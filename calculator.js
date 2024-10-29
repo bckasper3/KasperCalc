@@ -4,18 +4,20 @@ function calculate() {
   const input1 = parseFloat(document.getElementById("input1").value) || 0;
   let result_PSI;
 
-  const SG_JetA = 0.875;            //at 70°F
-  const SG_JetB = 0.8;                  //not correct value
-  const SG_JP_4 = 0.885;                //not correct value
-  const SG_JP_5 = 0.9;                  //not correct value
-  const SG_JP_8 = 0.895;                //not correct value
-  const SG_StoddardSolvent = 0.50;      //not correct value
+  const SG_JetA = .8075;            //at 70°F
+  const SG_JetB = 0.7935;
+  const SG_JP_4 = 0.775;
+  const SG_JP_5 = 0.810;
+  const SG_JP_8 = 0.8075;
+  const SG_AvGas = 0.7240;
+  const SG_StoddardSolvent = 0.790;
 
   let Density_JetA = SG_JetA*8.3290; //Pounds per Gallon at 70°F
   let Density_JetB = SG_JetB*8.3290;
   let Density_JP_4 = SG_JP_4*8.3290;
   let Density_JP_5 = SG_JP_5*8.3290;
   let Density_JP_8 = SG_JP_8*8.3290;
+  let Density_AvGas = SG_AvGas*8.3290;
   let Density_StoddardSolvent = SG_StoddardSolvent*8.3290;
 
   switch (operation) {
@@ -48,6 +50,12 @@ function calculate() {
       result_Density = Density_JP_8.toFixed(4);
       result_InH2O = (input1/SG_JP_8).toFixed(3);       
       result_PSI = ((input1/SG_JP_8)*0.0361).toFixed(5);
+      break;
+    case "AvGas":
+      result_SG = SG_AvGas.toFixed(4);
+      result_Density = Density_AvGas.toFixed(4);
+      result_InH2O = (input1/SG_AvGas).toFixed(3);       
+      result_PSI = ((input1/SG_AvGas)*0.0361).toFixed(5);
       break;
     case "StoddardSolvent":
         result_SG = SG_StoddardSolvent.toFixed(4);
