@@ -69,10 +69,10 @@ function calculate() {
       result_InH2O = "";  
       result_PSI = "";
   }
-  document.getElementById("result_SG").innerText = "Specific Gravity (S.G.):  " + result_SG;
-  document.getElementById("result_Density").innerText = "Density (lb/gallon):  " + result_Density;
-  document.getElementById("result_InH2O").innerText = "Inches of Water (inH20):  " + result_InH2O;
-  document.getElementById("result_PSI").innerText = "Result (PSI):  " + result_PSI;
+  document.getElementById("result_SG").innerText = result_SG;
+  document.getElementById("result_Density").innerText = result_Density;
+  document.getElementById("result_InH2O").innerText = result_InH2O;
+  document.getElementById("result_PSI").innerText = result_PSI;
 }
 
 function updateCalculator() {

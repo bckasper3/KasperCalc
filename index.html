@@ -8,32 +8,52 @@
   </head>
 
   <body>
-    <div class = "body1">
-    <div class="Header">Inches of Fuel to PSI Calculator</div>
-    <div class="container">
-      <div class="row1">
-        <label class="dropdownlabel" for="operation">           Select<nobr> Fuel:</label>
-        <select class = "dropdown" id="operation" onchange="updateCalculator()">
-          <option value="JetA">Jet A</option>
-          <option value="JetB">Jet B</option>
-          <option value="JP4">JP-4</option>
-          <option value="JP5">JP-5</option>
-          <option value="JP8">JP-8</option>
-          <option value="AvGas">AvGas</option>
-          <option value="StoddardSolvent">Stoddard Solvent  </option>
-        </select>
+    <div class="wrapper">
+      <div class="header">Inches of Fuel to PSI Calculator</div>
+
+      <div class="group1">
+        <label class="dropdownlabel" for="operation">Select<nobr> Fuel:</label>
+        <span class="output">
+          <select class="dropdown" id="operation" onchange="updateCalculator()">
+            <option value="JetA">Jet A</option>
+            <option value="JetB">Jet B</option>
+            <option value="JP4">JP-4</option>
+            <option value="JP5">JP-5</option>
+            <option value="JP8">JP-8</option>
+            <option value="AvGas">AvGas</option>
+            <option value="StoddardSolvent">Stoddard Solvent</option>
+          </select>
+        </span>
       </div>
-      <div class="row2">
-        <label class = "needscentered" for="input1">Inches of Fuel:</label>
-        <input type="number" id="input1" size=10 oninput="calculate()" >
+
+      <div class="group2">
+        <span class="label">Inches of Fuel:</span>
+        <span class="output inputbox">
+          <input type="number" id="input1" oninput="calculate()" />
+        </span>
       </div>
-      <div class = "intCalc">
-        <div id="result_SG">Specific Gravity (S.G.):&nbsp&nbsp</div>
-        <div id="result_Density">Density (lb/gallon):&nbsp&nbsp</div>
-        <div id="result_InH2O">Inches of Water (inH20):&nbsp&nbsp</div>
+
+      <div class="group">
+        <div>
+          <span class="label">Specific Gravity (S.G.): </span>
+          <span class="output" id="result_SG">&nbsp</span>
+        </div>
+
+        <div>
+          <span class="label">Density (lb/gallon):</span>
+          <span class="output" id="result_Density">&nbsp</span>
+        </div>
+
+        <div>
+          <span class="label">Inches of Water (inH20):</span>
+          <span class="output" id="result_InH2O">&nbsp</span>
+        </div>
       </div>
-      <div id="result_PSI">Result (PSI):&nbsp&nbsp</div> 
-    </div> 
+
+      <div class="group result">
+        <span class="label">Result (PSI):</span>
+        <span class="output result" id="result_PSI">&nbsp</span>
+      </div>
     </div>
 
     <script src="calculator.js"></script>
