@@ -1,0 +1,488 @@
+/*---------------------------------------
+  CUSTOM PROPERTIES ( VARIABLES )             
+-----------------------------------------*/
+:root {
+  --white-color: #fff;
+  --primary-color: #444444;
+  --secondary-color: #000000;
+  --section-bg-color: #efefef; /*#CCD0D8*/
+  --custom-btn-bg-color: #699dad; /*#225b9c*/ /*A3C3CD*/ /*A9CCCF*/
+  --dark-color: #333333;
+  --p-color: #000;
+  --border-color: #e9eaeb;
+  --section-title-color: #61828A; 
+  --icon-color: #A9CCCF; /*#225b9c*/
+  --banner-color: #A3C3CD;
+
+  --body-font-family: "Roboto", Arial, sans-serif;
+  --title-font-family: "Roboto", Arial, sans-serif;
+
+  --h1-font-size: 32px;
+  --h2-font-size: 20px;
+  --h4-font-size: 20px;
+  --h3-font-size: 14px;
+  --h5-font-size: 14px;
+  --h6-font-size: 14px;
+  --p-font-size: 20px;
+  --menu-font-size: 1.5rem;
+  --copyright-font-size: 12px;
+  --banner-font-size: 52px;
+  --footer-link-font-size: 16px;
+
+  --border-radius-large: 100px;
+  --border-radius-medium: 15px;
+  --border-radius-small: 10px;
+
+  --font-weight-thin: 100;
+  --font-weight-light: 200;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+
+}
+
+body {
+  background: var(--section-bg-color);
+  font-family: var(--body-font-family);
+}
+
+main{
+  margin-bottom: 3rem;
+  min-height: 90vh;
+}
+
+/*---------------------------------------
+  TYPOGRAPHY               
+-----------------------------------------*/
+
+h2,
+h4 {
+  color: var(--dark-color);
+}
+
+.h1,
+h1 {
+  font-family: var(--title-font-family);
+  font-weight: var(--font-weight-light);
+  margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+  padding: 0.3rem 1rem 0.3rem 1rem;
+}
+
+.h2,
+h2 {
+  font-family: var(--title-font-family);
+  font-weight: var(--font-weight-light);
+}
+
+h4 {
+  font-family: var(--title-font-family);
+  font-weight: var(--font-weight-bold);
+}
+
+.h1,
+h1 {
+  font-size: var(--h1-font-size);
+  color: var(--secondary-color);
+}
+
+.h2,
+h2 {
+  font-size: var(--h2-font-size);
+  margin-top: 20px;
+}
+
+.h4,
+h4 {
+  font-size: var(--h4-font-size);
+}
+
+.h5,
+h5 {
+  font-size: var(--h5-font-size);
+  line-height: normal;
+}
+
+.h6,
+h6 {
+  font-size: var(--h6-font-size);
+}
+
+p {
+  color: var(--p-color);
+  font-size: var(--p-font-size);
+  font-weight: var(--font-weight-light);
+  margin-bottom: 0px;
+}
+
+ul li {
+  color: var(--p-color);
+  font-size: var(--p-font-size);
+  font-weight: var(--font-weight-normal);
+
+  list-style-type: disc;
+  margin: 0;
+  padding: 0px 5px 0px 5px;
+}
+
+a,
+button {
+  touch-action: manipulation;
+  transition: all 0.3s;
+}
+
+a {
+  color: var(--p-color);
+  font-size: var(--p-font-size);
+}
+
+a:hover {
+  color: var(--secondary-color);
+}
+
+::selection {
+  background: var(--secondary-color);
+  color: var(--white-color);
+}
+
+::-moz-selection {
+  background: var(--secondary-color);
+  color: var(--white-color);
+}
+
+b,
+strong {
+  font-weight: var(--font-weight-bold);
+}
+
+.custom-icon {
+  color: var(--icon-color);
+}
+
+.section-bg {
+  background: var(--section-bg-color);
+}
+
+.section-block {
+  padding: 20px;
+}
+
+.section-divider {
+  background: var(--border-color);
+  width: 1px;
+  height: 50%;
+  margin: auto;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url(/fonts/Roboto-Thin.ttf) format("truetype");
+  font-weight: 100;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url(/fonts/Roboto-Light.ttf) format("truetype");
+  font-weight: 200;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url(/fonts/Roboto-Regular.ttf) format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url(/fonts/Roboto-Medium.ttf) format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url(/fonts/Roboto-Bold.ttf) format("truetype");
+  font-weight: 700;
+}
+
+/*---------------------------------------
+  SECTION TITLE               
+-----------------------------------------*/
+
+.section-title {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  background-color: var(--section-title-color);
+  border-radius: var(--border-radius-medium);
+  color: var(--white-color);
+}
+
+.banner>.section-title {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  background-color: var(--banner-color);
+  color: var(--p-color);
+}
+
+.section-title-wrap {
+  display: block;
+  position: relative;
+  text-align: center;
+}
+
+.section-content-wrap {
+  display: block;
+  position: relative;
+  text-align: center;
+  font-size: var(--p-font-size);
+}
+
+.section-content-wrap-left {
+  display: block;
+  position: relative;
+  text-align: left;
+}
+
+.section-title-line {
+  background: var(--border-color);
+  display: inline-block;
+  vertical-align: middle;
+  width: 80%;
+  height: 2px;
+  margin: 0 auto;
+}
+
+.banner {
+  display: block;
+  position: relative;
+  text-align: center;
+  background-color: var(--banner-color);
+}
+
+.bannertext {
+  font-size: var(--banner-font-size);
+  font-weight: var(--font-weight-thin);
+}
+
+.cssbannercontainer {
+  width: 100%;
+  line-height: 1.25;
+  padding-top: 1rem;
+  padding-bottom: 0.3rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/*---------------------------------------
+  CUSTOM BUTTON               
+-----------------------------------------*/
+.custom-btn {
+  background: var(--custom-btn-bg-color);
+  border: 0;
+  color: var(--white-color);
+  font-family: var(--title-font-family);
+  font-size: var(--p-font-size);
+  font-weight: var(--font-weight-regular);
+  position: relative;
+  overflow: hidden;
+  padding: 8px 16px;
+  margin:5px;
+  border-radius: var(--border-radius-small);
+  font-weight: var(--font-weight-light); 
+}
+
+.custom-btn::after {
+  content: "";
+  background: var(--icon-color);
+  border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+  position: absolute;
+  top: 0;
+  right: -10px;
+  width: 30px;
+  height: 20px;
+  transform: translateY(-100%);
+  transition: all 0.5s;
+  border-radius: var(--border-radius-small);
+}
+
+.custom-btn:hover::after {
+  transform: translate(0);
+}
+
+.custom-btn:hover {
+  background: var(--secondary-color);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  color: var(--white-color);
+}
+
+/*---------------------------------------
+  NAVIGATION              
+-----------------------------------------*/
+
+.navbar {
+  background-color: var(--banner-color);
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (max-width: 768px) { /*this is the breakpoint for the medium size for bootstrap*/
+  .navbar-brand{
+    margin-right:0px;
+  }
+  }
+
+@media (max-width: 768px) { /*this is the breakpoint for the medium size for bootstrap*/
+  .dropdown-menu{
+    background-color: var(--banner-color);
+    border: none;
+  }
+  .dropdown-item{
+    color: rgba(0, 0, 0, .55);
+  }
+  }
+  
+/* 
+.dropdown-menu-start {
+  --bs-position: start;
+}
+.dropdown-menu-start[data-bs-popper] {
+  right: auto;
+  left: 0;
+} */
+
+.navbar-toggler{
+  margin: 0rem 0.8rem 0rem 0.8rem;
+}
+
+/*---------------------------------------
+  LOGO             
+-----------------------------------------*/
+.headerlogo {
+  height: 3rem;
+}
+
+.logo {
+  height: 4.5rem;
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+}
+
+.logoblock {
+  display: inline-block;
+  padding: 5px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+  border-radius: 10px;
+}
+
+footer .logoblock {
+  margin-bottom: 1rem;
+}
+
+.footerlogo {
+  padding: 0.5rem 0rem 0rem 0rem;
+  margin-bottom: 0;
+}
+
+/*---------------------------------------
+  FOOTER STYLES               
+-----------------------------------------*/
+footer {
+  background-color: var(--banner-color);
+}
+
+.FooterRowTitle {
+  margin: 0px 0px 0px 0px;
+  line-height: normal;
+  display: inline;
+}
+
+.footerflexbox {
+  display: inline-block;
+  padding: 0px 10px 3px 0px;
+  margin-bottom: 1rem;
+  border-bottom: 3px solid var(--primary-color);
+}
+
+.kofi {
+  display: block;
+  filter: drop-shadow(3px 3px 3px);
+  height: 50px;
+}
+.kofiabout {
+  filter: drop-shadow(3px 3px 3px);
+  height: 180px;
+}
+
+.footerlink {
+  padding-bottom: 0.5rem;
+  padding-left: 0.4rem;
+  font-size: var(--footer-link-font-size);
+  color: var(--dark-color);
+  font-weight: var(--font-weight-normal);
+}
+
+.footerlink a{
+  font-size: var(--footer-link-font-size);
+}
+
+/*THIS IS THE COPYRIGHT ON THE BOTTOM OF THE PAGE*/
+.copyrighttext {
+  padding-top: 2rem;
+  padding-bottom: 0.8rem;
+  text-align: center;
+  font-style: italic;
+  color: var(--p-color);
+  font-size: var(--copyright-font-size);
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.footerkoficoffelink {
+  color: var(--dark-color);
+  font-size: var(--copyright-font-size);
+}
+
+/*---------------------------------------
+  SHIT FROM BOOTSTRAP               
+-----------------------------------------*/
+.footerwrapper {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  display: flex;
+  flex-flow: row wrap;
+  row-gap: 1.5rem;
+  column-gap: 5%;
+  justify-content: center;
+}
+
+.footerRow:last-child {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .footerwrapper {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
+
+@media (max-width: 824px) {
+.footerRow:first-child {
+  display: none;
+}
+.footerRow:last-child {
+  display: inline;
+}
+}
+
+.csscontainer {
+  margin-top: 3.5rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+footer>.csscontainer {
+  padding-top: 3.5rem;
+  margin-right: auto;
+  margin-left: auto;
+}
