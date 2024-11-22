@@ -31,7 +31,7 @@
 
   --border-radius-large: 100px;
   --border-radius-medium: 15px;
-  --border-radius-small: 10px;
+  --border-radius-small: 7px;
 
   --font-weight-thin: 100;
   --font-weight-light: 200;
@@ -269,6 +269,12 @@ strong {
   margin-left: auto;
 }
 
+.dropdown-item{
+  box-sizing: border-box;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
 /*---------------------------------------
   CUSTOM BUTTON               
 -----------------------------------------*/
@@ -336,18 +342,24 @@ strong {
     color: rgba(0, 0, 0, .55);
   }
   }
-  
-/* 
-.dropdown-menu-start {
-  --bs-position: start;
-}
-.dropdown-menu-start[data-bs-popper] {
-  right: auto;
-  left: 0;
-} */
 
 .navbar-toggler{
   margin: 0rem 0.8rem 0rem 0.8rem;
+}
+
+.dropdown-menu{
+  padding:  0px;
+}
+
+.dropdown{
+  display: block !important;
+  margin-right: auto;
+}
+
+ @media (max-width: 768px) { /*this is the breakpoint for the medium size for bootstrap*/
+  .dropdown-toggle{
+    text-align: left;
+  } 
 }
 
 /*---------------------------------------
