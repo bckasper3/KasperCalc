@@ -13,11 +13,13 @@
     <!-- DEFERRED JAVASCRIPT -->
     <script defer type="text/javascript" src="js/jquery.min.js"></script>
     <script defer type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script defer type="text/javascript" src="calculator.js"></script>
 
     <!-- CSS FILES -->
     <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
     <link rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/calc-style.css" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
@@ -30,7 +32,7 @@
     <!-- FAVICON -->
     <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
-    <link rel="shortcut icon" href="favicon/favicon.ico" />
+    <link rel="shortcut icon" href="/favicon/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="KasperCalc" />
     <link rel="manifest" href="/favicon/site.webmanifest" />
@@ -67,7 +69,7 @@
           </li>
 
           <li class="nav-item text-center d-flex align-items-center dropdown"> <!--ADD ACTIVE CLASS ON THE OTHER PAGES active-->
-            <a class="nav-link dropdown-toggle active" id="navbarDropdown1" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Calculators</a>
+            <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Calculators</a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
               <a class="dropdown-item" href="fuelHead.html">Fuel Head Calculator</a>
               <a class="dropdown-item" href="PPH.html">PPH to GPM Calculator</a>
@@ -75,7 +77,7 @@
           </li>
 
           <li class="nav-item text-center d-flex align-items-center dropdown"> <!--ADD ACTIVE CLASS ON THE OTHER PAGES active-->
-            <a class="nav-link dropdown-toggle" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Jet Fuel Properties</a>
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Jet Fuel Properties</a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown2">
               <a class="dropdown-item" href="absoluteDensity.html">Absolute Density</a>
               <a class="dropdown-item" href="relativeDensity.html">Relative Density</a>
@@ -88,7 +90,7 @@
           </li>
 
           <li class="nav-item text-center d-flex align-items-center dropdown"> <!--ADD ACTIVE CLASS ON THE OTHER PAGES active-->
-            <a class="nav-link dropdown-toggle" id="navbarDropdown3" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Misc</a>
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Misc</a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown3">
               <a class="dropdown-item" href="PGdensity.html">Propylene Gylcol Density</a>
               <a class="dropdown-item" href="PGviscosity.html">Propylene Gylcol Viscosity</a>
@@ -120,27 +122,62 @@
 
       <!-- UNDER THE BANNER -->
 
-      <!-- JET FUEL PROPERTIES -->
+      <!-- CALCULATOR -->
       <section>
         <div class="csscontainer">
           <div class="col-lg-12 col-12">
-            <div class="section-title-wrap">
-              <div class="h1 section-title">Jet Fuel Properties</div>
-            </div>
 
-            <div class="section-content-wrap col-8 mx-auto">
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
+            <div class="wrapper">
+              <div class="header">Fuel Head<br>Calculator</div>
+        
+              <div class="group1">
+                <label class="dropdownlabel" for="operation">Select<nobr> Fuel:</label>
+                <span class="output">
+                  <select class="dropdowncalc" id="operation" onchange="updateCalculator()">
+                    <option value="JetA">Jet A</option>
+                    <option value="JetB">Jet B</option>
+                    <option value="JP4">JP-4</option>
+                    <option value="JP5">JP-5</option>
+                    <option value="JP8">JP-8</option>
+                    <option value="AvGas">AvGas</option>
+                    <option value="StoddardSolvent">Stoddard Solvent</option>
+                  </select>
+                </span>
+              </div>
+        
+              <div class="group2">
+                <span class="label">Inches of Fuel:</span>
+                <span class="output inputbox">
+                  <input type="number" id="input1" oninput="calculate()" />
+                </span>
+              </div>
+        
+              <div class="group">
+                <div>
+                  <span class="label">Specific Gravity (S.G.): </span>
+                  <span class="output" id="result_SG">&nbsp</span>
+                </div>
+        
+                <div>
+                  <span class="label">Density (lb/gallon):</span>
+                  <span class="output" id="result_Density">&nbsp</span>
+                </div>
+        
+                <div>
+                  <span class="label">Inches of Water (inH20):</span>
+                  <span class="output" id="result_InH2O">&nbsp</span>
+                </div>
+              </div>
+        
+              <div class="group result">
+                <span class="label">Result (PSI):</span>
+                <span class="output result" id="result_PSI">&nbsp</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
 
       <!-- JET FUEL PROPERTIES -->
       <section>
