@@ -13,12 +13,15 @@
   --section-title-color: #61828A; 
   --icon-color: #A9CCCF; /*#225b9c*/
   --banner-color: #A3C3CD;
+  --calc-background-color: #eeeeee;
+  --calc-result-color: #cfcfcf;
+  --calc-outline-color: --calc-outline-color;
 
   --body-font-family: "Roboto", Arial, sans-serif;
   --title-font-family: "Roboto", Arial, sans-serif;
 
   --h1-font-size: 32px;
-  --h2-font-size: 20px;
+  --h2-font-size: 22px;
   --h4-font-size: 20px;
   --h3-font-size: 14px;
   --h5-font-size: 14px;
@@ -28,6 +31,7 @@
   --copyright-font-size: 12px;
   --banner-font-size: 52px;
   --footer-link-font-size: 16px;
+  --calc-title-font-size: 38px;
 
   --border-radius-large: 100px;
   --border-radius-medium: 15px;
@@ -347,7 +351,7 @@ strong {
   @media (max-width: 768px) { /*this is the breakpoint for the medium size for bootstrap*/
     :root{
     --h1-font-size: 22px;
-    --h2-font-size: 16px;
+    --h2-font-size: 18px;
     --h4-font-size: 16px;
     --h3-font-size: 14px;
     --h5-font-size: 14px;
@@ -356,7 +360,8 @@ strong {
     --menu-font-size: 16rem;
     --copyright-font-size: 10px;
     --banner-font-size: 42px;
-    --footer-link-font-size: 10px; 
+    --footer-link-font-size: 12px; 
+    --calc-title-font-size: 24px;
      }
     }
 
@@ -520,3 +525,254 @@ footer>.csscontainer {
   margin-right: auto;
   margin-left: auto;
 }
+
+
+
+/*---------------------------------------
+  CALCULATOR-CSS              
+-----------------------------------------*/
+.wrapper{
+  margin-left:auto;
+  margin-right: auto;
+  /* margin: 0rem 1rem 0rem 1rem; */
+  max-width: 25rem;
+  background-color: #6a746a;
+  border-radius: 20px;
+  border: 3px solid rgb(67, 67, 67);
+  font-size: var(--h2-font-size);
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+
+.header{
+  font-family: "Roboto", Arial, sans-serif;
+  background-color: #eeeeee;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+  margin: 0.5rem 0.5rem 0.8rem 0.5rem;;
+  font-size: var(--calc-title-font-size);
+  box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4);
+  border-radius: 10px;  
+  border: 2px solid --calc-outline-color;
+}
+
+.calcinput{
+  Width: 7rem;
+  font-size: 1.4rem;
+  padding: 0.4rem 0.4rem 0.2rem 0.4rem;
+  text-align: center;
+  border: 1px solid #000;
+  border-radius: 5px;  
+  margin-top: auto;
+  margin-bottom: auto;
+  line-height: 1.5rem;
+}
+
+.dropdownlabel{
+  padding: .5rem 0em .5rem 0em;
+  vertical-align: middle;
+  }
+
+.dropdowncalc{
+  width: 10rem;
+  font-size: var(--h2-font-size);
+  cursor: pointer;
+  border: 1px solid #000;
+  border-radius: 5px;  
+  color: #000;
+  padding: .4rem 0em .4rem 0.4em;
+  background-color: #d9d9d9;
+}
+
+.dropdowncalc:hover{
+  background-color: #cfcfcf; 
+}
+
+.outputrow{
+  display: flex;
+  justify-content: space-between;
+}
+
+.output{
+  background-color: var(--calc-background-color);
+  line-height: 1.0em;
+  float: right;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.label{
+  line-height: 1.7em;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.group{
+  background-color: var(--calc-background-color);
+  margin: 0.5rem;
+  border-radius: 10px;
+  box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4);
+  color: #000;
+  padding: 0.2rem 0.5rem 0.2rem .8rem;
+  border: 2px solid --calc-outline-color;
+}
+
+.group1{
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--calc-background-color);
+  margin: 0.5rem;
+  border-radius: 10px;
+  box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4);
+  color: #000;
+  padding: 0.3rem 0.5rem 0.3rem 0.5rem;
+  border: 2px solid --calc-outline-color;
+}
+
+.group2{
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--calc-background-color);
+  margin: 0.5rem;
+  border-radius: 10px;
+  box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4);
+  color: #000;
+  padding: 0.5rem;
+  border: 2px solid --calc-outline-color;
+}
+
+.group.result{
+  display: flex;
+  justify-content: space-between;
+  color: #000;
+  background-color: var(--calc-result-color);
+  border: 2px solid --calc-outline-color;
+  font-weight: bold;
+  padding: 0.3rem 0.5rem 0.3rem .8rem;
+  border-radius: 10px; 
+}
+
+.output.result{
+  background-color: #cfcfcf; 
+}
+
+
+
+
+
+/*TRYING CHAT GPT CODE HERE*/
+
+/* Container for the toggle switch */
+.toggle-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Styling for the toggle switch container */
+.toggle-switch {
+  position: relative;
+  /* display: inline-block; */
+  width: 300px;
+  height: 50px;  /* Increased height for larger pill */
+}
+
+/* Hide the checkbox input */
+.toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Slider (the background of the toggle) */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--calc-background-color); /* Blue color for the inactive state */
+  transition: 0.4s;
+  border-radius: 10px;  /* Rounded slider */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  color: var(--primary-color);
+  font-size: 16px;
+  font-weight: normal;
+  z-index: 1;
+  border: 2px solid var(--calc-outline-color);
+  box-sizing: border-box;
+  border-radius: 10px;
+  box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4);
+}
+
+/* Styling for the left and right option labels */
+.option {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--h2-font-size);
+  transition: 0.4s;
+  /* opacity: 0.6; */
+}
+
+.left {
+  left: 20px;
+}
+
+.right {
+  right: 20px;
+}
+
+/* Create the larger pill-shaped moving handle */
+.slider:before {
+  content: "";
+  height: 40px;  /* Larger pill shape */
+  width: 156px;  /* Larger pill shape */
+  /* opacity: 0.6; */
+  transition: 0.4s;
+  top: 5px; /* Center the handle vertically */
+  z-index: 2;  /* Make sure handle appears on top */
+
+
+
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #000;
+  border-radius: 10px;  /* Rounded pill shape */
+}
+
+/* When the toggle is checked (active state) */
+.toggle-input:checked + .slider {
+  background-color: var(--custom-btn-bg-color); /* Green color for the active state */
+}
+
+/* Move the handle to the right when checked */
+.toggle-input:checked + .slider:before {
+  transform: translateX(228px); /* Move handle to the right */
+  width: 50px;
+}
+
+/* Change the text opacity when checked */
+.toggle-input:checked + .slider .left {
+  opacity: 0.6; /* Dim the left text */
+}
+
+.toggle-input:checked + .slider .right {
+  opacity: 1; /* Highlight the right text */
+}
+
+.toggle-input:not(:checked) + .slider .left {
+  opacity: 1; /* Highlight the left text */
+}
+
+.toggle-input:not(:checked) + .slider .right {
+  opacity: 0.6; /* Dim the right text */
+}
+
