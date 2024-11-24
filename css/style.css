@@ -22,6 +22,9 @@
   --calc-slider-translate: 225px;
   --calc-dropdown-color: #d9d9d9;
 
+  --calc-pph-slider-pill-width: 65px;
+  --calc-pph-slider-translate: 160px;
+
   --body-font-family: "Roboto", Arial, sans-serif;
   --title-font-family: "Roboto", Arial, sans-serif;
 
@@ -536,7 +539,7 @@ footer>.csscontainer {
 
 
 /*---------------------------------------
-  CALCULATOR-CSS              
+  INCHES OF FUEL CALCULATOR-CSS              
 -----------------------------------------*/
 .wrapper{
   margin-left:auto;
@@ -668,7 +671,7 @@ footer>.csscontainer {
 
 
 /*---------------------------------------
-  SLIDER-CSS              
+  FUEL HEAD PRESSURE CALC - CSS            
 -----------------------------------------*/
 
 /* Container for the toggle switch */
@@ -693,7 +696,7 @@ footer>.csscontainer {
 }
 
 /* Slider (the background of the toggle) */
-.slider {
+.slider, .slider1 {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -785,10 +788,74 @@ footer>.csscontainer {
   opacity: 0.6; /* Dim the right text */
 }
 
-#fuelHeadCalcOption2{
+#pphgpmCalcOption2{
   display: none;
 }
 
-#fuelHeadCalcResult2{
+#pphgpmCalcResult2{
+  display: none;
+}
+
+/*---------------------------------------
+  SLIDER-CSS 2             
+-----------------------------------------*/
+
+.slider1:before {
+  content: "";
+  height: 45px;  /* Larger pill shape */
+  width: var(--calc-pph-slider-pill-width);  /* Larger pill shape */ /*156px*/
+  transition: 0.4s;
+  top: 5px; /* Center the handle vertically */
+  z-index: 2;  /* Make sure handle appears on top */
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #000;
+  border-radius: 10px;  /* Rounded pill shape */
+}
+
+
+.toggle-switch1 {
+  position: relative;
+  width: 250px;
+  height: 60px;  /* Increased height for larger pill */
+}
+
+.toggle-input1:checked + .slider1 {
+  background-color: var(--custom-btn-bg-color); /* Green color for the active state */ /*--custom-btn-bg-color*/
+}
+
+.toggle-input1:checked:hover + .slider1 {
+  background-color: var(--calc-hover-color); /* Green color for the active state */ /*--custom-btn-bg-color*/
+}
+
+/* Move the handle to the right when checked */
+.toggle-input1:checked + .slider1:before {
+  transform: translateX(var(--calc-pph-slider-translate)); /* Move handle to the right */
+  width: 65px;
+}
+
+/* Change the text opacity when checked */
+.toggle-input1:checked + .slider1 .left {
+  opacity: 0.6; /* Dim the left text */
+}
+
+.toggle-input1:checked + .slider1 .right {
+  opacity: 1; /* Highlight the right text */
+}
+
+.toggle-input1:not(:checked) + .slider1 .left {
+  opacity: 1; /* Highlight the left text */
+}
+
+.toggle-input1:not(:checked) + .slider1 .right {
+  opacity: 0.6; /* Dim the right text */
+}
+
+#pphgpmCalcOption2{
+  display: none;
+}
+
+#pphgpmCalcResult2{
   display: none;
 }
