@@ -127,12 +127,12 @@
           <div class="col-lg-12 col-12 px-3">
 
             <div class="wrapper">
-              <div class="header">Fuel Head Calculato
+              <div class="header">Fuel Head Calculator
             </div>
 
             <div class="toggle-container">
               <label class="toggle-switch">
-                <input type="checkbox" id="toggle" class="toggle-input">
+                <input type="checkbox" id="fuelheadcalctoggle" class="toggle-input">
                 <span class="slider">
                   <span class="option left">Inches of Fuel</span>
                   <span class="option right">PSI</span>
@@ -142,8 +142,9 @@
         
               <div class="group1">
                 <label class="dropdownlabel" for="operation">Select Fuel:</label>
+
                 <span class="output">
-                  <select class="dropdowncalc" id="operation" onchange="updateCalculator()">
+                  <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="updateCalculator()">
                     <option value="JetA">Jet A</option>
                     <option value="JetB">Jet B</option>
                     <option value="JP4">JP-4</option>
@@ -152,11 +153,15 @@
                     <option value="AvGas">AvGas</option>
                     <option value="StoddardSolvent">Stoddard Solvent</option>
                   </select>
+
                 </span>
               </div>
         
               <div class="group2">
-                <span class="label">Inches of Fuel:</span>
+                <span class="label">
+                  <span id="fuelHeadCalcOption1">Inches of Fuel:</span>
+                  <span id="fuelHeadCalcOption2">PSI:</span>
+                </span> 
                 <span class="output inputbox">
                   <input class= "calcinput" type="number" id="input1" oninput="calculate()" />
                 </span>
@@ -180,16 +185,21 @@
               </div>
         
               <div class="group result">
-                <span class="label">Result (PSI):</span>
+                <span class="label">
+                  <span id="fuelHeadCalcResult1">Result (PSI):</span>
+                  <span id="fuelHeadCalcResult2">Result (Inches of Fuel):</span>
+                </span>
                 <span class="output result" id="result_PSI">&nbsp</span>
               </div>
             </div>
           </div>
         </div>
+        <p class="text-center">*All values dependent on Temperature*
+        </p>
       </section>
 
 
-      <!-- JET FUEL PROPERTIES -->
+      <!-- TEXT UNDER THE CALCULATOR -->
       <section>
         <div class="csscontainer">
           <div class="col-lg-12 col-12">
@@ -197,22 +207,22 @@
 
               <div style="text-align: center">
                 <h1>Formula</h1>
-                <img style="max-width: 100%;" src="https://latex.codecogs.com/svg.image?{Inches\ of\ Fuel}*{Specific\ Gravity\ of\ fuel}*0.0361(\frac{lbs}{in^{3}}) = PSI" />
+                <img style="max-width: 100%;" src="https://latex.codecogs.com/svg.image?{Inches\ of\ Fuel}*{Specific\ Gravity\ of\ fuel}*0.0360912(\frac{lbs}{in^{3}}) = PSI" />
               </div>
 
               <div class="my-5" style="text-align: center">
                 <h1>Plain Text Formula </h1>
-                  <span>Inches of Fuel * Specific Gravity of Fuel * 0.0361 (lbs/in^3) = PSI</span>
+                  <span>Inches of Fuel * Specific Gravity of Fuel * 0.0360912 (lbs/in^3) = PSI</span>
               </div>
 
               <div class="my-5" style="text-align: center">
                 <h1>CodeCogs Formula</h1>
-                  <span>{Inches\ of\ Fuel}*{Specific\ Gravity\ of\ fuel}*0.0361(\frac{lbs}{in^{3}}) = PSI</span>
+                  <span>{Inches\ of\ Fuel}*{Specific\ Gravity\ of\ fuel}*0.0360912(\frac{lbs}{in^{3}}) = PSI</span>
               </div>
 
               <div class="my-5" style="text-align: center">
                 <h1>LaTex Formula</h1>
-                  <span>{Inches\ of\ Fuel}*{Specific\ Gravity\ of\ fuel}*0.0361(\frac{lbs}{in^{3}}) = PSI</span>
+                  <span>{Inches\ of\ Fuel}*{Specific\ Gravity\ of\ fuel}*0.0360912(\frac{lbs}{in^{3}}) = PSI</span>
               </div>
 
               </div>
