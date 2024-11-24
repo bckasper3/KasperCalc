@@ -15,7 +15,12 @@
   --banner-color: #A3C3CD;
   --calc-background-color: #eeeeee;
   --calc-result-color: #cfcfcf;
-  --calc-outline-color: --calc-outline-color;
+  --calc-outline-color: rgb(67, 67, 67);
+  --calc-p-color: #000;
+  --calc-hover-color: #cfcfcf;
+  --calc-slider-pill-width: 156px;
+  --calc-slider-translate: 225px;
+  --calc-dropdown-color: #d9d9d9;
 
   --body-font-family: "Roboto", Arial, sans-serif;
   --title-font-family: "Roboto", Arial, sans-serif;
@@ -362,6 +367,8 @@ strong {
     --banner-font-size: 42px;
     --footer-link-font-size: 12px; 
     --calc-title-font-size: 24px;
+    --calc-slider-pill-width: 135px;
+    --calc-slider-translate: 228px;
      }
     }
 
@@ -538,7 +545,7 @@ footer>.csscontainer {
   max-width: 25rem;
   background-color: #6a746a;
   border-radius: 20px;
-  border: 3px solid rgb(67, 67, 67);
+  border: 3px solid var(--calc-outline-color);
   font-size: var(--h2-font-size);
   font-family: "Roboto", Arial, sans-serif;
 }
@@ -546,7 +553,7 @@ footer>.csscontainer {
 
 .header{
   font-family: "Roboto", Arial, sans-serif;
-  background-color: #eeeeee;
+  background-color: var(--calc-background-color);
   display: flex;
   justify-content: center;
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
@@ -554,7 +561,7 @@ footer>.csscontainer {
   font-size: var(--calc-title-font-size);
   box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4);
   border-radius: 10px;  
-  border: 2px solid --calc-outline-color;
+  border: 2px solid var(--calc-outline-color);
 }
 
 .calcinput{
@@ -580,13 +587,13 @@ footer>.csscontainer {
   cursor: pointer;
   border: 1px solid #000;
   border-radius: 5px;  
-  color: #000;
+  color: var(--calc-p-color);
   padding: .4rem 0em .4rem 0.4em;
-  background-color: #d9d9d9;
+  background-color: var(--calc-dropdown-color);
 }
 
 .dropdowncalc:hover{
-  background-color: #cfcfcf; 
+  background-color: var(--calc-hover-color); 
 }
 
 .outputrow{
@@ -613,9 +620,9 @@ footer>.csscontainer {
   margin: 0.5rem;
   border-radius: 10px;
   box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4);
-  color: #000;
+  color: var(--calc-p-color);
   padding: 0.2rem 0.5rem 0.2rem .8rem;
-  border: 2px solid --calc-outline-color;
+  border: 2px solid var(--calc-outline-color);
 }
 
 .group1{
@@ -626,9 +633,9 @@ footer>.csscontainer {
   margin: 0.5rem;
   border-radius: 10px;
   box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4);
-  color: #000;
+  color: var(--calc-p-color);
   padding: 0.3rem 0.5rem 0.3rem 0.5rem;
-  border: 2px solid --calc-outline-color;
+  border: 2px solid var(--calc-outline-color);
 }
 
 .group2{
@@ -638,31 +645,31 @@ footer>.csscontainer {
   margin: 0.5rem;
   border-radius: 10px;
   box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4);
-  color: #000;
+  color: var(--p-color);
   padding: 0.5rem;
-  border: 2px solid --calc-outline-color;
+  border: 2px solid var(--calc-outline-color);
 }
 
 .group.result{
   display: flex;
   justify-content: space-between;
-  color: #000;
+  color: var(--calc-p-color);
   background-color: var(--calc-result-color);
-  border: 2px solid --calc-outline-color;
+  border: 2px solid var(--calc-outline-color);
   font-weight: bold;
   padding: 0.3rem 0.5rem 0.3rem .8rem;
   border-radius: 10px; 
 }
 
 .output.result{
-  background-color: #cfcfcf; 
+  background-color: var(--calc-result-color); 
 }
 
 
 
-
-
-/*TRYING CHAT GPT CODE HERE*/
+/*---------------------------------------
+  SLIDER-CSS              
+-----------------------------------------*/
 
 /* Container for the toggle switch */
 .toggle-container {
@@ -674,9 +681,8 @@ footer>.csscontainer {
 /* Styling for the toggle switch container */
 .toggle-switch {
   position: relative;
-  /* display: inline-block; */
   width: 300px;
-  height: 50px;  /* Increased height for larger pill */
+  height: 60px;  /* Increased height for larger pill */
 }
 
 /* Hide the checkbox input */
@@ -711,6 +717,10 @@ footer>.csscontainer {
   box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4);
 }
 
+.slider:hover {
+  background-color: var(--calc-hover-color);
+  }
+
 /* Styling for the left and right option labels */
 .option {
   position: absolute;
@@ -718,7 +728,6 @@ footer>.csscontainer {
   transform: translateY(-50%);
   font-size: var(--h2-font-size);
   transition: 0.4s;
-  /* opacity: 0.6; */
 }
 
 .left {
@@ -732,15 +741,11 @@ footer>.csscontainer {
 /* Create the larger pill-shaped moving handle */
 .slider:before {
   content: "";
-  height: 40px;  /* Larger pill shape */
-  width: 156px;  /* Larger pill shape */
-  /* opacity: 0.6; */
+  height: 45px;  /* Larger pill shape */
+  width: var(--calc-slider-pill-width);  /* Larger pill shape */ /*156px*/
   transition: 0.4s;
   top: 5px; /* Center the handle vertically */
   z-index: 2;  /* Make sure handle appears on top */
-
-
-
   box-sizing: border-box;
   border-style: solid;
   border-width: 2px;
@@ -750,12 +755,16 @@ footer>.csscontainer {
 
 /* When the toggle is checked (active state) */
 .toggle-input:checked + .slider {
-  background-color: var(--custom-btn-bg-color); /* Green color for the active state */
+  background-color: var(--custom-btn-bg-color); /* Green color for the active state */ /*--custom-btn-bg-color*/
+}
+
+.toggle-input:checked:hover + .slider {
+  background-color: var(--calc-hover-color); /* Green color for the active state */ /*--custom-btn-bg-color*/
 }
 
 /* Move the handle to the right when checked */
 .toggle-input:checked + .slider:before {
-  transform: translateX(228px); /* Move handle to the right */
+  transform: translateX(var(--calc-slider-translate)); /* Move handle to the right */
   width: 50px;
 }
 
@@ -776,3 +785,10 @@ footer>.csscontainer {
   opacity: 0.6; /* Dim the right text */
 }
 
+#fuelHeadCalcOption2{
+  display: none;
+}
+
+#fuelHeadCalcResult2{
+  display: none;
+}
