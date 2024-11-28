@@ -148,7 +148,7 @@ a {
 }
 
 a:hover {
-  color: var(--secondary-color);
+  color: var(--primary-color);
 }
 
 ::selection {
@@ -356,7 +356,13 @@ strong {
   }
 }
 
-  @media (max-width: 768px) { /*this is the breakpoint for the medium size for bootstrap*/
+@media (max-width: 900px) { /*this is a number I pulled out of nowhere*/
+  :root{
+    --p-font-size: 18px;
+     }
+    }
+
+  @media (max-width: 500px) { /*this is the breakpoint for the medium size for bootstrap*/
     :root{
     --h1-font-size: 22px;
     --h2-font-size: 18px;
@@ -375,10 +381,6 @@ strong {
      }
     }
 
-.navbar-toggler{
-  margin: 0rem 0.8rem 0rem 0.8rem;
-}
-
 .dropdown-menu{
   padding:  0px;
 }
@@ -393,6 +395,93 @@ strong {
     text-align: left;
   } 
 }
+
+
+
+/*---------------------------------------
+  Navbar - Hamburger Icon            
+-----------------------------------------*/
+
+nav>.navbar-toggler{
+  margin: 0rem 0.8rem 0rem 0.8rem;
+  padding: 1.1rem 0.3rem 1.1rem 0.3rem;
+  text-decoration: none;
+  border-style: solid; /*inset outset*/
+  border-width: 2px!important;
+  border-color: black !important;
+  border-radius: 0.25rem;
+  transition: none;
+  /* transition: box-shadow .15s ease-in-out; */
+  background-color: transparent;
+  box-shadow: 2px 2px 3px;
+}
+
+.navbar-toggler .navbar-toggler-icon::before {
+  top: -8px;
+}
+
+.navbar-toggler .navbar-toggler-icon::after {
+  top: 8px;
+}
+
+.navbar-toggler:hover {
+  text-decoration: none;
+  background-color: rgba(0,0,0,0.05);
+}
+
+.navbar-toggler:focus {
+  text-decoration: none;
+  outline: none;
+  box-shadow: 2px 2px 3px;
+}
+
+
+.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
+  background: transparent;
+}
+
+.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon:before,
+.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon:after {
+  transition: top 300ms 50ms ease, -webkit-transform 300ms 350ms ease;
+  transition: top 300ms 50ms ease, transform 300ms 350ms ease;
+  transition: top 300ms 50ms ease, transform 300ms 350ms ease,
+    -webkit-transform 300ms 350ms ease;
+  top: 0;
+}
+
+.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon:before {
+  transform: rotate(45deg);
+}
+
+.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon:after {
+  transform: rotate(-45deg);
+}
+
+.navbar-toggler .navbar-toggler-icon {
+  background: var(--dark-color);
+  /* transition: background 10ms 300ms ease; */ /*I hated the way this looked when the page loaded in, it changed the animation to a slightly less pleasant version*/
+  display: block;
+  width: 30px;
+  height: 2px;
+  position: relative;
+}
+
+.navbar-toggler .navbar-toggler-icon:before,
+.navbar-toggler .navbar-toggler-icon:after {
+  transition: top 300ms 350ms ease, -webkit-transform 300ms 50ms ease;
+  transition: top 300ms 350ms ease, transform 300ms 50ms ease;
+  transition: top 300ms 350ms ease, transform 300ms 50ms ease,
+    -webkit-transform 300ms 50ms ease;
+  position: absolute;
+  right: 0;
+  left: 0;
+  background: var(--dark-color);
+  width: 30px;
+  height: 2px;
+  content: "";
+}
+
+
 
 /*---------------------------------------
   LOGO             
@@ -859,3 +948,19 @@ footer>.csscontainer {
 #pphgpmCalcResult2{
   display: none;
 }
+
+/*---------------------------------------
+  SLIDER-CSS 2             
+-----------------------------------------*/
+
+.canvascontainer{
+  max-width: 100rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.chartcanvas{
+  background-color: #fff;
+}
+
