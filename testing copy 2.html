@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FuckChart.js</title>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" />
+</head>
+<body>
+    
+    <div>
+        <canvas id="myChart" width="400" height="100" aria-label="Alt Text Here" role="img">
+        <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p></canvas>
+      </div>
+      
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- CHART JS CDN -->
+      <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-autocolors"></script> --> <!--AWESOME CHART JS FOR COLOR GENERATION-->
+      
+      <script>
+        const ctx = document.getElementById('myChart');
+      
+        Chart.defaults.font.size = 22; //declaring the font size globally
+        Chart.defaults.font.family = "Roboto" //declaring the font globally in the chart
+        Chart.defaults.font.weight = "normal"
+        const myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['-40', '0', '40', '90'],
+            XAxisID: 'first-x-axis',
+            datasets: [
+                {
+              label: 'Av. Gas',
+              data: [752,717,682,638],
+              borderWidth: 2,
+              borderColor: '#36A2EB',
+              yAxisID: 'first-y-axis',
+              XAxisID: 'first-x-axis',
+            },
+            {
+              label: 'JP-4, Jet B',
+              data: [806,775,745,706],
+              borderWidth: 2,
+              borderColor: '#000',
+              yAxisID: 'second-y-axis',
+            }
+                ] 
+            },
+
+          options: {
+            scales: {
+              y: {beginAtZero: true},
+            //   'first-y-axis':{type:linear},
+            //   'second-y-axis':{type:linear}
+                },
+
+            layout: {
+              padding: 50,
+            }
+          }
+        });
+      </script>
+
+
+</body>
+</html>

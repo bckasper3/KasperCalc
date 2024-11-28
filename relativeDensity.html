@@ -13,11 +13,11 @@
     <!-- DEFERRED JAVASCRIPT -->
     <script defer type="text/javascript" src="js/jquery.min.js"></script>
     <script defer type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script defer type="text/javascript" scr="js/d3.v7.min.js"></script>
-    <script defer type="text/javascript" scr="js/KasperCalcd3charts.js"></script>
+    <script defer type="text/javascript" scr="js/chart.min.js"></script>
+    <!-- <script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js"></script> -->
 
     <!-- CSS FILES -->
-    <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
     <link rel="stylesheet" type="text/css" media="print" href="css/print.css" />
 
@@ -61,7 +61,7 @@
         data-bs-target="#navbarNav"
         class="navbar-toggler"
         aria-controls="navbarNav"
-        aria-expanded="false"
+        aria-expanded="falses"
         aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -131,8 +131,131 @@
       <section>
         <div class="csscontainer">
           <div class="col-lg-12 col-12">
-            </div onload="myScript()">
-              <svg width=600 height = 600></svg>
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Relative Density Chart</div>
+            </div>
+
+
+
+
+            <div class="mx-4">
+              <div class="canvascontainer">
+                <canvas id="myChart" width="400" height="600" aria-label="Alt Text Here" role="img" class="chartcanvas">
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p></canvas>
+              </div>
+            </div>
+            
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- CHART JS CDN -->
+            <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-autocolors"></script> --> <!--AWESOME CHART JS FOR COLOR GENERATION-->
+            
+            <script>
+              const ctx = document.getElementById('myChart');
+            
+              Chart.defaults.font.size = 22; //declaring the font size globally
+              Chart.defaults.font.family = "Roboto" //declaring the font globally in the chart
+              Chart.defaults.font.weight = "normal"
+              const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+              datasets: [{
+                  data: [752,717,682,638],
+                  label: 'Av. Gas',
+                  tension: 0.4,
+                  borderColor: '#000',
+                  // This binds the dataset to the left y axis
+                  // yAxisID: 'left-y-axis',
+                  // xAxisID: 'bottom-x-axis'
+              }, {
+                  data: [806,775,745,706],
+                  label: 'JP-4, Jet B',
+                  tension: 0.4,
+                  borderColor: '#3ff501',
+                  // This binds the dataset to the right y axis
+                  // yAxisID: 'right-y-axis'
+              }],
+              labels: ['-40', '0', '40', '90']
+            },
+      
+                options: {
+
+                  maintainAspectRatio: false,
+                  plugins:{
+                    customCanvasBackgroundColor:{
+                      color: 'white',
+                    },
+                    // title:{
+                    //   align: 'center',
+                    //   display: true,
+                    //   text: 'Relative Density',
+                    //   fullSize: true,
+                    // },
+                    legend:{
+                      labels:{
+                        align: 'top',
+                        padding: 20,
+                        usePointStyle: false,
+                        boxHeight: 2,
+                      },
+                    },
+                  },
+                  scales: {
+                    y:{tick:{crossAlign:'far',},
+                       beginAtZero: true,
+                       min: 620,
+                       max:880, 
+                       ticks:{
+                       stepSize:10,
+                       font: {
+                        size: 16,
+                       },
+                       },
+                       title: {
+                        display:true,
+                        text: 'Density, kg/m³',
+                        padding: 10,
+                      }
+                    },
+                    x:{
+                       min: -40,
+                       max: 90, 
+                       ticks:{
+                       stepSize:10,
+                       font: {
+                          size: 16,
+                        },
+                       },
+                       title: {
+                        display:true,
+                        text: 'Temperature °C',
+                      }
+                    },
+                    },
+                  // 'left-y-axis': {
+                  //     type: 'linear',
+                  //     position: 'left'
+                  // },
+                  // 'right-y-axis': {
+                  //     type: 'linear',
+                  //     position: 'right'
+                  // },
+                  // 'bottom-x-axis': {
+                  //     type: 'linear',
+                  //     position: 'bottom'
+                  // }
+      
+                layout: {
+                    padding: {
+                    left: 10,
+                    right: 25,
+                    top: 5,
+                    bottom: 5,
+                    }
+                  }
+                }
+              });
+            </script>
+
 
 
 
