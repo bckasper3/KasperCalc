@@ -5,20 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- META DATA FOR -->
-    <title>KasperCalc: Vapor Pressure</title>
+    <title>KasperCalc: Nominal Density</title>
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, bckasper3, Jet Fuel Properties, Jet Fuel Vapor Pressure Calculator, Jet Fuel Vapour Pressure Calculator, CRC 530" />
+    <meta name="keywords" content="KasperCalc, bckasper3, Jet Fuel Properties, Jet Fuel Nominal Density, Jet Fuel Nominal Density Calculator, Jet Fuel Density, Jet Fuel Density Calculator, CRC 530" />
     <meta name="description" content="KasperCalc provides ad-free caclulators for Jet Fuel head pressures and common jet fuel properties" />
 
     <!-- DEFERRED JAVASCRIPT -->
     
     <script defer type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script defer type="text/javascript" src="js/nominalDensity.js"></script>
 
     <!-- CSS FILES -->
     <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" />
-        <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
-    <link rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="print"  href="css/print.css" />
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
@@ -60,7 +61,7 @@
         data-bs-target="#navbarNav"
         class="navbar-toggler"
         aria-controls="navbarNav"
-        aria-expanded="false"
+        aria-expanded="falses"
         aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -117,7 +118,7 @@
           <div class="col-lg-12 col-12">
             <div class="banner section-title-wrap">
               <div class="h1 section-title bannertext">
-                Vapor Pressure
+                Nominal Density
               </div>
             </div>
           </div>
@@ -130,44 +131,134 @@
       <section>
         <div class="csscontainer">
           <div class="col-lg-12 col-12">
+
             <div class="section-title-wrap">
-              <div class="h1 section-title">Jet Fuel Properties</div>
+              <div class="h1 section-title">Nominal Density Chart</div>
             </div>
 
-            <div class="section-content-wrap col-8 mx-auto">
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
+            <div class="mx-4">
+              <button id="toggleTooltipButton">Hide Tooltips</button>
+              <div class="canvascontainer">
+
+                <script type="text/javascript" src="js/chart.min.js"></script>
+                <script type="text/javascript" src="js/papaparse.min.js"></script>
+
+                <!-- <canvas id="myChart"></canvas> -->
+                <canvas id="myChart"aria-label="Alt Text Here" width="400" height="600" role="img" class="chartcanvas"> <!-- width="400" height="600" -->
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p></canvas>
+
+
+              </div>
             </div>
+            <p class="text-center">*Toggle data sets by clicking the legend*
+            </p>
           </div>
         </div>
       </section>
 
-      <!-- JET FUEL PROPERTIES -->
+
+      <!-- CALCULATOR -->
       <section>
         <div class="csscontainer">
-          <div class="col-lg-12 col-12">
-            <div class="section-title-wrap">
-              <div class="h1 section-title">Jet Fuel Properties</div>
-            </div>
+          <div class="col-lg-12 col-12 px-3">
 
-            <div class="section-content-wrap col-8 mx-auto">
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
+            <div class="wrapper">
+              <div class="header text-center">Nominal Density Calculator
+              </div>
+
+            <!-- <div class="toggle-container">
+              <label class="toggle-switch">
+                <input type="checkbox" id="fuelheadcalctoggle" class="toggle-input">
+                <span class="slider">
+                  <span class="option left">Inches of Fuel</span>
+                  <span class="option right">PSI</span>
+                </span>
+              </label>
+            </div> -->
+        
+              <div class="group1">
+                <label class="dropdownlabel" for="operation">Select Fuel:</label>
+
+                <span class="output">
+                  <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="updateCalculator()">
+                    <option value="Av. Gas">Av. Gas</option>
+                    <option value="JP-4, Jet B">JP-4, Jet B</option>
+                    <option value="JP-7, TS">JP-7, TS</option>
+                    <option value="JP-8, Jet A, Jet A-1">JP-8, Jet A, Jet A-1</option>
+                    <option value="JP-5">JP-5</option>
+                    <option value="RJ-4">RJ-4</option>
+                    <option value="JP-10">JP-10</option>
+                    <option value="JP-9">JP-9</option>
+                    <option value="RJ-6">RJ-6</option>
+                    <option value="JP-9">JP-9</option>
+                    <option value="RJ-5">RJ-5</option>
+                  </select>
+
+                </span>
+              </div>
+        
+              <div class="group">
+                <div class="outputrow">
+                <span class="label">
+                  <span id="nominalDensityOption1">Degrees (°F)</span>
+                </span> 
+                <span class="output inputbox">
+                  <input class= "calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" />
+                </span>
+                </div>
+        
+                <div class="outputrow">
+                  <span class="label">
+                    <span id="nominalDensityOption2">Degrees (°C)</span>
+                  </span> 
+                  <span class="output inputbox">
+                    <input class= "calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" />
+                  </span>
+                </div>
+              </div>
+        
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Density (kg/m³):</span>
+                  <span class="output" id="result_density1">&nbsp</span>
+                </div>
+        
+                <div class="outputrow">
+                  <span class="label">Density (lb/in³):</span>
+                  <span class="output" id="result_density2">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Density (lb/gal):</span>
+                  <span class="output" id="result_density3">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Specific Gravity*:</span>
+                  <span class="output" id="result_density4">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Specific Gravity**:</span>
+                  <span class="output" id="result_density5">&nbsp</span>
+                </div>
+                
+                <div class="outputrow">
+                  <span class="label">°API***:</span>
+                  <span class="output" id="result_density6">&nbsp</span>
+                </div>
+              </div>
+
             </div>
           </div>
+
+          <p class="text-center">* SG based on static density of water of 1000 (kg/m³) *</p>
+          <p class="text-center">** SG based on temperature dependent density of water **</p>
+          <p class="text-center">*** °API is typically referenced at 60°F ***</p>
+
         </div>
+        <!-- <p class="text-center">*S.G. based on the density of</br>water at 39.2°F  = 1000kg/m³*
+        </p> -->
       </section>
 
     </main>
@@ -250,7 +341,7 @@
         <div class="footerRow">
           <a href="index.html">
             <div class="logoblock">
-              <img class="logo" src="img/letter_k_PNG65.webp" height="4.5rem;" alt="KasperCalcLogo" />
+              <img class="logo" src="img/letter_k_PNG65.webp"  alt="KasperCalcLogo"/>
               <h4 class="footerlogo">KasperCalc</h4>
             </div>
           </a>
@@ -270,7 +361,7 @@
           All Rights Reserved. Powered by
           <a class="footerkoficoffelink" href="https://ko-fi.com/kaspercalc">Coffee.</a>
         </div>
-KasperCalc.com        <div> 
+        <div> 
           KasperCalc is not liable for any errors in the calculations or fuel properties. Please check your work.
           <a class="footerkoficoffelink" href="disclaimer.html" target="_blank">Disclaimer.</a>
         </div>
