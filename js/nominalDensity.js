@@ -62,6 +62,10 @@ let densityWater = [
   [180 , 970.4],
   [190 , 966.8],
   [200 , 963.0],
+  [212 , 958.4],
+  [220 , 955.2],
+  [240 , 946.7],
+  [260 , 937.5],
 ];
 
 let papaParseOutput = [];    // this is an empty array
@@ -76,6 +80,7 @@ function loadCSVData(files) {
   let promises = files.map((file, index) => {     // this was let promises = files.map(file => {
     return new Promise((resolve, reject) => {
       Papa.parse(file, {
+        dynamicTyping: true, //changes the strings to numbers
         download: true,  // Downloads the file if it's a URL
         complete: function(results) {
           // Push the new parsed data into the global ARRAY, with the index as the key
@@ -293,7 +298,7 @@ function convertToCelsius() {
 
 function linearInterpolation(x, data) {
   // Step 1: Check if the x is within the bounds of the data
-  x = parseFloat(x); //papaParse is returning strings instead of numbers
+  //x = parseFloat(x); //papaParse is returning strings instead of numbers
   minX = Math.min(...data.map(point => point[0])); // Minimum x value
   maxX = Math.max(...data.map(point => point[0])); // Maximum x value
 
@@ -327,6 +332,42 @@ function linearInterpolation(x, data) {
     }
   }
 }
+
+function linearInterpolationWater(x, data) {
+  // Step 1: Check if the x is within the bounds of the data
+  //x = parseFloat(x); //papaParse is returning strings instead of numbers
+  minX = Math.min(...data.map(point => point[0])); // Minimum x value
+  maxX = Math.max(...data.map(point => point[0])); // Maximum x value
+
+  if (x < minX || x > maxX) {
+    console.log('outside of water density data');
+  }
+
+  // Step 2: Check if x is already in the data array
+  for (let i = 0; i < data.length; i++) {
+    if (data[i][0] === x) {
+      console.log('value is predefined');
+      return data[i][1]; // If x is already in the array, no interpolation is needed
+    }
+  }
+
+  // Step 3: Find the two data points (x0, y0) and (x1, y1)
+  for (let i = 0; i < data.length - 1; i++) {
+    let x0 = parseFloat(data[i][0]);
+    let y0 = parseFloat(data[i][1]);
+    let x1 = parseFloat(data[i+1][0]);
+    let y1 = parseFloat(data[i+1][1]);
+
+    // Check if x is between x0 and x1 (i.e., find the two surrounding points)
+    if (x >= x0 && x <= x1) {
+    
+      // Step 4: Perform linear interpolation
+      let y = y0 + ((x - x0) * (y1 - y0)) / (x1 - x0);
+      return y; // Return the interpolated y value
+    }
+  }
+}
+
 
 let switchIndex = 0;
 let flag = false;
@@ -371,7 +412,7 @@ function updateCalculator() {
   let interpolatedValue = linearInterpolation(fahrenheit, papaParseOutput[switchIndex]);
   console.log(`Interpolated value at x = ${fahrenheit} is y = ${interpolatedValue}`);
 
-  let interp_densityWater = linearInterpolation(fahrenheit, densityWater);
+  let interp_densityWater = linearInterpolationWater(fahrenheit, densityWater);
 
   if (flag == true) {
       document.getElementById("result_density1").innerText = ("Out of Range");

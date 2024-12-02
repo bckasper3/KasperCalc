@@ -1,35 +1,15 @@
 // URLs of the CSV files (replace with your own file paths or URLs)
 const csvFiles = [
-  '../csvData/11.csv', // Replace with actual file paths or URLs
-  '../csvData/12.csv',
-  '../csvData/13.csv',
-  '../csvData/14.csv',
-  '../csvData/15.csv',
-  '../csvData/16.csv',
-  '../csvData/17.csv',
-  '../csvData/18.csv',
-  '../csvData/19.csv',
-  '../csvData/20.csv',
-  '../csvData/21.csv', 
-  '../csvData/22.csv',
-  '../csvData/23.csv',
-  '../csvData/24.csv',
-  '../csvData/25.csv',
-  '../csvData/26.csv',
-  '../csvData/27.csv',
-  '../csvData/28.csv',
-  '../csvData/29.csv',
-  '../csvData/30.csv',
-  '../csvData/31.csv', 
-  '../csvData/32.csv',
-  '../csvData/33.csv',
-  '../csvData/34.csv',
-  '../csvData/35.csv',
-  '../csvData/36.csv',
-  '../csvData/37.csv',
-  '../csvData/38.csv',
-  '../csvData/39.csv',
-];
+  '../csvData/55.csv', // Replace with actual file paths or URLs
+  '../csvData/48.csv',
+  '../csvData/49.csv',
+  '../csvData/50.csv',
+  '../csvData/51.csv',
+  '../csvData/52.csv',
+  '../csvData/53.csv',
+  '../csvData/54.csv',
+  '../csvData/47.csv',
+ ];
 
 const fixedColors = [ //for setting the rgb values of the lines //https://personal.sron.nl/~pault/#sec:qualitative
   'rgb(68,119,170)',   // Blue
@@ -47,35 +27,15 @@ const fixedColors = [ //for setting the rgb values of the lines //https://person
 ];
 
 const fixedLabels = [ //for the data labels because they aren't in the csv files
-  'JP-4, Jet B (Min)',
-  'JP-4, Jet B (Typical)',
-  'JP-5 (Min)',
-  'JP-4, Jet B (Max)',
-  'JP-5 (Typical)',
-  'JP-5 (Max)',
-  'Jet A, Jet A-1, JP-8 (Min)',
-  'JP-7 (Min)',
-  'JP-7 (Typical)',
-  'JP-7 (Max)',
-  'Jet A, Jet A-1, JP-8 (Typical)',
-  'Jet A, Jet A-1, JP-8 (Max)',
-  'TS (Min)',
-  'TS (Typical)',
-  'TS (Max)',
-  'RJ-4 (Min)',
-  'RJ-4 (Typical)',
-  'RJ-4 (Max)',
-  'RJ-6 (Min)',
-  'RJ-6 (Typical)',
-  'RJ-6 (Max)',
-  'RJ-5 (Min)',
-  'RJ-5 (Typical)',
-  'RJ-5 (Max)',
-  'JP-9, JP-10 (Min)',
-  'JP-10 (Typical)',
-  'JP-10 (Max)',
-  'JP-9 (Typical)',
-  'JP-9 (Max)',
+  'RJ-5',
+  'JP-4, Jet B',
+  'TS',
+  'JP-5, Jet A, Jet A-1, JP-8',
+  'JP-7',
+  'JP-9, JP-10',
+  'RJ-4',
+  'RJ-6',
+  'Av. Gas',
 ];
 
 // let densityWater = [
@@ -230,7 +190,7 @@ function createChart() {
             usePointStyle: false,
             boxHeight: 2,
             font: {
-              size: 12, // Set the desired font size for legend labels
+              size: 18, // Set the desired font size for legend labels
              },
           },
 
@@ -248,19 +208,23 @@ function createChart() {
       },
       responsive: true,
       scales: {
-        y:{tick:{crossAlign:'far',},
+        y:{
+          type: 'logarithmic',
+          tick:{
+            crossAlign:'far',
+          },
            //beginAtZero: true,
            //min: 620,
            //max:1200, 
            ticks:{
-            stepSize:0.1,
+            //stepSize:20,
             font: {
             size: 16,
            },
            },
            title: {
             display:true,
-            text: 'Relative Density, Water at 60°F',
+            text: 'Kinematic Viscosity, mm²/sec (centistokes)',
             padding: 10,
             font: {
               size: 20,
@@ -268,16 +232,18 @@ function createChart() {
           }
         },
         x:{
-           min: -40,
+           //beginAtZero: true,
+           //min: 0,
+           //max: 392,
            //suggestedMax: 194, 
            ticks:{
             //stepSize:10,
             //autoSkip: true,
             maxTicksLimit: 26,
             maxRotation: 0,
-           font: {
+            font: {
               size: 16,
-            },
+             },
            },
            title: {
             display:true,
@@ -289,10 +255,6 @@ function createChart() {
         },
         },
     }
-
-
-
-
   });
 }
 
@@ -335,10 +297,15 @@ function convertToCelsius() {
 }
 
 function linearInterpolation(x, data) {
+
+  console.log('tis is the data into the interp function', data);
   // Step 1: Check if the x is within the bounds of the data
   x = parseFloat(x); //papaParse is returning strings instead of numbers
   minX = Math.min(...data.map(point => point[0])); // Minimum x value
   maxX = Math.max(...data.map(point => point[0])); // Maximum x value
+
+  console.log('min', minX);
+  console.log('max', maxX);
 
   if (x < minX || x > maxX) {
     flag = true;
@@ -413,94 +380,34 @@ let flag = false;
 // Example usage:
 function updateCalculator() {
   const operation = document.getElementById("operation").value;
-    switch (operation) {
-     case'JP-4, Jet B (Min)':
+  switch (operation) {
+    case "RJ-5":
       switchIndex = 0;
-      break;    
-     case'JP-4, Jet B (Typical)':
+      break;
+    case "JP-4, Jet B":
       switchIndex = 1;
-      break;    
-     case'JP-5 (Min)':
+      break;
+    case "TS":
       switchIndex = 2;
-      break;    
-     case'JP-4, Jet B (Max)':
+      break;
+    case "JP-5, Jet A, Jet A-1, JP-8":
       switchIndex = 3;
-      break;    
-     case'JP-5 (Typical)':
+      break;
+    case "JP-7":
       switchIndex = 4;
-      break;    
-     case'JP-5 (Max)':
+      break;
+    case "JP-9, JP-10":
       switchIndex = 5;
-      break;    
-     case'Jet A, Jet A-1, JP-8 (Min)':
+      break;
+    case "RJ-4":
       switchIndex = 6;
-      break;    
-     case'JP-7 (Min)':
+      break;  
+    case "RJ-6":
       switchIndex = 7;
-      break;    
-     case'JP-7 (Typical)':
+      break;  
+    case "Av. Gas":
       switchIndex = 8;
-      break;    
-     case'JP-7 (Max)':
-      switchIndex = 9;
-      break;    
-     case'Jet A, Jet A-1, JP-8 (Typical)':
-      switchIndex = 10;
-      break;    
-     case'Jet A, Jet A-1, JP-8 (Max)':
-      switchIndex = 11;
-      break;    
-     case'TS (Min)':
-      switchIndex = 12;
-      break;    
-     case'TS (Typical)':
-      switchIndex = 13;
-      break;    
-     case'TS (Max)':
-      switchIndex = 14;
-      break;    
-     case 'RJ-4 (Min)':
-      switchIndex = 15;
-      break;    
-     case'RJ-4 (Typical)':
-      switchIndex = 16;
-      break;    
-     case'RJ-4 (Max)':
-      switchIndex = 17;
-      break;    
-     case 'RJ-6 (Min)':
-      switchIndex = 18;
-      break;    
-    case'RJ-6 (Typical)':
-      switchIndex = 19;
-      break;    
-    case 'RJ-6 (Max)':
-      switchIndex = 20;
-      break;    
-    case 'RJ-5 (Min)':
-      switchIndex = 21;
-      break;    
-    case 'RJ-5 (Typical)':
-      switchIndex = 22;
-      break;    
-    case 'RJ-5 (Max)':
-      switchIndex = 23;
-      break;    
-    case 'JP-9, JP-10 (Min)':
-      switchIndex = 24;
-      break;    
-    case 'JP-10 (Typical)':
-      switchIndex = 25;
-      break;    
-    case 'JP-10 (Max)':
-      switchIndex = 26;
-      break;    
-    case 'JP-9 (Typical)':
-      switchIndex = 27;
-      break;    
-     case'JP-9 (Max)':
-      switchIndex = 28;
-      break;    
+      break;  
     }
 
   let fahrenheit = document.getElementById("fahrenheit").value;
@@ -515,11 +422,13 @@ function updateCalculator() {
       document.getElementById("result_density3").innerText = ("Out of Range");
       document.getElementById("result_density4").innerText = ("Out of Range");
       document.getElementById("result_density5").innerText = ("Out of Range");
+      document.getElementById("result_density6").innerText = ("Out of Range");
   } else {
       document.getElementById("result_density1").innerText = ((interpolatedValue).toFixed(3));
-      document.getElementById("result_density2").innerText = ((interpolatedValue*999).toFixed(3));
-      document.getElementById("result_density3").innerText = ((interpolatedValue*0.000036127298147753*999).toFixed(4));
-      document.getElementById("result_density4").innerText = ((interpolatedValue*0.0083454063545262*999).toFixed(4));
-      document.getElementById("result_density5").innerText = (((141.5/(interpolatedValue))-131.5).toFixed(4));
+      document.getElementById("result_density2").innerText = ((interpolatedValue).toFixed(3));
+      document.getElementById("result_density3").innerText = ((interpolatedValue*.01).toFixed(5));
+      document.getElementById("result_density4").innerText = ((interpolatedValue*0.000001).toFixed(8));
+      document.getElementById("result_density5").innerText = ((interpolatedValue*0.0015500031).toFixed(5));
+      document.getElementById("result_density6").innerText = ((interpolatedValue*0.0000107639).toFixed(5));
   }
 }
