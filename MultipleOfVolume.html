@@ -13,10 +13,11 @@
     <!-- DEFERRED JAVASCRIPT -->
     
     <script defer type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script defer type="text/javascript" src="js/multOfVolume.js"></script>
 
     <!-- CSS FILES -->
     <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" />
-        <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
     <link rel="stylesheet" type="text/css" media="print" href="css/print.css" />
 
@@ -125,49 +126,135 @@
 
       <!-- UNDER THE BANNER -->
 
-      <!-- JET FUEL PROPERTIES -->
-      <section>
-        <div class="csscontainer">
-          <div class="col-lg-12 col-12">
-            <div class="section-title-wrap">
-              <div class="h1 section-title">Jet Fuel Properties</div>
-            </div>
+     <!-- JET FUEL PROPERTIES -->
+     <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
 
-            <div class="section-content-wrap col-8 mx-auto">
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Thermal Expansion Chart</div>
+          </div>
+
+          <div class="mx-5">
+            <button id="toggleTooltipButton">Hide Tooltips</button>
+            <div class="canvascontainer">
+
+              <script type="text/javascript" src="js/chart.min.js"></script>
+              <script type="text/javascript" src="js/papaparse.min.js"></script>
+
+              <!-- <canvas id="myChart"></canvas> -->
+              <canvas id="myChart"aria-label="Alt Text Here" width="400" height="600" role="img" class="chartcanvas"> <!-- width="400" height="600" -->
+              <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p></canvas>
+
+
             </div>
           </div>
+          <p class="text-center">*Toggle data sets by clicking the legend*
+          </p>
+          <p class="text-center">*At 60°F, 1.01kPa x 10² (1 Atm)*
+          </p>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- JET FUEL PROPERTIES -->
-      <section>
-        <div class="csscontainer">
-          <div class="col-lg-12 col-12">
-            <div class="section-title-wrap">
-              <div class="h1 section-title">Jet Fuel Properties</div>
+
+    <!-- CALCULATOR -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12 px-3">
+
+          <div class="wrapper">
+            <div class="header text-center">Thermal Expansion Calculator
             </div>
 
-            <div class="section-content-wrap col-8 mx-auto">
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
+          <!-- <div class="toggle-container">
+            <label class="toggle-switch">
+              <input type="checkbox" id="fuelheadcalctoggle" class="toggle-input">
+              <span class="slider">
+                <span class="option left">Inches of Fuel</span>
+                <span class="option right">PSI</span>
+              </span>
+            </label>
+          </div> -->
+      
+            <div class="group1">
+              <label class="dropdownlabel" for="operation">Select Fuel:</label>
+
+              <span class="output">
+                <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="updateCalculator()">
+                  <option value="Av. Gas">Av. Gas</option>
+                  <option value="JP-4, Jet B">JP-4, Jet B</option>
+                  <option value="JP-7, TS">JP-7, TS</option>
+                  <option value="JP-5, Jet A, Jet A-1, JP-8">JP-5, Jet A, Jet A-1, JP-8</option>
+                  <option value="JP-9, JP-10, RJ-4">JP-9, JP-10, RJ-4</option>
+                  <option value="RJ-6">RJ-6</option>
+                  <option value="RJ-5">RJ-5</option>
+                </select>
+
+              </span>
             </div>
+      
+            <div class="group">
+              <div class="outputrow">
+              <span class="label">
+                <span id="nominalDensityOption1">Degrees (°F)</span>
+              </span> 
+              <span class="output inputbox">
+                <input class= "calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" />
+              </span>
+              </div>
+      
+              <div class="outputrow">
+                <span class="label">
+                  <span id="nominalDensityOption2">Degrees (°C)</span>
+                </span> 
+                <span class="output inputbox">
+                  <input class= "calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" />
+                </span>
+              </div>
+            </div>
+      
+            <div class="group">
+              <div class="outputrow">
+                <span class="label">Multiple of Volume:</span>
+                <span class="output" id="result_density1">&nbsp</span>
+              </div>
+<!--       
+              <div class="outputrow">
+                <span class="label">Density (lb/in³):</span>
+                <span class="output" id="result_density2">&nbsp</span>
+              </div>
+
+              <div class="outputrow">
+                <span class="label">Density (lb/gal):</span>
+                <span class="output" id="result_density3">&nbsp</span>
+              </div>
+
+              <div class="outputrow">
+                <span class="label">Specific Gravity*:</span>
+                <span class="output" id="result_density4">&nbsp</span>
+              </div>
+
+              <div class="outputrow">
+                <span class="label">Specific Gravity**:</span>
+                <span class="output" id="result_density5">&nbsp</span>
+              </div>
+              
+              <div class="outputrow">
+                <span class="label">°API***:</span>
+                <span class="output" id="result_density6">&nbsp</span>
+              </div>-->
+            </div>
+
           </div>
         </div>
-      </section>
+
+        <p class="text-center">* At 15.5°C, 1.01kPa x 10² (1 Atm) *</p>
+
+      </div>
+      <!-- <p class="text-center">*S.G. based on the density of</br>water at 39.2°F  = 1000kg/m³*
+      </p> -->
+    </section>
 
     </main>
 
@@ -183,7 +270,7 @@
               </div>
             </a>
             <a href="https://ko-fi.com/kaspercalc" target="_blank">
-              <img class="logo" src="img/letter_k_PNG65.webp" height="4.5rem;" alt="KasperCalcLogo" />
+              <img class="kofi" src="img/kofi5.webp" height="50px" alt="Buy Me a Coffee at ko-fi.com" />
             </a>
           </div>
 
