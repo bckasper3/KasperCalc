@@ -18,18 +18,22 @@
   --calc-outline-color: rgb(67, 67, 67);
   --calc-p-color: #000;
   --calc-hover-color: #cfcfcf;
-  --calc-slider-pill-width: 156px;
-  --calc-slider-translate: 225px;
   --calc-dropdown-color: #d9d9d9;
 
-  --calc-pph-slider-pill-width: 65px;
-  --calc-pph-slider-translate: 160px;
+  --calc-slider-pill-width: 180px;
+  --calc-slider-translate: 217px;
+
+  --calc-pph-slider-pill-width: 70px;
+  --calc-pph-slider-translate: 152px;
+
+  --calc-pph-slider-pill-width2: 205px;
+  --calc-pph-slider-translate2: 265px;
 
   --body-font-family: "Roboto", Arial, sans-serif;
   --title-font-family: "Roboto", Arial, sans-serif;
 
   --h1-font-size: 32px;
-  --h2-font-size: 22px;
+  --h2-font-size: 26px;
   --h4-font-size: 20px;
   --h3-font-size: 14px;
   --h5-font-size: 14px;
@@ -301,11 +305,38 @@ strong {
   color: var(--white-color);
   font-family: var(--title-font-family);
   font-size: var(--p-font-size);
-  font-weight: var(--font-weight-regular);
   position: relative;
   overflow: hidden;
   padding: 8px 16px;
   margin:5px;
+  border-radius: var(--border-radius-small);
+  font-weight: var(--font-weight-light); 
+}
+
+.custom-heading {
+  display: inline-block;
+  background: var(--section-title-color);
+  border: 0;
+  color: var(--white-color);
+  font-family: var(--title-font-family);
+  font-size: var(--h1-font-size);
+  position: relative;
+  overflow: hidden;
+  padding: 8px 16px;
+  border-radius: var(--border-radius-medium);
+  font-weight: var(--font-weight-light); 
+}
+
+.custom-subheading {
+  display: inline-block;
+  background: var(--custom-btn-bg-color);
+  border: 0;
+  color: var(--white-color);
+  font-family: var(--title-font-family);
+  font-size: var(--h2-font-size);
+  position: relative;
+  overflow: hidden;
+  padding: 5px 10px;
   border-radius: var(--border-radius-small);
   font-weight: var(--font-weight-light); 
 }
@@ -573,7 +604,19 @@ nav>.navbar-toggler{
   margin-left:auto;
   margin-right: auto;
   /* margin: 0rem 1rem 0rem 1rem; */
-  max-width: 25rem;
+  max-width: 30rem;
+  background-color: #6a746a;
+  border-radius: 20px;
+  border: 3px solid var(--calc-outline-color);
+  font-size: var(--h2-font-size);
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+.wrapperlg{
+  margin-left:auto;
+  margin-right: auto;
+  /* margin: 0rem 1rem 0rem 1rem; */
+  max-width: 35rem;
   background-color: #6a746a;
   border-radius: 20px;
   border: 3px solid var(--calc-outline-color);
@@ -613,7 +656,7 @@ nav>.navbar-toggler{
   }
 
 .dropdowncalc{
-  width: 10rem;
+  width: 13rem;
   font-size: var(--h2-font-size);
   cursor: pointer;
   border: 1px solid #000;
@@ -724,7 +767,7 @@ nav>.navbar-toggler{
 }
 
 /* Slider (the background of the toggle) */
-.slider, .slider1 {
+.slider, .slider1, .slider2 {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -785,18 +828,31 @@ nav>.navbar-toggler{
 }
 
 /* When the toggle is checked (active state) */
-.toggle-input:checked + .slider {
-  background-color: var(--custom-btn-bg-color); /* Green color for the active state */ /*--custom-btn-bg-color*/
+/* .toggle-input:hover{
+  background-color: var(--calc-hover-color);
+} */
+
+
+.toggle-input1:hover + .slider1 {
+  background-color: var(--calc-hover-color);
 }
 
-.toggle-input:checked:hover + .slider {
-  background-color: var(--calc-hover-color); /* Green color for the active state */ /*--custom-btn-bg-color*/
+.toggle-input1:hover + .slider2 {
+  background-color: var(--calc-hover-color);
 }
+
+/* .toggle-input:checked:hover + .slider {
+  background-color: var(--calc-hover-color);
+}
+
+.toggle-input:not(:checked):hover + .slider {
+  background-color: var(--calc-hover-color); 
+} */
 
 /* Move the handle to the right when checked */
 .toggle-input:checked + .slider:before {
   transform: translateX(var(--calc-slider-translate)); /* Move handle to the right */
-  width: 50px;
+  width: 60px;
 }
 
 /* Change the text opacity when checked */
@@ -842,6 +898,21 @@ nav>.navbar-toggler{
   border-radius: 10px;  /* Rounded pill shape */
 }
 
+.slider2:before {
+  content: "";
+  height: 45px;  /* Larger pill shape */
+  width: var(--calc-pph-slider-pill-width2);  /* Larger pill shape */ /*156px*/
+  transition: 0.4s;
+  top: 5px; /* Center the handle vertically */
+  z-index: 2;  /* Make sure handle appears on top */
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #000;
+  border-radius: 10px;  /* Rounded pill shape */
+}
+
+
 
 .toggle-switch1 {
   position: relative;
@@ -849,17 +920,36 @@ nav>.navbar-toggler{
   height: 60px;  /* Increased height for larger pill */
 }
 
-.toggle-input1:checked + .slider1 {
-  background-color: var(--custom-btn-bg-color); /* Green color for the active state */ /*--custom-btn-bg-color*/
+.toggle-switch2 {
+  position: relative;
+  width: 350px;
+  height: 60px;  /* Increased height for larger pill */
 }
 
-.toggle-input1:checked:hover + .slider1 {
-  background-color: var(--calc-hover-color); /* Green color for the active state */ /*--custom-btn-bg-color*/
+/* .toggle-input1:hover{
+  background-color: var(--calc-hover-color);
+} */
+
+/* .toggle-input1:checked + .slider1 {
+  background-color: var(--custom-btn-bg-color);
+} */
+
+.toggle-input1:hover + .slider1 {
+  background-color: var(--calc-hover-color);
+}
+
+.toggle-input2:hover + .slider2 {
+  background-color: var(--calc-hover-color);
 }
 
 /* Move the handle to the right when checked */
 .toggle-input1:checked + .slider1:before {
   transform: translateX(var(--calc-pph-slider-translate)); /* Move handle to the right */
+  width: 72px;
+}
+
+.toggle-input2:checked + .slider2:before {
+  transform: translateX(var(--calc-pph-slider-translate2)); /* Move handle to the right */
   width: 65px;
 }
 
@@ -868,7 +958,15 @@ nav>.navbar-toggler{
   opacity: 0.6; /* Dim the left text */
 }
 
+.toggle-input2:checked + .slider2 .left {
+  opacity: 0.6; /* Dim the left text */
+}
+
 .toggle-input1:checked + .slider1 .right {
+  opacity: 1; /* Highlight the right text */
+}
+
+.toggle-input2:checked + .slider2 .right {
   opacity: 1; /* Highlight the right text */
 }
 
@@ -876,7 +974,15 @@ nav>.navbar-toggler{
   opacity: 1; /* Highlight the left text */
 }
 
+.toggle-input2:not(:checked) + .slider2 .left {
+  opacity: 1; /* Highlight the left text */
+}
+
 .toggle-input1:not(:checked) + .slider1 .right {
+  opacity: 0.6; /* Dim the right text */
+}
+
+.toggle-input2:not(:checked) + .slider2 .right {
   opacity: 0.6; /* Dim the right text */
 }
 
@@ -903,3 +1009,14 @@ nav>.navbar-toggler{
   background-color: #fff;
 }
 
+.canvasdiv{
+  margin-left: 8rem;
+  margin-right: 8rem;
+}
+
+@media (max-width: 1200px) { /*this is the breakpoint for the medium size for bootstrap*/
+   .canvasdiv{
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
