@@ -1,15 +1,16 @@
-//URLs of the CSV files (replace with your own file paths or URLs)
+// Array containing paths to the locally stored CSV files
 const csvFiles = [
-  '../csvData/55.csv', // Replace with actual file paths or URLs
-  '../csvData/48.csv',
-  '../csvData/49.csv',
-  '../csvData/50.csv',
-  '../csvData/51.csv',
-  '../csvData/52.csv',
-  '../csvData/53.csv',
-  '../csvData/54.csv',
-  '../csvData/47.csv',
- ];
+  '../csvData/81.csv', 
+  '../csvData/75.csv',
+  '../csvData/76.csv',
+  '../csvData/77.csv',
+  '../csvData/78.csv',
+  '../csvData/79.csv',
+  '../csvData/80.csv',
+  '../csvData/74.csv', //look here next time dumbo
+  '../csvData/82.csv',
+  '../csvData/83.csv'
+];
 
 const fixedColors = [ //for setting the rgb values of the lines //https://personal.sron.nl/~pault/#sec:qualitative
   'rgb(68,119,170)',   // Blue
@@ -27,15 +28,16 @@ const fixedColors = [ //for setting the rgb values of the lines //https://person
 ];
 
 const fixedLabels = [ //for the data labels because they aren't in the csv files
-  'RJ-5',
+  'RJ-4',
   'JP-4, Jet B',
   'TS',
-  'JP-5, Jet A, Jet A-1, JP-8',
-  'JP-7',
-  'JP-9, JP-10',
-  'RJ-4',
-  'RJ-6',
+  'JP-8, Jet A, Jet A-1',
+  'JP-5, JP-7',
+  'JP-9',
+  'JP-10',
   'Av. Gas',
+  'RJ-6',
+  'RJ-5',
 ];
 
 // let densityWater = [
@@ -224,8 +226,8 @@ function createGraph() {
             x:{
               type: 'linear',
               //beginAtZero: true,
-              min: -40,
-              max: 356,
+              min: 0,
+              max: 291,
               //suggestedMax: 194, 
               ticks:{
                 //stepSize:10,
@@ -260,7 +262,7 @@ function createGraph() {
               },
               title: {
                 display:true,
-                text: 'Kinematic Viscosity, mm²/sec (centistokes)',
+                text: 'True Vapor Pressure, kPa',
                 padding: 10,
                 font: {
                   size: 20,
@@ -272,11 +274,9 @@ function createGraph() {
       };
 
   const ctx = document.getElementById('myChart').getContext('2d');
- myChart =  new Chart(ctx, config);
+  myChart =new Chart(ctx, config);
 
 };
-
-
 
 //Listening for the Tooptips Toggle Button
 document.getElementById('toggleTooltipButton').addEventListener('click', function() {
@@ -352,40 +352,40 @@ function linearInterpolation(x, data) {
 }
 
 //Does Linear interpolation on the water data
-function linearInterpolationWater(x, data) {
-  // Step 1: Check if the x is within the bounds of the data
-  //x = parseFloat(x); //papaParse is returning strings instead of numbers
-  minX = Math.min(...data.map(point => point[0])); // Minimum x value
-  maxX = Math.max(...data.map(point => point[0])); // Maximum x value
+// function linearInterpolationWater(x, data) {
+//   // Step 1: Check if the x is within the bounds of the data
+//   //x = parseFloat(x); //papaParse is returning strings instead of numbers
+//   minX = Math.min(...data.map(point => point[0])); // Minimum x value
+//   maxX = Math.max(...data.map(point => point[0])); // Maximum x value
 
-  if (x < minX || x > maxX) {
-    console.log('outside of water density data');
-  }
+//   if (x < minX || x > maxX) {
+//     console.log('outside of water density data');
+//   }
 
-  // Step 2: Check if x is already in the data array
-  for (let i = 0; i < data.length; i++) {
-    if (data[i][0] === x) {
-      console.log('value is predefined');
-      return data[i][1]; // If x is already in the array, no interpolation is needed
-    }
-  }
+//   // Step 2: Check if x is already in the data array
+//   for (let i = 0; i < data.length; i++) {
+//     if (data[i][0] === x) {
+//       console.log('value is predefined');
+//       return data[i][1]; // If x is already in the array, no interpolation is needed
+//     }
+//   }
 
-  // Step 3: Find the two data points (x0, y0) and (x1, y1)
-  for (let i = 0; i < data.length - 1; i++) {
-    let x0 = parseFloat(data[i][0]);
-    let y0 = parseFloat(data[i][1]);
-    let x1 = parseFloat(data[i+1][0]);
-    let y1 = parseFloat(data[i+1][1]);
+//   // Step 3: Find the two data points (x0, y0) and (x1, y1)
+//   for (let i = 0; i < data.length - 1; i++) {
+//     let x0 = parseFloat(data[i][0]);
+//     let y0 = parseFloat(data[i][1]);
+//     let x1 = parseFloat(data[i+1][0]);
+//     let y1 = parseFloat(data[i+1][1]);
 
-    // Check if x is between x0 and x1 (i.e., find the two surrounding points)
-    if (x >= x0 && x <= x1) {
+//     // Check if x is between x0 and x1 (i.e., find the two surrounding points)
+//     if (x >= x0 && x <= x1) {
     
-      // Step 4: Perform linear interpolation
-      let y = y0 + ((x - x0) * (y1 - y0)) / (x1 - x0);
-      return y; // Return the interpolated y value
-    }
-  }
-}
+//       // Step 4: Perform linear interpolation
+//       let y = y0 + ((x - x0) * (y1 - y0)) / (x1 - x0);
+//       return y; // Return the interpolated y value
+//     }
+//   }
+// }
 
 let switchIndex = 0;
 let flag = false;
@@ -402,7 +402,7 @@ transformedData = function(parameter1){
 function updateCalculator() {
   const operation = document.getElementById("operation").value;
   switch (operation) {
-    case "RJ-5":
+    case "RJ-4":
       switchIndex = 0;
       break;
     case "JP-4, Jet B":
@@ -411,50 +411,51 @@ function updateCalculator() {
     case "TS":
       switchIndex = 2;
       break;
-    case "JP-5, Jet A, Jet A-1, JP-8":
+    case "JP-8, Jet A, Jet A-1":
       switchIndex = 3;
       break;
-    case "JP-7":
+    case "JP-5, JP-7":
       switchIndex = 4;
       break;
-    case "JP-9, JP-10":
+    case "JP-9":
       switchIndex = 5;
       break;
-    case "RJ-4":
+    case "JP-10":
       switchIndex = 6;
       break;  
-    case "RJ-6":
-      switchIndex = 7;
-      break;  
     case "Av. Gas":
+      switchIndex = 7;
+      break; 
+    case "RJ-6":
       switchIndex = 8;
+      break;  
+    case "RJ-5":
+      switchIndex = 9;
       break;  
     }
 
-    let fahrenheit = document.getElementById("fahrenheit").value;
+  let fahrenheit = document.getElementById("fahrenheit").value;
 
-    if (nonChartData == null) {
-    nonChartData = transformedData();
-    };
-    
-    let interpolatedValue = linearInterpolation(fahrenheit, nonChartData[switchIndex]);
-    console.log(`Interpolated value at x = ${fahrenheit} is y = ${interpolatedValue}`);
-  
-    //let interp_densityWater = linearInterpolationWater(fahrenheit, densityWater);
+  if (nonChartData == null) {
+  nonChartData = transformedData();
+  };
+
+  let interpolatedValue = linearInterpolation(fahrenheit, nonChartData[switchIndex]);
+  console.log(`Interpolated value at x = ${fahrenheit} is y = ${interpolatedValue}`);
 
   if (flag == true) {
-      document.getElementById("result_density1").innerText = ("Out of Range");
-      document.getElementById("result_density2").innerText = ("Out of Range");
-      document.getElementById("result_density3").innerText = ("Out of Range");
-      document.getElementById("result_density4").innerText = ("Out of Range");
-      document.getElementById("result_density5").innerText = ("Out of Range");
-      document.getElementById("result_density6").innerText = ("Out of Range");
-  } else {
-      document.getElementById("result_density1").innerText = ((interpolatedValue).toFixed(3));
-      document.getElementById("result_density2").innerText = ((interpolatedValue).toFixed(3));
-      document.getElementById("result_density3").innerText = ((interpolatedValue*.01).toFixed(5));
-      document.getElementById("result_density4").innerText = ((interpolatedValue*0.000001).toFixed(8));
-      document.getElementById("result_density5").innerText = ((interpolatedValue*0.0015500031).toFixed(5));
-      document.getElementById("result_density6").innerText = ((interpolatedValue*0.0000107639).toFixed(5));
-  }
+    document.getElementById("result_density1").innerText = ("Out of Range");
+    document.getElementById("result_density2").innerText = ("Out of Range");
+    document.getElementById("result_density3").innerText = ("Out of Range");
+    document.getElementById("result_density4").innerText = ("Out of Range");
+    document.getElementById("result_density5").innerText = ("Out of Range");
+    document.getElementById("result_density6").innerText = ("Out of Range");
+} else {
+    document.getElementById("result_density1").innerText = ((interpolatedValue).toFixed(3));
+    document.getElementById("result_density2").innerText = ((interpolatedValue*10000).toFixed(1));
+    document.getElementById("result_density3").innerText = ((interpolatedValue*0.1450377377).toFixed(4));
+    document.getElementById("result_density4").innerText = ((interpolatedValue*0.0098692327).toFixed(4));
 }
+}
+
+

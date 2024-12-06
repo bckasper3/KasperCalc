@@ -62,199 +62,219 @@ const fixedLabels = [ //for the data labels because they aren't in the csv files
 //   [260 , 937.5],
 // ];
 
-let papaParseOutput = [];    // this is an empty array
-//let papaParseOutput1 = {}; // this is an empty object
+// Function to fetch and parse CSV files, returning an array of separate datasets
+async function processCSVFiles(filePaths) {
+  const allData = [];  // This will store an array of data for each CSV file
 
-// Initialize an empty array to hold parsed data
-let allData = [];
-let labels = [];
+  for (const filePath of filePaths) {
+    try {
+      // Fetch the CSV file
+      const response = await fetch(filePath);
+      const csvData = await response.text();
 
-// Function to load and parse CSV data from multiple files
-function loadCSVData(files) {
-  let promises = files.map((file, index) => {     // this was let promises = files.map(file => {
-    return new Promise((resolve, reject) => {
-      Papa.parse(file, {
-        dynamicTyping: true, //changes the strings to numbers
-        download: true,  // Downloads the file if it's a URL
-        complete: function(results) {
-          // Push the new parsed data into the global ARRAY, with the index as the key
-          papaParseOutput.push(results.data);  // This adds a new index to the array
-          resolve(results.data);  // Resolve the promise with the parsed data
-          //console.log(allData);
-        },
-        error: function(error) {
-          reject('Error parsing CSV: ' + error.message);
-        },
-        header: false,    // Assumes the CSV has headers
-        skipEmptyLines: true
-      });
-    });
-  });
+      // Parse the CSV file
+      const parsedData = parseCSV(csvData);
 
-  // Once all files are loaded and parsed, create the chart
-  Promise.all(promises)
-    .then(() => {
-      // Process each CSV file's data (optional)
-      papaParseOutput.forEach((data, index) => {
-        processCSVData(data, index);
-      });
-
-      // Create the chart after all data is processed
-      createChart();
-    })
-    .catch(error => {
-      console.error('Error loading CSV files: ', error);
-    });
-}
-
-// Function to process data from each CSV file
-function processCSVData(csvData, fileIndex) {
-  // Assuming each CSV has the same structure
-  // Example: ['Date', 'Value'] columns, adjust if your structure is different
-
-  if (fileIndex === 0) {
-    // Only populate labels once (using the first file as reference)
-    csvData.forEach(row => {
-      labels.push(row[0]);  // Assuming the first column is 'Date'
-    });
+      // Store the parsed data for this file as a separate array
+      allData.push(parsedData);
+    } catch (error) {
+      console.error(`Error processing file ${filePath}:`, error);
+    }
   }
 
-  // Extract values from the 'Value' column and push to allData array
-  const values = csvData.map(row => parseFloat(row[1])); // Adjust 'Value' as needed
-  allData.push(values);
+  return allData;  // Return an array of arrays
 }
 
-// Function to create the chart
-function createChart() {
-  // Create a line chart for each CSV file's data
-  const ctx = document.getElementById('myChart').getContext('2d');
+// Function to parse the CSV content into { x, y } objects
+function parseCSV(csvData) {
+  const rows = csvData.trim().split('\n');  // Split the CSV into rows
+  const parsedData = [];
 
-  // Prepare datasets for Chart.js
-  const datasets = allData.map((data, index) => ({
-    label: fixedLabels[index % fixedLabels.length], // Label for each dataset (e.g., Data 1, Data 2, etc.)
-    data: data,                     // The data for the chart
-    borderColor: fixedColors[index % fixedColors.length], // Use fixed color, wrap around if index exceeds array length //`rgb(${index * 60}, ${index * 80}, ${index * 100})`, // Different colors for each line
-    fill: false,                     // Don't fill under the line
-    tension: 0.1                     // Line smoothing
-    //console.log(data);
-  }));
+  rows.forEach(row => {
+    const columns = row.split(',');  // Split each row by commas (assuming CSV format)
 
-  // Create the Chart.js chart
-  myChart = new Chart(ctx, {
-    type: 'line',  // Chart type (e.g., line chart)
-    data: {
-      labels: labels, // X-axis labels (shared across all datasets)
-      datasets: datasets // Data from all CSV files
-    },
-    
-    options: {
-      maintainAspectRatio: false,
-      layout: {
-        padding: {
-        left: 10,
-        right: 25,
-        top: 5,
-        bottom: 5,
-        }
-      },
-      interaction: {
-        mode: 'index', // Change interaction mode if needed
-        intersect: false,
-      },
-      elements: {
-        point:{
-            radius: 0,
-        },
-      },
-      plugins:{
-        tooltip: {
-          enabled: true  // Tooltips are enabled by default
-        },
-        customCanvasBackgroundColor:{
-          color: 'white',
-        },
-        // title:{
-        //   align: 'center',
-        //   display: true,
-        //   text: 'Nominal Density',
-        //   fullSize: true,
-        // },
-        legend:{
-          labels:{
-            align: 'top',
-            padding: 20,
-            usePointStyle: false,
-            boxHeight: 2,
-            font: {
-              size: 18, // Set the desired font size for legend labels
-             },
-          },
+    // Assuming the file has no header, so the first column is x and the second is y
+    if (columns.length >= 2) {
+      const x = parseFloat(columns[0].trim());  // Parse x value
+      const y = parseFloat(columns[1].trim());  // Parse y value
 
-          //makes the lines disappear faster
-          onClick: function(e, legendItem, legend) {
-            // This will toggle the dataset visibility when the legend item is clicked
-            const datasetIndex = legendItem.datasetIndex;
-            const ci = legend.chart;
-            const meta = ci.getDatasetMeta(datasetIndex);
-            meta.hidden = meta.hidden === null ? !ci.data.datasets[datasetIndex].hidden : null;
-            ci.update();
-        }
-
-        },
-      },
-      responsive: true,
-      scales: {
-        y:{tick:{crossAlign:'far',},
-           //beginAtZero: true,
-           //min: 620,
-           //max:1200, 
-           ticks:{
-            //stepSize:20,
-            font: {
-            size: 16,
-           },
-           },
-           title: {
-            display:true,
-            text: 'Multiple of Volume At 60°F, 1 Atm',
-            padding: 10,
-            font: {
-              size: 20,
-             },
-          }
-        },
-        x:{
-           beginAtZero: true,
-           min: 0,
-           //max: 392,
-           //suggestedMax: 194, 
-           ticks:{
-            //stepSize:10,
-            //autoSkip: true,
-            //maxTicksLimit: 26,
-            maxRotation: 0,
-            font: {
-              size: 16,
-             },
-           },
-           title: {
-            display:true,
-            text: 'Temperature °F',
-            font: {
-              size: 20,
-             },
-          }
-        },
-        },
+      // Only add to the array if both x and y are valid numbers
+      if (!isNaN(x) && !isNaN(y)) {
+        parsedData.push({ x, y });
+      }
     }
   });
+
+  return parsedData;
 }
 
+// Example usage of the processCSVFiles function
+processCSVFiles(csvFiles)
+  .then(allData => {
+    // allData is now an array of arrays, where each inner array represents the data of one CSV file
+    fallData = allData;
+    createGraph();
+  })
+  .catch(error => {
+    console.error('Error processing CSV files:', error);
+  });
 
-// Load and parse all CSV files
-loadCSVData(csvFiles);
+function createGraph() {
+  // Code to run after the delay
+  console.log('the big array', fallData);
+
+  fallData.forEach((dataSet, index) => {
+  // You can now use each `dataSet` (an array of { x, y } objects) for a different chart
+  console.log(`Data from file ${csvFiles[index]}:`, dataSet);
+    });
+
+  const datasets = fallData.map((dataSet, index) => {
+      return {
+        label: fixedLabels[index % fixedLabels.length],  //`Dataset ${index + 1}`,  // Give each dataset a unique label
+        data: dataSet.map(item => ({ x: item.x, y: item.y })),  // Map to Chart.js format
+        fill: false,  // Set to `true` if you want the area under the line to be filled
+        borderColor:  fixedColors[index % fixedColors.length],//`hsl(${index * 60}, 100%, 50%)`,  // Set a unique color for each line (based on index)
+        tension: 0.1  // Line smoothing (0 = no smoothing, 1 = highly smoothed)
+      };
+    });
+
+    // console.log('the data set');
+    // console.log(datasets);
+
+  const config = {
+        type: 'line',  // Line chart type
+        data: {
+          datasets: datasets  // Use the datasets we created
+        },
+        options: {
+          decimation: {
+          enabled: false // Disable data decimation completely [2, 7]
+          },
+          plugins:{
+            // decimation: {
+            //   enabled: false, // Disable data decimation completely [2, 7]
+            //   algorithm: 'min-max',
+            // },
+            legend: {
+              position: 'top',  // Position of the legend (optional)
+            },
+            tooltip: {
+              enabled: true,
+              mode: 'nearest',
+              intersect: false,
+              axis: 'x',
+            },
+            customCanvasBackgroundColor:{
+              color: 'white',
+            },
+            // title:{
+            //   align: 'center',
+            //   display: true,
+            //   text: 'Nominal Density',
+            //   fullSize: true,
+            // },
+            legend:{
+              labels:{
+                align: 'top',
+                padding: 20,
+                usePointStyle: false,
+                boxHeight: 2,
+                font: {
+                  size: 18, // Set the desired font size for legend labels
+                },
+              },
+
+            //makes the lines disappear faster
+              onClick: function(e, legendItem, legend) {
+                // This will toggle the dataset visibility when the legend item is clicked
+                const datasetIndex = legendItem.datasetIndex;
+                const ci = legend.chart;
+                const meta = ci.getDatasetMeta(datasetIndex);
+                meta.hidden = meta.hidden === null ? !ci.data.datasets[datasetIndex].hidden : null;
+                ci.update();
+            },
+
+            },
+          },
+          maintainAspectRatio: false,
+          layout: {
+            padding: {
+            left: 10,
+            right: 25,
+            top: 5,
+            bottom: 5,
+            },
+          },
+          interaction: {
+            mode: 'nearest', // Change interaction mode if needed
+            //intersect: false,
+            axis: 'x',
+          },
+          elements: {
+            point:{
+                radius: 0,
+            },
+          },
+          responsive: true,
+          scales: {
+            x:{
+              type: 'linear',
+              //beginAtZero: true,
+              min: 40,
+              max: 392,
+              //suggestedMax: 194, 
+              ticks:{
+                //stepSize:10,
+                //autoSkip: true,
+                //maxTicksLimit: 26,
+                maxRotation: 0,
+                font: {
+                  size: 16,
+                },
+              },
+              title: {
+                display:true,
+                text: 'Temperature °F',
+                font: {
+                  size: 20,
+                },
+              }
+            },
+            y:{
+              type: 'logarithmic',
+              tick:{
+                crossAlign:'far',
+              },
+              //beginAtZero: true,
+              //min: 620,
+              //max:1200, 
+              ticks:{
+                //stepSize:20,
+                font: {
+                size: 16,
+              },
+              },
+              title: {
+                display:true,
+                text: 'Multiple of Volume At 60°F, 1 Atm',
+                padding: 10,
+                font: {
+                  size: 20,
+                },
+              }
+            },
+          }
+        }
+      };
+
+  const ctx = document.getElementById('myChart').getContext('2d');
+ myChart =  new Chart(ctx, config);
+
+};
 
 
+
+//Listening for the Tooptips Toggle Button
 document.getElementById('toggleTooltipButton').addEventListener('click', function() {
   // Toggle the enabled property of tooltips
   const currentTooltipState = myChart.options.plugins.tooltip.enabled;
@@ -267,9 +287,6 @@ document.getElementById('toggleTooltipButton').addEventListener('click', functio
   const buttonText = myChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
   document.getElementById('toggleTooltipButton').textContent = buttonText;
 });
-
-
-
 
 
 // Convert Celsius to Fahrenheit
@@ -288,21 +305,57 @@ function convertToCelsius() {
   updateCalculator();
 }
 
+//Performing Linear Interpolation to calculate the Y value
 function linearInterpolation(x, data) {
-
-  console.log('tis is the data into the interp function', data);
+  //console.log('tis is the data into the interp function', data);
   // Step 1: Check if the x is within the bounds of the data
   x = parseFloat(x); //papaParse is returning strings instead of numbers
   minX = Math.min(...data.map(point => point[0])); // Minimum x value
   maxX = Math.max(...data.map(point => point[0])); // Maximum x value
 
-  console.log('min', minX);
-  console.log('max', maxX);
+  //console.log('min', minX);
+  //console.log('max', maxX);
 
   if (x < minX || x > maxX) {
     flag = true;
   } else {
     flag = false;
+  }
+
+  // Step 2: Check if x is already in the data array
+  for (let i = 0; i < data.length; i++) {
+    if (data[i][0] === x) {
+      //console.log('value is predefined');
+      return data[i][1]; // If x is already in the array, no interpolation is needed
+    }
+  }
+
+  // Step 3: Find the two data points (x0, y0) and (x1, y1)
+  for (let i = 0; i < data.length - 1; i++) {
+    let x0 = parseFloat(data[i][0]);
+    let y0 = parseFloat(data[i][1]);
+    let x1 = parseFloat(data[i+1][0]);
+    let y1 = parseFloat(data[i+1][1]);
+
+    // Check if x is between x0 and x1 (i.e., find the two surrounding points)
+    if (x >= x0 && x <= x1) {
+    
+      // Step 4: Perform linear interpolation
+      let y = y0 + ((x - x0) * (y1 - y0)) / (x1 - x0);
+      return y; // Return the interpolated y value
+    }
+  }
+}
+
+//Does Linear interpolation on the water data
+function linearInterpolationWater(x, data) {
+  // Step 1: Check if the x is within the bounds of the data
+  //x = parseFloat(x); //papaParse is returning strings instead of numbers
+  minX = Math.min(...data.map(point => point[0])); // Minimum x value
+  maxX = Math.max(...data.map(point => point[0])); // Maximum x value
+
+  if (x < minX || x > maxX) {
+    console.log('outside of water density data');
   }
 
   // Step 2: Check if x is already in the data array
@@ -330,44 +383,16 @@ function linearInterpolation(x, data) {
   }
 }
 
-
-// function linearInterpolationWater(x, data) {
-//   // Step 1: Check if the x is within the bounds of the data
-//   //x = parseFloat(x); //papaParse is returning strings instead of numbers
-//   minX = Math.min(...data.map(point => point[0])); // Minimum x value
-//   maxX = Math.max(...data.map(point => point[0])); // Maximum x value
-
-//   if (x < minX || x > maxX) {
-//     console.log('outside of water density data');
-//   }
-
-//   // Step 2: Check if x is already in the data array
-//   for (let i = 0; i < data.length; i++) {
-//     if (data[i][0] === x) {
-//       console.log('value is predefined');
-//       return data[i][1]; // If x is already in the array, no interpolation is needed
-//     }
-//   }
-
-//   // Step 3: Find the two data points (x0, y0) and (x1, y1)
-//   for (let i = 0; i < data.length - 1; i++) {
-//     let x0 = parseFloat(data[i][0]);
-//     let y0 = parseFloat(data[i][1]);
-//     let x1 = parseFloat(data[i+1][0]);
-//     let y1 = parseFloat(data[i+1][1]);
-
-//     // Check if x is between x0 and x1 (i.e., find the two surrounding points)
-//     if (x >= x0 && x <= x1) {
-    
-//       // Step 4: Perform linear interpolation
-//       let y = y0 + ((x - x0) * (y1 - y0)) / (x1 - x0);
-//       return y; // Return the interpolated y value
-//     }
-//   }
-// }
-
 let switchIndex = 0;
 let flag = false;
+let nonChartData = null; // Declare a global variable to store the result
+
+transformedData = function(parameter1){
+  const transformedDataintermediate = fallData.map(dataset => 
+    dataset.map(point => [point.x, point.y])  // Create an array with x and y values
+  );
+  return transformedDataintermediate;
+};
 
 // Example usage:
 function updateCalculator() {
@@ -396,11 +421,16 @@ function updateCalculator() {
       break;  
     }
 
-  let fahrenheit = document.getElementById("fahrenheit").value;
-  let interpolatedValue = linearInterpolation(fahrenheit, papaParseOutput[switchIndex]);
-  console.log(`Interpolated value at x = ${fahrenheit} is y = ${interpolatedValue}`);
+    let fahrenheit = document.getElementById("fahrenheit").value;
 
-  //let interp_densityWater = linearInterpolationWater(fahrenheit, densityWater);
+    if (nonChartData == null) {
+    nonChartData = transformedData();
+    };
+    
+    let interpolatedValue = linearInterpolation(fahrenheit, nonChartData[switchIndex]);
+    console.log(`Interpolated value at x = ${fahrenheit} is y = ${interpolatedValue}`);
+  
+    //let interp_densityWater = linearInterpolationWater(fahrenheit, densityWater);
 
   if (flag == true) {
       document.getElementById("result_density1").innerText = ("Out of Range");

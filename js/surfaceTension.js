@@ -1,14 +1,16 @@
 //URLs of the CSV files (replace with your own file paths or URLs)
 const csvFiles = [
-  '../csvData/55.csv', // Replace with actual file paths or URLs
-  '../csvData/48.csv',
-  '../csvData/49.csv',
-  '../csvData/50.csv',
-  '../csvData/51.csv',
-  '../csvData/52.csv',
-  '../csvData/53.csv',
-  '../csvData/54.csv',
-  '../csvData/47.csv',
+  '../csvData/56.csv', // Replace with actual file paths or URLs
+  '../csvData/57.csv',
+  '../csvData/58.csv',
+  '../csvData/59.csv',
+  '../csvData/60.csv',
+  '../csvData/61.csv',
+  '../csvData/62.csv',
+  '../csvData/63.csv',
+  '../csvData/64.csv',
+  '../csvData/65.csv',
+  '../csvData/66.csv',
  ];
 
 const fixedColors = [ //for setting the rgb values of the lines //https://personal.sron.nl/~pault/#sec:qualitative
@@ -27,15 +29,17 @@ const fixedColors = [ //for setting the rgb values of the lines //https://person
 ];
 
 const fixedLabels = [ //for the data labels because they aren't in the csv files
-  'RJ-5',
+  'Av. Gas',
   'JP-4, Jet B',
   'TS',
-  'JP-5, Jet A, Jet A-1, JP-8',
   'JP-7',
-  'JP-9, JP-10',
+  'JP-8, Jet A, Jet A-1',
+  'JP-5',
   'RJ-4',
+  'JP-10',
+  'JP-9',
   'RJ-6',
-  'Av. Gas',
+  'RJ-5',
 ];
 
 // let densityWater = [
@@ -225,7 +229,7 @@ function createGraph() {
               type: 'linear',
               //beginAtZero: true,
               min: -40,
-              max: 356,
+              max: 176,
               //suggestedMax: 194, 
               ticks:{
                 //stepSize:10,
@@ -260,7 +264,7 @@ function createGraph() {
               },
               title: {
                 display:true,
-                text: 'Kinematic Viscosity, mm²/sec (centistokes)',
+                text: 'Surface Tension, mN / m x 10m⁴',
                 padding: 10,
                 font: {
                   size: 20,
@@ -402,7 +406,7 @@ transformedData = function(parameter1){
 function updateCalculator() {
   const operation = document.getElementById("operation").value;
   switch (operation) {
-    case "RJ-5":
+    case "Av. Gas":
       switchIndex = 0;
       break;
     case "JP-4, Jet B":
@@ -411,23 +415,29 @@ function updateCalculator() {
     case "TS":
       switchIndex = 2;
       break;
-    case "JP-5, Jet A, Jet A-1, JP-8":
+    case "JP-7":
       switchIndex = 3;
       break;
-    case "JP-7":
+    case "JP-8, Jet A, Jet A-1":
       switchIndex = 4;
       break;
-    case "JP-9, JP-10":
+    case "JP-5":
       switchIndex = 5;
       break;
     case "RJ-4":
       switchIndex = 6;
       break;  
-    case "RJ-6":
+    case "JP-10":
       switchIndex = 7;
       break;  
-    case "Av. Gas":
+    case "JP-9":
       switchIndex = 8;
+      break;  
+    case "RJ-6":
+      switchIndex = 9;
+      break;  
+    case "RJ-5":
+      switchIndex = 10;
       break;  
     }
 
@@ -452,9 +462,9 @@ function updateCalculator() {
   } else {
       document.getElementById("result_density1").innerText = ((interpolatedValue).toFixed(3));
       document.getElementById("result_density2").innerText = ((interpolatedValue).toFixed(3));
-      document.getElementById("result_density3").innerText = ((interpolatedValue*.01).toFixed(5));
-      document.getElementById("result_density4").innerText = ((interpolatedValue*0.000001).toFixed(8));
-      document.getElementById("result_density5").innerText = ((interpolatedValue*0.0015500031).toFixed(5));
-      document.getElementById("result_density6").innerText = ((interpolatedValue*0.0000107639).toFixed(5));
+      document.getElementById("result_density3").innerText = ((interpolatedValue).toFixed(3));
+      document.getElementById("result_density4").innerText = ((interpolatedValue*0.001).toFixed(6));
+      document.getElementById("result_density5").innerText = ((interpolatedValue*0.0001837186).toFixed(6));
+      document.getElementById("result_density6").innerText = ((interpolatedValue*0.0000057101).toFixed(6));
   }
 }
