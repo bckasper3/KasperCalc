@@ -53,7 +53,7 @@
         <img src="img/letter_k_PNG65.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
       </a>
 
-      <a class="navbar-brand" href="index.html"> Kaspercalc </a>
+      <a class="navbar-brand" href="index.html"> KasperCalc </a>
 
       <button 
         type="button"
@@ -78,6 +78,8 @@
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
               <a class="dropdown-item" href="fuelHead.html">Fuel Head Calculator</a>
               <a class="dropdown-item" href="PPH.html">PPH to GPM Calculator</a>
+              <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+              <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
             </div>
           </li>
 
@@ -136,7 +138,7 @@
               <div class="h1 section-title">Relative Density Chart (S.G.)</div>
             </div>
 
-            <div class="mx-5">
+            <div class="canvasdiv">
               <button id="toggleTooltipButton">Hide Tooltips</button>
               <div class="canvascontainer">
 
@@ -161,7 +163,7 @@
         <div class="csscontainer">
           <div class="col-lg-12 col-12 px-3">
 
-            <div class="wrapper">
+            <div class="wrapperlg">
               <div class="header text-center">Relative Density Calculator
               </div>
 
@@ -179,30 +181,30 @@
                 <label class="dropdownlabel" for="operation">Select Fuel:</label>
 
                 <span class="output">
-                  <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="updateCalculator()" style="width: 14rem;">
-                    <option value="JP-4, Jet B (Min)">JP-4, Jet B (Min)</option>
+                  <select class="dropdowncalc dropdown-menu-end" style="width: 20rem;" id="operation" onchange="updateCalculator()">
+                    <option value="Jet A, Jet A-1, JP-8 (Typical)">Jet A, Jet A-1, JP-8 (Typical)</option>
+                    <option value="Jet A, Jet A-1, JP-8 (Min)">Jet A, Jet A-1, JP-8 (Min)</option>
+                    <option value="Jet A, Jet A-1, JP-8 (Max)">Jet A, Jet A-1, JP-8 (Max)</option>
                     <option value="JP-4, Jet B (Typical)">JP-4, Jet B (Typical)</option>
-                    <option value="JP-5 (Min)">JP-5 (Min)</option>
+                    <option value="JP-4, Jet B (Min)">JP-4, Jet B (Min)</option>
                     <option value="JP-4, Jet B (Max)">JP-4, Jet B (Max)</option>
                     <option value="JP-5 (Typical)">JP-5 (Typical)</option>
+                    <option value="JP-5 (Min)">JP-5 (Min)</option>
                     <option value="JP-5 (Max)">JP-5 (Max)</option>
-                    <option value="Jet A, Jet A-1, JP-8 (Min)">Jet A, Jet A-1, JP-8 (Min)</option>
-                    <option value="JP-7 (Min)">JP-7 (Min)</option>
                     <option value="JP-7 (Typical)">JP-7 (Typical)</option>
+                    <option value="JP-7 (Min)">JP-7 (Min)</option>
                     <option value="JP-7 (Max)">JP-7 (Max)</option>
-                    <option value="Jet A, Jet A-1, JP-8 (Typical)">Jet A, Jet A-1, JP-8 (Typical)</option>
-                    <option value="Jet A, Jet A-1, JP-8 (Max)">Jet A, Jet A-1, JP-8 (Max)</option>
-                    <option value="TS (Min)">TS (Min)</option>
                     <option value="TS (Typical)">TS (Typical)</option>
+                    <option value="TS (Min)">TS (Min)</option>
                     <option value="TS (Max)">TS (Max)</option>
-                    <option value="RJ-4 (Min)">RJ-4 (Min)</option>
                     <option value="RJ-4 (Typical)">RJ-4 (Typical)</option>
+                    <option value="RJ-4 (Min)">RJ-4 (Min)</option>
                     <option value="RJ-4 (Max)">RJ-4 (Max)</option>
-                    <option value="RJ-6 (Min)">RJ-6 (Min)</option>
                     <option value="RJ-6 (Typical)">RJ-6 (Typical)</option>
+                    <option value="RJ-6 (Min)">RJ-6 (Min)</option>
                     <option value="RJ-6 (Max)">RJ-6 (Max)</option>
-                    <option value="RJ-5 (Min)">RJ-5 (Min)</option>
                     <option value="RJ-5 (Typical)">RJ-5 (Typical)</option>
+                    <option value="RJ-5 (Min)">RJ-5 (Min)</option>
                     <option value="RJ-5 (Max)">RJ-5 (Max)</option>
                     <option value="JP-9, JP-10 (Min)">JP-9, JP-10 (Min)</option>
                     <option value="JP-10 (Typical)">JP-10 (Typical)</option>
@@ -239,7 +241,9 @@
                   <span class="label">Specific Gravity:</span>
                   <span class="output" id="result_density1">&nbsp</span>
                 </div>
+              </div>
         
+              <div class="group">
                 <div class="outputrow">
                   <span class="label">Density (kg/m³)*:</span>
                   <span class="output" id="result_density2">&nbsp</span>
@@ -254,17 +258,55 @@
                   <span class="label">Density (lb/gal)*:</span>
                   <span class="output" id="result_density4">&nbsp</span>
                 </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Density (kg/m³)**:</span>
+                  <span class="output" id="result_density5">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Density (lb/in³)**:</span>
+                  <span class="output" id="result_density6">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Density (lb/gal)**:</span>
+                  <span class="output" id="result_density7">&nbsp</span>
+                </div>
+              </div>
                 
+              <div class="group">  
+                <div class="outputrow">
+                  <span class="label">Density (kg/m³)***:</span>
+                  <span class="output" id="result_density8">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Density (lb/in³)***:</span>
+                  <span class="output" id="result_density9">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Density (lb/gal)***:</span>
+                  <span class="output" id="result_density10">&nbsp</span>
+                </div>
+              </div>  
+              
+              <div class="group"> 
                 <div class="outputrow">
                   <span class="label">°API**:</span>
-                  <span class="output" id="result_density5">&nbsp</span>
+                  <span class="output" id="result_density11">&nbsp</span>
                 </div>
               </div>
 
             </div>
           </div>
 
-          <p class="text-center">* Density conversions based on density of water of 60°F = 999 (kg/m³) *</p>
+          <p class="text-center">* Based on density of water of 60°F = 999 (kg/m³) *</p>
+          <p class="text-center">* Based on density of water of 70°F = 998 (kg/m³) *</p>
+          <p class="text-center">* Based on density of water of 4°F = 1000 (kg/m³) *</p>
           <p class="text-center">** °API is typically referenced at 60°F **</p>
 
         </div>
@@ -357,7 +399,7 @@
             </div>
           </a>
           <a href="https://ko-fi.com/kaspercalc" target="_blank">
-            <img class="logo" src="img/letter_k_PNG65.webp" height="4.5rem;" alt="KasperCalcLogo" />
+            <img class="kofi" src="img/kofi5.webp" height="50px" alt="Buy Me a Coffee at ko-fi.com" />
           </a>
         </div>
 

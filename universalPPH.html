@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- META DATA FOR -->
-    <title>KasperCalc: Vapor Pressure</title>
+    <title>KasperCalc: Universal PPH TO GPM</title>
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, bckasper3, Jet Fuel Properties, Jet Fuel Vapor Pressure Calculator, Jet Fuel Vapour Pressure Calculator, CRC 530" />
+    <meta name="keywords" content="KasperCalc, bckasper3, Fuel Flow Rate Calculator, Jet Fuel Properties, Jet Fuel PPH to GPM, CRC 530" />
     <meta name="description" content="KasperCalc provides ad-free caclulators for Jet Fuel head pressures and common jet fuel properties" />
 
     <!-- DEFERRED JAVASCRIPT -->
     
     <script defer type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script defer type="text/javascript" src="js/vaporPressure.js"></script>
+    <script defer type="text/javascript" src="js/universalPPHcalc.js"></script>
 
     <!-- CSS FILES -->
     <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" />
@@ -74,7 +74,7 @@
           </li>
 
           <li class="nav-item text-center d-flex align-items-center dropdown"> <!--ADD ACTIVE CLASS ON THE OTHER PAGES active-->
-            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Calculators</a>
+            <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Calculators</a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
               <a class="dropdown-item" href="fuelHead.html">Fuel Head Calculator</a>
               <a class="dropdown-item" href="PPH.html">PPH to GPM Calculator</a>
@@ -84,7 +84,7 @@
           </li>
 
           <li class="nav-item text-center d-flex align-items-center dropdown"> <!--ADD ACTIVE CLASS ON THE OTHER PAGES active-->
-            <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Jet Fuel Properties</a>
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Jet Fuel Properties</a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown2">
               <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
               <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
@@ -120,133 +120,142 @@
           <div class="col-lg-12 col-12">
             <div class="banner section-title-wrap">
               <div class="h1 section-title bannertext">
-                Vapor Pressure
+                Universal Pounds per Hour to GPM
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- JET FUEL PROPERTIES -->
-      <section>
-        <div class="csscontainer">
-          <div class="col-lg-12 col-12">
-  
-            <div class="section-title-wrap">
-              <div class="h1 section-title">Vapor Pressure Chart</div>
-            </div>
-  
-            <div class="canvasdiv">
-              <button id="toggleTooltipButton">Hide Tooltips</button>
-              <div class="canvascontainer">
-  
-                <script type="text/javascript" src="js/chart.min.js"></script>
-                <!--<script type="text/javascript" src="js/papaparse.min.js"></script>-->
-  
-                <!-- <canvas id="myChart"></canvas> -->
-                <canvas id="myChart"aria-label="Alt Text Here" width="400" height="600" role="img" class="chartcanvas"> <!-- width="400" height="600" -->
-                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p></canvas>
-  
-  
+      <!-- UNDER THE BANNER -->
+
+          <!-- CALCULATOR -->
+          <section>
+            <div class="csscontainer">
+              <div class="col-lg-12 col-12 px-3">
+    
+                <div class="wrapper">
+                  <div class="header text-center">Universal Pounds per Hour to GPM Calculator
+                </div>
+    
+                <div class="toggle-container">
+                  <label class="toggle-switch1">
+                    <input type="checkbox" id="PPHtoGPMcheck" class="toggle-input1">
+                    <span class="slider1">
+                      <span class="option left">PPH</span>
+                      <span class="option right">GPM</span>
+                    </span>
+                  </label>
+                </div>
+            
+                  <div class="group1">
+                    <label class="dropdownlabel" for="operation1">Select Fuel:</label>
+    
+                    <span class="output">
+                      <select class="dropdowncalc dropdown-menu-end" id="operation1" onchange="updateCalculator1()">
+                        <option value="JetA">Jet A</option>
+                        <option value="JetB">Jet B</option>
+                        <option value="JP4">JP-4</option>
+                        <option value="JP5">JP-5</option>
+                        <option value="JP8">JP-8</option>
+                        <option value="AvGas">AvGas</option>
+                        <option value="StoddardSolvent">Stoddard Solvent</option>
+                      </select>
+    
+                    </span>
+                  </div>
+            
+                  <div class="group2">
+                    <span class="label">
+                      <span id="pphgpmCalcOption1">PPH:</span>
+                      <span id="pphgpmCalcOption2">GPM:</span>
+                    </span> 
+                    <span class="output inputbox">
+                      <input class= "calcinput" type="number" id="input2" oninput="updateCalculator1()" />
+                    </span>
+                  </div>
+            
+                  <div class="group">
+                    <div class="outputrow">
+                      <span class="label">Specific Gravity (S.G.): </span>
+                      <span class="output" id="result_SG">&nbsp</span>
+                    </div>
+            
+                    <div class="outputrow">
+                      <span class="label">Density (lb/gallon):</span>
+                      <span class="output" id="result_Density">&nbsp</span>
+                    </div>
+            
+                    <div class="outputrow">
+                      <span class="label">Inches<sup>3</sup> / Sec:</span>
+                      <span class="output" id="result_inches3sec">&nbsp</span>
+                    </div>
+                  </div>
+            
+                  <div class="group result">
+                    <span class="label">
+                      <span id="pphgpmCalcResult1">Result (GPM):</span>
+                      <span id="pphgpmCalcResult2">Result (PPH):</span>
+                    </span>
+                    <span class="output result" id="result_gpm">&nbsp</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <p class="text-center">*Toggle data sets by clicking the legend*
+            <p class="text-center">*Calculations based on 70°F*
             </p>
-            <!-- <p class="text-center">*This chart is in process*
-            </p> -->
-          </div>
-        </div>
-      </section>
-  
-  
-      <!-- CALCULATOR -->
-      <section>
-        <div class="csscontainer">
-          <div class="col-lg-12 col-12 px-3">
-  
-            <div class="wrapper">
-              <div class="header text-center">Vapor Pressure Calculator
-              </div>
-  
-            <!-- <div class="toggle-container">
-              <label class="toggle-switch">
-                <input type="checkbox" id="fuelheadcalctoggle" class="toggle-input">
-                <span class="slider">
-                  <span class="option left">Inches of Fuel</span>
-                  <span class="option right">PSI</span>
-                </span>
-              </label>
-            </div> -->
-        
-              <div class="group1">
-                <label class="dropdownlabel" for="operation">Select Fuel:</label>
-  
-                <span class="output">
-                  <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="updateCalculator()">
-                    <option value="JP-8, Jet A, Jet A-1">JP-8, Jet A, Jet A-1</option>
-                    <option value="Av. Gas">Av. Gas</option>
-                    <option value="JP-4, Jet B">JP-4, Jet B</option>
-                    <option value="TS">TS</option>
-                    <option value="JP-5, JP-7">JP-5, JP-7</option>
-                    <option value="JP-9">RJ-4</option>
-                    <option value="JP-10">JP-10</option>
-                    <option value="RJ-4">JP-9</option>
-                    <option value="RJ-6">RJ-6</option>
-                    <option value="RJ-5">RJ-5</option>
-                  </select>
-  
-                </span>
-              </div>
-        
-              <div class="group">
-                <div class="outputrow">
-                <span class="label">
-                  <span id="nominalDensityOption1">Degrees (°F)</span>
-                </span> 
-                <span class="output inputbox">
-                  <input class= "calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" />
-                </span>
-                </div>
-        
-                <div class="outputrow">
-                  <span class="label">
-                    <span id="nominalDensityOption2">Degrees (°C)</span>
-                  </span> 
-                  <span class="output inputbox">
-                    <input class= "calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" />
-                  </span>
+          </section>
+
+          <!-- Button to Other Calculator -->
+          <section>
+
+              <div class="col-lg-12 col-12">
+                <div class="section-content-wrap col-8 mx-auto">
+                  <h2>Also See:</h2>
+                  <a href="PPH.html" class="custom-link custom-btn btn">Jet Fuel PPH to GPM Calculator</a><br/>
                 </div>
               </div>
-        
-              <div class="group">
-                <div class="outputrow">
-                  <span class="label">True Vapor Pressure, kPa:</span>
-                  <span class="output" id="result_density1">&nbsp</span>
+
+          </section>
+    
+    
+          <!-- TEXT UNDER THE CALCULATOR -->
+          <section>
+            <div class="csscontainer">
+              <div class="col-lg-12 col-12">
+                <div class="section-content-wrap col-10 mx-auto">
+    
+                  <div style="text-align: center">
+                    <h1>Formula</h1>
+                    <img style="max-width: 100%;" src="https://latex.codecogs.com/svg.image?&space;PPH*\frac{1\,hr}{60&space;min}*\frac{1}{Density\,(lb/gallon)}=GPM" /></br></br>
+                    <img style="max-width: 100%;" src="https://latex.codecogs.com/svg.image?GPM*60*Density\,(lb/gallon)=PPH" />
+                  </div>
+    
+                  <div class="my-5" style="text-align: center">
+                    <h1>Plain Text Formula </h1>
+                      <span>PPH * (1 hr/60 min) * ( 1 / Density (lb/gallon)) = GPM</span></br></br>
+                      <span>GPM * (60 min/1 hr) * Density (lb/gallon) = PPH</span>
+                  </div>
+    
+                  <div class="my-5" style="text-align: center">
+                    <h1>CodeCogs Formula</h1>
+                      <span>PPH * \frac{1\, hr}{60 min} * \frac{1}{Density\, (lb/gallon)} = GPM</span></br></br>
+                      <span>GPM * 60 *Density\,  (lb/gallon) = PPH</span>
+                  </div>
+    
+                  <div class="my-5" style="text-align: center">
+                    <h1>LaTex Formula</h1>
+                      <span>\[ PPH*\frac{1\,hr}{60 min}*\frac{1}{Density\,(lb/gallon)}=GPM\]</span></br></br>
+                      <span>\[GPM*60*Density\,(lb/gallon)=PPH\]</span>
+                  </div>
+    
+                  </div>
                 </div>
-        
-                <div class="outputrow">
-                  <span class="label">Dyne/centimeter²:</span>
-                  <span class="output" id="result_density2">&nbsp</span>
-                </div>
-  
-                <div class="outputrow">
-                  <span class="label">PSI:</span>
-                  <span class="output" id="result_density3">&nbsp</span>
-                </div>
-  
-                <div class="outputrow">
-                  <span class="label">Atmosphere, atm:</span>
-                  <span class="output" id="result_density4">&nbsp</span>
-                </div>
+              </div>
             </div>
-          </div>
-  
-          <!-- <p class="text-center">* This calculator is in process *</p> -->
-  
-        </div>
-        <!-- <p class="text-center">*S.G. based on the density of</br>water at 39.2°F  = 1000kg/m³*
-        </p> -->
-      </section>
+          </section>
+    
+        </main>
 
     </main>
 
