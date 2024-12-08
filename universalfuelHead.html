@@ -50,7 +50,7 @@
     <!-- NAVIGATION -->
     <nav class="navbar navbar-expand-md navbar-light">
       <a class="navbar-brand" href="index.html">
-        <img src="img/blueK.png" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
       </a>
 
       <a class="navbar-brand" href="index.html"> KasperCalc </a>
@@ -99,8 +99,11 @@
           <li class="nav-item text-center d-flex align-items-center dropdown"> <!--ADD ACTIVE CLASS ON THE OTHER PAGES active-->
             <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Misc</a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown3">
+              <a class="dropdown-item" href="densityWater.html">Water Density</a>
               <a class="dropdown-item" href="PGdensity.html">Propylene Gylcol Density</a>
               <a class="dropdown-item" href="PGviscosity.html">Propylene Gylcol Viscosity</a>
+              <a class="dropdown-item" href="PGthermalconductivity.html">Propylene Gylcol Thermal Conductivity</a>
+              <a class="dropdown-item" href="PGheatcapacity.html">Propylene Gylcol Specific Heat Capacity</a>
             </div>
           </li>
 
@@ -170,7 +173,7 @@
                   <span id="fuelHeadCalcOption6">Kg/m³:</span>
                 </span> 
                 <span class="output inputbox">
-                  <input class= "calcinput" type="number" id="input2" oninput="calculate()" />
+                  <input class= "calcinput" type="number" id="input2" oninput="calculate()" value="1"/>
                 </span>
               </div>
 
@@ -180,7 +183,7 @@
                   <span id="fuelHeadCalcOption2">PSI:</span>
                 </span> 
                 <span class="output inputbox">
-                  <input class= "calcinput" type="number" id="input1" oninput="calculate()" />
+                  <input class= "calcinput" type="number" id="input1" oninput="calculate()" value="0"/>
                 </span>
               </div>
         
@@ -240,7 +243,50 @@
       <section>
         <div class="csscontainer">
           <div class="mx-md-5 mx-3 section-content-wrap">
+            
+            <div class="mx-auto d-inline-block mt-1"  style="max-width:800px;">
+              <div class="custom-heading">Pressure Conversions</div>
+              <div style="text-align: left" class="mt-1">
+                <div class="custom-subheading">Inches of Fluid ⮕ PSI</div><br>
+                <img style="max-width: 100%;" class="my-1" src="https://latex.codecogs.com/svg.image?\large&space;(Inches\,of\,\:Liquid)*S.G.*Density\,of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=PSI(\frac{lb}{in^{2}})" /></br>
+                <span style="font-size:14px;"><b>Plain Text Formula:</b> (Inches of Liquid) * Specific Gravity of Liquid * Density of Water (kg/m³) * (1 (lb/in³)/27679.90471(kg/m³))= PSI (lb/in²)</span></br>
+                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> \[(Inches\,of\, \:Liquid)*S.G.*Density\, of\, Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=PSI(\frac{lb}{in^{2}})\]</span></br>
+              </div>
+            
+              <div style="text-align: left" class="mt-4">
+                <div class="custom-subheading">PSI ⮕ Inches of Fluid</div><br>
+                <img style="max-width: 100%;" class="my-1" src="https://latex.codecogs.com/svg.image?\large&space;PSI(\frac{lb}{in^{2}})*\frac{27679.90471\,(\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\,of\,Water(\frac{kg}{m^{3}})}*\frac{1}{S.G.}=Inches\,of\,\:Liquid" /></br>
+                <span style="font-size:14px;"><b>Plain Text Formula:</b> PSI (lb/in²)* (27679.90471(kg/m³) / 1 (lb/in³))*(1/Density of Water (kg/m³))*(1/(S.G.))= Inches of Liquid</span></br>
+                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> PSI(\frac{lb}{in^{2}})*\frac{27679.90471\,(\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\, of\, Water(\frac{kg}{m^{3}})}*\frac{1}{S.G.}=Inches\, of\,\: Liquid</span></br></br>
+              </div>
+            </div></br>
 
+<!----------------------------------------------------------------------------------------->
+            <div class="mx-auto d-inline-block mt-4"  style="max-width:800px;">
+              <div class="custom-heading">DENSITY CONVERSIONS FROM S.G.</div>
+              <div style="text-align: left" class="mt-1">
+                <div class="custom-subheading">S.G ⮕ Kg/m³</div><br>
+                <img style="max-width: 100%;" class="my-1" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\:of\:Water(\frac{kg}{m^{3}})=Density\:of\:Liquid(\frac{kg}{m^{3}})"/></br>
+                <span style="font-size:14px;"><b>Plain Text Formula:</b> Specific Gravity of Liquid * Density of Water (kg/m³) = Density of Liquid (kg/m³)</span></br>
+                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> \[ S.G.*Density\:of\:Water(\frac{kg}{m^{3}})=Density\:of\:Liquid(\frac{kg}{m^{3}})\]</span></br>
+              </div>
+
+              <div style="text-align: left" class="mt-4">
+                <div class="custom-subheading">S.G ⮕ Lb/Gallon</div><br>
+                <img style="max-width: 100%;" class="my-1" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\,\:of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}*\frac{231\,in^{3}}{1\,Gallon}=Density\,of\,Liquid(\frac{lb}{gallon})" /></br>
+                <span style="font-size:14px;"><b>Plain Text Formula:</b> Specific Gravity of Liquid * Density of Water (kg/m³) * (1 (lb/in³)/27679.90471(kg/m³))*(231 (in³)/1 Gallon) = Density of Liquid (lb/gallon)</span></br>
+                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b>\[S.G.*Density\,\:of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}*\frac{231\,in^{3}}{1\,Gallon}=Density\,of\,Liquid(\frac{lb}{gallon})\]</span></br>
+              </div>
+
+              <div style="text-align: left" class="mt-4">
+                <div class="custom-subheading">S.G ⮕ Lb/in³</div><br>
+                <img style="max-width: 100%;" class="my-1" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\,of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=Density\,of\,Liquid(\frac{lb}{in^{3}})" /></br>
+                <span style="font-size:14px;"><b>Plain Text Formula:</b> Specific Gravity of Liquid * Density of Water (kg/m³) * (1 (lb/in³)/27679.90471(kg/m³)) = Density of Liquid (lb/in³)</span></br>
+                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> \[S.G.*Density\, of\, Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=Density\, of\, Liquid(\frac{lb}{in^{3}})\]</span></br></br>
+              </div>
+            </div></br>
+
+<!----------------------------------------------------------------------------------------->
             <div class="d-inline-block mt-4" style="max-width:800px;">
               <div class="custom-heading">DENSITY CONVERSIONS TO S.G.</div>
               <div style="text-align: left" class="mt-1">
@@ -265,50 +311,6 @@
               </div>
             </div>
 
-<!----------------------------------------------------------------------------------------->
-            <div class="mx-auto d-inline-block mt-5"  style="max-width:800px;">
-              <div class="custom-heading">DENSITY CONVERSIONS FROM S.G.</div>
-              <div style="text-align: left" class="mt-1">
-                <div class="custom-subheading">S.G ⮕ Kg/m³</div><br>
-                <img style="max-width: 100%;" class="my-1" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\:of\:Water(\frac{kg}{m^{3}})=Density\:of\:Liquid(\frac{kg}{m^{3}})"/></br>
-                <span style="font-size:14px;"><b>Plain Text Formula:</b> Specific Gravity of Liquid * Density of Water (kg/m³) = Density of Liquid (kg/m³)</span></br>
-                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> \[ S.G.*Density\:of\:Water(\frac{kg}{m^{3}})=Density\:of\:Liquid(\frac{kg}{m^{3}})\]</span></br>
-              </div>
-
-              <div style="text-align: left" class="mt-4">
-                <div class="custom-subheading">S.G ⮕ Lb/Gallon</div><br>
-                <img style="max-width: 100%;" class="my-1" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\,\:of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}*\frac{231\,in^{3}}{1\,Gallon}=Density\,of\,Liquid(\frac{lb}{gallon})" /></br>
-                <span style="font-size:14px;"><b>Plain Text Formula:</b> Specific Gravity of Liquid * Density of Water (kg/m³) * (1 (lb/in³)/27679.90471(kg/m³))*(231 (in³)/1 Gallon) = Density of Liquid (lb/gallon)</span></br>
-                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b>\[S.G.*Density\,\:of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}*\frac{231\,in^{3}}{1\,Gallon}=Density\,of\,Liquid(\frac{lb}{gallon})\]</span></br>
-              </div>
-
-              <div style="text-align: left" class="mt-4">
-                <div class="custom-subheading">S.G ⮕ Lb/in³</div><br>
-                <img style="max-width: 100%;" class="my-1" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\,of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=Density\,of\,Liquid(\frac{lb}{in^{3}})" /></br>
-                <span style="font-size:14px;"><b>Plain Text Formula:</b> Specific Gravity of Liquid * Density of Water (kg/m³) * (1 (lb/in³)/27679.90471(kg/m³)) = Density of Liquid (lb/in³)</span></br>
-                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> \[S.G.*Density\, of\, Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=Density\, of\, Liquid(\frac{lb}{in^{3}})\]</span></br></br>
-              </div>
-            </div>
-
-<!----------------------------------------------------------------------------------------->
-            <div class="mx-auto d-inline-block mt-5"  style="max-width:800px;">
-              <div class="custom-heading">Pressure Conversions</div>
-              <div style="text-align: left" class="mt-1">
-                <div class="custom-subheading">Inches of Fluid ⮕ PSI</div><br>
-                <img style="max-width: 100%;" class="my-1" src="https://latex.codecogs.com/svg.image?\large&space;(Inches\,of\,\:Liquid)*S.G.*Density\,of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=PSI(\frac{lb}{in^{2}})" /></br>
-                <span style="font-size:14px;"><b>Plain Text Formula:</b> (Inches of Liquid) * Specific Gravity of Liquid * Density of Water (kg/m³) * (1 (lb/in³)/27679.90471(kg/m³))= PSI (lb/in²)</span></br>
-                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> \[(Inches\,of\, \:Liquid)*S.G.*Density\, of\, Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=PSI(\frac{lb}{in^{2}})\]</span></br>
-              </div>
-            
-              <div style="text-align: left" class="mt-4">
-                <div class="custom-subheading">PSI ⮕ Inches of Fluid</div><br>
-                <img style="max-width: 100%;" class="my-1" src="https://latex.codecogs.com/svg.image?\large&space;PSI(\frac{lb}{in^{2}})*\frac{27679.90471\,(\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\,of\,Water(\frac{kg}{m^{3}})}*\frac{1}{S.G.}=Inches\,of\,\:Liquid" /></br>
-                <span style="font-size:14px;"><b>Plain Text Formula:</b> PSI (lb/in²)* (27679.90471(kg/m³) / 1 (lb/in³))*(1/Density of Water (kg/m³))*(1/(S.G.))= Inches of Liquid</span></br>
-                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> PSI(\frac{lb}{in^{2}})*\frac{27679.90471\,(\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\, of\, Water(\frac{kg}{m^{3}})}*\frac{1}{S.G.}=Inches\, of\,\: Liquid</span></br>
-              </div>
-            </div>
-          </div>
-
           </div>
         </div>
       </section>
@@ -322,12 +324,12 @@
           <div class="footerRow kofirow">
             <a href="index.html">
               <div class="logoblock">
-                <img class="logo" src="img/blueK.png" height="4.5rem;" alt="KasperCalcLogo" />
+                <img class="logo" src="img/blueK.webp" height="72px;" width="119.44px;" alt="KasperCalcLogo" />
                 <h4 class="footerlogo">KasperCalc</h4>
               </div>
             </a>
             <a href="https://ko-fi.com/kaspercalc" target="_blank">
-              <img class="kofi" src="img/kofi5.webp" height="50px" alt="Buy Me a Coffee at ko-fi.com" />
+              <img class="kofi" src="img/kofi5.webp" height="50px" width="198.63013px" alt="Buy Me a Coffee at ko-fi.com" />
             </a>
           </div>
 
@@ -375,10 +377,19 @@
               <span class="footerflexbox">Misc Properties</span>
             </h4>
             <div class="footerlink">
+                <a href="densityWater.html">Water Density</a>
+              </div>
+            <div class="footerlink">
               <a href="PGdensity.html">Propylene Gylcol Density</a>
             </div>
             <div class="footerlink">
               <a href="PGviscosity.html">Propylene Gylcol Viscosity</a>
+            </div>
+            <div class="footerlink">
+              <a href="PGheatcapacity.html">Propylene Gylcol Specific Heat Capacity</a>
+            </div>
+            <div class="footerlink">
+              <a href="PGthermalconductivity.html">Propylene Gylcol Thermal Conductivity</a>
             </div>
           </div>
           <div class="footerRow">
@@ -394,12 +405,12 @@
         <div class="footerRow">
           <a href="index.html">
             <div class="logoblock">
-              <img class="logo" src="img/blueK.png" height="4.5rem;" alt="KasperCalcLogo" />
+              <img class="logo" src="img/blueK.webp" height="72px;" width="119.44px;" alt="KasperCalcLogo" />
               <h4 class="footerlogo">KasperCalc</h4>
             </div>
           </a>
           <a href="https://ko-fi.com/kaspercalc" target="_blank">
-            <img class="kofi" src="img/kofi5.webp" height="50px" alt="Buy Me a Coffee at ko-fi.com" />
+            <img class="kofi" src="img/kofi5.webp" height="50px" width="198.63013px" alt="Buy Me a Coffee at ko-fi.com" />
           </a>
         </div>
 

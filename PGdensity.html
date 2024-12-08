@@ -8,18 +8,18 @@
     <title>KasperCalc: Propylene Gylcol Density</title>
     <meta name="author" content="bckasper3" />
     <meta name="keywords" content="KasperCalc, bckasper3, Propylene Gylcol Properties, Propylene Gylcol Density, Propylene Gylcol Density Calculator, CRC 530" />
-    <meta name="description" content="KasperCalc provides ad-free caclulators for Jet Fuel head pressures and common jet fuel properties" />
+    <meta name="description" content="KasperCalc provides ad-free caclulators for Jet Fuel head pressures and common jet fuel properties and much more!" />
 
     <!-- DEFERRED JAVASCRIPT -->
     
     <script defer type="text/javascript" src="js/bootstrap.min.js"></script>
-
+    <script defer type="text/javascript" src="js/pgDensity.js"></script>
 
     <!-- CSS FILES -->
     <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" />
-        <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
-    <link rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="print"  href="css/print.css" />
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
@@ -45,10 +45,12 @@
   <!-- BODY -->
   <body>
 
+
+
     <!-- NAVIGATION -->
     <nav class="navbar navbar-expand-md navbar-light">
       <a class="navbar-brand" href="index.html">
-        <img src="img/blueK.png" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
       </a>
 
       <a class="navbar-brand" href="index.html"> KasperCalc </a>
@@ -59,7 +61,7 @@
         data-bs-target="#navbarNav"
         class="navbar-toggler"
         aria-controls="navbarNav"
-        aria-expanded="false"
+        aria-expanded="falses"
         aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -97,8 +99,11 @@
           <li class="nav-item text-center d-flex align-items-center dropdown"> <!--ADD ACTIVE CLASS ON THE OTHER PAGES active-->
             <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Misc</a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown3">
+              <a class="dropdown-item" href="densityWater.html">Water Density</a>
               <a class="dropdown-item" href="PGdensity.html">Propylene Gylcol Density</a>
               <a class="dropdown-item" href="PGviscosity.html">Propylene Gylcol Viscosity</a>
+              <a class="dropdown-item" href="PGthermalconductivity.html">Propylene Gylcol Thermal Conductivity</a>
+              <a class="dropdown-item" href="PGheatcapacity.html">Propylene Gylcol Specific Heat Capacity</a>
             </div>
           </li>
 
@@ -131,44 +136,130 @@
       <section>
         <div class="csscontainer">
           <div class="col-lg-12 col-12">
+
             <div class="section-title-wrap">
-              <div class="h1 section-title">Jet Fuel Properties</div>
+              <div class="h1 section-title">Propylene Glycol Density Chart</div>
             </div>
 
-            <div class="section-content-wrap col-8 mx-auto">
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
+            <div class="canvasdiv">
+              <button id="toggleTooltipButton">Hide Tooltips</button>
+              <div class="canvascontainer">
+
+                <script type="text/javascript" src="js/chart.min.js"></script>
+                <script type="text/javascript" src="js/papaparse.min.js"></script>
+
+                <!-- <canvas id="myChart"></canvas> -->
+                <canvas id="myChart"aria-label="Alt Text Here" width="400" height="600" role="img" class="chartcanvas"> <!-- width="400" height="600" -->
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p></canvas>
+
+
+              </div>
             </div>
+            <p class="text-center">*Data from "Propylene Glycol Industrial Grade, <a href="https://www.carpemar.com/images/pdf/FT/Propilenglicol_IND/FT_Propilenglicol_IND_EN.pdf" target="_blank">Carpemar 2016</a>*</p>
+            <p class="text-center">*Toggle data sets by clicking the legend*</p>
           </div>
         </div>
       </section>
 
-      <!-- JET FUEL PROPERTIES -->
+
+      <!-- CALCULATOR -->
       <section>
         <div class="csscontainer">
-          <div class="col-lg-12 col-12">
-            <div class="section-title-wrap">
-              <div class="h1 section-title">Jet Fuel Properties</div>
-            </div>
+          <div class="col-lg-12 col-12 px-3">
 
-            <div class="section-content-wrap col-8 mx-auto">
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
-            ipsum Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium recusandae, pariatur id tem
+            <div class="wrapper">
+              <div class="header text-center">Propylene Glycol Density Calculator
+              </div>
+
+            <!-- <div class="toggle-container">
+              <label class="toggle-switch">
+                <input type="checkbox" id="fuelheadcalctoggle" class="toggle-input">
+                <span class="slider">
+                  <span class="option left">Inches of Fuel</span>
+                  <span class="option right">PSI</span>
+                </span>
+              </label>
+            </div> -->
+        
+              <div class="group1">
+                <label class="dropdownlabel" for="operation">Select Mixture %:</label>
+
+                <span class="output">
+                  <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="calculate()" style="width: 9rem;">
+                    <option value="50">50%</option>
+                    <option value="45">45%</option>
+                    <option value="40">40%</option>
+                    <option value="35">35%</option>
+                    <option value="30">30%</option>
+                    <option value="25">25%</option>
+                    <option value="Freeze Curve">Freeze Curve</option>
+                  </select>
+
+                </span>
+              </div>
+        
+              <div class="group">
+                <div class="outputrow">
+                <span class="label">
+                  <span id="nominalDensityOption1">Degrees (°F)</span>
+                </span> 
+                <span class="output inputbox">
+                  <input class= "calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" value="70"/>
+                </span>
+                </div>
+        
+                <div class="outputrow">
+                  <span class="label">
+                    <span id="nominalDensityOption2">Degrees (°C)</span>
+                  </span> 
+                  <span class="output inputbox">
+                    <input class= "calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" />
+                  </span>
+                </div>
+              </div>
+        
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Density (kg/m³):</span>
+                  <span class="output" id="result_density1">&nbsp</span>
+                </div>
+        
+                <div class="outputrow">
+                  <span class="label">Density (lb/in³):</span>
+                  <span class="output" id="result_density2">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Density (lb/gal):</span>
+                  <span class="output" id="result_density3">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Specific Gravity*:</span>
+                  <span class="output" id="result_density4">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Specific Gravity**:</span>
+                  <span class="output" id="result_density5">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Specific Gravity***:</span>
+                  <span class="output" id="result_density6">&nbsp</span>
+                </div>
+              </div>
+
             </div>
           </div>
+
+          <p class="text-center">* SG based on static density of water of 1000 (kg/m³) *</p>
+          <p class="text-center">** SG based on static density of water of 998 (kg/m³) **</p>
+          <p class="text-center">*** SG based on temperature dependent density of water ***</p>
+
         </div>
+        <!-- <p class="text-center">*S.G. based on the density of</br>water at 39.2°F  = 1000kg/m³*
+        </p> -->
       </section>
 
     </main>
@@ -180,12 +271,12 @@
           <div class="footerRow">
             <a href="index.html">
               <div class="logoblock">
-                <img class="logo" src="img/blueK.png" height="4.5rem;" alt="KasperCalcLogo" />
+                <img class="logo" src="img/blueK.webp" height="72px;" width="119.44px;" alt="KasperCalcLogo" />
                 <h4 class="footerlogo">KasperCalc</h4>
               </div>
             </a>
             <a href="https://ko-fi.com/kaspercalc" target="_blank">
-              <img class="kofi" src="img/kofi5.webp" height="50px" alt="Buy Me a Coffee at ko-fi.com" />
+              <img class="kofi" src="img/kofi5.webp" height="50px" width="198.63013px" alt="Buy Me a Coffee at ko-fi.com" />
             </a>
           </div>
 
@@ -233,10 +324,19 @@
               <span class="footerflexbox">Misc Properties</span>
             </h4>
             <div class="footerlink">
+                <a href="densityWater.html">Water Density</a>
+              </div>
+            <div class="footerlink">
               <a href="PGdensity.html">Propylene Gylcol Density</a>
             </div>
             <div class="footerlink">
               <a href="PGviscosity.html">Propylene Gylcol Viscosity</a>
+            </div>
+            <div class="footerlink">
+              <a href="PGheatcapacity.html">Propylene Gylcol Specific Heat Capacity</a>
+            </div>
+            <div class="footerlink">
+              <a href="PGthermalconductivity.html">Propylene Gylcol Thermal Conductivity</a>
             </div>
           </div>
           <div class="footerRow">
@@ -251,12 +351,12 @@
         <div class="footerRow">
           <a href="index.html">
             <div class="logoblock">
-              <img class="logo" src="img/blueK.png" height="4.5rem;" alt="KasperCalcLogo" />
+                <img class="logo" src="img/blueK.webp" height="72px;" width="119.44px;" alt="KasperCalcLogo" />
               <h4 class="footerlogo">KasperCalc</h4>
             </div>
           </a>
           <a href="https://ko-fi.com/kaspercalc" target="_blank">
-            <img class="kofi" src="img/kofi5.webp" height="50px" alt="Buy Me a Coffee at ko-fi.com" />
+            <img class="kofi" src="img/kofi5.webp" height="50px" width="198.63013px" alt="Buy Me a Coffee at ko-fi.com" />
           </a>
         </div>
 

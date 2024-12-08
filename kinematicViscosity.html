@@ -8,7 +8,7 @@
     <title>KasperCalc: Kinematic Viscosity</title>
     <meta name="author" content="bckasper3" />
     <meta name="keywords" content="KasperCalc, bckasper3, Jet Fuel Properties, Jet Fuel Kinematic Viscosity, CRC 530" />
-    <meta name="description" content="KasperCalc provides ad-free caclulators for Jet Fuel head pressures and common jet fuel properties" />
+    <meta name="description" content="KasperCalc provides ad-free caclulators for Jet Fuel head pressures and common jet fuel properties and much more!" />
 
     <!-- DEFERRED JAVASCRIPT -->
     
@@ -50,7 +50,7 @@
     <!-- NAVIGATION -->
     <nav class="navbar navbar-expand-md navbar-light">
       <a class="navbar-brand" href="index.html">
-        <img src="img/blueK.png" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
       </a>
 
       <a class="navbar-brand" href="index.html"> KasperCalc </a>
@@ -99,8 +99,11 @@
           <li class="nav-item text-center d-flex align-items-center dropdown"> <!--ADD ACTIVE CLASS ON THE OTHER PAGES active-->
             <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Misc</a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown3">
+              <a class="dropdown-item" href="densityWater.html">Water Density</a>
               <a class="dropdown-item" href="PGdensity.html">Propylene Gylcol Density</a>
               <a class="dropdown-item" href="PGviscosity.html">Propylene Gylcol Viscosity</a>
+              <a class="dropdown-item" href="PGthermalconductivity.html">Propylene Gylcol Thermal Conductivity</a>
+              <a class="dropdown-item" href="PGheatcapacity.html">Propylene Gylcol Specific Heat Capacity</a>
             </div>
           </li>
 
@@ -184,7 +187,7 @@
               <label class="dropdownlabel" for="operation">Select Fuel:</label>
 
               <span class="output">
-                <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="updateCalculator()">
+                <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="calculate()">
                   <option value="JP-5, Jet A, Jet A-1, JP-8">JP-5, Jet A, Jet A-1, JP-8</option>
                   <option value="RJ-5">RJ-5</option>
                   <option value="JP-4, Jet B">JP-4, Jet B</option>
@@ -205,7 +208,7 @@
                 <span id="nominalDensityOption1">Degrees (°F)</span>
               </span> 
               <span class="output inputbox">
-                <input class= "calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" />
+                <input class= "calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" value="70"/>
               </span>
               </div>
       
@@ -226,7 +229,7 @@
               </div>
       
               <div class="outputrow">
-                <span class="label">centistokes (cSt):</span>
+                <span class="label">Centistokes (cSt):</span>
                 <span class="output" id="result_density2">&nbsp</span>
               </div>
 
@@ -270,12 +273,12 @@
           <div class="footerRow">
             <a href="index.html">
               <div class="logoblock">
-                <img class="logo" src="img/blueK.png" height="4.5rem;" alt="KasperCalcLogo" />
+                <img class="logo" src="img/blueK.webp" height="72px;" width="119.44px;" alt="KasperCalcLogo" />
                 <h4 class="footerlogo">KasperCalc</h4>
               </div>
             </a>
             <a href="https://ko-fi.com/kaspercalc" target="_blank">
-              <img class="kofi" src="img/kofi5.webp" height="50px" alt="Buy Me a Coffee at ko-fi.com" />
+              <img class="kofi" src="img/kofi5.webp" height="50px" width="198.63013px" alt="Buy Me a Coffee at ko-fi.com" />
             </a>
           </div>
 
@@ -323,10 +326,19 @@
               <span class="footerflexbox">Misc Properties</span>
             </h4>
             <div class="footerlink">
+                <a href="densityWater.html">Water Density</a>
+              </div>
+            <div class="footerlink">
               <a href="PGdensity.html">Propylene Gylcol Density</a>
             </div>
             <div class="footerlink">
               <a href="PGviscosity.html">Propylene Gylcol Viscosity</a>
+            </div>
+            <div class="footerlink">
+              <a href="PGheatcapacity.html">Propylene Gylcol Specific Heat Capacity</a>
+            </div>
+            <div class="footerlink">
+              <a href="PGthermalconductivity.html">Propylene Gylcol Thermal Conductivity</a>
             </div>
           </div>
           <div class="footerRow">
@@ -341,12 +353,12 @@
         <div class="footerRow">
           <a href="index.html">
             <div class="logoblock">
-              <img class="logo" src="img/blueK.png" height="4.5rem;" alt="KasperCalcLogo" />
+              <img class="logo" src="img/blueK.webp" height="72px;" width="119.44px;" alt="KasperCalcLogo" />
               <h4 class="footerlogo">KasperCalc</h4>
             </div>
           </a>
           <a href="https://ko-fi.com/kaspercalc" target="_blank">
-            <img class="kofi" src="img/kofi5.webp" height="50px" alt="Buy Me a Coffee at ko-fi.com" />
+            <img class="kofi" src="img/kofi5.webp" height="50px" width="198.63013px" alt="Buy Me a Coffee at ko-fi.com" />
           </a>
         </div>
 
