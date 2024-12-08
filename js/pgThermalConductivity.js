@@ -1,15 +1,13 @@
-//URLs of the CSV files (replace with your own file paths or URLs)
+// URLs of the CSV files (replace with your own file paths or URLs)
 const csvFiles = [
-  '../csvData/55.csv', // Replace with actual file paths or URLs
-  '../csvData/48.csv',
-  '../csvData/49.csv',
-  '../csvData/50.csv',
-  '../csvData/51.csv',
-  '../csvData/52.csv',
-  '../csvData/53.csv',
-  '../csvData/54.csv',
-  '../csvData/47.csv',
- ];
+  '../csvData/propylenegylcol/pg-15.csv', // Replace with actual file paths or URLs
+  '../csvData/propylenegylcol/pg-16.csv',
+  '../csvData/propylenegylcol/pg-17.csv',
+  '../csvData/propylenegylcol/pg-18.csv',
+  '../csvData/propylenegylcol/pg-19.csv',
+  '../csvData/propylenegylcol/pg-20.csv',
+  '../csvData/propylenegylcol/pg-21.csv',
+];
 
 const fixedColors = [ //for setting the rgb values of the lines //https://personal.sron.nl/~pault/#sec:qualitative
   'rgb(68,119,170)',   // Blue
@@ -27,44 +25,14 @@ const fixedColors = [ //for setting the rgb values of the lines //https://person
 ];
 
 const fixedLabels = [ //for the data labels because they aren't in the csv files
-  'RJ-5',
-  'JP-4, Jet B',
-  'TS',
-  'JP-5, Jet A, Jet A-1, JP-8',
-  'JP-7',
-  'JP-9, JP-10',
-  'RJ-4',
-  'RJ-6',
-  'Av. Gas',
+  'Freeze Curve',
+  '50%',
+  '45%',
+  '40%',
+  '35%',
+  '30%',
+  '25%',
 ];
-
-// let densityWater = [
-//   [-40 , 999.9],
-//   [32.2, 999.9],
-//   [34  , 999.9],
-//   [39.2, 1000 ],
-//   [40  , 1000 ],
-//   [50  , 999.7],
-//   [60  , 999.0],
-//   [70  , 998.0],
-//   [80  , 996.6],
-//   [90  , 995.0],
-//   [100 , 993.1],
-//   [110 , 990.9],
-//   [120 , 988.6],
-//   [130 , 986.0],
-//   [140 , 983.2],
-//   [150 , 980.2],
-//   [160 , 977.1],
-//   [170 , 973.8],
-//   [180 , 970.4],
-//   [190 , 966.8],
-//   [200 , 963.0],
-//   [212 , 958.4],
-//   [220 , 955.2],
-//   [240 , 946.7],
-//   [260 , 937.5],
-// ];
 
 // Function to fetch and parse CSV files, returning an array of separate datasets
 async function processCSVFiles(filePaths) {
@@ -119,7 +87,6 @@ processCSVFiles(csvFiles)
     fallData = allData;
     createGraph();
     convertToCelsius();
-    calculate()
   })
   .catch(error => {
     console.error('Error processing CSV files:', error);
@@ -227,7 +194,7 @@ function createGraph() {
               type: 'linear',
               //beginAtZero: true,
               min: -40,
-              max: 356,
+              max: 212,
               //suggestedMax: 194, 
               ticks:{
                 //stepSize:10,
@@ -247,7 +214,7 @@ function createGraph() {
               }
             },
             y:{
-              type: 'logarithmic',
+              type: 'linear',
               tick:{
                 crossAlign:'far',
               },
@@ -262,7 +229,7 @@ function createGraph() {
               },
               title: {
                 display:true,
-                text: 'Kinematic Viscosity, mm²/sec (centistokes)',
+                text: 'Thermal Conductivity, W/mK',
                 padding: 10,
                 font: {
                   size: 20,
@@ -313,7 +280,7 @@ function convertToCelsius() {
 
 //Performing Linear Interpolation to calculate the Y value
 function linearInterpolation(x, data) {
-  //console.log('tis is the data into the interp function', data);
+  console.log('tis is the data into the interp function', data);
   // Step 1: Check if the x is within the bounds of the data
   x = parseFloat(x); //papaParse is returning strings instead of numbers
   minX = Math.min(...data.map(point => point[0])); // Minimum x value
@@ -353,42 +320,6 @@ function linearInterpolation(x, data) {
   }
 }
 
-//Does Linear interpolation on the water data
-function linearInterpolationWater(x, data) {
-  // Step 1: Check if the x is within the bounds of the data
-  //x = parseFloat(x); //papaParse is returning strings instead of numbers
-  minX = Math.min(...data.map(point => point[0])); // Minimum x value
-  maxX = Math.max(...data.map(point => point[0])); // Maximum x value
-
-  if (x < minX || x > maxX) {
-    console.log('outside of water density data');
-  }
-
-  // Step 2: Check if x is already in the data array
-  for (let i = 0; i < data.length; i++) {
-    if (data[i][0] === x) {
-      console.log('value is predefined');
-      return data[i][1]; // If x is already in the array, no interpolation is needed
-    }
-  }
-
-  // Step 3: Find the two data points (x0, y0) and (x1, y1)
-  for (let i = 0; i < data.length - 1; i++) {
-    let x0 = parseFloat(data[i][0]);
-    let y0 = parseFloat(data[i][1]);
-    let x1 = parseFloat(data[i+1][0]);
-    let y1 = parseFloat(data[i+1][1]);
-
-    // Check if x is between x0 and x1 (i.e., find the two surrounding points)
-    if (x >= x0 && x <= x1) {
-    
-      // Step 4: Perform linear interpolation
-      let y = y0 + ((x - x0) * (y1 - y0)) / (x1 - x0);
-      return y; // Return the interpolated y value
-    }
-  }
-}
-
 let switchIndex = 0;
 let flag = false;
 let nonChartData = null; // Declare a global variable to store the result
@@ -404,59 +335,50 @@ transformedData = function(parameter1){
 function calculate() {
   const operation = document.getElementById("operation").value;
   switch (operation) {
-    case "RJ-5":
+    case "Freeze Curve":
       switchIndex = 0;
       break;
-    case "JP-4, Jet B":
+    case "50":
       switchIndex = 1;
       break;
-    case "TS":
+    case "45":
       switchIndex = 2;
       break;
-    case "JP-5, Jet A, Jet A-1, JP-8":
+    case "40":
       switchIndex = 3;
       break;
-    case "JP-7":
+    case "35":
       switchIndex = 4;
       break;
-    case "JP-9, JP-10":
+    case "30":
       switchIndex = 5;
       break;
-    case "RJ-4":
+    case "25":
       switchIndex = 6;
-      break;  
-    case "RJ-6":
-      switchIndex = 7;
-      break;  
-    case "Av. Gas":
-      switchIndex = 8;
-      break;  
+      break;   
     }
 
-    let fahrenheit = document.getElementById("fahrenheit").value;
+  let fahrenheit = document.getElementById("fahrenheit").value;
+  let nonChartData;
 
-    if (nonChartData == null) {
-    nonChartData = transformedData();
-    };
-    
-    let interpolatedValue = linearInterpolation(fahrenheit, nonChartData[switchIndex]);
-    console.log(`Interpolated value at x = ${fahrenheit} is y = ${interpolatedValue}`);
+  if (nonChartData == null) {
+  nonChartData = transformedData();
+  };
   
-    //let interp_densityWater = linearInterpolationWater(fahrenheit, densityWater);
+  let interpolatedValue = linearInterpolation(fahrenheit, nonChartData[switchIndex]);
+  console.log(`Interpolated value at x = ${fahrenheit} is y = ${interpolatedValue}`);
 
-  if (flag == true) {
+   if (flag == true) {
       document.getElementById("result_density1").innerText = ("Out of Range");
       document.getElementById("result_density2").innerText = ("Out of Range");
       document.getElementById("result_density3").innerText = ("Out of Range");
       document.getElementById("result_density4").innerText = ("Out of Range");
       document.getElementById("result_density5").innerText = ("Out of Range");
-      document.getElementById("result_density6").innerText = ("Out of Range");
   } else {
-      document.getElementById("result_density1").innerText = ((interpolatedValue).toFixed(3));
-      document.getElementById("result_density2").innerText = ((interpolatedValue).toFixed(3));
-      document.getElementById("result_density3").innerText = ((interpolatedValue*.01).toFixed(5));
-      document.getElementById("result_density4").innerText = ((interpolatedValue*0.000001).toFixed(8));
-      document.getElementById("result_density5").innerText = ((interpolatedValue*0.0015500031).toFixed(5));
-      document.getElementById("result_density6").innerText = ((interpolatedValue*0.0000107639).toFixed(5));
+      document.getElementById("result_density1").innerText = ((interpolatedValue).toFixed(4));
+      document.getElementById("result_density2").innerText = ((interpolatedValue*0.238845999).toFixed(5));
+      document.getElementById("result_density3").innerText = ((interpolatedValue*0.00238846).toFixed(6));
+      document.getElementById("result_density4").innerText = ((interpolatedValue*0.5777893).toFixed(5));
+      document.getElementById("result_density5").innerText = ((interpolatedValue*6.933472).toFixed(5));
   }
 }

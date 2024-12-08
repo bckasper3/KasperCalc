@@ -4,67 +4,76 @@ function calculate() {
   const input1 = parseFloat(document.getElementById("input1").value) || 0;
   let result_PSI;
 
-  const SG_JetA = 0.8075;            //at 70°F
-  const SG_JetB = 0.7935;
-  const SG_JP_4 = 0.775;
-  const SG_JP_5 = 0.810;
-  const SG_JP_8 = 0.8075;
-  const SG_AvGas = 0.7240;
-  const SG_StoddardSolvent = 0.790;
+  const SG_JetA = 0.80884;            //at 70°F
+  const SG_JetB = 0.76071;
+  const SG_JP_4 = 0.76071;
+  const SG_JP_5 = 0.81585;
+  const SG_JP_8 = 0.80884;
+  const SG_AvGas = 0.69994;
+  const SG_StoddardSolvent = 0.78156;
 
-  let Density_JetA = SG_JetA*8.3290; //Pounds per Gallon at 70°F
-  let Density_JetB = SG_JetB*8.3290;
-  let Density_JP_4 = SG_JP_4*8.3290;
-  let Density_JP_5 = SG_JP_5*8.3290;
-  let Density_JP_8 = SG_JP_8*8.3290;
-  let Density_AvGas = SG_AvGas*8.3290;
-  let Density_StoddardSolvent = SG_StoddardSolvent*8.3290;
+  let denseWater = 998; //kg per m^3, for water at 70°F
+
+  let Density_JetA = SG_JetA*denseWater*(1/27679.904719)*231;    //Pounds per Gallon at 70°F
+  let Density_JetB = SG_JetB*denseWater*(1/27679.904719)*231;    //Pounds per Gallon at 70°F
+  let Density_JP_4 = SG_JP_4*denseWater*(1/27679.904719)*231;    //Pounds per Gallon at 70°F
+  let Density_JP_5 = SG_JP_5*denseWater*(1/27679.904719)*231;    //Pounds per Gallon at 70°F
+  let Density_JP_8 = SG_JP_8*denseWater*(1/27679.904719)*231;    //Pounds per Gallon at 70°F
+  let Density_AvGas = SG_AvGas*denseWater*(1/27679.904719)*231;  //Pounds per Gallon at 70°F
+  let Density_StoddardSolvent = SG_StoddardSolvent*denseWater*(1/27679.904719)*231; //Pounds per Gallon at 70°F
 
 
   if (fuelHeadCalcCheckbox.checked) {
     //PSI CHECK BOX
     switch (operation) {
       case "JetA":
+        result_PSI = (input1*(27679.904719/(SG_JetA*denseWater)));    //Rounds to 5 decimal places
+        result_InH2O = (input1*27.7076).toFixed(4); 
+        result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
         result_SG = SG_JetA.toFixed(4);
         result_Density = Density_JetA.toFixed(4);
-        result_PSI = (input1/(SG_JetA*0.0360912)).toFixed(5);    //Rounds to 5 decimal places
-        result_InH2O = (result_PSI*27.7076).toFixed(4); 
         break;
       case "JetB":
+        result_PSI = (input1*(27679.904719/(SG_JetB*denseWater)));
+        result_InH2O = (input1*27.7076).toFixed(4); 
+        result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
         result_SG = SG_JetB.toFixed(4);
         result_Density = Density_JetB.toFixed(4); 
-        result_PSI = (input1/(SG_JetB*0.0360912)).toFixed(5);
-        result_InH2O = (result_PSI*27.7076).toFixed(4); 
         break;
       case "JP4":
+        result_PSI = (input1*(27679.904719/(SG_JP_4*denseWater)));
+        result_InH2O = (input1*27.7076).toFixed(4); 
+        result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
         result_SG = SG_JP_4.toFixed(4);
         result_Density = Density_JP_4.toFixed(4);
-        result_PSI = (input1/(SG_JP_4*0.0360912)).toFixed(5);
-        result_InH2O = (result_PSI*27.7076).toFixed(4); 
         break;
       case "JP5":
+        result_PSI = (input1*(27679.904719/(SG_JP_5*denseWater)));
+        result_InH2O = (input1*27.7076).toFixed(4);   
+        result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
         result_SG = SG_JP_5.toFixed(4);
-        result_Density = Density_JP_5.toFixed(4);    
-        result_PSI = (input1/(SG_JP_5*0.0360912)).toFixed(5);
-        result_InH2O = (result_PSI*27.7076).toFixed(4);   
+        result_Density = Density_JP_5.toFixed(4);  
         break;
       case "JP8":
+        result_PSI = (input1*(27679.904719/(SG_JP_8*denseWater)));
+        result_InH2O = (input1*27.7076).toFixed(4); 
+        result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
         result_SG = SG_JP_8.toFixed(4);
         result_Density = Density_JP_8.toFixed(4);
-        result_PSI = (input1/(SG_JP_8*0.0360912)).toFixed(5);
-        result_InH2O = (result_PSI*27.7076).toFixed(4); 
         break;
       case "AvGas":
+        result_PSI = (input1*(27679.904719/(SG_AvGas*denseWater)));
+        result_InH2O = (input1*27.7076).toFixed(4); 
+        result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
         result_SG = SG_AvGas.toFixed(4);
-        result_Density = Density_AvGas.toFixed(4);     
-        result_PSI = (input1/(SG_AvGas*0.0360912)).toFixed(5);
-        result_InH2O = (result_PSI*27.7076).toFixed(4); 
+        result_Density = Density_AvGas.toFixed(4);   
         break;
-      case "StoddardSolvent":
+      case "StoddardSolvent":    
+          result_PSI = (input1*(27679.904719/(SG_StoddardSolvent*denseWater)));
+          result_InH2O = (input1*27.7076).toFixed(4); 
+          result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
           result_SG = SG_StoddardSolvent.toFixed(4);
           result_Density = Density_StoddardSolvent.toFixed(4);      
-          result_PSI = (input1/(SG_StoddardSolvent*0.0360912)).toFixed(5);
-          result_InH2O = (result_PSI*27.7076).toFixed(4); 
           break;      
       default:
         result_SG = "";
@@ -76,45 +85,53 @@ function calculate() {
     //INCHES OF FUEL CHECKBOX
       switch (operation) {
         case "JetA":
+          result_PSI = (SG_JetA*denseWater*(1/27679.904719)*input1);    //Rounds to 5 decimal places
+          result_InH2O = (result_PSI*27.7076).toFixed(4); 
+          result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
           result_SG = SG_JetA.toFixed(4);
           result_Density = Density_JetA.toFixed(4);
-          result_PSI = ((input1*SG_JetA)*0.0360912).toFixed(5);    //Rounds to 5 decimal places
-          result_InH2O = (result_PSI*27.7076).toFixed(4); 
           break;
         case "JetB":
+          result_PSI = (SG_JetB*denseWater*(1/27679.904719)*input1);
+          result_InH2O = (result_PSI*27.7076).toFixed(4);  
+          result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
           result_SG = SG_JetB.toFixed(4);
           result_Density = Density_JetB.toFixed(4);    
-          result_PSI = ((input1*SG_JetB)*0.0360912).toFixed(5);
-          result_InH2O = (result_PSI*27.7076).toFixed(4);  
           break;
         case "JP4":
-          result_SG = SG_JP_4.toFixed(4);
-          result_Density = Density_JP_4.toFixed(4);    
-          result_PSI = ((input1*SG_JP_4)*0.0360912).toFixed(5);
+          result_PSI = (SG_JP_4*denseWater*(1/27679.904719)*input1);
           result_InH2O = (result_PSI*27.7076).toFixed(4); 
+          result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
+          result_SG = SG_JP_4.toFixed(4);
+          result_Density = Density_JP_4.toFixed(4);  
           break;
         case "JP5":
+          result_PSI = (SG_JP_5*denseWater*(1/27679.904719)*input1);
+          result_InH2O = (result_PSI*27.7076).toFixed(4); 
+          result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
           result_SG = SG_JP_5.toFixed(4);
           result_Density = Density_JP_5.toFixed(4);   
-          result_PSI = ((input1*SG_JP_5)*0.0360912).toFixed(5);
-          result_InH2O = (result_PSI*27.7076).toFixed(4); 
           break;
         case "JP8":
+          result_PSI = (SG_JP_8*denseWater*(1/27679.904719)*input1);
+          result_InH2O = (result_PSI*27.7076).toFixed(4); 
+          result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
           result_SG = SG_JP_8.toFixed(4);
           result_Density = Density_JP_8.toFixed(4);
-          result_PSI = ((input1*SG_JP_8)*0.0360912).toFixed(5);
-          result_InH2O = (result_PSI*27.7076).toFixed(4); 
           break;
         case "AvGas":
+          result_PSI = (SG_AvGas*denseWater*(1/27679.904719)*input1);
+          result_InH2O = (result_PSI*27.7076).toFixed(4); 
+          result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
           result_SG = SG_AvGas.toFixed(4);
           result_Density = Density_AvGas.toFixed(4);
-          result_InH2O = (result_PSI*27.7076).toFixed(4); 
           break;
         case "StoddardSolvent":
-            result_SG = SG_StoddardSolvent.toFixed(4);
-            result_Density = Density_StoddardSolvent.toFixed(4);    
-            result_PSI = ((input1*SG_StoddardSolvent)*0.0360912).toFixed(5);
+            result_PSI = (SG_StoddardSolvent*denseWater*(1/27679.904719)*input1);
             result_InH2O = (result_PSI*27.7076).toFixed(4);  
+            result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
+            result_SG = SG_StoddardSolvent.toFixed(4);
+            result_Density = Density_StoddardSolvent.toFixed(4);  
             break;      
         default:
           result_SG = "";
@@ -128,11 +145,6 @@ function calculate() {
   document.getElementById("result_InH2O").innerText = result_InH2O;
   document.getElementById("result_PSI").innerText = result_PSI;
 }
-
-function updateCalculator() {
-  calculate(); // Update result when operation changes
-}
-
 
 // THE TOGGLE SLIDER FOR THE FUEL HEAD CALCULATOR
 const fuelHeadCalcCheckbox = document.getElementById('fuelheadcalctoggle');
@@ -160,3 +172,4 @@ fuelHeadCalcCheckbox.addEventListener('change', function() { // need to try: cli
     }
 });
 
+calculate()

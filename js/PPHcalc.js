@@ -1,4 +1,4 @@
-function calculate1() {
+function calculate() {
   const operation1 = document.getElementById("operation1").value;
   const input2 = parseFloat(document.getElementById("input2").value) || 0;
   let result_gpm;
@@ -129,10 +129,6 @@ document.getElementById("result_inches3sec").innerText = result_inches3sec;
 document.getElementById("result_gpm").innerText = result_gpm;
 }
 
-function updateCalculator1() {
-calculate1(); // Update result when operation changes
-}
-
 
 // THE TOGGLE SLIDER FOR THE FUEL HEAD CALCULATOR
 const varPPHtoGPMcheck = document.getElementById('PPHtoGPMcheck');
@@ -149,13 +145,15 @@ varPPHtoGPMcheck.addEventListener('change', function() { // need to try: click, 
 
     varpphgpmCalcResult1.style.display = 'none'; // Show element when checked
     varpphgpmCalcResult2.style.display = 'inline'; // Show element when unchecked
-    calculate1();
+    calculate();
   } else {
     varpphgpmCalcOption1.style.display = 'inline'; // Hide element when unchecked
     varpphgpmCalcOption2.style.display = 'none'; // Hide element when unchecked
 
     varpphgpmCalcResult1.style.display = 'inline'; // Hide element when unchecked
     varpphgpmCalcResult2.style.display = 'none'; // Hide element when unchecked
-    calculate1();
+    calculate();
   }
 });
+
+calculate()

@@ -72,7 +72,7 @@ function calculate() {
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
-          result_kgm = result_kgm.toFixed(3);
+          result_kgm = result_kgm.toFixed(2);
           result_PSI = result_PSI.toFixed(4);
           varfuelHeadCalcOption1.style.display = 'none'; // Show element when checked
           varfuelHeadCalcOption2.style.display = 'inline'; // Show element when unchecked
@@ -91,7 +91,7 @@ function calculate() {
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
-          result_kgm = result_kgm.toFixed(3);
+          result_kgm = result_kgm.toFixed(2);
           result_PSI = result_PSI.toFixed(4);
           varfuelHeadCalcOption1.style.display = 'none'; // Show element when checked
           varfuelHeadCalcOption2.style.display = 'inline'; // Show element when unchecked
@@ -110,7 +110,7 @@ function calculate() {
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
-          result_kgm = result_kgm.toFixed(3);
+          result_kgm = result_kgm.toFixed(2);
           result_PSI = result_PSI.toFixed(4);
           varfuelHeadCalcOption1.style.display = 'none'; // Show element when checked
           varfuelHeadCalcOption2.style.display = 'inline'; // Show element when unchecked
@@ -129,7 +129,7 @@ function calculate() {
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
-          result_kgm = result_kgm.toFixed(3);
+          result_kgm = result_kgm.toFixed(2);
           result_PSI = result_PSI.toFixed(4);
           varfuelHeadCalcOption1.style.display = 'none'; // Show element when checked
           varfuelHeadCalcOption2.style.display = 'inline'; // Show element when unchecked
@@ -148,7 +148,7 @@ function calculate() {
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
-          result_kgm = result_kgm.toFixed(3);
+          result_kgm = result_kgm.toFixed(2);
           result_PSI = result_PSI.toFixed(4);
           varfuelHeadCalcOption1.style.display = 'none'; // Show element when checked
           varfuelHeadCalcOption2.style.display = 'inline'; // Show element when unchecked
@@ -188,7 +188,7 @@ function calculate() {
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
-            result_kgm = result_kgm.toFixed(3);
+            result_kgm = result_kgm.toFixed(2);
             result_PSI = result_PSI.toFixed(4);
             varfuelHeadCalcOption1.style.display = 'inline'; // Hide element when unchecked
             varfuelHeadCalcOption2.style.display = 'none'; // Hide element when unchecked
@@ -207,7 +207,7 @@ function calculate() {
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
-            result_kgm = result_kgm.toFixed(3);
+            result_kgm = result_kgm.toFixed(2);
             result_PSI = result_PSI.toFixed(4);
             varfuelHeadCalcOption1.style.display = 'inline'; // Hide element when unchecked
             varfuelHeadCalcOption2.style.display = 'none'; // Hide element when unchecked
@@ -226,7 +226,7 @@ function calculate() {
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
-            result_kgm = result_kgm.toFixed(3);
+            result_kgm = result_kgm.toFixed(2);
             result_PSI = result_PSI.toFixed(4);
             varfuelHeadCalcOption1.style.display = 'inline'; // Hide element when unchecked
             varfuelHeadCalcOption2.style.display = 'none'; // Hide element when unchecked
@@ -245,7 +245,7 @@ function calculate() {
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
-            result_kgm = result_kgm.toFixed(3);
+            result_kgm = result_kgm.toFixed(2);
             result_PSI = result_PSI.toFixed(4);
             varfuelHeadCalcOption1.style.display = 'inline'; // Hide element when unchecked
             varfuelHeadCalcOption2.style.display = 'none'; // Hide element when unchecked
@@ -264,7 +264,7 @@ function calculate() {
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
-            result_kgm = result_kgm.toFixed(3);
+            result_kgm = result_kgm.toFixed(2);
             result_PSI = result_PSI.toFixed(4);
             varfuelHeadCalcOption1.style.display = 'inline'; // Hide element when unchecked
             varfuelHeadCalcOption2.style.display = 'none'; // Hide element when unchecked

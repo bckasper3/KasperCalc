@@ -120,6 +120,7 @@ processCSVFiles(csvFiles)
     // allData is now an array of arrays, where each inner array represents the data of one CSV file
     fallData = allData;
     createGraph();
+    convertToCelsius();
   })
   .catch(error => {
     console.error('Error processing CSV files:', error);
@@ -313,7 +314,7 @@ function convertToCelsius() {
 
 //Performing Linear Interpolation to calculate the Y value
 function linearInterpolation(x, data) {
-  //console.log('tis is the data into the interp function', data);
+  console.log('tis is the data into the interp function', data);
   // Step 1: Check if the x is within the bounds of the data
   x = parseFloat(x); //papaParse is returning strings instead of numbers
   minX = Math.min(...data.map(point => point[0])); // Minimum x value
@@ -437,6 +438,7 @@ function updateCalculator() {
     }
 
   let fahrenheit = document.getElementById("fahrenheit").value;
+  let nonChartData;
 
   if (nonChartData == null) {
   nonChartData = transformedData();

@@ -114,6 +114,7 @@ processCSVFiles(csvFiles)
     // allData is now an array of arrays, where each inner array represents the data of one CSV file
     fallData = allData;
     createGraph();
+    calculate();
   })
   .catch(error => {
     console.error('Error processing CSV files:', error);
@@ -288,23 +289,6 @@ document.getElementById('toggleTooltipButton').addEventListener('click', functio
   document.getElementById('toggleTooltipButton').textContent = buttonText;
 });
 
-
-// Convert Celsius to Fahrenheit
-function convertToFahrenheit() {
-  var celsius = document.getElementById("celsius").value;
-  var fahrenheit = (parseFloat(celsius) * 9/5) + 32;
-  document.getElementById("fahrenheit").value = fahrenheit.toFixed(2); // Update Fahrenheit box
-  updateCalculator();
-}
-
-// Convert Fahrenheit to Celsius
-function convertToCelsius() {
-  var fahrenheit = document.getElementById("fahrenheit").value;
-  var celsius = (parseFloat(fahrenheit) - 32) * 5/9;
-  document.getElementById("celsius").value = celsius.toFixed(2); // Update Celsius box
-  updateCalculator();
-}
-
 //Performing Linear Interpolation to calculate the Y value
 function linearInterpolation(x, data) {
   //console.log('tis is the data into the interp function', data);
@@ -395,7 +379,7 @@ transformedData = function(parameter1){
 };
 
 // Example usage:
-function updateCalculator() {
+function calculate() {
   const operation = document.getElementById("operation").value;
   switch (operation) {
     case "Av. Gas":

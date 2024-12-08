@@ -1,21 +1,14 @@
-//URLs of the CSV files (replace with your own file paths or URLs)
+// URLs of the CSV files (replace with your own file paths or URLs)
 const csvFiles = [
-  '../csvData/55.csv', // Replace with actual file paths or URLs
-  '../csvData/48.csv',
-  '../csvData/49.csv',
-  '../csvData/50.csv',
-  '../csvData/51.csv',
-  '../csvData/52.csv',
-  '../csvData/53.csv',
-  '../csvData/54.csv',
-  '../csvData/47.csv',
+  '../csvData/densityofWater.csv', // Replace with actual file paths or URLs
+  '../csvData/densityofWater-sat.csv',
  ];
 
 const fixedColors = [ //for setting the rgb values of the lines //https://personal.sron.nl/~pault/#sec:qualitative
   'rgb(68,119,170)',   // Blue
+  'rgb(238,102,119)',  // Red
   'rgb(34,136,51)',    // Green
   'rgb(204,187,68)',   // Yellow
-  'rgb(238,102,119)',  // Red
   'rgb(170,51,119)',   // Purple
   'rgb(187,187,187)',  // Grey
   'rgb(102,204,238)',  // Cyan
@@ -27,44 +20,9 @@ const fixedColors = [ //for setting the rgb values of the lines //https://person
 ];
 
 const fixedLabels = [ //for the data labels because they aren't in the csv files
-  'RJ-5',
-  'JP-4, Jet B',
-  'TS',
-  'JP-5, Jet A, Jet A-1, JP-8',
-  'JP-7',
-  'JP-9, JP-10',
-  'RJ-4',
-  'RJ-6',
-  'Av. Gas',
+  'Density of Water',
+  'Saturation Pressure Density of Water',
 ];
-
-// let densityWater = [
-//   [-40 , 999.9],
-//   [32.2, 999.9],
-//   [34  , 999.9],
-//   [39.2, 1000 ],
-//   [40  , 1000 ],
-//   [50  , 999.7],
-//   [60  , 999.0],
-//   [70  , 998.0],
-//   [80  , 996.6],
-//   [90  , 995.0],
-//   [100 , 993.1],
-//   [110 , 990.9],
-//   [120 , 988.6],
-//   [130 , 986.0],
-//   [140 , 983.2],
-//   [150 , 980.2],
-//   [160 , 977.1],
-//   [170 , 973.8],
-//   [180 , 970.4],
-//   [190 , 966.8],
-//   [200 , 963.0],
-//   [212 , 958.4],
-//   [220 , 955.2],
-//   [240 , 946.7],
-//   [260 , 937.5],
-// ];
 
 // Function to fetch and parse CSV files, returning an array of separate datasets
 async function processCSVFiles(filePaths) {
@@ -118,8 +76,6 @@ processCSVFiles(csvFiles)
     // allData is now an array of arrays, where each inner array represents the data of one CSV file
     fallData = allData;
     createGraph();
-    convertToCelsius();
-    calculate()
   })
   .catch(error => {
     console.error('Error processing CSV files:', error);
@@ -226,8 +182,8 @@ function createGraph() {
             x:{
               type: 'linear',
               //beginAtZero: true,
-              min: -40,
-              max: 356,
+              min: 32,
+              max: 675,
               //suggestedMax: 194, 
               ticks:{
                 //stepSize:10,
@@ -247,7 +203,7 @@ function createGraph() {
               }
             },
             y:{
-              type: 'logarithmic',
+              type: 'linear',
               tick:{
                 crossAlign:'far',
               },
@@ -262,7 +218,7 @@ function createGraph() {
               },
               title: {
                 display:true,
-                text: 'Kinematic Viscosity, mm²/sec (centistokes)',
+                text: 'Multiple of Volume At 60°F, 1 Atm',
                 padding: 10,
                 font: {
                   size: 20,
@@ -294,22 +250,6 @@ document.getElementById('toggleTooltipButton').addEventListener('click', functio
   document.getElementById('toggleTooltipButton').textContent = buttonText;
 });
 
-
-// Convert Celsius to Fahrenheit
-function convertToFahrenheit() {
-  var celsius = document.getElementById("celsius").value;
-  var fahrenheit = (parseFloat(celsius) * 9/5) + 32;
-  document.getElementById("fahrenheit").value = fahrenheit.toFixed(2); // Update Fahrenheit box
-  calculate();
-}
-
-// Convert Fahrenheit to Celsius
-function convertToCelsius() {
-  var fahrenheit = document.getElementById("fahrenheit").value;
-  var celsius = (parseFloat(fahrenheit) - 32) * 5/9;
-  document.getElementById("celsius").value = celsius.toFixed(2); // Update Celsius box
-  calculate();
-}
 
 //Performing Linear Interpolation to calculate the Y value
 function linearInterpolation(x, data) {
@@ -353,110 +293,144 @@ function linearInterpolation(x, data) {
   }
 }
 
-//Does Linear interpolation on the water data
-function linearInterpolationWater(x, data) {
-  // Step 1: Check if the x is within the bounds of the data
-  //x = parseFloat(x); //papaParse is returning strings instead of numbers
-  minX = Math.min(...data.map(point => point[0])); // Minimum x value
-  maxX = Math.max(...data.map(point => point[0])); // Maximum x value
 
-  if (x < minX || x > maxX) {
-    console.log('outside of water density data');
-  }
 
-  // Step 2: Check if x is already in the data array
-  for (let i = 0; i < data.length; i++) {
-    if (data[i][0] === x) {
-      console.log('value is predefined');
-      return data[i][1]; // If x is already in the array, no interpolation is needed
-    }
-  }
 
-  // Step 3: Find the two data points (x0, y0) and (x1, y1)
-  for (let i = 0; i < data.length - 1; i++) {
-    let x0 = parseFloat(data[i][0]);
-    let y0 = parseFloat(data[i][1]);
-    let x1 = parseFloat(data[i+1][0]);
-    let y1 = parseFloat(data[i+1][1]);
 
-    // Check if x is between x0 and x1 (i.e., find the two surrounding points)
-    if (x >= x0 && x <= x1) {
-    
-      // Step 4: Perform linear interpolation
-      let y = y0 + ((x - x0) * (y1 - y0)) / (x1 - x0);
-      return y; // Return the interpolated y value
-    }
-  }
-}
+
 
 let switchIndex = 0;
 let flag = false;
-let nonChartData = null; // Declare a global variable to store the result
+let fallData1;
+let nonChartData; // Declare a global variable to store the result
+
+const csvFiles1 = [
+  '../csvData/densityofWater-combined.csv', // Replace with actual file paths or URLs
+ ];
+
+processCSVFiles(csvFiles1)
+  .then(allData1 => {
+    console.log('allData1:', allData1);
+    // allData is now an array of arrays, where each inner array represents the data of one CSV file
+    fallData1 = allData1;
+    nonChartData = transformedData();
+    calculate();
+  })
+  .catch(error => {
+    console.error('Error processing CSV files:', error);
+  });
+
 
 transformedData = function(parameter1){
-  const transformedDataintermediate = fallData.map(dataset => 
+  const transformedDataintermediate = fallData1.map(dataset => 
     dataset.map(point => [point.x, point.y])  // Create an array with x and y values
   );
   return transformedDataintermediate;
 };
 
-// Example usage:
+
 function calculate() {
-  const operation = document.getElementById("operation").value;
+  let operation = document.getElementById("operation").value;
+  let input2 = parseFloat(document.getElementById("input2").value) || 0;
+
+  const varfuelHeadCalcOption3 = document.getElementById('fuelHeadCalcOption3');
+  const varfuelHeadCalcOption4 = document.getElementById('fuelHeadCalcOption4');
+  const varfuelHeadCalcOption5 = document.getElementById('fuelHeadCalcOption5');
+  const varfuelHeadCalcOption6 = document.getElementById('fuelHeadCalcOption6');
+
+  let result_temp;
+  let result_temp_F;
+
+  let result_gcm;
+  let result_lbgal;
+  let result_lbft;
+  let result_lbin;
+  let result_slugft;
+  let result_kgm;
+
+  if (input2 == 0) {
+    input2 = 70;
+  }
+
+  result_temp = parseFloat(input2);
+
+  if (operation == 'degF') {
+    result_temp_F = result_temp;
+
+  } else if (operation == 'degC') {
+    result_temp_F = result_temp*(9/5)+32;
+
+  } else if (operation == 'degK') {
+    result_temp_F = ((result_temp+(-273.15))*(9/5))+32;
+
+  } else if (operation == 'degR') {
+    result_temp_F = (result_temp*1)+(-459.67);
+
+  } else {
+    result_temp = 0;
+    result_temp_F = 0;
+  }
+
+  console.log('degrees F before linearInterpolation:',result_temp_F);
+
+  console.log('nonChart Data Here:',nonChartData);
+  result_kgm = linearInterpolation(result_temp_F, nonChartData[switchIndex]);
+  console.log(`Interpolated value at x = ${result_temp_F} is y = ${result_kgm}`);
+
+
+  result_gcm = result_kgm*0.001;
+  result_lbgal = result_kgm*(1/27679.90471)*231;
+  result_lbft = result_kgm*(1/27679.90471)*(12*12*12);
+  result_lbin = result_kgm*(1/27679.90471);
+  result_slugft = result_kgm*(1/515.37881839);
+  result_kgm = result_kgm;
+
   switch (operation) {
-    case "RJ-5":
-      switchIndex = 0;
+    case "degF":
+      varfuelHeadCalcOption3.style.display = 'inline'; // Show element when checked
+      varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
+      varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
+      varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
       break;
-    case "JP-4, Jet B":
-      switchIndex = 1;
+    case "degC":
+      varfuelHeadCalcOption3.style.display = 'none'; // Show element when checked
+      varfuelHeadCalcOption4.style.display = 'inline'; // Show element when unchecked
+      varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
+      varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
       break;
-    case "TS":
-      switchIndex = 2;
+    case "degK":
+      varfuelHeadCalcOption3.style.display = 'none'; // Show element when checked
+      varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
+      varfuelHeadCalcOption5.style.display = 'inline'; // Show element when unchecked
+      varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
       break;
-    case "JP-5, Jet A, Jet A-1, JP-8":
-      switchIndex = 3;
+    case "degR":
+      varfuelHeadCalcOption3.style.display = 'none'; // Show element when checked
+      varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
+      varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
+      varfuelHeadCalcOption6.style.display = 'inline'; // Show element when unchecked
       break;
-    case "JP-7":
-      switchIndex = 4;
-      break;
-    case "JP-9, JP-10":
-      switchIndex = 5;
-      break;
-    case "RJ-4":
-      switchIndex = 6;
-      break;  
-    case "RJ-6":
-      switchIndex = 7;
-      break;  
-    case "Av. Gas":
-      switchIndex = 8;
-      break;  
+    default:
+      varfuelHeadCalcOption3.style.display = 'inline'; // Show element when checked
+      varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
+      varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
+      varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
     }
 
-    let fahrenheit = document.getElementById("fahrenheit").value;
-
-    if (nonChartData == null) {
-    nonChartData = transformedData();
-    };
-    
-    let interpolatedValue = linearInterpolation(fahrenheit, nonChartData[switchIndex]);
-    console.log(`Interpolated value at x = ${fahrenheit} is y = ${interpolatedValue}`);
-  
-    //let interp_densityWater = linearInterpolationWater(fahrenheit, densityWater);
-
   if (flag == true) {
-      document.getElementById("result_density1").innerText = ("Out of Range");
-      document.getElementById("result_density2").innerText = ("Out of Range");
-      document.getElementById("result_density3").innerText = ("Out of Range");
-      document.getElementById("result_density4").innerText = ("Out of Range");
-      document.getElementById("result_density5").innerText = ("Out of Range");
-      document.getElementById("result_density6").innerText = ("Out of Range");
+    document.getElementById("result_gcm").innerText =     ("Out of Range");
+    document.getElementById("result_lbgal").innerText =   ("Out of Range");
+    document.getElementById("result_lbft").innerText =    ("Out of Range");
+    document.getElementById("result_lbin").innerText =    ("Out of Range");
+    document.getElementById("result_slugft").innerText =  ("Out of Range");
+    document.getElementById("result_kgm").innerText =     ("Out of Range");
   } else {
-      document.getElementById("result_density1").innerText = ((interpolatedValue).toFixed(3));
-      document.getElementById("result_density2").innerText = ((interpolatedValue).toFixed(3));
-      document.getElementById("result_density3").innerText = ((interpolatedValue*.01).toFixed(5));
-      document.getElementById("result_density4").innerText = ((interpolatedValue*0.000001).toFixed(8));
-      document.getElementById("result_density5").innerText = ((interpolatedValue*0.0015500031).toFixed(5));
-      document.getElementById("result_density6").innerText = ((interpolatedValue*0.0000107639).toFixed(5));
+    document.getElementById("result_gcm").innerText = (result_gcm.toFixed(4));
+    document.getElementById("result_lbgal").innerText = (result_lbgal.toFixed(3));
+    document.getElementById("result_lbft").innerText = (result_lbft.toFixed(3));
+    document.getElementById("result_lbin").innerText = (result_lbin.toFixed(4));
+    document.getElementById("result_slugft").innerText = (result_slugft.toFixed(4));
+    document.getElementById("result_kgm").innerText = (result_kgm.toFixed(3));
   }
 }
+

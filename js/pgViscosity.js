@@ -1,14 +1,12 @@
 //URLs of the CSV files (replace with your own file paths or URLs)
 const csvFiles = [
-  '../csvData/55.csv', // Replace with actual file paths or URLs
-  '../csvData/48.csv',
-  '../csvData/49.csv',
-  '../csvData/50.csv',
-  '../csvData/51.csv',
-  '../csvData/52.csv',
-  '../csvData/53.csv',
-  '../csvData/54.csv',
-  '../csvData/47.csv',
+  '../csvData/propylenegylcol/pg-22.csv', // Replace with actual file paths or URLs
+  '../csvData/propylenegylcol/pg-23.csv',
+  '../csvData/propylenegylcol/pg-24.csv',
+  '../csvData/propylenegylcol/pg-25.csv',
+  '../csvData/propylenegylcol/pg-26.csv',
+  '../csvData/propylenegylcol/pg-27.csv',
+  '../csvData/propylenegylcol/pg-28.csv',
  ];
 
 const fixedColors = [ //for setting the rgb values of the lines //https://personal.sron.nl/~pault/#sec:qualitative
@@ -27,15 +25,13 @@ const fixedColors = [ //for setting the rgb values of the lines //https://person
 ];
 
 const fixedLabels = [ //for the data labels because they aren't in the csv files
-  'RJ-5',
-  'JP-4, Jet B',
-  'TS',
-  'JP-5, Jet A, Jet A-1, JP-8',
-  'JP-7',
-  'JP-9, JP-10',
-  'RJ-4',
-  'RJ-6',
-  'Av. Gas',
+  'Freeze Curve',
+  '50',
+  '45',
+  '40',
+  '35',
+  '30',
+  '25',
 ];
 
 // let densityWater = [
@@ -227,7 +223,7 @@ function createGraph() {
               type: 'linear',
               //beginAtZero: true,
               min: -40,
-              max: 356,
+              max: 176,
               //suggestedMax: 194, 
               ticks:{
                 //stepSize:10,
@@ -262,7 +258,7 @@ function createGraph() {
               },
               title: {
                 display:true,
-                text: 'Kinematic Viscosity, mm²/sec (centistokes)',
+                text: 'Dynamic Viscosity (mPa-s)',
                 padding: 10,
                 font: {
                   size: 20,
@@ -404,32 +400,26 @@ transformedData = function(parameter1){
 function calculate() {
   const operation = document.getElementById("operation").value;
   switch (operation) {
-    case "RJ-5":
+    case "Freeze Curve":
       switchIndex = 0;
       break;
-    case "JP-4, Jet B":
+    case "50":
       switchIndex = 1;
       break;
-    case "TS":
+    case "45":
       switchIndex = 2;
       break;
-    case "JP-5, Jet A, Jet A-1, JP-8":
+    case "40":
       switchIndex = 3;
       break;
-    case "JP-7":
+    case "35":
       switchIndex = 4;
       break;
-    case "JP-9, JP-10":
+    case "30":
       switchIndex = 5;
       break;
-    case "RJ-4":
+    case "25":
       switchIndex = 6;
-      break;  
-    case "RJ-6":
-      switchIndex = 7;
-      break;  
-    case "Av. Gas":
-      switchIndex = 8;
       break;  
     }
 
@@ -452,11 +442,11 @@ function calculate() {
       document.getElementById("result_density5").innerText = ("Out of Range");
       document.getElementById("result_density6").innerText = ("Out of Range");
   } else {
-      document.getElementById("result_density1").innerText = ((interpolatedValue).toFixed(3));
-      document.getElementById("result_density2").innerText = ((interpolatedValue).toFixed(3));
-      document.getElementById("result_density3").innerText = ((interpolatedValue*.01).toFixed(5));
-      document.getElementById("result_density4").innerText = ((interpolatedValue*0.000001).toFixed(8));
-      document.getElementById("result_density5").innerText = ((interpolatedValue*0.0015500031).toFixed(5));
-      document.getElementById("result_density6").innerText = ((interpolatedValue*0.0000107639).toFixed(5));
+      document.getElementById("result_density1").innerText = ((interpolatedValue).toFixed(4));
+      document.getElementById("result_density2").innerText = ((interpolatedValue*.001).toFixed(7));
+      document.getElementById("result_density3").innerText = ((interpolatedValue*.01).toFixed(6));
+      document.getElementById("result_density4").innerText = ((interpolatedValue).toFixed(4));
+      document.getElementById("result_density5").innerText = ((interpolatedValue*0.000671968994813).toFixed(6));
+      document.getElementById("result_density6").innerText = ((interpolatedValue*3.6).toFixed(5));
   }
 }
