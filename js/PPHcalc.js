@@ -1,23 +1,26 @@
+
+let denseWater = 998; //kg per m^3, for water at 70°F
+const SG_JetA = 0.8075;            //at 70°F
+const SG_JetB = 0.7935;
+const SG_JP_4 = 0.775;
+const SG_JP_5 = 0.810;
+const SG_JP_8 = 0.8075;
+const SG_AvGas = 0.7240;
+const SG_StoddardSolvent = 0.790;
+
+
 function calculate() {
   const operation1 = document.getElementById("operation1").value;
   const input2 = parseFloat(document.getElementById("input2").value) || 0;
   let result_gpm;
 
-  const SG_JetA = 0.8075;            //at 70°F
-  const SG_JetB = 0.7935;
-  const SG_JP_4 = 0.775;
-  const SG_JP_5 = 0.810;
-  const SG_JP_8 = 0.8075;
-  const SG_AvGas = 0.7240;
-  const SG_StoddardSolvent = 0.790;
-
-  let Density_JetA = SG_JetA*8.3290; //Pounds per Gallon at 70°F
-  let Density_JetB = SG_JetB*8.3290;
-  let Density_JP_4 = SG_JP_4*8.3290;
-  let Density_JP_5 = SG_JP_5*8.3290;
-  let Density_JP_8 = SG_JP_8*8.3290;
-  let Density_AvGas = SG_AvGas*8.3290;
-  let Density_StoddardSolvent = SG_StoddardSolvent*8.3290;
+  let Density_JetA = SG_JetA*denseWater*(231/27679.90471); //Pounds per Gallon at 70°F
+  let Density_JetB = SG_JetB*denseWater*(231/27679.90471);
+  let Density_JP_4 = SG_JP_4*denseWater*(231/27679.90471);
+  let Density_JP_5 = SG_JP_5*denseWater*(231/27679.90471);
+  let Density_JP_8 = SG_JP_8*denseWater*(231/27679.90471);
+  let Density_AvGas = SG_AvGas*denseWater*(231/27679.90471);
+  let Density_StoddardSolvent = SG_StoddardSolvent*denseWater*(231/27679.90471);
 
 if (varPPHtoGPMcheck.checked) {
   //GPM TO PPH CHECK BOX
@@ -129,6 +132,31 @@ document.getElementById("result_inches3sec").innerText = result_inches3sec;
 document.getElementById("result_gpm").innerText = result_gpm;
 }
 
+const textElement1 = document.getElementById("text-to-toggle1");
+const textElement2 = document.getElementById("text-to-toggle2");
+const clickableWord = document.getElementById("clickable-word");
+
+clickableWord.addEventListener("click", function() {
+  // Change the variable when the word is clicked
+
+  if (textElement1.style.display === "none") {
+    // If hidden, show the text
+    textElement1.style.display = "block";
+    textElement2.style.display = "none";
+    clickableWord.innerHTML = "<p>*<u>Click here to use density of 999kg/m³</u>*</p>"; // Change button text to "Show"
+    denseWater = 998; //kg per m^3, for water at 60°F
+    console.log(denseWater);
+    calculate();
+} else {
+    // If visible, hide the text
+    textElement1.style.display = "none";
+    textElement2.style.display = "block";
+    clickableWord.innerHTML = "<p>*<u>Click here to use density of 998kg/m³</u>*</p>"; // Change button text to "Show"
+    denseWater = 999; //kg per m^3, for water at 70°F
+    console.log(denseWater);
+    calculate();
+}
+});
 
 // THE TOGGLE SLIDER FOR THE FUEL HEAD CALCULATOR
 const varPPHtoGPMcheck = document.getElementById('PPHtoGPMcheck');

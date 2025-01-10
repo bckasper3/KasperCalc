@@ -1,18 +1,19 @@
 
+
+let denseWater = 998; //kg per m^3, for water at 70°F
+const SG_JetA = 0.80884;            //at 70°F
+const SG_JetB = 0.76071;
+const SG_JP_4 = 0.76071;
+const SG_JP_5 = 0.81585;
+const SG_JP_8 = 0.80884;
+const SG_AvGas = 0.69994;
+const SG_StoddardSolvent = 0.78156;
+
+
 function calculate() {
   const operation = document.getElementById("operation").value;
   const input1 = parseFloat(document.getElementById("input1").value) || 0;
   let result_PSI;
-
-  const SG_JetA = 0.80884;            //at 70°F
-  const SG_JetB = 0.76071;
-  const SG_JP_4 = 0.76071;
-  const SG_JP_5 = 0.81585;
-  const SG_JP_8 = 0.80884;
-  const SG_AvGas = 0.69994;
-  const SG_StoddardSolvent = 0.78156;
-
-  let denseWater = 998; //kg per m^3, for water at 70°F
 
   let Density_JetA = SG_JetA*denseWater*(1/27679.904719)*231;    //Pounds per Gallon at 70°F
   let Density_JetB = SG_JetB*denseWater*(1/27679.904719)*231;    //Pounds per Gallon at 70°F
@@ -152,6 +153,35 @@ const varfuelHeadCalcOption1 = document.getElementById('fuelHeadCalcOption1');
 const varfuelHeadCalcOption2 = document.getElementById('fuelHeadCalcOption2');
 const varfuelHeadCalcResult1 = document.getElementById('fuelHeadCalcResult1');
 const varfuelHeadCalcResult2 = document.getElementById('fuelHeadCalcResult2');
+
+
+
+const textElement1 = document.getElementById("text-to-toggle1");
+const textElement2 = document.getElementById("text-to-toggle2");
+const clickableWord = document.getElementById("clickable-word");
+
+clickableWord.addEventListener("click", function() {
+  // Change the variable when the word is clicked
+
+  if (textElement1.style.display === "none") {
+    // If hidden, show the text
+    textElement1.style.display = "block";
+    textElement2.style.display = "none";
+    clickableWord.innerHTML = "<p>*<u>Click here to use density of 999kg/m³</u>*</p>"; // Change button text to "Show"
+    denseWater = 998; //kg per m^3, for water at 60°F
+    console.log(denseWater);
+    calculate();
+} else {
+    // If visible, hide the text
+    textElement1.style.display = "none";
+    textElement2.style.display = "block";
+    clickableWord.innerHTML = "<p>*<u>Click here to use density of 998kg/m³</u>*</p>"; // Change button text to "Show"
+    denseWater = 999; //kg per m^3, for water at 70°F
+    console.log(denseWater);
+    calculate();
+}
+});
+
 
 // Add an event listener to the checkbox to monitor changes
 fuelHeadCalcCheckbox.addEventListener('change', function() { // need to try: click, change, and input

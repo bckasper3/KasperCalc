@@ -1,4 +1,12 @@
 
+let denseWater = 998; //kg per m^3, for water at 70°F
+let result_SG;
+let result_Density;
+let result_lbin;
+let result_kgm;
+let result_inches3sec;
+let result_gpm;
+
 function calculate() {
   let operation = document.getElementById("operation").value;
   let input1 = parseFloat(document.getElementById("input1").value) || 0;
@@ -14,14 +22,6 @@ function calculate() {
 
   const pphgpmCalcResult1 = document.getElementById('pphgpmCalcResult1');
   const pphgpmCalcResult2 = document.getElementById('pphgpmCalcResult2');
-
-  let denseWater = 998; //kg per m^3, for water at 70°F
-  let result_SG;
-  let result_Density;
-  let result_lbin;
-  let result_kgm;
-  let result_inches3sec;
-  let result_gpm;
 
   if (operation == 'S.G.') {
     result_SG = input2;
@@ -292,6 +292,32 @@ function calculate() {
   document.getElementById("result_gpm").innerText = result_gpm;
   document.getElementById("result_inches3sec").innerText = result_inches3sec;
 }
+
+const textElement1 = document.getElementById("text-to-toggle1");
+const textElement2 = document.getElementById("text-to-toggle2");
+const clickableWord = document.getElementById("clickable-word");
+
+clickableWord.addEventListener("click", function() {
+  // Change the variable when the word is clicked
+
+  if (textElement1.style.display === "none") {
+    // If hidden, show the text
+    textElement1.style.display = "block";
+    textElement2.style.display = "none";
+    clickableWord.innerHTML = "<p>*<u>Click here to use density of 999kg/m³</u>*</p>"; // Change button text to "Show"
+    denseWater = 998; //kg per m^3, for water at 60°F
+    console.log(denseWater);
+    calculate();
+} else {
+    // If visible, hide the text
+    textElement1.style.display = "none";
+    textElement2.style.display = "block";
+    clickableWord.innerHTML = "<p>*<u>Click here to use density of 998kg/m³</u>*</p>"; // Change button text to "Show"
+    denseWater = 999; //kg per m^3, for water at 70°F
+    console.log(denseWater);
+    calculate();
+}
+});
 
 // THE TOGGLE SLIDER FOR THE FUEL HEAD CALCULATOR
 const fuelHeadCalcCheckbox = document.getElementById('PPHtoGPMcheck');

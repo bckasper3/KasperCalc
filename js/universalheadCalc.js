@@ -1,4 +1,10 @@
 
+let denseWater = 998; //kg per m^3, for water at 70°F
+let result_SG;
+let result_Density;
+let result_lbin;
+let result_kgm;
+
 function calculate() {
   let operation = document.getElementById("operation").value;
   let input1 = parseFloat(document.getElementById("input1").value) || 0;
@@ -14,12 +20,6 @@ function calculate() {
 
   const varfuelHeadCalcResult1 = document.getElementById('fuelHeadCalcResult1');
   const varfuelHeadCalcResult2 = document.getElementById('fuelHeadCalcResult2');
-
-  let denseWater = 998; //kg per m^3, for water at 70°F
-  let result_SG;
-  let result_Density;
-  let result_lbin;
-  let result_kgm;
 
   if (input1 == null) {
     input1 = 0;
@@ -301,6 +301,32 @@ function calculate() {
   document.getElementById("result_InH2O").innerText = result_InH2O;
   document.getElementById("result_PSI").innerText = result_PSI;
 }
+
+const textElement1 = document.getElementById("text-to-toggle1");
+const textElement2 = document.getElementById("text-to-toggle2");
+const clickableWord = document.getElementById("clickable-word");
+
+clickableWord.addEventListener("click", function() {
+  // Change the variable when the word is clicked
+
+  if (textElement1.style.display === "none") {
+    // If hidden, show the text
+    textElement1.style.display = "block";
+    textElement2.style.display = "none";
+    clickableWord.innerHTML = "<p>*<u>Click here to use density of 999kg/m³</u>*</p>"; // Change button text to "Show"
+    denseWater = 998; //kg per m^3, for water at 60°F
+    console.log(denseWater);
+    calculate();
+} else {
+    // If visible, hide the text
+    textElement1.style.display = "none";
+    textElement2.style.display = "block";
+    clickableWord.innerHTML = "<p>*<u>Click here to use density of 998kg/m³</u>*</p>"; // Change button text to "Show"
+    denseWater = 999; //kg per m^3, for water at 70°F
+    console.log(denseWater);
+    calculate();
+}
+});
 
 // THE TOGGLE SLIDER FOR THE FUEL HEAD CALCULATOR
 const fuelHeadCalcCheckbox = document.getElementById('fuelheadcalctoggle');
