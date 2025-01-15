@@ -20,7 +20,7 @@
     <!-- CSS FILES -->
     <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> --> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
     <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
     <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
 
@@ -79,10 +79,12 @@
           <li class="nav-item text-center d-flex align-items-center dropdown"> <!--ADD ACTIVE CLASS ON THE OTHER PAGES active-->
             <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Calculators</a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
-              <a class="dropdown-item" href="fuelHead.html">Fuel Head Calculator</a>
-              <a class="dropdown-item" href="PPH.html">PPH to GPM Calculator</a>
+              <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+              <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
               <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
               <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+              <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+              <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
             </div>
           </li>
 
@@ -103,6 +105,7 @@
             <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Misc</a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown3">
               <a class="dropdown-item" href="densityWater.html">Water Density</a>
+              <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
               <a class="dropdown-item" href="PGdensity.html">Propylene Gylcol Density</a>
               <a class="dropdown-item" href="PGviscosity.html">Propylene Gylcol Viscosity</a>
               <a class="dropdown-item" href="PGthermalconductivity.html">Propylene Gylcol Thermal Conductivity</a>
@@ -154,30 +157,37 @@
                   </label>
                 </div>
             
-                <div class="group1 d-flex flex-wrap">
-                  <label class="dropdownlabel" for="operation">Select Input Unit:</label>
-  
-                  <span class="output">
-                    <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="calculate()" aria-label="Configurable units selector dropdown">
-                      <option value="S.G.">S.G.</option>
-                      <option value="LB / Gal">Lb / Gal</option>
-                      <option value="lbin">Lb/in³:</option>
-                      <option value="kgm">Kg/m³</option>
-                    </select>
-                    </span>
-                </div>
-
-                <div class="group2">
-                  <span class="label">
-                    <span id="fuelHeadCalcOption3">S.G.:</span>
-                    <span id="fuelHeadCalcOption4">Lb/Gallon:</span>
-                    <span id="fuelHeadCalcOption5">Lb/in³:</span>
-                    <span id="fuelHeadCalcOption6">Kg/m³:</span>
-                  </span> 
-                  <span class="output inputbox">
-                    <input class= "calcinput" type="number" id="input2" oninput="calculate()" value="1" aria-label="Configurable input units (S.G. or Lb/in or lb/gallon or kg/m3)"/>
+                <div class="group12">
+                  <span>
+                    <div class="d-flex flex-wrap" style="justify-content: space-between;">
+                      <span class="dropdownlabel" for="operation">
+                        Select Input Unit:
+                      </span>
+                      <span class="output">
+                        <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="calculate()" aria-label="Configurable units selector dropdown">
+                          <option value="S.G.">S.G.</option>
+                          <option value="LB / Gal">Lb/Gal</option>
+                          <option value="lbin">Lb/in³</option>
+                          <option value="kgm">Kg/m³</option>
+                        </select>
+                      </span>
+                    </div>
                   </span>
-                </div>
+                
+                  <span>
+                    <div class="d-flex flex-wrap" style="justify-content: space-between;">
+                      <span class="label">
+                        <span id="fuelHeadCalcOption3">S.G.:</span>
+                        <span id="fuelHeadCalcOption4">Lb/Gallon:</span>
+                        <span id="fuelHeadCalcOption5">Lb/in³:</span>
+                        <span id="fuelHeadCalcOption6">Kg/m³:</span>
+                    </span>
+                      <span class="output inputbox">
+                        <input class= "calcinput" type="number" id="input2" oninput="calculate()" value="1" aria-label="Configurable input units (S.G. or Lb/in or lb/gallon or kg/m3)"/>
+                      </span>
+                  </div>
+                </span>
+              </div>
             
                   <div class="group2">
                     <span class="label">
@@ -196,7 +206,7 @@
                     </div>
             
                     <div class="outputrow">
-                      <span class="label">Density (lb/gallon):</span>
+                      <span class="label">Lb / Gallon:</span>
                       <span class="output" id="result_Density">&nbsp</span>
                     </div>
             
@@ -233,14 +243,16 @@
 
           <!-- Button to Other Calculator -->
           <section>
-
-              <div class="col-lg-12 col-12">
-                <div class="section-content-wrap col-8 mx-auto">
-                  <h2>Also See:</h2>
-                  <a href="PPH.html" class="custom-link custom-btn btn">Jet Fuel PPH to GPM Calculator</a><br/>
-                </div>
+            <div class="col-lg-12 col-12">
+              <div class="mx-auto mt-4 text-center">
+                <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
+                <a href="PPH.html" class="custom-link custom-btn btn d-inline-block">PPH to GPM Calculator</a><br/>
               </div>
-
+              <div class="mx-auto mt-1 text-center">
+                <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
+                <a href="CrazyUniversalPPH.html" class="custom-link custom-btn btn d-inline-block">Water Density Compensated Universal PPH to GPM Calculator</a><br/>
+              </div>
+            </div>
           </section>
     
     
@@ -271,21 +283,21 @@
                 <div class="custom-heading">DENSITY CONVERSIONS FROM S.G.</div>
                 <div style="text-align: left" class="mt-1">
                   <div class="custom-subheading">S.G ⮕ Kg/m³</div><br>
-                  <img style="max-width: 100%;" class="my-1" alt="Specific Gravity to kilograms over meteres cubed equation" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\:of\:Water(\frac{kg}{m^{3}})=Density\:of\:Fuel(\frac{kg}{m^{3}})"/></br>
+                  <img style="max-width: 100%;" class="my-1" alt="Specific Gravity to kilograms over meteres cubed equation" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\:of\:Water(\frac{kg}{m^{3}})=Density\:of\:Liquid(\frac{kg}{m^{3}})"/></br>
                   <span style="font-size:14px;"><b>Plain Text Formula:</b> Specific Gravity of Liquid * Density of Water (kg/m³) = Density of Liquid (kg/m³)</span></br>
                   <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> \[ S.G.*Density\:of\:Water(\frac{kg}{m^{3}})=Density\:of\:Liquid(\frac{kg}{m^{3}})\]</span></br>
                 </div>
 
                 <div style="text-align: left" class="mt-4">
                   <div class="custom-subheading">S.G ⮕ Lb/Gallon</div><br>
-                  <img style="max-width: 100%;" class="my-1" alt="Specific Gravity to pounds per gallon equation" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\,\:of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}*\frac{231\,in^{3}}{1\,Gallon}=Density\,of\,Fuel(\frac{lb}{gallon})" /></br>
+                  <img style="max-width: 100%;" class="my-1" alt="Specific Gravity to pounds per gallon equation" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\,\:of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}*\frac{231\,in^{3}}{1\,Gallon}=Density\,of\,Liquid(\frac{lb}{gallon})" /></br>
                   <span style="font-size:14px;"><b>Plain Text Formula:</b> Specific Gravity of Liquid * Density of Water (kg/m³) * (1 (lb/in³)/27679.90471(kg/m³))*(231 (in³)/1 Gallon) = Density of Liquid (lb/gallon)</span></br>
                   <span style="font-size:14px;"><b>CodeCogs/LaTex:</b>\[S.G.*Density\,\:of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}*\frac{231\,in^{3}}{1\,Gallon}=Density\,of\,Liquid(\frac{lb}{gallon})\]</span></br>
                 </div>
 
                 <div style="text-align: left" class="mt-4">
                   <div class="custom-subheading">S.G ⮕ Lb/in³</div><br>
-                  <img style="max-width: 100%;" class="my-1" alt="Specific Gravity to pounds per inch cubed equation" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\,of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=Density\,of\,Fuel(\frac{lb}{in^{3}})" /></br>
+                  <img style="max-width: 100%;" class="my-1" alt="Specific Gravity to pounds per inch cubed equation" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\,of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=Density\,of\,Liquid(\frac{lb}{in^{3}})" /></br>
                   <span style="font-size:14px;"><b>Plain Text Formula:</b> Specific Gravity of Liquid * Density of Water (kg/m³) * (1 (lb/in³)/27679.90471(kg/m³)) = Density of Liquid (lb/in³)</span></br>
                   <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> \[S.G.*Density\, of\, Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=Density\, of\, Liquid(\frac{lb}{in^{3}})\]</span></br></br>
                 </div>
@@ -296,21 +308,21 @@
                 <div class="custom-heading">DENSITY CONVERSIONS TO S.G.</div>
                 <div style="text-align: left" class="mt-1">
                   <div class="custom-subheading">Kg/m³ ⮕ S.G.</div><br>
-                  <img style="max-width: 100%;" class="my-1" alt="kilogram per meters cubed to specific gravity equation" src="https://latex.codecogs.com/svg.image?\large&space;\frac{Density\,of\,Fuel(\frac{kg}{m^{3}})}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G.\"/></br
+                  <img style="max-width: 100%;" class="my-1" alt="kilogram per meters cubed to specific gravity equation" src="https://latex.codecogs.com/svg.image?\large&space;\frac{Density\,of\,Liquid(\frac{kg}{m^{3}})}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G.\"/></br>
                   <span style="font-size:14px;"><b>Plain Text Formula:</b>(Density of Liquid (kg/m³)/Density of Water (kg/m³)) =  Specific Gravity of Liquid</span></br>
                   <span style="font-size:14px;"><b>CodeCogs/LaTex:</b>\[\frac{Density\,of\,Liquid(\frac{kg}{m^{3}})}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G.\]</span></br>
                 </div>
 
                 <div style="text-align: left" class="mt-4">
                   <div class="custom-subheading">Lb/Gallon ⮕ S.G.</div><br>
-                  <img style="max-width: 100%;" class="my-1" alt="pounds per gallon to specific gravity equation" src="https://latex.codecogs.com/svg.image?\large&space;Density\,of\,Fuel(\frac{lb}{gallon})*\frac{1\,Gallon}{231\,in^{3}}*\frac{(27679.90471\,\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G." /></br>
+                  <img style="max-width: 100%;" class="my-1" alt="pounds per gallon to specific gravity equation" src="https://latex.codecogs.com/svg.image?\large&space;Density\,of\,Liquid(\frac{lb}{gallon})*\frac{1\,Gallon}{231\,in^{3}}*\frac{(27679.90471\,\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G." /></br>
                   <span style="font-size:14px;"><b>Plain Text Formula:</b>Density of Liquid (lb/gallon)*(1 Gallon/231 (in³))*(27679.90471(kg/m³)/1 (lb/in³))*(1/Density of Water (kg/m³)) =  Specific Gravity of Liquid</span></br>
                   <span style="font-size:14px;"><b>CodeCogs/LaTex:</b>\[Density\,of\,Liquid(\frac{lb}{gallon})*\frac{1\,Gallon}{231\,in^{3}}*\frac{(27679.90471\,\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G.\]</span></br>
                 </div>
 
                 <div style="text-align: left" class="mt-4">
                   <div class="custom-subheading">Lb/in³ ⮕ S.G</div><br>
-                  <img style="max-width: 100%;" class="my-1" alt="pounds per inch cubed to specific gravity equation" src="https://latex.codecogs.com/svg.image?\large&space;Density\,of\,Fuel(\frac{lb}{in^{3}})*\frac{(27679.90471\,\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G." /></br>
+                  <img style="max-width: 100%;" class="my-1" alt="pounds per inch cubed to specific gravity equation" src="https://latex.codecogs.com/svg.image?\large&space;Density\,of\,Liquid(\frac{lb}{in^{3}})*\frac{(27679.90471\,\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G." /></br>
                   <span style="font-size:14px;"><b>Plain Text Formula:</b>Density of Liquid (lb/in³)*(27679.90471(kg/m³)/1 (lb/in³))*(1/Density of Water (kg/m³)) =  Specific Gravity of Liquid</span></br>
                   <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> \[Density\,of\,Liquid(\frac{lb}{in^{3}})*\frac{(27679.90471\,\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G.\]</span></br></br>
                 </div>
@@ -343,16 +355,22 @@
               <span class="footerflexbox"> Calculators </span>
             </h4>
             <div class="footerlink">
-              <a href="fuelHead.html"> Fuel Head Pressure </a>
+              <a href="fuelHead.html"> Jet Fuel Head Pressure </a>
             </div>
             <div class="footerlink">
-              <a href="PPH.html"> PPH to GPM </a>
+              <a href="PPH.html"> Jet Fuel PPH to GPM </a>
             </div>
             <div class="footerlink">
               <a href="universalfuelHead.html"> Universal Fluid Head </a>
             </div>
             <div class="footerlink">
               <a href="universalPPH.html"> Universal PPH to GPM </a>
+            </div>
+            <div class="footerlink">
+              <a href="CrazyUniversalfuelHead.html"> Water Density Compensated Universal Fluid Head </a>
+            </div>
+            <div class="footerlink">
+              <a href="CrazyUniversalPPH.html"> Water Density Compensated Universal PPH to GPM </a>
             </div>
           </div>
 
@@ -389,7 +407,10 @@
             </h4>
             <div class="footerlink">
                 <a href="densityWater.html">Water Density</a>
-              </div>
+            </div>
+            <div class="footerlink">
+              <a href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+          </div>
             <div class="footerlink">
               <a href="PGdensity.html">Propylene Gylcol Density</a>
             </div>

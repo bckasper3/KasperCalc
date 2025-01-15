@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- META DATA FOR -->
-    <title>KasperCalc: Universal Fluid Head Pressure</title>
+    <title>KasperCalc: Crazy Universal Fluid Head Pressure</title>
     <link rel="canonical" href="https://kaspercalc.com/fuelHead.html" />
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, bckasper3, Inches of liquid to PSI, Head Pressure Calculator, Density Calculator Properties, Universal Density Calculator" />
+    <meta name="keywords" content="KasperCalc, bckasper3, Temperature Compensated Inches of liquid to PSI, Temperature Compensated Head Pressure Calculator, Temperature Compensated Density Calculator Properties, Temperature Compensated Universal Density Calculator" />
     <meta name="description" content="KasperCalc provides ad-free caclulators for Jet Fuel head pressures and common jet fuel properties and much more!" />
 
     <!-- DEFERRED JAVASCRIPT -->
     
         <!-- <script defer type="text/javascript" src="js/bootstrap.min.js"></script> -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script defer type="text/javascript" src="js/universalheadCalc.js"></script>
+    <script defer type="text/javascript" src="js/CrazyUniversalheadCalc.js"></script>
 
     <!-- CSS FILES -->
     <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> --> 
@@ -129,7 +129,7 @@
           <div class="col-lg-12 col-12">
             <div class="banner section-title-wrap">
               <div class="h1 section-title bannertext">
-                Universal Fluid Head Pressure Calculator
+                Water Density Compensated Universal Fluid Head Pressure Calculator
               </div>
             </div>
           </div>
@@ -144,7 +144,7 @@
           <div class="col-lg-12 col-12 px-3">
 
             <div class="wrapper">
-              <div class="header text-center">Universal Fluid Head Calculator
+              <div class="header text-center">Water Density Compensated Universal Fluid Head Calculator
             </div>
 
             <div class="toggle-container">
@@ -157,38 +157,78 @@
               </label>
             </div>
         
-
-              <div class="group12">
-                <span>
-                  <div class="d-flex flex-wrap" style="justify-content: space-between;">
-                    <span class="dropdownlabel" for="operation">
-                      Select Input Unit:
-                    </span>
-                    <span class="output">
-                      <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="calculate()" aria-label="Configurable Density units selector dropdown">
-                        <option value="S.G.">S.G.</option>
-                        <option value="LB / Gal">Lb / Gal</option>
-                        <option value="lbin">Lb/in³</option>
-                        <option value="kgm">Kg/m³</option>
-                      </select>
-                    </span>
-                  </div>
-                </span>
-              
-                <span>
-                  <div class="d-flex flex-wrap" style="justify-content: space-between;">
-                    <span class="label">
-                      <span id="fuelHeadCalcOption3">S.G.:</span>
-                      <span id="fuelHeadCalcOption4">Lb/Gallon:</span>
-                      <span id="fuelHeadCalcOption5">Lb/in³:</span>
-                      <span id="fuelHeadCalcOption6">Kg/m³:</span>
+            <div class="group12">
+              <span>
+                <div class="d-flex flex-wrap" style="justify-content: space-between;">
+                  <span class="dropdownlabel" for="operation">
+                    Select Input Unit:
                   </span>
-                <span class="output inputbox">
-                  <input class= "calcinput" type="number" id="input2" oninput="calculate()" value="1" aria-label="Specific gravity input box"/>
-                </span>
+                  <span class="output">
+                    <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="calculate()" aria-label="Configurable Density units selector dropdown">
+                      <option value="S.G.">S.G.</option>
+                      <option value="LB / Gal">Lb / Gal</option>
+                      <option value="lbin">Lb/in³</option>
+                      <option value="kgm">Kg/m³</option>
+                    </select>
+                  </span>
                 </div>
               </span>
+            
+              <span>
+                <div class="d-flex flex-wrap" style="justify-content: space-between;">
+                  <span class="label">
+                    <span id="fuelHeadCalcOption3">S.G.:</span>
+                    <span id="fuelHeadCalcOption4">Lb/Gallon:</span>
+                    <span id="fuelHeadCalcOption5">Lb/in³:</span>
+                    <span id="fuelHeadCalcOption6">Kg/m³:</span>
+                </span>
+              <span class="output inputbox">
+                <input class= "calcinput" type="number" id="input2" oninput="calculate()" value="1" aria-label="Specific gravity/Density input box"/>
+              </span>
+              </div>
+            </span>
+          </div>
+
+          <div class="group12">
+            <span>
+              <div class="d-flex flex-wrap" style="justify-content: space-between;">
+                <span class="dropdownlabel" for="operation1">
+                  Select Input Unit:
+                </span>
+                <span class="output">
+                  <select class="dropdowncalc dropdown-menu-end" id="operation1" onchange="calculate()" aria-label="Configurable Temperature units selector dropdown">
+                    <option value="degF">°F</option>
+                    <option value="degC">°C</option>
+                    <option value="degK"> &nbsp K</option>
+                    <option value="degR">°R</option>
+                  </select>
+                </span>
+              </div>
+            </span>
+
+            <span>
+              <div class="d-flex flex-wrap" style="justify-content: space-between;">
+                <span class="label">
+                  <span id="FF">°F:</span>
+                  <span id="CC">°C:</span>
+                  <span id="KK">K:</span>
+                  <span id="RR">°R:</span>
+              </span>
+            <span class="output inputbox">
+              <input class= "calcinput" type="number" id="input3" oninput="calculate()" value="60" aria-label="Temperature input box"/>
+            </span>
             </div>
+          </span>
+
+          <div class="outputrow d-flex justify-content-between">
+            <span class="label">
+              <span>Water Density (kg/m³):</span>
+            </span>
+            <span class="output" style="line-height: 1;" id="result_kgm1">&nbsp</span>
+            <!-- class="output result" -->
+          </div>
+          
+        </div>
 
               <div class="group2">
                 <span class="label">
@@ -237,9 +277,7 @@
             </div>
           </div>
         </div>
-        <p class="text-center"                          id="text-to-toggle1">*S.G. based on water @ 70°F = 998kg/m³*</p>
-        <p class="text-center" style ="display: none;"  id="text-to-toggle2">*S.G. based on water @ 60°F = 999kg/m³*</p>
-        <p class="text-center" style="cursor: pointer;" id="clickable-word">*<u>Click here to use density of 999kg/m³</u>*</p>
+        <p style="text-align: center;"> Water Densities per <a href="densityWater.html" style="cursor: pointer;" target="_blank">this page.</a><p>
       </section>
 
       <!-- Button to Other Calculator -->
@@ -251,7 +289,7 @@
           </div>
           <div class="mx-auto mt-1 text-center">
             <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
-            <a href="CrazyUniversalfuelHead.html" class="custom-link custom-btn btn d-inline-block">Water Density Compensated Fluid Head Calculator</a><br/>
+            <a href="universalfuelHead.html" class="custom-link custom-btn btn d-inline-block">Universal Fluid Head Calculator</a><br/>
           </div>
         </div>
     </section>
