@@ -75,7 +75,6 @@ function calculate() {
   result_SG = result_SG;
 
 
-
   // console.log('calculate() is being run');
   // console.log('operation:',operation);
   // console.log('log and jog baby');  
@@ -92,8 +91,8 @@ function calculate() {
       //PSI CHECK BOX
       switch (operation) {
         case "S.G.":
-          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(1/input1));    //Rounds to 5 decimal places
-          result_InH2O = (result_PSI/result_SG).toFixed(4);      //Rounds to 3 decimal places
+          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
+          result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places
 
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
@@ -111,8 +110,8 @@ function calculate() {
           varfuelHeadCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "LB / Gal":
-          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(1/input1));    //Rounds to 5 decimal places
-          result_InH2O = (result_PSI/result_SG).toFixed(4);      //Rounds to 3 decimal places 
+          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
+          result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places 
           
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
@@ -130,8 +129,8 @@ function calculate() {
           varfuelHeadCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "lbin":
-          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(1/input1));    //Rounds to 5 decimal places
-          result_InH2O = (result_PSI/result_SG).toFixed(4);      //Rounds to 3 decimal places
+          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
+          result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places
           
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
@@ -149,8 +148,8 @@ function calculate() {
           varfuelHeadCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "kgm":
-          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(1/input1));    //Rounds to 5 decimal places
-          result_InH2O = (result_PSI/result_SG).toFixed(4);      //Rounds to 3 decimal places  
+          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
+          result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places  
           
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
@@ -168,8 +167,8 @@ function calculate() {
           varfuelHeadCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "In. of H20":
-          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(1/input1));    //Rounds to 5 decimal places
-          result_InH2O = (result_PSI/result_SG).toFixed(4);      //Rounds to 3 decimal places
+          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
+          result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places
           
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
@@ -401,7 +400,7 @@ processCSVFiles(csvFiles1)
  
 //Performing Linear Interpolation to calculate the Y value
 function linearInterpolation(x, data) {
-  console.log('tis is the data into the interp function', data);
+  //console.log('tis is the data into the interp function', data);
   // Step 1: Check if the x is within the bounds of the data
   x = parseFloat(x); //papaParse is returning strings instead of numbers
   minX = Math.min(...data.map(point => point[0])); // Minimum x value
@@ -484,9 +483,9 @@ function calculate1() {
     result_temp_F = 0;
   }
 
-  console.log('degrees F before linearInterpolation:',result_temp_F);
+  //console.log('degrees F before linearInterpolation:',result_temp_F);
 
-  console.log('nonChart Data Here:',nonChartData);
+  //console.log('nonChart Data Here:',nonChartData);
   result_kgm1 = linearInterpolation(result_temp_F, nonChartData[switchIndex]);
   console.log(`Interpolated value at x = ${result_temp_F} is y = ${result_kgm1}`);
 

@@ -39,8 +39,8 @@ function calculate() {
   const varfuelHeadCalcOption4 = document.getElementById('fuelHeadCalcOption4');
   const varfuelHeadCalcOption5 = document.getElementById('fuelHeadCalcOption5');
   const varfuelHeadCalcOption6 = document.getElementById('fuelHeadCalcOption6');
+  const varfuelHeadCalcOption7 = document.getElementById('fuelHeadCalcOption7');
 
-  const varfuelHeadCalcResult1 = document.getElementById('fuelHeadCalcResult1');
 
   if (input2 == null) {
     input2 = 0;
@@ -57,6 +57,8 @@ function calculate() {
   } else if (operation == 'kgm') {
     result_kgm = input2;
     result_SG = result_kgm/denseWater;
+  } else if (operation == 'sg') {
+    result_SG = input2;
   } else {
     result_SG = 0;
   }
@@ -76,6 +78,7 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
+          varfuelHeadCalcOption7.style.display = 'none'; // Show element when unchecked
           break;
         case "LB / Gal":
           result_SG = result_SG.toFixed(4);
@@ -86,6 +89,7 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'inline'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
+          varfuelHeadCalcOption7.style.display = 'none'; // Show element when unchecked
           break;
         case "lbin":        
           result_SG = result_SG.toFixed(4);
@@ -96,6 +100,7 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'inline'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
+          varfuelHeadCalcOption7.style.display = 'none'; // Show element when unchecked
           break;
         case "kgm":
           result_SG = result_SG.toFixed(4);
@@ -106,8 +111,9 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'inline'; // Show element when unchecked
+          varfuelHeadCalcOption7.style.display = 'none'; // Show element when unchecked
           break;
-        case "In. of H20":
+        case "sg":
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
@@ -116,6 +122,7 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
+          varfuelHeadCalcOption7.style.display = 'inline'; // Show element when unchecked
           break;
         default:
           result_SG = "0";

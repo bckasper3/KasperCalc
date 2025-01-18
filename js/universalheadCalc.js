@@ -66,8 +66,8 @@ function calculate() {
       //PSI CHECK BOX
       switch (operation) {
         case "S.G.":
-          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(1/input1));    //Rounds to 5 decimal places
-          result_InH2O = (result_PSI/result_SG).toFixed(4);      //Rounds to 3 decimal places
+          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
+          result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places
 
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
@@ -85,8 +85,8 @@ function calculate() {
           varfuelHeadCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "LB / Gal":
-          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(1/input1));    //Rounds to 5 decimal places
-          result_InH2O = (result_PSI/result_SG).toFixed(4);      //Rounds to 3 decimal places 
+          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
+          result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places 
           
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
@@ -104,8 +104,8 @@ function calculate() {
           varfuelHeadCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "lbin":
-          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(1/input1));    //Rounds to 5 decimal places
-          result_InH2O = (result_PSI/result_SG).toFixed(4);      //Rounds to 3 decimal places
+          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
+          result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places
           
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
@@ -123,8 +123,8 @@ function calculate() {
           varfuelHeadCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "kgm":
-          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(1/input1));    //Rounds to 5 decimal places
-          result_InH2O = (result_PSI/result_SG).toFixed(4);      //Rounds to 3 decimal places  
+          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
+          result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places  
           
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
@@ -142,8 +142,8 @@ function calculate() {
           varfuelHeadCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "In. of H20":
-          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(1/input1));    //Rounds to 5 decimal places
-          result_InH2O = (result_PSI/result_SG).toFixed(4);      //Rounds to 3 decimal places
+          result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
+          result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places
           
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
