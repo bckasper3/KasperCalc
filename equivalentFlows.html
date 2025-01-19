@@ -168,7 +168,7 @@
                       Flow Rate:*
                     </span>
                       <span class="output inputbox">
-                        <input class= "calcinput1" type="number" id="flow1InputNum" oninput="calculate()" value="900" aria-label="Input box for flow rate, either volumetric or mass flow rate"/>
+                        <input class= "calcinput1" type="number" id="flow1InputNum" oninput="calculate()" value="1" aria-label="Input box for flow rate, either volumetric or mass flow rate"/>
                         <select class="dropdowncalc dropdown-menu-end" id="flowUnit1" onchange="calculate()" aria-label="Configurable units selector dropdown for flow rate">
                           <option value="PPH">PPH</option>
                           <option value="GPM">GPM</option>
@@ -335,6 +335,307 @@
             <p class="text-center">Specific Gravity is a temperature dependent unit</p>
             <p style="text-align: center;"> Water Densities per <a href="densityWater.html" style="cursor: pointer;" target="_blank">this page.</a><p>
           </section>
+
+
+          <!-- MULTIFLOW CALCULATOR__________________________________________________________________________________-->
+          <section>
+            <div class="csscontainer">
+              <div class="col-lg-12 col-12 px-3">
+    
+                <div class="wrapper" style="max-width:60rem;">
+                  <div class="header text-center" style="margin-bottom:0;">
+                    Multi Flow Density Dependent Flow Rate Calculator
+                  </div>
+
+                <div class="group12 text-center" style="margin-bottom:0;">
+                  Flow 1 + Flow 2 = Flow 3
+                </div>
+
+              <!-- FLOW 3 -->
+              <!-- FLOW RATE -->
+              <div class="d-flexbck flex-wrap">
+              <div class="d-flexbck flex-column" style="flex: 1; min-width: fit-content;">
+              <div class="group12" style="flex: 1; min-width: fit-content;">
+                <div class="group12">
+                  <div style="text-align: center;">
+                    <span class="dropdownlabel">
+                      Flow 1
+                    </span>
+                  </div>
+                </div>
+
+                  <div class="d-flexbck flex-wrap" style="justify-content: space-between;">
+                    <span class="dropdownlabel" for="flowUnit3">
+                      Flow Rate:*
+                    </span>
+                      <span class="output inputbox">
+                        <input class= "calcinput1" type="number" id="flow3InputNum" oninput="calculate6()" value="0.5" aria-label="Input box for flow rate, either volumetric or mass flow rate"/>
+                        <select class="dropdowncalc dropdown-menu-end" id="flowUnit3" onchange="calculate6()" aria-label="Configurable units selector dropdown for flow rate">
+                          <option value="PPH">PPH</option>
+                          <option value="GPM">GPM</option>
+                          <option value="kgPs">kg/sec</option>
+                          <option value="gramM">Gram/Min</option>
+                          <option value="inSec">in³/sec</option>
+                          <option value="ftSec">ft³/sec</option>
+                          <option value="mSEc">m³/sec</option>
+                          <option value="mmSec">mm³/sec</option>
+                          <option value="lMin">L/min</option>
+                        </select>
+                      </span>
+                  </div>
+
+                <!-- DENSITY -->
+                <div class="d-flexbck flex-wrap" style="justify-content: space-between;" id="HideableDensity3">
+                  <span class="dropdownlabel" for="densUnit3">
+                    Density:
+                  </span>
+                  <span class="output inputbox">
+                    <input class= "calcinput1" type="number" id="dens3InputNum" oninput="calculate6()" value="999" aria-label="Density or specific gravity input box"/>
+                    <select class="dropdowncalc dropdown-menu-end" id="densUnit3" onchange="calculate6()" aria-label="Units for density input box">
+                      <option value="kgm">Kg/m³</option>
+                      <option value="S.G.">S.G.</option>
+                      <option value="LB / Gal">Lb/Gal</option>
+                      <option value="lbin">Lb/in³</option>
+                    </select>
+                  </span>
+                </div>
+
+                <!-- TEMPERATURE -->
+                <div class="d-flexbck flex-wrap" style="justify-content: space-between;" id="HideableTemp3">
+                  <span class="dropdownlabel" for="tempUnit3">
+                    Temperature:
+                  </span>
+                  <span class="output inputbox">
+                    <input class= "calcinput1" type="number" id="Temp3InputNum" oninput="calculate6()" value="60" aria-label="Temperature input box"/>
+                    <select class="dropdowncalc dropdown-menu-end" id="tempUnit3" onchange="calculate6()" aria-label="Configurable Temperature units selector dropdown">
+                      <option value="degF">°F</option>
+                      <option value="degC">°C</option>
+                      <option value="degK"> &nbsp K</option>
+                      <option value="degR">°R</option>
+                    </select>
+                  </span>
+                </div>
+
+                <div class="d-flexbck flex-wrap" style="justify-content: space-between;" id="HideableTemp3waterdensity">
+                  <span class="dropdownlabel">
+                    Density of Water (kg/m³):
+                  </span>
+                  <span class="dropdownlabel" id="waterDensity3">
+                    998
+                  </span>
+                </div>
+              </div>
+              <!-- END OF FLOW 3 -->
+
+
+
+
+
+
+
+              <!-- FLOW 4 -->
+              <!-- FLOW RATE -->
+                <div class="group12" style="flex: 1; min-width: fit-content;">
+  
+                  <div class="group12">
+                    <div style="text-align: center;">
+                      <span class="dropdownlabel">
+                        Flow 2
+                      </span>
+                    </div>
+                  </div>
+  
+                    <div class="d-flexbck flex-wrap" style="justify-content: space-between;">
+                      <span class="dropdownlabel" for="flowUnit4">
+                        Flow Rate:*
+                      </span>
+                        <span class="output inputbox">
+                          <input class= "calcinput1" type="number" id="flow4InputNum" oninput="calculate6()" value="0.5" aria-label="Input box for flow rate, either volumetric or mass flow rate"/>
+                          <select class="dropdowncalc dropdown-menu-end" id="flowUnit4" onchange="calculate6()" aria-label="Configurable units selector dropdown for flow rate">
+                            <option value="PPH">PPH</option>
+                            <option value="GPM">GPM</option>
+                            <option value="kgPs">kg/sec</option>
+                            <option value="gramM">Gram/Min</option>
+                            <option value="inSec">in³/sec</option>
+                            <option value="ftSec">ft³/sec</option>
+                            <option value="mSEc">m³/sec</option>
+                            <option value="mmSec">mm³/sec</option>
+                            <option value="lMin">L/min</option>
+                          </select>
+                        </span>
+                    </div>
+  
+                  <!-- DENSITY -->
+                  <div class="d-flexbck flex-wrap" style="justify-content: space-between;" id="HideableDensity4">
+                    <span class="dropdownlabel" for="densUnit4">
+                      Density:
+                    </span>
+                    <span class="output inputbox">
+                      <input class= "calcinput1" type="number" id="dens4InputNum" oninput="calculate6()" value="999" aria-label="Density or specific gravity input box"/>
+                      <select class="dropdowncalc dropdown-menu-end" id="densUnit4" onchange="calculate6()" aria-label="Units for density input box">
+                        <option value="kgm">Kg/m³</option>
+                        <option value="S.G.">S.G.</option>
+                        <option value="LB / Gal">Lb/Gal</option>
+                        <option value="lbin">Lb/in³</option>
+                      </select>
+                    </span>
+                  </div>
+  
+                  <!-- TEMPERATURE -->
+                  <div class="d-flexbck flex-wrap" style="justify-content: space-between;" id="HideableTemp4">
+                    <span class="dropdownlabel" for="tempUnit4">
+                      Temperature:
+                    </span>
+                    <span class="output inputbox">
+                      <input class= "calcinput1" type="number" id="Temp4InputNum" oninput="calculate6()" value="60" aria-label="Temperature input box"/>
+                      <select class="dropdowncalc dropdown-menu-end" id="tempUnit4" onchange="calculate6()" aria-label="Configurable Temperature units selector dropdown">
+                        <option value="degF">°F</option>
+                        <option value="degC">°C</option>
+                        <option value="degK"> &nbsp K</option>
+                        <option value="degR">°R</option>
+                      </select>
+                    </span>
+                  </div>
+  
+                  <div class="d-flexbck flex-wrap" style="justify-content: space-between;" id="HideableTemp4waterdensity">
+                    <span class="dropdownlabel">
+                      Density of Water (kg/m³):
+                    </span>
+                    <span class="dropdownlabel" id="waterDensity4">
+                      998
+                    </span>
+                  </div>
+                </div>
+              </div>
+                <!-- END OF FLOW 4 -->
+
+
+
+
+
+
+
+
+              <!-- FLOW 5 -->
+              <!-- FLOW RATE UNITS-->
+              <div class="d-flexbck flex-wrap" style="flex: 1; min-width: fit-content;"">
+              <div class="flex-wrap" style="flex: 1; min-width: fit-content;">
+                <div class="group12">
+                  <div class="group12">
+                    <div style="text-align: center;">
+                      <span class="dropdownlabel">
+                        Flow 3
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="d-flexbck flex-wrap" style="justify-content: space-between;">
+                    <span class="dropdownlabel" for="flowUnit5">
+                      Flow Rate Units:*
+                    </span>
+                      <span class="output inputbox">
+                        <select class="dropdowncalc dropdown-menu-end" id="flowUnit5" onchange="calculate6()" aria-label="Input box for flow rate, either volumetric or mass flow rate, flow flow 2">
+                          <option value="PPH">PPH</option>
+                          <option value="GPM">GPM</option>
+                          <option value="kgPs">kg/sec</option>
+                          <option value="gramM">Gram/Min</option>
+                          <option value="inSec">in³/sec</option>
+                          <option value="ftSec">ft³/sec</option>
+                          <option value="mSEc">m³/sec</option>
+                          <option value="mmSec">mm³/sec</option>
+                          <option value="lMin">L/min</option>
+                        </select>
+                      </span>
+                  </div>
+
+               <!-- DENSITY -->
+              <div class="d-flexbck flex-wrap" style="justify-content: space-between;" id="HideableDensity5">
+                <span class="dropdownlabel" for="densUnit5">
+                  Density:
+                </span>
+                <span class="output inputbox">
+                  <input class= "calcinput1" type="number" id="dens5InputNum" oninput="calculate6()" value="999" aria-label="Density or specific gravity input box"/>
+                  <select class="dropdowncalc dropdown-menu-end" id="densUnit5" onchange="calculate6()" aria-label="Units for density input box">
+                    <option value="kgm">Kg/m³</option>
+                    <option value="S.G.">S.G.</option>
+                    <option value="LB / Gal">Lb/Gal</option>
+                    <option value="lbin">Lb/in³</option>
+                  </select>
+                </span>
+              </div>
+
+              <!-- TEMPERATURE -->
+              <div class="d-flexbck flex-wrap" style="justify-content: space-between;" id="HideableTemp5">
+                <span class="dropdownlabel" for="tempUnit5">
+                  Temperature:
+                </span>
+                <span class="output inputbox">
+                  <input class= "calcinput1" type="number" id="Temp5InputNum" oninput="calculate6()" value="60" aria-label="Temperature input box"/>
+                  <select class="dropdowncalc dropdown-menu-end" id="tempUnit5" onchange="calculate6()" aria-label="Configurable Temperature units selector dropdown">
+                    <option value="degF">°F</option>
+                    <option value="degC">°C</option>
+                    <option value="degK"> &nbsp K</option>
+                    <option value="degR">°R</option>
+                  </select>
+                </span>
+              </div>
+
+              <div class="d-flexbck flex-wrap" style="justify-content: space-between;" id="HideableTemp5waterdensity">
+                <span class="dropdownlabel">
+                  Density of Water (kg/m³):
+                </span>
+                <span class="dropdownlabel" id="waterDensity5">
+                  998
+                </span>
+              </div>
+          </div>
+          
+          <div class="group result">
+            <span class="label">
+              <span id="FlowResult11">Result (PPH):</span>
+              <span id="FlowResult12">Result (GPM):</span>
+              <span id="FlowResult13">Result (kg/sec):</span>
+              <span id="FlowResult14">Result (gram/min):</span>
+              <span id="FlowResult15">Result (in³/sec):</span>
+              <span id="FlowResult16">Result (ft³/sec):</span>
+              <span id="FlowResult17">Result (m³/sec):</span>
+              <span id="FlowResult18">Result (mm³/sec):</span>
+              <span id="FlowResult19">Result (L/min):</span>
+            </span>
+            <span class="output result" id="result_selectedUnit1">&nbsp</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+      <!-- END OF FLOW 5 -->          
+
+                </div>
+              </div>
+            </div>
+            <p class="text-center">*Mixed Mass and Volume Flow Rate Units*</p>
+            <p class="text-center">Mass is always conserved, Mass In = Mass Out</p>
+            <p class="text-center">Volume is <u>NOT</u> always conserved, Volume In ≠ Volume Out</p>
+            <p class="text-center">Specific Gravity is a temperature dependent unit</p>
+            <p style="text-align: center;"> Water Densities per <a href="densityWater.html" style="cursor: pointer;" target="_blank">this page.</a><p>
+          </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           <!-- Button to Other Calculator -->
           <section>
