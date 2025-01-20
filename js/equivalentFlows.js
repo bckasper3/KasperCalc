@@ -8,6 +8,32 @@ let density1_kgm;
 let density2_kgm;
 let result;
 
+let Temp1InputNum = parseFloat(document.getElementById('Temp1InputNum').value) || 0;
+let tempUnit1 = document.getElementById('tempUnit1').value;
+let Temp2InputNum = parseFloat(document.getElementById('Temp2InputNum').value) || 0;
+let tempUnit2 = document.getElementById('tempUnit2').value;
+
+
+let denseWater3 = 998; //kg per m^3, for water at 70°F
+let denseWater4 = 998; //kg per m^3, for water at 70°F
+let denseWater5 = 998; //kg per m^3, for water at 70°F
+let waterDensity3;
+let waterDensity4;
+let waterDensity5;
+let flow3PPH;
+let flow4PPH;
+let density3_kgm;
+let density4_kgm;
+let density5_kgm;
+let result1;
+
+let Temp3InputNum = parseFloat(document.getElementById('Temp3InputNum').value) || 0;
+let tempUnit3 = document.getElementById('tempUnit3').value;
+let Temp4InputNum = parseFloat(document.getElementById('Temp4InputNum').value) || 0;
+let tempUnit4 = document.getElementById('tempUnit4').value;
+let Temp5InputNum = parseFloat(document.getElementById('Temp5InputNum').value) || 0;
+let tempUnit5 = document.getElementById('tempUnit5').value;
+
 const csvFiles1 = [
 '../csvData/densityofWater-combined.csv', // Replace with actual file paths or URLs
 ];
@@ -31,6 +57,7 @@ processCSVFiles(csvFiles1)
   fallData1 = allData1;
   nonChartData = transformedData();
   calculate();
+  calculate6();
 })
 .catch(error => {
   console.error('Error processing CSV files:', error);
@@ -48,14 +75,10 @@ function calculate() {
   const flowUnit1 = document.getElementById('flowUnit1').value;
   const dens1InputNum = parseFloat(document.getElementById('dens1InputNum').value) || 0;
   const densUnit1 = document.getElementById('densUnit1').value;
-  const Temp1InputNum = parseFloat(document.getElementById('Temp1InputNum').value) || 0;
-  const tempUnit1 = document.getElementById('tempUnit1').value;
 
   const flowUnit2 = document.getElementById('flowUnit2').value;
   const dens2InputNum = parseFloat(document.getElementById('dens2InputNum').value) || 0;
   const densUnit2 = document.getElementById('densUnit2').value;
-  const Temp2InputNum = parseFloat(document.getElementById('Temp2InputNum').value) || 0;
-  const tempUnit2 = document.getElementById('tempUnit2').value;
 
   const HideableDensity1 = document.getElementById('HideableDensity1');
   const HideableTemp1 = document.getElementById('HideableTemp1');
@@ -86,7 +109,6 @@ function calculate() {
   FlowResult8.style.display = 'none'; // Show element when checked
   FlowResult9.style.display = 'none'; // Show element when checked
 
-  const result_selectedUnit= document.getElementById('result_selectedUnit');
 
   if (flow1InputNum == null) {
     flow1InputNum = 0;
@@ -120,7 +142,7 @@ function calculate() {
   } else {
     density1_kgm = "0.810";
   }
-console.log("density of flow 1:",density1_kgm);
+//console.log("density of flow 1:",density1_kgm);
 
 // NEED TO GET DENSITY TO KGM EVERYTIME -2
 if (densUnit2 == 'kgm') {
@@ -134,7 +156,7 @@ if (densUnit2 == 'kgm') {
 } else {
   density2_kgm = "999";
 }
-console.log("density of flow 2:",density2_kgm);
+//console.log("density of flow 2:",density2_kgm);
 
 
 
@@ -438,3 +460,443 @@ function calculate1() {
     document.getElementById("waterDensity2").innerText = (waterDensity2.toFixed(2));
   }
  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ function calculate6() {
+  calculate3();
+  denseWater3 = waterDensity3;
+  calculate4();
+  denseWater4 = waterDensity4;
+  calculate5();
+  denseWater5 = waterDensity5;
+
+
+  const flow3InputNum = parseFloat(document.getElementById('flow3InputNum').value) || 0;
+  const flowUnit3 = document.getElementById('flowUnit3').value;
+  const dens3InputNum = parseFloat(document.getElementById('dens3InputNum').value) || 0;
+  const densUnit3 = document.getElementById('densUnit3').value;
+
+  const flow4InputNum = parseFloat(document.getElementById('flow4InputNum').value) || 0;
+  const flowUnit4 = document.getElementById('flowUnit4').value;
+  const dens4InputNum = parseFloat(document.getElementById('dens4InputNum').value) || 0;
+  const densUnit4 = document.getElementById('densUnit4').value;
+
+  const flowUnit5 = document.getElementById('flowUnit5').value;
+  const dens5InputNum = parseFloat(document.getElementById('dens5InputNum').value) || 0;
+  const densUnit5 = document.getElementById('densUnit5').value;
+
+  const HideableDensity3 = document.getElementById('HideableDensity3');
+  const HideableTemp3 = document.getElementById('HideableTemp3');
+
+  const HideableDensity4 = document.getElementById('HideableDensity4');
+  const HideableTemp4 = document.getElementById('HideableTemp4');
+
+  const HideableDensity5 = document.getElementById('HideableDensity5');
+  const HideableTemp5 = document.getElementById('HideableTemp5');
+
+  const HideableTemp3waterdensity = document.getElementById('HideableTemp3waterdensity');
+  const HideableTemp4waterdensity = document.getElementById('HideableTemp4waterdensity');
+  const HideableTemp5waterdensity = document.getElementById('HideableTemp5waterdensity');
+
+  const FlowResult11 = document.getElementById('FlowResult11');
+  const FlowResult12 = document.getElementById('FlowResult12');
+  const FlowResult13 = document.getElementById('FlowResult13');
+  const FlowResult14 = document.getElementById('FlowResult14');
+  const FlowResult15 = document.getElementById('FlowResult15');
+  const FlowResult16 = document.getElementById('FlowResult16');
+  const FlowResult17 = document.getElementById('FlowResult17');
+  const FlowResult18 = document.getElementById('FlowResult18');
+  const FlowResult19 = document.getElementById('FlowResult19');
+
+  FlowResult11.style.display = 'none'; // Show element when checked
+  FlowResult12.style.display = 'none'; // Show element when checked
+  FlowResult13.style.display = 'none'; // Show element when checked
+  FlowResult14.style.display = 'none'; // Show element when checked
+  FlowResult15.style.display = 'none'; // Show element when checked
+  FlowResult16.style.display = 'none'; // Show element when checked
+  FlowResult17.style.display = 'none'; // Show element when checked
+  FlowResult18.style.display = 'none'; // Show element when checked
+  FlowResult19.style.display = 'none'; // Show element when checked
+
+
+  if (flow3InputNum == null) {
+    flow3InputNum = 0;
+  }
+
+  if (flow4InputNum == null) {
+    flow4InputNum = 0;
+  }
+
+  if (densUnit3 == "S.G.") {
+    HideableTemp3.style.display = 'flex'; // Show element when checked
+    HideableTemp3waterdensity.style.display = 'flex'; // Show element when checked
+  } else {
+    HideableTemp3.style.display = 'none'; // Show element when checked
+    HideableTemp3waterdensity.style.display = 'none'; // Show element when checked
+  }
+
+  if (densUnit4 == "S.G.") {
+    HideableTemp4.style.display = 'flex'; // Show element when checked
+    HideableTemp4waterdensity.style.display = 'flex'; // Show element when checked
+  } else {
+    HideableTemp4.style.display = 'none'; // Show element when checked
+    HideableTemp4waterdensity.style.display = 'none'; // Show element when checked
+  }
+
+  if (densUnit5 == "S.G.") {
+    HideableTemp5.style.display = 'flex'; // Show element when checked
+    HideableTemp5waterdensity.style.display = 'flex'; // Show element when checked
+  } else {
+    HideableTemp5.style.display = 'none'; // Show element when checked
+    HideableTemp5waterdensity.style.display = 'none'; // Show element when checked
+  }
+
+
+// NEED TO GET DENSITY TO KGM EVERYTIME -3
+  if (densUnit3 == 'kgm') {
+    density3_kgm = dens3InputNum;
+   } else if (densUnit3 == 'S.G.') {
+    density3_kgm = dens3InputNum*denseWater3;
+  } else if (densUnit3 == 'LB / Gal') {
+    density3_kgm = dens3InputNum*(1/231)*27679.90471;
+  } else if (densUnit3 == 'lbin') {
+    density3_kgm = dens3InputNum*27679.90471;
+  } else {
+    density3_kgm = "0.810";
+  }
+
+// NEED TO GET DENSITY TO KGM EVERYTIME -4
+if (densUnit4 == 'kgm') {
+  density4_kgm = dens4InputNum;
+ } else if (densUnit4 == 'S.G.') {
+  density4_kgm = dens4InputNum*denseWater4;
+} else if (densUnit4 == 'LB / Gal') {
+  density4_kgm = dens4InputNum*(1/231)*27679.90471;
+} else if (densUnit4 == 'lbin') {
+  density4_kgm = dens4InputNum*27679.90471;
+} else {
+  density4_kgm = "999";
+ }
+
+// NEED TO GET DENSITY TO KGM EVERYTIME -5
+if (densUnit5 == 'kgm') {
+  density5_kgm = dens5InputNum;
+ } else if (densUnit5 == 'S.G.') {
+  density5_kgm = dens5InputNum*denseWater5;
+} else if (densUnit5 == 'LB / Gal') {
+  density5_kgm = dens5InputNum*(1/231)*27679.90471;
+} else if (densUnit5 == 'lbin') {
+  density5_kgm = dens5InputNum*27679.90471;
+} else {
+  density5_kgm = "999";
+}
+
+
+// OUT OF HERE I NEED TO ALWAYS GET FLOW 3 IN PPH
+  switch (flowUnit3) {
+    case "PPH":
+      HideableDensity3.style.display = 'none'; // Show element when checked
+      HideableTemp3.style.display = 'none'; // Show element when checked
+      flow3PPH = flow3InputNum; 
+      break;
+    case "GPM":
+      HideableDensity3.style.display = 'flex'; // Show element when checked
+      flow3PPH = flow3InputNum*60*density3_kgm*(1/27679.90471)*(231);  
+      break;
+    case "kgPs":
+      HideableDensity3.style.display = 'none'; // Show element when checked
+      HideableTemp3.style.display = 'none'; // Show element when checked
+      flow3PPH = flow3InputNum*7936.6414387; 
+      break;
+    case "gramM":
+      HideableDensity3.style.display = 'none'; // Show element when checked
+      HideableTemp3.style.display = 'none'; // Show element when checked
+      flow3PPH = flow3InputNum*0.1322773573; 
+      break;
+    case "inSec":
+      HideableDensity3.style.display = 'flex'; // Show element when checked
+      flow3PPH = flow3InputNum*60*60*density3_kgm*(1/27679.90471);  
+      break;
+    case "ftSec":
+      HideableDensity3.style.display = 'flex'; // Show element when checked
+      flow3PPH = flow3InputNum*12*12*12*60*60*density3_kgm*(1/27679.90471);  
+      break;
+    case "mSEc":
+      HideableDensity3.style.display = 'flex'; // Show element when checked
+      flow3PPH = flow3InputNum*39.3701*39.3701*39.3701*60*60*density3_kgm*(1/27679.90471);  
+      break;
+    case "mmSec":
+      HideableDensity4.style.display = 'flex'; // Show element when checked
+      flow3PPH = flow3InputNum*0.0393701*0.0393701*0.0393701*60*60*density3_kgm*(1/27679.90471);   
+      break;
+    case "lMin":
+      HideableDensity3.style.display = 'flex'; // Show element when checked
+      flow3PPH = flow3InputNum*61.0237*60*density3_kgm*(1/27679.90471);   
+      break;
+    default:
+      HideableDensity3.style.display = 'none'; // Show element when checked
+      HideableTemp3.style.display = 'none'; // Show element when checked
+      flow3PPH = flow3InputNum; 
+    }
+
+    // OUT OF HERE I NEED TO ALWAYS GET FLOW 4 IN PPH
+  switch (flowUnit4) {
+    case "PPH":
+      HideableDensity4.style.display = 'none'; // Show element when checked
+      HideableTemp4.style.display = 'none'; // Show element when checked
+      flow4PPH = flow4InputNum; 
+      break;
+    case "GPM":
+      HideableDensity4.style.display = 'flex'; // Show element when checked
+      flow4PPH = flow4InputNum*60*density4_kgm*(1/27679.90471)*(231);  
+      break;
+    case "kgPs":
+      HideableDensity4.style.display = 'none'; // Show element when checked
+      HideableTemp4.style.display = 'none'; // Show element when checked
+      flow4PPH = flow4InputNum*7936.6414387; 
+      break;
+    case "gramM":
+      HideableDensity4.style.display = 'none'; // Show element when checked
+      HideableTemp4.style.display = 'none'; // Show element when checked
+      flow4PPH = flow4InputNum*0.1322773573; 
+      break;
+    case "inSec":
+      HideableDensity4.style.display = 'flex'; // Show element when checked
+      flow4PPH = flow4InputNum*60*60*density4_kgm*(1/27679.90471);  
+      break;
+    case "ftSec":
+      HideableDensity4.style.display = 'flex'; // Show element when checked
+      flow4PPH = flow4InputNum*12*12*12*60*60*density4_kgm*(1/27679.90471);  
+      break;
+    case "mSEc":
+      HideableDensity4.style.display = 'flex'; // Show element when checked
+      flow4PPH = flow4InputNum*39.3701*39.3701*39.3701*60*60*density4_kgm*(1/27679.90471);  
+      break;
+    case "mmSec":
+      HideableDensity4.style.display = 'flex'; // Show element when checked
+      flow4PPH = flow4InputNum*0.0393701*0.0393701*0.0393701*60*60*density4_kgm*(1/27679.90471);   
+      break;
+    case "lMin":
+      HideableDensity4.style.display = 'flex'; // Show element when checked
+      flow4PPH = flow4InputNum*61.0237*60*density4_kgm*(1/27679.90471);   
+      break;
+    default:
+      HideableDensity4.style.display = 'none'; // Show element when checked
+      HideableTemp4.style.display = 'none'; // Show element when checked
+      flow4PPH = flow4InputNum; 
+    }
+
+    // OUT OF HERE I NEED TO TAKE FLOW 5 IN PPH, AND GET IT INTO THE DESIRED UNITS
+    switch (flowUnit5) {
+      case "PPH":
+        HideableDensity5.style.display = 'none'; // Show element when checked
+        HideableTemp5.style.display = 'none'; // Show element when checked
+        FlowResult11.style.display = 'inline'; // Show element when checked
+        result1 = (flow3PPH + flow4PPH); 
+        break;
+      case "GPM":
+        HideableDensity5.style.display = 'flex'; // Show element when checked
+        FlowResult12.style.display = 'inline'; // Show element when checked
+        result1 = ((flow3PPH*(1/60)*27679.90471*(1/density5_kgm)*(1/231))+(flow4PPH*(1/60)*27679.90471*(1/density5_kgm)*(1/231))); 
+        break;
+      case "kgPs":
+        HideableDensity5.style.display = 'none'; // Show element when checked
+        HideableTemp5.style.display = 'none'; // Show element when checked
+        FlowResult13.style.display = 'inline'; // Show element when checked
+        result1 = ((flow3PPH*0.0001259979)+(flow4PPH*0.0001259979)); 
+        break;
+      case "gramM":
+        HideableDensity5.style.display = 'none'; // Show element when checked
+        HideableTemp5.style.display = 'none'; // Show element when checked
+        FlowResult14.style.display = 'inline'; // Show element when checked
+        result1 = ((flow3PPH*7.5598728333)+(flow4PPH*7.5598728333)); 
+        break;
+      case "inSec":
+        HideableDensity5.style.display = 'flex'; // Show element when checked
+        FlowResult15.style.display = 'inline'; // Show element when checked
+        result1 = ((flow3PPH*(1/60)*(1/60)*(27679.90471)*(1/density5_kgm))+(flow4PPH*(1/60)*(1/60)*(27679.90471)*(1/density5_kgm))); 
+        break;
+      case "ftSec":
+        HideableDensity5.style.display = 'flex'; // Show element when checked
+        FlowResult16.style.display = 'inline'; // Show element when checked
+        result1 = ((flow3PPH*(1/60)*(1/60)*(27679.90471)*(1/density5_kgm)*(1/12)*(1/12)*(1/12))+(flow4PPH*(1/60)*(1/60)*(27679.90471)*(1/density5_kgm)*(1/12)*(1/12)*(1/12))); 
+        break;
+      case "mSEc":
+        HideableDensity5.style.display = 'flex'; // Show element when checked
+        FlowResult17.style.display = 'inline'; // Show element when checked
+        result1 = ((flow3PPH*(1/60)*(1/60)*(27679.90471)*(1/density5_kgm)*(0.0254)*(0.0254)*(0.0254))+(flow4PPH*(1/60)*(1/60)*(27679.90471)*(1/density5_kgm)*(0.0254)*(0.0254)*(0.0254))); 
+        break;
+      case "mmSec":
+        HideableDensity5.style.display = 'flex'; // Show element when checked
+        FlowResult18.style.display = 'inline'; // Show element when checked
+        result1 = ((flow3PPH*(1/60)*(1/60)*(27679.90471)*(1/density5_kgm)*(25.4)*(25.4)*(25.4))+(flow4PPH*(1/60)*(1/60)*(27679.90471)*(1/density5_kgm)*(25.4)*(25.4)*(25.4)));
+        break;
+      case "lMin":
+        HideableDensity5.style.display = 'flex'; // Show element when checked
+        FlowResult19.style.display = 'inline'; // Show element when checked
+        result1 = ((flow3PPH*(1/60)*(1/60)*(27679.90471)*(1/density5_kgm)*0.0163871)+(flow4PPH*(1/60)*(1/60)*(27679.90471)*(1/density5_kgm)*0.0163871)); 
+        break;
+      default:
+        HideableDensity5.style.display = 'none'; // Show element when checked
+        HideableTemp5.style.display = 'none'; // Show element when checked
+        FlowResult11.style.display = 'inline'; // Show element when checked
+        FlowResult12.style.display = 'inline'; // Show element when checked
+        FlowResult13.style.display = 'inline'; // Show element when checked
+        FlowResult14.style.display = 'inline'; // Show element when checked
+        FlowResult15.style.display = 'inline'; // Show element when checked
+        FlowResult16.style.display = 'inline'; // Show element when checked
+        FlowResult17.style.display = 'inline'; // Show element when checked
+        result1 = (flow3InputNum + flow4InputNum); 
+      }
+      console.log("flow 5", result1);
+  }
+
+
+  function calculate3() {
+    let tempUnit3 = document.getElementById("tempUnit3").value;
+    let Temp3InputNum = parseFloat(document.getElementById("Temp3InputNum").value) || 0;
+    let result_temp;
+    let result_temp_F;
+  
+    if (Temp3InputNum == 0) {
+      Temp3InputNum = 60;
+    }
+  
+    result_temp = parseFloat(Temp3InputNum);
+  
+    if (tempUnit3 == 'degF') {
+      result_temp_F = result_temp;
+  
+    } else if (tempUnit3 == 'degC') {
+      result_temp_F = result_temp*(9/5)+32;
+  
+    } else if (tempUnit3 == 'degK') {
+      result_temp_F = ((result_temp+(-273.15))*(9/5))+32;
+  
+    } else if (tempUnit3 == 'degR') {
+      result_temp_F = (result_temp*1)+(-459.67);
+  
+    } else {
+      result_temp = 0;
+      result_temp_F = 0;
+    }
+  
+    //console.log('degrees F before linearInterpolation:',result_temp_F);
+    //console.log('nonChart Data Here:',nonChartData);
+    waterDensity3 = linearInterpolation(result_temp_F, nonChartData[switchIndex]);
+    //console.log(`Interpolated value at x = ${result_temp_F} is y = ${waterDensity1}`);
+  
+    if (flag == true) {
+      document.getElementById("waterDensity3").innerText =     ("Out of Range");
+    } else {
+      document.getElementById("waterDensity3").innerText = (waterDensity3.toFixed(2));
+    }
+   }
+  
+
+   function calculate4() {
+    let tempUnit4 = document.getElementById("tempUnit4").value;
+    let Temp4InputNum = parseFloat(document.getElementById("Temp4InputNum").value) || 0;
+    let result_temp;
+    let result_temp_F;
+  
+    if (Temp4InputNum == 0) {
+      Temp4InputNum = 60;
+    }
+  
+    result_temp = parseFloat(Temp4InputNum);
+  
+    if (tempUnit4 == 'degF') {
+      result_temp_F = result_temp;
+  
+    } else if (tempUnit4 == 'degC') {
+      result_temp_F = result_temp*(9/5)+32;
+  
+    } else if (tempUnit4 == 'degK') {
+      result_temp_F = ((result_temp+(-273.15))*(9/5))+32;
+  
+    } else if (tempUnit4 == 'degR') {
+      result_temp_F = (result_temp*1)+(-459.67);
+  
+    } else {
+      result_temp = 0;
+      result_temp_F = 0;
+    }
+  
+    //console.log('degrees F before linearInterpolation:2',result_temp_F);
+    //console.log('nonChart Data Here:',nonChartData);
+    waterDensity4 = linearInterpolation(result_temp_F, nonChartData[switchIndex]);
+    //console.log(`Interpolated value at x = ${result_temp_F} is y = ${waterDensity2}`);
+  
+    if (flag == true) {
+      document.getElementById("waterDensity4").innerText =     ("Out of Range");
+    } else {
+      document.getElementById("waterDensity4").innerText = (waterDensity4.toFixed(2));
+    }
+   }
+     
+
+   function calculate5() {
+    let tempUnit5 = document.getElementById("tempUnit5").value;
+    let Temp5InputNum = parseFloat(document.getElementById("Temp5InputNum").value) || 0;
+    let result_temp;
+    let result_temp_F;
+  
+    if (Temp5InputNum == 0) {
+      Temp5InputNum = 60;
+    }
+  
+    result_temp = parseFloat(Temp5InputNum);
+  
+    if (tempUnit5 == 'degF') {
+      result_temp_F = result_temp;
+  
+    } else if (tempUnit5 == 'degC') {
+      result_temp_F = result_temp*(9/5)+32;
+  
+    } else if (tempUnit5 == 'degK') {
+      result_temp_F = ((result_temp+(-273.15))*(9/5))+32;
+  
+    } else if (tempUnit5 == 'degR') {
+      result_temp_F = (result_temp*1)+(-459.67);
+  
+    } else {
+      result_temp = 0;
+      result_temp_F = 0;
+    }
+  
+    //console.log('degrees F before linearInterpolation:2',result_temp_F);
+    //console.log('nonChart Data Here:',nonChartData);
+    waterDensity5 = linearInterpolation(result_temp_F, nonChartData[switchIndex]);
+    //console.log(`Interpolated value at x = ${result_temp_F} is y = ${waterDensity2}`);
+  
+    if (flag == true) {
+      document.getElementById("waterDensity5").innerText =     ("Out of Range");
+    } else {
+      document.getElementById("waterDensity5").innerText = (waterDensity5.toFixed(2));
+    }
+   }
