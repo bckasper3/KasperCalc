@@ -772,7 +772,7 @@ if (densUnit5 == 'kgm') {
         FlowResult17.style.display = 'inline'; // Show element when checked
         result1 = (flow3InputNum + flow4InputNum); 
       }
-      console.log("flow 5", result1);
+      document.getElementById("result_selectedUnit1").innerText = result1.toFixed(3);
   }
 
 
