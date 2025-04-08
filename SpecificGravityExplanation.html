@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- META DATA FOR -->
-    <title>KasperCalc: Fuel Head Pressure</title>
+    <title>KasperCalc: Specific Gravity Explanation</title>
     <link rel="canonical" href="https://kaspercalc.com/fuelHead.html" />
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, bckasper3, Inches of Fuel to PSI, Fuel Head Pressure Calculator, Jet Fuel Properties, Jet Fuel Density, CRC 530, Jet Pump Calculator, Ejectors Calculator" />
+    <meta name="keywords" content="KasperCalc, bckasper3, Specific Gravity Explanation, Does Specific Gravity Vary with Temperature, Water Temperature of Specific Gravity, Does S.G. Vary with Temperature, Water Temperature of S.G." />
     <meta name="description" content="KasperCalc provides ad-free caclulators for Jet Fuel head pressures and common jet fuel properties and much more!" />
 
     <!-- DEFERRED JAVASCRIPT -->
     
     <!-- <script defer type="text/javascript" src="js/bootstrap.min.js"></script> -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script defer type="text/javascript" src="js/headCalc.js"></script>
+    <!-- <script defer type="text/javascript" src="js/headCalc.js"></script> -->
 
     <!-- CSS FILES -->
     <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> --> 
@@ -131,7 +131,7 @@
           <div class="col-lg-12 col-12">
             <div class="banner section-title-wrap">
               <div class="h1 section-title bannertext">
-                Jet Fuel Head Pressure Calculator
+                The Final Word on Specific Gravity
               </div>
             </div>
           </div>
@@ -140,181 +140,79 @@
 
       <!-- UNDER THE BANNER -->
 
-      <!-- CALCULATOR -->
-      <section>
-        <div class="csscontainer">
-          <div class="col-lg-12 col-12 px-3">
-
-            <div class="wrapper">
-              <div class="header text-center">Jet Fuel Head Calculator
-            </div>
-
-            <div class="toggle-container">
-              <label class="toggle-switch">
-                <input type="checkbox" id="fuelheadcalctoggle" class="toggle-input" aria-label="Inches of Fuel to PSI Toggle Checkbox">
-                <span class="slider">
-                  <span class="option left">Inches of Fuel</span>
-                  <span class="option right">PSI</span>
-                </span>
-              </label>
-            </div>
-        
-              <div class="group1 d-flex flex-wrap">
-                <label class="dropdownlabel" for="operation">Select Fuel:</label>
-
-                <span class="output">
-                  <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="calculate()" aria-label="Jet Fuel Selector Dropdown">
-                    <option value="JetA">Jet A</option>
-                    <option value="JetB">Jet B</option>
-                    <option value="JP4">JP-4</option>
-                    <option value="JP5">JP-5</option>
-                    <option value="JP8">JP-8</option>
-                    <option value="AvGas">AvGas</option>
-                    <option value="StoddardSolvent">Stoddard Solvent</option>
-                  </select>
-
-                </span>
-              </div>
-        
-              <div class="group2">
-                <span class="label">
-                  <span id="fuelHeadCalcOption1">Inches of Fuel:</span>
-                  <span id="fuelHeadCalcOption2">PSI:</span>
-                </span> 
-                <span class="output inputbox">
-                  <input class= "calcinput" type="number" id="input1" oninput="calculate()" value="0" aria-label="Either Input Inches of Fuel or PSI"/>
-                </span>
-              </div>
-        
-              <div class="group">
-                <div class="outputrow">
-                  <span class="label">Specific Gravity (S.G.): </span>
-                  <span class="output" id="result_SG">&nbsp</span>
-                </div>
-        
-                <div class="outputrow">
-                  <span class="label">Density (lb/gallon):</span>
-                  <span class="output" id="result_Density">&nbsp</span>
-                </div>
-        
-                <div class="outputrow">
-                  <span class="label">Inches of Water (inH₂O):</span>
-                  <span class="output" id="result_InH2O">&nbsp</span>
-                </div>
-              </div>
-        
-              <div class="group result">
-                <span class="label">
-                  <span id="fuelHeadCalcResult1">Result (PSI):</span>
-                  <span id="fuelHeadCalcResult2">Result (Inches of Fuel):</span>
-                </span>
-                <span class="output result" id="result_PSI">&nbsp</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p class="text-center">*Fuels are mixtures and have variation, see other calculators*</p>
-        <p class="text-center"                          id="text-to-toggle1">*S.G. based on water @ 70°F = 998kg/m³*</p>
-        <p class="text-center" style ="display: none;"  id="text-to-toggle2">*S.G. based on water @ 60°F = 999kg/m³*</p>
-        <p class="text-center" style="cursor: pointer;" id="clickable-word">*<u>Click here to use density of 999kg/m³</u>*</p>
-        <p class="text-center"><a href="SpecificGravityExplanation.html" target="_blank">Specific Gravity is a Contentious Unit</a></p>
-      </section>
-
-
-    <!-- Button to Other Calculator -->
-    <section>
-      <div class="col-lg-12 col-12">
-        <div class="mx-auto mt-4 text-center">
-          <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
-          <a href="nominalDensity.html" class="custom-link custom-btn btn d-inline-block">Jet Fuel Nominal Density</a><br/>
-        </div>
-        <div class="mx-auto mt-1 text-center">
-          <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
-          <a href="minmaxDensity.html" class="custom-link custom-btn btn d-inline-block">Min/Max Jet Fuel Nominal Density</a><br/>
-        </div>
-        <div class="mx-auto mt-1 text-center">
-          <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
-          <a href="universalfuelHead.html" class="custom-link custom-btn btn d-inline-block">Universal Fluid Head Pressure Calculator</a><br/>
-        </div>
-        <div class="mx-auto mt-1 text-center">
-          <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
-          <a href="CrazyUniversalfuelHead.html" class="custom-link custom-btn btn d-inline-block">Water Density Compensated Universal Fluid Head Calculator</a><br/>
-        </div>
-      </div>
-  </section>
-
-
       <!-- TEXT UNDER THE CALCULATOR -->
       <section>
         <div class="csscontainer">
           <div class="mx-md-5 mx-3 section-content-wrap">
 
             <div class="mx-auto d-inline-block mt-1"  style="max-width:800px;">
-              <div class="custom-heading">Pressure Conversions</div>
+              <div class="custom-heading">What is Specific Gravity?</div>
               <div style="text-align: left" class="mt-1">
-                <div class="custom-subheading">Inches of Fuel ⮕ PSI</div><br>
-                <img style="max-width: 100%;" class="my-1" alt="Inches of Fuel to PSI Equation" src="https://latex.codecogs.com/svg.image?\large&space;(Inches\,of\,\:Fuel)*S.G.*Density\,of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=PSI(\frac{lb}{in^{2}})" /></br>
-                <span style="font-size:14px;"><b>Plain Text Formula:</b> (Inches of Fuel) * Specific Gravity of Fuel * Density of Water (kg/m³) * (1 (lb/in³)/27679.90471(kg/m³))= PSI (lb/in²)</span></br>
-                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> \[(Inches\,of\, \:Fuel)*S.G.*Density\, of\, Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=PSI(\frac{lb}{in^{2}})\]</span></br>
-              </div>
+                <div class="custom-subheading">What is Specific Gravity</div><br>
+                <span>Specific Gravity (S.G.) is a <b>dimensionless</b> ratio of the density of a fluid to the density of a reference fluid.</span></br>
+                <img style="max-width: 100%; display: block;" class="my-3" alt="kilogram per meters cubed to specific gravity equation" src="https://latex.codecogs.com/svg.image?\large&space;S.G. = \frac{Density\,of\,Fluid}{Density\,\:of\,Reference\,Fluid}\"/>
+                <span><b>Note:</b>  The numerator and denominator must be in the same units.</span></br>
+                <span style="font-size:14px;"><b>Plain Text Formula:</b> S.G. = Density of Fluid/Density of Reference Fluid</span></br>
+                <span style="font-size:14px; margin-bottom:100px;"><b>CodeCogs/LaTex:</b> S.G. = \frac{Density\,of\,Fluid}{Density\,\:of\,Reference\,Fluid}\</span></br></br>
+
+                <span style="font-size:var(--h2-font-size);"><b>Liquid:</b></span></br>
+                <span>Reference Fluid: <b>Water</b></span></br>
+                <img style="max-width: 100%;display: block;" class="my-3" alt="kilogram per meters cubed to specific gravity equation" src="https://latex.codecogs.com/svg.image?\large&space;S.G. = \frac{Density\,of\,Liquid}{Density\,\:of\,Water}\"/>
+                <span><b>Note:</b>  The numerator and denominator must be in the same units.</span></br>
+                <span><b>Note:</b>  The density of water for this calculation is contentious. See discussion below.</span></br>
+                <span style="font-size:14px;"><b>Plain Text Formula:</b> S.G. = Density of Liquid/Density of Water</span></br>
+                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> S.G. = \frac{Density\,of\,Liquid}{Density\,\:of\,Water}\</span></br></br>
+
+                <span style="font-size:var(--h2-font-size);"><b>Gas:</b></span></br>
+                <span>Reference Fluid: <b>Air</b></span></br>
+                <img style="max-width: 100%; display: block;" class="my-3" alt="kilogram per meters cubed to specific gravity equation" src="https://latex.codecogs.com/svg.image?\large&space;S.G. = \frac{Density\,of\,Gas}{Density\,\:of\,Air}\"/>
+                <span><b>Note:</b>  The numerator and denominator must be in the same units.</span></br>
+                <span><b>Note:</b> Density of Air is typically at Normal Temperature and Pressure (NPT) Conditions</span></br>
+                <span style="font-size:14px;"><b>Plain Text Formula:</b> S.G. = Density of Gas/Density of Air</span></br>
+                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> S.G. = \frac{Density\,of\,Gas}{Density\,\:of\,Air}\</span></br>
+
+              </div></br>
             
               <div style="text-align: left" class="mt-4">
-                <div class="custom-subheading">PSI ⮕ Inches of Fuel</div><br>
-                <img style="max-width: 100%;" class="my-1" alt="PSI to Inches of Fuel Equation" src="https://latex.codecogs.com/svg.image?\large&space;PSI(\frac{lb}{in^{2}})*\frac{27679.90471\,(\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\,of\,Water(\frac{kg}{m^{3}})}*\frac{1}{S.G.}=Inches\,of\,\:Fuel" /></br>
-                <span style="font-size:14px;"><b>Plain Text Formula:</b> PSI (lb/in²)* (27679.90471(kg/m³) / 1 (lb/in³))*(1/Density of Water (kg/m³))*(1/(S.G.))= Inches of Fuel</span></br>
-                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> PSI(\frac{lb}{in^{2}})*\frac{27679.90471\,(\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\, of\, Water(\frac{kg}{m^{3}})}*\frac{1}{S.G.}=Inches\, of\,\: Fuel</span></br></br>
+                <div class="custom-subheading">So What is the Density of Water</div><br>
+                <span><b>Don't skim this one. Read the entire paragraph twice!</b></br></span>
+                <span class="py-1">The density of water for a specific gravity calculation is a contentious subject. The most technically correct answer is that every specific gravity measurement should be listed with the temperature of the fluid under measurement and the temperature of the water that was used as a reference. See "<i>The Wise Words of an ASME Trusted Source</i>" below. However, I have yet to see anyone use specific gravity while specifying both of these temperatures.</br></br></span>
+                <span style="padding-top:40px;">It is quite common to see something like this:</br></span>
+                <span class="my-1">Specific Gravity of Jet A @70°F = 0.80722</br></br></span>
+                <span class="my-1">However, I have never seen anyone specify the following:</br></span>
+                <span class="my-3">Specific Gravity of Jet A @70°F (water temp at 39.164°F)= 0.80722</br></br></span>
+                <span class="my-1">This means that people need to make assumptions about the temperature of water that was used as a comparison point. In different industries and at different companies, different stardards exist.</br></br></span>
+                <span><b>Option 1:</b> Assume the density of water is water at its most dense. Water is the most dense at 3.98°C(39.164°F). This corresponds to a density of 1.9403 slugs/ft³ (999.973 kg/m³). This is the <u>most common method</u>.</span></br></br>
+                <span><b>Option 2:</b> Assume the density of water is water room temperature. Some industries/companies say room temp is at 60°F (15.55°C), some say 66°F (18.88°C), and others say 70°F. This is the second most common method. Most companies say room temp is 60°F.</span></br></br>
+                <span><b>Option 3:</b> Assume the density of water is the same as the temperature of the liquid under test. I think this makes the most intuitive sense although it is the least convenient because you need to have the density of water handy (See
+                  <a href="https://kaspercalc.com/densityWater.html" target="_blank">Density of Water Calculator</a>)(See
+                  <a href="https://kaspercalc.com/SpecificGravCalculator.html" target="_blank">Temperature Compensated SG Calculator</a>). This is the method used by
+                  <a href="https://www.mt.com/sg/en/home/applications/Application_Browse_Laboratory_Analytics/Density/what-is-specific-gravity.html" target="_blank">Mettler Toledo.</a></span></br></br>
+                <span><b>Bonus:</b></span></br>
+                <span>It is common to see a specific gravity equation written where the density of water is 1000 kg/m³. However, the most dense that water can be (under standard atmospheric pressure) is 999.973 kg/m³. I understand that this rounds up to 1000 kg/m³ but I think it is sloppy to round this because it implies that the density of water is 1000.00000 kg/m³.</span></br>
+              </div></br>
+
+              <div style="text-align: left" class="mt-4">
+                <div class="custom-subheading">The Wise Words of an ASME Trusted Source</div><br>
+                <span>The following is the official trusted fluids textbook of ASME:</span></br><br>
+                <span><b>Mark's Standard Handbook for Mechanical Engineers, 12th Edition:</b></span></br>
+                <span>"The <b>specific gravity</b> (sp. gr.) of a substance is a dimensionless ratio of the density of a fluid to that of a reference fluid. Water is used as the reference fluid for solids and liquids, and air is used for gases. Since the density of liquids changes with temperature for a precise definition of <b>specific gravity</b>, the temperature of the fluid and the reference fluid should be stated, for example, 60/60°F, where the upper temperature pertains to the liquid and the lower to water. If no temperatures are stated, reference is made to water at its maximum density, which occurs at 3.98°C(39.164°F) and atmospheric pressure. The maximum density of water is 1.9403 slugs/ft³ (999.973 kg/m³). For gases, it is common practice to use the ratio of the molecular weight of the gas to that of air (28.9644), thus eliminating the necessity of stating the pressure and temperature for ideal gases."</span></br>
+              </div></br>
+
+              <div style="text-align: left" class="mt-4">
+                <div class="custom-subheading">Irrelevant Rant</div><br>
+                <span>What it the point of a "convenient" dimensionless ratio if every time the number comes up you have to question exactly how to convert it back to density. I think specific gravity is overused. Absolute density units are much less ambiguous. Specific Gravity is a muddled confusing mess of a unit. Let's obsolete this unit and start over.</span></br></br>
+                <span>At the temperature extremes does specific gravity even make any sense?</br></span>
+                <span>The specific gravity of ethanol at -20°F is 0.807. Water at this temperature would be frozen.</span>
+                <span>The specific gravity of MIL-PRF-23699 at 300°F is 0.88. Water at this temperature would be boiling.</span></br></br>
+                <span>I would argue that it makes no sense to compare the density of a liquid to the density of an icecube or to superheated steam.
+              </div></br>
+
+              <div style="text-align: left" class="mt-4">
+                <div class="custom-subheading">Special Thanks</div><br>
+                <span>Special thanks to <b>Camren</b> for encouraging me to add this clarification and doing the background research. Additional thanks for being half of KasperCalc's web traffic.</span></br>
               </div>
             </div></br>
-
-<!----------------------------------------------------------------------------------------->
-            <div class="mx-auto d-inline-block mt-4"  style="max-width:800px;">
-              <div class="custom-heading">DENSITY CONVERSIONS FROM S.G.</div>
-              <div style="text-align: left" class="mt-1">
-                <div class="custom-subheading">S.G ⮕ Kg/m³</div><br>
-                <img style="max-width: 100%;" class="my-1" alt="Specific Gravity to kilograms over meteres cubed equation" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\:of\:Water(\frac{kg}{m^{3}})=Density\:of\:Fuel(\frac{kg}{m^{3}})"/></br>
-                <span style="font-size:14px;"><b>Plain Text Formula:</b> Specific Gravity of Fuel * Density of Water (kg/m³) = Density of Fuel (kg/m³)</span></br>
-                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> \[ S.G.*Density\:of\:Water(\frac{kg}{m^{3}})=Density\:of\:Fuel(\frac{kg}{m^{3}})\]</span></br>
-              </div>
-
-              <div style="text-align: left" class="mt-4">
-                <div class="custom-subheading">S.G ⮕ Lb/Gallon</div><br>
-                <img style="max-width: 100%;" class="my-1" alt="Specific Gravity to pounds per gallon equation" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\,\:of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}*\frac{231\,in^{3}}{1\,Gallon}=Density\,of\,Fuel(\frac{lb}{gallon})" /></br>
-                <span style="font-size:14px;"><b>Plain Text Formula:</b> Specific Gravity of Fuel * Density of Water (kg/m³) * (1 (lb/in³)/27679.90471(kg/m³))*(231 (in³)/1 Gallon) = Density of Fuel (lb/gallon)</span></br>
-                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b>\[S.G.*Density\,\:of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}*\frac{231\,in^{3}}{1\,Gallon}=Density\,of\,Fuel(\frac{lb}{gallon})\]</span></br>
-              </div>
-
-              <div style="text-align: left" class="mt-4">
-                <div class="custom-subheading">S.G ⮕ Lb/in³</div><br>
-                <img style="max-width: 100%;" class="my-1" alt="Specific Gravity to pounds per inch cubed equation" src="https://latex.codecogs.com/svg.image?\large&space;S.G.*Density\,of\,Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=Density\,of\,Fuel(\frac{lb}{in^{3}})" /></br>
-                <span style="font-size:14px;"><b>Plain Text Formula:</b> Specific Gravity of Fuel * Density of Water (kg/m³) * (1 (lb/in³)/27679.90471(kg/m³)) = Density of Fuel (lb/in³)</span></br>
-                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> \[S.G.*Density\, of\, Water(\frac{kg}{m^{3}})*\frac{1\,(\frac{lb}{in^{3}})}{27679.90471\,(\frac{kg}{m^{3}})}=Density\, of\, Fuel(\frac{lb}{in^{3}})\]</span></br></br>
-              </div>
-            </div></br>
-
-<!----------------------------------------------------------------------------------------->
-            <div class="d-inline-block mt-4" style="max-width:800px;">
-              <div class="custom-heading">DENSITY CONVERSIONS TO S.G.</div>
-              <div style="text-align: left" class="mt-1">
-                <div class="custom-subheading">Kg/m³ ⮕ S.G.</div><br>
-                <img style="max-width: 100%;" class="my-1" alt="kilogram per meters cubed to specific gravity equation" src="https://latex.codecogs.com/svg.image?\large&space;\frac{Density\,of\,Fuel(\frac{kg}{m^{3}})}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G.\"/></br>
-                <span style="font-size:14px;"><b>Plain Text Formula:</b>(Density of Fuel (kg/m³)/Density of Water (kg/m³)) =  Specific Gravity of Fuel</span></br>
-                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b>\[\frac{Density\,of\,Fuel(\frac{kg}{m^{3}})}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G.\]</span></br>
-              </div>
-
-              <div style="text-align: left" class="mt-4">
-                <div class="custom-subheading">Lb/Gallon ⮕ S.G.</div><br>
-                <img style="max-width: 100%;" class="my-1" alt="pounds per gallon to specific gravity equation" src="https://latex.codecogs.com/svg.image?\large&space;Density\,of\,Fuel(\frac{lb}{gallon})*\frac{1\,Gallon}{231\,in^{3}}*\frac{(27679.90471\,\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G." /></br>
-                <span style="font-size:14px;"><b>Plain Text Formula:</b>Density of Fuel (lb/gallon)*(1 Gallon/231 (in³))*(27679.90471(kg/m³)/1 (lb/in³))*(1/Density of Water (kg/m³)) =  Specific Gravity of Fuel</span></br>
-                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b>\[Density\,of\,Fuel(\frac{lb}{gallon})*\frac{1\,Gallon}{231\,in^{3}}*\frac{(27679.90471\,\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G.\]</span></br>
-              </div>
-
-              <div style="text-align: left" class="mt-4">
-                <div class="custom-subheading">Lb/in³ ⮕ S.G</div><br>
-                <img style="max-width: 100%;" class="my-1" alt="pounds per inch cubed to specific gravity equation" src="https://latex.codecogs.com/svg.image?\large&space;Density\,of\,Fuel(\frac{lb}{in^{3}})*\frac{(27679.90471\,\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G." /></br>
-                <span style="font-size:14px;"><b>Plain Text Formula:</b>Density of Fuel (lb/in³)*(27679.90471(kg/m³)/1 (lb/in³))*(1/Density of Water (kg/m³)) =  Specific Gravity of Fuel</span></br>
-                <span style="font-size:14px;"><b>CodeCogs/LaTex:</b> \[Density\,of\,Fuel(\frac{lb}{in^{3}})*\frac{(27679.90471\,\frac{kg}{m^{3}})}{(\frac{lb}{in^{3}})}*\frac{1}{Density\,\:of\,Water(\frac{kg}{m^{3}})}=S.G.\]</span></br></br>
-              </div>
-            </div>
 
           </div>
         </div>
