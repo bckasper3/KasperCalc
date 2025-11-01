@@ -319,6 +319,7 @@ function calculate() {
   document.getElementById("result_kgm").innerText = result_kgm;
   document.getElementById("result_gpm").innerText = result_gpm;
   document.getElementById("result_inches3sec").innerText = result_inches3sec;
+  document.getElementById("result_Densitylbft").innerText = (result_Density*7.48052).toFixed(4);
 
 }//end of calculate function
 

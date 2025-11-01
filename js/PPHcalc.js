@@ -130,6 +130,7 @@ document.getElementById("result_SG").innerText = result_SG;
 document.getElementById("result_Density").innerText = result_Density;
 document.getElementById("result_inches3sec").innerText = result_inches3sec;
 document.getElementById("result_gpm").innerText = result_gpm;
+document.getElementById("result_Densitylbft").innerText = (result_Density*7.48052).toFixed(4);
 }
 
 const textElement1 = document.getElementById("text-to-toggle1");

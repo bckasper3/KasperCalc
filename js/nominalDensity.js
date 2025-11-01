@@ -465,5 +465,6 @@ function updateCalculator() {
       document.getElementById("result_density5").innerText = ((interpolatedValue/998).toFixed(5));
       document.getElementById("result_density6").innerText = ((interpolatedValue/interp_densityWater).toFixed(5));
       document.getElementById("result_density7").innerText = (((141.5/(interpolatedValue/interp_densityWater))-131.5).toFixed(5));
+      document.getElementById("result_density8").innerText = ((interpolatedValue*0.0083454063545262*7.48052).toFixed(4));
   }
 }

@@ -568,5 +568,9 @@ function calculate() {
       document.getElementById("result_density9").innerText = ((interpolatedValue*0.000036127298147753*1000).toFixed(4));
       document.getElementById("result_density10").innerText = ((interpolatedValue*0.0083454063545262*1000).toFixed(4));
       document.getElementById("result_density11").innerText = (((141.5/(interpolatedValue))-131.5).toFixed(4));
+
+      document.getElementById("result_density12").innerText = ((interpolatedValue*0.0083454063545262*999*7.48052).toFixed(4));
+      document.getElementById("result_density13").innerText = ((interpolatedValue*0.0083454063545262*998*7.48052).toFixed(4));
+      document.getElementById("result_density14").innerText = ((interpolatedValue*0.0083454063545262*1000*7.48052).toFixed(4));
   }
 }

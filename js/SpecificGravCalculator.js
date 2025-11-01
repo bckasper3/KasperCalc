@@ -138,6 +138,7 @@ function calculate() {
   document.getElementById("result_Density").innerText = result_Density;
   document.getElementById("result_lbin").innerText = result_lbin;
   document.getElementById("result_kgm").innerText = result_kgm;
+  document.getElementById("result_lbft").innerText = (result_Density*7.48052).toFixed(4);
 }
 
 // Function to fetch and parse CSV files, returning an array of separate datasets

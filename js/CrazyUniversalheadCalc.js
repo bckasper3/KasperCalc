@@ -325,6 +325,7 @@ function calculate() {
   document.getElementById("result_kgm").innerText = result_kgm;
   document.getElementById("result_InH2O").innerText = result_InH2O;
   document.getElementById("result_PSI").innerText = result_PSI;
+  document.getElementById("result_Densitylbft").innerText = (result_Density*7.48052).toFixed(4);
 }
 
 // THE TOGGLE SLIDER FOR THE FUEL HEAD CALCULATOR
