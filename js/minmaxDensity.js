@@ -556,6 +556,9 @@ function calculate() {
       document.getElementById("result_density9").innerText = ("Out of Range");
       document.getElementById("result_density10").innerText = ("Out of Range");
       document.getElementById("result_density11").innerText = ("Out of Range");
+      document.getElementById("result_density12").innerText = ("Out of Range");      
+      document.getElementById("result_density13").innerText = ("Out of Range");   
+      document.getElementById("result_density14").innerText = ("Out of Range");   
   } else {
       document.getElementById("result_density1").innerText = ((interpolatedValue).toFixed(3));
       document.getElementById("result_density2").innerText = ((interpolatedValue*999).toFixed(3));

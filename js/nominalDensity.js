@@ -457,6 +457,7 @@ function updateCalculator() {
       document.getElementById("result_density5").innerText = ("Out of Range");
       document.getElementById("result_density6").innerText = ("Out of Range");
       document.getElementById("result_density7").innerText = ("Out of Range");
+      document.getElementById("result_density8").innerText = ("Out of Range");
   } else {
       document.getElementById("result_density1").innerText = ((interpolatedValue).toFixed(3));
       document.getElementById("result_density2").innerText = ((interpolatedValue*0.000036127298147753).toFixed(5));
