@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal Gas Flow Calculator</title>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --bg: #f4f7f9;
+            --card: #ffffff;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); padding: 20px; color: #333; }
+        .container { max-width: 500px; margin: 0 auto; background: var(--card); padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { margin-top: 0; color: var(--primary); border-bottom: 2px solid var(--bg); padding-bottom: 10px; }
+        .group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.9em; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        .result-box { background: var(--primary); color: white; padding: 20px; border-radius: 8px; text-align: center; margin-top: 20px; }
+        .result-val { font-size: 2em; font-weight: bold; display: block; }
+        .info { font-size: 0.85em; color: #666; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Gas Correction Tool</h2>
+    
+    <div class="group">
+        <label>1. Select Gas</label>
+        <input list="gases" id="gasInput" placeholder="Type to search gas...">
+        <datalist id="gases">
+            </datalist>
+    </div>
+
+    <div class="group">
+        <label>2. Flow Reading (on meter)</label>
+        <input type="number" id="flowIn" value="100" step="any">
+    </div>
+
+    <div class="result-box">
+        <span class="info">Actual Flow Rate</span>
+        <span id="output" class="result-val">0.00</span>
+        <span id="unitLabel">sccm / slm</span>
+    </div>
+
+    <div class="info" id="gasDetails">
+        Formula: -- | GCF: --
+    </div>
+</div>
+
+<script>
+// This is your "Gold" data from the previous step
+const gasList = [
+    { Title: "Oxygen", Formula: "O2", GCF: 0.9779 },
+    { Title: "Nitrogen", Formula: "N2", GCF: 1.0000 },
+    { Title: "Argon", Formula: "Ar", GCF: 1.4150 },
+    { Title: "Carbon Dioxide", Formula: "CO2", GCF: 0.7370 }
+    // ... add the rest of your list here
+];
+
+const gasInput = document.getElementById('gasInput');
+const flowIn = document.getElementById('flowIn');
+const output = document.getElementById('output');
+const datalist = document.getElementById('gases');
+const gasDetails = document.getElementById('gasDetails');
+
+// Populate Search List
+gasList.forEach(gas => {
+    let opt = document.createElement('option');
+    opt.value = gas.Title;
+    datalist.appendChild(opt);
+});
+
+function calculate() {
+    const selectedGas = gasList.find(g => g.Title === gasInput.value);
+    const reading = parseFloat(flowIn.value);
+
+    if (selectedGas && !isNaN(reading)) {
+        const actualFlow = reading * selectedGas.GCF;
+        output.innerText = actualFlow.toFixed(2);
+        gasDetails.innerText = `Formula: ${selectedGas.Formula} | GCF: ${selectedGas.GCF}`;
+    } else {
+        output.innerText = "0.00";
+        gasDetails.innerText = "Please select a valid gas";
+    }
+}
+
+gasInput.addEventListener('input', calculate);
+flowIn.addEventListener('input', calculate);
+</script>
+
+</body>
+</html>
