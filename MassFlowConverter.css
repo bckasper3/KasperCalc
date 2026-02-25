@@ -1,0 +1,531 @@
+/* ============================================================
+   BANNER
+   ============================================================ */
+
+.section-title {
+  display: inline-block;
+  background-color: var(--banner-color);
+  color: var(--p-color);
+  border-radius: var(--border-radius-medium);
+}
+
+/* ============================================================
+   CALCULATOR WRAPPER
+   ============================================================ */
+.wrapper {
+  background-color: #6a746a;
+  font-size: var(--h2-font-size);
+  font-family: var(--body-font-family);
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 20px;
+  border: 3px solid var(--calc-outline-color);
+}
+
+
+/* ============================================================
+   SECTION LABELS (replaces dark mono labels)
+   ============================================================ */
+/* .section-label {
+  font-family: var(--body-font-family);
+  font-size: 13px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 1.5px;
+  color: white;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+} */
+
+
+/* Optimized Section Label */
+.section-label {
+  font-family: var(--body-font-family);
+  font-size: 13px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 1.5px;
+  color: white;
+  text-transform: uppercase;
+  margin: 20px 0 15px 0; /* Consistent spacing */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2); /* Softer line */
+}
+
+
+
+/* ============================================================
+   GAS SELECTOR
+   ============================================================ */
+.gas-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  align-items: flex-end;
+}
+.gas-search-wrap {
+  flex: 1;
+  position: relative;
+}
+.gas-search-wrap input {
+  width: 100%;
+  background: var(--white-color);
+  border: 1px solid var(--calc-outline-color);
+  border-radius: var(--border-radius-small);
+  padding: 9px 14px;
+  font-family: var(--body-font-family);
+  font-size: var(--h2-font-size);
+  color: var(--p-color);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.gas-search-wrap input:focus {
+  border-color: var(--section-title-color);
+  box-shadow: 0 0 0 2px rgba(97,130,138,0.2);
+}
+.gas-search-wrap input::placeholder { color: #999; }
+
+.gas-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  background: var(--white-color);
+  border: 2px solid var(--section-title-color);
+  border-radius: var(--border-radius-small);
+  max-height: 240px;
+  overflow-y: auto;
+  z-index: 100;
+  display: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--section-title-color) var(--calc-dropdown-color);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+.gas-dropdown.open { display: block; }
+.gas-option {
+  padding: 9px 14px;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.1s;
+  border-bottom: 1px solid var(--border-color);
+}
+.gas-option:last-child { border-bottom: none; }
+.gas-option:hover, .gas-option.active {
+  background: rgba(97,130,138,0.12);
+}
+.gas-option .formula {
+  font-size: 12px;
+  color: var(--custom-btn-bg-color);
+  font-weight: var(--font-weight-bold);
+}
+
+.gas-badge {
+  background: var(--calc-background-color);
+  border: 2px solid var(--calc-outline-color);
+  border-radius: var(--border-radius-small);
+  padding: 9px 16px;
+  font-size: 15px;
+  font-weight: var(--font-weight-bold);
+  color: var(--section-title-color);
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: center;
+  box-shadow: 0 3px 5px 0 rgba(0,0,0,.2);
+}
+
+/* ============================================================
+   CONVERSION GRID
+   ============================================================ */
+.conv-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.input-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Large value input — uses calcinput1 styling plus extra size */
+.value-input {
+  background: var(--white-color);
+  border: 1px solid var(--calc-outline-color);
+  border-radius: var(--border-radius-small);
+  padding: 10px 14px;
+  font-family: var(--body-font-family);
+  font-size: 24px;
+  font-weight: var(--font-weight-medium);
+  color: var(--p-color);
+  outline: none;
+  width: 100%;
+  text-align: left;
+  transition: border-color 0.2s;
+}
+.value-input:focus {
+  border-color: var(--section-title-color);
+  box-shadow: 0 0 0 2px rgba(97,130,138,0.2);
+}
+.value-input[readonly] {
+  background-color: var(--calc-result-color);
+  color: var(--dark-color);
+  font-weight: var(--font-weight-bold);
+  cursor: default;
+}
+
+/* Unit selects — matches dropdowncalc */
+select.unit-select {
+  font-size: var(--h2-font-size);
+  cursor: pointer;
+  border: 1px solid var(--calc-outline-color);
+  border-radius: var(--border-radius-small);
+  padding: .4rem 2rem .4rem .6rem;
+  background-color: var(--calc-dropdown-color);
+  color: var(--calc-p-color);
+  outline: none;
+  width: 100%;
+  transition: background-color 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23444' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+select.unit-select:hover { background-color: var(--calc-hover-color); }
+select.unit-select:focus {
+  border-color: var(--section-title-color);
+  box-shadow: 0 0 0 2px rgba(97,130,138,0.2);
+  outline: none;
+}
+
+/* Reference select — same treatment */
+select.ref-select {
+  font-size: var(--h2-font-size);
+  cursor: pointer;
+  border: 1px solid var(--calc-outline-color);
+  border-radius: var(--border-radius-small);
+  padding: .4rem 2rem .4rem .6rem;
+  background-color: var(--calc-dropdown-color);
+  color: var(--calc-p-color);
+  outline: none;
+  width: 100%;
+  transition: background-color 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23444' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+select.ref-select:hover  { background-color: var(--calc-hover-color); }
+select.ref-select:focus  { border-color: var(--section-title-color); outline: none; }
+
+/* SWAP button — custom-btn style */
+.arrow-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 28px;
+}
+.arrow-btn {
+  background: var(--custom-btn-bg-color);
+  border: none;
+  border-radius: var(--border-radius-small);
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--white-color);
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  transition: all 0.2s;
+  box-shadow: 0 3px 5px 0 rgba(0,0,0,.3);
+  position: relative;
+  overflow: hidden;
+}
+.arrow-btn:hover {
+  background: var(--secondary-color);
+  box-shadow: 0 1rem 3rem rgba(0,0,0,.175);
+}
+
+/* ============================================================
+   RESULT PANEL — mirrors .group.result
+   ============================================================ */
+.result-display {
+  background-color: var(--calc-result-color);
+  border: 2px solid var(--calc-outline-color);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 3px 5px 0 rgba(0,0,0,.4);
+  font-weight: var(--font-weight-bold);
+}
+.result-icon {
+  font-size: 22px;
+  color: var(--section-title-color);
+}
+.result-text { flex: 1; }
+.result-value {
+  font-family: var(--body-font-family);
+  font-size: 30px;
+  font-weight: var(--font-weight-bold);
+  color: var(--dark-color);
+  line-height: 1;
+}
+.result-label {
+  font-size: 14px;
+  color: var(--primary-color);
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+  font-weight: var(--font-weight-normal);
+}
+
+/* ============================================================
+   REFERENCE ROW
+   ============================================================ */
+.ref-row { margin-bottom: 24px; }
+
+/* ============================================================
+   DIVIDER
+   ============================================================ */
+.divider {
+  height: 2px;
+  background: var(--border-color);
+  margin: 20px 0;
+  border-radius: 1px;
+}
+
+/* ============================================================
+   GAS INFO PANEL — mirrors group12 grid
+   ============================================================ */
+/* .gas-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+}
+.info-cell {
+  background-color: var(--calc-background-color);
+  border: 2px solid var(--calc-outline-color);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 3px 5px 0 rgba(0,0,0,.25);
+}
+.info-cell .key {
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 1.5px;
+  color: var(--primary-color);
+  text-transform: uppercase;
+}
+.info-cell .val {
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  color: var(--dark-color);
+}
+.info-cell .val.accent  { color: var(--section-title-color); font-weight: var(--font-weight-bold); }
+.info-cell .val.accent2 { color: var(--custom-btn-bg-color); font-weight: var(--font-weight-bold); } */
+
+
+/* Strict 3x2 Grid for Desktop */
+.gas-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Forces 3 columns */
+  gap: 12px;
+}
+
+.info-cell {
+  background-color: var(--calc-background-color);
+  border: 2px solid var(--calc-outline-color);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 3px 5px 0 rgba(0,0,0,.25);
+  min-height: 70px; /* Ensures uniform height */
+  justify-content: center;
+}
+
+/* Responsive: Stack on mobile devices */
+@media (max-width: 768px) {
+  .gas-info {
+    grid-template-columns: repeat(2, 1fr); /* 2x3 grid on tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .gas-info {
+    grid-template-columns: 1fr; /* 1x6 list on phones */
+  }
+}
+
+/* 3. The Label (Key) - Small, Uppercase, Subtle */
+.info-cell .key {
+  font-size: 0.8rem !important; /* Forces size even if Bootstrap interferes */
+  font-weight: 700;
+  letter-spacing: 0.05rem;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  line-height: 1;
+}
+
+/* 4. The Data (Value) - Larger and Bold */
+.info-cell .val {
+  /* This scales between 16px and 20px based on screen size */
+  font-size: clamp(1rem, 1.2vw, 1.25rem) !important; 
+  font-weight: 600;
+  color: var(--dark-color);
+  word-break: break-word; /* Prevents long names from overflowing */
+  line-height: 1.2;
+}
+
+/* 5. Highlight Colors */
+.info-cell .val.accent  { color: var(--section-title-color) !important; }
+.info-cell .val.accent2 { color: var(--custom-btn-bg-color) !important; }
+
+
+
+
+
+
+
+
+/* ============================================================
+   CARD INNER PADDING
+   ============================================================ */
+.card-inner { padding: 24px 28px; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background-color: var(--banner-color);
+  padding: 2rem 1rem 1rem;
+}
+.footerwrapper {
+  display: flex;
+  flex-flow: row wrap;
+  row-gap: 1.5rem;
+  column-gap: 5%;
+  justify-content: center;
+}
+.footerRow:last-child { display: none; }
+@media (max-width: 824px) {
+  .footerRow:first-child { display: none; }
+  .footerRow:last-child  { display: inline; }
+}
+@media (max-width: 600px) {
+  .footerwrapper { flex-direction: column; margin-left: 1rem; margin-right: 1rem; }
+}
+.FooterRowTitle {
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: .5rem;
+  color: var(--dark-color);
+}
+.footerlink a {
+  font-size: var(--footer-link-font-size);
+  text-decoration: none;
+  display: block;
+  padding: 2px 0;
+  color: var(--p-color);
+}
+.footerlink a:hover { text-decoration: underline; color: var(--primary-color); }
+.footerlogo { margin: 0; font-size: 1.1rem; font-weight: var(--font-weight-bold); }
+.logo { margin-top: 0; margin-bottom: 0; }
+.logoblock {
+  display: inline-block; padding: 5px;
+  border: 2px solid #000; border-radius: 10px;
+}
+.kofi { display: block; height: 50px; filter: drop-shadow(3px 3px 3px rgba(0,0,0,.2)); }
+.copyrighttext {
+  text-align: center;
+  font-size: var(--copyright-font-size);
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0,0,0,.15);
+  margin-top: 1rem;
+}
+.footerkoficoffelink { color: var(--primary-color); }
+
+/* ============================================================
+   CUSTOM BUTTONS / LINKS
+   ============================================================ */
+.custom-btn {
+  background: var(--custom-btn-bg-color);
+  border: none;
+  border-radius: var(--border-radius-small);
+  padding: 8px 16px;
+  font-family: var(--title-font-family);
+  font-size: var(--p-font-size);
+  font-weight: var(--font-weight-light);
+  color: var(--white-color);
+  margin: 5px;
+  cursor: pointer;
+  transition: .3s;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  display: inline-block;
+}
+.custom-btn:hover {
+  background: var(--secondary-color);
+  box-shadow: 0 1rem 3rem rgba(0,0,0,.175);
+  color: var(--white-color);
+  text-decoration: none;
+}
+
+/* ============================================================
+   PULSE ANIMATION
+   ============================================================ */
+@keyframes pulse {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+.pulse { animation: pulse 0.3s ease; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 600px) {
+  .conv-grid { grid-template-columns: 1fr; }
+  .arrow-col { padding-top: 0; transform: rotate(90deg); }
+  .card-inner { padding: 16px 14px; }
+  .gas-row { flex-direction: column; }
+  :root {
+    --h2-font-size: 18px;
+    --p-font-size: 16px;
+    --banner-font-size: 36px;
+    --calc-title-font-size: 24px;
+  }
+}
+@media (max-width: 900px) {
+  :root {
+    --h2-font-size: 18px;
+    --p-font-size: 18px;
+  }
+}
