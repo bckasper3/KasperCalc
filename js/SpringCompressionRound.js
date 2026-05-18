@@ -828,8 +828,10 @@ function computeMinTensileStrengthPsi(rec, d) {
 
 function computeArborDiameter(D, d, mts, E) {
   if (!D || !d || !mts || !E) return null;
-  const D_arbor = 1 / (1 / D + (1.7 * mts) / (E * d));
-  return D_arbor > 0 ? D_arbor : null;
+  const sigma_B = 0.78 * mts;           // bending proportional limit
+  const kappa   = (1.7 * sigma_B) / (E * d);
+  const D_prime = (-1 + Math.sqrt(1 + 4 * kappa * D)) / (2 * kappa);
+  return D_prime > 0 ? D_prime : null;
 }
 
 
