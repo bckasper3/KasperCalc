@@ -1,0 +1,2757 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA FOR -->
+    <title>KasperCalc: Compression Spring Super Calculator</title>
+    <link rel="canonical" href="https://kaspercalc.com/fuelHead.html" />
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, bckasper3, Compression Spring Calculator, Coil Spring Calculator Extreme, Smart Spring Calculator, Super Spring Calculator, Advanced Spring Design Calculator" />
+    <meta name="description" content="Calculate compression springs with round wire using KasperCalc's precise ad-free calculator." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    
+    <!-- <script defer type="text/javascript" src="js/bootstrap.min.js"></script> -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <script defer src="js/springCharts.js"></script>
+    <script defer type="text/javascript" src="js/SpringCompressionRound.js"></script>
+    <script defer src="js/printHelpers.js"></script>
+
+    <!-- CSS FILES -->
+    <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> --> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+<!-- Google tag (gtag.js) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5XLCN0GJQ0');
+</script> -->
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+
+
+
+
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrapper{margin:0 auto;max-width:58rem;background:#6a746a;border-radius:20px;border:3px solid rgb(67,67,67)}
+.hdr{background:#eee;display:flex;justify-content:center;align-items:center;gap:10px;padding:0.4rem 0.6rem;margin:0.5rem 0.5rem 0.5rem;font-size:24px;font-weight:200;box-shadow:0 3px 5px rgba(0,0,0,.4);border-radius:10px;border:2px solid rgb(67,67,67);font-family:"Roboto",Arial,sans-serif}
+.toolbar{background:#eee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:5px 8px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.tbtn{font-size:14px;padding:3px 10px;border-radius:6px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;cursor:pointer;font-family:"Roboto",Arial,sans-serif;font-weight:400;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.tbtn:hover{background:#eee}
+.tbtn.accent{background:#699dad;color:#fff;border-color:rgb(67,67,67)}
+.tbtn.accent:hover{background:#5a8a9a}
+.tbtn.active{background:#A3C3CD;border-color:rgb(67,67,67);font-weight:600}
+.tlabel{font-size:12px;color:#555;font-weight:400;margin-right:2px}
+.grp{background:#eee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:6px 8px}
+.grp-title{font-size:12px;font-weight:600;color:#61828A;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid #c0c0c0;padding-bottom:4px;margin-bottom:6px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.g6{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+.f{display:flex;flex-direction:column;gap:2px}
+.f label{font-size:12px;color:#444;font-weight:400}
+.f input,.f select{font-size:12px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;width:100%;height:22px;font-family:"Roboto",Arial,sans-serif}
+.f input:focus,.f select:focus{outline:none;border-color:#61828A;background:#e8f0f3}
+.f input.user{background:#d9d9d9}
+.itype-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+.it {display:flex;flex-direction:row;align-items:center;justify-content:flex-start;padding:4px 8px;border:1.5px solid rgb(67,67,67);border-radius:6px;gap:6px;cursor:pointer;font-size:12px;color:#000;background:#d9d9d9;transition:background 0.15s;}
+.it:hover{background:#eee}
+.it input{accent-color:#61828A;width:11px;height:11px}
+.it.sel{background:#A3C3CD;border-color:#3a6270;font-weight:600}
+.rg{display:flex;flex-direction: column;flex-wrap:wrap;gap:3px 10px}
+.rr{display:flex;align-items:center;gap:4px;font-size:12px;color:#000;cursor:pointer}
+.rr input{accent-color:#61828A;width:11px;height:11px}
+.cb{display:flex;flex-wrap:wrap;gap:3px 10px}
+.cr{display:flex;flex-direction: column;align-items:center;gap:4px;font-size:12px;color:#000;cursor:pointer}
+.cr input{accent-color:#61828A;width:11px;height:11px}
+.sst{font-size:12px;font-weight:600;color:#61828A;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.05em}
+
+.lt{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;min-width:520px}
+.lt-wrap{overflow-x:auto}
+.lt th{font-size:12px;font-weight:600;color:#555;text-align:center;padding:3px 4px;}
+.lt th:first-child{text-align:left;width:155px}
+.lt th:last-child{width:32px}
+.lt td{padding:1px 2px;vertical-align:middle}
+.lt tr:last-child td{border-bottom:none}
+.lt input{font-size:12px;padding:1px 4px;border-radius:4px;border:1.5px solid #434343;background:#fff;color:#000;width:80%;text-align:right;font-family:"Roboto",Arial,sans-serif;height:20px;margin: 0 auto;display: block;}
+.lt td.na{text-align:center; font-weight: bold;}
+.lt input:focus{outline:none;border-color:#61828A;background:#e8f0f3}
+
+.gp{background:#eeeeee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:6px 8px;display:none}
+.gp.visible{display:block}
+.gp-inner{height:100px;border:1.5px dashed #999;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#888}
+
+.config-split {display:flex;gap: 20px;align-items: flex-start;}
+.side-left {flex: 0 0 220px;display: flex;flex-direction: column;gap: 8px;}
+.side-right {flex: 1;display: flex;flex-direction: column;gap: 12px;}
+.check-row {display: flex;gap: 25px;}
+.cb-v, .rg-v {display: flex;flex-direction: column;gap: 4px;}
+.cr-h, .rr {display: flex;align-items: center;gap: 6px;font-size:12px;cursor: pointer;white-space: nowrap;}
+.graph-banner{background:#eeeeee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);overflow:hidden}
+.graph-tab-row{display:flex;border-bottom:2px solid rgb(67,67,67);background:#d9d9d9}
+.graph-tab{flex:1;padding:5px 4px;font-size:12px;font-weight:500;color:#555;text-align:center;cursor:pointer;border-right:1px solid #b0b0b0;font-family:"Roboto",Arial,sans-serif;background:transparent;border-top:none;border-left:none;border-bottom:none}
+.graph-tab:last-child{border-right:none}
+.graph-tab:hover{background:#eee}
+.graph-tab.active{background:#eeeeee;color:#1a3a40;font-weight:700;border-bottom:2px solid #eeeeee;margin-bottom:-2px}
+.graph-content{padding:8px;display:none;min-height: 450px;}
+.graph-content.visible{display:block}
+.graph-placeholder{height:140px;border:1.5px dashed #999;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#888;background:#fafafa}
+.graph-placeholder svg{opacity:0.3}
+.bottom-bar{background:#eee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:6px 10px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+
+.status-dot{width:8px;height:8px;border-radius:50%;background:#aaa;flex-shrink:0}
+.status-dot.ok{background:#2a7a2a}
+.status-dot.warn{background:#cc7700}
+.status-dot.err{background:#cc2222}
+
+
+.cfg-row{display: flex;gap: 0;align-items: flex-start;flex-wrap: wrap}
+.cfg-col{flex: 1 1 0;padding: 8px 12px 8px 12px;}
+.cfg-col:first-child{padding-left: 0}
+.cfg-col:last-child{padding-right: 12px;}
+.cfg-col-wide{flex: 3 1 0;padding: 8px 12px 8px 12px;}
+.cfg-field{display: flex;align-items: center;gap: 6px;margin-bottom: 5px;min-width: 300px;}
+.cfg-field:last-child{margin-bottom: 0}
+.cfg-label{font-size: 12px;color: #444;white-space: nowrap;width: 44px;flex-shrink: 0}
+.cfg-select{font-size: 14px;padding: 2px 5px;border-radius: 5px;border: 1.5px solid rgb(67,67,67);background: #d9d9d9;color: #000;height: 22px;font-family: "Roboto", Arial, sans-serif;flex: 1 1 auto;min-width: 0;max-width: 240px;width: 100%}
+.cfg-check-list,.cfg-radio-list{display: flex;flex-direction: column;gap: 5px;margin-top: 4px}
+.cfg-check-label{display: flex;align-items: center;gap: 5px;font-size: 12px;color: #000;cursor: pointer;white-space: nowrap}
+.cfg-check-label input[type=checkbox],.cfg-check-label input[type=radio]{accent-color: #61828A;width: 11px;height: 11px;flex-shrink: 0}
+@media (max-width: 600px){.cfg-col{flex: 1 1 45%;padding: 0 0 10px 0}}
+
+.prop-panel{background:#eee;margin:0 .5rem .5rem;border-radius:10px;border:2px solid #434343;box-shadow:0 3px 5px 0 rgb(0 0 0 / .4);padding:6px 8px;overflow: visible;}
+.prop-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 16px;align-items:start;overflow: visible;}
+.prop-col{display:flex;flex-direction:column;gap:0;overflow: visible;}
+.prop-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:4px;padding:2px 0;border-bottom:.5px solid #d0d0d0;overflow: visible;}
+.prop-row:last-child{border-bottom:none}
+.prop-row-label{font-size:12px;color:#333;white-space:nowrap;text-overflow:ellipsis;padding-right:4px;overflow: visible;}
+.prop-row-label.italic{font-style:italic}
+.prop-row input[type="number"]{font-size:12px;padding:1px 4px 1px 4px;border-radius:4px;border:1.5px solid #434343;background:#fff;color:#000;height:20px;font-family:"Roboto",Arial,sans-serif;width:100px;text-align:right}
+.prop-row input[type="number"]:focus{outline:none;border-color:#61828a;background:#e8f0f3}
+.prop-row input.warn{border-color:#c70;background:#fff3cc}
+.prop-row input.err{border-color:#c22;background:#ffe8e8}
+.prop-row input.ok{border-color:#2a7a2a;background:#e8f5e8}
+.prop-row-unit{font-size:12px;color:#555;width:30px;text-align:left;padding:1px 2px;}
+.prop-avail-label{font-size:12px;color:#333;white-space:nowrap}
+.wire-chip{font-size: 11px;padding: 2px 10px;border-radius: 4px;border: 1.5px solid rgb(67,67,67);background: #d9d9d9;color: #333; height: 20px;display:inline-block;}
+.wire-chip.avail{background:#e8f5e8;border-color:#2a7a2a;color:#1a4a1a;font-weight:600}
+.wire-chip.unavail{background:#ffe8e8;border-color:#c22;color:#6a1a1a;font-weight:600}
+@media (max-width:650px){.prop-cols{grid-template-columns:1fr}.prop-avail-row {display: none !important; }.prop-fakerow {display: grid !important; }}
+@media (min-width:651px){.prop-avail-row {display: inline-flex !important; }.prop-fakerow {display: none !important; }}
+
+.prop-avail-row{display: flex;flex-wrap: wrap;align-items: center;justify-content: space-between;gap: 8px;padding: 6px 0;border-top:1px solid silver;margin-top:8px}
+.prop-item{display: flex;align-items: center;gap: 6px;flex: 1 1 180px;min-width: 180px;height: 20px}
+.prop-avail-label{font-size: 12px;color: #333;white-space: nowrap;line-height: 20px}
+.prop-output{display: inline-flex;align-items: center;justify-content: center;height: 20px;min-width: 60px;font-size: 12px;padding: 0 4px;border-radius: 4px;border: 1.5px solid #434343;background: #fff;white-space: nowrap;box-sizing: border-box}
+
+#travelRow{border-bottom: 1px solid silver}
+@media (min-width: 652px){#travelRow{border-bottom: none !important}}
+
+.input-highlight {background:#becbcf !important;border-color:#3a6270 !important;font-weight:600} /*{background-color: #e8f5e8 !important; border-color: #4caf50 !important;} */
+#bottomStatusSummary { white-space: pre-line; }
+
+.lt input[type=number]::-webkit-inner-spin-button,.lt input[type=number]::-webkit-outer-spin-button{opacity: 0}
+.lt input[type=number]:hover::-webkit-inner-spin-button,.lt input[type=number]:hover::-webkit-outer-spin-button,.lt input[type=number]:focus::-webkit-inner-spin-button,.lt input[type=number]:focus::-webkit-outer-spin-button{opacity: 1}
+
+
+.user-entered {font-weight: 700 !important;background: #c8d8e0 !important;border-color: #3a6270 !important;}
+
+.tooltip-wrap{position:relative;display:inline-flex;align-items:center;gap:4px}
+.tooltip-icon{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:#61828a;color:#fff;font-size:9px;font-weight:700;font-style:normal;cursor:default;flex-shrink:0;line-height:1;user-select:none}
+.tooltip-icon:focus+.tooltip-box,.tooltip-icon:hover+.tooltip-box{display:block}
+.tooltip-box{display:none;position:absolute;bottom:calc(100% + 6px);left:0;width:220px;background:#1a3a40;color:#eee;font-size:12px;line-height:1.55;padding:7px 10px;border-radius:6px;border:1px solid #3a6270;box-shadow:0 3px 8px rgba(0,0,0,.4);z-index:100;pointer-events:none;font-weight:400;font-family:Roboto,Arial,sans-serif;white-space: normal;word-wrap: break-word;}
+.tooltip-box::after{content:'';position:absolute;top:100%;left:12px;border:5px solid transparent;border-top-color:#1a3a40;z-index:100;}
+
+.ref-zoomable{cursor:zoom-in;transition:opacity .15s}
+.ref-zoomable:hover{opacity:.85}
+.lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+.lightbox-overlay.active{display:flex}
+.lightbox-img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:6px;box-shadow:0 8px 32px rgba(0,0,0,.6);cursor:default;touch-action: pinch-zoom;}
+.lightbox-close{position:fixed;top:16px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;z-index:100000}
+.lightbox-close:hover{background:rgba(255,255,255,.3)}
+.lightbox-caption{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.8);font-size:13px;font-family:Roboto,Arial,sans-serif;text-align:center;max-width:80vw;pointer-events:none}
+</style>
+
+
+   </head>
+
+
+
+  <!-- BODY -->
+
+  <body>
+
+ <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityWater.html">Water Density</a>
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item" style="padding-right: 0px;">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+      <section class="banner" aria-label="Page banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                Compression Spring Super Calculator
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <h1 class="visually-hidden">Smart Spring Calculator for Compression Springs with Round Wire</h1>
+
+      <section aria-label="Spring calculator">
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+
+<div class="wrapper">
+
+  <div class="hdr" role="banner">
+    Compression Spring Calculator
+  </div>
+
+  <div class="toolbar" role="toolbar" aria-label="File operations">
+    <span class="tlabel" aria-hidden="true">FILE</span>
+    <button class="tbtn" onclick="importCfg()" aria-label="Import saved configuration from JSON file">
+      <svg aria-hidden="true" width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Import
+    </button>
+    <button class="tbtn" onclick="exportCfg()" aria-label="Export current configuration to JSON file">
+      <svg aria-hidden="true" width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M8 10V2M4 5l4-4 4 4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Export
+    </button>
+    <button class="tbtn" onclick="customMaterial()" aria-label="User Entered Custom Material Properties">
+      <img src="img/Spool_of_Wire.svg" alt="Spool of Wire Icon" width="15" height="15">Custom Material
+    </button>
+    <input type="file" id="fileIn" accept=".json" style="display:none" onchange="handleImport(event)" aria-label="Import configuration file">
+    <div class="ms-auto">
+      <button class="tbtn" onclick="clearAll()" aria-label="Clear all input fields">Clear All</button>
+    </div>
+  </div>
+
+  <div class="grp" role="group" aria-labelledby="inputModeTitle">
+    <div class="grp-title" id="inputModeTitle">Input mode</div>
+    <div class="itype-grid" id="itypeGrid" role="radiogroup" aria-label="Select input mode">
+      <label class="it sel" data-mode="power" aria-label="Power user mode — all fields unlocked"><input type="radio" name="itype" value="power" checked> Power user</label>
+      <label class="it" data-mode="two" aria-label="Two load mode — enter two load positions"><input type="radio" name="itype" value="two"> Two Load</label>
+      <label class="it" data-mode="one" aria-label="One load mode — enter a single load position"><input type="radio" name="itype" value="one"> One Load</label>
+      <label class="it" data-mode="rate" aria-label="Rate based mode — enter spring rate as primary input"><input type="radio" name="itype" value="rate"> Rate Based</label>
+      <label class="it" data-mode="dim" aria-label="Dimensional mode — enter physical dimensions"><input type="radio" name="itype" value="dim"> Dimensional</label>
+      <label class="it" data-mode="wt" aria-label="Minimum weight mode — optimize for lowest mass"><input type="radio" name="itype" value="wt"> Min. Weight</label>
+    </div>
+  </div>
+
+  <div class="grp" role="group" aria-labelledby="configTitle">
+    <div class="grp-title" id="configTitle">Configuration</div>
+    <div class="cfg-row">
+
+      <!-- COL 1: Material / Hand / Grade -->
+      <div class="cfg-col-wide">
+        <div class="cfg-field">
+          <label class="cfg-label pe-5" for="material">Material<sup>1</sup></label>
+          <select class="cfg-select" id="material" onchange="onMaterialSelectionChange()" aria-label="Select spring wire material">
+            <option disabled selected>Loading materials...</option>
+          </select>
+          <button class="tbtn" onclick="showMaterial()" style="font-size: 10px;" aria-label="Kaspercalc Predefined Material viewer">
+             <span class="tooltip-icon" tabindex="0">i</span>
+          </button>   
+        </div>
+        <!-- <div class="cfg-field">
+          <button class="tbtn" onclick="showMAterial()" style="font-size: 10px;" aria-label="Kaspercalc Predefined Material viewer">
+            <img src="img/Spool_of_Wire.svg" alt="Spool of Wire Icon" width="15" height="15">View Material Properties
+          </button>    
+        </div>               -->
+        <div class="cfg-field">
+          <label class="cfg-label pe-5" for="hand">Hand</label>
+          <select class="cfg-select" id="hand" aria-label="Select coil winding hand">
+            <option>Optional (either)</option>
+            <option>Left hand</option>
+            <option>Right hand</option>
+          </select>
+        </div>
+        <div class="cfg-field">
+          <label class="cfg-label pe-5" for="grade">Grade</label>
+          <select class="cfg-select" id="grade" onchange="ODandLengthToleranceChange()" aria-label="Select manufacturing grade tolerance">
+            <option>Commercial</option>
+            <option>Precision</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- COL 2: End type -->
+      <div class="cfg-col" role="group" aria-labelledby="endTypeLabel">
+        <div class="sst" id="endTypeLabel">End type</div>
+        <div class="cfg-check-list">
+          <label class="cfg-check-label">
+            <input type="checkbox" id="endClosed" aria-label="Closed ends"> Closed
+          </label>
+          <label class="cfg-check-label">
+            <input type="checkbox" id="endGround" aria-label="Ground ends"> Ground
+          </label>
+        </div>
+      </div>
+
+      <!-- COL 3: Condition -->
+      <div class="cfg-col" role="group" aria-labelledby="conditionLabel">
+        <div class="sst" id="conditionLabel">Condition</div>
+        <div class="cfg-check-list">
+          <label class="cfg-check-label">
+            <input type="checkbox" id="condPreset" aria-label="Preset condition"> Preset
+          </label>
+          <label class="cfg-check-label">
+            <input type="checkbox" id="condPeened" aria-label="Shot peened condition"> Peened
+          </label>
+        </div>
+      </div>
+
+      <!-- COL 4: Buckling constraint -->
+      <div class="cfg-col" role="group" aria-labelledby="buckleLabel">
+        <div class="sst" id="buckleLabel">Buckling constraint</div>
+        <div class="cfg-radio-list" role="radiogroup" aria-labelledby="buckleLabel">
+          <label class="cfg-check-label">
+            <input type="radio" name="buckle" value="unk" checked aria-label="End fixation not known"> End fixation not known <!-- Not selected -->
+          </label>
+          <label class="cfg-check-label">
+            <input type="radio" name="buckle" value="ff" aria-label="Fixed – Fixed: Both ends flat against parallel plates"> <b>Fixed – Fixed:</b> Both ends flat against parallel plates<!-- Fixed–Fixed   α=0.50 -->
+          </label>
+          <label class="cfg-check-label">
+            <input type="radio" name="buckle" value="fh" aria-label="Fixed – Hinged: One end flat, one end pivoted"> <b>Fixed – Hinged:</b> One end flat, one end pivoted<!-- Fixed–Hinged  α=0.707 -->
+          </label>
+          <label class="cfg-check-label">
+            <input type="radio" name="buckle" value="hh" aria-label="hinged – Hinged: Both ends pivoted"> <b>Hinged – Hinged:</b> Both ends pivoted<!-- Hinged–Hinged α=1.00 -->
+          </label>
+          <label class="cfg-check-label">
+            <input type="radio" name="buckle" value="ffree" aria-label="Fixed – Free: One end flat, one end free to move laterally"> <b>Fixed – Free:</b> One end flat, one end free to move laterally <!-- Fixed–Free    α=2.00 -->
+          </label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="prop-panel" role="region" aria-labelledby="springPropsTitle">
+    <div class="grp-title" id="springPropsTitle">Spring properties</div>
+
+    <div class="prop-cols">
+
+      <!-- COLUMN 1: Wire & spring -->
+      <div class="prop-col" role="group" aria-label="Wire and spring properties">
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="d">Wire Diameter</label>
+          <input type="number" id="d" step="0.001" oninput="onUserInput('d')" aria-label="Wire diameter in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label italic" for="dTol">Wire Dia. Tol. (±) <sup>2</sup></label>
+          <input type="number" id="dTol" step="0.001" aria-label="Wire diameter tolerance in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="sw">Wire Length</label>
+          <input type="number" id="wl" aria-label="Wire length in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="sw">Wire Weight</label>
+          <input type="number" id="sw" aria-label="Wire weight in pounds">
+          <span class="prop-row-unit" aria-hidden="true">lb</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="mts">Min. Tensile Strength</label>
+          <input type="number" id="mts" oninput="onUserInput('mts')" aria-label="Minimum tensile strength in PSI">
+          <span class="prop-row-unit" aria-hidden="true">psi</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="k">Spring Rate</label>
+          <input type="number" id="k" step="0.01" oninput="onUserInput('k')" aria-label="Spring rate in pounds per inch">
+          <span class="prop-row-unit" aria-hidden="true">lb/in</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="C">Spring Index</label>
+          <input type="number" id="C" step="0.1" oninput="onUserInput('C')" aria-label="Spring index (dimensionless)">
+          <span class="prop-row-unit" aria-hidden="true"></span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="fn">Natural Frequency</label>
+          <input type="number" id="fn" aria-label="Natural frequency in Hertz">
+          <span class="prop-row-unit" aria-hidden="true">Hz</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="G">Shear Modulus G</label>
+          <input type="number" id="G" oninput="onUserInput('G')" aria-label="Shear modulus in PSI">
+          <span class="prop-row-unit" aria-hidden="true">psi</span>
+        </div>
+
+      </div>
+
+      <!-- COLUMN 2: Coil & bore -->
+      <div class="prop-col" role="group" aria-label="Coil and bore dimensions">
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="arbor">Arbor Diameter</label>
+          <input type="number" id="arbor" step="0.001" aria-label="Arbor diameter in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="ID">Coil ID</label>
+          <input type="number" id="ID" step="0.001" oninput="onUserInput('ID')" aria-label="Coil inside diameter in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="D">Coil Mean Diameter</label>
+          <input type="number" id="D" step="0.001" oninput="onUserInput('D')" aria-label="Coil mean diameter in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="OD">Coil OD</label>
+          <input type="number" id="OD" step="0.001" oninput="onUserInput('OD')" aria-label="Coil outside diameter in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label italic" for="dTolCoil">Coil Dia. Tol. (+/-)</label>
+          <input type="number" id="dTolCoil" step="0.001" aria-label="Coil diameter tolerance in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label italic" for="minID">
+            <span class="tooltip-wrap">
+              Min. Coil ID (Free)
+              <span class="tooltip-icon" tabindex="0">i</span>
+              <span class="tooltip-box">
+                The smallest inside diameter the spring could present at
+                free length, accounting for worst-case manufacturing
+                tolerances (wire at its maximum diameter and coil at its
+                minimum diameter). Use this when checking clearance over a
+                shaft rather than the nominal ID, to ensure the spring
+                will always fit without binding across the full tolerance
+                stack.
+              </span>
+            </span>
+          </label>
+          <input type="number" id="minID" step="0.001" aria-label="Minimum coil inside diameter at free length in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row">
+         <label class="prop-row-label" for="shaft">
+            <span class="tooltip-wrap">
+              Shaft Diameter
+              <span class="tooltip-icon" tabindex="0">i</span>
+              <span class="tooltip-box">
+                The largest shaft or rod that can safely fit inside the
+                spring at free length. Calculated as the minimum coil ID
+                (accounting for wire and coil diameter tolerances) minus
+                the required diametral clearance per SMI guidelines —
+                5% of mean diameter for springs over 0.512" ID, 10% for
+                smaller springs. Enter a required shaft size to back-solve
+                the coil geometry.
+              </span>
+            </span>
+          </label>
+          <input type="number" id="shaft" step="0.001" aria-label="Shaft diameter in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label italic" for="hole">
+            <span class="tooltip-wrap">
+              Hole Diameter
+              <span class="tooltip-icon" tabindex="0">i</span>
+              <span class="tooltip-box">
+                The minimum bore diameter required to contain the spring
+                at solid. Calculated from the expanded coil OD at solid
+                (which grows slightly from the free OD due to helix
+                geometry) plus coil diameter tolerance and the required
+                diametral clearance. Use this as the minimum allowable
+                bore size in your assembly drawing. Enter a fixed bore
+                size to back-solve the coil geometry.
+              </span>
+            </span>
+          </label>
+          <input type="number" id="hole" step="0.001" aria-label="Hole diameter in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+      </div>
+
+      <!-- COLUMN 3: Coil count & geometry -->
+      <div class="prop-col" role="group" aria-label="Coil count and geometry">
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="Na">Active Coils</label>
+          <input type="number" id="Na" step="0.5" oninput="onUserInput('Na')" aria-label="Number of active coils">
+          <span class="prop-row-unit" aria-hidden="true"></span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="Nt">Total Coils</label>
+          <input type="number" id="Nt" step="0.5" oninput="onUserInput('Nt')" aria-label="Total number of coils">
+          <span class="prop-row-unit" aria-hidden="true"></span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label italic" for="Nd">Dead Coils</label>
+          <input type="number" id="Nd" readonly aria-label="Number of dead coils (computed)" aria-readonly="true">
+          <span class="prop-row-unit" aria-hidden="true"></span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="pitch">Pitch</label>
+          <input type="number" id="pitch" step="0.001" oninput="onUserInput('pitch')" aria-label="Coil pitch in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="pitchAng">Pitch Angle</label>
+          <input type="number" id="pitchAng" readonly aria-label="Pitch angle in degrees (computed)" aria-readonly="true">
+          <span class="prop-row-unit" aria-hidden="true">deg</span>
+        </div>
+
+        <div class="prop-row">
+          <label class="prop-row-label" for="LfTol">Free Length Tol. (±)</label>
+          <input type="number" id="LfTol" step="0.001" aria-label="Free length tolerance in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row">
+        <label class="prop-row-label" for="LsAllowable">
+          <span class="tooltip-wrap">
+            Allowable Solid Length
+            <span class="tooltip-icon" tabindex="0">i</span>
+            <span class="tooltip-box">
+              The maximum compressed height permitted by your assembly.
+              If the spring's calculated solid length (Nt × d) exceeds
+              this value, coils will clash before reaching solid and the
+              fixture may be overloaded. This value is a user input as a safety check and is not computed by the calculator.
+            </span>
+          </span>
+        </label>
+          <input type="number" id="LsAllowable" step="0.001" oninput="onUserInput('Ls')" aria-label="Allowable solid length in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row" id="travelRow">
+          <label class="prop-row-label" for="travelL1L2">Travel (L1-L2)</label>
+          <input type="number" id="travelL1L2" step="0.050" oninput="onUserInput('travelL1L2')" aria-label="Travel between L1 and L2 in inches">
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <!-- Mobile-only availability rows -->
+        <div class="prop-row prop-fakerow" style="min-width:260px;">
+          <span class="prop-avail-label">Wire Available<sup>3</sup></span>
+          <span class="prop-output wire-chip" id="wireAvailabilityChip_mobile" aria-live="polite" aria-label="Wire availability status"></span>
+          <span class="prop-row-unit" aria-hidden="true"> </span>
+        </div>
+
+        <div class="prop-row prop-fakerow">
+          <span class="prop-avail-label">Next Smaller Wire</span>
+          <span class="prop-output" id="wSmaller_mobile" aria-label="Next smaller standard wire diameter"></span>
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row prop-fakerow">
+          <span class="prop-avail-label">Next Larger Wire</span>
+          <span class="prop-output" id="wLarger_mobile" aria-label="Next larger standard wire diameter"></span>
+          <span class="prop-row-unit" aria-hidden="true">in</span>
+        </div>
+
+        <div class="prop-row prop-fakerow">
+          <span class="prop-avail-label">Est. Cycle Life</span>
+          <span class="prop-output" style="min-width:120px;" id="cycleLife_mobile" aria-label="Estimated cycle life"></span>
+          <span class="prop-row-unit" aria-hidden="true"> </span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- BOTTOM ROW: Wire availability -->
+    <div class="prop-avail-row d-flex flex-wrap align-items-center justify-content-between" role="region" aria-label="Wire availability summary">
+
+      <div class="prop-item" style="min-width:270px;">
+        <span class="prop-avail-label">Wire Available<sup>3</sup></span>
+        <span class="prop-output wire-chip" id="wireAvailabilityChip" aria-live="polite" aria-label="Wire availability status"></span>
+      </div>
+
+      <div class="prop-item">
+        <span class="prop-avail-label">Next Smaller Wire</span>
+        <span class="prop-output" id="wSmaller" aria-label="Next smaller standard wire diameter in inches"></span>
+      </div>
+
+      <div class="prop-item">
+        <span class="prop-avail-label">Next Larger Wire</span>
+        <span class="prop-output" id="wLarger" aria-label="Next larger standard wire diameter in inches"></span>
+      </div>
+
+      <div class="prop-item">
+        <span class="prop-avail-label">Est. Cycle Life</span>
+        <span class="prop-output" style="min-width:100px;" id="cycleLife" aria-label="Estimated cycle life"></span>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="grp" role="region" aria-labelledby="loadPositionsTitle">
+    <div class="grp-title" id="loadPositionsTitle">Load positions</div>
+    <div class="lt-wrap">
+      <table class="lt" aria-label="Spring load position results table">
+        <thead>
+          <tr>
+            <th scope="col" style="text-align:left">Parameter</th>
+            <th scope="col">Free</th>
+            <th scope="col">L1</th>
+            <th scope="col">L2</th>
+            <th scope="col">At Solid</th>
+            <th scope="col">At Buckle</th>
+            <th scope="col"><span class="visually-hidden">Units</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td scope="row">Load</td>
+            <td class="na">0</td>
+            <td><input type="number" id="F1" placeholder="—" oninput="onUserInput('F1')" aria-label="Load at position L1 in pounds"></td>
+            <td><input type="number" id="F2" placeholder="—" oninput="onUserInput('F2')" aria-label="Load at position L2 in pounds"></td>
+            <td><input type="number" id="Fs" placeholder="—" readonly aria-label="Load at solid in pounds (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="Fbuckle" placeholder="—" readonly aria-label="Load at buckle in pounds (computed)" aria-readonly="true"></td>
+            <td>lb</td>
+          </tr>
+          <tr>
+            <td scope="row">Load Tol. ±</td>
+            <td class="na">0</td>
+            <td><input type="number" id="F1tol" placeholder="—" aria-label="Load tolerance at L1 in pounds"></td>
+            <td><input type="number" id="F2tol" placeholder="—" aria-label="Load tolerance at L2 in pounds"></td>
+            <td class="na" aria-hidden="true"></td>
+            <td class="na" aria-hidden="true"></td>
+            <td>lb</td>
+          </tr>
+          <tr>
+            <td scope="row">Length</td>
+            <td><input type="number" id="Lf" step="0.001" oninput="onUserInput('Lf')" aria-label="Free length in inches"></td>
+            <td><input type="number" id="L1" step="0.001" oninput="onUserInput('L1')" aria-label="Length at position L1 in inches"></td>
+            <td><input type="number" id="L2" step="0.001" oninput="onUserInput('L2')" aria-label="Length at position L2 in inches"></td>
+            <td><input type="number" id="Ls" step="0.001" oninput="onUserInput('Ls')" aria-label="Solid length in inches"></td>
+            <td><input type="number" id="Lbuckle" placeholder="—" readonly aria-label="Length at buckle point in inches (computed)" aria-readonly="true"></td>
+            <td>in</td>
+          </tr>
+          <tr>
+            <td scope="row">Deflection</td>
+            <td class="na">0</td>
+            <td><input type="number" id="def1" placeholder="—" readonly aria-label="Deflection at L1 in inches (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="def2" placeholder="—" readonly aria-label="Deflection at L2 in inches (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="defS" placeholder="—" readonly aria-label="Deflection at solid in inches (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="defBuckle" placeholder="—" readonly aria-label="Deflection at buckle in inches (computed)" aria-readonly="true"></td>
+            <td>in</td>
+          </tr>
+          <tr>
+            <td scope="row">% Max Deflection</td>
+            <td class="na">0</td>
+            <td><input type="number" id="pct1" placeholder="—" readonly aria-label="Percent of max deflection at L1 (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="pct2" placeholder="—" readonly aria-label="Percent of max deflection at L2 (computed)" aria-readonly="true"></td>
+            <td class="na">100</td>
+            <td><input type="number" id="pctBuckle" placeholder="—" readonly aria-label="Percent of max deflection at buckle (computed)" aria-readonly="true"></td>
+            <td>%</td>
+          </tr>
+          <tr>
+            <td scope="row">Corrected Stress</td>
+            <td class="na">0</td>
+            <td><input type="number" id="sc1" placeholder="—" readonly aria-label="Wahl corrected stress at L1 in PSI (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="sc2" placeholder="—" readonly aria-label="Wahl corrected stress at L2 in PSI (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="scS" placeholder="—" readonly aria-label="Wahl corrected stress at solid in PSI (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="scBuckle" placeholder="—" readonly aria-label="Wahl corrected stress at buckle in PSI (computed)" aria-readonly="true"></td>
+            <td>psi</td>
+          </tr>
+          <tr>
+            <td scope="row">Corrected % MTS</td>
+            <td class="na">0</td>
+            <td><input type="number" id="pMTS1" placeholder="—" readonly aria-label="Corrected stress as percent of minimum tensile strength at L1 (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="pMTS2" placeholder="—" readonly aria-label="Corrected stress as percent of minimum tensile strength at L2 (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="pMTSs" placeholder="—" readonly aria-label="Corrected stress as percent of minimum tensile strength at solid (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="pMTSbuckle" placeholder="—" readonly aria-label="Corrected stress as percent of minimum tensile strength at buckle (computed)" aria-readonly="true"></td>
+            <td>%</td>
+          </tr>
+          <tr>
+            <td scope="row">Uncorrected Stress</td>
+            <td class="na">0</td>
+            <td><input type="number" id="su1" placeholder="—" readonly aria-label="Uncorrected torsional stress at L1 in PSI (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="su2" placeholder="—" readonly aria-label="Uncorrected torsional stress at L2 in PSI (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="suS" placeholder="—" readonly aria-label="Uncorrected torsional stress at solid in PSI (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="suBuckle" placeholder="—" readonly aria-label="Uncorrected torsional stress at buckle in PSI (computed)" aria-readonly="true"></td>
+            <td>psi</td>
+          </tr>
+          <tr>
+            <td scope="row">Uncorrected % MTS</td>
+            <td class="na">0</td>
+            <td><input type="number" id="pUS1" placeholder="—" readonly aria-label="Corrected stress as percent of minimum tensile strength at L1 (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="pUS2" placeholder="—" readonly aria-label="Corrected stress as percent of minimum tensile strength at L2 (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="pUSs" placeholder="—" readonly aria-label="Corrected stress as percent of minimum tensile strength at solid (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="pUSbuckle" placeholder="—" readonly aria-label="Corrected stress as percent of minimum tensile strength at buckle (computed)" aria-readonly="true"></td>
+            <td>%</td>
+          </tr>
+          <tr>
+            <td scope="row">Expanded Coil OD</td>
+            <td class="na"></td>
+            <td><input type="number" id="OD1" placeholder="—" readonly aria-label="Expanded coil outside diameter at L1 in inches (computed)" aria-readonly="true"></td>
+            <td><input type="number" id="OD2" placeholder="—" readonly aria-label="Expanded coil outside diameter at L2 in inches (computed)" aria-readonly="true"></td>
+            <td class="na" aria-hidden="true"></td>
+            <td><input type="number" id="ODbuckle" placeholder="—" readonly aria-label="Expanded coil outside diameter at buckle in inches (computed)" aria-readonly="true"></td>
+            <td>in</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:0.5rem;margin:0 0.5rem 0.5rem;flex-wrap:wrap">
+
+    <!-- LEFT BOX: Exports & Reports -->
+    <div class="grp" style="flex:1 1 300px;margin:0" role="region" aria-labelledby="reportsTitle">
+      <div class="grp-title" id="reportsTitle">Generate Reports</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <button class="tbtn accent" onclick="generateDesignReport()" style="font-size:13px;padding:5px 18px;" aria-label="Generate spring design report as PDF">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="10" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 5h6M5 8h6M5 11h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Generate Report
+        </button>
+        <button class="tbtn accent" onclick="generateDesignReportWithGraphs()" style="font-size:13px;padding:5px 18px;" aria-label="Generate spring design report with graphs as PDF">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="10" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 5h6M5 8h6M5 11h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Generate Report with Graphs
+        </button>
+      </div>
+      <div class="grp-title pt-3">2D/3D Model Exports</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        <button class="tbtn accent" style="font-size:13px;padding:5px 18px;" aria-label="Export SolidWorks Smart Spring parametric file">
+          <!-- <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> -->
+          <a href="https://cad.onshape.com/documents/3443442e14bd222b97f69040/w/6bbc2fd497e4dddbcf151ba9/e/bfc7fd8423c19df892d54757?configuration=List_3CI4HSVITrER5d%3DMin_Operating&renderMode=0&uiState=69f73a6509cbe237fa8c2e2a" target="_blank"
+          style="font-size: 13px; color: #fff; text-decoration: none;">OnShape Spring Creator</a>
+        </button>
+        <button class="tbtn accent" onclick="ComingSoon()" style="font-size:13px;padding:5px 18px;" aria-label="Export spring 3D model as STEP file">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Export .STEP
+        </button>
+        <button class="tbtn accent" onclick="ComingSoon()" style="font-size:13px;padding:5px 18px;" aria-label="Export spring 3D model as SolidWorks part file">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Export .SLDPRT
+        </button>
+        <button class="tbtn accent" onclick="ComingSoon()" style="font-size:13px;padding:5px 18px;" aria-label="Export spring 2D drawing as DXF file">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Export DXF
+        </button>
+        <button class="tbtn accent" onclick="UseAMcMasterCarrSpring()" style="font-size:13px;padding:5px 18px;" aria-label="Export KasperCalc SolidWorks Smart Spring parametric file">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Solidworks Smart Spring
+        </button>
+        <button class="tbtn accent" onclick="SpringMacroPopup()" style="font-size:13px;padding:5px 18px;" aria-label="Export KasperCalc SolidWorks Smart Spring parametric file">
+          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          KasperCalc Solidworks Spring Macro
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT BOX: Warnings & Status -->
+    <div class="grp" style="flex:1 1 260px;margin:0" role="region" aria-labelledby="warningsTitle">
+      <div class="grp-title" id="warningsTitle">Warnings &amp; Status</div>
+      <div style="display:flex;align-items:flex-start;gap:6px">
+        <div class="status-dot" id="bottomStatusDot" style="margin-top:3px;flex-shrink:0" aria-hidden="true"></div>
+        <span style="font-size:12px;color:#555;white-space:pre-line" id="bottomStatusSummary"
+          role="status" aria-live="polite" aria-label="Calculation status and warnings">No results yet</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="graph-banner" role="region" aria-labelledby="graphsTitle">
+    <div class="grp-title" id="graphsTitle" style="padding:6px 8px 0;margin:0">Graphs</div>
+    <div class="graph-tab-row" role="tablist" aria-label="Spring calculation graphs">
+      <button class="graph-tab active" role="tab" aria-selected="true" aria-controls="graphContent1" onclick="switchGraphTab(1, this)">Load vs. Deflection</button>
+      <button class="graph-tab" role="tab" aria-selected="false" aria-controls="graphContent2" onclick="switchGraphTab(2, this)">Load vs. Length</button>
+      <button class="graph-tab" role="tab" aria-selected="false" aria-controls="graphContent3" onclick="switchGraphTab(3, this)">% MTS vs. Deflection</button>
+      <button class="graph-tab" role="tab" aria-selected="false" aria-controls="graphContent4" onclick="switchGraphTab(4, this)">Stress vs. Length</button>
+      <button class="graph-tab" role="tab" aria-selected="false" aria-controls="graphContent5" onclick="switchGraphTab(5, this)">Fatigue Strength Diagram</button>
+      <button class="graph-tab" role="tab" aria-selected="false" aria-controls="graphContent6" onclick="switchGraphTab(6, this)">Stress vs. Load</button>
+    </div>
+      <div id="graphContent1" class="graph-content visible" role="tabpanel">
+        <canvas id="chartLoadVsDeflection" height="350" style="width:100%;height:350px;"></canvas>
+      </div>
+      <div id="graphContent2" class="graph-content" role="tabpanel">
+        <canvas id="chartLoadVsLength" height="350" style="width:100%;height:350px;"></canvas>
+      </div>
+      <div id="graphContent3" class="graph-content" role="tabpanel">
+        <canvas id="chartPctMTSvsDeflection" height="350" style="width:100%;height:350px;"></canvas>
+      </div>
+      <div id="graphContent4" class="graph-content" role="tabpanel">
+        <canvas id="chartStressVsLength" height="350" style="width:100%;height:350px;"></canvas>
+      </div>
+      <div id="graphContent5" class="graph-content" role="tabpanel">
+        <canvas id="chartFatigueStrength" height="350" style="width:100%;height:350px;"></canvas>
+      </div>
+      <div id="graphContent6" class="graph-content" role="tabpanel">
+        <canvas id="chartStressVsLoad" height="350" style="width:100%;height:350px;"></canvas>
+      </div>
+  </div>
+
+  <div class="bottom-bar d-block" role="contentinfo">
+    <p style="font-size:12px;color:#555">For critical applications, please verify with hand calculations or other spring solvers. This is a free calculator and is not liable for any design errors or calculation mistakes. This calculator uses a fuzzy solver and may make mistakes.</p>
+    <p style="font-size:12px;color:#555"><sup>1</sup>Custom materials live in the page URL. They are unable to be imported or exported.</p>
+    <p style="font-size:12px;color:#555"><sup>2</sup>Wire Diameter Tolerances per ASTM A 228/A228M-02</p>
+    <p style="font-size:12px;color:#555"><sup>3</sup>Check Standard Wire Sizes: <a style="font-size:12px;color:#555" href="https://www.thespringstore.com/standard-spring-wire-diameter-sizes.html" target="_blank" rel="noopener noreferrer">The Spring Store</a></p>
+  </div>
+
+  <div style="height:0.5rem"></div>
+
+</div>
+
+          </div>
+        </div>
+      </section>
+
+          <!-- Button to Other Calculator -->
+          <!-- <section>
+            <div class="col-lg-12 col-12">
+              <div class="mx-auto mt-4 text-center">
+                <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
+                <a href="nominalDensity.html" class="custom-link custom-btn btn d-inline-block">Jet Fuel Nominal Density</a><br/>
+              </div>
+              <div class="mx-auto mt-1 text-center">
+                <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
+                <a href="minmaxDensity.html" class="custom-link custom-btn btn d-inline-block">Min/Max Jet Fuel Nominal Density</a><br/>
+              </div>
+              <div class="mx-auto mt-1 text-center">
+                <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
+                <a href="universalPPH.html" class="custom-link custom-btn btn d-inline-block">Universal PPH to GPM Calculator</a><br/>
+              </div>
+              <div class="mx-auto mt-1 text-center">
+                <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
+                <a href="CrazyUniversalPPH.html" class="custom-link custom-btn btn d-inline-block">Water Density Compensated Universal PPH to GPM Calculator</a><br/>
+              </div>
+            </div>
+          </section> -->
+    
+    
+          <!-- TEXT UNDER THE CALCULATOR -->
+          <section>
+            <!--
+  ============================================================
+  SPRING REFERENCE SECTION — drop this block after the
+  calculator's closing </section> tag, before the footer.
+  Matches KasperCalc's existing style.css + inline styles.
+  MathJax renders all equations client-side, no external images.
+  ============================================================
+-->
+
+<!-- MathJax — load once, configure before the script -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath:  [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      tags: 'none'
+    },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+    startup: { typeset: true }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<style>
+/* ── Reference section shell ───────────────────────────── */
+.ref-wrapper {
+  margin: 0 auto;
+  max-width: 58rem;
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+/* ── Top-level section card ────────────────────────────── */
+.ref-card {
+  background: #eee;
+  border: 2px solid rgb(67,67,67);
+  border-radius: 10px;
+  box-shadow: 0 3px 5px rgba(0,0,0,.4);
+  margin: 0 0 1rem;
+  overflow: hidden;
+}
+
+/* ── Card header bar ───────────────────────────────────── */
+.ref-card-header {
+  background: #6a746a;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.ref-card-header h2 {
+  font-size: 13px;
+  font-weight: 700;
+  color: #eee;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 0;
+  flex: 1;
+}
+.ref-card-header .ref-num {
+  font-size: 12px;
+  color: #A3C3CD;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.ref-chevron {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  color: #A3C3CD;
+}
+.ref-card.collapsed .ref-chevron { transform: rotate(-90deg); }
+.ref-card.collapsed .ref-body    { display: none; }
+
+/* ── Card body ─────────────────────────────────────────── */
+.ref-body {
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+.ref-body.two-col {
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 24px;
+}
+@media (max-width: 640px) {
+  .ref-body.two-col { grid-template-columns: 1fr; }
+}
+
+/* ── Sub-section label ─────────────────────────────────── */
+.ref-sub {
+  font-size: 12px;
+  font-weight: 700;
+  color: #61828A;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid #c0c0c0;
+  padding-bottom: 3px;
+  margin-bottom: 6px;
+}
+
+/* ── Body copy ─────────────────────────────────────────── */
+.ref-body p {
+  font-size: 13px;
+  color: #333;
+  line-height: 1.65;
+  margin: 0 0 8px;
+}
+.ref-body p:last-child { margin-bottom: 0; }
+.ref-body ul {
+  font-size: 13px;
+  color: #333;
+  line-height: 1.7;
+  padding-left: 18px;
+  margin: 0 0 8px;
+}
+
+/* ── Equation block ────────────────────────────────────── */
+.ref-eq-block {
+  background: #d9d9d9;
+  border: 1.5px solid rgb(67,67,67);
+  border-radius: 6px;
+  padding: 10px 16px 8px;
+  margin: 6px 0 10px;
+  overflow-x: auto;
+}
+.ref-eq-tag {
+  font-size: 12px;
+  color: #61828A;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  font-family: "Roboto", Arial, sans-serif;
+  display: block;
+  margin-bottom: 4px;
+}
+mjx-container { color: #1a3a40 !important; margin: 0;}
+mjx-container[jax="SVG"][display="true"] {
+  margin: 0.7em 0 !important;
+}
+
+/* Inline math */
+mjx-container[jax="SVG"] {
+  margin: 0 !important;
+}
+
+/* ── Figure placeholder ────────────────────────────────── */
+.ref-fig {
+  border: 1.5px dashed #999;
+  border-radius: 6px;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 20px 12px;
+  text-align: center;
+  margin: 4px 0;
+}
+.ref-fig-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #494949;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.ref-fig-caption {
+  font-size: 12px;
+  color: #5f5f5f;
+  max-width: 400px;
+}
+.ref-fig svg { opacity: 0.25; }
+
+/* ── Data table ────────────────────────────────────────── */
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11.5px;
+  margin: 6px 0;
+}
+.ref-table th {
+  background: #d9d9d9;
+  border: 1px solid #bbb;
+  padding: 4px 8px;
+  font-weight: 600;
+  color: #444;
+  text-align: left;
+}
+.ref-table td {
+  border: 1px solid #ccc;
+  padding: 3px 8px;
+  color: #333;
+  vertical-align: top;
+}
+.ref-table tr:nth-child(even) td { background: #f5f5f5; }
+.ref-table-caption {
+  font-size: 12px;
+  color: #888;
+  margin-top: 3px;
+  font-style: italic;
+}
+
+/* ── Callout / warning boxes ───────────────────────────── */
+.ref-callout {
+  background: #e8f0f3;
+  border-left: 3px solid #61828A;
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #1a3a40;
+  line-height: 1.55;
+}
+.ref-callout strong { color: #3a6270; }
+.ref-warn {
+  background: #fff8e6;
+  border-left: 3px solid #cc7700;
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #5a3a00;
+  line-height: 1.55;
+}
+
+/* ── Section wrapper ───────────────────────────────────── */
+.ref-section-wrap {
+  padding: 1rem 0.5rem 0.5rem;
+}
+.ref-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #6a746a;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+  padding-left: 2px;
+}
+
+/* ── Full-bleed child inside two-col ───────────────────── */
+.full-col { grid-column: 1 / -1; }
+</style>
+
+
+<!-- ════════════════════════════════════════════════════════
+     SPRING REFERENCE SECTION
+     ════════════════════════════════════════════════════════ -->
+<section aria-label="Compression spring reference guide">
+<div class="csscontainer">
+<div class="col-lg-12 col-12 px-3">
+<div class="ref-wrapper">
+<div class="ref-section-wrap">
+
+  <div class="ref-section-title">Reference Guide — Helical Compression Springs</div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       1. WHAT IS A HELICAL COMPRESSION SPRING
+       ══════════════════════════════════════════════════════ -->
+<div class="ref-card" id="refCard1">
+  <div class="ref-card-header" onclick="toggleRefCard('refCard1')" role="button" tabindex="0" aria-expanded="true">
+    <span class="ref-num">01</span>
+    <h2>What Is a Helical Compression Spring?</h2>
+    <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="ref-body two-col">
+
+    <!-- LEFT: Text -->
+    <div>
+      <p>A helical compression spring stores energy and resists compressive force. When the ends are pushed toward each other, the spring deflects and pushes back with a restoring force proportional to displacement. This linear force–deflection relationship is what makes spring behavior predictable and calculable.</p>
+      <p>Of all spring configurations, the straight cylindrical spring wound from round wire is by far the most common, appearing in automotive valve trains, aircraft fuel systems, consumer electronics, and countless other applications. Round wire is preferred because it stores more energy per unit weight than rectangular wire and is substantially cheaper to draw and form.</p>
+      <p>When applications demand unusual load-deflection behavior — a nonlinear rate, a lower solid height, or resistance to resonance — engineers turn to alternative geometries: conical, barrel-shaped, or hourglass coils, sometimes with variable spacing between turns. Rectangular wire is used specifically when minimum solid height is the priority, which is why die springs are almost always made from it. Springs can also be nested concentrically to multiply energy storage without enlarging the installation envelope.</p>
+    </div>
+
+    <!-- RIGHT: Image -->
+    <div>
+      <div class="ref-sub">Dimensional Terminology</div>
+      <div class="ref-fig" style="min-height:100px; border:none; background:transparent; padding:0;">
+        <img src="img/Compression_Spring_Terminology.jpg"
+             alt="Compression Spring Terminology Figure showing OD, ID, pitch, free length, wire diameter, and end types"
+             style="width:100%; border-radius:6px; display:block;" class="ref-zoomable">
+        <span class="ref-fig-label" style="margin-top:6px;">Compression Spring Dimensional Terminology</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       2. GEOMETRY & TERMINOLOGY
+       ══════════════════════════════════════════════════════ -->
+  <div class="ref-card" id="refCard2">
+    <div class="ref-card-header" onclick="toggleRefCard('refCard2')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">02</span>
+      <h2>Geometry &amp; Terminology</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body two-col">
+
+      <div>
+        <div class="ref-sub">Diameters</div>
+        <p>Three diameters describe every coil spring. The <strong>outside diameter (OD)</strong> is used when the spring operates inside a bore or cavity. The <strong>inside
+          diameter (ID)</strong> is specified when the spring fits over a rod or shaft. The <strong>mean diameter (D)</strong> is the average of OD and ID. Mean diameter is what all stress and
+          rate equations use internally.</p>
+        <p>Coil diameter grows slightly when a spring is compressed. Even small increases matter when clearances are tight. The expanded OD can be estimated from the initial pitch geometry:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Expanded OD under compression</span>
+          \[ OD_{compressed} \approx \sqrt{OD_{free}^{2} + \frac{\left(p^{2} - d^{2}\right) N_{a}}{\pi^{2}}} \]
+        </div>
+        <p>Long springs may also buckle sideways under load, requiring additional diametral clearance beyond what this estimate provides.</p>
+
+        <div class="ref-sub" style="margin-top:12px;">Free Length &amp; Pitch</div>
+        <p>The <strong>free length (L<sub>f</sub>)</strong> is the overall spring length with no load applied. When loads are not tightly controlled, free length is the primary dimension to specify on drawings. When exact force targets must be met, free length becomes a reference dimension — it floats to satisfy the load — and pitch is the parameter that sets it.</p>
+        <p><strong>Pitch (p)</strong> is the center-to-center distance between adjacent coils. It directly determines free length for a given coil count and end type (see dimensional characteristics table below).</p>
+      </div>
+
+      <div>
+        <div class="ref-sub">Spring Index</div>
+        <p>The spring index is the ratio of mean coil diameter to wire diameter:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Spring index</span>
+          \[ C = \frac{D}{d} \]
+        </div>
+        <p>It is arguably the most important dimensionless parameter in spring design — it governs the stress correction factor, manufacturing difficulty, and handling behavior.</p>
+        <div class="ref-callout">
+          <strong>Preferred range: C = 4 to 12.</strong> Below 4, the wire must bend so sharply during coiling that cracking risk rises sharply and tooling wears quickly. Above 12, springs tangle during handling and usually require individual packaging, especially if the ends are not squared.
+        </div>
+
+        <div class="ref-sub" style="margin-top:12px;">Active vs. Dead Coils</div>
+        <p>Total coils (N<sub>t</sub>) = active coils (N<sub>a</sub>) + dead coils (N<sub>d</sub>). <strong>Active coils</strong> deflect under load and set the spring rate.
+          <strong>Dead coils</strong> are the end turns bearing against the seat. The dead coils contribute to solid height but not to rate. End type determines the dead coil count (see table below).</p>
+
+        <div class="ref-sub" style="margin-top:12px;">Solid Height</div>
+        <p>Solid height (L<sub>s</sub>) is the spring length when every coil contacts its neighbor. For ground-end springs: L<sub>s</sub> = N<sub>t</sub> × d. For unground ends: L<sub>s</sub> = (N<sub>t</sub> + 1) × d. Solid height should be specified as a <em>maximum</em> on engineering drawings, with any plating thickness factored in.</p>
+      </div>
+
+      <!-- Full-width table -->
+      <div class="full-col">
+        <div class="ref-sub">Dimensional Characteristics by End Type</div>
+        <div style="overflow-x:auto;">
+          <table class="ref-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Open / Plain (not ground)</th>
+                <th>Open / Plain (ground)</th>
+                <th>Squared only</th>
+                <th>Squared &amp; Ground</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Solid Height (L<sub>s</sub>)</td>
+                <td>(N<sub>t</sub> + 1)d</td>
+                <td>N<sub>t</sub> · d</td>
+                <td>(N<sub>t</sub> + 1)d</td>
+                <td>N<sub>t</sub> · d *</td>
+              </tr>
+              <tr>
+                <td>Active Coils (N<sub>a</sub>)</td>
+                <td>N<sub>t</sub></td>
+                <td>N<sub>t</sub> − 1</td>
+                <td>N<sub>t</sub> − 2</td>
+                <td>N<sub>t</sub> − 2</td>
+              </tr>
+              <tr>
+                <td>Pitch (p)</td>
+                <td>(L<sub>f</sub> − d) / N<sub>t</sub></td>
+                <td>L<sub>f</sub> / N<sub>t</sub></td>
+                <td>(L<sub>f</sub> − 3d) / N<sub>a</sub></td>
+                <td>(L<sub>f</sub> − 2d) / N<sub>a</sub></td>
+              </tr>
+              <tr>
+                <td>Free Length (L<sub>f</sub>)</td>
+                <td>p · N<sub>t</sub> + d</td>
+                <td>p · N<sub>t</sub></td>
+                <td>p · N<sub>a</sub> + 3d</td>
+                <td>p · N<sub>a</sub> + 2d</td>
+              </tr>
+              <tr>
+                <td>Total Coils (N<sub>t</sub>)</td>
+                <td>N<sub>a</sub></td>
+                <td>N<sub>a</sub> + 1</td>
+                <td>N<sub>a</sub> + 2</td>
+                <td>N<sub>a</sub> + 2</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="ref-table-caption">* Small-index springs can achieve lower solid heights. Total coil count should be shown as a reference dimension on engineering drawings.</p>
+      </div>
+
+      <div class="full-col">
+        <!-- FIGURE PLACEHOLDER -->
+        <div class="ref-fig" style="min-height:100px;">
+            <img src="img/Spring_End_Types.png" 
+                alt="Spring End Type Comparison Figure" 
+                class="img-fluid w-75 object-fit-cover rounded-4 mb-2 ref-zoomable" style="width:100%;">
+          <span class="ref-fig-label">Compression Spring End Type Comparison</span>
+          <!-- <span class="ref-fig-caption">Compression Spring End Type Comparison<br>plain, plain-ground, squared, and squared-and-ground end configurations</span> -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       3. END TYPES & SQUARENESS
+       ══════════════════════════════════════════════════════ -->
+  <div class="ref-card" id="refCard3">
+    <div class="ref-card-header" onclick="toggleRefCard('refCard3')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">03</span>
+      <h2>End Types, Squareness &amp; Coil Direction</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body two-col">
+      <div>
+        <div class="ref-sub">Choosing an End Type</div>
+        <p>Four end configurations are available: plain, plain-ground, squared, and squared-and-ground. End type affects solid height, active coil count, free length calculation, and manufacturing cost.</p>
+        <p>For a spring to seat squarely and resist buckling, it needs a bearing surface of at least 270°. Squared-and-ground ends reliably provide 270°–330° of contact. <strong>Squared ends without grinding</strong> are the better choice when wire is very fine (under 0.5 mm / 0.020"), the index exceeds 12, or the spring rate is low — grinding these springs can produce dangerously thin sections at the wire tip.</p>
+        <p>Squareness measured in the free position does not guarantee squareness under load. For applications where in-service squareness matters, verify it at the installed test height.</p>   
+        <div class="ref-sub" style="margin-top:12px;">
+          Hysteresis
+        </div>
+        <p>
+          Compression springs exhibit very low hysteresis. The small energy loss during cycling comes from friction at the end seats as the coils try to rotate slightly during compression.
+          These losses to not from internal material damping. In most designs internal material damping losses are negligible.
+        </p>
+        </div>
+        <div> 
+          <div class="ref-sub">
+            Direction of Coiling
+          </div>  
+          <p>
+            Springs can be wound left-hand or right-hand. For single-spring applications, direction is immaterial — if unspecified, the manufacturer chooses whatever is most efficient for their equipment.
+          </p>
+          <p>
+            The exception is <strong>nested springs</strong>. When two springs are concentrically stacked with small diametral clearance, they must be wound in opposite directions. Matching wind
+            directions causes coils to interleave under deflection, locking the assembly.
+          </p>
+          <!-- FIGURE PLACEHOLDER -->
+          <div class="ref-fig" style="min-height:80px;margin-top:8px;">
+            <img src="img/Left_Hand_VS_Right_Hand_Spring.avif" 
+                alt="Spring Coil Direction Figure, left hand vs right hand coil" 
+                class="img-fluid h-100 object-fit-cover rounded-4 ref-zoomable" style="width:100%;">
+            <span class="ref-fig-label">Compression Spring Coil Directon</span>     
+            <!-- <span class="ref-fig-caption">Left-hand vs. right-hand coil direction</span> -->
+          </div>
+        </div>
+      </div>  
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       4. SPRING RATE & LOAD–DEFLECTION
+       ══════════════════════════════════════════════════════ -->
+  <div class="ref-card" id="refCard4">
+    <div class="ref-card-header" onclick="toggleRefCard('refCard4')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">04</span>
+      <h2>Spring Rate &amp; Load–Deflection Behavior</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body two-col">
+      <div>
+        <div class="ref-sub">The Rate Equation</div>
+        <p>Spring rate (k) is the change in load per unit of deflection (lb/in). This is the slope of the load-deflection line. For a round-wire helical compression spring it depends on four parameters: wire diameter, mean coil diameter, active coil count, and the material's shear modulus.</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Spring rate</span>
+          \[ k = \frac{G \, d^{4}}{8 \, D^{3} \, N_{a}} \]
+        </div>
+        <p>This equation holds when pitch angle is below 15° and deflection per turn is less than D/4 — both conditions satisfied by the vast majority of springs in service. Loads at any position follow directly from rate and deflection:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Load from deflection</span>
+          \[ F = k \left( L_{f} - L \right) \]
+        </div>
+
+        <div class="ref-sub" style="margin-top:12px;">Springs in Parallel &amp; Series</div>
+        <p>Springs acting in <strong>parallel</strong> (compressed by the same displacement) sum their rates directly:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Parallel rate</span>
+          \[ k_{total} = k_{1} + k_{2} + \cdots + k_{n} \]
+        </div>
+        <p>Springs acting in <strong>series</strong> (each carrying the same load but deflecting independently) produce a composite rate lower than any single element:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Series rate</span>
+          \[ \frac{1}{k_{total}} = \frac{1}{k_{1}} + \frac{1}{k_{2}} + \cdots + \frac{1}{k_{n}} \]
+        </div>
+        <p>The series formula also applies to variable-pitch or variable-diameter springs: divide the body into short increments, compute rate for each, then combine them as springs in series.</p>
+      </div>
+      <div>
+        <div class="ref-sub">Where to Specify Rate</div>
+        <p>A real spring's load-deflection curve is not perfectly linear at the extremes. Coil settling at the beginning of travel and coil clash near solid both distort the curve away from the ideal line. Spring rate and test loads should therefore always be specified at heights within the <strong>15–85% of full deflection range</strong> — loads outside this band are inherently harder for manufacturers to hold to tolerance.</p>
+        <!-- FIGURE PLACEHOLDER -->
+        <div class="ref-fig" style="min-height:130px;margin-top:6px;">
+          <img src="img/Load_Vs_Deflection_Compression_Spring.png" 
+              alt="Compression spring load vs deflection curve" 
+              class="img-fluid h-100 object-fit-cover rounded-4 ref-zoomable" style="width:100%;">
+          <span class="ref-fig-label">Typical load-deflection curve</span>
+          <span class="ref-fig-caption">Specify rate and test loads between 15% and 85% of total deflection to avoid non-linear end effects</span>
+        </div>
+        <div class="ref-warn" style="margin-top:10px;">
+          Variable-rate springs (conical, barrel, variable-pitch) require incremental load calculation: divide total deflection into short chords, compute rate for each chord, and accumulate load segment by segment rather than applying the single-rate formula across the full travel.
+        </div>
+
+        <div class="ref-sub" style="margin-top:12px;">Load Classification</div>
+        <p>Loads are classified as <strong>static</strong> (infrequent cycling, often sustained), <strong>cyclic</strong> (10,000 to over a billion cycles between defined heights), or <strong>dynamic</strong> (rapid loading that generates surge waves). Each class has different governing failure modes and allowable stress criteria. See sections below.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       5. STRESS & WAHL CORRECTION
+       ══════════════════════════════════════════════════════ -->
+  <div class="ref-card" id="refCard5">
+    <div class="ref-card-header" onclick="toggleRefCard('refCard5')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">05</span>
+      <h2>Stress &amp; the Wahl Correction Factor</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body two-col">
+      <div>
+        <div class="ref-sub">Torsional Stress in the Wire</div>
+        <p>Wire in a compression spring is stressed primarily in torsion. The coil geometry converts axial load into a twisting moment along the wire length. The nominal (uncorrected) torsional stress is:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Uncorrected torsional stress</span>
+          \[ \tau = \frac{8 \, F \, D}{\pi \, d^{3}} \]
+        </div>
+        <p>This treats the wire as a straight torsion member, which is a simplification. Because the wire is curved into a coil, the inner surface of each turn is geometrically shorter than the outer surface, concentrating stress there. A direct shear component from the transverse load adds further stress at that same inner surface, compounding the effect.</p>
+
+        <div class="ref-sub" style="margin-top:12px;">Wahl Factor K<sub>W1</sub> — springs not yet preset</div>
+        <p>The K<sub>W1</sub> correction accounts for both coil curvature and direct shear simultaneously. It is the correct factor for any spring that has not been deliberately preset:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Wahl correction factor K<sub>W1</sub></span>
+          \[ K_{W1} = \frac{4C - 1}{4C - 4} + \frac{0.615}{C} \]
+        </div>
+        <p>Corrected peak stress = K<sub>W1</sub> × τ. Because K<sub>W1</sub> grows as C decreases, tightly-wound low-index springs carry disproportionately high inner-surface stresses for a given applied load.</p>
+      </div>
+      <div>
+        <div class="ref-sub">Wahl Factor K<sub>W2</sub> — preset springs</div>
+        <p>After presetting, local yielding at the inner surface redistributes stress more uniformly around the wire cross section. In this condition, only the direct shear component requires correction:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Direct-shear correction factor K<sub>W2</sub></span>
+          \[ K_{W2} = \frac{4C + 2}{4C - 3} \]
+        </div>
+        <p>Since K<sub>W2</sub> &lt; K<sub>W1</sub>, preset springs can sustain higher allowable stresses at the same wire geometry. At elevated temperatures with very slow loading, the stress distribution approaches fully uniform — no correction factor — but this case is uncommon and warrants careful review.</p>
+
+        <div class="ref-warn" style="margin-top:10px;">
+          <strong>Critical:</strong> The correction factor used in stress calculation must match the factor used to derive the allowable stress data. Mixing K<sub>W1</sub>-based allowables with K<sub>W2</sub>-calculated stress — or vice versa — produces an unconservative result that may fail in service without warning.
+        </div>
+
+        <!-- FIGURE PLACEHOLDER -->
+        <div class="ref-fig" style="min-height:100px;margin-top:10px;">
+          <img src="img/Wahl_Stress_Correction Factor_For_Round Spring_Wire(Helical_Comp).png" 
+              alt="Wahl Stress Correction Factor For Round Spring Wire (HelicalCompression Springs)" 
+              class="img-fluid h-100 object-fit-cover rounded-4 ref-zoomable" style="width:100%;">
+          <span class="ref-fig-label">Wahl correction factor</span>
+          <span class="ref-fig-caption">K<sub>W1</sub> and K<sub>W2</sub> plotted against spring index C.<br>Both factors increase steeply below C = 4</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       6. STATIC LOADING — ALLOWABLE STRESS & PRESETTING
+       ══════════════════════════════════════════════════════ -->
+  <div class="ref-card" id="refCard6">
+    <div class="ref-card-header" onclick="toggleRefCard('refCard6')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">06</span>
+      <h2>Static Loading — Allowable Stresses &amp; Presetting</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 24px;">
+
+        <div>
+          <div class="ref-sub">What Limits a Statically Loaded Spring</div>
+          <p>When a spring cycles infrequently or holds a sustained load for long periods, the governing failure modes are <strong>permanent set</strong> (plastic deformation that shifts free length) and <strong>stress relaxation</strong> (gradual load loss under sustained compression, especially at elevated temperature). Fatigue is not the primary concern in this loading class.</p>
+          <p>If the K<sub>W1</sub>-corrected torsional stress at solid exceeds the material's allowable percentage of tensile strength, the spring will take a permanent set the first time it is compressed to solid. Whether that is acceptable depends on whether solid is a credible operating condition.</p>
+
+          <div class="ref-sub" style="margin-top:12px;">Presetting — Increasing Capacity Through Controlled Yielding</div>
+          <p>Presetting compresses a spring to solid to deliberately yield the highest-stressed inner surface. The plastic flow leaves behind compressive residual stress that directly opposes
+            the operating torsional stress. This effectively pre-loads the wire in the beneficial direction. The result is a spring that carries significantly higher loads without setting in service.</p>
+          <p>Cold set removal should reduce free length by at least 10%. Under 10% makes free length control difficult. A stress ratio above 1.3 (calculated / allowable) produces geometric
+            distortion without meaningfully increasing load capacity. With a stress ratio above 1.3 the gains plateau.</p>
+          <!-- FIGURE PLACEHOLDER -->
+          <div class="ref-fig" style="min-height:80px;margin-top:8px;">
+          <img src="img/SpringLoadCarryAbilityverseAmountOfSetRemoved.png" 
+              alt="Spring Load Carry Ability verse Amount Of Set Removed" 
+              class="img-fluid h-100 object-fit-cover rounded-4 ref-zoomable" style="width:100%;">
+            <span class="ref-fig-label">Load-Carrying Capacity vs. Percentage of Set Removed</span>
+            <span class="ref-fig-caption">Capacity plateaus above a stress ratio of about 1.3</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="ref-sub">Allowable Torsional Stress: Static Applications</div>
+          <table class="ref-table">
+            <thead>
+              <tr>
+                <th>Material</th>
+                <th>Before Preset<br>(use K<sub>W1</sub>)</th>
+                <th>After Preset<br>(use K<sub>W2</sub>)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Patented &amp; cold drawn carbon steel</td>
+                <td>45% MTS</td>
+                <td>60–70% MTS</td>
+              </tr>
+              <tr>
+                <td>Hardened &amp; tempered carbon / low-alloy steel</td>
+                <td>50% MTS</td>
+                <td>65–75% MTS</td>
+              </tr>
+              <tr>
+                <td>Austenitic stainless steels</td>
+                <td>35% MTS</td>
+                <td>55–65% MTS</td>
+              </tr>
+              <tr>
+                <td>Nonferrous alloys</td>
+                <td>35% MTS</td>
+                <td>55–65% MTS</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="ref-table-caption">MTS = minimum tensile strength. Bending and buckling stresses are not included in these limits.</p>
+
+          <div class="ref-callout" style="margin-top:10px;">
+            If the K<sub>W2</sub>-corrected stress at solid still exceeds the post-preset allowable, the spring <strong>cannot be manufactured</strong> from that material in that geometry.
+            Lower the stress by increasing wire diameter relative to coil diameter, adding active coils, or selecting a higher-strength alloy.
+          </div>
+
+          <div class="ref-sub" style="margin-top:12px;">Stress Relaxation at Elevated Temperature</div>
+            <p>When a spring is held at a fixed compressed height for an extended period, especially at elevated temperature, the wire stress decreases gradually as the material
+              creeps at a microscopic level. The practical result is measurable load loss over time. Relaxation is quantified as a percentage of initial load:</p>
+            <div class="ref-eq-block">
+              <span class="ref-eq-tag">Stress relaxation</span>
+              \[ \text{Relaxation} \;(\%) = \frac{P_{0} - P_{F}}{P_{0}} \times 100 \]
+            </div>
+            <p>Even music wire, which has excellent room-temperature properties, can exhibit meaningful relaxation after 100 hours at temperatures as low as 100°C. Springs
+              for sustained high-temperature service should be <strong>heat-set</strong>: preset at the service temperature rather than at room temperature. Heat setting
+              substantially improves relaxation resistance and is often more cost-effective than specifying an exotic high-temperature alloy.</p>
+            <div class="ref-fig" style="min-height:90px;margin-top:6px;">
+            <img src="img/Spring_Relaxationg_At_Various _Temps.png" 
+                alt="Critical buckling curves — springs plotting above and to the right of a curve will buckle. Solid line: one end free to tip. Dashed line: parallel plate support." 
+                class="img-fluid w-100 object-fit-cover rounded-4 ref-zoomable" style="width:100%;">
+            <span class="ref-fig-label">Spring Relaxation Data for Various Metals</span>
+            <span class="ref-fig-caption">Springs were preset at room temperature and tested for 100 hours at the indicated temperatures. The initial stress K<sub>w1</sub> corrected.</span>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       7. CYCLIC LOADING — FATIGUE & LIFE
+       ══════════════════════════════════════════════════════ -->
+  <div class="ref-card" id="refCard7">
+    <div class="ref-card-header" onclick="toggleRefCard('refCard7')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">07</span>
+      <h2>Cyclic Loading — Fatigue &amp; Life Estimation</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body two-col">
+      <div>
+        <div class="ref-sub">What Limits a Cyclic Spring</div>
+        <p>When a spring cycles repeatedly between two load heights (from 10,000 to over a billion times) the failure mode shifts from yielding to <strong>fatigue crack initiation</strong>. The K<sub>W1</sub>-corrected maximum stress must stay below the material's fatigue allowable for the target life.</p>
+        <p>Fatigue cracks almost always start at the wire surface, making surface quality the dominant manufacturing variable. Pits, seams, laps, or drawing marks act as stress
+          concentrations that can cut fatigue life by an order of magnitude compared to clean wire. Premium-grade wire specifies tighter surface quality tolerances and is justified
+          for cyclic applications even at added cost.</p>
+
+        <div class="ref-sub" style="margin-top:12px;">Shot Peening</div>
+        <p>Shot peening bombards the spring surface with small steel spheres, plastically deforming a thin surface layer and inducing compressive residual stresses exactly where
+          fatigue cracks originate. The mechanism is the same as presetting — beneficial residual stress — but confined to the surface. Peening can increase fatigue strength by up to
+          <strong>20% at 10 million cycles</strong> and reduces sensitivity to pre-existing surface defects, though it does not eliminate them entirely.</p>
+        <div class="ref-sub">Allowable Cyclic Stresses — use K<sub>W1</sub>, stress ratio = 0</div>
+        <table class="ref-table">
+          <thead>
+            <tr>
+              <th>Life Target</th>
+              <th>A228 / SS / Nonferrous unpeened</th>
+              <th>A228 / SS / Nonferrous peened</th>
+              <th>A230 / A232 unpeened</th>
+              <th>A230 / A232 peened</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>10<sup>5</sup> cycles</td><td>36% MTS</td><td>42% MTS</td><td>42% MTS</td><td>49% MTS</td></tr>
+            <tr><td>10<sup>6</sup> cycles</td><td>33% MTS</td><td>39% MTS</td><td>40% MTS</td><td>47% MTS</td></tr>
+            <tr><td>10<sup>7</sup> cycles</td><td>30% MTS</td><td>36% MTS</td><td>38% MTS</td><td>46% MTS</td></tr>
+          </tbody>
+        </table>
+        <p class="ref-table-caption">Assumes ambient environment, no surging, minimum stress = 0. Use as design guidelines only — actual life depends on material heat, wire
+          surface condition, and environment.</p>
+      </div>
+      <div>
+        <div class="ref-sub" style="margin-top:12px;">Modified Goodman Diagram</div>
+        <p>To estimate life at stress ratios other than zero, plot the operating stress range on a <strong>modified Goodman diagram</strong>.
+          Draw a line from point A (at 67% of tensile strength on the 45° line) through the operating stress coordinate (point B). Where this
+          line crosses the vertical axis (point C), draw a horizontal line to intersect the S-N family. The intersection at point D is the
+          estimated life. This method correctly accounts for mean stress contribution to fatigue damage.</p>
+        <!-- FIGURE PLACEHOLDER -->
+        <div class="ref-fig" style="min-height:90px;margin-top:6px;">
+          <img src="img/Modified_Goodman_Diagram_For_Estimating_Fatigue.png" 
+              alt="Critical buckling curves — springs plotting above and to the right of a curve will buckle. Solid line: one end free to tip. Dashed line: parallel plate support." 
+              class="img-fluid h-100 object-fit-cover rounded-4 ref-zoomable" style="width:100%;">
+          <span class="ref-fig-label">Modified Goodman Diagram</span>
+          <span class="ref-fig-caption">Fatigue life estimation procedure at non-zero stress ratios, showing construction lines A–B–C–D.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       8. BUCKLING
+       ══════════════════════════════════════════════════════ -->
+  <div class="ref-card" id="refCard8">
+    <div class="ref-card-header" onclick="toggleRefCard('refCard8')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">08</span>
+      <h2>Buckling</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body two-col">
+      <div>
+        <div class="ref-sub">When Buckling Occurs</div>
+        <p>A buckles (spring bows sideways) when its slenderness ratio (L<sub>f</sub> / D) is too high for the deflection imposed. Springs with L<sub>f</sub> / D greater than approximately 4 are candidates for buckling analysis. The critical threshold depends on how the ends are constrained:</p>
+        <!-- <ul>
+          <li style="font-size: 14px;"><strong>One end free to tip</strong> — most prone to buckling</li>
+          <li style="font-size: 14px;"><strong>Both ends on flat parallel plates</strong> — considerably more stable</li>
+          <li style="font-size: 14px;"><strong>One end laterally constrained</strong> — intermediate behavior</li>
+        </ul> -->
+        <ul class="cfg-buckling-guide">
+          <li style="font-size: 14px; margin-bottom: 8px;">
+            <strong>Fixed–Fixed (Parallel Plates):</strong> 
+            Both ends held flat and constrained (e.g., a piston in a cylinder). 
+            <em>(K ≈ 0.5)</em>.
+          </li>
+          
+          <li style="font-size: 14px; margin-bottom: 8px;">
+            <strong>Fixed–Hinged (Guarded Pivot):</strong> 
+            One end held flat, the other pivoted but laterally constrained. 
+            <em>(K ≈ 0.707)</em>.
+          </li>
+          
+          <li style="font-size: 14px; margin-bottom: 8px;">
+            <strong>Hinged–Hinged (Pivoted Ends):</strong> 
+            Both ends are free to pivot or rotate (e.g., pointed ends). 
+            <em>(K = 1.0)</em>.
+          </li>
+          
+          <li style="font-size: 14px; margin-bottom: 8px;">
+            <strong>Fixed–Free (Unguided):</strong> 
+            One end fixed, the other free to tilt and move sideways. 
+            <em>(K ≈ 2.0)</em>.
+          </li>
+        </ul>
+        <p>When a slender spring is unavoidable, stack multiple shorter springs in series inside a tube or over a rod, with intermediate guides between segments to prevent coil binding.</p>
+        <div class="ref-warn" style="margin-top:8px;">
+          Guiding a spring inside a bore or over a shaft prevents buckling but introduces sliding friction that shifts actual loads relative to calculated values. At high slenderness ratios,
+          this friction error can be significant and must be included in the force budget.
+        </div>
+        <div class="ref-fig" style="min-height:80px;margin-top:10px;">
+          <img src="img/Spring_Buckling_5.png" 
+              alt="Critical buckling curves — springs plotting above and to the right of a curve will buckle. Solid line: one end free to tip. Dashed line: parallel plate support." 
+              class="img-fluid h-100 object-fit-cover rounded-4 ref-zoomable" style="width:100%;">
+          <span class="ref-fig-label pt-2">Spring Buckling End Conditions</span>
+          <!-- <span class="ref-fig-caption">Fixed-free, fixed-pinned, and pinned-pinned configurations used to select the correct buckling curve</span> -->
+        </div>
+      </div>
+      <div>
+        <!-- FIGURE PLACEHOLDER -->
+        <div class="ref-fig" style="min-height:130px;">
+          <img src="img/Spring_Buckling.png" 
+              alt="Critical buckling curves — springs plotting above and to the right of a curve will buckle. Solid line: one end free to tip. Dashed line: parallel plate support." 
+              class="img-fluid h-100 object-fit-cover rounded-4 ref-zoomable" style="width:100%;">
+          <span class="ref-fig-label">Critical Spring Buckling Curves</span>
+          <span class="ref-fig-caption">Curve A (both ends on flat parallel plates) and Curve B (one end free to tip) define the critical buckling boundary. Springs whose Lf/D and
+            δ/Lf operating point plots above and to the right of a curve will buckle laterally, while points below and to the left are stable.</span>
+        </div>
+        <!-- Curve A represents the more stable fixed-fixed
+            end condition, while Curve B is the less stable fixed-free condition where buckling occurs at lower slenderness ratios and smaller deflections. -->
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       9. DYNAMIC LOADING — IMPACT & RESONANCE
+       ══════════════════════════════════════════════════════ -->
+  <div class="ref-card" id="refCard9">
+    <div class="ref-card-header" onclick="toggleRefCard('refCard9')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">09</span>
+      <h2>Dynamic Loading — Impact &amp; Resonance</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body two-col">
+      <div>
+        <div class="ref-sub">Surge Waves &amp; Impact Loading</div>
+        <p>When a spring is loaded or released rapidly, a <strong>surge wave</strong> — a pulse of torsional stress — propagates from the point of loading toward the fixed end. It travels at roughly 1/10 the speed of a free torsional wave through the wire material. The torsional wave speed in the wire is:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Torsional wave velocity in wire</span>
+          \[ V_{T} = \sqrt{\frac{G}{\rho}} \]
+        </div>
+        <p>The surge wave velocity in actual springs typically falls between 50 and 500 m/s. For steel, the relationship between axial impact velocity and instantaneous stress reduces to a concise form that is independent of spring geometry:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Impact velocity vs. stress — steel springs</span>
+          \[ V_{impact} = \frac{\tau}{35.5} \quad \left[\text{m/s},\; \tau \text{ in MPa}\right] \]
+        </div>
+        <p>At high loading velocities, instantaneous surge-wave stress can exceed the static torsional stress calculated from the load equation. When the wave reflects off the far end, stresses are amplified further. Springs in high-speed or impact service must be evaluated against these dynamic stress levels, not solely the static prediction.</p>
+
+        <div class="ref-fig" style="min-height:90px;margin-top:8px;">
+          <img src="img/Spring_Wave_Pressure_Surge_From_Impact.png" 
+              alt="Surge of a wave through a compression spring" 
+              class="img-fluid h-100 object-fit-cover rounded-4 ref-zoomable" style="width:100%;">
+          <span class="ref-fig-label">Compression Spring Wave Surge</span>
+          <!-- <span class="ref-fig-caption">Arbor (inner circle, dashed) vs. finished coil ID (outer circle). The difference is the elastic springback the formula predicts</span> -->
+        </div>
+        <div class="ref-sub" style="margin-top:12px;">Mass Correction for Energy Balance</div>
+        <p>When spring mass is less than 1/4 of the mass being accelerated, the spring can be treated as massless in energy-balance calculations. When spring mass is significant, substitute (W + W<sub>s</sub>/3) for W in velocity equations — this approximates spring inertia by concentrating its mass at the moving end.</p>
+        </div>
+      <div>
+        <div class="ref-sub">Resonance &amp; Natural Frequency</div>
+        <p>Resonance occurs when the cyclic loading frequency matches the spring's <strong>natural frequency</strong> or an integer multiple of it. Individual coil deflections and stresses
+          can then far exceed static predictions, and the minimum-load condition may produce zero or tensile contact force as the spring bounces off its seat.</p>
+        <p>Natural frequency for a compression spring with both ends fixed:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Natural frequency — both ends fixed</span>
+          \[ f_{n} = \frac{d}{2\pi \, N_{a} \, D^{2}} \sqrt{\frac{G}{\rho}} \quad [\text{Hz}] \]
+        </div>
+        <div class="ref-callout" style="margin-top:8px;">
+          <strong>Design rule:</strong> Natural spring frequency should be at least <strong>13× the operating frequency</strong>. If this cannot be achieved, use energy-absorbing countermeasures: an internal damper coil rubbing against the active coils, contact with an arbor or housing, a variable-pitch spring that detunes under deflection, or a series/parallel spring combination that shifts the system's resonant frequency away from the excitation.
+        </div>
+
+        <div class="ref-sub" style="margin-top:12px;">Velocity of a Propelled Mass</div>
+        <p>For horizontal spring-ejection with the spring treated as massless:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Horizontal ejection velocity</span>
+          \[ V = \sqrt{\frac{k \, \delta^{2}}{W / g}} \]
+        </div>
+        <p>For vertical ejection, the gravitational potential energy term modifies the result. Both expressions apply only when spring mass is below 1/4 of the ejected mass — use the (W + W<sub>s</sub>/3) correction otherwise.</p>
+        <!-- FIGURE PLACEHOLDER -->
+        <div class="ref-fig" style="min-height:80px;margin-top:6px;">
+          <img src="img/Velocity_OfObject_Propelled_by_spring.png" 
+              alt="Compression Spring Winding on Arbor" 
+              class="img-fluid h-100 object-fit-cover rounded-4 ref-zoomable" style="width:100%;">
+          <span class="ref-fig-label">Velocity of an object propelled by a compression spring</span>
+          <span class="ref-fig-caption">Velocity of a mass propelled by a compression spring as a function of initial stress and weight ratio</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+     10. MISC CALCULATIONS
+     ══════════════════════════════════════════════════════ -->
+  <div class="ref-card" id="refCard10">
+    <div class="ref-card-header" onclick="toggleRefCard('refCard10')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">10</span>
+      <h2>Miscellaneous Calculations</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body two-col">
+
+      <div>
+        <div class="ref-sub">Arbor Diameter — Cold Winding Springback</div>
+        <p>When a helical spring is wound cold on a mandrel, the wire springs back elastically as soon as winding tension is released. The coil opens slightly, so the finished inside diameter is always larger than the arbor it was wound on. To hit a target inside diameter, the arbor must be made deliberately undersized to compensate for this springback.</p>
+        <p>The required arbor diameter D' is found from the Gardiner-Carlson formula, which models the wire as an elastic beam bent around a cylinder and accounts for the ratio of bending stress to stiffness:</p>
+
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Arbor diameter — Gardiner &amp; Carlson (1958)</span>
+          \[
+            D' = \frac{-1 + \sqrt{1 + \dfrac{4 \cdot 1.7 \cdot \sigma_{B} \cdot D}{E \cdot d}}}
+                {2 \cdot \dfrac{1.7 \cdot \sigma_{B}}{E \cdot d}}
+          \]
+        </div>
+
+        <p>where D is the desired mean coil diameter after springback, d is the wire diameter, σ<sub>B</sub> is the minimum tensile strength of the wire, and E is Young's modulus. The constant 1.7 is an empirical winding factor established by Gardiner and Carlson from physical winding trials.</p>
+
+        <div class="ref-sub" style="margin-top:12px;">How Young's Modulus E Is Obtained</div>
+        <p>Young's modulus is not independently tabulated for every spring material. Instead it is derived from the shear modulus G and Poisson's ratio ν, both of which are standard material database fields, using the isotropic elasticity identity:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Young's modulus from shear modulus</span>
+          \[ E = 2G\left(1 + \nu\right) \]
+        </div>
+        <p>This relationship holds exactly for any homogeneous isotropic material. For common spring materials the resulting E values are: ~30 Mpsi for carbon and alloy steels, ~28–29 Mpsi for stainless steels, and ~15–19 Mpsi for copper and titanium alloys.</p>
+      </div>
+
+      <div>
+        <div class="ref-sub">Understanding the Formula</div>
+        <p>The derivation starts from the elastic beam-bending curvature equation. When a wire of diameter d is bent to a radius r, the bending stress at the outer fibre is σ = E·d / (2r).
+          Setting the curvature of the arbor (1/r') and the curvature of the finished coil (1/r) equal to the elastic springback curvature yields a quadratic in D'. The Gardiner-Carlson solution to
+          that quadratic is the formula above. For this formula, only the positive root is the physically meaningful one.</p>
+        <p>The formula can be rearranged to make the structure clearer by defining a single curvature factor:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Curvature factor (intermediate)</span>
+          \[ \kappa = \frac{1.7 \,\sigma_{B}}{E \cdot d} \]
+        </div>
+        <p>which gives the compact form:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Compact form</span>
+          \[ D' = \frac{-1 + \sqrt{1 + 4\,\kappa\, D}}{2\,\kappa} \]
+        </div>
+        <p>κ has units of 1/length and represents how much curvature the material can elastically sustain per unit of wire diameter. A stiffer material (higher E) or a thicker wire (larger d) both reduce κ, meaning less springback and a larger required arbor relative to the finished ID.</p>
+
+        <div class="ref-callout" style="margin-top:10px;">
+          <strong>Practical note:</strong> The arbor diameter D' is the <em>mean</em> diameter of the mandrel — that is, the arbor OD plus one wire diameter. In practice, a mandrel is specified by its outside diameter, so the mandrel OD = D' − d. Always confirm springback on first-article samples; actual springback varies slightly with wire temper, coiling speed, and mandrel surface condition.
+        </div>
+
+        <div class="ref-sub" style="margin-top:12px;">Source</div>
+        <p style="font-size:11.5px;color:#555;">Gardiner, F. J. and Carlson, H. C. R., <em>The Spring-back of Coil Springs</em>, Mechanical Engineering, vol. 80, pp. 74–76, 1958. Formula implementation follows the Associated Spring Designers (ASD) software convention.</p>
+
+        <!-- FIGURE PLACEHOLDER -->
+        <div class="ref-fig" style="min-height:90px;margin-top:8px;">
+          <img src="img/Arbor_Coil_Winding_Springback.png" 
+              alt="Compression Spring Winding on Arbor" 
+              class="img-fluid h-100 object-fit-cover rounded-4 ref-zoomable" style="width:100%;">
+          <span class="ref-fig-label">Compression Spring Winding on Arbor</span>
+          <span class="ref-fig-caption">Arbor (inner circle, dashed) vs. finished coil ID (outer circle). The difference is the elastic springback the formula predicts</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+</div><!-- end ref-section-wrap -->
+</div>
+</div>
+</div>
+</section>
+
+
+<script>
+/* ── Collapse / expand reference cards ─────────────────── */
+function toggleRefCard(id) {
+  const card = document.getElementById(id);
+  if (!card) return;
+  const isCollapsed = card.classList.contains('collapsed');
+  card.classList.toggle('collapsed', !isCollapsed);
+  const header = card.querySelector('.ref-card-header');
+  if (header) header.setAttribute('aria-expanded', isCollapsed ? 'true' : 'false');
+  /* Re-typeset MathJax when a previously-hidden card is opened,
+     in case MathJax skipped rendering while the card was display:none */
+  if (isCollapsed && window.MathJax) {
+    MathJax.typesetPromise([card]).catch(err => console.warn('MathJax:', err));
+  }
+}
+
+/* Keyboard accessibility for card headers */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.ref-card-header').forEach(header => {
+    header.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        header.click();
+      }
+    });
+  });
+});
+</script>
+          </section>
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary p-4 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+            <div id="citationText" class="font-monospace text-dark-emphasis small pt-2">
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    </main>   
+    
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->    
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5XLCN0GJQ0');
+</script>
+
+<script>
+function initLightbox() {
+  const overlay  = document.getElementById('lightboxOverlay');
+  const img      = document.getElementById('lightboxImg');
+  const caption  = document.getElementById('lightboxCaption');
+  const closeBtn = document.getElementById('lightboxClose');
+
+  if (!overlay) return;
+
+  function openLightbox(src, alt, captionText) {
+    img.src             = src;
+    img.alt             = alt || '';
+    caption.textContent = captionText || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    img.src = '';
+  }
+
+  document.addEventListener('click', e => {
+    const target = e.target.closest('.ref-zoomable');
+    if (!target) return;
+    const figLabel = target.closest('.ref-fig')
+      ?.querySelector('.ref-fig-label')
+      ?.textContent ?? '';
+    openLightbox(target.src, target.alt, figLabel);
+  });
+
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeLightbox();
+  });
+
+  closeBtn.addEventListener('click', closeLightbox);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initLightbox);  // ← add this line
+</script>
+
+  </body>
+
+
+<!-- ============================================================
+     CUSTOM MATERIAL MODAL
+     Drop this HTML anywhere in your <body>.
+     Call customMaterial() to open, closeCustomMaterial() to close.
+     Matches KasperCalc inline styles exactly.
+     ============================================================ -->
+
+<!-- ── Modal overlay ─────────────────────────────────────── -->
+<div id="customMaterialOverlay" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  z-index:99998;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+">
+
+  <!-- ── Modal panel ───────────────────────────────────────── -->
+  <div style="
+    background:#eee;
+    border:2px solid rgb(67,67,67);
+    border-radius:14px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.45);
+    width:100%;
+    max-width:750px;
+    max-height:92vh;
+    overflow-y:auto;
+    font-family:'Roboto',Arial,sans-serif;
+    position:relative;
+  ">
+
+    <!-- ── Header bar ──────────────────────────────────────── -->
+    <div style="
+      background:#6a746a;
+      border-radius:11px 11px 0 0;
+      padding:8px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    ">
+      <span style="font-size:13px;font-weight:700;color:#eee;text-transform:uppercase;letter-spacing:0.07em;">
+        Custom Material
+      </span>
+      <button onclick="closeCustomMaterial()" style="
+        background:rgba(255,255,255,0.15);
+        border:2px solid rgba(255,255,255,0.35);
+        color:#fff;
+        width:26px;height:26px;
+        border-radius:50%;
+        cursor:pointer;
+        font-size:14px;
+        display:flex;align-items:center;justify-content:center;
+        line-height:1;
+      ">&#x2715;</button>
+    </div>
+
+    <!-- ── Body ────────────────────────────────────────────── -->
+    <div style="padding:12px 14px;display:flex;flex-direction:column;gap:10px;">
+
+      <!-- ── Section: Basic Information ──────────────────── -->
+      <div style="
+        border:1.5px solid rgb(67,67,67);
+        border-radius:8px;
+        overflow:hidden;
+      ">
+        <div style="
+          background:#d9d9d9;
+          padding:4px 10px;
+          font-size: 12px;font-weight:700;color:#61828A;
+          text-transform:uppercase;letter-spacing:0.06em;
+          border-bottom:1px solid #c0c0c0;
+        ">Basic Information</div>
+        <div style="padding:8px 10px;display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;">
+
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <label style="font-size:12px;color:#444;width:130px;flex-shrink:0;">Material Name</label>
+              <input type="text" id="cm_name" placeholder="e.g. ASTM A228 Music Wire" style="
+                flex:1;font-size:12px;padding:2px 6px;border-radius:4px;
+                border:1.5px solid #434343;background:#fff;
+                color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;
+              ">
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <label style="font-size:12px;color:#444;width:130px;flex-shrink:0;">Specification</label>
+              <input type="text" id="cm_spec" placeholder="e.g. ASTM A228" style="
+                flex:1;font-size:12px;padding:2px 6px;border-radius:4px;
+                border:1.5px solid #434343;background:#fff;
+                color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;
+              ">
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <label style="font-size:12px;color:#444;">Comment</label>
+            <textarea id="cm_comment" rows="2" placeholder="Optional notes..." style="
+              font-size:12px;padding:4px 6px;border-radius:4px;
+              border:1.5px solid #434343;background:#fff;
+              color:#000;font-family:'Roboto',Arial,sans-serif;
+              resize:vertical;
+            "></textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Section: Minimum Tensile Strength ────────────── -->
+      <div style="
+        border:1.5px solid rgb(67,67,67);
+        border-radius:8px;
+        overflow:hidden;
+      ">
+        <div style="
+          background:#d9d9d9;
+          padding:4px 10px;
+          font-size:12px;font-weight:700;color:#61828A;
+          text-transform:uppercase;letter-spacing:0.06em;
+          border-bottom:1px solid #c0c0c0;
+        ">Minimum Tensile Strength</div>
+        <div style="padding:8px 10px;display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;align-items:center;">
+
+          <div style="display:flex;align-items:center;gap:6px;">
+            <label style="font-size:12px;color:#444;width:130px;flex-shrink:0;">Equation Type</label>
+            <select id="cm_eqType" onchange="cmUpdateEquation()" style="
+              flex:1;font-size:12px;padding:2px 5px;border-radius:4px;
+              border:1.5px solid #434343;background:#d9d9d9;
+              color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;
+            ">
+              <option value="constant">Constant</option>
+              <option value="binomial" selected>Binomial</option>
+              <option value="linear">Linear</option>
+              <option value="polynomial">Polynomial</option>
+              <option value="power">Power</option>
+            </select>
+          </div>
+
+          <!-- Equation display box -->
+          <div id="cm_eqDisplay" style="
+            background:#d9d9d9;
+            border:1.5px solid rgb(67,67,67);
+            border-radius:6px;
+            padding:6px 10px;
+            min-height:44px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:12px;color:#1a3a40;
+            text-align:center;
+            overflow-x:auto;
+          ">
+            <!-- filled by cmUpdateEquation() -->
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Section: Material Data ────────────────────────── -->
+      <div style="
+        border:1.5px solid rgb(67,67,67);
+        border-radius:8px;
+        overflow:hidden;
+      ">
+        <div style="
+          background:#d9d9d9;
+          padding:4px 10px;
+          font-size:12px;font-weight:700;color:#61828A;
+          text-transform:uppercase;letter-spacing:0.06em;
+          border-bottom:1px solid #c0c0c0;
+        ">Material Data</div>
+        <div style="padding:8px 10px;display:grid;grid-template-columns:1fr 1fr;gap:5px 16px;">
+
+          <!-- LEFT column -->
+          <div style="display:flex;flex-direction:column;gap:4px;">
+
+            <!-- <div style="display:flex;align-items:center;gap:6px;">
+              <label style="font-size:12px;color:#444;width:150px;flex-shrink:0;">Category</label>
+              <select id="cm_category" style="
+                flex:1;font-size:12px;padding:2px 5px;border-radius:4px;
+                border:1.5px solid #434343;background:#d9d9d9;
+                color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;
+              ">
+                <option value="Round">Round</option>
+              </select>
+            </div> -->
+
+            <div style="display:flex;align-items:center;gap:6px;">
+              <label style="font-size:12px;color:#444;width:150px;flex-shrink:0;">Density (lb/in³)</label>
+              <input type="number" id="cm_density" step="0.001" placeholder="0.284" style="
+                flex:1;font-size:12px;padding:1px 4px;border-radius:4px;
+                border:1.5px solid #434343;background:#fff;
+                color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;text-align:right;
+              ">
+              <span style="font-size:12px;color:#555;width:52px;">lb/in³</span>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:6px;">
+              <label style="font-size:12px;color:#444;width:150px;flex-shrink:0;">Young's Modulus (E)</label>
+              <input type="number" id="cm_E" step="100000" placeholder="30000000" style="
+                flex:1;font-size:12px;padding:1px 4px;border-radius:4px;
+                border:1.5px solid #434343;background:#fff;
+                color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;text-align:right;
+              ">
+              <span style="font-size:12px;color:#555;width:52px;">psi</span>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:6px;">
+              <label style="font-size:12px;color:#444;width:150px;flex-shrink:0;">Torsion Modulus (G)</label>
+              <input type="number" id="cm_G" step="100000" placeholder="11500000" style="
+                flex:1;font-size:12px;padding:1px 4px;border-radius:4px;
+                border:1.5px solid #434343;background:#fff;
+                color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;text-align:right;
+              ">
+              <span style="font-size:12px;color:#555;width:52px;">psi</span>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:6px;">
+              <label style="font-size:12px;color:#444;width:150px;flex-shrink:0;">Poisson's Ratio</label>
+              <input type="number" id="cm_nu" step="0.01" placeholder="0.30" style="
+                flex:1;font-size:12px;padding:1px 4px;border-radius:4px;
+                border:1.5px solid #434343;background:#fff;
+                color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;text-align:right;
+              ">
+              <span style="font-size:12px;color:#555;width:52px;"></span>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:6px;">
+              <label style="font-size:12px;color:#444;width:150px;flex-shrink:0;">Allowable % Tensile</label>
+              <input type="number" id="cm_allowTensile" step="1" placeholder="45" style="
+                flex:1;font-size:12px;padding:1px 4px;border-radius:4px;
+                border:1.5px solid #434343;background:#fff;
+                color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;text-align:right;
+              ">
+              <span style="font-size:12px;color:#555;width:52px;">%</span>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:6px;">
+              <label style="font-size:12px;color:#444;width:150px;flex-shrink:0;">% Tensile to Set</label>
+              <input type="number" id="cm_tensileSet" step="1" placeholder="60" style="
+                flex:1;font-size:12px;padding:1px 4px;border-radius:4px;
+                border:1.5px solid #434343;background:#fff;
+                color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;text-align:right;
+              ">
+              <span style="font-size:12px;color:#555;width:52px;">%</span>
+            </div>
+
+          </div>
+
+          <!-- RIGHT column -->
+          <div style="display:flex;flex-direction:column;gap:4px;">
+
+            <div style="display:flex;align-items:center;gap:6px;">
+              <label style="font-size:12px;color:#444;width:110px;flex-shrink:0;">Min Diameter</label>
+              <input type="number" id="cm_minD" step="0.001" placeholder="0.005" style="
+                flex:1;font-size:12px;padding:1px 4px;border-radius:4px;
+                border:1.5px solid #434343;background:#fff;
+                color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;text-align:right;
+              ">
+              <span style="font-size:12px;color:#555;width:24px;">in</span>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:6px;">
+              <label style="font-size:12px;color:#444;width:110px;flex-shrink:0;">Max Diameter</label>
+              <input type="number" id="cm_maxD" step="0.001" placeholder="0.250" style="
+                flex:1;font-size:12px;padding:1px 4px;border-radius:4px;
+                border:1.5px solid #434343;background:#fff;
+                color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;text-align:right;
+              ">
+              <span style="font-size:12px;color:#555;width:24px;">in</span>
+            </div>
+
+            <!-- P0–P4 fields -->
+            <div style="margin-top:4px;padding-top:4px;border-top:1px solid #d0d0d0;">
+              <div style="font-size:12px;font-weight:700;color:#61828A;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">
+                Tensile Strength Coefficients
+              </div>
+              <div id="cm_pFields" style="display:flex;flex-direction:column;gap:4px;">
+                <!-- filled by cmUpdateEquation() -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+        <!-- ── Section: Custom S/N Data ─────────────────────── -->
+      <div style="
+        border:1.5px solid rgb(67,67,67);
+        border-radius:8px;
+        overflow:hidden;
+      ">
+        <div style="
+          background:#d9d9d9;
+          padding:4px 10px;
+          font-size:12px;font-weight:700;color:#61828A;
+          text-transform:uppercase;letter-spacing:0.06em;
+          border-bottom:1px solid #c0c0c0;
+          display:flex;align-items:center;justify-content:space-between;
+        ">
+          <span>Custom S/N Data</span>
+          <span style="font-size:10px;font-weight:400;color:#888;text-transform:none;letter-spacing:0;">
+            Optional — overrides built-in fatigue allowables
+          </span>
+        </div>
+        <div style="padding:8px 10px;display:flex;flex-direction:column;gap:8px;">
+
+          <!-- Ultimate Strength Factor -->
+          <div style="display:flex;align-items:center;gap:6px;">
+            <label style="font-size:12px;color:#444;width:170px;flex-shrink:0;">
+              Ultimate Strength Factor
+            </label>
+            <input type="number" id="cm_usf" step="0.01" placeholder="0.56" style="
+              width:80px;font-size:12px;padding:1px 4px;border-radius:4px;
+              border:1.5px solid #434343;background:#fff;
+              color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;text-align:right;
+            ">
+            <span style="font-size:12px;color:#777;">
+              (τ<sub>ult</sub> / σ<sub>ult</sub> — typically 0.56 for steel)
+            </span>
+          </div>
+
+          <!-- S/N table -->
+          <div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 28px;gap:0;margin-bottom:2px;">
+              <div style="font-size:12px;font-weight:600;color:#555;padding:3px 6px;background:#d9d9d9;border:1px solid #bbb;border-radius:4px 0 0 0;">Life (cycles)</div>
+              <div style="font-size:12px;font-weight:600;color:#555;padding:3px 6px;background:#d9d9d9;border:1px solid #bbb;border-left:none;">% of Tensile Strength</div>
+              <div style="background:#d9d9d9;border:1px solid #bbb;border-left:none;border-radius:0 4px 0 0;"></div>
+            </div>
+            <div id="cm_snRows" style="display:flex;flex-direction:column;gap:1px;">
+              <!-- rows injected by cmAddSnRow() -->
+            </div>
+            <button onclick="cmAddSnRow()" style="
+              margin-top:4px;font-size:12px;padding:2px 10px;border-radius:4px;
+              border:1.5px solid rgb(67,67,67);background:#d9d9d9;
+              color:#000;cursor:pointer;font-family:'Roboto',Arial,sans-serif;
+            ">+ Add Row</button>
+          </div>
+
+          <p style="font-size:12px;color:#888;margin:0;">
+            Leave empty to use the built-in fatigue allowables from the reference table.
+            If data is provided, the cycle life estimator will interpolate from these points
+            using a Basquin power law fit.
+          </p>
+
+        </div>
+      </div>
+
+      <!-- ── Footer buttons ─────────────────────────────────── -->
+      <div style="display:flex;justify-content:flex-end;gap:8px;padding-top:4px;">
+        <button onclick="closeCustomMaterial()" style="
+          font-size:13px;padding:5px 18px;border-radius:6px;
+          border:1.5px solid rgb(67,67,67);background:#d9d9d9;
+          color:#000;cursor:pointer;font-family:'Roboto',Arial,sans-serif;
+        ">Cancel</button>
+        <button onclick="applyCustomMaterial()" style="
+          font-size:13px;padding:5px 18px;border-radius:6px;
+          border:1.5px solid rgb(67,67,67);background:#699dad;
+          color:#fff;cursor:pointer;font-family:'Roboto',Arial,sans-serif;font-weight:600;
+        ">Apply Material</button>
+      </div>
+
+    </div><!-- end body -->
+  </div><!-- end panel -->
+</div><!-- end overlay -->
+
+
+<script>
+// ============================================================
+// CUSTOM MATERIAL MODAL
+// ============================================================
+
+function customMaterial() {
+  const overlay = document.getElementById('customMaterialOverlay');
+  overlay.style.display = 'flex';
+  cmUpdateEquation();
+
+  // Seed default S/N rows if table is empty
+  const container = document.getElementById('cm_snRows');
+  if (container && container.children.length === 0) {
+    cmAddSnRow(100000, 42);
+    cmAddSnRow(1000000, 40);
+    cmAddSnRow(1e7, 35);
+  }
+
+  // If a custom material is currently active, repopulate the modal fields
+  const activeName = document.getElementById('material')?.value;
+  const activeRec  = activeName ? loadedRoundMaterialsByName[activeName] : null;
+  if (activeRec?.['_custom']) {
+    cmPopulateFromRecord(activeRec);
+  }
+}
+
+function cmPopulateFromRecord(rec) {
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if (el && val !== undefined && val !== null) el.value = val;
+  };
+
+  setVal('cm_name',         rec['NAME']                    ?? '');
+  setVal('cm_spec',         rec['SPECIFICATION']           ?? '');
+  setVal('cm_comment',      rec['COMMENT']                 ?? '');
+  setVal('cm_density',      rec['DENSITY (LB/IN^3)']       ?? '');
+  setVal('cm_E',            rec['YOUNGS MODULUS (PSI)'] ?? '');
+  setVal('cm_G',            rec['TORSION MODULUS (PSI)'] ?? '');
+  setVal('cm_nu',           rec['POISSONS RATIO']          ?? '');
+  setVal('cm_allowTensile', rec['ALLOWABLE % TENSILE']     ?? '');
+  setVal('cm_tensileSet',   rec['% TENSILE TO SET']        ?? '');
+  setVal('cm_minD',         rec['MIN DIAMETER/WIDTH (in)'] ?? '');
+  setVal('cm_maxD',         rec['MAX DIAMETER/WIDTH (in)'] ?? '');
+  setVal('cm_usf',          rec['ULTIMATE_STRENGTH_FACTOR']?? '');
+
+  // Set equation type and re-render P fields
+  const eqType = (rec['EQUATION TYPE'] || 'Binomial').toLowerCase();
+  const eqSel  = document.getElementById('cm_eqType');
+  if (eqSel) {
+    eqSel.value = eqType;
+    cmUpdateEquation();   // renders the correct P fields
+  }
+
+  // Populate P fields after cmUpdateEquation() creates them
+  setVal('cm_p0', rec['P0'] ?? '');
+  setVal('cm_p1', rec['P1'] ?? '');
+  setVal('cm_p2', rec['P2'] ?? '');
+  setVal('cm_p3', rec['P3'] ?? '');
+  setVal('cm_p4', rec['P4'] ?? '');
+
+  // For database materials with no custom S/N, show the built-in defaults
+  const snData  = rec['CUSTOM_SN_DATA'];
+  const snRows  = document.getElementById('cm_snRows');
+  if (snRows) {
+    snRows.innerHTML = '';
+    _cmSnRowCount = 0;
+    if (snData && Array.isArray(snData) && snData.length > 0) {
+      snData.forEach(({ life, pct }) => cmAddSnRow(life, pct));
+    } else {
+      // Show built-in defaults as reference
+      cmAddSnRow(100000, 36);
+      cmAddSnRow(1000000, 33);
+      cmAddSnRow(1e7, 30);
+    }
+  }
+}
+
+function closeCustomMaterial() {
+  const overlay = document.getElementById('customMaterialOverlay');
+  overlay.style.display = 'none';
+
+  // If we were in view mode, restore to edit mode
+  if (overlay.dataset.mode === 'view') {
+    delete overlay.dataset.mode;
+
+    // Restore header title
+    const header = overlay.querySelector('span[style*="font-size:13px"]');
+    if (header) header.textContent = 'Custom Material';
+
+    // Re-enable all inputs
+    overlay.querySelectorAll('input, select, textarea').forEach(el => {
+      el.removeAttribute('disabled');
+      el.style.opacity = '';
+      el.style.cursor  = '';
+    });
+
+    // Restore Apply button and Cancel label
+    const footer = overlay.querySelector('[style*="justify-content:flex-end"]');
+    if (footer) {
+      footer.querySelectorAll('button').forEach(btn => {
+        btn.style.display = '';
+        if (btn.textContent.trim() === 'Close') btn.textContent = 'Cancel';
+      });
+    }
+
+    // Restore + Add Row and × buttons
+    overlay.querySelectorAll('button').forEach(btn => {
+      if (btn.textContent.trim() === '+ Add Row') btn.style.display = '';
+    });
+    overlay.querySelectorAll('#cm_snRows button').forEach(btn => {
+      btn.style.display = '';
+    });
+  }
+}
+
+// Close on overlay background click
+document.getElementById('customMaterialOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeCustomMaterial();
+});
+
+// Close on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const overlay = document.getElementById('customMaterialOverlay');
+    if (overlay.style.display === 'flex') closeCustomMaterial();
+  }
+});
+
+// ── Equation display & P-field generator ─────────────────────
+const CM_EQUATIONS = {
+  constant:   { tex: 'Tensile = P_0',                                                                    pLabels: ['P0 (constant psi)'] },
+  binomial:   { tex: 'Tensile = \\dfrac{P_0 \\cdot d^{P_4} + P_1}{P_2 \\cdot d^{P_4} + P_3}',          pLabels: ['P0', 'P1', 'P2', 'P3', 'P4 (exponent)'] },
+  linear:     { tex: 'Tensile = P_0 + P_1 \\cdot d',                                                    pLabels: ['P0 (intercept)', 'P1 (slope)'] },
+  polynomial: { tex: 'Tensile = P_0 + P_1 d + P_2 d^2 + P_3 d^3 + P_4 d^4',                            pLabels: ['P0', 'P1', 'P2', 'P3', 'P4'] },
+  power:      { tex: 'Tensile = P_0 \\cdot d^{P_1}',                                                    pLabels: ['P0 (coefficient)', 'P1 (exponent)'] },
+};
+
+function cmUpdateEquation() {
+  const type    = document.getElementById('cm_eqType').value;
+  const eq      = CM_EQUATIONS[type];
+  const display = document.getElementById('cm_eqDisplay');
+  const pFields = document.getElementById('cm_pFields');
+
+  // Render equation using MathJax if available, else plain text
+  display.innerHTML = '\\(' + eq.tex + '\\)';
+  if (window.MathJax) {
+    MathJax.typesetPromise([display]).catch(err => {
+      display.textContent = eq.tex;
+    });
+  }
+
+  // Render P input fields
+  pFields.innerHTML = '';
+  eq.pLabels.forEach((label, i) => {
+    const id = 'cm_p' + i;
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:6px;';
+    row.innerHTML = `
+      <label for="${id}" style="font-size:12px;color:#444;width:110px;flex-shrink:0;">${label}</label>
+      <input type="number" id="${id}" step="any" style="
+        flex:1;font-size:12px;padding:1px 4px;border-radius:4px;
+        border:1.5px solid #434343;background:#fff;
+        color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;text-align:right;
+      ">
+    `;
+    pFields.appendChild(row);
+  });
+}
+
+// ── S/N row management ───────────────────────────────────────
+let _cmSnRowCount = 0;
+
+function cmAddSnRow(life = '', pct = '') {
+  const id  = ++_cmSnRowCount;
+  const container = document.getElementById('cm_snRows');
+  const row = document.createElement('div');
+  row.id    = 'cm_snRow_' + id;
+  row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 28px;gap:0;';
+  row.innerHTML = `
+    <input type="number" id="cm_snLife_${id}" value="${life}" placeholder="e.g. 1000000"
+      step="any" style="
+      font-size:12px;padding:1px 4px;border-radius:0;
+      border:1px solid #bbb;border-top:none;background:#fff;
+      color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;text-align:right;width:100%;
+    ">
+    <input type="number" id="cm_snPct_${id}" value="${pct}" placeholder="e.g. 35"
+      step="0.1" min="0" max="100" style="
+      font-size:12px;padding:1px 4px;border-radius:0;
+      border:1px solid #bbb;border-top:none;border-left:none;background:#fff;
+      color:#000;height:22px;font-family:'Roboto',Arial,sans-serif;text-align:right;width:100%;
+    ">
+    <button onclick="cmRemoveSnRow(${id})" style="
+      border:1px solid #bbb;border-top:none;border-left:none;background:#fff;
+      color:#c22;cursor:pointer;font-size:13px;height:22px;width:28px;
+      display:flex;align-items:center;justify-content:center;padding:0;
+    ">×</button>
+  `;
+  container.appendChild(row);
+}
+
+function cmRemoveSnRow(id) {
+  document.getElementById('cm_snRow_' + id)?.remove();
+}
+
+function cmGetSnData() {
+  const rows = document.querySelectorAll('[id^="cm_snRow_"]');
+  const data = [];
+  rows.forEach(row => {
+    const id   = row.id.replace('cm_snRow_', '');
+    const life = parseFloat(document.getElementById('cm_snLife_' + id)?.value);
+    const pct  = parseFloat(document.getElementById('cm_snPct_'  + id)?.value);
+    if (!isNaN(life) && !isNaN(pct) && life > 0 && pct > 0) {
+      data.push({ life, pct });
+    }
+  });
+  // Sort by ascending life for interpolation
+  return data.sort((a, b) => a.life - b.life);
+}
+
+// ── Read a number field, return null if empty ─────────────────
+function cmRead(id) {
+  const el  = document.getElementById(id);
+  const val = parseFloat(el?.value);
+  return isNaN(val) ? null : val;
+}
+
+// ── Apply custom material to the calculator ───────────────────
+function applyCustomMaterial() {
+  const name = document.getElementById('cm_name').value.trim();
+  if (!name) {
+    alert('Please enter a material name.');
+    return;
+  }
+
+  const type = document.getElementById('cm_eqType').value;
+  const eq   = CM_EQUATIONS[type];
+
+  const record = {
+    'NAME':                    name,
+    'SPECIFICATION':           document.getElementById('cm_spec').value.trim(),
+    'COMMENT':                 document.getElementById('cm_comment').value.trim(),
+    'EQUATION TYPE':           type.charAt(0).toUpperCase() + type.slice(1),
+    'DENSITY (LB/IN^3)':       String(cmRead('cm_density')      ?? 0.284),
+    'YOUNGS MODULUS (PSI)':  String(cmRead('cm_E')            ?? 30000000),
+    'TORSION MODULUS (PSI)':  String(cmRead('cm_G')            ?? 11500000),
+    'POISSONS RATIO':          String(cmRead('cm_nu')           ?? 0.30),
+    'ALLOWABLE % TENSILE':     String(cmRead('cm_allowTensile') ?? 45),
+    '% TENSILE TO SET':        String(cmRead('cm_tensileSet')   ?? 60),
+    'MIN DIAMETER/WIDTH (in)': String(cmRead('cm_minD')        ?? 0.005),
+    'MAX DIAMETER/WIDTH (in)': String(cmRead('cm_maxD')        ?? 0.625),
+    'P0': String(cmRead('cm_p0') ?? 0),
+    'P1': String(cmRead('cm_p1') ?? 0),
+    'P2': String(cmRead('cm_p2') ?? 0),
+    'P3': String(cmRead('cm_p3') ?? 0),
+    'P4': String(cmRead('cm_p4') ?? 1),
+    '_custom': true,             // ← now after record is built
+  };
+
+  // S/N data
+  const snData = cmGetSnData();
+  const usf    = cmRead('cm_usf');
+  if (snData.length > 0) record['CUSTOM_SN_DATA']          = snData;
+  if (usf !== null)      record['ULTIMATE_STRENGTH_FACTOR'] = String(usf);
+
+  // Add to loaded materials
+  loadedRoundMaterialsByName[name] = record;
+
+  const sel = document.getElementById('material');
+  [...sel.options].forEach(opt => {
+    if (opt.dataset.custom === name) sel.removeChild(opt);
+  });
+
+  const opt       = document.createElement('option');
+  opt.value       = name;
+  opt.textContent = name + ' (custom)'; //'★ ' 
+  opt.dataset.custom = name;
+  sel.insertBefore(opt, sel.firstChild);
+  sel.value = name;
+
+  closeCustomMaterial();
+  onMaterialSelectionChange();
+}
+</script>
+
+</html>

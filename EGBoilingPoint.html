@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA FOR -->
+    <title>KasperCalc: Ethylene Glycol Boiling Point</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, bckasper3, Ethylene Glycol Boiling Point, Ethylene Glycol Vaporization Temperature, Ethylene Glycol Pressure Calculator, Ethylene Glycol Antifreeze Boiling" />
+    <meta name="description" content="Calculate and reference the boiling point of Ethylene glycol solutions at pressures from 1 to 6 ATM across concentration ranges." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+
+    <!-- <script defer type="text/javascript" src="js/bootstrap.min.js"></script> -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <!-- calculator and chart JS embedded below -->
+
+    <!-- CSS FILES -->
+    <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+<!-- Google tag (gtag.js) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5XLCN0GJQ0');
+</script> -->
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+
+   </head>
+
+  <!-- BODY -->
+  <body>
+
+
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityWater.html">Water Density</a>
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item" style="padding-right: 0px;">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                Ethylene Glycol Boiling Point
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- UNDER THE BANNER -->
+      <h1 class="visually-hidden">Ethylene Glycol Boiling Point Calculator — Boiling Temperature vs Concentration and Pressure</h1>
+
+       <!-- Chart -->
+     <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Ethylene Glycol Boiling Point Chart</div>
+          </div>
+
+          <div class="canvasdiv">
+            <button id="toggleTooltipButton">Hide Tooltips</button>
+            <a style="font-size: medium; text-decoration: none;" href="img/EthyleneGlycolBoilingPointChart(VperVEthyleneGlycol_Temperature).png" download="EthyleneGlycolBoilingPointChart(VperVEthyleneGlycol_Temperature).png">
+              <button>Download Chart</button>
+            </a>
+            <a style="font-size: medium; text-decoration: none;" href="img/EthyleneGlycolBoilingPointChart(VperVEthyleneGlycol_Temperature).png" target="_blank">
+              <button>Open In New Tab</button>
+            </a>
+            <div class="canvascontainer">
+              <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+              <canvas id="myChart" aria-label="Ethylene Glycol Boiling Point vs % V/V Concentration at 1–6 ATM" width="400" height="600" role="img" class="chartcanvas">
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+              </canvas>
+            </div>
+          </div>
+          <p class="text-center">Calculated via Raoult's Law with Antoine equation constants<br>(water: A=8.07131, B=1730.63, C=233.426; EG: A=8.09083, B=2088.94, C=203.58)</p>
+          <p class="text-center">Toggle data sets by clicking the legend.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CALCULATOR -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12 px-3">
+
+          <div class="wrapper" style="max-width:35rem;">
+            <div class="header text-center">Ethylene Glycol Boiling Point Calculator</div>
+
+            <div class="group1 d-flex flex-wrap">
+              <label class="dropdownlabel" for="pressure">Pressure (ATM):</label>
+              <span class="output inputbox">
+                <select class="calcinput" id="pressure" onchange="egBoilingCalc()" aria-label="System pressure in ATM">
+                  <option value="1">1 ATM</option>
+                  <option value="2">2 ATM</option>
+                  <option value="3">3 ATM</option>
+                  <option value="4">4 ATM</option>
+                  <option value="5">5 ATM</option>
+                  <option value="6">6 ATM</option>
+                </select>
+              </span>
+            </div>
+
+            <div class="group1 d-flex flex-wrap">
+              <label class="dropdownlabel" for="concentration">% V/V Ethylene Glycol (0–100):</label>
+              <span class="output inputbox">
+                <input class="calcinput" type="number" id="concentration" min="0" max="100" step="1" value="30"
+                  oninput="egBoilingCalc()" aria-label="Ethylene glycol concentration % V/V" />
+              </span>
+            </div>
+
+            <div class="group">
+              <div class="outputrow">
+                <span class="label">Boiling Point (°F):</span>
+                <span class="output" id="boiling_f">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">Boiling Point (°C):</span>
+                <span class="output" id="boiling_c">&nbsp;</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+      <!-- BOILING POINT REFERENCE -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+
+            <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
+              <div class="custom-heading">Boiling Point of Ethylene Glycol Solutions</div>
+
+              <div style="text-align: left" class="mt-3">
+                <div class="custom-subheading">What Is the Boiling Point?</div>
+                <p class="mt-2">
+                  The boiling point is the temperature at which a liquid transitions to vapor at a given pressure.
+                  Adding Ethylene glycol to water raises the boiling point above 212 °F (100 °C). This effect is called
+                  <span style="font-weight:var(--font-weight-medium)">boiling point elevation</span>. The boiling point
+                  also rises with system pressure; at 2 ATM a 30% V/V solution boils at approximately
+                  <span style="font-weight:var(--font-weight-medium)">262 °F (128 °C)</span>, compared to 217 °F (103 °C)
+                  at 1 ATM.
+                </p>
+              </div>
+
+              <div style="text-align: left" class="mt-4">
+                <div class="custom-subheading">Why It Matters for System Design</div>
+                <p class="mt-2">
+                  Operating above the boiling point causes vapor formation, which leads to cavitation in pumps,
+                  vapor lock in heat exchangers, and loss of system pressure control. In pressurized closed-loop
+                  HVAC and process cooling systems, the actual system pressure sets the effective boiling point of
+                  the glycol solution. This is why higher-pressure systems can operate at higher temperatures
+                  without boiling. This chart provides the maximum safe operating temperature at each concentration
+                  and pressure combination.
+                </p>
+              </div>
+
+              <p class= "mt-3 text-start"><span style="font-weight:var(--font-weight-normal)">Note:</span> Boiling points are calculated via Raoult's Law with Antoine equation vapor pressures for water and ethylene glycol. Valid for 0–100% V/V at 1–6 ATM.</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary p-4 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+            <div id="citationText" class="font-monospace text-dark-emphasis small pt-2">
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->
+
+<script>
+// ── Raoult's Law Boiling Point — EG/Water ────────────────────────────────────
+// Antoine equation: log10(P_mmHg) = A - B/(T_C + C)
+function pWater(T) { return Math.pow(10, 8.07131 - 1730.63 / (T + 233.426)); }
+function pEG(T)    { return Math.pow(10, 8.09083 - 2088.94 / (T + 203.58)); }
+
+// V/V % → mole fraction of EG (ρ_water=997, ρ_EG=1113 g/L; MW_water=18.015, MW_EG=62.068)
+function vvToMoleFractionEG(concVV) {
+  const ve = concVV / 100, vw = 1 - ve;
+  const nE = (ve * 1113) / 62.068, nW = (vw * 997) / 18.015;
+  return nE / (nE + nW);
+}
+
+// Binary search for boiling point (°C) at given % V/V and ATM
+function egBoilingPointC(concVV, pressureATM) {
+  const Pt = pressureATM * 760;
+  const xEG = vvToMoleFractionEG(concVV), xW = 1 - xEG;
+  let lo = 80, hi = 310;
+  for (let i = 0; i < 60; i++) {
+    const T = (lo + hi) / 2;
+    if (xW * pWater(T) + xEG * pEG(T) < Pt) lo = T; else hi = T;
+  }
+  return (lo + hi) / 2;
+}
+
+function cToF(c) { return c * 9 / 5 + 32; }
+
+// ── Calculator ────────────────────────────────────────────────────────────────
+function egBoilingCalc() {
+  const conc = parseFloat(document.getElementById('concentration').value);
+  const atm  = parseFloat(document.getElementById('pressure').value);
+  const fEl  = document.getElementById('boiling_f');
+  const cEl  = document.getElementById('boiling_c');
+  if (isNaN(conc) || conc < 0 || conc > 100) {
+    fEl.textContent = '—'; cEl.textContent = '—'; return;
+  }
+  const boilC = egBoilingPointC(conc, atm);
+  fEl.textContent = cToF(boilC).toFixed(1) + ' °F';
+  cEl.textContent = boilC.toFixed(1) + ' °C';
+}
+
+// ── Chart data ────────────────────────────────────────────────────────────────
+// Generate {x: % V/V, y: °F} at every 1% step from 0 to 100
+function denseDataByConc(pressureATM) {
+  const pts = [];
+  for (let c = 0; c <= 100; c++) {
+    pts.push({ x: c, y: parseFloat(cToF(egBoilingPointC(c, pressureATM)).toFixed(1)) });
+  }
+  return pts;
+}
+
+// ── Chart ─────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function () {
+  egBoilingCalc();
+
+  const customBg = {
+    id: 'customCanvasBackgroundColor',
+    beforeDraw(chart, args, options) {
+      const { ctx } = chart;
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-over';
+      ctx.fillStyle = options.color || 'white';
+      ctx.fillRect(0, 0, chart.width, chart.height);
+      ctx.restore();
+    }
+  };
+
+  const pressures = [
+    { label: '1 ATM', atm: 1, color: 'rgb(68,119,170)' },
+    { label: '2 ATM', atm: 2, color: 'rgb(34,136,51)' },
+    { label: '3 ATM', atm: 3, color: 'rgb(204,187,68)' },
+    { label: '4 ATM', atm: 4, color: 'rgb(238,102,119)' },
+    { label: '5 ATM', atm: 5, color: 'rgb(170,51,119)' },
+    { label: '6 ATM', atm: 6, color: 'rgb(102,204,238)' }
+  ];
+
+  const datasets = pressures.map(p => ({
+    label: p.label,
+    data: denseDataByConc(p.atm),
+    fill: false,
+    borderColor: p.color,
+    tension: 0.1
+  }));
+
+  const ctx = document.getElementById('myChart').getContext('2d');
+  const boilingChart = new Chart(ctx, {
+    type: 'line',
+    data: { datasets },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
+      plugins: {
+        customCanvasBackgroundColor: { color: 'white' },
+        legend: {
+          position: 'top',
+          labels: { align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 } },
+          onClick: function (e, legendItem, legend) {
+            const ci = legend.chart;
+            const meta = ci.getDatasetMeta(legendItem.datasetIndex);
+            meta.hidden = meta.hidden === null ? !ci.data.datasets[legendItem.datasetIndex].hidden : null;
+            ci.update();
+          }
+        },
+        tooltip: {
+          enabled: true,
+          mode: 'nearest',
+          intersect: false,
+          axis: 'x',
+          callbacks: {
+            title: items => items[0].parsed.x.toFixed(0) + '% V/V',
+            label: item => item.dataset.label + ': ' + item.parsed.y + ' °F'
+          }
+        }
+      },
+      interaction: { mode: 'nearest', axis: 'x' },
+      elements: { point: { radius: 0 } },
+      scales: {
+        x: {
+          type: 'linear',
+          min: 0,
+          max: 100,
+          ticks: { maxRotation: 0, font: { size: 16 } },
+          title: { display: true, text: '% V/V Ethylene Glycol', font: { size: 20 } }
+        },
+        y: {
+          type: 'linear',
+          ticks: { font: { size: 16 } },
+          title: { display: true, text: 'Boiling Point (°F)', padding: 10, font: { size: 20 } }
+        }
+      }
+    },
+    plugins: [customBg]
+  });
+
+  document.getElementById('toggleTooltipButton').addEventListener('click', function () {
+    const current = boilingChart.options.plugins.tooltip.enabled;
+    boilingChart.options.plugins.tooltip.enabled = !current;
+    boilingChart.update();
+    this.textContent = boilingChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+  });
+});
+</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5XLCN0GJQ0');
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,1136 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: 12V Wire Gauge &amp; Amperage Calculator</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, 12V, wire gauge, AWG, amperage, voltage drop, wire length, automotive wiring, marine wiring" />
+    <meta name="description" content="Find the correct wire gauge (AWG) for your 12V system. Calculate maximum current based on wire length and keep voltage drop within the 3% rule." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XLCN0GJQ0');
+    </script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      .awg-table th, .awg-table td { font-size: 0.82rem; padding: 0.3rem 0.45rem; white-space: nowrap; }
+      .awg-result-ok   { background-color: #d4edda !important; }
+      .awg-result-warn { background-color: #fff3cd !important; }
+      .awg-result-big  { background-color: #f8d7da !important; }
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityWater.html">Water Density</a>
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item" style="padding-right: 0px;">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                12V Amperage and Wire Length
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- INTRODUCTION -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-2" style="max-width:820px;">
+
+              <div class="custom-heading">Why Wire Gauge Matters</div>
+              <p class="mt-3 text-start">
+                Every wire has resistance, and resistance costs voltage. In a 12&thinsp;V system a wire that is too thin
+                acts like a small resistor in series with your load. This means that some of the supply voltage is "spent" heating the
+                wire instead of running the device. This can cause dimmer lights, sluggish motors, or a fire hazard.
+              </p>
+              <p class="text-start">
+                American Wire Gauge (AWG) is a standardized sizing system used throughout North America for copper
+                conductors. Counter-intuitively, a <em>lower</em> AWG number means a <em>thicker</em> wire with
+                lower resistance. AWG&nbsp;4/0 (pronounced "four-ought") is the largest listed here at
+                107&thinsp;mm&sup2;, while AWG&nbsp;16 is the smallest at 1.31&thinsp;mm&sup2;.
+              </p>
+
+              <div class="custom-subheading mt-4">The 3&thinsp;% Rule</div>
+              <p class="mt-2 text-start">
+                The most widely cited rule for 12&thinsp;V DC wiring (recommended by the ABYC (American Boat and
+                Yacht Council) and common in automotive and RV practice) is to limit the total round-trip voltage
+                drop to <span style="font-weight:var(--font-weight-normal)">3&thinsp;% of nominal supply voltage</span>, or roughly 0.36&thinsp;V on a
+                12&thinsp;V system. Beyond 3&thinsp;% many devices begin to under-perform; at 10&thinsp;% or more
+                you risk equipment damage and serious heat buildup in the wire.
+              </p>
+              <p class="text-start mt-2">
+                The physics behind the table below come directly from Ohm's Law.
+                For a round-trip conductor of length&nbsp;<em>L</em> (one-way, in feet), cross-section
+                <em>A</em>&thinsp;mm&sup2;, and copper resistivity &rho;&nbsp;=&nbsp;0.01724&thinsp;&Omega;&middot;mm&sup2;/m:
+              </p>
+              <p class="my-2" style="font-family: monospace; font-size:1.05rem;">
+                V<sub>drop</sub> &nbsp;=&nbsp; I &times; 2 &times; &rho; &times; (L &times; 0.3048) / A
+              </p>
+              <p class="text-start my-4">
+                Setting V<sub>drop</sub>&nbsp;&le;&nbsp;0.36&thinsp;V and solving for the minimum cross-sectional area:
+              </p>
+              <p class="my-2" style="font-family: monospace; font-size:1.05rem;">
+                A<sub>min</sub> &nbsp;=&nbsp; I &times; L / 34.27 &nbsp;&nbsp; (mm&sup2;, with L in one-way feet)
+              </p>
+              <p class="text-start mt-4">
+                The factor 34.27 comes from 0.36&nbsp;/&nbsp;(2&nbsp;&times;&nbsp;0.01724&nbsp;&times;&nbsp;0.3048).
+                Once A<sub>min</sub> is known, the table below selects the smallest AWG gauge whose conductor area
+                meets or exceeds that minimum.
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- CHART 1: Max Current vs Wire Length -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Max Allowable Current vs. Wire Length (3% Rule)</div>
+            </div>
+
+            <div class="px-5 mx-auto py-2" style="max-width:950px;">
+              <p>
+                Each line below shows the maximum current that keeps voltage drop at or below 0.36&thinsp;V
+                (3&thinsp;% of 12&thinsp;V) for a given AWG gauge. Pick the gauge whose line sits above your
+                required current at your wire run length. Longer runs demand heavier wire.
+              </p>
+            </div>
+
+            <div class="canvasdiv">
+              <button id="toggleTooltipBtn1">Hide Tooltips</button>
+              <a style="font-size: medium; text-decoration: none;" href="img/Max Allowable Current vs. Wire Length (3Percent Rule).png" download="Max Allowable Current vs. Wire Length (3Percent Rule).png">
+                <button>Download Chart</button>
+              </a>
+              <a style="font-size: medium; text-decoration: none;" href="img/Max Allowable Current vs. Wire Length (3Percent Rule).png" target="_blank">
+                <button>Open In New Tab</button>
+              </a>
+              <div class="canvascontainer">
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+                <canvas id="chartCurrentVsLength" aria-label="Max Current vs Wire Length by AWG" width="400" height="600" role="img" class="chartcanvas">
+                  <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc.</p>
+                </canvas>
+              </div>
+            </div>
+            <p class="text-center">One-way wire length (ft). Current values assume copper conductor, 3% voltage drop limit (0.36&thinsp;V on 12&thinsp;V).
+              <br>Toggle gauges by clicking the legend.</p>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- AWG LOOKUP TABLE -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Minimum AWG Gauge Quick Reference Table</div>
+            </div>
+
+            <div class="px-5 mx-auto py-2" style="max-width:950px;">
+              <p>
+                Find your one-way wire run length in the left column and your load current across the top.
+                The cell shows the minimum AWG copper wire gauge required to stay within the 3&thinsp;% voltage
+                drop rule. When in doubt, go one size heavier.
+              </p>
+            </div>
+
+            <div class="mx-auto" style="max-width:980px; overflow-x:auto;">
+              <table id="awgLookupTable" class="table table-striped table-bordered table-hover table-sm text-center awg-table">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr id="awgTableHeader"></tr>
+                </thead>
+                <tbody id="awgTableBody"></tbody>
+              </table>
+            </div>
+            <p class="text-center mt-1" style="font-size:0.82rem;">
+              Copper conductor, 12&thinsp;V nominal, 3% drop limit. Length = one-way run in feet.
+              Cells marked &ldquo;&gt;&nbsp;4/0&rdquo; exceed the range of this table and require a parallel run or bus bar.
+            </p>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- INTERACTIVE CALCULATOR -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+
+            <div class="wrapper" style="max-width: 35rem;">
+              <div class="header text-center">12V Wire Gauge Calculator</div>
+
+              <div class="group2">
+                <span class="label">Current Draw (A):</span>
+                <span class="output inputbox">
+                  <input class="calcinput" style="width:7rem;" type="number" id="inputAmps" oninput="calcWireGauge()" value="20" min="1" max="400" aria-label="Current in amperes" />
+                </span>
+              </div>
+
+              <div class="group2">
+                <span class="label">One-Way Wire Length (ft):</span>
+                <span class="output inputbox">
+                  <input class="calcinput" style="width:7rem;" type="number" id="inputLength" oninput="calcWireGauge()" value="15" min="1" max="500" aria-label="Wire length in feet" />
+                </span>
+              </div>
+
+              <div class="group result">
+                <span class="label">Minimum AWG Gauge:</span>
+                <span class="output result" id="calcResultAWG">&nbsp;</span>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label fs-4">Min. cross-section (mm&sup2;):</span>
+                  <span class="output fs-4" id="calcResultArea">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label fs-4">Conductor area of selected gauge:</span>
+                  <span class="output fs-4" id="calcResultActualArea">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label fs-4">Round-trip resistance:</span>
+                  <span class="output fs-4" id="calcResultResistance">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label fs-4">Voltage drop at rated current:</span>
+                  <span class="output fs-4" id="calcResultVDrop">&nbsp;</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- WORKED EXAMPLES -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-2" style="max-width:820px;">
+
+              <div class="custom-heading">Worked Examples</div><br>
+
+              <div class="custom-subheading mt-4">Example 1: Marine Bilge Pump (20&thinsp;ft run)</div>
+              <p class="mt-2 text-start">
+                A 12&thinsp;V bilge pump draws 8&thinsp;A at full flow. The pump sits in the bilge and the
+                breaker panel is 20&thinsp;ft away (one-way). How heavy does the wire need to be?
+              </p>
+              <p class="text-start mt-2">
+                A<sub>min</sub> = 8&thinsp;A &times; 20&thinsp;ft / 34.27 = <span style="font-weight:var(--font-weight-normal)">4.67&thinsp;mm&sup2;</span>
+              </p>
+              <p class="text-start mt-2">
+                AWG&nbsp;10 has 5.26&thinsp;mm&sup2; &mdash; that is the smallest gauge that meets the requirement.
+                Round-trip resistance for 40&thinsp;ft of AWG&nbsp;10:
+                0.001&thinsp;&Omega;/ft &times; 40&thinsp;ft = 0.040&thinsp;&Omega;.
+                Voltage drop: 8&thinsp;A &times; 0.040&thinsp;&Omega; = <span style="font-weight:var(--font-weight-normal)">0.32&thinsp;V</span> (2.7% — within the 3% rule).
+              </p>
+
+              <div class="custom-subheading mt-5">Example 2: Truck Winch (8&thinsp;ft run)</div>
+              <p class="mt-2 text-start">
+                A 12&thinsp;V electric winch has a peak stall current of 400&thinsp;A. The battery sits 8&thinsp;ft
+                from the winch motor. What gauge wire and how many parallel runs are needed?
+              </p>
+              <p class="text-start mt-2">
+                A<sub>min</sub> = 400&thinsp;A &times; 8&thinsp;ft / 34.27 = <span style="font-weight:var(--font-weight-normal)">93.4&thinsp;mm&sup2;</span>
+              </p>
+              <p class="text-start mt-2">
+                AWG&nbsp;4/0 provides 107.2&thinsp;mm&sup2; and just meets this requirement as a single run.
+                In practice, winch manufacturers typically specify two parallel 2/0 runs
+                (2 &times; 67.4 = 134.8&thinsp;mm&sup2; total) for mechanical reliability and reduced heat at the
+                terminal lugs. Always follow the winch manufacturer's wiring recommendation.
+              </p>
+
+              <div class="custom-subheading mt-5">Example 3: RV Rooftop Air Conditioner (35&thinsp;ft run)</div>
+              <p class="mt-2 text-start">
+                A 12&thinsp;V compressor air conditioner draws 30&thinsp;A. The inverter/battery bank is 35&thinsp;ft
+                from the unit. What gauge is needed?
+              </p>
+              <p class="text-start mt-2">
+                A<sub>min</sub> = 30&thinsp;A &times; 35&thinsp;ft / 34.27 = <span style="font-weight:var(--font-weight-normal)">30.6&thinsp;mm&sup2;</span>
+              </p>
+              <p class="text-start mt-2">
+                AWG&nbsp;2 provides 33.6&thinsp;mm&sup2;. Voltage drop:
+                (2 &times; 0.0001563&thinsp;&Omega;/ft &times; 35&thinsp;ft) &times; 30&thinsp;A =
+                0.328&thinsp;V (2.7%). A single AWG&nbsp;2 run is sufficient.
+                Note that the cable must also be rated for the environment (see jacket materials below).
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- COPPER VS ALUMINUM -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-2" style="max-width:820px;">
+
+              <div class="custom-heading">Copper vs. Aluminum Conductors</div>
+              <p class="mt-3 text-start">
+                Aluminum is roughly 60&thinsp;% as conductive as copper by cross-section, meaning an aluminum wire
+                needs about 60&thinsp;% more cross-sectional area to carry the same current with the same voltage
+                drop. In practice, an aluminum wire must be two AWG steps larger than an equivalent copper wire
+                (e.g., AWG&nbsp;2 copper &asymp; AWG&nbsp;1/0 aluminum for the same ampacity).
+              </p>
+
+              <div class="table-responsive mt-3">
+                <table class="table table-striped table-bordered table-hover table-sm text-center">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th>Property</th>
+                      <th>Copper</th>
+                      <th>Aluminum</th>
+                    </tr>
+                  </thead>
+                  <tbody class="fs-6">
+                    <tr><td>Resistivity (20&thinsp;&deg;C)</td><td>0.0172 &Omega;&middot;mm&sup2;/m</td><td>0.0282 &Omega;&middot;mm&sup2;/m</td></tr>
+                    <tr><td>Relative conductivity</td><td>100%</td><td>~61%</td></tr>
+                    <tr><td>Density</td><td>8.96 g/cm&sup3;</td><td>2.70 g/cm&sup3;</td></tr>
+                    <tr><td>Weight for equal ampacity</td><td>Heavier</td><td>~50% lighter</td></tr>
+                    <tr><td>Cost (general trend)</td><td>Higher</td><td>Lower</td></tr>
+                    <tr><td>Oxidation behavior</td><td>Thin patina, conductive</td><td>Hard oxide layer, insulating</td></tr>
+                    <tr><td>Terminal compatibility</td><td>All standard lugs</td><td>Requires AL-rated lugs &amp; anti-ox paste</td></tr>
+                    <tr><td>Typical use in 12&thinsp;V systems</td><td>Preferred</td><td>Large battery cable runs, weight-sensitive</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <p class="mt-2 text-start">
+                Aluminum is common in large-format battery-to-inverter runs where weight matters, especially in RV and
+                marine installations. For any aluminum connection, use AL/CU-rated compression lugs and apply an
+                antioxidant compound. Aluminum should <em>never</em> be used for small-gauge wiring or where
+                connections may be disturbed frequently; the oxide layer that forms on exposed aluminum is resistive
+                and can cause high-resistance joints that arc and overheat.
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- WIRE JACKET MATERIALS -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Wire Jacket (Insulation) Materials</div>
+            </div>
+
+            <div class="px-5 mx-auto py-2 text-start" style="max-width:950px;">
+              <p>
+                The insulation jacket protects the conductor from abrasion, moisture, and heat. Choosing the right
+                jacket is just as important as choosing the right gauge. The wrong insulation can degrade, crack, and
+                create a short circuit even when the conductor is properly sized.
+              </p>
+            </div>
+
+            <div class="mx-auto" style="max-width:1200px; overflow-x:auto;">
+              <table class="table table-striped table-bordered table-hover table-sm text-center">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th>Type</th>
+                    <th>Common Name</th>
+                    <th>Max Temp.</th>
+                    <th>Oil / Fuel Resistance</th>
+                    <th>Flexibility</th>
+                    <th>Typical Use</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span style="font-weight:var(--font-weight-normal)">GPT</span></td>
+                    <td>General Purpose Thermoplastic (PVC)</td>
+                    <td>60&thinsp;&deg;C (140&thinsp;&deg;F)</td>
+                    <td>Poor</td>
+                    <td>Good</td>
+                    <td class="text-start">Interior auto wiring, body harness</td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:var(--font-weight-normal)">TXL</span></td>
+                    <td>Thin-wall Cross-linked PVC</td>
+                    <td>125&thinsp;&deg;C (257&thinsp;&deg;F)</td>
+                    <td>Moderate</td>
+                    <td>Excellent</td>
+                    <td class="text-start">Engine bay, underhood wiring</td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:var(--font-weight-normal)">GXL</span></td>
+                    <td>Cross-linked PVC, standard wall</td>
+                    <td>125&thinsp;&deg;C (257&thinsp;&deg;F)</td>
+                    <td>Moderate</td>
+                    <td>Very Good</td>
+                    <td class="text-start">General automotive, slightly harsher environments than GPT</td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:var(--font-weight-normal)">SXL</span></td>
+                    <td>Cross-linked PVC, heavy wall</td>
+                    <td>125&thinsp;&deg;C (257&thinsp;&deg;F)</td>
+                    <td>Good</td>
+                    <td>Good</td>
+                    <td class="text-start">Marine engine rooms, areas with abrasion risk</td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:var(--font-weight-normal)">SGX / SGT</span></td>
+                    <td>Starter / Battery Cable</td>
+                    <td>90&thinsp;&deg;C (194&thinsp;&deg;F)</td>
+                    <td>Good</td>
+                    <td>Very Good</td>
+                    <td class="text-start">Battery cables, starter leads, high-current runs</td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:var(--font-weight-normal)">XLPE</span></td>
+                    <td>Cross-linked Polyethylene</td>
+                    <td>90&ndash;105&thinsp;&deg;C</td>
+                    <td>Very Good</td>
+                    <td>Good</td>
+                    <td class="text-start">Marine (ABYC compliant), solar PV wire</td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:var(--font-weight-normal)">Neoprene</span></td>
+                    <td>Polychloroprene sheath</td>
+                    <td>90&thinsp;&deg;C (194&thinsp;&deg;F)</td>
+                    <td>Excellent</td>
+                    <td>Excellent</td>
+                    <td class="text-start">Portable cables, marine bilge, outdoor exposed runs</td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:var(--font-weight-normal)">Silicone</span></td>
+                    <td>Silicone rubber</td>
+                    <td>200&thinsp;&deg;C (392&thinsp;&deg;F)</td>
+                    <td>Moderate</td>
+                    <td>Excellent</td>
+                    <td class="text-start">Near exhaust manifolds, heater elements, high-temp engine wiring</td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:var(--font-weight-normal)">PTFE</span></td>
+                    <td>Teflon</td>
+                    <td>260&thinsp;&deg;C (500&thinsp;&deg;F)</td>
+                    <td>Excellent</td>
+                    <td>Low</td>
+                    <td class="text-start">Aerospace, turbocharger wiring, extreme-temperature applications</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- WIRE GAUGE SELECTION PROCEDURE -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-2" style="max-width:820px;">
+
+              <div class="custom-heading">Wire Gauge Selection Procedure</div>
+              <p class="mt-3 text-start">
+                Use the following six steps to size any 12&thinsp;V DC wire run from first principles. The calculator
+                above automates steps 1&ndash;4.
+              </p>
+
+              <ol class="mt-3 text-start" style="line-height:2;">
+                <li>
+                  <span style="font-weight:var(--font-weight-normal)">Determine the total load current.</span> Sum the nameplate current of every device on
+                  the circuit. Add a 25&thinsp;% safety margin for motor starting surges or future load growth.
+                </li>
+                <li>
+                  <span style="font-weight:var(--font-weight-normal)">Measure the one-way wire run length.</span> Route the measurement along the actual cable
+                  path (around corners, through bulkheads), not point-to-point. Include both the positive lead to
+                  the load <em>and</em> the return/ground lead &mdash; they are both part of the circuit. The
+                  formula uses one-way length because the factor of 2 (round trip) is already included.
+                </li>
+                <li>
+                  <span style="font-weight:var(--font-weight-normal)">Calculate the minimum conductor area.</span> A<sub>min</sub> = I &times; L / 34.27&thinsp;mm&sup2;
+                  (copper, 3% drop limit on 12&thinsp;V).
+                </li>
+                <li>
+                  <span style="font-weight:var(--font-weight-normal)">Select the next larger standard AWG size.</span> If the calculation yields 4.0&thinsp;mm&sup2;,
+                  choose AWG&nbsp;10 (5.26&thinsp;mm&sup2;), not AWG&nbsp;12 (3.31&thinsp;mm&sup2;).
+                </li>
+                <li>
+                  <span style="font-weight:var(--font-weight-normal)">Verify the ampacity rating of the wire.</span> Conductor area determines voltage drop,
+                  but the insulation type sets the continuous current limit. Confirm the chosen wire's ampacity
+                  (from manufacturer data or NEC/ABYC tables) equals or exceeds your load current. Derate by
+                  ~20&thinsp;% if the wire runs in a bundle of four or more conductors; derate further for ambient
+                  temperatures above 30&thinsp;&deg;C.
+                </li>
+                <li>
+                  <span style="font-weight:var(--font-weight-normal)">Size the fuse or circuit breaker.</span> Fuse the wire, not the load. The fuse rating
+                  should be at or just below the wire's ampacity. Place the fuse as close to the power source as
+                  practical (within 18 inches of the battery terminal for primary circuits, per ABYC E-11).
+                </li>
+              </ol>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- CHART 2: AWG Reference -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">AWG Reference: Cross-Section &amp; Resistance</div>
+            </div>
+
+            <div class="px-5 mx-auto py-2" style="max-width:950px;">
+              <p>
+                The bars show conductor cross-section area (left axis). The orange line shows DC resistance per foot
+                (right axis). Heavier gauges have dramatically lower resistance. Going from AWG&nbsp;10 to
+                AWG&nbsp;4 halves the resistance per foot.
+              </p>
+            </div>
+
+            <div class="canvasdiv">
+                <button id="toggleTooltipButton">Hide Tooltips</button>
+                <a style="font-size: medium; text-decoration: none;" href="img/AWG Reference_ Cross-Section & Resistance.png" download="AWG Reference_ Cross-Section & Resistance.png">
+                  <button>Download Chart</button>
+                </a>
+                <a style="font-size: medium; text-decoration: none;" href="img/AWG Reference_ Cross-Section & Resistance.png" target="_blank">
+                  <button>Open In New Tab</button>
+                </a>
+              <div class="canvascontainer">
+                <canvas id="chartAWGReference" aria-label="AWG cross-section and resistance chart" width="400" height="500" role="img" class="chartcanvas">
+                  <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc.</p>
+                </canvas>
+              </div>
+            </div>
+            <p class="text-center">Resistance values are for copper conductor at 20&thinsp;&deg;C. Toggle datasets by clicking the legend.</p>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- AWG PROPERTIES TABLE -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">AWG Copper Wire Properties Reference Table</div>
+            </div>
+
+            <div class="mx-auto" style="max-width:780px; overflow-x:auto;">
+              <table class="table table-striped table-bordered table-hover table-sm text-center">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th>AWG</th>
+                    <th>Area (mm&sup2;)</th>
+                    <th>Diameter (mm)</th>
+                    <th>Resistance (m&Omega;/ft)</th>
+                    <th>Typical Max Current*</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>16</td><td>1.31</td><td>1.29</td><td>4.016</td><td>13 A</td></tr>
+                  <tr><td>14</td><td>2.08</td><td>1.63</td><td>2.525</td><td>17 A</td></tr>
+                  <tr><td>12</td><td>3.31</td><td>2.05</td><td>1.588</td><td>23 A</td></tr>
+                  <tr><td>10</td><td>5.26</td><td>2.59</td><td>0.999</td><td>33 A</td></tr>
+                  <tr><td>8</td><td>8.37</td><td>3.26</td><td>0.628</td><td>46 A</td></tr>
+                  <tr><td>6</td><td>13.3</td><td>4.11</td><td>0.395</td><td>60 A</td></tr>
+                  <tr><td>4</td><td>21.2</td><td>5.19</td><td>0.249</td><td>80 A</td></tr>
+                  <tr><td>2</td><td>33.6</td><td>6.54</td><td>0.156</td><td>100 A</td></tr>
+                  <tr><td>1</td><td>42.4</td><td>7.35</td><td>0.124</td><td>115 A</td></tr>
+                  <tr><td>1/0</td><td>53.5</td><td>8.25</td><td>0.0982</td><td>135 A</td></tr>
+                  <tr><td>2/0</td><td>67.4</td><td>9.27</td><td>0.0779</td><td>160 A</td></tr>
+                  <tr><td>3/0</td><td>85.0</td><td>10.40</td><td>0.0618</td><td>190 A</td></tr>
+                  <tr><td>4/0</td><td>107.2</td><td>11.68</td><td>0.0490</td><td>230 A</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-center mx-auto" style="font-size: 1rem; max-width: 50rem;">
+              *Typical maximum continuous current for single conductor in free air, 60&thinsp;&deg;C rated insulation.
+              Derate for bundled wires, conduit, or elevated ambient temperature. Values are approximate; consult NEC Table 310.16 or ABYC E-11 for code-compliant design.
+            </p>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ADDITIONAL NOTES -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-2 mb-4" style="max-width:820px;">
+
+              <div class="custom-heading">Additional Design Notes</div><br>
+
+              <div class="custom-subheading mt-5">Fusing</div>
+              <p class="mt-2 text-start">
+                Every unfused conductor is a potential fire. The fuse protects the wire, not the appliance. Size the
+                fuse to the wire's ampacity rating, and place it as close to the positive battery terminal as possible. A fuse should be 
+                within 18&thinsp;inches for primary circuits per ABYC E-11. Use a blade fuse (ATO/ATC) for
+                circuits up to 40&thinsp;A, a MIDI or ANL fuse for battery and inverter cables above that.
+              </p>
+
+              <div class="custom-subheading mt-5">Temperature Derating</div>
+              <p class="mt-2 text-start">
+                Wire ampacity is rated at a standard ambient temperature, typically 30&thinsp;&deg;C (86&thinsp;&deg;F).
+                In an engine bay or an enclosed box in summer sun, temperatures can exceed 60&ndash;80&thinsp;&deg;C.
+                At 60&thinsp;&deg;C ambient, derate wire ampacity by roughly 20&thinsp;%. Choose a wire rated for
+                the maximum temperature it will actually see. Use TXL or XLPE for engine bays and silicone near exhaust manifolds.
+              </p>
+
+              <div class="custom-subheading mt-5">Bundled Wires</div>
+              <p class="mt-2 text-start">
+                When multiple current-carrying conductors run together in a loom, conduit, or tight bundle, each
+                wire's heat has less path to dissipate. Apply a bundling derating factor: 0.80 for 4&ndash;6
+                conductors, 0.70 for 7&ndash;24, and 0.50 for 25 or more. In practice, for a bundle of 6 wires each
+                rated 20&thinsp;A, treat each as if limited to 20&thinsp;A &times; 0.80 = 16&thinsp;A.
+              </p>
+
+              <div class="custom-subheading mt-5">Stranded vs. Solid Wire</div>
+              <p class="mt-2 text-start">
+                For any mobile application (vehicles, boats, RVs) always use <em>stranded</em>
+                copper wire. Solid wire work-hardens and fractures under repeated vibration. Marine-grade
+                tinned-copper stranded wire resists corrosion further; the tin coating prevents the green verdigris
+                that forms on bare copper strands in humid bilge environments.
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary p-4 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+            <div id="citationText" class="font-monospace text-dark-emphasis small pt-2">
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    </main>   
+    
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->    
+
+
+
+    <!-- =====================================================================
+         EMBEDDED JAVASCRIPT
+         ===================================================================== -->
+    <script>
+
+      // ------------------------------------------------------------------
+      // AWG data — copper, cross-section and resistance at 20 °C
+      // ------------------------------------------------------------------
+      const AWG_DATA = [
+        { name:'16',  areaMM2:1.31,   resOhmsPerFt:0.004016  },
+        { name:'14',  areaMM2:2.08,   resOhmsPerFt:0.002525  },
+        { name:'12',  areaMM2:3.31,   resOhmsPerFt:0.001588  },
+        { name:'10',  areaMM2:5.26,   resOhmsPerFt:0.0009989 },
+        { name:'8',   areaMM2:8.37,   resOhmsPerFt:0.0006282 },
+        { name:'6',   areaMM2:13.3,   resOhmsPerFt:0.0003951 },
+        { name:'4',   areaMM2:21.2,   resOhmsPerFt:0.0002485 },
+        { name:'2',   areaMM2:33.6,   resOhmsPerFt:0.0001563 },
+        { name:'1',   areaMM2:42.4,   resOhmsPerFt:0.0001239 },
+        { name:'1/0', areaMM2:53.5,   resOhmsPerFt:0.00009820},
+        { name:'2/0', areaMM2:67.4,   resOhmsPerFt:0.00007790},
+        { name:'3/0', areaMM2:85.0,   resOhmsPerFt:0.00006180},
+        { name:'4/0', areaMM2:107.2,  resOhmsPerFt:0.00004900},
+      ];
+
+      // I_max (A) = FACTOR * A_mm2 / L_ft
+      // derived from: V_drop = I * 2 * rho * L_m / A, where rho=0.01724 Ω·mm²/m, V_drop=0.36 V
+      const V_DROP_LIMIT = 0.36;   // 3% of 12 V
+      const RHO_COPPER   = 0.01724; // Ω·mm²/m
+      const FT_TO_M      = 0.3048;
+      const FACTOR       = V_DROP_LIMIT / (2 * RHO_COPPER * FT_TO_M); // ≈ 34.27
+
+      function minAWG(amps, lengthFt) {
+        const reqArea = amps * lengthFt / FACTOR;
+        return AWG_DATA.find(g => g.areaMM2 >= reqArea) || null;
+      }
+
+      // ------------------------------------------------------------------
+      // Build the lookup table dynamically
+      // ------------------------------------------------------------------
+      const TABLE_LENGTHS  = [5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 75, 90];
+      const TABLE_CURRENTS = [5, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 100];
+
+      function buildLookupTable() {
+        const hdr = document.getElementById('awgTableHeader');
+        hdr.innerHTML = '<th>Length (ft)</th>' +
+          TABLE_CURRENTS.map(a => `<th>${a} A</th>`).join('');
+
+        const tbody = document.getElementById('awgTableBody');
+        tbody.innerHTML = TABLE_LENGTHS.map(L => {
+          const cells = TABLE_CURRENTS.map(I => {
+            const g = minAWG(I, L);
+            if (!g) return '<td class="awg-result-big">&gt; 4/0</td>';
+            // colour coding: green = AWG 8 or lighter, yellow = 2..4, red = 1/0+
+            const idx = AWG_DATA.indexOf(g);
+            let cls = 'awg-result-ok';
+            if (idx >= 9) cls = 'awg-result-big';
+            else if (idx >= 6) cls = 'awg-result-warn';
+            return `<td class="${cls}">${g.name}</td>`;
+          }).join('');
+          return `<tr><th>${L}</th>${cells}</tr>`;
+        }).join('');
+      }
+
+      buildLookupTable();
+
+      // ------------------------------------------------------------------
+      // Interactive calculator
+      // ------------------------------------------------------------------
+      function calcWireGauge() {
+        const amps     = parseFloat(document.getElementById('inputAmps').value);
+        const lengthFt = parseFloat(document.getElementById('inputLength').value);
+
+        if (isNaN(amps) || isNaN(lengthFt) || amps <= 0 || lengthFt <= 0) {
+          ['calcResultAWG','calcResultArea','calcResultActualArea','calcResultResistance','calcResultVDrop']
+            .forEach(id => document.getElementById(id).textContent = '—');
+          return;
+        }
+
+        const reqArea = amps * lengthFt / FACTOR;
+        const gauge   = minAWG(amps, lengthFt);
+
+        document.getElementById('calcResultArea').textContent = reqArea.toFixed(2) + ' mm²';
+
+        if (!gauge) {
+          document.getElementById('calcResultAWG').textContent           = '> 4/0 — use parallel runs';
+          document.getElementById('calcResultActualArea').textContent     = '—';
+          document.getElementById('calcResultResistance').textContent     = '—';
+          document.getElementById('calcResultVDrop').textContent          = '—';
+          return;
+        }
+
+        const roundTripR = gauge.resOhmsPerFt * 2 * lengthFt;
+        const vDrop      = amps * roundTripR;
+        const pctDrop    = (vDrop / 12 * 100).toFixed(2);
+
+        document.getElementById('calcResultAWG').textContent         = 'AWG ' + gauge.name;
+        document.getElementById('calcResultActualArea').textContent   = gauge.areaMM2 + ' mm²';
+        document.getElementById('calcResultResistance').textContent   = (roundTripR * 1000).toFixed(2) + ' mΩ';
+        document.getElementById('calcResultVDrop').textContent        = vDrop.toFixed(3) + ' V  (' + pctDrop + '%)';
+      }
+
+      calcWireGauge();
+
+      // ------------------------------------------------------------------
+      // Chart 1: Max current vs wire length, one line per AWG gauge
+      // ------------------------------------------------------------------
+      const CHART1_GAUGES = ['16','14','12','10','8','6','4','2','1/0'];
+      const CHART1_LENGTHS = [];
+      for (let L = 2; L <= 100; L += 2) CHART1_LENGTHS.push(L);
+
+      const chart1Colors = [
+        'rgb(68,119,170)',
+        'rgb(102,204,238)',
+        'rgb(34,136,51)',
+        'rgb(153,204,68)',
+        'rgb(238,119,51)',
+        'rgb(238,51,51)',
+        'rgb(170,51,119)',
+        'rgb(102,17,0)',
+        'rgb(51,34,136)',
+      ];
+
+      function buildChart1() {
+        const datasets = CHART1_GAUGES.map((name, i) => {
+          const gauge = AWG_DATA.find(g => g.name === name);
+          const data  = CHART1_LENGTHS.map(L => ({
+            x: L,
+            y: Math.min(FACTOR * gauge.areaMM2 / L, 300),
+          }));
+          return {
+            label: 'AWG ' + name,
+            data:  data,
+            fill:  false,
+            borderColor: chart1Colors[i],
+            backgroundColor: chart1Colors[i],
+            tension: 0.1,
+            pointRadius: 0,
+          };
+        });
+
+        const config = {
+          type: 'line',
+          data: { datasets },
+          options: {
+            plugins: {
+              legend: {
+                labels: { font:{ size:16 }, boxHeight:2, padding:16 },
+                onClick(e, legendItem, legend) {
+                  const idx  = legendItem.datasetIndex;
+                  const ci   = legend.chart;
+                  const meta = ci.getDatasetMeta(idx);
+                  meta.hidden = meta.hidden === null ? !ci.data.datasets[idx].hidden : null;
+                  ci.update();
+                },
+              },
+              tooltip: {
+                enabled: true,
+                mode: 'index',
+                intersect: false,
+                callbacks: {
+                  title: items => 'Wire length: ' + items[0].parsed.x + ' ft',
+                  label: ctx  => ctx.dataset.label + ':  ' + ctx.parsed.y.toFixed(1) + ' A max',
+                },
+              },
+              customCanvasBackgroundColor: { color: 'white' },
+            },
+            maintainAspectRatio: false,
+            layout: { padding:{ left:10, right:25, top:5, bottom:5 } },
+            interaction: { mode:'index', axis:'x', intersect:false },
+            responsive: true,
+            scales: {
+              x: {
+                type: 'linear',
+                min: 0,
+                max: 100,
+                ticks: { maxRotation:0, font:{ size:15 } },
+                title: { display:true, text:'One-Way Wire Length (ft)', font:{ size:19 } },
+              },
+              y: {
+                type: 'linear',
+                min: 0,
+                max: 300,
+                ticks: { font:{ size:15 } },
+                title: { display:true, text:'Max Allowable Current (A)', padding:8, font:{ size:19 } },
+              },
+            },
+          },
+        };
+
+        const ctx = document.getElementById('chartCurrentVsLength').getContext('2d');
+        window._chart1 = new Chart(ctx, config);
+      }
+
+      document.getElementById('toggleTooltipBtn1').addEventListener('click', function() {
+        const t = window._chart1.options.plugins.tooltip;
+        t.enabled = !t.enabled;
+        window._chart1.update();
+        this.textContent = t.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+      });
+
+      buildChart1();
+
+      // ------------------------------------------------------------------
+      // Chart 2: AWG reference — cross-section (bars) + resistance (line)
+      // ------------------------------------------------------------------
+      function buildChart2() {
+        const labels = AWG_DATA.map(g => 'AWG ' + g.name);
+        const areas  = AWG_DATA.map(g => g.areaMM2);
+        const resMilliOhms = AWG_DATA.map(g => g.resOhmsPerFt * 1000);
+
+        const config = {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [
+              {
+                label: 'Cross-Section (mm²)',
+                data: areas,
+                backgroundColor: 'rgba(68,119,170,0.65)',
+                borderColor:     'rgba(68,119,170,1)',
+                borderWidth: 1,
+                yAxisID: 'yLeft',
+                order: 2,
+              },
+              {
+                label: 'Resistance (mΩ/ft)',
+                data: resMilliOhms,
+                type: 'line',
+                fill: false,
+                borderColor: 'rgb(238,119,51)',
+                backgroundColor: 'rgb(238,119,51)',
+                tension: 0.1,
+                pointRadius: 5,
+                pointHoverRadius: 8,
+                yAxisID: 'yRight',
+                order: 1,
+              },
+            ],
+          },
+          options: {
+            plugins: {
+              legend: {
+                labels: { font:{ size:16 }, boxHeight:6, padding:16 },
+              },
+              tooltip: {
+                enabled: true,
+                mode: 'index',
+                intersect: false,
+                callbacks: {
+                  label: ctx => {
+                    if (ctx.dataset.yAxisID === 'yLeft')  return 'Area: ' + ctx.parsed.y.toFixed(2) + ' mm²';
+                    if (ctx.dataset.yAxisID === 'yRight') return 'Resistance: ' + ctx.parsed.y.toFixed(3) + ' mΩ/ft';
+                  },
+                },
+              },
+              customCanvasBackgroundColor: { color: 'white' },
+            },
+            maintainAspectRatio: false,
+            layout: { padding:{ left:10, right:25, top:5, bottom:5 } },
+            responsive: true,
+            scales: {
+              x: {
+                ticks: { maxRotation:0, font:{ size:14 } },
+                title: { display:true, text:'AWG Gauge', font:{ size:19 } },
+              },
+              yLeft: {
+                type: 'linear',
+                position: 'left',
+                min: 0,
+                ticks: { font:{ size:15 } },
+                title: { display:true, text:'Cross-Section (mm²)', padding:8, font:{ size:17 } },
+              },
+              yRight: {
+                type: 'linear',
+                position: 'right',
+                min: 0,
+                ticks: { font:{ size:15 } },
+                title: { display:true, text:'Resistance (mΩ/ft)', padding:8, font:{ size:17 } },
+                grid: { drawOnChartArea: false },
+              },
+            },
+          },
+        };
+
+        const ctx = document.getElementById('chartAWGReference').getContext('2d');
+        window._chart2 = new Chart(ctx, config);
+      }
+
+      document.getElementById('toggleTooltipButton').addEventListener('click', function() {
+        const t = window._chart2.options.plugins.tooltip;
+        t.enabled = !t.enabled;
+        window._chart2.update();
+        this.textContent = t.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+      });
+
+      buildChart2();
+
+    </script>
+
+  </body>
+</html>

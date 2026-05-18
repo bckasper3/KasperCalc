@@ -1,0 +1,282 @@
+/* THESE RULES ONLY APPLY WHEN THE LAYOUT IS PRINTED*/
+
+nav{display:none}
+footer{display:none}
+
+@media print {
+
+  /* ── Hide everything by default ─────────────────────── */
+  body.print-report * { visibility: hidden; }
+
+  /* ── Show only the calculator wrapper ───────────────── */
+  body.print-report .wrapper,
+  body.print-report .wrapper * { visibility: visible; }
+
+  /* ── Position the wrapper to fill the page ──────────── */
+  body.print-report .wrapper {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%;
+    border: none !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  /* ── Strip all color from the wrapper ───────────────── */
+  body.print-report .wrapper,
+  body.print-report .wrapper * {
+    color: #000 !important;
+    background: #fff !important;
+    border-color: #999 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  /* ── Remove colored status dots ─────────────────────── */
+  body.print-report .status-dot {
+    background: #000 !important;
+    border: 1px solid #000 !important;
+  }
+
+  /* ── Remove colored input highlights ────────────────── */
+  body.print-report .user-entered {
+    font-weight: 700 !important;
+    background: #fff !important;
+    border-color: #000 !important;
+  }
+  body.print-report input.warn,
+  body.print-report input.err,
+  body.print-report input.ok {
+    background: #fff !important;
+    border-color: #999 !important;
+  }
+
+  /* ── Hide interactive / non-report elements ─────────── */
+  body.print-report .toolbar,
+  body.print-report .grp-title + .itype-grid,
+  body.print-report #itypeGrid,
+  body.print-report .graph-banner,
+  body.print-report .bottom-bar,
+  body.print-report nav,
+  body.print-report footer,
+  body.print-report .banner,
+  body.print-report #infoModalOverlay,
+  body.print-report #customMaterialOverlay,
+  body.print-report #lightboxOverlay,
+  body.print-report .tooltip-icon,
+  body.print-report .tooltip-box {
+    display: none !important;
+  }
+
+  /* ── Show graphs only when print-with-graphs is set ─── */
+  body.print-report:not(.print-with-graphs) .graph-banner {
+    display: none !important;
+  }
+  body.print-report.print-with-graphs .graph-banner {
+    display: block !important;
+    visibility: visible !important;
+  }
+  body.print-report.print-with-graphs .graph-banner * {
+    visibility: visible !important;
+  }
+
+  /* ── Graph tab strip — hide tabs, show all panels ───── */
+  body.print-report.print-with-graphs .graph-tab-row {
+    display: none !important;
+  }
+  body.print-report.print-with-graphs .graph-content {
+    display: block !important;
+    visibility: visible !important;
+    page-break-inside: avoid;
+    margin-bottom: 12px;
+  }
+  body.print-report.print-with-graphs canvas {
+    max-width: 100%;
+    height: 200px !important;
+  }
+
+  /* ── Header bar ──────────────────────────────────────── */
+  body.print-report .hdr {
+    background: #fff !important;
+    border-bottom: 2px solid #000 !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    padding: 8px 0 !important;
+  }
+
+  /* ── Table ───────────────────────────────────────────── */
+  body.print-report .lt input {
+    border: none !important;
+    background: transparent !important;
+    font-weight: 400 !important;
+  }
+  body.print-report .lt th {
+    border-bottom: 1.5px solid #000 !important;
+  }
+
+  /* ── Page layout ─────────────────────────────────────── */
+  @page {
+    size: letter portrait;
+    margin: 0.6in 0.5in;
+  }
+
+  body.print-report .prop-cols {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  body.print-report .grp,
+  body.print-report .prop-panel {
+    border: 1px solid #ccc !important;
+    margin-bottom: 8px !important;
+    padding: 6px 8px !important;
+    page-break-inside: avoid;
+  }
+
+  /* ── Remove the input mode section (not needed in report) */
+  body.print-report .grp:has(#itypeGrid) {
+    display: none !important;
+  }
+
+  /* ── Tooltip wraps — show label text only ────────────── */
+  body.print-report .tooltip-wrap {
+    display: inline !important;
+  }
+
+    /* ── Hide report + export buttons ───────────────────── */
+  body.print-report [aria-label="Generate spring design report as PDF"],
+  body.print-report [aria-label="Generate spring design report with graphs as PDF"],
+  body.print-report [aria-label="Export KasperCalc SolidWorks Smart Spring parametric file"],
+  body.print-report [aria-label="Export spring 3D model as STEP file"],
+  body.print-report [aria-label="Export spring 3D model as SolidWorks part file"],
+  body.print-report [aria-label="Export spring 2D drawing as DXF file"],
+  body.print-report [aria-label="Export KasperCalc SolidWorks Smart Spring parametric file"] {
+    display: none !important;
+  }
+
+  /* Hide the entire left box if it becomes empty after hiding buttons */
+  body.print-report [aria-labelledby="reportsTitle"] {
+    display: none !important;
+  }
+
+  /* ── Taller graph panels ─────────────────────────────── */
+  body.print-report.print-with-graphs .graph-content {
+    display: block !important;
+    visibility: visible !important;
+    page-break-inside: avoid;
+    margin-bottom: 16px;
+  }
+  body.print-report.print-with-graphs canvas {
+    max-width: 100%;
+    height: 280px !important;
+    min-height: 280px !important;
+  }
+
+  /* ── Prevent blank trailing pages ───────────────────── */
+  /* Clip the wrapper to its actual content height so
+     the browser doesn't pad out a final empty page     */
+  body.print-report {
+    height: auto !important;
+    overflow: hidden !important;
+  }
+  body.print-report .wrapper {
+    height: auto !important;
+    overflow: visible !important;
+    /* Avoid a page break after the last element */
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  /* No orphan page after any section */
+  body.print-report .grp:last-child,
+  body.print-report .prop-panel:last-child,
+  body.print-report .graph-banner:last-child {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* The spacer div at the bottom of .wrapper adds a blank page — kill it */
+  body.print-report .wrapper > div[style*="height:0.5rem"],
+  body.print-report .wrapper > div[style*="height: 0.5rem"] {
+    display: none !important;
+  }
+
+  /* ── Tighten bottom padding so content ends cleanly ─── */
+  body.print-report .wrapper {
+    padding-bottom: 0 !important;
+  }
+
+  @page {
+    size: letter portrait;
+    margin: 0.6in 0.5in;
+  }
+
+    /* ── Kill the entire reference section — display:none  ──
+     visibility:hidden still reserves layout space and causes
+     blank pages. display:none removes it from the flow.     */
+  body.print-report .ref-wrapper,
+  body.print-report .ref-section-wrap,
+  body.print-report section[aria-label="Compression spring reference guide"],
+  body.print-report .ref-card,
+  body.print-report .ref-body,
+  body.print-report .ref-card-header {
+    display: none !important;
+  }
+
+  /* ── Also hide the section wrapper and csscontainer
+     that wraps the reference guide ─────────────────────── */
+  body.print-report section:has(.ref-wrapper) {
+    display: none !important;
+  }
+
+  /* ── Fallback if :has() isn't supported — target by
+     the MathJax script tag's parent section. Hide any
+     section that doesn't contain the calculator wrapper. ── */
+  body.print-report main > section:not(:has(.wrapper)) {
+    display: none !important;
+  }
+
+  /* ── Hide nav, footer, banner explicitly with display ── */
+  body.print-report nav,
+  body.print-report footer,
+  body.print-report .banner,
+  body.print-report .cssbannercontainer {
+    display: none !important;
+  }
+
+  /* ── Graphs — all panels visible for print ───────────── */
+  body.print-report.print-with-graphs .graph-tab-row {
+    display: none !important;
+  }
+  body.print-report.print-with-graphs .graph-content {
+    display: block !important;
+    visibility: visible !important;
+    height: 280px !important;
+    min-height: 280px !important;
+    page-break-inside: avoid;
+    margin-bottom: 16px;
+  }
+  body.print-report.print-with-graphs .graph-content canvas {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    height: 260px !important;
+  }
+
+  /* ── Stop body height from creating trailing pages ───── */
+  body.print-report {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    background: #fff !important;
+  }
+
+  html.print-report {
+    height: auto !important;
+  }
+
+  body.print-report #springReferenceSection {
+  display: none !important;
+    }
+}

@@ -1,0 +1,610 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA FOR -->
+    <title>KasperCalc: Ethylene Glycol Specific Heat Capacity</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, bckasper3, Ethylene Glycol, Ethylene Glycol Specific Heat Capacity, Ethylene Glycol Specific Heat Capacity Calculator" />
+    <meta name="description" content="Look up specific heat capacity values for Ethylene glycol at various concentrations and temperatures." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    
+    <!-- <script defer type="text/javascript" src="js/bootstrap.min.js"></script> -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <!-- chart and calculator JS embedded below -->
+
+    <!-- CSS FILES -->
+    <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> --> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+<!-- Google tag (gtag.js) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5XLCN0GJQ0');
+</script> -->
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+
+   </head>
+
+  <!-- BODY -->
+  <body>
+
+
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityWater.html">Water Density</a>
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item" style="padding-right: 0px;">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                Ethylene Glycol Specific Heat Capacity
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- UNDER THE BANNER -->
+
+      <!-- Jet Fuel -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Ethylene Glycol Specific Heat Capacity Chart</div>
+            </div>
+
+            <div class="canvasdiv">
+              <button id="toggleTooltipButton">Hide Tooltips</button>
+              <a style="font-size: medium; text-decoration: none;" href="img/EthyleneGlycolSpecificHeatCapacity((KJ_per_KgxK)_VS_Temperature).png" download="EthyleneGlycolSpecificHeatCapacity((KJ_per_KgxK)_VS_Temperature).png">
+                <button>Download Chart</button>
+              </a>
+              <a style="font-size: medium; text-decoration: none;" href="img/EthyleneGlycolSpecificHeatCapacity((KJ_per_KgxK)_VS_Temperature).png" target="_blank">
+                <button>Open In New Tab</button>
+              </a>
+              <img src="img/EthyleneGlycolSpecificHeatCapacity((KJ_per_KgxK)_VS_Temperature).png" alt="Heat Capacity of Ethylene Glycol vs Temperature Graph" style="position:absolute; width:1px; height:1px; overflow:hidden; opacity:0;">     
+              <div class="canvascontainer">
+
+                    <!-- <script defer type="text/javascript" src="js/chart.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+                
+
+                <!-- <canvas id="myChart"></canvas> -->
+                <canvas id="myChart"aria-label="Alt Text Here" width="400" height="600" role="img" class="chartcanvas"> <!-- width="400" height="600" -->
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p></canvas>
+
+
+              </div>
+            </div>
+            <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/ethylene-glycol-d_146.html" target="_blank">Engineering Toolbox — Ethylene Glycol</a></p>
+            <p class="text-center">Toggle data sets by clicking the legend.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- CALCULATOR -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+
+            <div class="wrapper">
+              <div class="header text-center">Ethylene Glycol Specific Heat Capacity Calculator
+              </div>
+
+            <!-- <div class="toggle-container">
+              <label class="toggle-switch">
+                <input type="checkbox" id="fuelheadcalctoggle" class="toggle-input">
+                <span class="slider">
+                  <span class="option left">Inches of Fuel</span>
+                  <span class="option right">PSI</span>
+                </span>
+              </label>
+            </div> -->
+        
+              <div class="group1 d-flex flex-wrap">
+                <label class="dropdownlabel" for="operation">Select Mixture %:</label>
+
+                <span class="output">
+                  <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="calculate()" aria-label="Percent Ethylene Glycol concentration dropdown">
+                    <option value="60">60% V/V</option>
+                    <option value="50">50% V/V</option>
+                    <option value="40">40% V/V</option>
+                    <option value="30">30% V/V</option>
+                    <option value="20">20% V/V</option>
+                    <option value="10">10% V/V</option>
+                    <option value="0">0% V/V (Water)</option>
+                  </select>
+
+                </span>
+              </div>
+        
+              <div class="group">
+                <div class="outputrow">
+                <span class="label">
+                  <span id="nominalDensityOption1">Degrees (°F)</span>
+                </span> 
+                <span class="output inputbox">
+                  <input class= "calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" value="70" aria-label="Input box for degrees Fahrenheit"/>
+                </span>
+                </div>
+        
+                <div class="outputrow">
+                  <span class="label">
+                    <span id="nominalDensityOption2">Degrees (°C)</span>
+                  </span> 
+                  <span class="output inputbox">
+                    <input class= "calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" aria-label="SInput box for degrees Celcius"/>
+                  </span>
+                </div>
+              </div>
+        
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Cp (KJ/(Kg*K)):</span>
+                  <span class="output" id="result_density1">&nbsp</span>
+                </div>
+        
+                <div class="outputrow">
+                  <span class="label">Cp (J/(g*K)):</span>
+                  <span class="output" id="result_density2">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Cp (KJ/(Kg*°C)):</span>
+                  <span class="output" id="result_density3">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Cp (J/(Kg*K)):</span>
+                  <span class="output" id="result_density4">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Cp (cal/(g*°C)):</span>
+                  <span class="output" id="result_density5">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Cp (kcal/(Kg*°C)):</span>
+                  <span class="output" id="result_density6">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Cp (btu/lbf):</span>
+                  <span class="output" id="result_density7">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">Cp (kWh/(Kg*K)):</span>
+                  <span class="output" id="result_density8">&nbsp</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- <p class="text-center">* SG based on static density of water of 1000 (kg/m³) *</p> -->
+        </div>
+      </section>
+
+      <!-- SPECIFIC HEAT CAPACITY REFERENCE -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+
+            <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
+              <div class="custom-heading">Specific Heat Capacity of Ethylene Glycol</div>
+
+              <div style="text-align: left" class="mt-3">
+                <div class="custom-subheading">What Is Specific Heat Capacity?</div>
+                <p class="mt-2">
+                  Specific heat capacity (<span style="font-weight:var(--font-weight-medium)">Cp</span>) is the amount of energy required to raise
+                  one kilogram of fluid by one degree Kelvin. It is measured in
+                  <span style="font-weight:var(--font-weight-medium)">J / (kg · K)</span> [SI] or
+                  <span style="font-weight:var(--font-weight-medium)">BTU / (lb · °F)</span> [Imperial].
+                  The heat transfer equation is:
+                </p>
+                <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
+                  Q = ṁ × Cp × ΔT
+                </p>
+                <p class="mt-1">
+                  where <em>Q</em> is heat flow (W or BTU/hr), <em>ṁ</em> is mass flow rate, and <em>ΔT</em> is the temperature
+                  difference across the heat exchanger.
+                </p>
+              </div>
+
+              <div style="text-align: left" class="mt-4">
+                <div class="custom-subheading">Why It Matters for Ethylene Glycol Systems</div>
+                <p class="mt-2">
+                  Ethylene glycol solutions have a lower Cp than water. At 40% V/V and 68 °F (20 °C),
+                  Cp is roughly 10–15% lower than pure water, which means a larger flow rate or temperature
+                  differential is required to transfer the same amount of heat. This directly affects
+                  heat exchanger sizing, chiller capacity, and pump selection in HVAC and process cooling systems.
+                </p>
+              </div>
+
+              <p class= "mt-3 text-start"><span style="font-weight:var(--font-weight-normal)">Note:</span> Cp increases with temperature and decreases as Ethylene glycol concentration increases.</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary p-4 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+            <div id="citationText" class="font-monospace text-dark-emphasis small pt-2">
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    </main>   
+    
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->
+
+<script>
+// ── EG Specific Heat Capacity Data ────────────────────────────────────────────
+// Source: Engineering Toolbox — Ethylene Glycol
+// Format: [temperature_°F, Cp_kJ/(kg·K)]
+const egCpData = {
+  vv0:  [[-40,4.26],[32,4.22],[68,4.18],[95,4.18],[140,4.19],[176,4.21],[212,4.22]],
+  vv10: [[25,4.08],[32,4.08],[68,4.04],[104,4.05],[140,4.07],[176,4.11],[212,4.15]],
+  vv20: [[17,3.91],[32,3.90],[68,3.88],[104,3.89],[140,3.93],[176,3.97],[212,4.01]],
+  vv30: [[7,3.73],[32,3.73],[68,3.73],[104,3.75],[140,3.79],[176,3.83],[212,3.87]],
+  vv40: [[-10,3.56],[32,3.57],[68,3.59],[104,3.62],[140,3.66],[176,3.70],[212,3.74]],
+  vv50: [[-35,3.40],[-22,3.40],[32,3.41],[68,3.44],[104,3.48],[140,3.52],[176,3.56],[212,3.60]],
+  vv60: [[-65,3.22],[-40,3.23],[-22,3.24],[32,3.26],[68,3.29],[104,3.33],[140,3.38],[176,3.43],[212,3.48]]
+};
+
+const concMap = { '0': egCpData.vv0, '10': egCpData.vv10, '20': egCpData.vv20,
+  '30': egCpData.vv30, '40': egCpData.vv40, '50': egCpData.vv50, '60': egCpData.vv60 };
+
+const egLabels = ['0%', '10%', '20%', '30%', '40%', '50%', '60%'];
+const egColors = ['rgb(68,119,170)','rgb(34,136,51)','rgb(204,187,68)','rgb(238,102,119)','rgb(170,51,119)','rgb(102,204,238)','rgb(187,187,187)'];
+const egKeys   = ['vv0','vv10','vv20','vv30','vv40','vv50','vv60'];
+
+// ── Interpolation ─────────────────────────────────────────────────────────────
+function egInterp(tF, arr) {
+  if (tF <= arr[0][0]) return arr[0][1];
+  if (tF >= arr[arr.length-1][0]) return arr[arr.length-1][1];
+  for (let i = 0; i < arr.length-1; i++) {
+    if (tF >= arr[i][0] && tF <= arr[i+1][0]) {
+      const t = (tF - arr[i][0]) / (arr[i+1][0] - arr[i][0]);
+      return arr[i][1] + t * (arr[i+1][1] - arr[i][1]);
+    }
+  }
+}
+
+function denseByTempF(arr) {
+  const pts = [];
+  const minF = arr[0][0], maxF = arr[arr.length-1][0];
+  for (let t = minF; t <= maxF; t += 2) {
+    pts.push({ x: t, y: parseFloat(egInterp(t, arr).toFixed(4)) });
+  }
+  return pts;
+}
+
+// ── Temperature Converters ────────────────────────────────────────────────────
+function convertToFahrenheit() {
+  const c = parseFloat(document.getElementById('celsius').value);
+  document.getElementById('fahrenheit').value = ((c * 9/5) + 32).toFixed(2);
+  calculate();
+}
+function convertToCelsius() {
+  const f = parseFloat(document.getElementById('fahrenheit').value);
+  document.getElementById('celsius').value = ((f - 32) * 5/9).toFixed(2);
+  calculate();
+}
+
+// ── Calculator ────────────────────────────────────────────────────────────────
+function calculate() {
+  const op = document.getElementById('operation').value;
+  const fahr = parseFloat(document.getElementById('fahrenheit').value);
+  const ids = ['result_density1','result_density2','result_density3','result_density4','result_density5','result_density6','result_density7','result_density8'];
+  const arr = concMap[op];
+  if (!arr || isNaN(fahr) || fahr < arr[0][0] || fahr > arr[arr.length-1][0]) {
+    ids.forEach(id => document.getElementById(id).innerText = 'Out of Range');
+    return;
+  }
+  const cp = egInterp(fahr, arr);
+  document.getElementById('result_density1').innerText = cp.toFixed(4);
+  document.getElementById('result_density2').innerText = cp.toFixed(4);
+  document.getElementById('result_density3').innerText = cp.toFixed(4);
+  document.getElementById('result_density4').innerText = (cp * 1000).toFixed(1);
+  document.getElementById('result_density5').innerText = (cp / 4.1868).toFixed(4);
+  document.getElementById('result_density6').innerText = (cp / 4.1868).toFixed(4);
+  document.getElementById('result_density7').innerText = (cp * 0.23885).toFixed(4);
+  document.getElementById('result_density8').innerText = (cp / 3600).toFixed(7);
+}
+
+// ── Chart ─────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function () {
+  convertToCelsius();
+  calculate();
+
+  const customBg = {
+    id: 'customCanvasBackgroundColor',
+    beforeDraw(chart, args, options) {
+      const { ctx } = chart;
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-over';
+      ctx.fillStyle = options.color || 'white';
+      ctx.fillRect(0, 0, chart.width, chart.height);
+      ctx.restore();
+    }
+  };
+
+  const datasets = egKeys.map((key, i) => ({
+    label: egLabels[i],
+    data: denseByTempF(egCpData[key]),
+    fill: false,
+    borderColor: egColors[i],
+    tension: 0.1
+  }));
+
+  const ctx = document.getElementById('myChart').getContext('2d');
+  const cpChart = new Chart(ctx, {
+    type: 'line',
+    data: { datasets },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
+      plugins: {
+        customCanvasBackgroundColor: { color: 'white' },
+        legend: {
+          position: 'top',
+          labels: { align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 } },
+          onClick: function (e, legendItem, legend) {
+            const ci = legend.chart;
+            const meta = ci.getDatasetMeta(legendItem.datasetIndex);
+            meta.hidden = meta.hidden === null ? !ci.data.datasets[legendItem.datasetIndex].hidden : null;
+            ci.update();
+          }
+        },
+        tooltip: {
+          enabled: true,
+          mode: 'nearest',
+          intersect: false,
+          axis: 'x',
+          callbacks: {
+            title: items => items[0].parsed.x.toFixed(0) + ' °F',
+            label: item => item.dataset.label + ': ' + item.parsed.y.toFixed(3) + ' kJ/(kg·K)'
+          }
+        }
+      },
+      interaction: { mode: 'nearest', axis: 'x' },
+      elements: { point: { radius: 0 } },
+      scales: {
+        x: {
+          type: 'linear',
+          min: -40,
+          max: 220,
+          ticks: { maxRotation: 0, font: { size: 16 } },
+          title: { display: true, text: 'Temperature (°F)', font: { size: 20 } }
+        },
+        y: {
+          type: 'linear',
+          ticks: { font: { size: 16 } },
+          title: { display: true, text: 'Cp (kJ/(kg·K))', padding: 10, font: { size: 20 } }
+        }
+      }
+    },
+    plugins: [customBg]
+  });
+
+  document.getElementById('toggleTooltipButton').addEventListener('click', function () {
+    const current = cpChart.options.plugins.tooltip.enabled;
+    cpChart.options.plugins.tooltip.enabled = !current;
+    cpChart.update();
+    this.textContent = cpChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+  });
+});
+</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5XLCN0GJQ0');
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,1978 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: MIl-HDBK-5 Chapter 1 - General</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, MIL-HDBK-5, MIL Spec Material Properties, general material properties, Stress, strain, compressive properties, Types of material Failures, Commonly Used Formulas, MMPDS" />
+    <meta name="description" content="MIL-HDBK-5 general introduction and typical formulas, for industrial, commerical, aerospace, and defense applications." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XLCN0GJQ0');
+    </script>
+
+    <!-- MathJax — renders LaTeX equations client-side -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath:  [['\\(', '\\)']],
+          displayMath: [['\\[', '\\]']],
+          tags: 'none'
+        },
+        options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+        startup: { typeset: true }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityWater.html">Water Density</a>
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item" style="padding-right: 0px;">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                MIL-HDBK-5: Chapter 1 — General
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- OVERVIEW -->
+
+      <style>
+/* Container & Structure */
+.wrapper { margin: 0 auto; max-width: 72rem; background-color: #6a746a; border-radius: 12px; border: 3px solid var(--calc-outline-color, #4a5a4a); padding: 4px; }
+.row { display: flex; flex-wrap: wrap; gap: 4px; margin: 0; }
+.col-half { flex: 1 1 300px; display: flex; flex-direction: column; gap: 4px; }
+
+/* Group Blocks */
+.group { background-color: var(--calc-background-color, #f5f5f0); border-radius: 8px; box-shadow: 0px 2px 4px rgba(0,0,0,.2); color: var(--calc-p-color, #222); padding: 8px 10px; border: 2px solid var(--calc-outline-color, #4a5a4a); margin: 0; }
+.section-title-TOC { display: inline-block; background-color: var(--section-title-color, #3a6270); border-radius: 4px; color: #fff; padding: 2px 10px; font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+
+/* Links & Items (No vertical margins, tight padding) */
+.quick-link { display: flex; align-items: flex-start; gap: 8px; padding: 2px 4px; border-radius: 4px; text-decoration: none; color: inherit; transition: background 0.13s; }
+.quick-link:hover { background: rgba(58,98,112,0.08); }
+.quick-num { min-width: 3rem; font-size: 13px; font-weight: 500; color: #3a6270; flex-shrink: 0; }
+.quick-title { font-size: 13px; font-weight: 500; color: var(--calc-p-color, #222); line-height: 1.3; }
+.quick-sub .quick-num { padding-left: 0.8rem; }
+.quick-sub2 .quick-num { padding-left: 1.6rem; }
+
+/* Figures & Equations */
+.fig-link { display: flex; align-items: baseline; gap: 6px; padding: 2px 4px; border-radius: 4px; text-decoration: none; color: inherit; transition: background 0.13s; }
+.fig-link:hover { background: rgba(58,98,112,0.08); }
+.fig-badge { font-size: 11px; font-weight: 500; font-family: "Courier New", monospace; color: #fff; background: #3a6270; border-radius: 4px; padding: 1px 5px; flex-shrink: 0; white-space: nowrap; }
+.fig-badge.eq { background: #5a8a7a; }
+.fig-title { font-size: 13px; font-weight: 400; color: var(--calc-p-color, #222); line-height: 1.3; }
+
+/* Disclaimer & Buttons */
+.disclaimer-bar { border-left: 3px solid #c0562a; background: #f9ede8; padding: 6px 10px; border-radius: 0 6px 6px 0; margin-top: 2px; }
+.disclaimer-bar p { margin: 0; font-size: 12px; font-weight: 400; color: #5a2a10; line-height: 1.4; }
+.tbtn { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border-radius: 6px; border: 2px solid var(--calc-outline-color, #4a5a4a); background: var(--calc-background-color, #f5f5f0); color: var(--calc-p-color, #222); font-size: 12px; font-weight: 400; padding: 4px 12px; transition: filter 0.15s, transform 0.1s; line-height: 1.3; }
+.tbtn:hover { filter: brightness(0.93); }
+.tbtn:active { transform: scale(0.97); }
+.tbtn.secondary { background: #e4f0f3; color: #1a3d45; border-color: #9abdc7; }
+      </style>
+
+  <section class="col-11 mx-auto">
+    <div class="csscontainer">
+      <div class="wrapper">
+        <div class="header fs-4">MIL-HDBK-5: Chapter 1 — General</div>
+
+        <div class="row">
+          <!-- Table of Contents -->
+          <div class="col-half">
+            <div class="group">
+              <span class="section-title-TOC">Table of Contents</span>
+              <div class="list-container">
+                <a href="#1.0" class="quick-link"><span class="quick-num">1.0</span><span class="quick-title">General</span></a>
+                <a href="#1.1" class="quick-link"><span class="quick-num">1.1</span><span class="quick-title">Purpose and Use of Document</span></a>
+                <a href="#1.1.1" class="quick-link quick-sub"><span class="quick-num">1.1.1</span><span class="quick-title">Introduction</span></a>
+                <a href="#1.1.2" class="quick-link quick-sub"><span class="quick-num">1.1.2</span><span class="quick-title">Scope of Handbook</span></a>
+                <a href="#1.2" class="quick-link"><span class="quick-num">1.2</span><span class="quick-title">Nomenclature</span></a>
+                <a href="#1.2.1" class="quick-link quick-sub"><span class="quick-num">1.2.1</span><span class="quick-title">Symbols and Definitions</span></a>
+                <a href="#1.2.2" class="quick-link quick-sub"><span class="quick-num">1.2.2</span><span class="quick-title">International Systems of Units (SI)</span></a>
+                <a href="#1.3" class="quick-link"><span class="quick-num">1.3</span><span class="quick-title">Commonly Used Formulas</span></a>
+                <a href="#1.3.1" class="quick-link quick-sub"><span class="quick-num">1.3.1</span><span class="quick-title">General</span></a>
+                <a href="#1.3.2" class="quick-link quick-sub"><span class="quick-num">1.3.2</span><span class="quick-title">Simple Unit Stresses</span></a>
+                <a href="#1.3.3" class="quick-link quick-sub"><span class="quick-num">1.3.3</span><span class="quick-title">Combined Stresses</span></a>
+                <a href="#1.3.4" class="quick-link quick-sub"><span class="quick-num">1.3.4</span><span class="quick-title">Deflections (Axial)</span></a>
+                <a href="#1.3.5" class="quick-link quick-sub"><span class="quick-num">1.3.5</span><span class="quick-title">Deflections (Bending)</span></a>
+                <a href="#1.3.6" class="quick-link quick-sub"><span class="quick-num">1.3.6</span><span class="quick-title">Deflections (Torsion)</span></a>
+                <a href="#1.3.7" class="quick-link quick-sub"><span class="quick-num">1.3.7</span><span class="quick-title">Biaxial Elastic Deformation</span></a>
+                <a href="#1.3.8" class="quick-link quick-sub"><span class="quick-num">1.3.8</span><span class="quick-title">Basic Column Formula</span></a>
+                <a href="#1.3.9" class="quick-link quick-sub"><span class="quick-num">1.3.9</span><span class="quick-title">Inelastic Stress-Strain Response</span></a>
+                <a href="#1.4" class="quick-link"><span class="quick-num">1.4</span><span class="quick-title">Basic Principles</span></a>
+                <a href="#1.4.1" class="quick-link quick-sub"><span class="quick-num">1.4.1</span><span class="quick-title">General</span></a>
+                <a href="#1.4.2" class="quick-link quick-sub"><span class="quick-num">1.4.2</span><span class="quick-title">Stress</span></a>
+                <a href="#1.4.3" class="quick-link quick-sub"><span class="quick-num">1.4.3</span><span class="quick-title">Strain</span></a>
+                <a href="#1.4.4" class="quick-link quick-sub"><span class="quick-num">1.4.4</span><span class="quick-title">Tensile Properties</span></a>
+                <a href="#1.4.5" class="quick-link quick-sub"><span class="quick-num">1.4.5</span><span class="quick-title">Compressive Properties</span></a>
+                <a href="#1.4.6" class="quick-link quick-sub"><span class="quick-num">1.4.6</span><span class="quick-title">Shear Properties</span></a>
+                <a href="#1.4.7" class="quick-link quick-sub"><span class="quick-num">1.4.7</span><span class="quick-title">Bearing Properties</span></a>
+                <a href="#1.4.8" class="quick-link quick-sub"><span class="quick-num">1.4.8</span><span class="quick-title">Temperature Effects</span></a>
+                <a href="#1.4.9" class="quick-link quick-sub"><span class="quick-num">1.4.9</span><span class="quick-title">Fatigue Properties</span></a>
+                <a href="#1.4.10" class="quick-link quick-sub"><span class="quick-num">1.4.10</span><span class="quick-title">Metallurgical Instability</span></a>
+                <a href="#1.4.11" class="quick-link quick-sub"><span class="quick-num">1.4.11</span><span class="quick-title">Biaxial Properties</span></a>
+                <a href="#1.4.12" class="quick-link quick-sub"><span class="quick-num">1.4.12</span><span class="quick-title">Fracture Toughness</span></a>
+                <a href="#1.4.13" class="quick-link quick-sub"><span class="quick-num">1.4.13</span><span class="quick-title">Fatigue-Crack-Propagation</span></a>
+                <a href="#1.5" class="quick-link"><span class="quick-num">1.5</span><span class="quick-title">Types of Failures</span></a>
+                <a href="#1.5.1" class="quick-link quick-sub"><span class="quick-num">1.5.1</span><span class="quick-title">General</span></a>
+                <a href="#1.5.2" class="quick-link quick-sub"><span class="quick-num">1.5.2</span><span class="quick-title">Material Failures</span></a>
+                <a href="#1.5.3" class="quick-link quick-sub"><span class="quick-num">1.5.3</span><span class="quick-title">Instability Failures</span></a>
+                <a href="#1.6" class="quick-link"><span class="quick-num">1.6</span><span class="quick-title">Columns</span></a>
+                <a href="#1.6.1" class="quick-link quick-sub"><span class="quick-num">1.6.1</span><span class="quick-title">General</span></a>
+                <a href="#1.6.2" class="quick-link quick-sub"><span class="quick-num">1.6.2</span><span class="quick-title">Primary Instability Failures</span></a>
+                <a href="#1.6.3" class="quick-link quick-sub"><span class="quick-num">1.6.3</span><span class="quick-title">Local Instability Failure</span></a>
+                <a href="#1.6.4" class="quick-link quick-sub"><span class="quick-num">1.6.4</span><span class="quick-title">Correction of Column Test Results</span></a>
+                <a href="#1.7" class="quick-link"><span class="quick-num">1.7</span><span class="quick-title">Thin-Walled and Stiffened Thin-Walled Sections</span></a>
+                <a href="Chapter2(steel).html" class="quick-link"><span class="quick-num">2.0</span><span class="quick-title">Steel</span></a>
+                <a href="Chapter3(aluminum).html" class="quick-link"><span class="quick-num">3.0</span><span class="quick-title">Aluminum</span></a>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Figures & Equations stacked tightly -->
+          <div class="col-half">
+            <div class="group">
+              <span class="section-title-TOC">Table of Figures</span>
+              <div>
+                <a href="#fig-1.4.4" class="fig-link"><span class="fig-badge">Fig 1.4.4</span><span class="fig-title">Typical tensile stress-strain diagrams</span></a>
+                <a href="#fig-1.4.8.2.2" class="fig-link"><span class="fig-badge">Fig 1.4.8.2.2</span><span class="fig-title">Typical creep-rupture curve</span></a>
+                <a href="#fig-1.4.9.2a" class="fig-link"><span class="fig-badge">Fig 1.4.9.2(a)</span><span class="fig-title">Best fit S/N curve — various stress ratios</span></a>
+                <a href="#fig-1.4.9.2b" class="fig-link"><span class="fig-badge">Fig 1.4.9.2(b)</span><span class="fig-title">Consolidated fatigue data — equivalent stress</span></a>
+                <a href="#fig-1.4.11" class="fig-link"><span class="fig-badge">Fig 1.4.11</span><span class="fig-title">Typical biaxial stress-strain diagrams</span></a>
+                <a href="#fig-1.4.11.2" class="fig-link"><span class="fig-badge">Fig 1.4.11.2</span><span class="fig-title">Typical biaxial yield stress envelope</span></a>
+                <a href="#fig-1.4.12.1" class="fig-link"><span class="fig-badge">Fig 1.4.12.1</span><span class="fig-title">Load-deformation record — brittle fracture</span></a>
+                <a href="#fig-1.4.12.3a" class="fig-link"><span class="fig-badge">Fig 1.4.12.3(a)</span><span class="fig-title">Principal fracture path directions</span></a>
+                <a href="#fig-1.4.12.3b" class="fig-link"><span class="fig-badge">Fig 1.4.12.3(b)</span><span class="fig-title">Principal fracture paths — cylindrical shapes</span></a>
+                <a href="#fig-1.4.12.4" class="fig-link"><span class="fig-badge">Fig 1.4.12.4</span><span class="fig-title">Load-deformation — non-plane strain fracture</span></a>
+                <a href="#fig-1.4.12.4.1" class="fig-link"><span class="fig-badge">Fig 1.4.12.4.1</span><span class="fig-title">Crack growth curve</span></a>
+                <a href="#fig-1.4.13.1a" class="fig-link"><span class="fig-badge">Fig 1.4.13.1(a)</span><span class="fig-title">Fatigue crack-growth curve</span></a>
+                <a href="#fig-1.4.13.1b" class="fig-link"><span class="fig-badge">Fig 1.4.13.1(b)</span><span class="fig-title">Fatigue crack-growth-rate curve</span></a>
+                <a href="#fig-1.4.13.3" class="fig-link"><span class="fig-badge">Fig 1.4.13.3</span><span class="fig-title">Sample display of fatigue crack growth rate data</span></a>
+                <a href="#fig-1.6.4.3a" class="fig-link"><span class="fig-badge">Fig 1.6.4.4(a)</span><span class="fig-title">Nondimensional correction chart — 2024-T3 sheet</span></a>
+                <a href="#fig-1.6.4.3b" class="fig-link"><span class="fig-badge">Fig 1.6.4.4(b)</span><span class="fig-title">Nondimensional correction chart — 2024-T3 clad sheet</span></a>
+                <a href="#fig-1.6.4.3c" class="fig-link"><span class="fig-badge">Fig 1.6.4.4(c)</span><span class="fig-title">Nondimensional correction chart — 2024-T4 extrusion &lt;¼″</span></a>
+                <a href="#fig-1.6.4.3d" class="fig-link"><span class="fig-badge">Fig 1.6.4.4(d)</span><span class="fig-title">Nondimensional correction chart — 2024-T4 extrusion ¼–1½″</span></a>
+                <a href="#fig-1.6.4.3e" class="fig-link"><span class="fig-badge">Fig 1.6.4.4(e)</span><span class="fig-title">Nondimensional correction chart — 2024-T3 tubing</span></a>
+                <a href="#fig-1.6.4.3f" class="fig-link"><span class="fig-badge">Fig 1.6.4.4(f)</span><span class="fig-title">Nondimensional correction chart — clad 2024-T3 sheet</span></a>
+                <a href="#fig-1.6.4.3g" class="fig-link"><span class="fig-badge">Fig 1.6.4.4(g)</span><span class="fig-title">Nondimensional correction chart — 7075-T6 sheet</span></a>
+                <a href="#fig-1.6.4.3h" class="fig-link"><span class="fig-badge">Fig 1.6.4.4(h)</span><span class="fig-title">Nondimensional correction chart — AZ31B-F / AZ61A-F extrusion</span></a>
+                <a href="#fig-1.6.4.3i" class="fig-link"><span class="fig-badge">Fig 1.6.4.4(i)</span><span class="fig-title">Nondimensional correction chart — AZ31B-H24 sheet</span></a>
+              </div>
+            </div>
+
+            <div class="group">
+              <span class="section-title-TOC">Table of Equations</span>
+              <div>
+                <a href="#eq-1.3.2a" class="fig-link"><span class="fig-badge eq">Eq 1.3.2(a)</span><span class="fig-title">Tension: f<sub>t</sub> = P/A</span></a>
+                <a href="#eq-1.3.2b" class="fig-link"><span class="fig-badge eq">Eq 1.3.2(b)</span><span class="fig-title">Compression: f<sub>c</sub> = P/A</span></a>
+                <a href="#eq-1.3.2c" class="fig-link"><span class="fig-badge eq">Eq 1.3.2(c)</span><span class="fig-title">Bending: f<sub>b</sub> = My/I = M/Z</span></a>
+                <a href="#eq-1.3.2d" class="fig-link"><span class="fig-badge eq">Eq 1.3.2(d)</span><span class="fig-title">Average direct shear: f<sub>s</sub> = S/A</span></a>
+                <a href="#eq-1.3.2e" class="fig-link"><span class="fig-badge eq">Eq 1.3.2(e)</span><span class="fig-title">Long./transverse shear: f<sub>x</sub> = SQ/Ib</span></a>
+                <a href="#eq-1.3.2f" class="fig-link"><span class="fig-badge eq">Eq 1.3.2(f)</span><span class="fig-title">Torsional shear, round tube: f<sub>x</sub> = Ty/I<sub>p</sub></span></a>
+                <a href="#eq-1.3.2g" class="fig-link"><span class="fig-badge eq">Eq 1.3.2(g)</span><span class="fig-title">Torsion, thin-walled closed: f<sub>s</sub> = T/2At</span></a>
+                <a href="#eq-1.3.2h" class="fig-link"><span class="fig-badge eq">Eq 1.3.2(h)</span><span class="fig-title">Biaxial stresses: f<sub>A</sub> = Bf<sub>H</sub>, f<sub>T</sub> = Bf<sub>L</sub></span></a>
+                <a href="#eq-1.3.3a" class="fig-link"><span class="fig-badge eq">Eq 1.3.3(a)</span><span class="fig-title">Combined — compression and bending</span></a>
+                <a href="#eq-1.3.3b" class="fig-link"><span class="fig-badge eq">Eq 1.3.3(b)</span><span class="fig-title">Combined — compression, bending, and torsion</span></a>
+                <a href="#eq-1.3.3c" class="fig-link"><span class="fig-badge eq">Eq 1.3.3(c)</span><span class="fig-title">Maximum normal stress</span></a>
+                <a href="#eq-1.3.4a" class="fig-link"><span class="fig-badge eq">Eq 1.3.4(a)</span><span class="fig-title">Unit strain: e = δ/L</span></a>
+                <a href="#eq-1.3.4b" class="fig-link"><span class="fig-badge eq">Eq 1.3.4(b)</span><span class="fig-title">Young's modulus: E = f/e</span></a>
+                <a href="#eq-1.3.4c" class="fig-link"><span class="fig-badge eq">Eq 1.3.4(c)</span><span class="fig-title">Axial deflection: δ = eL = (f/E)L</span></a>
+                <a href="#eq-1.3.4d" class="fig-link"><span class="fig-badge eq">Eq 1.3.4(d)</span><span class="fig-title">Axial deflection: δ = PL/AE</span></a>
+                <a href="#eq-1.3.5a" class="fig-link"><span class="fig-badge eq">Eq 1.3.5(a)</span><span class="fig-title">Beam slope rate: dι/dx = M/EI</span></a>
+                <a href="#eq-1.3.5b" class="fig-link"><span class="fig-badge eq">Eq 1.3.5(b)</span><span class="fig-title">Slope at point 2</span></a>
+                <a href="#eq-1.3.5c" class="fig-link"><span class="fig-badge eq">Eq 1.3.5(c)</span><span class="fig-title">Deflection at point 2</span></a>
+                <a href="#eq-1.3.5d" class="fig-link"><span class="fig-badge eq">Eq 1.3.5(d)</span><span class="fig-title">Deflection at point 2 — integral form</span></a>
+                <a href="#eq-1.3.6a" class="fig-link"><span class="fig-badge eq">Eq 1.3.6(a)</span><span class="fig-title">Twist rate: dφ/dx = T/GJ</span></a>
+                <a href="#eq-1.3.6b" class="fig-link"><span class="fig-badge eq">Eq 1.3.6(b)</span><span class="fig-title">Total twist, x<sub>1</sub> to x<sub>2</sub></span></a>
+                <a href="#eq-1.3.6c" class="fig-link"><span class="fig-badge eq">Eq 1.3.6(c)</span><span class="fig-title">Constant torque twist: Φ = TL/GJ</span></a>
+                <a href="#eq-1.3.7a" class="fig-link"><span class="fig-badge eq">Eq 1.3.7(a)</span><span class="fig-title">Poisson's ratio: μ = e<sub>T</sub>/e<sub>L</sub></span></a>
+                <a href="#eq-1.3.7b" class="fig-link"><span class="fig-badge eq">Eq 1.3.7(b)</span><span class="fig-title">Biaxial strain — x-direction</span></a>
+                <a href="#eq-1.3.7c" class="fig-link"><span class="fig-badge eq">Eq 1.3.7(c)</span><span class="fig-title">Biaxial strain — y-direction</span></a>
+                <a href="#eq-1.3.7d" class="fig-link"><span class="fig-badge eq">Eq 1.3.7(d)</span><span class="fig-title">Biaxial elastic modulus</span></a>
+                <a href="#eq-1.3.8a" class="fig-link"><span class="fig-badge eq">Eq 1.3.8(a)</span><span class="fig-title">Column formula — tangent modulus (conservative)</span></a>
+                <a href="#eq-1.3.8b" class="fig-link"><span class="fig-badge eq">Eq 1.3.8(b)</span><span class="fig-title">Euler column formula</span></a>
+                <a href="#eq-1.3.9a" class="fig-link"><span class="fig-badge eq">Eq 1.3.9(a)</span><span class="fig-title">Total strain: e<sub>total</sub> = f/E + e<sub>p</sub></span></a>
+                <a href="#eq-1.3.9b" class="fig-link"><span class="fig-badge eq">Eq 1.3.9(b)</span><span class="fig-title">Ramberg-Osgood plastic strain</span></a>
+                <a href="#eq-1.4.6.1" class="fig-link"><span class="fig-badge eq">Eq 1.4.6.1</span><span class="fig-title">Shear modulus: G = E/2(1+μ)</span></a>
+                <a href="#eq-1.4.12.2" class="fig-link"><span class="fig-badge eq">Eq 1.4.12.2</span><span class="fig-title">Stress intensity factor: K = f√(πa)·Y</span></a>
+                <a href="#eq-1.4.12.4.1" class="fig-link"><span class="fig-badge eq">Eq 1.4.12.4.1</span><span class="fig-title">Apparent fracture toughness K<sub>app</sub></span></a>
+                <a href="#eq-1.4.12.5.1a" class="fig-link"><span class="fig-badge eq">Eq 1.4.12.5.1(a)</span><span class="fig-title">K<sub>app</sub> — middle-tension panel</span></a>
+                <a href="#eq-1.4.12.5.1b" class="fig-link"><span class="fig-badge eq">Eq 1.4.12.5.1(b)</span><span class="fig-title">Net section stress criterion</span></a>
+                <a href="#eq-1.4.13.3a" class="fig-link"><span class="fig-badge eq">Eq 1.4.13.3(a)</span><span class="fig-title">Fatigue crack growth rate — general form</span></a>
+                <a href="#eq-1.4.13.3b" class="fig-link"><span class="fig-badge eq">Eq 1.4.13.3(b)</span><span class="fig-title">Fatigue crack growth rate — stress intensity</span></a>
+                <a href="#eq-1.4.13.3c" class="fig-link"><span class="fig-badge eq">Eq 1.4.13.3(c)</span><span class="fig-title">Fatigue crack growth rate — ΔK and R</span></a>
+                <a href="#eq-1.6.4.4c" class="fig-link"><span class="fig-badge eq">Eq 1.6.4.4(c)</span><span class="fig-title">Tangent modulus definition: E<sub>t</sub> = df/de</span></a>
+                <a href="#eq-1.6.4.4e" class="fig-link"><span class="fig-badge eq">Eq 1.6.4.4(e)</span><span class="fig-title">Strain components: e = e<sub>e</sub> + e<sub>p</sub></span></a>
+                <a href="#eq-1.6.4.4d" class="fig-link"><span class="fig-badge eq">Eq 1.6.4.4(d)</span><span class="fig-title">Ramberg-Osgood strain equation</span></a>
+                <a href="#eq-1.6.4.4f" class="fig-link"><span class="fig-badge eq">Eq 1.6.4.4(f)</span><span class="fig-title">Tangent modulus — reformulated</span></a>
+                <a href="#eq-1.6.4.4g" class="fig-link"><span class="fig-badge eq">Eq 1.6.4.4(g)</span><span class="fig-title">E<sub>t</sub> for test material</span></a>
+                <a href="#eq-1.6.4.4h" class="fig-link"><span class="fig-badge eq">Eq 1.6.4.4(h)</span><span class="fig-title">E<sub>t</sub> for design material</span></a>
+                <a href="#eq-1.6.4.4i" class="fig-link"><span class="fig-badge eq">Eq 1.6.4.4(i)</span><span class="fig-title">Iterative solution for F<sub>c</sub></span></a>
+              </div>
+            </div>
+          </div> <!-- Closed the second col-half cleanly here -->
+          
+          <!-- Footer Disclaimer Block -->
+          <div class="group mx-3 mb-3" style="margin-top: 12px; flex: 1 1 100%;">
+            <span class="section-title-TOC">Disclaimer</span>
+            <div class="disclaimer-bar">
+              <p><strong>For reference use only.</strong> The formulas, graphs, and values herein are provided in good faith for general engineering guidance. Please verify all data against MIL-HDBK-5J or the applicable superseding document (MMPDS).</p>
+            </div>
+            <div style="margin-top: 6px;">
+              <button class="tbtn secondary" onclick="window.open('/downloadable/MIL-HDBK-5J-1.pdf', '_blank')" aria-label="Download MIL-HDBK-5 reference document">
+                <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                MIL-HDBK-5
+              </button>
+            </div>
+          </div>
+        </div> <!-- Closed the row wrapper -->
+
+      </div> <!-- Closed the wrapper -->
+    </div> <!-- Closed the csscontainer -->
+  </section>
+
+      
+      <!-- ALSO SEE — LINKS TO OTHER PG PAGES -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Other MIL-HDBK-5 Chapters</div>
+            </div>
+
+            <div class="mx-auto mt-3 mb-4 text-center" style="max-width:820px;">
+              <!-- <p>Explore the full set of propylene glycol property calculators on KasperCalc:</p> -->
+              <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                <a href="Chapter2(steel).html" class="custom-link custom-btn btn d-inline-block">Chapter 2 (Steel)</a>
+                <a href="Chapter3(aluminum).html" class="custom-link custom-btn btn d-inline-block">Chapter 3 (Aluminum)</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+
+
+ <style>
+    .chapter-title { font-size: 1.6rem; font-weight: bold; text-transform: uppercase; margin: 2rem 0 0.25rem; }
+    .section.lvl-0 { margin: 2rem 0; }
+    .section-heading.lvl-0 { font-size: 1.2rem; font-weight: bold; text-transform: uppercase; margin: 0 0 0.75rem; }
+
+    /* Level 1 — subsections (1.1.1, 1.1.2, …) */
+    .section.lvl-1, section.lvl-2, section.lvl-3 { margin: 1.25rem 0 1.25rem 0; }
+    .section-heading.lvl-1, .section-heading.lvl-2, .section-heading.lvl-3 { font-size: 1.05rem; font-weight: bold; text-transform: uppercase; margin: 0 0 0.5rem; }
+
+    /* Level 2 — sub-subsections (1.4.1.1, 1.4.4.1, …) */
+    /* .section.lvl-2 { margin: 1rem 0 1rem 1.5rem; }
+    .section-heading.lvl-2 { font-size: 1rem; font-weight: bold; margin: 0 0 0.5rem; } */
+
+    /* Level 3 — deepest level (1.4.12.4.1, 1.6.4.1, …) */
+    /* .section.lvl-3 { margin: 0.75rem 0 0.75rem 3rem; }
+    .section-heading.lvl-3 { font-size: 0.95rem; font-weight: bold; margin: 0 0 0.4rem; } */
+
+    .section-num { margin-right: 0.6em; }
+
+    /* Body text */
+    .section p { margin: 0 0 0.75rem; font-size: 0.97rem; }
+
+    /* Equation placeholder */
+    .eq-placeholder {
+      display: block;
+      border: 1.5px dashed #888;
+      border-radius: 4px;
+      background: #f7f7f2;
+      color: #555;
+      font-family: monospace;
+      font-size: 0.88rem;
+      padding: 8px 16px;
+      margin: 0.75rem 0;
+      text-align: center;
+    }
+
+    /* Figure placeholder */
+    .fig-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px dashed #999;
+      border-radius: 6px;
+      background: #f5f5f0;
+      min-height: 140px;
+      margin: 1rem 0;
+      padding: 1rem;
+    }
+    .fig-placeholder .fig-label {
+      font-size: 0.88rem;
+      font-weight: bold;
+      color: #555;
+      margin-bottom: 4px;
+    }
+    .fig-placeholder .fig-caption {
+      font-size: 0.85rem;
+      color: #777;
+      font-style: italic;
+      text-align: center;
+    }
+
+    /* Inline equation reference tag */
+    .eq-ref { font-family: monospace; font-size: 0.92em; color: #333; }
+
+    /* Lists within content */
+    .section ul, .section ol { margin: 0.5rem 0 0.75rem 1.5rem; font-size: 0.97rem; }
+    .section li { margin-bottom: 0.25rem; }
+
+    /* Equation blocks */
+    .eq-block {
+      position: relative;
+      margin: 0.75rem 0;
+      padding: 2px 80px 2px 8px;
+      background: #f7f7f2;
+      border-radius: 4px;
+      border: 1px solid #e0e0d8;
+      overflow: hidden;
+    }
+    .eq-block.eq-template {
+      border-style: dashed;
+      border-color: #bbb;
+      background: #fafaf5;
+    }
+    .eq-num {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.82rem;
+      color: #777;
+      font-style: italic;
+      white-space: nowrap;
+    }
+
+    /* Lightbox */
+    .ref-zoomable{cursor:zoom-in;transition:opacity .15s}
+    .ref-zoomable:hover{opacity:.85}
+    .lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+    .lightbox-overlay.active{display:flex}
+    .lightbox-img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:6px;box-shadow:0 8px 32px rgba(0,0,0,.6);cursor:default;touch-action:pinch-zoom}
+    .lightbox-close{position:fixed;top:16px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;z-index:100000}
+    .lightbox-close:hover{background:rgba(255,255,255,.3)}
+    .lightbox-caption{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.8);font-size:13px;font-family:Roboto,Arial,sans-serif;text-align:center;max-width:80vw;pointer-events:none}
+  </style>
+
+
+  <section class="col-11 col-md-10 col-lg-8 mx-auto">
+    <div class="csscontainer";>
+      <div class="chapter-title" id="chapter-1">Chapter 1 — General</div>
+
+      <!-- ═══════════════════════════════════════════════════════
+          1.1  PURPOSE AND USE OF DOCUMENT
+      ═══════════════════════════════════════════════════════ -->
+      <div class="section lvl-0" id="1.1">
+        <div class="section-heading lvl-0">
+          <span class="section-num">1.1</span>Purpose and Use of Document
+        </div>
+
+        <!-- 1.1.1 -->
+        <div class="section lvl-1" id="1.1.1">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.1.1</span>Introduction
+          </div>
+          <p>Since many aerospace companies manufacture both commercial and military products, the standardization of metallic materials design data, which are acceptable to Government procuring or certification agencies is very beneficial to those manufacturers as well as governmental agencies. Although the design requirements for military and commercial products may differ greatly, the required design values for the strength of materials and elements and other needed material characteristics are often identical. Therefore, this publication provides standardized design values and related design information for metallic materials and structural elements used in aerospace structures. The data contained herein, or from approved items in the minutes of MIL-HDBK-5 coordination meetings, are acceptable to the Air Force, the Navy, the Army, and the Federal Aviation Administration. Approval by the procuring or certificating agency must be obtained for the use of design values for products not contained herein.</p>
+          <p>This printed document is distributed by the Document Automation and Production Service (DAPS). It is the only official form of MIL-HDBK-5. If computerized third-party MIL-HDBK-5 databases are used, caution should be exercised to ensure that the information in these databases is identical to that contained in this Handbook.</p>
+          <p>U.S. Government personnel may obtain free copies of the current version of the printed document from the Document Automation and Production Service (DAPS). Assistance with orders may be obtained by calling (215) 697-2179. The FAX number is (215) 697-1462. U.S. Government personnel may also obtain a free electronic copy of the current document from DAPS through the ASSIST website at http://assist.daps.mil.</p>
+        </div>
+
+        <!-- 1.1.2 -->
+        <div class="section lvl-1" id="1.1.2">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.1.2</span>Scope of Handbook
+          </div>
+          <p>This Handbook is primarily intended to provide a source of design mechanical and physical properties, and joint allowables. Material property and joint data obtained from tests by material and fastener producers, government agencies, and members of the airframe industry are submitted to MIL-HDBK-5 for review and analysis. Results of these analyses are submitted to the membership during semi-annual coordination meetings for approval and, when approved, published in this Handbook.</p>
+          <p>This Handbook also contains some useful basic formulas for structural element analysis. However, structural design and analysis are beyond the scope of this Handbook.</p>
+          <p>References for data and various test methods are listed at the end of each chapter. The reference number corresponds to the applicable paragraph of the chapter cited. Such references are intended to provide sources of additional information, but should not necessarily be considered as containing data suitable for design purposes.</p>
+          <p>The content of this Handbook is arranged as follows:</p>
+          <ul>
+            <li><strong>Chapter 1</strong> — Nomenclature, Systems of Units, Formulas, Material Property Definitions, Failure Analysis, Column Analysis, Thin-Walled Sections</li>
+            <li><strong>Chapters 2–7</strong> — Material Properties</li>
+            <li><strong>Chapter 8</strong> — Joint Allowables</li>
+            <li><strong>Chapter 9</strong> — Data Requirements, Statistical Analysis Procedures</li>
+          </ul>
+        </div>
+      </div><!-- /1.1 -->
+
+
+      <!-- ═══════════════════════════════════════════════════════
+          1.2  NOMENCLATURE
+      ═══════════════════════════════════════════════════════ -->
+      <div class="section lvl-0" id="1.2">
+        <div class="section-heading lvl-0">
+          <span class="section-num">1.2</span>Nomenclature
+        </div>
+
+        <div class="section lvl-1" id="1.2.1">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.2.1</span>Symbols and Definitions
+          </div>
+          <p>The various symbols used throughout the Handbook to describe properties of materials, grain directions, test conditions, dimensions, and statistical analysis terminology are included in Appendix A.</p>
+        </div>
+
+        <div class="section lvl-1" id="1.2.2">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.2.2</span>International System of Units (SI)
+          </div>
+          <p>Design properties and joint allowables contained in this Handbook are given in customary units of U.S. measure to ensure compatibility with government and industry material specifications and current aerospace design practice. Appendix A.4 may be used to assist in the conversion of these units to Standard International (SI) units when desired.</p>
+        </div>
+      </div><!-- /1.2 -->
+
+
+      <!-- ═══════════════════════════════════════════════════════
+          1.3  COMMONLY USED FORMULAS
+      ═══════════════════════════════════════════════════════ -->
+      <div class="section lvl-0" id="1.3">
+        <div class="section-heading lvl-0">
+          <span class="section-num">1.3</span>Commonly Used Formulas
+        </div>
+
+        <div class="section lvl-1" id="1.3.1">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.3.1</span>General
+          </div>
+          <p>Formulas provided in the following sections are listed for reference purposes. Sign conventions generally accepted in their use are that quantities associated with tension action (loads, stresses, strains, etc.) are usually considered as positive and quantities associated with compressive action are considered as negative. When compressive action is of primary interest, it is sometimes convenient to identify associated properties with a positive sign. Formulas for all statistical computations relating to allowables development are presented in Chapter 9.</p>
+        </div>
+
+        <div class="section lvl-1" id="1.3.2">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.3.2</span>Simple Unit Stresses
+          </div>
+          <div class="eq-block" id="eq-1.3.2a">\[ f_t = \frac{P}{A} \]<span class="eq-num">(1.3.2a) tension</span></div>
+          <div class="eq-block" id="eq-1.3.2b">\[ f_c = \frac{P}{A} \]<span class="eq-num">(1.3.2b) compression</span></div>
+          <div class="eq-block" id="eq-1.3.2c">\[ f_b = \frac{My}{I} = \frac{M}{Z} \]<span class="eq-num">(1.3.2c) bending</span></div>
+          <div class="eq-block" id="eq-1.3.2d">\[ f_s = \frac{S}{A} \]<span class="eq-num">(1.3.2d) average direct shear stress</span></div>
+          <div class="eq-block" id="eq-1.3.2e">\[ f_x = \frac{SQ}{Ib} \]<span class="eq-num">(1.3.2e) longitudinal or transverse shear stress</span></div>
+          <div class="eq-block" id="eq-1.3.2f">\[ f_x = \frac{Ty}{I_p} \]<span class="eq-num">(1.3.2f) shear stress in round<br>tubes due to torsion</span></div>
+          <div class="eq-block" id="eq-1.3.2g">\[ f_s = \frac{T}{2At} \]<span class="eq-num">(1.3.2g) shear stress due to torsion<br>in thin-walled structures of closed section. <br>Note that A is the area enclosed<br>by the median line of the section.</span></div>
+          <div class="eq-block" id="eq-1.3.2h">\[ f_A = Bf_H \qquad f_T = Bf_L \]<span class="eq-num">(1.3.2h) axial and tangential<br>stresses, where B = biaxial ratio</span></div>
+        </div>
+
+        <div class="section lvl-1" id="1.3.3">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.3.3</span>Combined Stresses <span style="font-weight:normal;font-size:0.9em;">(see Section 1.5.3.4)</span>
+          </div>
+          <div class="eq-block" id="eq-1.3.3a">\[ f_A = f_c + f_b \]<span class="eq-num">(1.3.3a) compression and bending</span></div>
+          <div class="eq-block eq-template" id="eq-1.3.3b">\[ f_{s\max} = \left[ f_s^2 + \left( \frac{f_n}{2} \right)^2 \right]^{1/2} \]<span class="eq-num">(1.3.3b) compression, bending, and torsion</span></div>
+          <div class="eq-block" id="eq-1.3.3c">\[ f_{n,\max} = \frac{f_n}{2} + f_{s,\max} \]<span class="eq-num">(1.3.3c) max. normal stress</span></div>
+        </div>
+
+        <div class="section lvl-1" id="1.3.4">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.3.4</span>Deflections (Axial)
+          </div>
+          <div class="eq-block" id="eq-1.3.4a">\[ e = \frac{\delta}{L} \]<span class="eq-num">(1.3.4a) unit deformation or strain</span></div>
+          <div class="eq-block" id="eq-1.3.4b">\[ E = \frac{f}{e} \]<span class="eq-num">(1.3.4b) This equation applied when E is <br>obtained from the same tests in<br>which f and e are measured.</span></div>
+          <div class="eq-block" id="eq-1.3.4c">\[ \delta = eL = \frac{f}{E}L \]<span class="eq-num">(1.3.4c)</span></div>
+          <div class="eq-block" id="eq-1.3.4d">\[ \delta = eL = (\frac{f}{E})*L = \frac{PL}{AE}\]<span class="eq-num">(1.3.4d) (This equation applies<br>when the deflection is to be calculated<br>using a known value of E.)</span></div>
+        </div>
+
+        <div class="section lvl-1" id="1.3.5">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.3.5</span>Deflections (Bending)
+          </div>
+          <div class="eq-block" id="eq-1.3.5a">\[ \frac{d\iota}{dx} = \frac{M}{EI} \]<span class="eq-num">(1.3.5a) Change of slope per unit length of a beam;<br>radians per unit length</span></div>
+          <div class="eq-block" id="eq-1.3.5b">\[ \iota_2 = \iota_1 + \int_{x_1}^{x_2} \frac{M}{EI}\,dx \]<span class="eq-num">(1.3.5b) Slope at Point 2.<br>(This integral denotes the area under<br>the curve of M/EI plotted against x,<br>between the limits of x<sub>1</sub> and x<sub>2</sub>.)</span></div>
+          <div class="eq-block" id="eq-1.3.5c">\[ y_2 = y_1 + \iota_1(x_2 - x_1) + \int_{x_1}^{x_2} \frac{M}{EI}(x_2 - x)\,dx \]<span class="eq-num">(1.3.5c) Deflection at Point 2. </span></div>
+           <p>(This integral denotes the area under the curve having an ordinate equal to M/EI multiplied by the
+corresponding distances to Point 2, plotted against x, between the limits of x1 and x2.)</p>
+          <div class="eq-block" id="eq-1.3.5d">\[ y_2 = y_1 + \int_{x_1}^{x_2} \iota\,dx \]<span class="eq-num">(1.3.5d) Deflection at Point 2.<br>(This integral denotes the area under<br>the curve of x1(i) plotted against x,<br>between the limits of x<sub>1</sub> and x<sub>2</sub>.)</span></div>
+        </div>
+
+        <div class="section lvl-1" id="1.3.6">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.3.6</span>Deflections (Torsion)
+          </div>
+          <div class="eq-block" id="eq-1.3.6a">\[ \frac{d\phi}{dx} = \frac{T}{GJ} \]<span class="eq-num">(1.3.6a) (Change of angular deflection<br>or twist per unit length of<br>a member,radians per unit length.) </span></div>
+          <div class="eq-block" id="eq-1.3.6b">\[ \phi_2 = \phi_1 + \int_{x_1}^{x_2} \frac{T}{GJ}\,dx \]<span class="eq-num">(1.3.6b) Total twist over a length from x1 to x2.<br>(This integral denotes the area under<br>the curve of T/GJ plotted against x, <br>between the limits of x<sub>1</sub> and x<sub>2</sub>.)</span></div>
+          <div class="eq-block" id="eq-1.3.6c">\[ \Phi = \frac{TL}{GJ} \]<span class="eq-num">(1.3.6c) Used when torque T/GJ<br>is constant over length L.</span></div>
+        </div>
+
+        <div class="section lvl-1" id="1.3.7">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.3.7</span>Biaxial Elastic Deformation
+          </div>
+          <div class="eq-block" id="eq-1.3.7a">\[ \mu = \frac{e_T}{e_L} \]<span class="eq-num">(1.3.7a) (Unit lateral deformation/unit axial<br>deformation.) This identifies Poisson’s<br>ratio in uniaxial loading.</span></div>
+          <div class="eq-block" id="eq-1.3.7b">\[ E e_x = f_x - \mu f_y \]<span class="eq-num">(1.3.7b)</span></div>
+          <div class="eq-block" id="eq-1.3.7c">\[ E e_y = f_y - \mu f_x \]<span class="eq-num">(1.3.7c)</span></div>
+          <div class="eq-block" id="eq-1.3.7d">\[ E_{\text{biaxial}} = E(1 - \mu B) \]<span class="eq-num">(1.3.7d)  B = biaxial elastic modulus.</span></div>
+        </div>
+
+        <div class="section lvl-1" id="1.3.8">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.3.8</span>Basic Column Formulas
+          </div>
+          <div class="eq-block" id="eq-1.3.8a">\[ F_c = \frac{\pi^2 E_t}{(L'/\rho)^2} \]<span class="eq-num">(1.3.8a) onservative using tangent modulus</span></div>
+          <div class="eq-block" id="eq-1.3.8b">\[ F_c = \frac{\pi^2 E}{(L'/\rho)^2} \]<span class="eq-num">(1.3.8b) standard Euler column formula </span></div>
+        </div>
+
+        <div class="section lvl-1" id="1.3.9">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.3.9</span>Inelastic Stress-Strain Response
+          </div>
+          <div class="eq-block" id="eq-1.3.9a">\[ e_{\text{total}} = \frac{f}{E} + e_p \]<span class="eq-num">(1.3.9a) elastic strain response plus<br>inelastic or plastic strain response</span></div>
+          <p>where</p>
+          <div class="eq-block" id="eq-1.3.9b">\[ e_p = 0.002\left(\frac{f}{f_{0.2\,\mathrm{ys}}}\right)^n \]<span class="eq-num">(1.3.9b) Ramberg-Osgood</span></div>
+          <div class="eq-block">\[\begin{aligned}f_{0.2\,\mathrm{ys}} &= \text{the 0.2 percent yield stress and n = Ramberg-Osgood parameter}\end{aligned}\]<span class="eq-num"></span>
+          </div>
+          <p>Equation 1.3.9(b) implies a log-linear relationship between inelastic strain and stress, which is observed with many metallic materials, at least for inelastic strains ranging from the material's proportional limit to its yield stress.</p>
+        </div>
+      </div><!-- /1.3 -->
+
+
+      <!-- ═══════════════════════════════════════════════════════
+          1.4  BASIC PRINCIPLES
+      ═══════════════════════════════════════════════════════ -->
+      <div class="section lvl-0" id="1.4">
+        <div class="section-heading lvl-0">
+          <span class="section-num">1.4</span>Basic Principles
+        </div>
+
+        <!-- 1.4.1 -->
+        <div class="section lvl-1" id="1.4.1">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.4.1</span>General
+          </div>
+          <p>It is assumed that users of this Handbook are familiar with the principles of strength of materials. A brief summary of that subject is presented in the following paragraphs to emphasize principles of importance regarding the use of allowables for various metallic materials.<br><br>Requirements for adequate test data have been established to ensure a high degree of reliability for allowables published in this Handbook. Statistical analysis methods, provided in Chapter 9, are standardized and approved by all government regulatory agencies as well as MIL-HDBK-5 members from industry.</p>
+
+          <div class="section lvl-2" id="1.4.1.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.1.1</span>Basis
+            </div>
+            <p>Primary static design properties are provided for the following conditions:</p>
+            <ul>
+              <li class="fs-6">Tension — F<sub>tu</sub> and F<sub>ty</sub></li>
+              <li class="fs-6">Compression — F<sub>cy</sub></li>
+              <li class="fs-6">Shear — F<sub>su</sub></li>
+              <li class="fs-6">Bearing — F<sub>bru</sub> and F<sub>bry</sub></li>
+            </ul>
+            <p>These design properties are presented as A- and B- or S-basis room temperature values for each alloy. Design properties for other temperatures, when determined in accordance with Section 1.4.1.3, are regarded as having the same basis as the corresponding room temperature values.</p>
+            <p>Elongation and reduction of area design properties listed in room temperature property tables represent procurement specification minimum requirements, and are designated as S-values. Elongation and reduction of area at other temperatures, as well as moduli, physical properties, creep properties, fatigue properties and fracture toughness properties are all typical values unless another basis is specifically indicated.</p>
+            <p>Use of B-Values — The use of B-basis design properties is permitted in design by the Air Force, the Army, the Navy, and the Federal Aviation Administration, subject to certain limitations specified by each agency. Reference should be made to specific requirements of the applicable agency before using B-values in design.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.1.2">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.1.2</span>Statistically Calculated Values
+            </div>
+            <p>Statistically calculated values are S (since 1975), T99 and T90. S, the minimum properties guaranteed in the material specification, are calculated using the same requirements and procedure as AMS and is explained in Chapter 9. T99 and T90 are the local tolerance bounds, and are defined and may be computed using the data requirements and statistical procedures explained in Chapter 9.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.1.3">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.1.3</span>Ratioed Values
+            </div>
+            <p>A ratioed design property is one that is determined through its relationship with an established design value. This may be a tensile stress in a different grain direction from the established design property grain direction, or it may be another stress property, e.g., compression, shear or bearing. It may also be the same stress property at a different temperature. Refer to Chapter 9 for specific data requirements and data analysis procedures.<br><br> Derived properties are presented in two manners. Room temperature derived properties are presented in tabular form with their baseline design properties. Other than room temperature derived properties are presented in graphical form as percentages of the room temperature value. Percentage values apply to all forms and thicknesses shown in the room temperature design property table for the heat
+              treatment condition indicated therein unless restrictions are otherwise indicated. Percentage curves usually
+              represent short time exposures to temperature (thirty minutes) followed by testing at the same strain rate
+              as used for the room temperature tests. When data are adequate, percentage curves are shown for other
+              exposure times and are appropriately labeled.</p>
+          </div>
+        </div><!-- /1.4.1 -->
+
+        <!-- 1.4.2 -->
+        <div class="section lvl-1" id="1.4.2">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.4.2</span>Stress
+          </div>
+          <p>The term "stress" as used in this Handbook implies a force per unit area and is a measure of the intensity of the force acting on a definite plane passing through a given point (see Equations 1.3.2(a) and 1.3.2(b)). The stress distribution may or may not be uniform, depending on the nature of the loading condition. For example, tensile stresses identified by Equation 1.3.2(a) are considered to be uniform. The bending stress determined from Equation 1.3.2(c) refers to the stress at a specified distance perpendicular to the normal axis. The shear stress acting over the cross section of a member subjected to bending is not uniform. (Equation 1.3.2(d) gives the average shear stress.)</p>
+        </div>
+
+        <!-- 1.4.3 -->
+        <div class="section lvl-1" id="1.4.3">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.4.3</span>Strain
+          </div>
+          <p>Strain is the change in length per unit length in a member or portion of a member. As in the case of stress, the strain distribution may or may not be uniform in a complex structural element, depending on the nature of the loading condition. Strains usually are present also in directions other than the directions of applied loads.</p>
+
+          <div class="section lvl-2" id="1.4.3.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.3.1</span>Poisson's Ratio Effect
+            </div>
+            <p>A normal strain is that which is associated with a normal stress; a normal strain occurs in the direction in which its associated normal stress acts. Normal strains that result from an increase in length are designated as positive (+) and those that result in a decrease in length are designated as negative (−).<br><br> Under the condition of uniaxial loading, strain varies directly with stress. The ratio of stress to strain has a constant value (E) within the elastic range of the material, but decreases when the proportional limit is exceeded (plastic range). Axial strain is always accompanied by lateral strains of opposite sign in the two directions mutually perpendicular to the axial strain. Under these conditions, the absolute value of a ratio of lateral strain to axial strain is defined as Poisson's ratio. For stresses within the elastic range, this ratio is approximately constant. For stresses exceeding the proportional limit, this ratio is a function of the axial strain and is then referred to as the lateral contraction ratio. Information on the variation of
+Poisson’s ratio with strain and with testing direction is available in Reference 1.4.3.1.<br><br>Under multiaxial loading conditions, strains resulting from the application of each directional load are additive. trains must be calculated for each of the principal directions taking into account each of the principal stresses and Poisson’s ratio (see Equation 1.3.7 for biaxial loading).</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.3.2">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.3.2</span>Shear Strain
+            </div>
+            <p>When an element of uniform thickness is subjected to pure shear, each side of the element will be displaced in opposite directions. Shear strain is computed by dividing this total displacement by the right angle distance separating the two sides.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.3.3">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.3.3</span>Strain Rate
+            </div>
+            <p>Strain rate is a function of loading rate. Test results are dependent upon strain rate, and the ASTM testing procedures specify appropriate strain rates. Design properties in this Handbook were developed from test data obtained from coupons tested at the stated strain rate or up to a value of 0.01 in./in./min, the standard maximum static rate for tensile testing materials per specification ASTM E 8.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.3.4">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.3.4</span>Elongation and Reduction of Area
+            </div>
+            <p>Elongation and reduction of area are measured in accordance with specification ASTM E 8.</p>
+          </div>
+        </div><!-- /1.4.3 -->
+
+        <!-- 1.4.4 -->
+        <div class="section lvl-1" id="1.4.4">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.4.4</span>Tensile Properties
+          </div>
+          <p>When a metallic specimen is tested in tension using standard procedures of ASTM E 8, it is customary to plot results as a "stress-strain diagram." Typical tensile stress-strain diagrams are characterized in Figure 1.4.4. Such diagrams, drawn to scale, are provided in appropriate chapters of this Handbook. The general format of such diagrams is to provide a strain scale nondimensionally (in./in.) and a stress scale in 1000 lb/in.² (ksi). Properties required for design and structural analysis are discussed in Sections 1.4.4.1 to 1.4.4.6.</p>
+
+          <div class="section lvl-2" id="1.4.4.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.4.1</span>Modulus of Elasticity (E)
+            </div>
+            <p>Referring to Figure 1.4.4, it is noted that the initial part of stress-strain curves are straight lines. This indicates a constant ratio between stress and strain. Numerical values of such ratios are defined as the modulus of elasticity, and denoted by the letter E. This value applies up to the proportional limit stress at which point the initial slope of the stress-strain curve then decreases. Modulus of elasticity has the same units as stress. See Equation 1.3.4(b).</p>
+            <p>Other moduli of design importance are tangent modulus, E<sub>t</sub>, and secant modulus, E<sub>s</sub>. Both of these moduli are functions of strain. Tangent modulus is the instantaneous slope of the stress-strain curve at any elected value of strain. Secant modulus is defined as the ratio of total stress to total strain at any selected value of strain. Both of these moduli are used in structural element designs. Except for materials such
+                as those described with discontinuous behaviors, such as the upper stress-strain curve in Figure 1.4.4,
+                tangent modulus is the lowest value of modulus at any state of strain beyond the proportional limit.
+                Similarly, secant modulus is the highest value of modulus beyond the proportional limit.</p>
+            <p>Clad aluminum alloys may have two separate modulus of elasticity values, as indicated in the
+                typical stress-strain curve shown in Figure 1.4.4. The initial slope, or primary modulus, denotes a
+                response of both the low-strength cladding and higher-strength core elastic behaviors. This value applies
+                only up to the proportional limit of the cladding. For example, the primary modulus of 2024-T3 clad sheet
+                applies only up to about 6 ksi. Similarly, the primary modulus of 7075-T6 clad sheet applies only up to
+                approximately 12 ksi. A typical use of primary moduli is for low amplitude, high frequency fatigue.
+                Primary moduli are not applicable at higher stress levels. Above the proportional limits of cladding
+                materials, a short transition range occurs while the cladding is developing plastic behavior. The material
+                then exhibits a secondary elastic modulus up to the proportional limit of the core material. This secondary
+                modulus is the slope of the second straight line portion of the stress-strain curve. In some cases, the
+                cladding is so little different from the core material that a single elastic modulus value is used.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.4.2">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.4.2</span>Tensile Proportional Limit Stress (F<sub>tp</sub>)
+            </div>
+            <p>The tensile proportional limit is the maximum stress for which strain remains proportional to stress. Since it is practically impossible to determine precisely this point on a stress-strain curve, it is customary to assign a small value of plastic strain to identify the corresponding stress as the proportional limit. In this Handbook, the tension and compression proportional limit stress corresponds to a plastic strain of 0.0001 in./in.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.4.3">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.4.3</span>Tensile Yield Stress (TYS or F<sub>ty</sub>)
+            </div>
+            <p>Stress-strain diagrams for some ferrous alloys exhibit a sharp break at a stress below the tensile ultimate strength. At this critical stress, the material elongates considerably with no apparent change in stress. See the upper stress-strain curve in Figure 1.4.4. The stress at which this occurs is referred to as the yield point. Most nonferrous metallic alloys and most high strength steels do not exhibit this sharp break, but yield in a monotonic manner. Permanent deformation may be detrimental, and the industry adopted 0.002 in./in. plastic strain as an arbitrary limit that is considered acceptable by all regulatory agencies. For tension and compression, the corresponding stress at this offset strain is defined as the yield stress (see Figure 1.4.4). This value of plastic axial strain is 0.002 in./in. and the corresponding stress is defined as
+the yield stress. For practical purposes, yield stress can be determined from a stress-strain diagram by
+extending a line parallel to the elastic modulus line and offset from the origin by an amount of 0.002 in./in. strain. The yield stress is determined as the intersection of the offset line with the stress-strain curve.</p>
+          </div>
+
+          <figure class="ref-fig" id="fig-1.4.4" style="margin:1rem 0;text-align:center;">
+            <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.4.4.%20Typical%20tensile%20stress-strain%20diagrams..png" alt="Figure 1.4.4 — Typical tensile stress-strain diagrams." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+            <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.4.4</strong> — Typical tensile stress-strain diagrams.</figcaption>
+          </figure>
+        </div><!-- /1.4.4 -->
+
+          <div class="section lvl-2" id="1.4.4.4">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.4.4</span>Tensile Ultimate Stress (TUS or F<sub>tu</sub>)
+            </div>
+            <p>Figure 1.4.4 shows how the tensile ultimate stress is determined from a stress-strain diagram. It is simply the maximum stress attained. It should be noted that all stresses are based on the original cross-sectional dimensions of a test specimen, without regard to the lateral contraction due to Poisson's ratio effects. That is, all strains used herein are termed engineering strains as opposed to true strains which take into account actual cross sectional dimensions. Ultimate tensile stress is commonly used as a criterion of the strength of the material for
+              structural design, but it should be recognized that other strength properties may often be more important.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.4.5">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.4.5</span>Elongation (e)
+            </div>
+            <p>An additional property that is determined from tensile tests is elongation. This is a measure of ductility. Elongation, also stated as total elongation, is defined as the permanent increase in gage length, measured after fracture of a tensile specimen. It is commonly expressed as a percentage of the original gage length. Elongation is usually measured over a gage length of 2 inches for rectangular tensile test specimens and in 4D (inches) for round test specimens. Welded test
+              specimens are exceptions. Refer to the applicable material specification for applicable specified gage
+              lengths. Although elongation is widely used as an indicator of ductility, this property can be significantly
+              affected by testing variables, such as thickness, strain rate, and gage length of test specimens. See Section
+              1.4.1.1 for data basis.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.4.6">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.4.6</span>Reduction of Area (RA)
+            </div>
+            <p>Another property determined from tensile tests is reduction of area, which is also a measure of ductility. Reduction of area is the difference, expressed as a percentage of the original cross sectional area, between the original cross section and the minimum cross sectional area adjacent to the fracture zone of a tested specimen. This property is less affected by testing
+              variables than elongation, but is more difficult to compute on thin section test specimens. See Section
+              1.4.1.1 for data basis.</p>
+          </div>
+
+        <!-- 1.4.5 -->
+        <div class="section lvl-1" id="1.4.5">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.4.5</span>Compressive Properties
+          </div>
+          <p>Results of compression tests completed in accordance with ASTM E 9 are plotted as stress-strain curves similar to those shown for tension in Figure 1.4.4. Preceding remarks concerning tensile properties of materials, except for ultimate stress and elongation, also apply to compressive properties. Moduli are slightly greater in compression for most of the commonly used structural metallic alloys. Special considerations concerning the ultimate compressive stress are described
+              in the following section. An evaluation of techniques for obtaining compressive strength properties of thin
+              sheet materials is outlined in Reference 1.4.5</p>
+
+          <div class="section lvl-2" id="1.4.5.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.5.1</span>Compressive Ultimate Stress (F<sub>cu</sub>)
+            </div>
+            <p>Since the actual failure mode for the highest tension and compression stress is shear, the maximum compression stress is limited to F<sub>tu</sub>. The driver for all the analysis of all structure loaded in compression is the slope of the compression stress strain curve, the tangent modulus.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.5.2">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.5.2</span>Compressive Yield Stress (CYS or F<sub>cy</sub>)
+            </div>
+            <p>Compressive yield stress is measured in a manner identical to that done for tensile yield strength. It is defined as the stress corresponding to 0.002 in./in. plastic strain.</p>
+          </div>
+        </div><!-- /1.4.5 -->
+
+        <!-- 1.4.6 -->
+        <div class="section lvl-1" id="1.4.6">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.4.6</span>Shear Properties
+          </div>
+          <p>Results of torsion tests on round tubes or round solid sections are plotted as torsion stress-strain diagrams. The shear modulus of elasticity is considered a basic shear property. The theoretical ratio between shear and tensile stress for homogeneous, isotropic materials is 0.577. Reference 1.4.6 contains additional information on
+            this subject.</p>
+
+          <div class="section lvl-2" id="1.4.6.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.6.1</span>Modulus of Rigidity (G)
+            </div>
+            <p>This property is the initial slope of the shear stress-strain curve. It is also referred to as the modulus of elasticity in shear. The relation between this property and the modulus of elasticity in tension is expressed for homogeneous isotropic materials by the following equation:</p>
+            <div class="eq-block" id="eq-1.4.6.1">\[ G = \frac{E}{2(1+\mu)} \]<span class="eq-num">(1.4.6.1) shear modulus</span></div>
+          </div>
+
+          <div class="section lvl-2" id="1.4.6.2">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.6.2</span>Proportional Limit Stress in Shear (F<sub>sp</sub>)
+            </div>
+            <p>This property is of particular interest in connection with formulas which are based on considerations of linear elasticity, as it represents the limiting value of shear stress for which such formulas are applicable. This property cannot be determined directly from torsion tests.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.6.3">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.6.3</span>Yield and Ultimate Stresses in Shear (SYS or F<sub>sy</sub>) and (SUS or F<sub>su</sub>)
+            </div>
+            <p>These properties, as usually obtained from ASTM test procedures tests, are not strictly basic properties,
+                as they will depend on the shape of the test specimen. In such cases, they should be treated as moduli and
+                should not be combined with the same properties obtained from other specimen configuration tests.</p>
+                <p>Design values reported for shear ultimate stress (Fsu) in room temperature property tables for
+                aluminum and magnesium thin sheet alloys are based on “punch” shear type tests except when noted.
+                Heavy section test data are based on “pin” tests. Thin aluminum products may be tested to ASTM B 831,
+                which is a slotted shear test. Thicker aluminums use ASTM B 769, otherwise known as the Amsler shear
+                test. These two tests only provide ultimate strength. Shear data for other alloys are obtained from pin
+                tests, except where product thicknesses are insufficient. These tests are used for other alloys; however,
+                the standards don’t specifically cover materials other than aluminum.</p>
+          </div>
+        </div><!-- /1.4.6 -->
+
+        <!-- 1.4.7 -->
+        <div class="section lvl-1" id="1.4.7">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.4.7</span>Bearing Properties
+          </div>
+          <p>Bearing stress limits are of value in the design of mechanically fastened joints and lugs. Only yield and ultimate stresses are obtained from bearing tests. Bearing stress is computed from test data by dividing the load applied to the pin, which bears against the edge of the hole, by the bearing area. Bearing area is the product of the pin diameter and the sheet or plate thickness.</p>
+          <p>A bearing test requires the use of special cleaning procedures as specified in ASTM E 238.
+          Results are identified as “dry-pin” values. The same tests performed without application of ASTM E 238
+          cleaning procedures are referred to as “wet pin” tests. Results from such tests can show bearing stresses
+          at least 10 percent lower than those obtained from “dry pin” tests. See Reference 1.4.7 for additional
+          information. Additionally, ASTM E 238 requires the use of hardened pins that have diameters within
+          0.001 of the hole diameter. As the clearance increases to 0.001 and greater, the bearing yield and failure
+          stress tends to decrease.</p>
+          <p>In the definition of bearing values, t is sheet or plate thickness, D is the pin diameter, and e is the
+          edge distance measured from the center of the hole to the adjacent edge of the material being tested in the
+          direction of applied load.</p>
+          <div class="section lvl-2" id="1.4.7.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.7.1</span>Bearing Yield and Ultimate Stresses (BYS or F<sub>bry</sub>) and (BUS or F<sub>bru</sub>)
+            </div>
+            <p>BUS is the maximum stress withstood by a bearing specimen. BYS is computed from a bearing stress-deformation curve by drawing a line parallel to the initial slope at an offset of 0.02 times the pin diameter.<br><br>Tabulated design properties for bearing yield stress (F<sub>bry</sub>) and bearing ultimate stress (F<sub>bru</sub>) are provided throughout the Handbook for edge margins of e/D = 1.5 and 2.0. Bearing values for e/D of 1.5 are not intended for designs of e/D &lt; 1.5. Bearing values for e/D < 1.5 must be substantiated by adequate tests, subject to the approval of the procuring or certificating regulatory agency. For edge margins between 1.5 and 2.0, linear interpolation of properties may be used.</p>
+            <p>Bearing design properties are applicable to t/D ratios from 0.25 to 0.50. Bearing design values
+              for conditions of t/D < 0.25 or t/D > 0.50 must be substantiated by tests. The percentage curves showing
+              temperature effects on bearing stress may be used with both e/D properties of 1.5 and 2.0.</p>
+            <p>Due to differences in results obtained between dry-pin and wet-pin tests, designers are encouraged
+              to consider the use of a reduction factor with published bearing stresses for use in design.</p>
+          </div>
+        </div><!-- /1.4.7 -->
+
+        <!-- 1.4.8 -->
+        <div class="section lvl-1" id="1.4.8">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.4.8</span>Temperature Effects
+          </div>
+          <p>Temperature effects require additional considerations for static, fatigue and fracture toughness properties. In addition, this subject introduces concerns for time-dependent creep properties.</p>
+
+          <div class="section lvl-2" id="1.4.8.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.8.1</span>Low Temperature
+            </div>
+            <p>Temperatures below room temperature generally cause an increase in strength properties of metallic alloys. Ductility, fracture toughness, and elongation usually decrease.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.8.2">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.8.2</span>Elevated Temperature
+            </div>
+            <p>Temperatures above room temperature usually cause a decrease in the strength properties of metallic alloys. This decrease is dependent on many factors, such as temperature and the time of exposure which may degrade the heat treatment condition, or cause a metallurgical change. Ductility may increase or decrease with increasing temperature depending on the same variables. Because of this dependence of strength and ductility at elevated temperatures on many
+                variables, it is emphasized that the elevated temperature properties obtained from this Handbook be
+                applied for only those conditions of exposure stated herein.</p>
+            <p>The effect of temperature on static mechanical properties is shown by a series of graphs of
+                property (as percentages of the room temperature allowable property) versus temperature. Data used to
+                construct these graphs were obtained from tests conducted over a limited range of strain rates. Caution
+                should be exercised in using these static property curves at very high temperatures, particularly if the
+                strain rate intended in design is much less than that stated with the graphs. The reason for this concern
+                is that at very low strain rates or under sustained loads, plastic deformation or creep deformation may
+                occur to the detriment of the intended structural use.</p>
+
+            <div class="section lvl-3" id="1.4.8.2.1">
+              <div class="section-heading lvl-3">
+                <span class="section-num">1.4.8.2.1</span>Creep and Stress-Rupture Properties
+              </div>
+              <p>Creep is defined as a time-dependent deformation of a material while under an applied load. It is usually regarded as an elevated temperature phenomenon, although some materials creep at room temperature. If permitted to continue indefinitely, creep terminates in rupture. Since creep in service is usually typified by complex conditions of loading
+                  and temperature, the number of possible stress-temperature-time profiles is infinite. For economic reasons,
+                  creep data for general design use are usually obtained under conditions of constant uniaxial loading and
+                  constant temperature in accordance with Reference 1.4.8.2.1(a). Creep data are sometimes obtained under
+                  conditions of cyclic uniaxial loading and constant temperature, or constant uniaxial loading and variable
+                  temperatures. Section 9.3.6 provides a limited amount of creep data analysis procedures. It is recognized
+                  that, when significant creep appears likely to occur, it may be necessary to test under simulated service
+                  conditions because of difficulties posed in attempting to extrapolate from simple to complex stress-
+                  temperature-time conditions.</p>
+              <p>Creep damage is cumulative similar to plastic strain resulting from multiple static loadings. This
+                  damage may involve significant effects on the temper of heat treated materials, including annealing, and the initiation and growth of cracks or subsurface voids within a material. Such effects are often recognized
+                  as reductions in short time strength properties or ductility, or both.</p>
+            </div>
+
+            <div class="section lvl-3" id="1.4.8.2.2">
+              <div class="section-heading lvl-3">
+                <span class="section-num">1.4.8.2.2</span>Creep-Rupture Curve
+              </div>
+              <p>Results of tests conducted under constant loading and
+                constant temperature are usually plotted as strain versus time up to rupture. A typical plot of this nature
+                is shown in Figure 1.4.8.2.2. Strain includes both the instantaneous deformation due to load application
+                and the plastic strain due to creep. Other definitions and terminology are provided in Section 9.3.6.2.</p>
+              <figure class="ref-fig" id="fig-1.4.8.2.2" style="margin:1rem 0;text-align:center;">
+                <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.4.8.2.2.%20Typical%20creep-rupture%20curve.png" alt="Figure 1.4.8.2.2 — Typical creep-rupture curve." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+                <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.4.8.2.2</strong> — Typical creep-rupture curve.</figcaption>
+              </figure>
+            </div>
+
+            <div class="section lvl-3" id="1.4.8.2.3">
+              <div class="section-heading lvl-3">
+                <span class="section-num">1.4.8.2.3</span>Creep or Stress-Rupture Presentations
+              </div>
+              <p>Results of creep or stress-rupture tests conducted over a range of stresses and temperatures are presented as curves of stress versus the logarithm of time to rupture. Each curve represents an average, best-fit description of measured behavior. Modification of such curves into design use are the responsibility of the design community since material applications and regulatory requirements may differ. Refer to Section 9.3.6 for data reduction and
+                presentation methods and References 1.4.8.2.1(b) and (c).</p>
+            </div>
+          </div><!-- /1.4.8.2 -->
+        </div><!-- /1.4.8 -->
+
+        <!-- 1.4.9 -->
+        <div class="section lvl-1" id="1.4.9">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.4.9</span>Fatigue Properties
+          </div>
+          <p>Repeated loads are one of the major considerations for design of both commercial and military aircraft structures. Static loading, preceded by cyclic loads of lesser magnitudes, may result in mechanical behaviors lower than those published in room temperature allowables tables. A fatigue allowables development philosophy is not presented in this Handbook. However, basic laboratory test data are useful for materials selection and are provided in the appropriate materials sections.</p>
+
+          <div class="section lvl-2" id="1.4.9.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.9.1</span>Terminology
+            </div>
+            <p>A number of symbols and definitions are commonly used to describe fatigue test conditions, test results and data analysis techniques. The most important of these are described in Section 9.3.4.2.</p>
+            <p>In the past, common methods of obtaining and reporting fatigue data included results obtained
+              from axial loading tests, plate bending tests, rotating bending tests, and torsion tests. Rotating bending
+              tests apply completely reversed (tension-compression) stresses to round cross section specimens. Tests
+              of this type are now seldom conducted for aerospace use and have therefore been dropped from
+              importance in this Handbook. For similar reasons, flexural fatigue data also have been dropped. No significant amount of torsional fatigue data have ever been made available. Axial loading tests, the only
+              type retained in this Handbook, consist of completely reversed loading conditions (mean stress equals
+              zero) and those in which the mean stress was varied to create different stress (or strain) ratios (R =
+              minimum stress or strain divided by maximum stress or strain). Refer to Reference 1.4.9(a) for load
+              control fatigue testing guidelines and Reference 1.4.9(b) for strain control fatigue testing guidelines.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.9.2">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.9.2</span>Graphical Display of Fatigue Data
+            </div>
+            <p>Results of axial fatigue tests are reported on S-N and ε-N diagrams. Figure 1.4.9.2(a) shows a family of axial load S-N curves. Data for each curve represents a separate R-value.</p>
+            <p>S-N and H - N diagrams are shown in this Handbook with the raw test data plotted for each stress
+                or strain ratio or, in some cases, for a single value of mean stress. A best-fit curve is drawn through the
+                data at each condition. Rationale used to develop best-fit curves and the characterization of all such curves
+                in a single diagram is explained in Section 9.3.4. For load control test data, individual curves are usually
+                based on an equivalent stress that consolidates data for all stress ratios into a single curve. Refer to Figure
+                1.4.9.2(b). For strain control test data, an equivalent strain consolidation method is used.</p>
+              <p>Elevated temperature fatigue test data are treated in the same manner as room temperature data,
+                  as long as creep is not a significant factor and room temperature analysis methods can be applied. In the
+                  limited number of cases where creep strain data have been recorded as a part of an elevated temperature
+                  fatigue test series, S-N (or H - N) plots are constructed for specific creep strain levels. This is provided
+                  in addition to the customary plot of maximum stress (or strain) versus cycles to failure.</p>
+              <p>The above information may not apply directly to the design of structures for several reasons. First,
+                  Handbook information may not take into account specific stress concentrations unique to any given
+                  structural design. Design considerations usually include stress concentrations caused by re-entrant
+                  corners, notches, holes, joints, rough surfaces, structural damage, and other conditions. Localized high
+                  stresses induced during the fabrication of some parts have a much greater influence on fatigue properties
+                  than on static properties. These factors significantly reduce fatigue life below that which is predictable
+                  by estimating smooth specimen fatigue performance with estimated stresses due to fabrication. Fabricated
+                  parts have been found to fail at less than 50,000 cycles of loading when the nominal stress was far below
+                  that which could be repeated many millions of times using a smooth-machined test specimen.</p>
+              <p>Notched fatigue specimen test data are shown in various Handbook figures to provide an
+                  understanding of deleterious effects relative to results for smooth specimens. All of the mean fatigue
+                  curves published in this Handbook, including both the notched fatigue and smooth specimen fatigue
+                  curves, require modification into allowables for design use. Such factors may impose a penalty on cyclic
+                  life or upon stress. This is a responsibility for the design community. Specific reductions vary between
+                  users of such information, and depending on the criticality of application, sources of uncertainty in the
+                  analysis, and requirements of the certificating activity. References 1.4.9.2(a) and (b) contain more specific
+                  information on fatigue testing procedures, organization of test results, influences of various factors, and
+                  design considerations.</p>
+            <figure class="ref-fig" id="fig-1.4.9.2a" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.4.9.2%28a%29.%20Best%20fit%20SN%20curve%20diagram%20for%20a%20material%20at%20various%20stress%20ratios..png" alt="Figure 1.4.9.2(a) — Best fit S/N curve diagram for a material at various stress ratios." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.4.9.2(a)</strong> — Best fit S/N curve diagram for a material at various stress ratios.</figcaption>
+            </figure>
+            <figure class="ref-fig" id="fig-1.4.9.2b" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.4.9.2%28b%29.%20Consolidated%20fatigue%20data%20for%20a%20material%20using%20the%20equivalent%20stress.png" alt="Figure 1.4.9.2(b) — Consolidated fatigue data for a material using the equivalent stress parameter." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.4.9.2(b)</strong> — Consolidated fatigue data for a material using the equivalent stress parameter.</figcaption>
+            </figure>
+          </div>
+        </div><!-- /1.4.9 -->
+
+        <!-- 1.4.10 -->
+        <div class="section lvl-1" id="1.4.10">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.4.10</span>Metallurgical Instability
+          </div>
+          <p>In addition to the retention of strength and ductility, a structural material must also retain surface and internal stability. Surface stability refers to the resistance of the material to oxidizing or corrosive environments. Lack of internal stability is generally manifested (in some ferrous and several other alloys) by carbide precipitation, spheroidization, sigma-phase formation, temper embrittlement, and internal or structural transformation, depending upon the specific conditions of exposure.</p>
+          <p>Environmental conditions, that influence metallurgical stability include heat, level of stress,
+            oxidizing or corrosive media, and nuclear radiation. The effect of environment on the material can be
+            observed as either improvement or deterioration of properties, depending upon the specific imposed
+            conditions. For example, prolonged heating may progressively raise the strength of a metallic alloy as
+            measured on smooth tensile or fatigue specimens. However, at the same time, ductility may be reduced
+            to such an extent that notched tensile or fatigue behavior becomes erratic or unpredictable. The metallurgy
+            of each alloy should be considered in making material selections.</p>
+          <p>Under normal temperatures, i.e., between -65°F and 160°F, the stability of most structural metallic
+            alloys is relatively independent of exposure time. However, as temperature is increased, the metallurgical
+            instability becomes increasingly time dependent. The factor of exposure time should be considered in
+            design when applicable.</p>
+        </div>
+
+        <!-- 1.4.11 -->
+        <div class="section lvl-1" id="1.4.11">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.4.11</span>Biaxial Properties
+          </div>
+          <p>Discussions up to this point pertained to uniaxial conditions of
+            static, fatigue, and creep loading. Many structural applications involve both biaxial and triaxial loadings.
+            Because of the difficulties of testing under triaxial loading conditions, few data exist. However,
+            considerable biaxial testing has been conducted and the following paragraphs describe how these results
+            are presented in this Handbook. This does not conflict with data analysis methods presented in Chapter
+            9. Therein, statistical analysis methodology is presented solely for use in analyzing test data to establish
+            allowables.</p>
+          <p>If stress axes are defined as being mutually perpendicular along x-, y-, and z-directions in a
+              rectangular coordinate system, a biaxial stress is then defined as a condition in which loads are applied
+              in both the x- and y-directions. In some special cases, loading may be applied in the z-direction instead
+              of the y-direction. Most of the following discussion will be limited to tensile loadings in the x- and y-
+              directions. Stresses and strains in these directions are referred to as principal stresses and principal strains.
+              See Reference 1.4.11.</p>
+          <p>When a specimen is tested under biaxial loading conditions, it is customary to plot the results as
+              a biaxial stress-strain diagram. These diagrams are similar to uniaxial stress-strain diagrams shown in
+              Figure 1.4.4. Usually, only the maximum (algebraically larger) principal stress and strain are shown for
+              each test result. When tests of the same material are conducted at different biaxial stress ratios, the
+              resulting curves may be plotted simultaneously, producing a family of biaxial stress-strain curves as
+              shown in Figure 1.4.11 for an isotropic material. For anisotropic materials, biaxial stress-strain curves also
+              require distinction by grain direction.</p>
+          <p>The reference direction for a biaxial stress ratio, i.e., the direction corresponding to B=0, should
+            be clearly indicated with each result. The reference direction is always considered as the longitudinal
+            (rolling) direction for flat products and the hoop (circumferential) direction for shells of revolution, e.g.,
+            tubes, cones, etc. The letter B denotes the ratio of applied stresses in the two loading directions. For
+            example, biaxility ratios of 2 and 0.5 shown in Figure 1.4.11 indicate results representing both biaxial
+            stress ratios of 2 or 0.5, since this is a hypothetical example for an isotropic material, e.g., cross-rolled
+            sheet. In a similar manner, the curve labeled B=1 indicates a biaxial stress-strain result for equally applied stresses in both directions. The curve labeled B = ∞, 0 indicates the biaxial stress-strain behavior when
+            loading is applied in only one direction, e.g., uniaxial behavior. Biaxial property data presented in the
+            Handbook are to be considered as basic material properties obtained from carefully prepared specimens.</p>
+          <figure class="ref-fig" id="fig-1.4.11" style="margin:1rem 0;text-align:center;">
+            <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.4.11.%20Typical%20biaxial%20stress-strain%20diagrams.png" alt="Figure 1.4.11 — Typical biaxial stress-strain diagrams for isotropic materials." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+            <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.4.11</strong> — Typical biaxial stress-strain diagrams for isotropic materials.</figcaption>
+          </figure>
+
+          <div class="section lvl-2" id="1.4.11.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.11.1</span>Biaxial Modulus of Elasticity
+            </div>
+            <p>Referring to Figure 1.4.11, it is noted that the original portion of each stress-strain curve is essentially a straight line. Under biaxial loading conditions, the initial slope of such curves is defined as the biaxial modulus. It is a function of biaxial stress ratio and Poisson's ratio. See Equation 1.3.7.4.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.11.2">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.11.2</span>Biaxial Yield Stress
+            </div>
+            <p>Biaxial yield stress is defined as the maximum principal
+              stress corresponding to 0.002 in./in. plastic strain in the same direction, as determined from a test curve.</p>
+            <p>In the design of aerospace structures, biaxial stress ratios other than those normally used in biaxial
+              testing are frequently encountered. Information can be combined into a single diagram to enable
+              interpolations at intermediate biaxial stress ratios, as shown in Figure 1.4.11.2. An envelope is constructed
+              through test results for each tested condition of biaxial stress ratios. In this case, a typical biaxial yield
+              stress envelope is identified. In the preparation of such envelopes, data are first reduced to
+              nondimensional form (percent of uniaxial tensile yield stress in the specified reference direction), then a
+              best-fit curve is fitted through the nondimensionalized data. Biaxial yield strength allowables are then
+              obtained by multiplying the uniaxial Fty (or Fcy) allowable by the applicable coordinate of the biaxial stress
+              ratio curve. To avoid possible confusion, the reference direction used for the uniaxial yield strength is
+              indicated on each figure.</p>
+            <figure class="ref-fig" id="fig-1.4.11.2" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.4.11.2.%20Typical%20biaxial%20yield%20stress.png" alt="Figure 1.4.11.2 — Typical biaxial yield stress envelope." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.4.11.2</strong> — Typical biaxial yield stress envelope.</figcaption>
+            </figure>
+          </div>
+
+          <div class="section lvl-2" id="1.4.11.3">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.11.3</span>Biaxial Ultimate Stress
+            </div>
+            <p>Biaxial ultimate stress is defined as the highest nominal principal stress attained in specimens of a given configuration, tested at a given biaxial stress ratio. This property is highly dependent upon geometric configuration of the test parts. Therefore, such data should be limited in use to the same design configurations.</p>
+            <p>The method of presenting biaxial ultimate strength data is similar to that described in the preceding
+                section for biaxial yield strength. Both biaxial ultimate strength and corresponding uniform elongation
+                data are reported, when available, as a function of biaxial stress ratio test conditions</p>
+          </div>
+        </div><!-- /1.4.11 -->
+
+        <!-- 1.4.12 -->
+        <div class="section lvl-1" id="1.4.12">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.4.12</span>Fracture Toughness
+          </div>
+          <p>The occurrence of flaws in a structural component is an
+            unavoidable circumstance of material processing, fabrication, or service. Flaws may appear as cracks,
+            voids, metallurgical inclusions, weld defects, design discontinuities, or some combination thereof. The
+            fracture toughness of a part containing a flaw is dependent upon flaw size, component geometry, and a
+            material property defined as fracture toughness. The fracture toughness of a material is literally a measure
+            of its resistance to fracture. As with other mechanical properties, fracture toughness is dependent upon
+            alloy type, processing variables, product form, geometry, temperature, loading rate, and other enviro-
+            nmental factors.</p>
+          <p>This discussion is limited to brittle fracture, which is characteristic of high strength materials under
+            conditions of loading resulting in plane-strain through the cross section. Very thin materials are described
+            as being under the condition of plane-stress. The following descriptions of fracture toughness properties
+            applies to the currently recognized practice of testing specimens under slowly increasing loads. Attendant
+            and interacting conditions of cyclic loading, prolonged static loadings, environmental influences other than
+            temperature, and high strain rate loading are not considered.</p>
+
+          <div class="section lvl-2" id="1.4.12.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.12.1</span>Brittle Fracture
+            </div>
+            <p>For materials that have little capacity for plastic flow, or for flaw
+              and structural configurations, which induce triaxial tension stress states adjacent to the flaw, component
+              behavior is essentially elastic until the fracture stress is reached. Then, a crack propagates from the flaw
+              suddenly and completely through the component. A convenient illustration of brittle fracture is a typical
+              load-compliance record of a brittle structural component containing a flaw, as illustrated in Figure
+              1.4.12.1. Since little or no plastic effects are noted, this mode is termed brittle fracture.</p>
+              <p>This mode of fracture is characteristic of the very high-strength metallic materials under plane-strain conditions.</p>
+            <figure class="ref-fig" id="fig-1.4.12.1" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.4.12.1.%20Typical%20load-deformation.png" alt="Figure 1.4.12.1 — Typical load-deformation record of a structural component containing a flaw subject to brittle fracture." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.4.12.1</strong> — Typical load-deformation record of a structural component containing a flaw subject to brittle fracture.</figcaption>
+            </figure>
+          </div>
+
+          <div class="section lvl-2" id="1.4.12.2">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.12.2</span>Brittle Fracture Analysis
+            </div>
+            <p>The application of linear elastic fracture mechanics
+                has led to the stress intensity concept to relate flaw size, component geometry, and fracture toughness.
+                In its very general form, the stress intensity factor, K, can be expressed as:</p>
+                <p>where</p>
+                f = stress applied to the gross section, ksi<br>
+                a = measure of flaw size, inches<br>
+                Y = factor relating component geometry and flaw size, nondimensional. See Reference 1.4.12.2(a) for values.</p>
+            <div class="eq-block" id="eq-1.4.12.2">\[ K = f\sqrt{\pi a}\cdot Y \]<span class="eq-num">(1.4.12.2) stress intensity factor</span></div>
+            <p>For every structural material, which exhibits brittle fracture (by nature of low ductility or plane-
+              strain stress conditions), there is a lower limiting value of K termed the plane-strain fracture toughness,
+              K<sub>Ic</sub>.</p>
+            <p>The specific application of this relationship is dependent on flaw type, structural configuration and
+                type of loading, and a variety of these parameters can interact in a real structure. Flaws may occur through
+                the thickness, may be imbedded as voids or metallurgical inclusions, or may be partial-through (surface)
+                cracks. Loadings of concern may be tension and/or flexure. Structural components may vary in section
+                size and may be reinforced in some manner. The ASTM Committee E 8 on Fatigue and Fracture has
+                developed testing and analytical techniques for many practical situations of flaw occurrence subject to
+                brittle fracture. They are summarized in Reference 1.4.12.2(a).</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.12.3">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.12.3</span>Critical Plane-Strain Fracture Toughness
+            </div>
+            <p>A tabulation of fracture
+                toughness data is printed in the general discussion prefacing most alloy chapters in this Handbook. These
+                critical plane-strain fracture toughness values have been determined in accordance with recommended
+                ASTM testing practices. This information is provided for information purposes only due to limitations
+                in available data quantities and product form coverages. The statistical reliability of these properties is
+                not known. Listed properties generally represent the average value of a series of test results.</p>
+            <p>Fracture toughness of a material commonly varies with grain direction. When identifying either
+                test results or a general critical plane strain fracture toughness average value, it is customary to specify
+                specimen and crack orientations by an ordered pair of grain direction symbols per ASTM E399.
+                [Reference 1.4.12.2(a).] The first digit denotes the grain direction normal to the crack plane. The second
+                digit denotes the grain direction parallel to the fracture plane. For flat sections of various products, e.g.,
+                plate, extrusions, forgings, etc., in which the three grain directions are designated (L) longitudinal, (T)
+                transverse, and (S) short transverse, the six principal fracture path directions are: L-T, L-S, T-L, T-S, S-L
+                and S-T. Figure 1.4.12.3(a) identifies these orientations. For cylindrical sections where the direction of
+                principle deformation is parallel to the longitudinal axis of the cylinder, the reference directions are
+                identified as in Figure 1.4.12.3(b), which gives examples for a drawn bar. The same system would be
+                useful for extrusions or forged parts having circular cross section.</p>
+            <figure class="ref-fig" id="fig-1.4.12.3a" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.4.12.3%28a%29.%20Typical%20principal%20fracture%20path%20directions.png" alt="Figure 1.4.12.3(a) — Typical principal fracture path directions." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.4.12.3(a)</strong> — Typical principal fracture path directions.</figcaption>
+            </figure>
+            <figure class="ref-fig" id="fig-1.4.12.3b" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.4.12.3%28b%29.%20Typical%20principal%20fracture%20path%20directions.png" alt="Figure 1.4.12.3(b) — Typical principal fracture path directions for cylindrical shapes." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.4.12.3(b)</strong> — Typical principal fracture path directions for cylindrical shapes.</figcaption>
+            </figure>
+
+            <div class="section lvl-3" id="1.4.12.3.1">
+              <div class="section-heading lvl-3">
+                <span class="section-num">1.4.12.3.1</span>Environmental Effects
+              </div>
+              <p>Cyclic loading, even well below the fracture threshold
+                  stress, may result in the propagation of flaws, leading to fracture. Strain rates in excess of standard static
+                  rates may cause variations in fracture toughness properties. There are significant influences of temperature on fracture toughness properties. Temperature effects data are limited. These information are included
+                  in each alloy section, when available.</p>
+                  <p>Under the condition of sustained loading, it has been observed that certain materials exhibit
+                  increased flaw propagation tendencies when situated in either aqueous or corrosive environments. When
+                  such is known to be the case, appropriate precautionary notes have been included with the standard
+                  fracture toughness information.</p>
+            </div>
+          </div><!-- /1.4.12.3 -->
+
+          <div class="section lvl-2" id="1.4.12.4">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.12.4</span>Fracture in Plane-Stress and Transitional-Stress States
+            </div>
+            <p>Plane-strain conditions do not describe the condition of certain structural configurations which are either relatively thin
+              or exhibit appreciable ductility. In these cases, the actual stress state may approach the opposite extreme,
+              plane-stress, or, more generally, some intermediate- or transitional-stress state. The behavior of flaws and
+              cracks under these conditions is different from those of plane-strain. Specifically, under these conditions,
+              significant plastic zones can develop ahead of the crack or flaw tip, and stable extension of the
+              discontinuity occurs as a slow tearing process. This behavior is illustrated in a compliance record by a
+              significant nonlinearity prior to fracture as shown in Figure 1.4.12.4. This nonlinearity results from the
+              alleviation of stress at the crack tip by causing plastic deformation.</p>
+            <figure class="ref-fig" id="fig-1.4.12.4" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.4.12.4.%20Typical%20load-deformation%20record%20for%20non-plane%20strain%20fracture.png" alt="Figure 1.4.12.4 — Typical load-deformation record for non-plane strain fracture." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.4.12.4</strong> — Typical load-deformation record for non-plane strain fracture.</figcaption>
+            </figure>
+
+            <div class="section lvl-3" id="1.4.12.4.1">
+              <div class="section-heading lvl-3">
+                <span class="section-num">1.4.12.4.1</span>Analysis of Plane-Stress and Transitional-Stress State Fracture
+              </div>
+              <p>The basic
+                concepts of linear elastic fracture mechanics as used in plane-strain fracture analysis also applies to these
+                conditions. The stress intensity factor concept, as expressed in general form by Equation 1.4.12.2, is used
+                to relate load or stress, flaw size, component geometry, and fracture toughness.</p>
+              <p>However, interpretation of the critical flaw dimension and corresponding stress has two possibilities. This is illustrated in Figure 1.4.12.4.1. One possibility is the onset of nonlinear displacement
+                with increasing load. The other possibility identifies the fracture condition, usually very close to the maximum load. Generally, these two conditions are separated in applied stress and exhibit large
+                differences in flaw dimensions due to stable tearing.</p>
+              <figure class="ref-fig" id="fig-1.4.12.4.1" style="margin:1rem 0;text-align:center;">
+                <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.4.12.4.1.%20Crack%20growth%20curve.png" alt="Figure 1.4.12.4.1 — Crack growth curve." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+                <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.4.12.4.1</strong> — Crack growth curve.</figcaption>
+              </figure>
+              <p>When a compliance record is transformed into a crack growth curve, the difference between the
+                  two possible K-factor designations becomes more apparent. In most practical cases, the definition of
+                  nonlinear crack length with increasing load is difficult to assess. As a result, an alternate characterization
+                  of this behavior is provided by defining an artificial or “apparent” stress intensity factor.</p>
+              <div class="eq-block" id="eq-1.4.12.4.1">\[ K_{app} = f\sqrt{\pi a_0}\cdot Y \]<span class="eq-num">(1.4.12.4.1) apparent fracture toughness</span></div>
+              <p>The apparent fracture toughness is computed as a function of the maximum stress and initial flaw
+                size. This datum coordinate corresponds to point A in Figure 1.4.12.4.1. This conservative stress intensity
+                factor is a first approximation to the actual property associated with the point of fracture.</p>
+            </div>
+          </div><!-- /1.4.12.4 -->
+
+          <div class="section lvl-2" id="1.4.12.5">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.12.5</span>Apparent Fracture Toughness Values for Plane-Stress and Transitional-Stress States
+            </div>
+            <p>When available, each alloy chapter contains graphical formats of stress
+                versus flaw size. This is provided for each temper, product form, grain direction, thickness, and specimen
+                configuration. Data points shown in these graphs represent the initial flaw size and maximum stress
+                achieved. These data have been screened to assure that an elastic instability existed at fracture, consistent
+                with specimen type. The average Kapp curve, as defined in the following subsections, is shown for each
+                set of data.</p>
+
+            <div class="section lvl-3" id="1.4.12.5.1">
+              <div class="section-heading lvl-3">
+                <span class="section-num">1.4.12.5.1</span>Middle-Tension Panels
+              </div>
+              <p>The calculation of apparent fracture toughness for middle-tension panels is given by the following equation.</p>
+              <div class="eq-block eq-template" id="eq-1.4.12.5.1a">\[ K_{\mathrm{app}} = f_c \left( \pi a_o \cdot \sec \pi a_o / W \right)^{1/2} \]<span class="eq-num">(1.4.12.5.1a) K_app, middle-tension panel</span></div>
+              <p>Data used to compute Kapp values have been screened to ensure that the net section stress at failure did not exceed 80 percent of the tensile yield strength; that is, they satisfied the criterion:</p>
+              <div class="eq-block" id="eq-1.4.12.5.1b">\[ \frac{f_{net}}{F_{ty}} \leq 0.80(TYS)/(1-2a/W) \]<span class="eq-num">(1.4.12.5.1b) net section stress criterion</span></div>
+              <p>This criterion assures that the fracture was an elastic instability and that plastic effects are negligible.</p>
+              <p>The average Kapp parametric curve is presented on each figure as a solid line with multiple
+                extensions where width effects are displayed in the data. As added information, where data are available,
+                the propensity for slow stable tearing prior to fracture is indicated by a crack extension ratio, Δ2a/2ao. The
+                coefficient (2) indicates the total crack length; the half-crack length is designated by the letter “a.” In
+                some cases, where data exist covering a wide range of thicknesses, graphs of Kapp versus thickness are
+                presented.</p>
+            </div>
+          </div><!-- /1.4.12.5 -->
+        </div><!-- /1.4.12 -->
+
+        <!-- 1.4.13 -->
+        <div class="section lvl-1" id="1.4.13">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.4.13</span>Fatigue Crack Growth
+          </div>
+          <p>Crack growth deals with material behavior between crack
+              initiation and crack instability. In small size specimens, crack initiation and specimen failure may be
+              nearly synonymous. However, in larger structural components, the existence of a crack does not
+              necessarily imply imminent failure. Significant structural life exists during cyclic loading and crack
+              growth.</p>
+
+          <div class="section lvl-2" id="1.4.13.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.13.1</span>Fatigue Crack Growth
+            </div>
+            <p>Fatigue crack growth is manifested as the growth or
+                extension of a crack under cyclic loading. This process is primarily controlled by the maximum load or
+                stress ratio. Additional factors include environment, loading frequency, temperature, and grain direction.
+                Certain factors, such as environment and loading frequency, have interactive effects. Environment is
+                important from a potential corrosion viewpoint. Time at stress is another important factor. Standard
+                testing procedures are documented in Reference 1.4.13.1.</p>
+            <p>Fatigue crack growth data presented herein are based on constant amplitude tests. Crack growth
+                behaviors based on spectrum loading cycles are beyond the scope of this Handbook. Constant amplitude
+                data consist of crack length measurements at corresponding loading cycles. Such data are presented as
+                crack growth curves as shown in Figure 1.4.13.1(a).</p>
+            <p>Since the crack growth curve is dependent on initial crack length and the loading conditions, the
+                above format is not the most efficient form to present information. The instantaneous slope, Δa/ΔN,
+                corresponding to a prescribed number of loading cycles, provides a more fundamental characterization
+                of this behavior. In general, fatigue crack growth rate behavior is evaluated as a function of the applied
+                stress intensity factor range, ΔK, as shown in Figure 1.4.13.1(b).</p>
+          </div>
+
+          <div class="section lvl-2" id="1.4.13.2">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.13.2</span>Fatigue Crack Growth Analysis
+            </div>
+            <p> It is known that fatigue-crack-growth behavior under constant-amplitude cyclic conditions is influenced by maximum cyclic stress, Smax, and
+          some measure of cyclic stress range, ΔS (such as stress ratio, R, or minimum cyclic stress, S<sub>min</sub>), the
+          instantaneous crack size, a, and other factors such as environment, frequency, and temperature. Thus,
+          fatigue-crack-growth rate behavior can be characterized, in general form, by the relation</p>
+            <div class="eq-block" id="eq-1.4.13.3a">\[ \frac{da}{dN} ≈ \frac{\Delta a}{\Delta N} = g\!\left(S_{\max},\,\Delta S or R or S_{\min},\,a,\,\ldots\right) \]<span class="eq-num">(1.4.13.3a)</span></div>
+            <p>By applying concepts of linear elastic fracture mechanics, the stress and crack size parameters can
+              be combined into the stress-intensity factor parameter, K, such that Equation 1.4.13.3(a) may be simplified
+              to</p>
+            <div class="eq-block" id="eq-1.4.13.3b">\[ \frac{da}{dN} ≈ \frac{\Delta a}{\Delta N} = g\!\left(K_{\max},\,\Delta K,\,\ldots\right) \]<span class="eq-num">(1.4.13.3b)</span></div>
+            <p>where</p>
+            <p>K<sub>max</sub> = the maximum cyclic stress-intensity factor<br>
+              ΔK = (1-R)K<sub>max</sub>, the range of the cyclic stress-intensity factor, for R ≥ 0<br>
+              ΔK = K<sub>max</sub>, for R ≤ 0.</p>
+            <figure class="ref-fig" id="fig-1.4.13.1a" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.4.13.1%28a%29.%20Fatigue%20crack-%20growth%20curve.png" alt="Figure 1.4.13.1(a) — Fatigue crack-growth curve." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.4.13.1(a)</strong> — Fatigue crack-growth curve.</figcaption>
+            </figure>
+            <figure class="ref-fig" id="fig-1.4.13.1b" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.4.13.1%28b%29.%20Fatigue%20crack-growth%20rate%20curve.png" alt="Figure 1.4.13.1(b) — Fatigue crack-growth-rate curve." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.4.13.1(b)</strong> — Fatigue crack-growth-rate curve.</figcaption>
+            </figure>
+            <p>At present, in the Handbook, the independent variable is considered to be simply ǻK and the data are con-
+                sidered to be parametric on the stress ratio, R, such that Equation 1.4.13.3(b) becomes</p>
+            <div class="eq-block" id="eq-1.4.13.3c">\[ \frac{da}{dN} ≈ \frac{\Delta a}{\Delta N} = g\!\left(\Delta K,\,R\right) \]<span class="eq-num">(1.4.13.3c)</span></div>
+          </div>
+
+          <div class="section lvl-2" id="1.4.13.3">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.4.13.3</span>Fatigue Crack Growth Data Presentation
+            </div>
+            <p>Fatigue crack growth rate data
+              for constant amplitude cyclic loading conditions are presented as logarithmic plots of da/dN versus ǻK.
+              Such information, such as that illustrated in Figure 1.4.13.3, are arranged by material alloy and heat
+              treatment condition. Each curve represents a specific stress ratio, R, environment, and cyclic loading
+              frequency. Specific details regarding test procedures and data interpolations are presented in Chapter 9.</p>
+            <figure class="ref-fig" id="fig-1.4.13.3" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.4.13.3.%20Sample%20display%20of%20fatigue%20crack%20growth%20rate%20data.png" alt="Figure 1.4.13.3 — Sample display of fatigue crack growth rate data." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.4.13.3</strong> — Sample display of fatigue crack growth rate data.</figcaption>
+            </figure>
+          </div>
+        </div><!-- /1.4.13 -->
+      </div><!-- /1.4 -->
+
+
+      <!-- ═══════════════════════════════════════════════════════
+          1.5  TYPES OF FAILURES
+      ═══════════════════════════════════════════════════════ -->
+      <div class="section lvl-0" id="1.5">
+        <div class="section-heading lvl-0">
+          <span class="section-num">1.5</span>Types of Failures
+        </div>
+
+        <div class="section lvl-1" id="1.5.1">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.5.1</span>General
+          </div>
+          <p>In the following discussion, failure will usually indicate fracture of a member or the condition of a member when it has attained maximum load.</p>
+        </div>
+
+        <div class="section lvl-1" id="1.5.2">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.5.2</span>Material Failures
+          </div>
+          <p>Fracture can occur in either ductile or brittle fashions in the same
+              material depending on the state of stress, rate of loading, and environment. The ductility of a material has
+              a significant effect on the ability of a part to withstand loading and delay fracture. Although not a specific
+              design property for ductile materials, some ductility data are provided in the Handbook to assist in material
+              selections. The following paragraphs discuss the relationship between failure and the applied or induced
+              stresses.</p>
+
+          <div class="section lvl-2" id="1.5.2.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.5.2.1</span>Direct Tension or Compression
+            </div>
+            <p>This type of failure is associated with ultimate
+                tensile or compressive stress of the material. For compression, it can only apply to members having large
+                cross sectional dimensions relative to their lengths. See Section 1.4.5.1</p>
+          </div>
+
+          <div class="section lvl-2" id="1.5.2.2">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.5.2.2</span>Shear
+            </div>
+            <p>Pure shear failures are usually obtained when the shear load is transmitted
+              over a very short length of a member. This condition is approached in the case of rivets and bolts. In
+              cases where ultimate shear stress is relatively low, a pure shear failure can result. But, generally members
+              subjected to shear loads fail under the action of the resulting normal stress, usually the compressive stress.
+              See Equation 1.3.3.3. Failure of tubes in torsion are not caused by exceeding the shear ultimate stress, but
+              by exceeding a normal compressive stress which causes the tube to buckle. It is customary to determine
+              stresses for members subjected to shear in the form of shear stresses although they are actually indirect
+              measures of the stresses actually causing failure.</p>
+            </div>
+
+          <div class="section lvl-2" id="1.5.2.3">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.5.2.3</span>Bearing
+            </div>
+            <p>Failure of a material in bearing can consist of crushing, splitting, tearing,
+                or progressive rapid yielding in the direction of load application. Failure of this type depends on the
+                relative size and shape of the two connecting parts. The maximum bearing stress may not be applicable
+                to cases in which one of the connecting members is relatively thin.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.5.2.4">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.5.2.4</span>Bending
+            </div>
+            <p>For sections not subject to geometric instability, a bending failure can be
+              classed as either a tensile or compressive failure. Reference 1.5.2.4 provides methodology by which actual
+              bending stresses above the material proportional limit can be used to establish maximum stress conditions.
+              Actual bending stresses are related to the bending modulus of rupture. The bending modulus of rupture
+              (f<sub>b</sub>) is determined by Equation 1.3.2.3. When the computed bending modulus of rupture is found to be
+              lower than the proportional limit strength, it represents an actual stress. Otherwise, it represents an
+              apparent stress, and is not considered as an actual material strength. This is important when considering
+              complex stress states, such as combined bending and compression or tension.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.5.2.5">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.5.2.5</span>Failure Due to Stress Concentrations
+            </div>
+            <p>Static stress properties represent pristine
+              materials without notches, holes, or other stress concentrations. Such simplistic structural design is not
+              always possible. Consideration should be given to the effect of stress concentrations. When available,
+              references are cited for specific data in various chapters of the Handbook.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.5.2.6">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.5.2.6</span>Failure from Combined Stresses
+            </div>
+            <p>Under combined stress conditions, where
+                failure is not due to buckling or instability, it is necessary to refer to some theory of failure. The
+                “maximum shear” theory is widely accepted as a working basis in the case of isotropic ductile materials.
+                It should be noted that this theory defines failure as the first yielding of a material. Any extension of this
+                theory to cover conditions of final rupture must be based on evidence supported by the user. The failure of brittle materials under combined stresses is generally treated by the “maximum stress” theory. Section
+                1.4.11 contains a more complete discussion of biaxial behavior. References 1.5.2.6(a) through (c) offer
+                additional information.</p>
+          </div>
+        </div><!-- /1.5.2 -->
+
+        <div class="section lvl-1" id="1.5.3">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.5.3</span>Instability Failures
+          </div>
+          <p>Practically all structural members, such as beams and columns,
+              particularly those made from thin material, are subject to failure due to instability. In general, instability
+              can be classed as (1) primary or (2) local. For example, the failure of a tube loaded in compression can
+              occur either through lateral deflection of the tube acting as a column (primary instability) or by collapse
+              of the tube walls at stresses lower than those required to produce a general column failure. Similarly, an
+              I-beam or other formed shape can fail by a general sidewise deflection of the compression flange, by local
+              wrinkling of thin outstanding flanges, or by torsional instability. It is necessary to consider all types of
+              potential failures unless it is apparent that the critical load for one type is definitely the controlling
+              condition.</p>
+          <p>Instability failures can occur in either the elastic range below the proportional limit or in the plastic
+              range. These two conditions are distinguished by referring to either “elastic instability” or “plastic
+              instability” failures. Neither type of failure is associated with a material’s ultimate strength, but largely
+              depends upon geometry.</p>
+          <p>A method for determining the local stability of aluminum alloy column sections is provided in
+            Reference 1.7.1(b). Documents cited therein are the same as those listed in References 3.20.2.2(a) through
+            (e).</p>
+          <div class="section lvl-2" id="1.5.3.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.5.3.1</span>Instability Failures Under Compression
+            </div>
+            <p>Failures of this type are discussed in Section 1.6 (Columns).</p>
+          </div>
+
+          <div class="section lvl-2" id="1.5.3.2">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.5.3.2</span>Instability Failures Under Bending
+            </div>
+            <p>Round tubes when subjected to bending
+              are subject to plastic instability failures. In such cases, the failure criterion is the modulus of rupture.
+              Equation 1.3.2.3, which was derived from theory and confirmed empirically with test data, is applicable.
+              Elastic instability failures of thin walled tubes having high D/t ratios are treated in later sections.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.5.3.3">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.5.3.3</span>Instability Failures Under Torsion
+            </div>
+            <p>The remarks given in the preceding section
+              apply in a similar manner to round tubes under torsional loading. In such cases, the modulus of rupture
+              in torsion is derived through the use of Equation 1.3.2.6. See Reference 1.5.3.3.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.5.3.4">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.5.3.4</span>Failure Under Combined Loadings
+            </div>
+            <p>For combined loading conditions in which
+              failure is caused by buckling or instability, no theory exists for general application. Due to the various
+              design philosophies and analytical techniques used throughout the aerospace industry, methods for
+              computing margin of safety are not within the scope of this Handbook.</p>
+          </div>
+        </div><!-- /1.5.3 -->
+      </div><!-- /1.5 -->
+
+
+      <!-- ═══════════════════════════════════════════════════════
+          1.6  COLUMNS
+      ═══════════════════════════════════════════════════════ -->
+      <div class="section lvl-0" id="1.6">
+        <div class="section-heading lvl-0">
+          <span class="section-num">1.6</span>Columns
+        </div>
+
+        <div class="section lvl-1" id="1.6.1">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.6.1</span>General
+          </div>
+          <p>A theoretical treatment of columns can be found in standard texts on the
+            strength of materials. Some of the problems which are not well defined by theory are discussed in this
+            section. Actual strengths of columns of various materials are provided in subsequent chapters.</p>
+        </div>
+
+        <div class="section lvl-1" id="1.6.2">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.6.2</span>Primary Instability Failures
+          </div>
+          <p>A column can fail through primary instability by
+            bending laterally (stable sections) or by twisting about some axis parallel to its own axis. This latter type
+            of primary failure is particularly common to columns having unsymmetrical open sections. The twisting
+            failure of a closed section column is precluded by its inherently high torsional rigidity. Since the amount
+            of available information is limited, it is advisable to conduct tests on all columns subject to this type of
+            failure.</p>
+
+          <div class="section lvl-2" id="1.6.2.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.6.2.1</span>Columns with Stable Sections
+            </div>
+            <p>The Euler formula for columns which fail by
+              lateral bending is given by Equation 1.3.8.2. A conservative approach in using this equation is to replace
+              the elastic modulus (E) by the tangent modulus (Et) given by Equation 1.3.8.1. Values for the restraint
+              coefficient (c) depend on degrees of ends and lateral fixities. End fixities tend to modify the effective
+              column length as indicated in Equation 1.3.8.1. For a pin-ended column having no end restraint, c = 1.0
+              and L1 = L. A fixity coefficient of c = 2 corresponds to an effective column length of L1 = 0.707 times
+              the total length.</p>
+            <p>The tangent modulus equation takes into account plasticity of a material and is valid when the
+                following conditions are met:</p>
+            <ol type="a">
+              <li>he column adjusts itself to forcible shortening only by bending and not by twisting.</li>
+              <li>No buckling of any portion of the cross section occurs.</li>
+              <li>Loading is applied concentrically along the longitudinal axis of the column.</li>
+              <li>The cross section of the column is constant along its entire length.</li>
+            </ol>
+            <p>MIL-HDBK-5 provides typical stress versus tangent modulus diagrams for many materials, forms,
+              and grain directions. These information are not intended for design purposes. Methodology is contained
+              in Chapter 9 for the development of allowable tangent modulus curves.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.6.2.2">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.6.2.2</span>Column Stress (f<sub>co</sub>)
+            </div>
+            <p>The upper limit of column stress for primary failure is
+              designated as f<sub>co</sub>. By definition, this term should not exceed the compression ultimate strength, regardless
+              of how the latter term is defined.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.6.2.3">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.6.2.3</span>Other Considerations
+            </div>
+            <p>Methods of analysis by which column failure stresses can
+              be computed, accounting for fixities, torsional instability, load eccentricity, combined lateral loads, or
+              varying column sections are contained in References 1.6.2.3(a) through (d).</p>
+          </div>
+        </div><!-- /1.6.2 -->
+
+        <div class="section lvl-1" id="1.6.3">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.6.3</span>Local Instability Failures
+          </div>
+          <p>Columns are subject to failure by local collapse of walls
+            at stresses below the primary failure strength. The buckling analysis of a column subject to local
+            instability requires consideration of the shape of the column cross section and can be quite complex. Local
+            buckling, which can combine with primary buckling, leads to an instability failure commonly identified
+            as crippling.</p>
+
+          <div class="section lvl-2" id="1.6.3.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.6.3.1</span>Crushing or Crippling Stress (f<sub>cc</sub>)
+            </div>
+            <p>The upper limit of column stress for local
+              failure is defined by either its crushing or crippling stress. The strengths of round tubes have been thoroughly investigated and considerable amounts of test results are available throughout literature. Fewer
+              data are available for other cross sectional configurations and testing is suggested to establish specific
+              information, e.g., the curve of transition from local to primary failure.</p>
+          </div>
+        </div><!-- /1.6.3 -->
+
+        <div class="section lvl-1" id="1.6.4">
+          <div class="section-heading lvl-1">
+            <span class="section-num">1.6.4</span>Correction of Column Test Results
+          </div>
+          <p> In the case of columns having unconventional
+            cross sections which are subject to local instability, it is necessary to establish curves of transition from
+            local to primary failure. In determining these column curves, sufficient tests should be made to cover the
+            following points.</p>
+
+          <div class="section lvl-2" id="1.6.4.1">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.6.4.1</span>Nature of "Short Column Curve"
+            </div>
+            <p>Test specimens should cover a range of L'/ρ
+              values. When columns are to be attached eccentrically in structural application, tests should be designed
+              to cover such conditions. This is important particularly in the case of open sections, as maximum load
+              carrying capabilities are affected by locations of load and reaction points.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.6.4.2">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.6.4.2</span>Local Failure
+            </div>
+            <p>When local failure occurs, the crushing or crippling stress can be
+              determined by extending the short column curve to a point corresponding to a zero value for L'/ρ'. When
+              a family of columns of the same general cross section is used, it is often possible to determine a
+              relationship between crushing or crippling stress and some geometric factor. Examples are wall thickness,
+              width, diameter, or some combination of these dimensions. Extrapolation of such data to conditions
+              beyond test geometry extremes should be avoided.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.6.4.3">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.6.4.3</span>Reduction of Column Test Results on Aluminum and Magnesium Alloys to Standard Material
+            </div>
+            <p>The use of correction factors provided in Figures 1.6.4.3(a) through (i) is
+              acceptable to the Air Force, the Navy, the Army, and the Federal Aviation Administration for use in
+              reducing aluminum and magnesium alloys column test data into allowables. (Note that an alternate
+              method is provided in Section 1.6.4.4). In using Figures 1.6.4.3(a) through (i), the correction of column
+              test results to standard material is made by multiplying the stress obtained from testing a column specimen
+              by the factor K. This factor may be considered applicable regardless of the type of failure involved, i.e.,
+              column crushing, crippling or twisting. Note that not all the information provided in these figures pertains
+              to allowable stresses, as explained below.</p>
+            <p>The following terms are used in reducing column test results into allowable column stress:</p>
+            <p>F<sub>cy</sub> is the design compression yield stress of the material in question, applicable to the gage, temper
+                and grain direction along the longitudinal axis of a test column.</p>
+            <p>F<sub>c</sub>' is the maximum test column stress achieved in test. Note that a letter (F) is used rather the
+                customary lower case (f). This value can be an individual test result.</p>
+            <p>F<sub>cy</sub>' is the compressive yield strength of the column material. Note that a letter (F) is used rather than
+                the customary lower case (f). This value can be an individual test result using a standard
+                compression test specimen.</p>
+            <p>Using the ratio of (F<sub>c</sub>' / F<sub>cy</sub>'), enter the appropriate diagram along the abscissa and extend a line
+                  upwards to the intersection of a curve with a value of (F<sub>c</sub>' / F<sub>cy</sub>'). Linear interpolation between curves is
+                  permissible. At this location, extend a horizontal line to the ordinate and read the corresponding K-factor.
+                  This factor is then used as a multiplier on the measured column strength to obtain the allowable. The basis
+                  for this allowable is the same as that noted for the compression yield stress allowable obtained from the
+                  room temperature allowables table.</p>
+            <p>If the above method is not feasible, due to an inability of conducting a standard compression test
+              of the column material, the compression yield stress of the column material may be estimated as follows:
+              Conduct a standard tensile test of the column material and obtain its tensile yield stress. Multiply this
+              value by the ratio of compression-to-tensile yield allowables for the standard material. This provides the
+              estimated compression yield stress of the column material. Continue with the analysis as described above
+              using the compression stress of a test column in the same manner.</p>
+            <p>If neither of the above methods are feasible, it may be assumed that the compressive yield stress
+                allowable for the column is 15 percent greater than minimum established allowable longitudinal tensile
+                yield stress for the material in question.</p>
+          </div>
+
+          <div class="section lvl-2" id="1.6.4.4">
+            <div class="section-heading lvl-2">
+              <span class="section-num">1.6.4.4</span>Reduction of Column Test Results to Standard Material — Alternate Method
+            </div>
+            <p>For materials that are not covered by Figures 1.6.4.4(a) through (i), the following method is acceptable for all materials to the Air Force, the Navy, the Army, and the Federal Aviation Administration.</p>
+            <p>(1) Obtain the column material compression properties: F<sub>cy</sub>, E<sub>c</sub>, n<sub>c</sub>.</p>
+            <p>(2) Determine the test material column stress (f<sub>c</sub>') from one or more column tests</p>
+            <p>(3) Determine the test material compression yield stress (f<sub>cy</sub>'') from one or more tests.</p>
+            <p>(4) Assume E<sub>c</sub> and n<sub>c</sub> from (1) apply directly to the column material. They should be the same material.</p>
+            <p>(5) Assume that geometry of the test column is the same as that intended for design. This means that a critical slenderness ratio value of (L'/ρ) applies to both cases.</p>
+            <p>(6) Using the conservative form of the basic column formula provided in Equation 1.3.8.1, this enables an equality to be written between column test properties and allowables. If</p>
+            <p>(L'/ρ) for design = (L'/ρ) of the column test</p>
+            <p>Then</p>
+            <p>(F<sub>c</sub>/E<sub>t</sub>) for design = (F<sub>c</sub>'/E<sub>t</sub>') from test</p>
+            <p>(7) Tangent modulus is defined as:</p>
+            <div class="eq-block" id="eq-1.6.4.4c">\[ E_t = \frac{df}{de} \]<span class="eq-num">(1.6.4.4c)</span></div>
+            <p>(8) Total strain (e) is defined as the sum of elastic and plastic strains, and throughout the Handbook is used as:</p>         
+            <div class="eq-block" id="eq-1.6.4.4e">\[ e = e_{e} + e_{p} \]<span class="eq-num">(1.6.4.4e)</span></div>
+            <p>or,</p>
+            <div class="eq-block" id="eq-1.6.4.4d">\[ e = \frac{f}{E} + 0.002\left(\frac{f}{F_{y}}\right)^n \]<span class="eq-num">(1.6.4.4d)</span></div>
+            
+            <figure class="ref-fig" id="fig-1.6.4.3a" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.6.4.4%28a%29.%20Nondimensional%20material%20correction%20chart%20for%202024-T3%20sheet..png" alt="Figure 1.6.4.4(a) — Nondimensional material correction chart for 2024-T3 sheet." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.6.4.4(a)</strong> — Nondimensional material correction chart for 2024-T3 sheet.</figcaption>
+            </figure>
+            <figure class="ref-fig" id="fig-1.6.4.3b" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure%201.6.4.4%28b%29.%20Nondimensional%20material%20correction%20chart%20for%202024-T3%20clad%20sheet.png" alt="Figure 1.6.4.4(b) — Nondimensional material correction chart for 2024-T3 clad sheet." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.6.4.4(b)</strong> — Nondimensional material correction chart for 2024-T3 clad sheet.</figcaption>
+            </figure>
+            <figure class="ref-fig" id="fig-1.6.4.3c" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure 1.6.4.4(c).png" alt="Figure 1.6.4.4(c) — Nondimensional material correction chart for 2024-T4 extrusion less than 1/4 inch thick." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.6.4.4(b)</strong> — Nondimensional material correction chart for 2024-T3 clad sheet.</figcaption>
+            </figure>
+            <figure class="ref-fig" id="fig-1.6.4.3d" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure 1.6.4.4(d).png" alt="Figure 1.6.4.4(d) — Nondimensional material correction chart for 2024-T4 extrusion 1/4 to 1-1/2 inches thick." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.6.4.4(b)</strong> — Nondimensional material correction chart for 2024-T3 clad sheet.</figcaption>
+            </figure>
+            <figure class="ref-fig" id="fig-1.6.4.3e" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure 1.6.4.4(e).png" alt="Figure 1.6.4.4(e) —Nondimensional material correction chart for 2024-T3 tubing." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.6.4.4(b)</strong> — Nondimensional material correction chart for 2024-T3 clad sheet.</figcaption>
+            </figure>
+            <figure class="ref-fig" id="fig-1.6.4.3f" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure 1.6.4.4(f).png" alt="Figure 1.6.4.4(f) — Nondimensional material correction chart for clad 2024-T3 sheet." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.6.4.4(b)</strong> — Nondimensional material correction chart for 2024-T3 clad sheet.</figcaption>
+            </figure>
+            <figure class="ref-fig" id="fig-1.6.4.3g" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure 1.6.4.4(g).png" alt="Figure 1.6.4.4(g) — Nondimensional material correction chart for 7075-T6 sheet." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.6.4.4(b)</strong> — Nondimensional material correction chart for 2024-T3 clad sheet.</figcaption>
+            </figure>
+            <figure class="ref-fig" id="fig-1.6.4.3h" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure 1.6.4.4(h).png" alt="Figure 1.6.4.4(h) — Nondimensional material correction chart for AZ31B-F and AZ61A-F extrusion." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.6.4.4(b)</strong> — Nondimensional material correction chart for 2024-T3 clad sheet.</figcaption>
+            </figure>
+            <figure class="ref-fig" id="fig-1.6.4.3i" style="margin:1rem 0;text-align:center;">
+              <img src="img/MIL-HDBK-5/CHAPTER1/Figure 1.6.4.4(i).png" alt="Figure 1.6.4.4(i) — Nondimensional material correction chart for AZ31B-H24 sheet." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+              <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 1.6.4.4(b)</strong> — Nondimensional material correction chart for 2024-T3 clad sheet.</figcaption>
+            </figure>
+            <p>Equation 1.6.4.4(c) can be rewritten as follows:</p>
+            <div class="eq-block" id="eq-1.6.4.4f">\[ E_t = \frac{f}{\frac{f}{E} + 0.002n \left( \frac{f}{f_y} \right)^n} \]<span class="eq-num">(1.6.4.4f)</span></div>
+            <p>Tangent modulus, for the material in question, using its compression allowables is:</p>
+            <div class="eq-block eq-template" id="eq-1.6.4.4g">\[ E_t = \frac{F_c}{\frac{F_c}{E_c} + 0.002n_c \left( \frac{F_c}{F_{cy}} \right)^{n_c}} \]<span class="eq-num">(1.6.4.4g)</span></div>
+            <p>In like manner, tangent modulus for the same material with the desired column configuration is:</p>
+            <div class="eq-block eq-template" id="eq-1.6.4.4h">\[ E_t' = \frac{F_c'}{\frac{F_c'}{E_c} + 0.002n_c \left( \frac{F_c'}{F_{cy'}} \right)^{n_c}} \]<span class="eq-num">(1.6.4.4h)</span></div>
+            <p>Substitution of Equations 1.6.4.4(g) and 1.6.4.4(h) for their respective terms in Equation 1.6.4.4(b) and simplifying provides the following relationship:</p>
+            <div class="eq-block eq-template" id="eq-1.6.4.4i">\[ \frac{F_c}{E_c} + 0.002n_c\left( \frac{F_c}{F_{cy}} \right)^{n_c} = \frac{f_c'}{E_c} + 0.002n_c\left( \frac{f_c'}{f_{cy}'} \right)^{n_c} \]<span class="eq-num">(1.6.4.4i)</span></div>
+            <p>The only unknown in the above equation is the term F<sub>c</sub>, the allowable column compression stress. This property can be solved by an iterative process.</p>
+            <p>This method is also applicable at other than room temperature, having made adjustments for the
+              effect of temperature on each of the properties. It is critical that the test material be the same in all
+              respects as that for which allowables are selected from the Handbook. Otherwise, the assumption
+              made in Equation 1.6.4.4(c) above is not valid. Equation 1.6.4.4(i) must account for such differences
+              in moduli and shape factors when applicable.</p>
+          </div>
+        </div><!-- /1.6.4 -->
+      </div><!-- /1.6 -->
+
+
+      <!-- ═══════════════════════════════════════════════════════
+          1.7  THIN-WALLED AND STIFFENED THIN-WALLED SECTIONS
+      ═══════════════════════════════════════════════════════ -->
+      <div class="section lvl-0" id="1.7">
+        <div class="section-heading lvl-0">
+          <span class="section-num">1.7</span>Thin-Walled and Stiffened Thin-Walled Sections
+        </div>
+        <p>A bibliography of information on thin-walled and stiffened thin-walled sections is contained in References 1.7(a) and (b).</p>
+      </div><!-- /1.7 -->
+    </div>
+</section>
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary p-4 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+            <div id="citationText" class="font-monospace text-dark-emphasis small pt-2">
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    </main>   
+    
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->
+
+<script>
+function initLightbox() {
+  const overlay  = document.getElementById('lightboxOverlay');
+  const img      = document.getElementById('lightboxImg');
+  const caption  = document.getElementById('lightboxCaption');
+  const closeBtn = document.getElementById('lightboxClose');
+
+  if (!overlay) return;
+
+  function openLightbox(src, alt, captionText) {
+    img.src             = src;
+    img.alt             = alt || '';
+    caption.textContent = captionText || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    img.src = '';
+  }
+
+  document.addEventListener('click', e => {
+    const target = e.target.closest('.ref-zoomable');
+    if (!target) return;
+    const figLabel = target.closest('.ref-fig')
+      ?.querySelector('.ref-fig-label')
+      ?.textContent ?? '';
+    openLightbox(target.src, target.alt, figLabel);
+  });
+
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeLightbox();
+  });
+
+  closeBtn.addEventListener('click', closeLightbox);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initLightbox);
+</script>
+
+  </body>
+</html>

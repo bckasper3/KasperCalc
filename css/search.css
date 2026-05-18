@@ -1,0 +1,257 @@
+body .searchbackground{
+    background-color: #f8f9fa;
+    background-image:
+        url('/img/backgrounds/white-wall-3.webp');
+    background-repeat: repeat;
+}
+
+#searchContainer {
+      margin: 2rem auto;
+      max-width: 50rem;
+      text-align: left;
+    }
+
+.form-control:focus {
+  color: #212529;
+  background-color: #fff;
+  border-color: #8a8d92;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(98, 98, 98, 0.25);
+}
+
+.search-icon {
+  cursor: pointer;
+  font-size: 1.25rem;
+}
+
+.align-svg-bottom {
+  flex-direction: row;
+  justify-content: flex-end; /* pushes content to the bottom */
+  width: 100%;
+}
+
+.btn-outline-info-bck {
+  color: var(--section-title-color);
+  border-color: var(--section-title-color);
+  border-width: 2px;
+  font-weight: var(--font-weight-normal);
+}
+
+.btn-outline-info-bck:hover {
+  color: #000;
+  background-color: var(--section-title-color);
+  border-color: var(--section-title-color);
+}
+
+.btn-outline-info-bck1 {
+  color: var(--banner-color);
+  border-color: var(--banner-color);
+  border-width: 2px;
+  font-weight: var(--font-weight-medium);
+}
+.btn-outline-info-bck1:hover {
+  color: #fff;
+  font-weight: var(--font-weight-medium);
+  background-color: var(--banner-color-alpha2);
+  border-color: var(--banner-color-alpha2);
+}
+
+/* Initial hidden state — no animation on first paint */
+.search-container2.no-animate {
+  transition: none !important;
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Default state: collapsed, sits in normal document flow */
+.search-container2 {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  width: 100%;
+  background-color: var(--banner-color);
+  padding: 0rem;
+  box-sizing: border-box;
+  font-weight: var(--font-weight-normal);
+  color: var(--primary-color);
+  font-size: var(--h3-font-size);
+  transition:
+    max-height 0.3s ease,
+    opacity 0.25s ease,
+    padding 0.3s ease;
+}
+
+/* When shown — expands in flow, pushing banner down */
+.search-container2.show {
+  max-height: 5rem;
+  opacity: 1;
+  padding: 0rem;
+}
+
+/* Mobile: searchBox1 hidden by default, shown on toggle */
+#searchBox1 {
+  display: none;
+}
+#searchBox1.show {
+  display: flex;
+}
+
+/* Optional: @starting-style if supported */
+@media (prefers-reduced-motion: no-preference) {
+  .search-container2 {
+    @starting-style {
+      transform: translateY(-2rem) scaleY(0);
+      opacity: 0;
+    }
+  }
+}
+
+/* Entry animation using transform only */
+@media (prefers-reduced-motion: no-preference) {
+  .search-container2 {
+    @starting-style {
+      transform: translateY(-2rem);
+    }
+  }
+}
+
+.icon-active {
+  fill: var(--header-font-color-active)!important; /* or any color you want */
+}
+
+.navbar-search-input {
+  width: 100%;
+  margin: 0 auto 0 auto;
+  font-size: var(--h4-font-size);
+  height: 2.5rem;
+  padding-left: .5rem;
+  z-index:-1;
+}
+
+.navbar-search-input2 {
+  font-size: var(--h3-font-size);
+  line-height: 1.3rem;
+  height: 2.5rem;
+  padding-left: .5rem;
+  min-width: 19rem;
+  z-index:10;
+}
+
+.btn:hover {
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+
+#searchInput {
+    padding: 0.5rem;
+    max-width: 50rem;
+    font-size: var(--h3-font-size);
+    line-height: 1.3rem;
+}
+
+#searchResults {
+    margin-top: 2rem;
+    max-width: 700px;  
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.result {
+    border-bottom: 1px solid #ccc;
+    padding: 1rem 0;
+    text-align: left;
+}
+
+.result a {
+    font-weight: bold;
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.result a:hover {
+    text-decoration: underline;
+}
+
+/* ─── Result count ─────────────────────────────────────────────────────────── */
+.result-count {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* ─── Breadcrumb trail in each result ─────────────────────────────────────── */
+.result-breadcrumb {
+    font-size: 0.78rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.01em;
+}
+.breadcrumb-sep {
+    margin: 0 0.25rem;
+    opacity: 0.6;
+}
+
+/* ─── Result title & snippet ──────────────────────────────────────────────── */
+.result-title {
+    color: #0d6efd;
+    font-size: 1.15rem !important;
+    text-decoration: none;
+}
+.result-title:hover {
+    text-decoration: underline;
+}
+.result-snippet {
+    font-size: 0.95rem !important;
+    color: #444;
+    line-height: 1.5;
+}
+
+/* ─── No-results message ──────────────────────────────────────────────────── */
+.no-results {
+    color: #6c757d;
+    margin-top: 1rem;
+}
+
+/* ─── Recent / Popular suggestions ───────────────────────────────────────── */
+.suggestion-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+.suggestion-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+.suggestion-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+.suggestion-btn {
+    background: none;
+    border: 1px solid #ced4da;
+    border-radius: 2rem;
+    padding: 0.25rem 0.85rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    color: #495057;
+}
+.suggestion-btn:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+    color: #212529;
+}
+.recent-btn {
+    border-style: solid;
+}
+.popular-btn {
+    border-style: dashed;
+}

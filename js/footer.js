@@ -1,0 +1,130 @@
+(function () {
+  const el = document.getElementById('site-footer');
+  if (!el) return;
+
+  el.innerHTML = `
+    <div class="csscontainer mt-2">
+      <div class="footerwrapper">
+
+        <div class="footerRow">
+          <a href="index.html">
+            <div class="logoblock">
+              <img class="logo" src="img/blueK.webp" height="72px;" width="119.44px;" alt="KasperCalcLogo" />
+              <h4 class="footerlogo">KasperCalc</h4>
+            </div>
+          </a>
+          <a class="kofi-link" href="https://ko-fi.com/kaspercalc" target="_blank">
+            <img class="kofi" src="img/kofi5.webp" height="50px" width="198.63013px" alt="Buy Me a Coffee at ko-fi.com" />
+          </a>
+        </div>
+
+        <div class="footerRow">
+          <h4 class="FooterRowTitle"><span class="footerflexbox">Fluids Calculators</span></h4>
+          <div class="footerlink"><a href="fuelHead.html">Jet Fuel Head Pressure</a></div>
+          <div class="footerlink"><a href="PPH.html">Jet Fuel PPH to GPM</a></div>
+          <div class="footerlink"><a href="universalfuelHead.html">Universal Fluid Head</a></div>
+          <div class="footerlink"><a href="universalPPH.html">Universal PPH to GPM</a></div>
+          <div class="footerlink"><a href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head</a></div>
+          <div class="footerlink"><a href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM</a></div>
+          <div class="footerlink"><a href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a></div>
+          <div class="footerlink"><a href="MassFlowConverter.html">Mass Flow Rate Calculator</a></div>
+        </div>
+
+        <div class="footerRow">
+          <h4 class="FooterRowTitle"><span class="footerflexbox">Spring Calculators</span></h4>
+          <div class="footerlink"><a href="SpringCompressionRound.html">Compression Spring Calculator</a></div>
+        </div>
+
+        <div class="footerRow">
+          <h4 class="FooterRowTitle"><span class="footerflexbox">MIL-HDBK-5</span></h4>
+          <div class="footerlink"><a href="Chapter1(general).html">Chapter 1 (General)</a></div>
+          <div class="footerlink"><a href="Chapter2(steel).html">Chapter 2 (Steel)</a></div>
+          <div class="footerlink"><a href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a></div>
+        </div>
+
+        <div class="footerRow">
+          <h4 class="FooterRowTitle"><span class="footerflexbox">Electronics Calculators</span></h4>
+          <div class="footerlink"><a href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a></div>
+          <div class="footerlink"><a href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a></div>
+          <div class="footerlink"><a href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a></div>
+          <div class="footerlink"><a href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a></div>
+        </div>
+
+        <div class="footerRow">
+          <h4 class="FooterRowTitle"><span class="footerflexbox">Jet Fuel</span></h4>
+          <div class="footerlink"><a href="minmaxDensity.html">Min/Max Density</a></div>
+          <div class="footerlink"><a href="nominalDensity.html">Nominal Density</a></div>
+          <div class="footerlink"><a href="kinematicViscosity.html">Kinematic Viscosity</a></div>
+          <div class="footerlink"><a href="surfaceTension.html">Surface Tension</a></div>
+          <div class="footerlink"><a href="vaporPressure.html">Vapor Pressure</a></div>
+          <div class="footerlink"><a href="MultipleOfVolume.html">Multiple of Volume</a></div>
+          <div class="footerlink"><a href="distillationCurves.html">Distillation Curves</a></div>
+        </div>
+
+        <div class="footerRow">
+          <h4 class="FooterRowTitle"><span class="footerflexbox">Propylene Glycol</span></h4>
+          <div class="footerlink"><a href="PGPropertiesGeneral.html">Propylene Glycol General Properties</a></div>
+          <div class="footerlink"><a href="PGFrostProtection.html">Propylene Glycol Frost Protection</a></div>
+          <div class="footerlink"><a href="PGdensity.html">Propylene Glycol Density</a></div>
+          <div class="footerlink"><a href="PGheatcapacity.html">Propylene Glycol Specific Heat Capacity</a></div>
+          <div class="footerlink"><a href="PGthermalconductivity.html">Propylene Glycol Thermal Conductivity</a></div>
+          <div class="footerlink"><a href="PGviscosity.html">Propylene Glycol Viscosity</a></div>
+          <div class="footerlink"><a href="PGPrandltNumber.html">Propylene Glycol Prandtl Number</a></div>
+          <div class="footerlink"><a href="PGThermalExpansionCoefficient.html">Propylene Glycol Thermal Expansion Coefficient</a></div>
+          <div class="footerlink"><a href="PGBoilingPoint.html">Propylene Glycol Boiling Point</a></div>
+        </div>
+
+        <div class="footerRow">
+          <h4 class="FooterRowTitle"><span class="footerflexbox">Ethylene Glycol</span></h4>
+          <div class="footerlink"><a href="EGPropertiesGeneral.html">Ethylene Glycol General Properties</a></div>
+          <div class="footerlink"><a href="EGFrostProtection.html">Ethylene Glycol Frost Protection</a></div>
+          <div class="footerlink"><a href="EGdensity.html">Ethylene Glycol Density</a></div>
+          <div class="footerlink"><a href="EGheatcapacity.html">Ethylene Glycol Specific Heat Capacity</a></div>
+          <div class="footerlink"><a href="EGthermalconductivity.html">Ethylene Glycol Thermal Conductivity</a></div>
+          <div class="footerlink"><a href="EGviscosity.html">Ethylene Glycol Viscosity</a></div>
+          <div class="footerlink"><a href="EGPrandltNumber.html">Ethylene Glycol Prandtl Number</a></div>
+          <div class="footerlink"><a href="EGThermalExpansionCoefficient.html">Ethylene Glycol Thermal Expansion Coefficient</a></div>
+          <div class="footerlink"><a href="EGBoilingPoint.html">Ethylene Glycol Boiling Point</a></div>
+        </div>
+
+        <div class="footerRow">
+          <h4 class="FooterRowTitle"><span class="footerflexbox">Misc Properties</span></h4>
+          <div class="footerlink"><a href="densityWater.html">Water Density</a></div>
+          <div class="footerlink"><a href="densityAirAltitude.html">Air Pressure from Altitude</a></div>
+          <div class="footerlink"><a href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a></div>
+          <div class="footerlink"><a href="SpecificGravityExplanation.html">Specific Gravity Explanation</a></div>
+        </div>
+
+        <div class="footerRow">
+          <h4 class="FooterRowTitle"><span class="footerflexbox">About</span></h4>
+          <div class="footerlink"><a href="about.html">About</a></div>
+        </div>
+
+        <div class="footerRow">
+          <a href="index.html">
+            <div class="logoblock">
+              <img class="logo" src="img/blueK.webp" height="72px;" width="119.44px;" alt="KasperCalcLogo" />
+              <h4 class="footerlogo">KasperCalc</h4>
+            </div>
+          </a>
+          <a class="kofi-link" href="https://ko-fi.com/kaspercalc" target="_blank">
+            <img class="kofi" src="img/kofi5.webp" height="50px" width="198.63013px" alt="Buy Me a Coffee at ko-fi.com" />
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="copyrighttext mt-3">
+      <div>Copyright &copy; <span id="kc-copyright-year"></span> KasperCalc</div>
+      <div>All Rights Reserved. Powered by <a class="footerkoficoffelink" href="https://ko-fi.com/kaspercalc">Coffee.</a></div>
+      <div>
+        KasperCalc is not liable for any errors in the calculations or fluid properties. Please check your work.
+        <a class="footerkoficoffelink" href="disclaimer.html" target="_blank">Disclaimer.</a>
+      </div>
+    </div>
+  `;
+
+  const yearEl = el.querySelector('#kc-copyright-year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+})();

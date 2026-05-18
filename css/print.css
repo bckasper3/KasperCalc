@@ -1,0 +1,269 @@
+/* ============================================================
+   KASPERCALC PRINT STYLESHEET
+   Graphs are pre-rendered to <img> tags before printing,
+   so no canvas visibility tricks are needed.
+   ============================================================ */
+
+@media print {
+
+  @page {
+    size: letter portrait;
+    margin: 0.6in 0.5in;
+  }
+
+  /* ── Body ────────────────────────────────────────────── */
+  body.print-report {
+    background: #fff !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  /* ── Hide everything, then reveal the wrapper ────────── */
+  body.print-report * {
+    visibility: hidden;
+  }
+
+  body.print-report .wrapper,
+  body.print-report .wrapper * {
+    visibility: visible;
+  }
+
+  /* ── DISPLAY:NONE on layout-space culprits ───────────── */
+  /* These still occupy space even when visibility:hidden   */
+
+  body.print-report #springReferenceSection,
+  body.print-report .ref-wrapper,
+  body.print-report .ref-section-wrap,
+  body.print-report section[aria-label="Compression spring reference guide"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  body.print-report nav,
+  body.print-report footer,
+  body.print-report .banner,
+  body.print-report .cssbannercontainer {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  body.print-report #infoModalOverlay,
+  body.print-report #customMaterialOverlay,
+  body.print-report #lightboxOverlay,
+  body.print-report #_printChartOffscreen {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  body.print-report .wrapper > div[style*="height:0.5rem"],
+  body.print-report .wrapper > div[style*="height: 0.5rem"] {
+    display: none !important;
+  }
+
+  /* ── Wrapper ─────────────────────────────────────────── */
+  body.print-report .wrapper {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  /* ── Strip color ─────────────────────────────────────── */
+  body.print-report .wrapper,
+  body.print-report .wrapper * {
+    color: #000 !important;
+    background: #fff !important;
+    border-color: #ccc !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  /* ── Hide non-report elements ────────────────────────── */
+  body.print-report .toolbar,
+  body.print-report #itypeGrid,
+  body.print-report .grp:has(#itypeGrid),
+  body.print-report .bottom-bar,
+  body.print-report .tooltip-icon,
+  body.print-report .tooltip-box,
+  body.print-report [aria-labelledby="reportsTitle"] {
+    display: none !important;
+  }
+
+  /* ── Header ──────────────────────────────────────────── */
+  body.print-report .hdr {
+    background: #fff !important;
+    border: none !important;
+    border-bottom: 2px solid #000 !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    padding: 8px 0 !important;
+    box-shadow: none !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* ── Section panels ──────────────────────────────────── */
+  body.print-report .grp,
+  body.print-report .prop-panel {
+    border: 1px solid #ccc !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 0 8px 0 !important;
+    padding: 6px 8px !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  body.print-report .grp:last-child,
+  body.print-report .prop-panel:last-child {
+    margin-bottom: 0 !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  body.print-report .grp-title {
+    color: #000 !important;
+    border-bottom: 1px solid #999 !important;
+  }
+
+  /* ── Spring properties ───────────────────────────────── */
+  body.print-report .prop-cols {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  body.print-report .prop-row {
+    border-bottom: 0.5px solid #ddd !important;
+  }
+
+  body.print-report .prop-row input[type="number"] {
+    border: none !important;
+    background: transparent !important;
+    width: 90px !important;
+  }
+
+  body.print-report .user-entered {
+    font-weight: 700 !important;
+    background: transparent !important;
+    border-color: #999 !important;
+  }
+
+  body.print-report input.warn,
+  body.print-report input.err,
+  body.print-report input.ok {
+    background: transparent !important;
+    border-color: #ccc !important;
+  }
+
+  body.print-report .status-dot,
+  body.print-report .status-dot.ok,
+  body.print-report .status-dot.warn,
+  body.print-report .status-dot.err {
+    background: #000 !important;
+    border: 1px solid #000 !important;
+  }
+
+  /* ── Load table ──────────────────────────────────────── */
+  body.print-report .lt input {
+    border: none !important;
+    background: transparent !important;
+    font-weight: 400 !important;
+  }
+
+  body.print-report .lt th {
+    border-bottom: 1.5px solid #000 !important;
+    background: #f0f0f0 !important;
+    color: #000 !important;
+  }
+
+  body.print-report .lt tr:nth-child(even) td {
+    background: #f8f8f8 !important;
+  }
+
+  /* ── Tooltips ────────────────────────────────────────── */
+  body.print-report .tooltip-wrap {
+    display: inline !important;
+  }
+
+  body.print-report .tooltip-icon {
+    display: none !important;
+  }
+
+  /* ── Wire availability ───────────────────────────────── */
+  body.print-report .wire-chip {
+    background: transparent !important;
+    border: 1px solid #ccc !important;
+    color: #000 !important;
+  }
+
+  /* ================================================================
+     GRAPHS
+     Charts are pre-rendered as <img> tags by printHelpers.js
+     before window.print() is called, so we just need to:
+     - show the graph banner and panels
+     - show the injected <img> tags
+     - hide the real canvases (already hidden by JS)
+     ================================================================ */
+
+  body.print-report:not(.print-with-graphs) .graph-banner {
+    display: none !important;
+  }
+
+  body.print-report.print-with-graphs .graph-banner {
+    display: block !important;
+    visibility: visible !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  body.print-report.print-with-graphs .graph-banner * {
+    visibility: visible !important;
+  }
+
+  body.print-report.print-with-graphs .graph-tab-row {
+    display: none !important;
+  }
+
+  /* Show all panels — they now contain <img> tags, not canvases */
+  body.print-report.print-with-graphs .graph-content {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 4px 8px !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-bottom: 8px !important;
+    border-bottom: 1px solid #eee !important;
+  }
+
+  body.print-report.print-with-graphs .graph-content:last-child {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* The injected chart images */
+  body.print-report.print-with-graphs .graph-content img[data-print-chart] {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    height: 300px !important;
+    object-fit: fill !important;
+    background: #fff !important;
+  }
+
+  /* Real canvases are hidden by JS — ensure they stay hidden in print too */
+  body.print-report.print-with-graphs .graph-content canvas {
+    display: none !important;
+  }
+}

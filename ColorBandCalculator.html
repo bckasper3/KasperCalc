@@ -1,0 +1,902 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: Color Band Calculator</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, bckasper3, Color Band Calculator, Resistor Color Code, Capacitor Color Code, Inductor Color Code, Electronics Calculator, color band decoder" />
+    <meta name="description" content="Decode resistor, capacitor, and inductor color bands with KasperCalc's color band calculator. Supports 3 to 6 band coding for all common component types." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XLCN0GJQ0');
+    </script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      /* ================================================================
+         COLOR BAND CALCULATOR — Embedded Styles
+         ================================================================ */
+
+      /* ---- Selectors (bands, mode, capacitor type) ---- */
+      .cbc-selector {
+        display: flex;
+        flex-direction: row;
+        gap: 1.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        font-weight: bold;
+        font-size: 1.1rem;
+        user-select: none;
+        margin: 0.6rem 0;
+      }
+
+      .cbc-opt {
+        padding: 0.35rem 0.75rem 0.25rem;
+        cursor: pointer;
+        border-radius: 3px;
+        border: 2px solid transparent;
+        transition: background-color 0.15s, color 0.15s;
+      }
+
+      .cbc-opt:hover { text-decoration: underline; }
+
+      .cbc-opt-active {
+        background-color: #444;
+        color: #f5f5f5;
+      }
+
+      /* ---- SVG component picture ---- */
+      #cbc-svg-wrap {
+        margin: 1.5rem auto 0.5rem;
+        max-width: 22rem;
+      }
+
+      #cbc-svg-wrap svg rect {
+        transition: fill 0.2s ease-in-out;
+      }
+
+      /* ---- Value display ---- */
+      #cbc-value {
+        font-size: 1.7rem;
+        text-align: center;
+        margin: 0.5rem 0 0;
+        line-height: 140%;
+      }
+
+      #cbc-value-span {
+        font-size: 1rem;
+        text-align: center;
+        margin: 0 0 0.75rem;
+        opacity: 0.45;
+      }
+
+      /* ---- Color band table ---- */
+      .cbc-table-wrap {
+        overflow-x: auto;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 1rem;
+      }
+
+      .cbc-columns {
+        display: flex;
+        flex-direction: row;
+        gap: 0;
+        margin: 0.5rem auto;
+        user-select: none;
+      }
+
+      .cbc-col {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .cbc-col-title {
+        text-align: center;
+        font-size: 0.72rem;
+        font-weight: bold;
+        height: 1.5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+        opacity: 0.5;
+        transition: opacity 0.15s;
+        white-space: nowrap;
+      }
+
+      .cbc-col:hover .cbc-col-title { opacity: 1; }
+
+      .cbc-cell {
+        width: 4.5rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #666;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: bold;
+        transition: box-shadow 0.12s;
+        position: relative;
+      }
+
+      .cbc-cell + .cbc-cell { border-top: none; }
+
+      .cbc-col:not(:last-child) .cbc-cell { border-right: 0; }
+
+      .cbc-columns > .cbc-col:first-child .cbc-cell:first-child { border-top-left-radius: 3px; }
+      .cbc-columns > .cbc-col:first-child .cbc-cell:last-child  { border-bottom-left-radius: 3px; }
+      .cbc-columns > .cbc-col:last-child  .cbc-cell:first-child { border-top-right-radius: 3px; }
+      .cbc-columns > .cbc-col:last-child  .cbc-cell:last-child  { border-bottom-right-radius: 3px; }
+
+      .cbc-cell-empty {
+        cursor: not-allowed;
+        background-color: #ebebeb !important;
+        color: transparent !important;
+        border-color: #ccc;
+      }
+
+      .cbc-cell-selected {
+        font-weight: 900;
+        text-decoration: underline;
+        box-shadow: inset 0 0 0 2.5px rgba(0,0,0,0.55);
+        z-index: 1;
+      }
+
+      .cbc-cell:not(.cbc-cell-empty):hover {
+        box-shadow: inset 0 0 0 2px rgba(0,0,0,0.3);
+      }
+
+      /* ---- Mode tabs ---- */
+      .cbc-mode-tabs {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 0.75rem 0 0.25rem;
+      }
+
+      .cbc-tab-active {
+        background-color: var(--section-title-color, #4a6fa5) !important;
+        color: #fff !important;
+        border-color: var(--section-title-color, #4a6fa5) !important;
+      }
+
+      /* ---- Mobile ---- */
+      @media screen and (max-width: 600px) {
+        .cbc-columns { width: 100%; }
+        .cbc-col { flex: 1; }
+        .cbc-cell { width: auto; font-size: 0.8rem; }
+        #cbc-value { font-size: 1.25rem; }
+        .cbc-selector { gap: 0.75rem; font-size: 1rem; }
+      }
+
+      @media screen and (max-width: 400px) {
+        .cbc-cell { height: 1.7rem; font-size: 0.72rem; }
+        #cbc-value { font-size: 1rem; }
+        .cbc-selector { gap: 0.4rem; font-size: 0.9rem; }
+      }
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityWater.html">Water Density</a>
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item" style="padding-right: 0px;">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext" id="cbc-banner-title">
+                Resistor Color Band Calculator
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODE TABS -->
+      <section>
+        <div class="csscontainer">
+          <div class="cbc-mode-tabs">
+            <a href="#resistor.html" class="custom-link custom-btn btn d-inline-block cbc-tab" id="cbc-tab-resistor">Resistor</a>
+            <a href="#capacitor.html" class="custom-link custom-btn btn d-inline-block cbc-tab" id="cbc-tab-capacitor">Capacitor</a>
+            <a href="#inductor.html" class="custom-link custom-btn btn d-inline-block cbc-tab" id="cbc-tab-inductor">Inductor</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- CALCULATOR -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12" id="cbc-container">
+
+            <!-- Bands count selector -->
+            <div id="cbc-bands-sel" class="cbc-selector"></div>
+
+            <!-- Capacitor type selector (hidden unless in capacitor mode) -->
+            <div id="cbc-type-sel" class="cbc-selector" style="display:none;"></div>
+
+            <!-- SVG component picture -->
+            <div id="cbc-svg-wrap"></div>
+
+            <!-- Value / tolerance display -->
+            <div id="cbc-value"></div>
+            <div id="cbc-value-span"></div>
+
+            <!-- Color band table -->
+            <div class="cbc-table-wrap">
+              <div id="cbc-table" class="cbc-columns"></div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ALSO SEE -->
+      <!-- <section>
+        <div class="col-lg-12 col-12">
+          <div class="mx-auto mt-4 text-center">
+            <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;">Also See:&nbsp;&nbsp;</h2>
+            <a href="SpringCompressionRound.html" class="custom-link custom-btn btn d-inline-block">Compression Spring Calculator</a>
+          </div>
+        </div>
+      </section> -->
+
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary p-4 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+            <div id="citationText" class="font-monospace text-dark-emphasis small pt-2">
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    </main>   
+    
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->    
+
+
+
+    <!-- =====================================================================
+         EMBEDDED JAVASCRIPT — Color Band Calculator
+         ===================================================================== -->
+    <script>
+
+      // -------------------------------------------------------------------
+      // DATA TABLES
+      // Color index order: Black=0, Brown=1, Red=2, Orange=3, Yellow=4,
+      //   Green=5, Blue=6, Violet=7, Grey=8, White=9, Gold=10, Silver=11
+      // null = color not valid for that parameter
+      // -------------------------------------------------------------------
+      const COLORS = ['Black','Brown','Red','Orange','Yellow','Green','Blue','Violet','Grey','White','Gold','Silver'];
+
+      const DIGIT_VALS      = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,    null, null];
+      const MULT_VALS       = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,    -1,   -2  ];
+      const RES_TOL_VALS    = [null, 1, 2, null, null, 0.5, 0.25, 0.1, null, null, 5, 10];
+      const TEMP_COEF_VALS  = [250, 100, 50, 15, 25, 20, 10, 5, 1, null, null, null];
+
+      const IND_MULT_VALS   = [0, 1, 2, 3, 4, 5, 6, null, null, null, -1, -2];
+      const IND_TOL_VALS    = [20, 1, 2, 3, 4, null, null, null, null, null, 5, 10];
+
+      const CAP_MULT_VALS   = [0, 1, 2, 3, 4, 5, 6, null, -2, -1, -1, -2];
+      const CAP_TOL_VALS    = [20, 1, 2, 3, 4, 5, null, null, null, 10, 5, 10];
+      const CAP_SMALL_TOL   = [2, 0.1, 0.25, null, null, 0.5, null, null, null, 1, null, null];
+      const CAP_TEMP_COEF   = [null, -33, -75, -150, -220, -330, -470, -750, null, null, null, null];
+
+      const VOLT_J = [4,    6,   10,  15,  20,  25,  35,  50,  null, 3,    null, null];
+      const VOLT_K = [100,  200, 300, 400, 500, 600, 700, 800, 900,  1000, 2000, null];
+      const VOLT_L = [null, 100, 250, null, 400, null, 630, null, null, null, null, null];
+      const VOLT_M = [10,   1.6, 4,   40,  6.3, 16,  null, null, 25, 2.5,  null, null];
+      const VOLT_N = [10,   null, 35, null, 6,   15,  20,  null, 25,  3,   null, null];
+
+      function getVoltRatings(type) {
+        return { J:VOLT_J, K:VOLT_K, L:VOLT_L, M:VOLT_M, N:VOLT_N }[type] || VOLT_J;
+      }
+
+      function getCapTolVals(pF) {
+        return pF < 10 ? CAP_SMALL_TOL : CAP_TOL_VALS;
+      }
+
+      function lookupVal(colorName, arr) {
+        const i = COLORS.indexOf(colorName);
+        return (i < 0 || arr[i] === null || arr[i] === undefined) ? 0 : arr[i];
+      }
+
+      // -------------------------------------------------------------------
+      // STATE
+      // -------------------------------------------------------------------
+      let currentMode = 'resistor';
+
+      const rState = { bands:4, d1:'Brown', d2:'Black', d3:'Black', mult:'Red', tol:'Gold', tc:'Yellow' };
+      const iState = { bands:4, d1:'Brown', d2:'Black', mult:'Black', tol:'Gold' };
+      const cState = { bands:4, type:'J', d1:'Brown', d2:'Black', mult:'Black', tol:'Black', tc:'Brown', volt:'Black' };
+
+      // -------------------------------------------------------------------
+      // COLORS — cell backgrounds & SVG fills
+      // -------------------------------------------------------------------
+      const CELL_BG = {
+        Black:   '#333',
+        Brown:   '#ab7951',
+        Red:     '#d74d5d',
+        Orange:  '#f59149',
+        Yellow:  '#f9f06b',
+        Green:   '#3fd690',
+        Blue:    '#4b91e6',
+        Violet:  '#b079db',
+        Grey:    '#999',
+        White:   '#fefefe',
+        Gold:    'radial-gradient(circle at top, #ffe054 0%, #fdb931 50%, #9f7928 100%)',
+        Silver:  'radial-gradient(circle at top, #eee 0%, #aaaaaf 100%)',
+      };
+
+      const CELL_TEXT = {
+        Black:'#fff', Brown:'#fff', Red:'#fff', Orange:'#000',
+        Yellow:'#333', Green:'#000', Blue:'#fff', Violet:'#fff',
+        Grey:'#000', White:'#333', Gold:'#000', Silver:'#000',
+      };
+
+      // SVG fill values (solid hex for body, url() for gradients)
+      const SVG_FILL = {
+        Black:  '#333',
+        Brown:  '#63452c',
+        Red:    '#a51d2d',
+        Orange: '#e66100',
+        Yellow: '#f9f06b',
+        Green:  '#26a269',
+        Blue:   '#1a5fb4',
+        Violet: '#613583',
+        Grey:   '#999',
+        White:  '#fefefe',
+        Gold:   'url(#gradientGold)',
+        Silver: 'url(#gradientSilver)',
+      };
+
+      // -------------------------------------------------------------------
+      // MATH HELPERS  (ported from om-master/src/math.ts)
+      // -------------------------------------------------------------------
+      function getPrefix(value) {
+        let prefix = '';
+        if (value < 1) {
+          if      (value < 1e-9)  { value *= 1e12; prefix = 'p'; }
+          else if (value < 1e-6)  { value *= 1e9;  prefix = 'n'; }
+          else if (value < 1e-3)  { value *= 1e6;  prefix = 'μ'; } // μ
+          else                    { value *= 1e3;  prefix = 'm'; }
+        } else if (value >= 1000) {
+          if      (value < 1e6)   { value /= 1e3;  prefix = 'k'; }
+          else if (value < 1e9)   { value /= 1e6;  prefix = 'M'; }
+          else                    { value /= 1e9;  prefix = 'G'; }
+        }
+        return [parseFloat(value.toFixed(2)), prefix];
+      }
+
+      function getInterval(value, tolerance) {
+        let frac = 0;
+        if      (value < 1)  frac = 4;
+        else if (value < 10) frac = 2;
+        const lo = parseFloat(((1 - tolerance / 100) * value).toFixed(frac));
+        const hi = parseFloat(((1 + tolerance / 100) * value).toFixed(frac));
+        return [lo.toLocaleString('en-US'), hi.toLocaleString('en-US')];
+      }
+
+      // -------------------------------------------------------------------
+      // VALUE CALCULATIONS
+      // -------------------------------------------------------------------
+      function calcResistor() {
+        let digits = 10 * lookupVal(rState.d1, DIGIT_VALS) + lookupVal(rState.d2, DIGIT_VALS);
+        if (rState.bands >= 5) digits = 10 * digits + lookupVal(rState.d3, DIGIT_VALS);
+        const tol   = rState.bands === 3 ? 20 : lookupVal(rState.tol, RES_TOL_VALS);
+        const ohms  = digits * Math.pow(10, lookupVal(rState.mult, MULT_VALS));
+        const tc    = rState.bands === 6 ? '&nbsp;<span style="white-space:nowrap">' + lookupVal(rState.tc, TEMP_COEF_VALS) + 'ppm/°C</span>' : '';
+        const [val, pfx] = getPrefix(ohms);
+        const [lo, hi]   = getInterval(ohms, tol);
+        return {
+          display: '<span style="white-space:nowrap">' + val + pfx + 'Ω</span> <span style="white-space:nowrap">± ' + tol + '%</span>' + tc,
+          range:   lo + 'Ω ≤ R ≤ ' + hi + 'Ω'
+        };
+      }
+
+      function calcInductor() {
+        const digits = 10 * lookupVal(iState.d1, DIGIT_VALS) + lookupVal(iState.d2, DIGIT_VALS);
+        const tol    = lookupVal(iState.tol, IND_TOL_VALS);
+        const uH     = digits * Math.pow(10, lookupVal(iState.mult, IND_MULT_VALS));
+        const [val, pfx] = getPrefix(uH / 1e6);
+        const [lo, hi]   = getInterval(uH, tol);
+        return {
+          display: '<span style="white-space:nowrap">' + val + pfx + 'H</span> <span style="white-space:nowrap">± ' + tol + '%</span>',
+          range:   lo + 'μH ≤ L ≤ ' + hi + 'μH'
+        };
+      }
+
+      function calcCapacitor() {
+        const digits  = 10 * lookupVal(cState.d1, DIGIT_VALS) + lookupVal(cState.d2, DIGIT_VALS);
+        const pF      = digits * Math.pow(10, lookupVal(cState.mult, CAP_MULT_VALS));
+        const tolArr  = getCapTolVals(pF);
+        const tol     = lookupVal(cState.tol, tolArr);
+        const [val, pfx] = getPrefix(pF / 1e12);
+        const [lo, hi]   = getInterval(pF, tol);
+        const voltVal = lookupVal(cState.volt, getVoltRatings(cState.type));
+        const voltStr = cState.bands >= 4 ? ' <span style="white-space:nowrap">' + voltVal + 'V</span>' : '';
+        return {
+          display: '<span style="white-space:nowrap">' + val + pfx + 'F</span> <span style="white-space:nowrap">± ' + tol + '%</span>' + voltStr,
+          range:   lo + 'pF ≤ C ≤ ' + hi + 'pF'
+        };
+      }
+
+      // -------------------------------------------------------------------
+      // SVG BUILDERS  (translated from om-master/src/Resistor.tsx)
+      // -------------------------------------------------------------------
+      const SVG_DEFS = `
+        <defs>
+          <linearGradient id="gradientGold" gradientUnits="userSpaceOnUse" x1="500" y1="250" x2="500" y2="0">
+            <stop style="stop-color:#9f7928;stop-opacity:1" offset="0"/>
+            <stop style="stop-color:#ffe054;stop-opacity:1" offset="1"/>
+          </linearGradient>
+          <linearGradient id="gradientSilver" gradientUnits="userSpaceOnUse" x1="500" y1="200" x2="500" y2="0">
+            <stop style="stop-color:#aaaaaf;stop-opacity:1" offset="0"/>
+            <stop style="stop-color:#eee;stop-opacity:1" offset="1"/>
+          </linearGradient>
+        </defs>`;
+
+      function band(color, x, wide) {
+        return '<rect style="fill:' + SVG_FILL[color] + '" width="' + (wide ? 60 : 30) + '" height="220" x="' + x + '" y="0"/>';
+      }
+
+      function buildResistorSVG() {
+        const s = rState;
+        let rects = band(s.d1, 223);
+        rects += band(s.d2, 338);
+        if (s.bands >= 5) rects += band(s.d3, 411);
+        rects += band(s.mult, 485);
+        if (s.bands >= 4) rects += band(s.tol, 631);
+        if (s.bands === 6) rects += band(s.tc, 747);
+
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 220">' + SVG_DEFS + `
+          <clipPath clipPathUnits="userSpaceOnUse" id="clipPath">
+            <path d="m 260,10 h 20 q 20,0 40,20 h 360 q 20,-20 40,-20 h 40 c 80,0 80,30 80,100 0,70 0,100 -80,100 h -40 q -20,0 -40,-20 H 320 q -20,20 -40,20 h -40 c -80,0 -80,-30 -80,-100 0,-70 0,-100 80,-100 z" fill="#000"/>
+          </clipPath>
+          <rect fill="#888" width="960" height="10" x="20" y="113"/>
+          <g clip-path="url(#clipPath)">
+            <rect fill="#ebc696" width="710" height="220" x="140" y="0"/>
+            ` + rects + `
+            <rect fill="rgba(0,0,0,0.07)" width="1000" height="300" x="0" y="116"/>
+          </g>
+        </svg>`;
+      }
+
+      function buildInductorSVG() {
+        const s = iState;
+        let rects = '';
+        if (s.bands === 5) rects += band('Silver', 280, true);
+        rects += band(s.d1, 390);
+        rects += band(s.d2, 464);
+        rects += band(s.mult, 538);
+        rects += band(s.tol, 612);
+
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 220">' + SVG_DEFS + `
+          <clipPath clipPathUnits="userSpaceOnUse" id="clipPath">
+            <path d="m 240 10 h 520 c 80 0 80 30 80 100 c 0 70 0 100 -80 100 h -520 c -80 0 -80 -30 -80 -100 c 0 -70 0 -100 80 -100 z" fill="#000"/>
+          </clipPath>
+          <rect fill="#888" width="960" height="10" x="20" y="113"/>
+          <g clip-path="url(#clipPath)">
+            <rect fill="#63c7c2" width="710" height="220" x="140" y="0"/>
+            ` + rects + `
+            <rect fill="rgba(0,0,0,0.07)" width="1000" height="300" x="0" y="116"/>
+          </g>
+        </svg>`;
+      }
+
+      function buildCapacitorSVG() {
+        const s = cState;
+        let rects = band(s.d1, 300, true);
+        rects += band(s.d2, 360, true);
+        rects += band(s.mult, 420, true);
+        if (s.bands === 5) rects += band(s.tol, 480, true);
+        if (s.bands === 4) rects += band(s.volt, 480, true);
+        if (s.bands >= 4)  rects += band(s.volt, 540, true);
+
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 220">' + SVG_DEFS + `
+          <clipPath clipPathUnits="userSpaceOnUse" id="clipPath">
+            <path d="m 380 0 h 140 c 80 0 80 30 80 110 c 0 70 0 110 -80 110 h -140 c -80 0 -80 -30 -80 -110 c 0 -70 0 -110 80 -110 z" fill="#000"/>
+          </clipPath>
+          <rect fill="#888" width="220" height="10" x="590" y="50"/>
+          <rect fill="#888" width="220" height="10" x="590" y="166"/>
+          <g clip-path="url(#clipPath)">
+            ` + rects + `
+            <rect fill="rgba(0,0,0,0.07)" width="1000" height="300" x="0" y="116"/>
+          </g>
+        </svg>`;
+      }
+
+      // -------------------------------------------------------------------
+      // FORMAT cell value (multiplier uses superscript notation)
+      // -------------------------------------------------------------------
+      function fmtCell(val, superscript) {
+        if (!superscript) return String(val);
+        if (val === 0) return '1';
+        if (val === 1) return '10';
+        return '10<sup>' + val + '</sup>';
+      }
+
+      // -------------------------------------------------------------------
+      // TABLE COLUMN DEFINITIONS
+      // -------------------------------------------------------------------
+      function getColumns() {
+        if (currentMode === 'resistor') {
+          const s = rState;
+          const cols = [
+            { title:'1st Digit',  vals:DIGIT_VALS,    sel:s.d1,   key:'d1',   sup:false },
+            { title:'2nd Digit',  vals:DIGIT_VALS,    sel:s.d2,   key:'d2',   sup:false },
+          ];
+          if (s.bands >= 5) cols.push({ title:'3rd Digit', vals:DIGIT_VALS, sel:s.d3, key:'d3', sup:false });
+          cols.push({ title:'Multiplier', vals:MULT_VALS, sel:s.mult, key:'mult', sup:true });
+          if (s.bands >= 4) cols.push({ title:'Tolerance', vals:RES_TOL_VALS, sel:s.tol, key:'tol', sup:false });
+          if (s.bands === 6) cols.push({ title:'Temp Coeff', vals:TEMP_COEF_VALS, sel:s.tc, key:'tc', sup:false });
+          return cols;
+
+        } else if (currentMode === 'inductor') {
+          const s = iState;
+          return [
+            { title:'1st Digit',  vals:DIGIT_VALS,    sel:s.d1,   key:'d1',   sup:false },
+            { title:'2nd Digit',  vals:DIGIT_VALS,    sel:s.d2,   key:'d2',   sup:false },
+            { title:'Multiplier', vals:IND_MULT_VALS, sel:s.mult, key:'mult', sup:true  },
+            { title:'Tolerance',  vals:IND_TOL_VALS,  sel:s.tol,  key:'tol',  sup:false },
+          ];
+
+        } else { // capacitor
+          const s = cState;
+          const digits = 10 * lookupVal(s.d1, DIGIT_VALS) + lookupVal(s.d2, DIGIT_VALS);
+          const pF     = digits * Math.pow(10, lookupVal(s.mult, CAP_MULT_VALS));
+          const tolArr = getCapTolVals(pF);
+          const voltArr = getVoltRatings(s.type);
+          const cols = [
+            { title:'1st Digit',  vals:DIGIT_VALS,    sel:s.d1,   key:'d1',   sup:false },
+            { title:'2nd Digit',  vals:DIGIT_VALS,    sel:s.d2,   key:'d2',   sup:false },
+            { title:'Multiplier', vals:CAP_MULT_VALS, sel:s.mult, key:'mult', sup:true  },
+          ];
+          if (s.bands >= 5) cols.push({ title:'Tolerance', vals:tolArr,  sel:s.tol,  key:'tol',  sup:false });
+          if (s.bands >= 4) cols.push({ title:'Voltage',   vals:voltArr, sel:s.volt, key:'volt', sup:false });
+          return cols;
+        }
+      }
+
+      // -------------------------------------------------------------------
+      // BUILD TABLE HTML
+      // -------------------------------------------------------------------
+      function buildColumn(col) {
+        let cells = '';
+        for (let i = 0; i < 12; i++) {
+          const color = COLORS[i];
+          const val   = col.vals[i];
+          if (val === null || val === undefined) {
+            cells += '<div class="cbc-cell cbc-cell-empty">&nbsp;</div>';
+          } else {
+            const selClass = col.sel === color ? ' cbc-cell-selected' : '';
+            cells += '<div class="cbc-cell' + selClass + '"'
+              + ' style="background:' + CELL_BG[color] + ';color:' + CELL_TEXT[color] + '"'
+              + ' data-key="' + col.key + '" data-color="' + color + '">'
+              + fmtCell(val, col.sup)
+              + '</div>';
+          }
+        }
+        return '<div class="cbc-col"><div class="cbc-col-title">' + col.title + '</div>' + cells + '</div>';
+      }
+
+      // -------------------------------------------------------------------
+      // MAIN RENDER
+      // -------------------------------------------------------------------
+      function render() {
+        // Banner title
+        const titles = {
+          resistor:  'Resistor Color Band Calculator',
+          inductor:  'Inductor Color Band Calculator',
+          capacitor: 'Capacitor Color Band Calculator',
+        };
+        document.getElementById('cbc-banner-title').textContent = titles[currentMode];
+
+        // Active tab highlight
+        ['resistor','capacitor','inductor'].forEach(m => {
+          const tab = document.getElementById('cbc-tab-' + m);
+          if (tab) tab.classList.toggle('cbc-tab-active', m === currentMode);
+        });
+
+        // --- Bands selector ---
+        const bandOpts = currentMode === 'inductor'  ? [4, 5]    :
+                         currentMode === 'capacitor' ? [3, 4, 5] :
+                         [3, 4, 5, 6];
+        const currentBands = currentMode === 'resistor' ? rState.bands :
+                             currentMode === 'inductor'  ? iState.bands : cState.bands;
+        document.getElementById('cbc-bands-sel').innerHTML = bandOpts.map(n =>
+          '<span class="cbc-opt' + (n === currentBands ? ' cbc-opt-active' : '') + '"'
+          + ' onclick="setBands(' + n + ')">' + n + ' Band' + (n > 1 ? 's' : '') + '</span>'
+        ).join('');
+
+        // --- Capacitor type selector ---
+        const typeEl = document.getElementById('cbc-type-sel');
+        if (currentMode === 'capacitor') {
+          typeEl.style.display = '';
+          typeEl.innerHTML = ['J','K','L','M','N'].map(t =>
+            '<span class="cbc-opt' + (t === cState.type ? ' cbc-opt-active' : '') + '"'
+            + ' onclick="setCapType(\'' + t + '\')">Type ' + t + '</span>'
+          ).join('');
+        } else {
+          typeEl.style.display = 'none';
+        }
+
+        // --- SVG ---
+        const svgHtml = currentMode === 'resistor'  ? buildResistorSVG()  :
+                        currentMode === 'inductor'  ? buildInductorSVG()  :
+                        buildCapacitorSVG();
+        document.getElementById('cbc-svg-wrap').innerHTML = svgHtml;
+
+        // --- Value display ---
+        const result = currentMode === 'resistor'  ? calcResistor()  :
+                       currentMode === 'inductor'  ? calcInductor()  :
+                       calcCapacitor();
+        document.getElementById('cbc-value').innerHTML      = result.display;
+        document.getElementById('cbc-value-span').innerHTML = result.range;
+
+        // --- Color table ---
+        const cols = getColumns();
+        document.getElementById('cbc-table').innerHTML = cols.map(buildColumn).join('');
+      }
+
+      // -------------------------------------------------------------------
+      // EVENT HANDLERS
+      // -------------------------------------------------------------------
+
+      // Cell clicks — event delegation on document
+      document.addEventListener('click', function(e) {
+        const cell = e.target.closest('.cbc-cell');
+        if (!cell || cell.classList.contains('cbc-cell-empty')) return;
+        const key   = cell.dataset.key;
+        const color = cell.dataset.color;
+        if (!key || !color) return;
+        if      (currentMode === 'resistor')  rState[key] = color;
+        else if (currentMode === 'inductor')  iState[key] = color;
+        else                                  cState[key] = color;
+        render();
+      });
+
+      function setBands(n) {
+        if      (currentMode === 'resistor')  rState.bands = n;
+        else if (currentMode === 'inductor')  iState.bands = n;
+        else                                  cState.bands = n;
+        render();
+      }
+
+      function setCapType(t) {
+        cState.type = t;
+        // Reset voltage rating to a safe default for the new type
+        const voltArr = getVoltRatings(t);
+        const firstValid = COLORS.find((c, i) => voltArr[i] !== null);
+        if (firstValid) cState.volt = firstValid;
+        render();
+      }
+
+      // Hash-based navigation (handles #resistor.html, #capacitor.html, #inductor.html)
+      function getModeFromHash() {
+        const h = window.location.hash;
+        if (h === '#capacitor.html') return 'capacitor';
+        if (h === '#inductor.html')  return 'inductor';
+        return 'resistor';
+      }
+
+      window.addEventListener('hashchange', function() {
+        currentMode = getModeFromHash();
+        render();
+      });
+
+      // -------------------------------------------------------------------
+      // INIT
+      // -------------------------------------------------------------------
+      currentMode = getModeFromHash();
+      render();
+
+    </script>
+
+  </body>
+</html>

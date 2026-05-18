@@ -1,0 +1,1083 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA FOR -->
+    <title>KasperCalc: Mass Flow Rate Calculator</title>
+    <link rel="canonical" href=" https://kaspercalc.com/equivalentFlows.html" />
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, bckasper3, Mass Flow Rates, Temperature Dependent Volumetric Flow Rate, Water Density Compensated Specific Gravity Flow Rates, Jet Pump Calculator, Ejectors Calculator" />
+    <meta name="description" content="Find equivalent fuel flow rates across different measurement units with KasperCalc’s flow conversion tool." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    
+        <!-- <script defer type="text/javascript" src="js/bootstrap.min.js"></script> -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> --> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/MassFlowConverter.css" />
+
+<!-- Google tag (gtag.js) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5XLCN0GJQ0');
+</script> -->
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+
+   </head>
+
+
+<body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityWater.html">Water Density</a>
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item" style="padding-right: 0px;">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<!-- ============================================================
+     MAIN
+     ============================================================ -->
+<main data-pagefind-body>
+
+  <!-- BANNER -->
+  <section class="banner">
+    <div class="cssbannercontainer">
+      <div class="col-lg-12 col-12">
+        <div class="section-title-wrap">
+          <div class="h1 section-title bannertext" style="background-color: var(--banner-color); color:var(--p-color); font-size:var(--h1-font-size); border-radius:0; font-weight: var(--font-weight-thin);">
+            Gas (Volume/Mass/Molar) Flow Rate Calculator
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALCULATOR -->
+  <section>
+    <div class="csscontainer mb-2">
+      <div class="col-lg-12 col-12 px-3">
+        <div class="wrapper">
+
+          <div class="header text-center" style="font-size: var(--h1-font-size)">
+            Gas (Volume/Mass/Molar) Flow Rate Calculator
+          </div>
+
+          <div class="card-inner">
+
+            <!-- GAS SELECTOR -->
+            <div class="section-label">Gas Selection</div>
+            <div class="gas-row">
+              <div class="gas-search-wrap">
+                <input type="text" id="gasSearch" placeholder="Search gas by name or formula..." autocomplete="off" aria-label="Gas search" />
+                <div class="gas-dropdown" id="gasDropdown"></div>
+              </div>
+              <div class="gas-badge" id="gasBadge">—</div>
+            </div>
+
+            <!-- FROM / TO -->
+            <div class="conv-grid">
+              <div class="conv-block">
+                <div class="section-label">From</div>
+                <div class="input-wrap">
+                  <input type="number" class="value-input" id="fromInput" value="1" step="any" aria-label="Input value" />
+                  <select class="unit-select" id="fromUnit" aria-label="From unit"></select>
+                </div>
+              </div>
+
+              <div class="arrow-col">
+                <button class="arrow-btn" id="swapBtn" title="Swap units">⇄</button>
+              </div>
+
+              <div class="conv-block">
+                <div class="section-label">To</div>
+                <div class="input-wrap">
+                  <input type="text" class="value-input" id="toValue" readonly value="—" aria-label="Result value" />
+                  <select class="unit-select" id="toUnit" aria-label="To unit"></select>
+                </div>
+              </div>
+            </div>
+
+            <!-- DONT LIKE HOW IT LOOKS -->
+            <!-- <div class="group result" style="margin-top:0.5rem;">
+              <span id="resultBig" class="output result" style="font-size:var(--h2-font-size);"></span>
+              <span id="resultLabel" class="label" style="font-size:var(--h3-font-size);color:#555;"></span>
+            </div> -->
+
+            <!-- REFERENCE CONDITION -->
+            <div class="ref-row">
+              <div class="section-label">Reference Condition</div>
+              <select class="ref-select" id="refCond" aria-label="Reference condition"></select>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section-label" style="margin-bottom:14px;">Gas Properties</div>
+            <div class="gas-info" id="gasInfo">
+              <div class="info-cell">
+                <span class="key">Gas</span>
+                <span class="val accent" id="infoTitle">—</span>
+              </div>
+              <div class="info-cell">
+                <span class="key">Formula</span>
+                <span class="val" id="infoFormula">—</span>
+              </div>
+              <div class="info-cell">
+                <span class="key">GCF</span>
+                <span class="val accent2" id="infoGCF">—</span>
+              </div>
+              
+              <div class="info-cell">
+                <span class="key">Density (25°C)</span>
+                <span class="val" id="infoDensity">—</span>
+              </div>
+              <div class="info-cell">
+                <span class="key">γ (Gamma)</span>
+                <span class="val" id="infoGamma">—</span>
+              </div>
+              <div class="info-cell">
+                <span class="key">Synonyms</span>
+                <span class="val" id="infoSynonyms" style="font-size:13px;">—</span>
+              </div>
+            </div>
+
+          </div><!-- /.card-inner -->
+        </div><!-- /.wrapper -->
+      </div>
+    </div>
+
+    <p class="text-center">Multi-unit conversion for 191 gases &mdash; volume, mass &amp; substance flow rates</p>
+    <p class="text-center">Reference conditions affect volume-based unit conversions only</p>
+  </section>
+
+  <!-- ALSO SEE -->
+  <section>
+    <div class="col-lg-12 col-12 text-center">
+
+      <div class="d-flex justify-content-center align-items-center gap-2 mt-4 flex-wrap">
+        <h2 class="my-auto">Also See:</h2>
+        <a href="equivalentFlows.html" class="custom-btn">Density Dependent Flow Rate Calculator</a>
+      </div>
+
+      <div class="d-flex justify-content-center align-items-center gap-2 mt-2 flex-wrap">
+        <h2 class="my-auto">Also See:</h2>
+        <a href="PPH.html" class="custom-btn">PPH to GPM Calculator</a>
+      </div>
+
+    </div>
+  </section>
+
+
+
+
+
+<style>
+.wrapper{margin:0 auto;max-width:54rem;background-color:#6a746a;border-radius:20px;border:3px solid var(--calc-outline-color);}
+.header{background-color:var(--calc-background-color);display:flex;justify-content:center;padding:0.5rem;margin:0.5rem 0.5rem 0.8rem;font-size:var(--calc-title-font-size);box-shadow:0px 3px 5px 0 rgba(0,0,0,.4);border-radius:10px;border:2px solid var(--calc-outline-color);line-height:1.25;font-weight:var(--font-weight-light);}
+.group{background-color:var(--calc-background-color);margin:0.5rem;border-radius:10px;box-shadow:0px 3px 5px 0 rgba(0,0,0,.4);color:var(--calc-p-color);padding:0.7rem 1rem;border:2px solid var(--calc-outline-color);}
+.group1{display:flex;justify-content:space-between;align-items:center;background-color:var(--calc-background-color);margin:0.4rem 0;border-radius:10px;box-shadow:0px 3px 5px 0 rgba(0,0,0,.4);color:var(--calc-p-color);padding:0.5rem 0.8rem;border:2px solid var(--calc-outline-color);}
+.wrapper .section-title{display:inline-block;background-color:var(--section-title-color);border-radius:var(--border-radius-medium);color:#fff;padding:4px 18px;font-size:19px;font-weight:var(--font-weight-light);margin-bottom:10px;}
+.custom-subheading{display:inline-block;background:var(--custom-btn-bg-color);color:#fff;font-size:17px;padding:3px 12px;border-radius:var(--border-radius-small);font-weight:var(--font-weight-light);margin-bottom:8px;}
+.wrapper p{color:var(--p-color);font-size:var(--p-font-size);font-weight:var(--font-weight-light);margin-bottom:0;line-height:1.6;}
+.note-bar{border-left:4px solid var(--icon-color);background:#e4f0f3;padding:8px 14px;border-radius:0 var(--border-radius-small) var(--border-radius-small) 0;margin-top:10px;}
+.unit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin-top:10px;}
+.unit-card{background:var(--calc-background-color);border:2px solid var(--calc-outline-color);border-radius:10px;box-shadow:0px 3px 5px 0 rgba(0,0,0,.4);padding:10px 14px;}
+.unit-card .abbr{font-family:"Courier New",monospace;font-size:17px;font-weight:700;color:#3a6270;display:block;margin-bottom:3px;}
+.unit-card .full{font-size:16px;font-weight:var(--font-weight-bold);color:var(--p-color);display:block;margin-bottom:4px;}
+.unit-card .desc{font-size:15px;font-weight:var(--font-weight-light);color:#333;line-height:1.5;}
+.type-badge{display:inline-block;font-size:13px;padding:2px 10px;border-radius:20px;font-weight:500;margin-top:6px;}
+.badge-mass{background:#c8dfe3;color:#1a3d45;}
+.badge-vol{background:#d4e8c2;color:#2a4a10;}
+.badge-sub{background:#e8daf5;color:#3a1a6a;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+@media(max-width:500px){.two-col{grid-template-columns:1fr;}}
+.type-block{border-radius:10px;border:2px solid var(--calc-outline-color);padding:10px 14px;box-shadow:0px 3px 5px 0 rgba(0,0,0,.4);}
+.type-block.mass{background:#c8dfe3;}
+.type-block.vol{background:#d4e8c2;}
+.type-block.sub{background:#e8daf5;grid-column:1/-1;}
+.type-block .tb-title{font-size:17px;font-weight:var(--font-weight-bold);margin-bottom:6px;color:#1a2a2a;}
+.type-block ul{margin:0;padding-left:18px;}
+.type-block ul li{font-size:16px;font-weight:var(--font-weight-light);line-height:1.8;color:#1a2a2a;}
+</style>
+
+<div class="wrapper mt-5">
+  <div class="header">Flow Rate Units — Reference</div>
+
+  <div class="group">
+    <div><span class="section-title">Three types of flow rate</span></div>
+    <p>Every unit in this calculator belongs to one of three categories. Mass and molar flow are independent of temperature and pressure. Volumetric flow depends on both — so a reference condition must be declared to make the number meaningful.</p>
+    <div class="two-col" style="margin-top:12px;">
+      <div class="type-block mass">
+        <div class="tb-title">Mass flow rate</div>
+        <ul>
+          <li>g/s, g/min, g/h</li>
+          <li>kg/s, kg/min, kg/h</li>
+          <li>lb/s, lb/min, lb/h</li>
+        </ul>
+      </div>
+      <div class="type-block vol">
+        <div class="tb-title">Volumetric flow rate</div>
+        <ul>
+          <li>sccm, scc/s, scc/h</li>
+          <li>slm (slpm), sl/s, sl/h</li>
+          <li>scfm, scf/h</li>
+          <li>m³/s, m³/min, m³/h</li>
+        </ul>
+      </div>
+      <div class="type-block sub">
+        <div class="tb-title">Molar (substance) flow rate</div>
+        <ul>
+          <li>mol/s, mol/min, mol/h</li>
+          <li>mmol/s, mmol/min — kmol/h</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note-bar" style="margin-top:12px;"><p>Conversions between mass and volume always require a gas identity and a reference condition. Conversions within the same type (e.g. kg/h → lb/min) require only unit math.</p></div>
+  </div>
+
+  <div class="group">
+    <div><span class="section-title">What each abbreviation means</span></div>
+    <div class="unit-grid">
+
+      <div class="unit-card">
+        <span class="abbr">sccm</span>
+        <span class="full">Standard Cubic Centimetres per Minute</span>
+        <span class="desc">The most common MFC unit in semiconductor and lab work. One sccm = 1 cm³/min of gas at the chosen reference condition.</span>
+        <span class="type-badge badge-vol">volumetric</span>
+      </div>
+
+      <div class="unit-card">
+        <span class="abbr">slm / slpm</span>
+        <span class="full">Standard Litres per Minute</span>
+        <span class="desc">Used in higher-flow lab and industrial processes. 1 slm = 1000 sccm. Also written slpm (standard litres per minute).</span>
+        <span class="type-badge badge-vol">volumetric</span>
+      </div>
+
+      <div class="unit-card">
+        <span class="abbr">scfm</span>
+        <span class="full">Standard Cubic Feet per Minute</span>
+        <span class="desc">Common in US industrial gas, HVAC, and combustion systems. One scfm ≈ 28.317 slm. The "standard" prefix ties the value to a reference T and P.</span>
+        <span class="type-badge badge-vol">volumetric</span>
+      </div>
+
+      <div class="unit-card">
+        <span class="abbr">scfh</span>
+        <span class="full">Standard Cubic Feet per Hour</span>
+        <span class="desc">Used in natural gas metering and burner ratings. 1 scfh = 1 scfm ÷ 60. Billing and regulatory reporting often uses scfh.</span>
+        <span class="type-badge badge-vol">volumetric</span>
+      </div>
+
+      <div class="unit-card">
+        <span class="abbr">Nm³/h</span>
+        <span class="full">Normal Cubic Metres per Hour</span>
+        <span class="desc">European standard, defined at 0 °C and 101.325 kPa (DIN 1343 / ISO 13443). "Normal" and "standard" mean different reference conditions — do not mix them.</span>
+        <span class="type-badge badge-vol">volumetric</span>
+      </div>
+
+      <div class="unit-card">
+        <span class="abbr">sm³/h</span>
+        <span class="full">Standard Cubic Metres per Hour</span>
+        <span class="desc">Similar to Nm³/h but typically referenced to 15 °C or 20 °C depending on the industry. Common in LNG and pipeline gas contracts.</span>
+        <span class="type-badge badge-vol">volumetric</span>
+      </div>
+
+      <div class="unit-card">
+        <span class="abbr">kg/h, lb/min…</span>
+        <span class="full">Mass per unit time</span>
+        <span class="desc">True mass flow — unaffected by temperature or pressure. Required for combustion stoichiometry, mass balance, and precise dosing. Needs gas molar mass to convert to volume.</span>
+        <span class="type-badge badge-mass">mass</span>
+      </div>
+
+      <div class="unit-card">
+        <span class="abbr">mol/min, mmol/s…</span>
+        <span class="full">Moles per unit time</span>
+        <span class="desc">Used in chemistry, reaction engineering, and analytical instruments. Converts to mass via M (molar mass) and to volume via the ideal gas law at the reference condition.</span>
+        <span class="type-badge badge-sub">molar</span>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="group">
+    <div><span class="section-title">The "standard" prefix explained</span></div>
+    <p>The <strong>s</strong> in sccm, slm, and scfm does not mean the gas is at standard conditions right now — it means the <em>quantity</em> has been normalised to a reference condition so that different measurements can be compared directly.</p>
+    <p style="margin-top:8px;">For example: 1 sccm of argon and 1 sccm of helium represent the same volume at the reference condition, but very different masses. A mass flow controller set to 100 sccm N₂ must be corrected by the GCF when used with a different gas.</p>
+    <div class="note-bar" style="margin-top:10px;"><p><strong>Common trap:</strong> "Normal" (N) and "Standard" (S) use different reference temperatures — 0 °C vs 20 °C or 25 °C depending on the standard body. Always check which definition your instrument or datasheet uses before converting.</p></div>
+  </div>
+
+  <div class="group">
+    <div><span class="section-title">Actual vs standard volumetric flow</span></div>
+    <p style="margin-bottom:8px;"><span class="custom-subheading">Actual (ACFM / am³/h)</span></p>
+    <p>Actual volumetric flow is the physical volume passing a point per unit time at the real operating temperature and pressure. It changes whenever T or P changes — a pipe running at 200 °C carries more actual volume than the same mass flow at 20 °C.</p>
+    <p style="margin-top:10px;margin-bottom:8px;"><span class="custom-subheading">Standard (sccm / scfm / Nm³/h)</span></p>
+    <p>Standard volumetric flow converts the actual flow back to what it would be at the reference condition. This is what mass flow controllers measure — they are insensitive to actual line pressure and temperature because they measure mass, then express it as an equivalent standard volume.</p>
+    <div class="note-bar" style="margin-top:10px;"><p>This calculator works with <strong>standard</strong> volumetric units only. If you have an actual volumetric flow at a known T and P, convert it to mass flow first using ṁ = ρ<sub>actual</sub> · Q<sub>actual</sub>, then enter the mass flow here.</p></div>
+  </div>
+
+  <div style="height:0.5rem;"></div>
+</div>
+
+
+
+
+<style>
+.wrapper{--h2-font-size:22px;--p-font-size:18px;--calc-title-font-size:30px;}
+.wrapper{margin:0 auto;max-width:54rem;background-color:#6a746a;border-radius:20px;border:3px solid var(--calc-outline-color);font-family:"Roboto",Arial,sans-serif;}
+.header{background-color:var(--calc-background-color);display:flex;justify-content:center;padding:0.5rem;margin:0.5rem 0.5rem 0.8rem;font-size:var(--calc-title-font-size);box-shadow:0px 3px 5px 0 rgba(0,0,0,.4);border-radius:10px;border:2px solid var(--calc-outline-color);line-height:1.25;font-weight:var(--font-weight-light);}
+.group{background-color:var(--calc-background-color);margin:0.5rem;border-radius:10px;box-shadow:0px 3px 5px 0 rgba(0,0,0,.4);color:var(--calc-p-color);padding:0.6rem 0.9rem;border:2px solid var(--calc-outline-color);}
+.group.result{display:flex;justify-content:space-between;background-color:var(--calc-result-color);border:2px solid var(--calc-outline-color);font-weight:bold;border-radius:10px;}
+.group1{display:flex;justify-content:space-between;align-items:center;background-color:var(--calc-background-color);margin:0.5rem;border-radius:10px;box-shadow:0px 3px 5px 0 rgba(0,0,0,.4);color:var(--calc-p-color);padding:0.4rem 0.6rem;border:2px solid var(--calc-outline-color);}
+.wrapper .section-title{display:inline-block;background-color:var(--section-title-color);border-radius:var(--border-radius-medium);color:#fff;padding:4px 18px;font-size:18px;font-weight:var(--font-weight-light);}
+.custom-subheading{display:inline-block;background:var(--custom-btn-bg-color);color:#fff;font-size:17px;padding:3px 12px;border-radius:var(--border-radius-small);font-weight:var(--font-weight-light);}
+.wrapper p{color:var(--p-color);font-size:var(--p-font-size);font-weight:var(--font-weight-light);margin-bottom:0;}
+.formula-mono{font-family:"Courier New",monospace;font-size:20px;font-weight:500;letter-spacing:0.03em;display:block;text-align:center;margin:6px 0 2px;}
+.formula-sub{font-size:15px;color:#555;text-align:center;font-weight:400;}
+.note-bar{border-left:4px solid var(--icon-color);background:#e4f0f3;padding:8px 14px;border-radius:0 var(--border-radius-small) var(--border-radius-small) 0;margin-top:8px;}
+.badge-pill{display:inline-block;font-size:14px;padding:3px 12px;border-radius:20px;background-color:var(--banner-color);color:#1a3d45;font-weight:400;margin:3px;}
+.ref-label{font-family:"Courier New",monospace;font-size:15px;font-weight:600;display:block;}
+.ref-val{font-size:15px;color:#444;}
+.row{display:flex;flex-wrap:wrap;margin:0 -6px;}
+.col-2{flex:0 0 50%;max-width:50%;padding:0 6px;margin-bottom:6px;}
+@media(max-width:560px){.col-2{flex:0 0 100%;max-width:100%;}}
+.gas-search-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;}
+.gas-search-row input{font-size:16px;padding:6px 10px;border:2px solid var(--calc-outline-color);border-radius:8px;background:var(--calc-dropdown-color);flex:1;min-width:160px;}
+.gas-search-row input:focus{outline:none;border-color:var(--section-title-color);}
+.gas-tag{font-size:13px;padding:3px 10px;border-radius:20px;background:var(--banner-color);color:#1a3d45;cursor:pointer;border:1.5px solid transparent;}
+.gas-tag:hover,.gas-tag.active{border-color:var(--calc-outline-color);font-weight:600;}
+.gas-table-wrap{overflow-x:auto;border-radius:8px;border:2px solid var(--calc-outline-color);}
+.gas-table{width:100%;border-collapse:collapse;font-size:15px;min-width:500px;}
+.gas-table th{background:var(--calc-result-color);text-align:left;padding:7px 10px;font-weight:600;font-size:14px;border-bottom:2px solid var(--calc-outline-color);position:sticky;top:0;}
+.gas-table td{padding:6px 10px;border-bottom:1px solid var(--border-color);vertical-align:middle;}
+.gas-table tr:last-child td{border-bottom:none;}
+.gas-table tr:hover td{background:var(--calc-hover-color);}
+.gas-table td.mono{font-family:"Courier New",monospace;font-size:13px;}
+.gas-table td.gcf{font-weight:600;color:#3a6270;}
+.pager{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:15px;flex-wrap:wrap;}
+.pager button{font-size:14px;padding:4px 12px;border:2px solid var(--calc-outline-color);border-radius:6px;background:var(--calc-dropdown-color);cursor:pointer;font-family:"Roboto",Arial,sans-serif;}
+.pager button:hover{background:var(--calc-hover-color);}
+.pager button:disabled{opacity:0.4;cursor:default;}
+.pager span{font-size:14px;color:#444;}
+.const-table{width:100%;border-collapse:collapse;font-size:16px;}
+.const-table th{text-align:left;font-weight:600;font-size:14px;color:#555;padding:6px 8px;border-bottom:1px solid var(--border-color);}
+.const-table td{padding:7px 8px;border-bottom:1px solid var(--border-color);}
+.const-table td:first-child{font-family:"Courier New",monospace;font-size:14px;font-weight:500;}
+.const-table tr:last-child td{border-bottom:none;}
+</style>
+
+<div class="csscontainer">
+<div class="wrapper">
+
+  <div class="header">Mass Flow Rate — Reference Guide</div>
+
+  <div class="group">
+    <div style="margin-bottom:8px;"><span class="section-title">What is mass flow rate?</span></div>
+    <p>Mass flow rate is the quantity of mass passing through a cross-section per unit time. Unlike volumetric flow, it is conserved regardless of changes in temperature or pressure along a pipe — making it the preferred measure in semiconductor manufacturing, chemical processing, HVAC, and compressed gas distribution.</p>
+  </div>
+
+  <div class="group">
+    <div style="margin-bottom:8px;"><span class="section-title">Core formulas</span></div>
+    <div class="group1" style="flex-direction:column;align-items:flex-start;margin:0.4rem 0;">
+      <span class="formula-mono">ṁ = ρ · Q</span>
+      <span class="formula-sub">ṁ = mass flow rate &nbsp;|&nbsp; ρ = gas density &nbsp;|&nbsp; Q = volumetric flow rate</span>
+    </div>
+    <p style="margin:8px 0 4px;">For an ideal gas, density follows from the ideal gas law:</p>
+    <div class="group1" style="flex-direction:column;align-items:flex-start;margin:0.4rem 0;">
+      <span class="formula-mono">ρ = (P · M) / (R · T)</span>
+      <span class="formula-sub">P = absolute pressure &nbsp;|&nbsp; M = molar mass &nbsp;|&nbsp; R = specific gas constant &nbsp;|&nbsp; T = absolute temperature (K)</span>
+    </div>
+    <p style="margin:8px 0 4px;">Combined working conversion used by mass flow controllers:</p>
+    <div class="group result" style="flex-direction:column;align-items:center;gap:4px;padding:10px;">
+      <span class="formula-mono" style="font-size:21px;">ṁ = Q · (P · M) / (R · T)</span>
+      <span class="formula-sub" style="color:#333;">Valid for ideal-gas approximation — accurate for most process gases at low-to-moderate pressures</span>
+    </div>
+  </div>
+
+  <div class="group">
+    <div style="margin-bottom:8px;"><span class="section-title">Gas correction factor (GCF)</span></div>
+    <p>Mass flow controllers are factory-calibrated on N₂ (GCF = 1.000). When flowing a different gas, the indicated flow is multiplied by the GCF to obtain actual mass flow:</p>
+    <div class="group1" style="flex-direction:column;align-items:flex-start;margin:0.4rem 0;">
+      <span class="formula-mono">Q<sub>actual</sub> = Q<sub>indicated</sub> × GCF</span>
+      <span class="formula-sub">GCF = (ρ<sub>cal</sub> / ρ<sub>gas</sub>) · √(γ<sub>cal</sub> / γ<sub>gas</sub>) &nbsp;|&nbsp; γ = C<sub>p</sub> / C<sub>v</sub> (heat capacity ratio)</span>
+    </div>
+    <p style="margin-top:6px;">GCF &gt; 1 means lighter than N₂ (e.g. He = 1.4005, H₂ = 1.0038). GCF &lt; 1 means denser (e.g. SF₆ = 0.2701). Always confirm the convention used by your MFC manufacturer — some vendors invert the definition.</p>
+  </div>
+
+  <div class="group">
+    <div style="margin-bottom:8px;"><span class="section-title">Physical constants</span></div>
+    <table class="const-table">
+      <thead><tr><th>Symbol</th><th>Constant</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>R</td><td>Universal gas constant</td><td>8.31446 J mol⁻¹ K⁻¹</td></tr>
+        <tr><td>P₀ (STP)</td><td>Standard pressure (IUPAC)</td><td>101,325 Pa (1 atm)</td></tr>
+        <tr><td>T₀ (STP)</td><td>Standard temperature (IUPAC)</td><td>273.15 K (0 °C)</td></tr>
+        <tr><td>T₀ (NTP)</td><td>Normal temperature (NIST)</td><td>293.15 K (20 °C)</td></tr>
+        <tr><td>Vₘ (STP)</td><td>Molar volume at STP</td><td>22.414 L mol⁻¹</td></tr>
+        <tr><td>Vₘ (25 °C)</td><td>Molar volume at 25 °C, 1 atm</td><td>24.465 L mol⁻¹</td></tr>
+        <tr><td>Nₐ</td><td>Avogadro constant</td><td>6.02214 × 10²³ mol⁻¹</td></tr>
+        <tr><td>kB</td><td>Boltzmann constant</td><td>1.38065 × 10⁻²³ J K⁻¹</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="group">
+    <div style="margin-bottom:8px;"><span class="section-title">Reference conditions</span></div>
+    <p>Standard volumetric units (sccm, slm, Nm³/h, scfm) require a declared reference condition. This calculator supports four definitions:</p>
+    <div class="row" style="margin-top:10px;">
+      <div class="col-2"><div class="group1" style="flex-direction:column;align-items:flex-start;margin:0;padding:10px 14px;"><span class="ref-label">STP (IUPAC)</span><span class="ref-val">0 °C, 101.325 kPa</span></div></div>
+      <div class="col-2"><div class="group1" style="flex-direction:column;align-items:flex-start;margin:0;padding:10px 14px;"><span class="ref-label">NTP (NIST)</span><span class="ref-val">20 °C, 101.325 kPa</span></div></div>
+      <div class="col-2"><div class="group1" style="flex-direction:column;align-items:flex-start;margin:0;padding:10px 14px;"><span class="ref-label">Standard (25 °C)</span><span class="ref-val">25 °C, 101.325 kPa</span></div></div>
+      <div class="col-2"><div class="group1" style="flex-direction:column;align-items:flex-start;margin:0;padding:10px 14px;"><span class="ref-label">Normal (DIN 1343)</span><span class="ref-val">0 °C, 101.325 kPa</span></div></div>
+    </div>
+    <div class="note-bar"><p>Reference conditions affect <strong>only volume-based units</strong>. Mass flow and molar flow conversions are unaffected by the chosen reference condition.</p></div>
+  </div>
+
+  <div class="group">
+    <div style="margin-bottom:8px;"><span class="section-title">Gas properties table</span></div>
+    <p style="margin-bottom:10px;">All 62 gases included in this calculator. R is the specific gas constant (J kg⁻¹ K⁻¹). Density shown at 25 °C and 0 °C (kg/m³). GCF referenced to N₂ calibration.</p>
+    <div class="gas-search-row">
+      <input type="text" id="gasSearch" placeholder="Search by name or formula..." />
+      <span class="gas-tag active" data-filter="all">All</span>
+      <span class="gas-tag" data-filter="noble">Noble</span>
+      <span class="gas-tag" data-filter="hydro">Hydrocarbons</span>
+      <span class="gas-tag" data-filter="halo">Halides/Freons</span>
+      <span class="gas-tag" data-filter="common">Common</span>
+    </div>
+    <div class="gas-table-wrap">
+      <table class="gas-table">
+        <thead>
+          <tr>
+            <th>Gas</th>
+            <th>Formula</th>
+            <th>GCF</th>
+            <th>γ (Gamma)</th>
+            <th>R (J kg⁻¹K⁻¹)</th>
+            <th>Density 25°C</th>
+            <th>Density 0°C</th>
+            <th>Synonyms</th>
+          </tr>
+        </thead>
+        <tbody id="gasTableBody"></tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <button id="prevBtn">← Prev</button>
+      <span id="pageInfo"></span>
+      <button id="nextBtn">Next →</button>
+      <span id="countInfo" style="color:#555;"></span>
+    </div>
+  </div>
+
+  <div class="group">
+    <div style="margin-bottom:8px;"><span class="section-title">Gases covered</span></div>
+    <div style="line-height:2.2;">
+      <span class="badge-pill">Noble gases (He, Ne, Ar, Kr, Xe)</span>
+      <span class="badge-pill">Hydrocarbons (CH₄ → C₁₀+)</span>
+      <span class="badge-pill">Fluorinated gases (NF₃, SF₆, CF₄, C₂F₆)</span>
+      <span class="badge-pill">Nitrogen compounds (N₂, NH₃, NO, N₂O)</span>
+      <span class="badge-pill">Halides (HCl, HF, HBr, Cl₂, F₂)</span>
+      <span class="badge-pill">Oxygen &amp; oxides (O₂, CO, CO₂, SO₂)</span>
+      <span class="badge-pill">Hydrogen &amp; deuterium</span>
+      <span class="badge-pill">Silanes &amp; dopant gases</span>
+      <span class="badge-pill">Refrigerants (R-series / Freons)</span>
+      <span class="badge-pill">Toxic &amp; specialty gases</span>
+    </div>
+  </div>
+
+  <div class="group">
+    <div style="margin-bottom:8px;"><span class="section-title">Common applications</span></div>
+    <p style="margin-bottom:6px;"><span class="custom-subheading">Semiconductor &amp; CVD</span></p>
+    <p style="margin-bottom:12px;">CVD and ALD processes require precise sccm-level flow of precursor gases such as SiH₄, NH₃, and WF₆. Converting between sccm and kg/h lets engineers verify mass balance and scale recipes across tool configurations.</p>
+    <p style="margin-bottom:6px;"><span class="custom-subheading">Industrial gas distribution</span></p>
+    <p style="margin-bottom:12px;">Oxygen, nitrogen, and argon pipelines are often invoiced in kg or Nm³. Converting actual volumetric flow (m³/h at line conditions) to standard conditions lets operators calculate billing quantities without measuring T and P at every point.</p>
+    <p style="margin-bottom:6px;"><span class="custom-subheading">Combustion &amp; emissions</span></p>
+    <p style="margin-bottom:12px;">Combustion engineers work with fuel flow in kg/h and air in ACFM or Nm³/h. The stoichiometric air-to-fuel ratio depends on γ and molar mass, making mass flow the natural currency for burner tuning and EPA Method 19 calculations.</p>
+    <p style="margin-bottom:6px;"><span class="custom-subheading">Analytical instruments</span></p>
+    <p>GC, mass spectrometers, and breath analyzers use carrier gases in the sccm–slm range. Converting to molar flow (mol/min) simplifies analyte concentration and detector sensitivity comparisons across different carrier gas choices.</p>
+  </div>
+
+  <div style="height:0.5rem;"></div>
+</div>
+</div>
+
+
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary p-4 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+            <div id="citationText" class="font-monospace text-dark-emphasis small pt-2">
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>   
+    
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->    
+
+<!-- ============================================================
+     JAVASCRIPT — identical conversion engine, updated defaults
+     ============================================================ -->
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const gasList = [{"ID":"1","Title":"Acetic Acid","Formula":"C2H4F2","GCF":"0.4155","Derived":"4","Density 1":"2.700","Density 2":"2.947","Synonyms":"Ethanoic Acid","Gamma":"1.2","R":"125.88"},{"ID":"2","Title":"Acetic Acid, Anhydride","Formula":"C4H6O3","GCF":"0.2580","Derived":"4","Density 1":"4.173","Density 2":"4.555","Synonyms":"Aceticanhydride","Gamma":"1.2","R":"81.44"},{"ID":"3","Title":"Acetone","Formula":"C3H6O","GCF":"0.3556","Derived":"4","Density 1":"2.374","Density 2":"2.591","Synonyms":"2-propanone","Gamma":"1.2","R":"143.16"},{"ID":"4","Title":"Acetonitryl","Formula":"C2H3N","GCF":"0.5178","Derived":"4","Density 1":"1.678","Density 2":"1.832","Synonyms":"Methyl Cyanide","Gamma":"1.2","R":"202.54"},{"ID":"5","Title":"Acetylene","Formula":"C2H2","GCF":"0.6255","Derived":"4","Density 1":"1.064","Density 2":"1.162","Synonyms":"Ethyne","Gamma":"1.23","R":"319.33"},{"ID":"6","Title":"Air","Formula":"Air","GCF":"1.0015","Derived":"1","Density 1":"1.185","Density 2":"1.293","Synonyms":"NA","Gamma":"1.4","R":"287.00"},{"ID":"7","Title":"Allene","Formula":"C3H4","GCF":"0.4514","Derived":"4","Density 1":"1.638","Density 2":"1.787","Synonyms":"Propadiene","Gamma":"1.2","R":"207.53"},{"ID":"8","Title":"Ammonia","Formula":"NH3","GCF":"0.7807","Derived":"2","Density 1":"0.696","Density 2":"0.760","Synonyms":"NA","Gamma":"1.32","R":"488.21"},{"ID":"9","Title":"Argon","Formula":"Ar","GCF":"1.4047","Derived":"1","Density 1":"1.633","Density 2":"1.782","Synonyms":"NA","Gamma":"1.66","R":"208.13"},{"ID":"10","Title":"Arsine","Formula":"AsH3","GCF":"0.7592","Derived":"5","Density 1":"3.186","Density 2":"3.478","Synonyms":"NA","Gamma":"1.2","R":"106.67"},{"ID":"11","Title":"Benzene","Formula":"C6H6","GCF":"0.3057","Derived":"4","Density 1":"3.193","Density 2":"3.485","Synonyms":"NA","Gamma":"1.2","R":"106.44"},{"ID":"12","Title":"Boron Trichloride","Formula":"BCl3","GCF":"0.4421","Derived":"4","Density 1":"4.789","Density 2":"5.228","Synonyms":"NA","Gamma":"1.2","R":"70.96"},{"ID":"13","Title":"Boron Triflouride","Formula":"BF3","GCF":"0.5431","Derived":"4","Density 1":"2.772","Density 2":"3.025","Synonyms":"NA","Gamma":"1.2","R":"122.62"},{"ID":"14","Title":"Bromine","Formula":"Br2","GCF":"0.8007","Derived":"4","Density 1":"6.532","Density 2":"7.130","Synonyms":"NA","Gamma":"1.4","R":"52.03"},{"ID":"15","Title":"Bromochlorodifluoromethane","Formula":"CBrClF2","GCF":"0.3684","Derived":"4","Density 1":"6.759","Density 2":"7.378","Synonyms":"NA","Gamma":"1.2","R":"50.28"},{"ID":"16","Title":"Bromodifluoromethane","Formula":"CHBrF2","GCF":"0.4644","Derived":"4","Density 1":"5.351","Density 2":"5.841","Synonyms":"NA","Gamma":"1.2","R":"63.51"},{"ID":"17","Title":"Bromotrifluormethane","Formula":"CBrF3","GCF":"0.3943","Derived":"4","Density 1":"6.087","Density 2":"6.644","Synonyms":"NA","Gamma":"1.2","R":"55.84"},{"ID":"18","Title":"Butane","Formula":"C4H10","GCF":"0.2622","Derived":"2","Density 1":"2.376","Density 2":"2.593","Synonyms":"NA","Gamma":"1.09","R":"143.05"},{"ID":"19","Title":"Butanol","Formula":"C4H10O","GCF":"0.2406","Derived":"4","Density 1":"3.030","Density 2":"3.307","Synonyms":"1-Butanol, Butyl Alcohol","Gamma":"1.2","R":"112.17"},{"ID":"20","Title":"Butene","Formula":"C4H8","GCF":"0.3056","Derived":"4","Density 1":"2.293","Density 2":"2.503","Synonyms":"1-Butene, 1-Butylene","Gamma":"1.2","R":"148.19"},{"ID":"21","Title":"Carbon Dioxide","Formula":"CO2","GCF":"0.7526","Derived":"1","Density 1":"1.799","Density 2":"1.964","Synonyms":"NA","Gamma":"1.22","R":"188.93"},{"ID":"22","Title":"Carbon Disulfide","Formula":"CS2","GCF":"0.6160","Derived":"4","Density 1":"3.112","Density 2":"3.397","Synonyms":"NA","Gamma":"1.2","R":"109.20"},{"ID":"23","Title":"Carbon Monoxide","Formula":"CO","GCF":"1.0012","Derived":"4","Density 1":"1.145","Density 2":"1.250","Synonyms":"NA","Gamma":"1.4","R":"296.84"},{"ID":"24","Title":"Carbon Tetrachloride","Formula":"CCl4","GCF":"0.3333","Derived":"4","Density 1":"6.287","Density 2":"6.863","Synonyms":"Tetrachloromethane","Gamma":"1.2","R":"54.05"},{"ID":"25","Title":"Carbonyl Sulfide","Formula":"COS","GCF":"0.6680","Derived":"4","Density 1":"2.456","Density 2":"2.680","Synonyms":"Carbon Oxysulfide","Gamma":"1.2","R":"138.40"},{"ID":"26","Title":"Chlorine","Formula":"Cl2","GCF":"0.8451","Derived":"4","Density 1":"2.898","Density 2":"3.163","Synonyms":"NA","Gamma":"1.4","R":"117.26"},{"ID":"27","Title":"Chlorine Trifluoride","Formula":"ClF3","GCF":"0.4496","Derived":"5","Density 1":"3.779","Density 2":"4.125","Synonyms":"NA","Gamma":"1.2","R":"89.94"},{"ID":"28","Title":"Chlorobenzene","Formula":"C6H5Cl","GCF":"0.2614","Derived":"4","Density 1":"4.601","Density 2":"5.022","Synonyms":"NA","Gamma":"1.2","R":"73.87"},{"ID":"29","Title":"Chlorodifluoroethane","Formula":"C2H3ClF2","GCF":"0.3216","Derived":"4","Density 1":"4.108","Density 2":"4.484","Synonyms":"Ethane, 2-chloro-1,1-difluoro-","Gamma":"1.2","R":"82.74"},{"ID":"30","Title":"Chloroform","Formula":"CHCl3","GCF":"0.4192","Derived":"4","Density 1":"4.879","Density 2":"5.326","Synonyms":"Trichloromethane","Gamma":"1.2","R":"69.65"},{"ID":"31","Title":"Chloropentafluoroethane","Formula":"C2ClF5","GCF":"0.2437","Derived":"4","Density 1":"6.314","Density 2":"6.892","Synonyms":"NA","Gamma":"1.2","R":"53.83"},{"ID":"32","Title":"Chloropropane","Formula":"C3H7Cl","GCF":"0.3080","Derived":"4","Density 1":"3.210","Density 2":"3.504","Synonyms":"Propylchloride","Gamma":"1.2","R":"105.86"},{"ID":"33","Title":"Cisbutene","Formula":"C4H8","GCF":"0.3004","Derived":"4","Density 1":"2.293","Density 2":"2.503","Synonyms":"Cis-2-butene","Gamma":"1.2","R":"148.19"},{"ID":"34","Title":"Cyanogen","Formula":"C2N2","GCF":"0.4924","Derived":"4","Density 1":"2.127","Density 2":"2.322","Synonyms":"NA","Gamma":"1.2","R":"159.79"},{"ID":"35","Title":"Cyanogen Chloride","Formula":"ClCN","GCF":"0.6486","Derived":"5","Density 1":"2.513","Density 2":"2.743","Synonyms":"NA","Gamma":"1.2","R":"135.26"},{"ID":"36","Title":"Cyclobutane","Formula":"C4H8","GCF":"0.3562","Derived":"4","Density 1":"2.293","Density 2":"2.503","Synonyms":"Tetramethylene","Gamma":"1.2","R":"148.19"},{"ID":"37","Title":"Cyclopropane","Formula":"C3H6","GCF":"0.4562","Derived":"4","Density 1":"1.720","Density 2":"1.877","Synonyms":"Trimethylene","Gamma":"1.2","R":"197.59"},{"ID":"38","Title":"Deuterium","Formula":"H22","GCF":"1.0003","Derived":"4","Density 1":"0.165","Density 2":"0.180","Synonyms":"D2","Gamma":"1.4","R":"2062.13"},{"ID":"39","Title":"Diborane","Formula":"B2H6","GCF":"0.5063","Derived":"5","Density 1":"1.131","Density 2":"1.235","Synonyms":"NA","Gamma":"1.2","R":"300.49"},{"ID":"40","Title":"Dibromodifluoromethane","Formula":"CBr2F2","GCF":"0.3590","Derived":"4","Density 1":"8.576","Density 2":"9.361","Synonyms":"NA","Gamma":"1.2","R":"39.63"},{"ID":"41","Title":"Dichlorofluoromethane","Formula":"CHCl2F","GCF":"0.4481","Derived":"4","Density 1":"4.207","Density 2":"4.592","Synonyms":"R21","Gamma":"1.2","R":"80.78"},{"ID":"42","Title":"Dichloromethane","Formula":"CH2Cl2","GCF":"0.5322","Derived":"4","Density 1":"3.472","Density 2":"3.789","Synonyms":"Methylene Chloride","Gamma":"1.2","R":"97.90"},{"ID":"43","Title":"Dichloropropane","Formula":"C3H6Cl2","GCF":"0.2698","Derived":"4","Density 1":"4.618","Density 2":"5.041","Synonyms":"1,2-dichloropropane,","Gamma":"1.2","R":"73.59"},{"ID":"44","Title":"Dichlorosilane","Formula":"H2SiCl2","GCF":"0.4716","Derived":"5","Density 1":"4.129","Density 2":"4.506","Synonyms":"NA","Gamma":"1.2","R":"82.32"},{"ID":"45","Title":"Diethyl Amine","Formula":"C4H11N","GCF":"0.2256","Derived":"4","Density 1":"2.989","Density 2":"3.263","Synonyms":"NA","Gamma":"1.2","R":"113.68"},{"ID":"46","Title":"Diethyl Ether","Formula":"C4H10O","GCF":"0.2235","Derived":"4","Density 1":"3.030","Density 2":"3.307","Synonyms":"1,1-oxybisethane","Gamma":"1.2","R":"112.17"},{"ID":"47","Title":"Diethyl Sulfide","Formula":"C4H10S","GCF":"0.2255","Derived":"4","Density 1":"3.686","Density 2":"4.024","Synonyms":"3-thiapentane, UN-2375","Gamma":"1.2","R":"92.19"},{"ID":"48","Title":"Difluoroethylene","Formula":"C2H2F2","GCF":"0.4492","Derived":"4","Density 1":"2.617","Density 2":"2.857","Synonyms":"Vinylidenefluoride, G-1132A, Difluoroethene","Gamma":"1.2","R":"129.85"},{"ID":"49","Title":"Dimethylamine","Formula":"C2H7N","GCF":"0.3705","Derived":"4","Density 1":"1.843","Density 2":"2.011","Synonyms":"N-methylmethanamine","Gamma":"1.2","R":"184.42"},{"ID":"50","Title":"Dimethyl Ether","Formula":"C2H6O","GCF":"0.4088","Derived":"4","Density 1":"1.883","Density 2":"2.055","Synonyms":"Methylether; Methane, Oxybis-","Gamma":"1.2","R":"180.48"},{"ID":"51","Title":"Dimethyl Sulfide","Formula":"C2H6S","GCF":"0.3623","Derived":"4","Density 1":"2.540","Density 2":"2.772","Synonyms":"2-thiopropane, Thiobismethane","Gamma":"1.2","R":"133.81"},{"ID":"52","Title":"Divinyl","Formula":"C4H6","GCF":"0.3248","Derived":"4","Density 1":"2.211","Density 2":"2.413","Synonyms":"1,3-butadiene","Gamma":"1.2","R":"153.71"},{"ID":"53","Title":"Ethane","Formula":"C2H6","GCF":"0.4998","Derived":"2","Density 1":"1.229","Density 2":"1.342","Synonyms":"NA","Gamma":"1.19","R":"276.51"},{"ID":"54","Title":"Ethane, 1-chloro-1,1,2,2-tetrafluoro-","Formula":"C2HClF4","GCF":"0.2684","Derived":"4","Density 1":"5.578","Density 2":"6.089","Synonyms":"Chlorotetrafluoroethane, F124, R124","Gamma":"1.2","R":"60.92"},{"ID":"55","Title":"Ethane, 1-chloro-1,2,2,2-tetrafluoro-","Formula":"C2HClF4","GCF":"0.2719","Derived":"4","Density 1":"5.578","Density 2":"6.089","Synonyms":"Chlorotetrafluoroethane","Gamma":"1.2","R":"60.92"},{"ID":"56","Title":"Ethanol","Formula":"C2H6O","GCF":"0.4046","Derived":"4","Density 1":"1.883","Density 2":"2.055","Synonyms":"Ethyl Alcohol","Gamma":"1.2","R":"180.48"},{"ID":"57","Title":"Ethylacetylene","Formula":"C4H6","GCF":"0.3256","Derived":"4","Density 1":"2.211","Density 2":"2.413","Synonyms":"1-butyne","Gamma":"1.2","R":"153.71"},{"ID":"58","Title":"Ethyl Amine","Formula":"C2H7N","GCF":"0.3694","Derived":"4","Density 1":"1.843","Density 2":"2.011","Synonyms":"Ethanamine","Gamma":"1.2","R":"184.42"},{"ID":"59","Title":"Ethylbenzene","Formula":"C8H10","GCF":"0.2001","Derived":"4","Density 1":"4.339","Density 2":"4.737","Synonyms":"1-butyne","Gamma":"1.2","R":"78.32"},{"ID":"60","Title":"Ethyl Bromide","Formula":"C2H5Br","GCF":"0.4124","Derived":"4","Density 1":"4.454","Density 2":"4.862","Synonyms":"NA","Gamma":"1.2","R":"75.60"},{"ID":"61","Title":"Ethyl Chloride","Formula":"C2H5Cl","GCF":"0.4212","Derived":"4","Density 1":"2.637","Density 2":"2.878","Synonyms":"Chloroethane","Gamma":"1.2","R":"128.88"},{"ID":"62","Title":"Ethyl Fluoride","Formula":"C2H5F","GCF":"0.4430","Derived":"4","Density 1":"1.964","Density 2":"2.144","Synonyms":"Fluoroethane, R-161","Gamma":"1.2","R":"173.00"},{"ID":"63","Title":"Ethylene","Formula":"C2H4","GCF":"0.6062","Derived":"1","Density 1":"1.147","Density 2":"1.252","Synonyms":"Ethene","Gamma":"1.21","R":"296.38"},{"ID":"64","Title":"Ethylene Dibromide","Formula":"C2H4Br2","GCF":"0.3173","Derived":"4","Density 1":"7.679","Density 2":"8.382","Synonyms":"1,2-dibromoethane","Gamma":"1.2","R":"44.26"},{"ID":"65","Title":"Ethylene Dichloride","Formula":"C2H4Cl2","GCF":"0.3475","Derived":"4","Density 1":"4.045","Density 2":"4.415","Synonyms":"1,2-dichloroethane","Gamma":"1.2","R":"84.02"},{"ID":"66","Title":"Ethylene Oxide","Formula":"C2H4O","GCF":"0.5308","Derived":"4","Density 1":"1.801","Density 2":"1.965","Synonyms":"Acetaldehide","Gamma":"1.2","R":"188.74"},{"ID":"67","Title":"Ethyleneimine","Formula":"C2H4N","GCF":"0.4790","Derived":"4","Density 1":"1.719","Density 2":"1.877","Synonyms":"Aziridine","Gamma":"1.2","R":"197.71"},{"ID":"68","Title":"Ethylidene Dichloride","Formula":"C2H4Cl2","GCF":"0.3506","Derived":"4","Density 1":"4.045","Density 2":"4.415","Synonyms":"1,1-dichloroethane","Gamma":"1.2","R":"84.02"},{"ID":"69","Title":"Ethyl Mercaptan","Formula":"C2H6S","GCF":"0.3654","Derived":"4","Density 1":"2.540","Density 2":"2.772","Synonyms":"Ethanethiol","Gamma":"1.2","R":"133.81"},{"ID":"70","Title":"Fluorine","Formula":"F2","GCF":"0.9115","Derived":"4","Density 1":"1.553","Density 2":"1.695","Synonyms":"NA","Gamma":"1.4","R":"218.82"},{"ID":"71","Title":"Formaldehyde","Formula":"CH2O","GCF":"0.7912","Derived":"4","Density 1":"1.227","Density 2":"1.340","Synonyms":"NA","Gamma":"1.2","R":"276.91"},{"ID":"72","Title":"Freon 11","Formula":"CCl3F","GCF":"0.3535","Derived":"4","Density 1":"5.615","Density 2":"6.129","Synonyms":"Trichloro,fluoromethane","Gamma":"1.2","R":"60.53"},{"ID":"73","Title":"Freon 12","Formula":"CCl2F2","GCF":"0.3712","Derived":"4","Density 1":"4.942","Density 2":"5.395","Synonyms":"Dichloro,difluoromethane","Gamma":"1.2","R":"68.76"},{"ID":"74","Title":"Freon 13","Formula":"CClF3","GCF":"0.3792","Derived":"4","Density 1":"4.270","Density 2":"4.661","Synonyms":"Chloro, trifluoromethane","Gamma":"1.2","R":"79.60"},{"ID":"75","Title":"Freon 14","Formula":"CF4","GCF":"0.4422","Derived":"4","Density 1":"3.597","Density 2":"3.926","Synonyms":"Carb. Tetrafluoride","Gamma":"1.2","R":"94.48"},{"ID":"76","Title":"Freon 22","Formula":"CHClF2","GCF":"0.4857","Derived":"4","Density 1":"3.534","Density 2":"3.858","Synonyms":"Chloro, difluoromethane","Gamma":"1.2","R":"96.16"},{"ID":"77","Title":"Freon 23","Formula":"CHF3","GCF":"0.5282","Derived":"4","Density 1":"2.862","Density 2":"3.124","Synonyms":"Trifluoromethane, Fluoroform","Gamma":"1.2","R":"118.76"},{"ID":"78","Title":"Freon 114","Formula":"C2Cl2F4","GCF":"0.2327","Derived":"4","Density 1":"6.986","Density 2":"7.626","Synonyms":"1,2-dichloro, 1,1,2,2-tetrafluoroethane","Gamma":"1.2","R":"48.65"},{"ID":"79","Title":"Furan","Formula":"C4H4O","GCF":"0.3889","Derived":"4","Density 1":"2.783","Density 2":"3.037","Synonyms":"Oxacylopentadiene","Gamma":"1.2","R":"122.139"},{"ID":"80","Title":"Helium","Formula":"He","GCF":"1.4005","Derived":"1","Density 1":"0.164","Density 2":"0.179","Synonyms":"NA","Gamma":"1.66","R":"2077.28"},{"ID":"81","Title":"Heptafluoropropane","Formula":"C3HF7","GCF":"0.1987","Derived":"4","Density 1":"6.950","Density 2":"7.586","Synonyms":"Freon 227, R-227ea","Gamma":"1.2","R":"48.90"},{"ID":"82","Title":"Hexamethyldisilazane","Formula":"C6H19NSi2","GCF":"0.1224","Derived":"4","Density 1":"6.597","Density 2":"7.201","Synonyms":"HMDS","Gamma":"1.2","R":"51.52"},{"ID":"83","Title":"Hexamethyldisiloxane","Formula":"C6H18OSi2","GCF":"0.1224","Derived":"4","Density 1":"6.637","Density 2":"7.245","Synonyms":"NA","Gamma":"1.2","R":"51.20"},{"ID":"84","Title":"Hexane","Formula":"C6H14","GCF":"0.1828","Derived":"4","Density 1":"3.522","Density 2":"3.845","Synonyms":"NA","Gamma":"1.2","R":"96.48"},{"ID":"85","Title":"Hexafluorobenzene","Formula":"C6F6","GCF":"0.1733","Derived":"4","Density 1":"7.605","Density 2":"8.301","Synonyms":"Perfluorobenzene","Gamma":"1.2","R":"44.69"},{"ID":"86","Title":"Hexene","Formula":"C6H12","GCF":"0.1918","Derived":"4","Density 1":"3.440","Density 2":"3.755","Synonyms":"1-Hexene","Gamma":"1.2","R":"98.79"},{"ID":"87","Title":"Hydrazine","Formula":"N2H4","GCF":"0.5506","Derived":"4","Density 1":"1.310","Density 2":"1.430","Synonyms":"NA","Gamma":"1.2","R":"259.46"},{"ID":"88","Title":"Hydrogen","Formula":"H2","GCF":"1.0038","Derived":"1","Density 1":"0.082","Density 2":"0.090","Synonyms":"NA","Gamma":"1.38","R":"4124.51"},{"ID":"89","Title":"Hydrogen Bromide","Formula":"HBr","GCF":"1.0028","Derived":"4","Density 1":"3.307","Density 2":"3.610","Synonyms":"NA","Gamma":"1.38","R":"102.76"},{"ID":"90","Title":"Hydrogen Chloride","Formula":"HCl","GCF":"1.0034","Derived":"4","Density 1":"1.490","Density 2":"1.627","Synonyms":"NA","Gamma":"1.4","R":"228.04"},{"ID":"91","Title":"Hydrogen Cyanide","Formula":"CHN","GCF":"0.7772","Derived":"4","Density 1":"1.105","Density 2":"1.206","Synonyms":"Hydrocyanic Acid","Gamma":"1.2","R":"307.66"},{"ID":"92","Title":"Hydrogen Fluoride","Formula":"HF","GCF":"1.0039","Derived":"4","Density 1":"0.818","Density 2":"0.893","Synonyms":"NA","Gamma":"1.4","R":"415.59"},{"ID":"93","Title":"Hydrogen Iodide","Formula":"HI","GCF":"0.9996","Derived":"4","Density 1":"5.228","Density 2":"5.707","Synonyms":"NA","Gamma":"1.4","R":"65.00"},{"ID":"94","Title":"Hydrogen Selenide","Formula":"H2Se","GCF":"0.8412","Derived":"5","Density 1":"3.309","Density 2":"3.612","Synonyms":"NA","Gamma":"1.2","R":"102.68"},{"ID":"95","Title":"Hydrogen Sulfide","Formula":"H2S","GCF":"0.8420","Derived":"4","Density 1":"1.393","Density 2":"1.521","Synonyms":"NA","Gamma":"1.2","R":"243.96"},{"ID":"96","Title":"Isobutane","Formula":"C4H10","GCF":"0.2725","Derived":"2","Density 1":"2.376","Density 2":"2.593","Synonyms":"2-Methylpropane","Gamma":"1.2","R":"143.05"},{"ID":"97","Title":"Isobutanol","Formula":"C4H10O","GCF":"0.2391","Derived":"4","Density 1":"3.030","Density 2":"3.307","Synonyms":"2-methyl-1-propanol","Gamma":"1.2","R":"112.17"},{"ID":"98","Title":"Isobutene","Formula":"C4H8","GCF":"0.2984","Derived":"4","Density 1":"2.293","Density 2":"2.503","Synonyms":"Isobutylene, Methylpropene","Gamma":"1.2","R":"148.19"},{"ID":"99","Title":"Isopentane","Formula":"C5H12","GCF":"0.2175","Derived":"4","Density 1":"2.949","Density 2":"3.219","Synonyms":"2-methylbutane","Gamma":"1.2","R":"115.24"},{"ID":"100","Title":"Isopropyl Alcohol","Formula":"C3H8O","GCF":"0.2931","Derived":"4","Density 1":"2.456","Density 2":"2.681","Synonyms":"2-propanol","Gamma":"1.2","R":"138.356"},{"ID":"104","Title":"Methane","Formula":"CH4","GCF":"0.7787","Derived":"1","Density 1":"0.656","Density 2":"0.716","Synonyms":"NA","Gamma":"1.31","R":"518.28"},{"ID":"105","Title":"Methanol","Formula":"CH4O","GCF":"0.6167","Derived":"4","Density 1":"1.310","Density 2":"1.430","Synonyms":"Methyl Alcohol","Gamma":"1.2","R":"259.49"},{"ID":"121","Title":"Neon","Formula":"Ne","GCF":"1.4043","Derived":"4","Density 1":"0.825","Density 2":"0.900","Synonyms":"NA","Gamma":"1.6","R":"412.02"},{"ID":"123","Title":"Nitrogen","Formula":"N2","GCF":"1.0000","Derived":"1","Density 1":"1.145","Density 2":"1.250","Synonyms":"NA","Gamma":"1.40","R":"296.80"},{"ID":"129","Title":"Nitrous Oxide","Formula":"N2O","GCF":"0.7121","Derived":"1","Density 1":"1.799","Density 2":"1.964","Synonyms":"NA","Gamma":"1.2","R":"188.91"},{"ID":"132","Title":"Oxygen","Formula":"O2","GCF":"0.9779","Derived":"1","Density 1":"1.308","Density 2":"1.428","Synonyms":"NA","Gamma":"1.48","R":"259.84"},{"ID":"145","Title":"Propane","Formula":"C3H8","GCF":"0.3499","Derived":"1","Density 1":"1.802","Density 2":"1.967","Synonyms":"NA","Gamma":"1.13","R":"188.56"},{"ID":"148","Title":"Propylene","Formula":"C3H6","GCF":"0.4048","Derived":"2","Density 1":"1.720","Density 2":"1.877","Synonyms":"Propene","Gamma":"1.2","R":"197.59"},{"ID":"150","Title":"R32","Formula":"CH2F2","GCF":"0.6197","Derived":"2","Density 1":"2.126","Density 2":"2.321","Synonyms":"Difluoromethane","Gamma":"1.2","R":"153.91"},{"ID":"163","Title":"Silane","Formula":"SiH4","GCF":"0.6809","Derived":"5","Density 1":"1.313","Density 2":"1.433","Synonyms":"NA","Gamma":"1.2","R":"258.88"},{"ID":"165","Title":"Sulfur Dioxide","Formula":"SO2","GCF":"0.6878","Derived":"4","Density 1":"2.619","Density 2":"2.858","Synonyms":"NA","Gamma":"1.2","R":"129.78"},{"ID":"166","Title":"Sulfur Hexafluoride","Formula":"SF6","GCF":"0.2701","Derived":"1","Density 1":"5.970","Density 2":"6.516","Synonyms":"NA","Gamma":"1.2","R":"56.93"},{"ID":"187","Title":"Water Vapor","Formula":"H2O","GCF":"0.7992","Derived":"5","Density 1":"0.742","Density 2":"0.810","Synonyms":"NA","Gamma":"1.33","R":"461.53"},{"ID":"188","Title":"Xenon","Formula":"Xe","GCF":"1.4042","Derived":"4","Density 1":"5.366","Density 2":"5.858","Synonyms":"NA","Gamma":"1.6","R":"63.33"}];
+
+const referenceConditionList = [
+  { "Title": "32°F & 1 ATM (0°C & 101.325 kPa)",      "Temp": "273.15",  "Pressure": "101325.2052" },
+  { "Title": "70°F & 1 ATM (21.1°C & 101.325 kPa)",   "Temp": "294.261", "Pressure": "101325.2052" },
+  { "Title": "77°F & 1 ATM (25°C & 101.325 kPa)",       "Temp": "298.15",  "Pressure": "101325.2052" }
+];
+
+const unitList = [
+  // ── Mass ──────────────────────────────────────────────────
+  {"Title":"Gm / Sec",   "Unit":"g",   "Time":"s", "Type":"mass",      "Value":"1"},
+  {"Title":"Gm / Min",   "Unit":"g",   "Time":"m", "Type":"mass",      "Value":"0.01666666667"},
+  {"Title":"Gm / Hr",    "Unit":"g",   "Time":"h", "Type":"mass",      "Value":"0.00027777778"},
+  {"Title":"Kg / Sec",   "Unit":"kg",  "Time":"s", "Type":"mass",      "Value":"1000"},
+  {"Title":"Kg / Min",   "Unit":"kg",  "Time":"m", "Type":"mass",      "Value":"16.6666666667"},
+  {"Title":"Kg / Hr",    "Unit":"kg",  "Time":"h", "Type":"mass",      "Value":"0.27777777778"},
+  {"Title":"Lb / Sec",   "Unit":"lb",  "Time":"s", "Type":"mass",      "Value":"453.59237"},
+  {"Title":"Lb / Min",   "Unit":"lb",  "Time":"m", "Type":"mass",      "Value":"7.55987283333"},
+  {"Title":"Lb / Hour",  "Unit":"lb",  "Time":"h", "Type":"mass",      "Value":"0.12599788056"},
+
+  // ── Substance (molar) ─────────────────────────────────────
+  {"Title":"Mole / Sec", "Unit":"mol", "Time":"s", "Type":"substance", "Value":"1"},
+  {"Title":"Mole / Min", "Unit":"mol", "Time":"m", "Type":"substance", "Value":"0.01666666667"},
+  {"Title":"Mole / Hr",  "Unit":"mol", "Time":"h", "Type":"substance", "Value":"0.00027777778"},
+  {"Title":"MMole / Sec","Unit":"mmol","Time":"s", "Type":"substance", "Value":"0.001"},
+  {"Title":"MMole / Min","Unit":"mmol","Time":"m", "Type":"substance", "Value":"0.00001666667"},
+  {"Title":"KMole / Hr", "Unit":"kmol","Time":"h", "Type":"substance", "Value":"0.27777777778"},
+
+  // ── Volume ────────────────────────────────────────────────
+  {"Title":"SCCS",       "Unit":"scc", "Time":"s", "Type":"volume",    "Value":"1e-06"},
+  {"Title":"SCCM",       "Unit":"scc", "Time":"m", "Type":"volume",    "Value":"1.66666667e-08"},
+  {"Title":"SCCH",       "Unit":"scc", "Time":"h", "Type":"volume",    "Value":"2.7777778e-10"},
+  {"Title":"SLS",        "Unit":"sl",  "Time":"s", "Type":"volume",    "Value":"0.001"},
+  {"Title":"SLM",        "Unit":"sl",  "Time":"m", "Type":"volume",    "Value":"1.666666e-05"},
+  {"Title":"SLH",        "Unit":"sl",  "Time":"h", "Type":"volume",    "Value":"2.77777778e-07"},
+  {"Title":"SCFS",       "Unit":"scf", "Time":"s", "Type":"volume",    "Value":"0.02831685"},
+  {"Title":"SCFM",       "Unit":"scf", "Time":"m", "Type":"volume",    "Value":"0.00047194750"},
+  {"Title":"SCFH",       "Unit":"scf", "Time":"h", "Type":"volume",    "Value":"7.865791667e-06"},
+  {"Title":"SCIM",       "Unit":"sci", "Time":"m", "Type":"volume",    "Value":"1.638706e-05"},
+  {"Title":"SM³ / Sec",  "Unit":"m3",  "Time":"s", "Type":"volume",    "Value":"1000"},
+  {"Title":"SM³ / Min",  "Unit":"m3",  "Time":"m", "Type":"volume",    "Value":"16.6666666667"},
+  {"Title":"SM³ / Hr",   "Unit":"m3",  "Time":"h", "Type":"volume",    "Value":"0.27777777778"},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+const R_CONST = 8314.4621;
+let selectedGas = null;
+let filteredGases = [...gasList];
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  populateUnits();
+  populateRefCond();
+  setupGasSearch();
+  document.getElementById('fromInput').addEventListener('input', calculate);
+  document.getElementById('fromUnit').addEventListener('change', calculate);
+  document.getElementById('toUnit').addEventListener('change', calculate);
+  document.getElementById('refCond').addEventListener('change', calculate);
+  document.getElementById('swapBtn').addEventListener('click', swapUnits);
+  // Default gas: Air
+  selectGas(gasList.find(g => g.Title === 'Air'));
+});
+
+function populateUnits() {
+  const from = document.getElementById('fromUnit');
+  const to   = document.getElementById('toUnit');
+  unitList.forEach((u, i) => {
+    from.add(new Option(u.Title, i));
+    to.add(new Option(u.Title, i));
+  });
+  from.value = 7;  // Lb / Min  (index 7)
+  to.value   = 22; // SCFM      (index 22)
+}
+
+function populateRefCond() {
+  const sel = document.getElementById('refCond');
+  referenceConditionList.forEach((r, i) => sel.add(new Option(r.Title, i)));
+  sel.value = 2; // 25°C & 760 Torr
+}
+
+// ============================================================
+// GAS SEARCH
+// ============================================================
+function setupGasSearch() {
+  const input    = document.getElementById('gasSearch');
+  const dropdown = document.getElementById('gasDropdown');
+
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase().trim();
+    filteredGases = q
+      ? gasList.filter(g =>
+          g.Title.toLowerCase().includes(q) ||
+          g.Formula.toLowerCase().includes(q) ||
+          (g.Synonyms && g.Synonyms.toLowerCase().includes(q))
+        )
+      : [...gasList];
+    renderDropdown();
+    dropdown.classList.add('open');
+  });
+
+  input.addEventListener('focus', () => {
+    filteredGases = [...gasList];
+    renderDropdown();
+    dropdown.classList.add('open');
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.gas-search-wrap')) dropdown.classList.remove('open');
+  });
+}
+
+function renderDropdown() {
+  const dropdown = document.getElementById('gasDropdown');
+  dropdown.innerHTML = filteredGases.slice(0, 80).map(g =>
+    `<div class="gas-option" data-idx="${gasList.indexOf(g)}">
+      <span>${g.Title}</span>
+      <span class="formula">${g.Formula}</span>
+    </div>`
+  ).join('');
+  dropdown.querySelectorAll('.gas-option').forEach(el => {
+    el.addEventListener('click', () => {
+      selectGas(gasList[+el.dataset.idx]);
+      dropdown.classList.remove('open');
+    });
+  });
+}
+
+function selectGas(gas) {
+  selectedGas = gas;
+  document.getElementById('gasSearch').value     = gas.Title;
+  document.getElementById('gasBadge').textContent = gas.Formula;
+  document.getElementById('infoTitle').textContent    = gas.Title;
+  document.getElementById('infoFormula').textContent  = gas.Formula;
+  document.getElementById('infoGCF').textContent      = gas.GCF;
+  document.getElementById('infoDensity').textContent  = gas['Density 2'] + ' kg/m³';
+  document.getElementById('infoGamma').textContent    = gas.Gamma;
+  document.getElementById('infoSynonyms').textContent = gas.Synonyms === 'NA' ? '—' : gas.Synonyms;
+  calculate();
+}
+
+// ============================================================
+// SWAP
+// ============================================================
+function swapUnits() {
+  const f = document.getElementById('fromUnit');
+  const t = document.getElementById('toUnit');
+  [f.value, t.value] = [t.value, f.value];
+  calculate();
+}
+
+// ============================================================
+// CONVERSION ENGINE
+// ============================================================
+function getSeconds(TIME) {
+  if (TIME === 'm') return 60;
+  if (TIME === 'h') return 3600;
+  return 1;
+}
+
+function convertWeight(VALUE, TOUNIT) {
+  if (TOUNIT === 'kg') return VALUE / 1000;
+  if (TOUNIT === 'lb') return VALUE * 0.0022046;
+  return VALUE; // g
+}
+
+function convertVolume(VALUE, TOUNIT) {
+  if (TOUNIT === 'm3')  return VALUE * 0.001;
+  if (TOUNIT === 'scc') return VALUE * 1000;
+  if (TOUNIT === 'scf') return VALUE * 0.035315;
+  if (TOUNIT === 'sci') return VALUE * 61.024;
+  return VALUE; // sl
+}
+
+function convertTime(VALUE, TIME) {
+  if (TIME === 'm') return VALUE * 60;
+  if (TIME === 'h') return VALUE * 3600;
+  return VALUE;
+}
+
+function simplifyValue(VALUE, UNIT, TIME) {
+  let value = 0;
+  if      (UNIT === 'g')   value = VALUE;
+  else if (UNIT === 'kg')  value = VALUE * 1000;
+  else if (UNIT === 'lb')  value = VALUE * 453.59237;
+  else if (UNIT === 'mol') value = VALUE;
+  else if (UNIT === 'sl')  value = VALUE;
+  else if (UNIT === 'm3')  value = VALUE / 0.001;
+  else if (UNIT === 'scc') value = VALUE / 1000;
+  else if (UNIT === 'scf') value = VALUE / 0.035315;
+  else if (UNIT === 'sci') value = VALUE / 61.024;
+  else if (UNIT === 'mmol') value = VALUE * 0.001;
+  else if (UNIT === 'kmol') value = VALUE * 1000;
+
+  const t = getSeconds(TIME);
+  return t > 1 ? value / t : value;
+}
+
+function calculateDensity(T, P, M) {
+  return (P * M) / (R_CONST * T);
+}
+
+function calculate() {
+  if (!selectedGas) return;
+
+  const fromVal = parseFloat(document.getElementById('fromInput').value);
+  if (isNaN(fromVal)) { setResult('—', 'Invalid input'); return; }
+
+  const fromIdx = +document.getElementById('fromUnit').value;
+  const toIdx   = +document.getElementById('toUnit').value;
+  const refIdx  = +document.getElementById('refCond').value;
+
+  const fromU = unitList[fromIdx];
+  const toU   = unitList[toIdx];
+  const ref   = referenceConditionList[refIdx];
+
+  const T = parseFloat(ref.Temp);
+  const P = parseFloat(ref.Pressure);
+  const M = R_CONST / parseFloat(selectedGas.R);
+
+  const simple = simplifyValue(fromVal, fromU.Unit, fromU.Time);
+  let result = 0;
+  const ft = fromU.Type, tt = toU.Type;
+
+  if (fromIdx === toIdx) {
+    result = fromVal;
+  } else if (ft === 'mass' && tt === 'mass') {
+    result = convertTime(convertWeight(simple, toU.Unit), toU.Time);
+  } else if (ft === 'mass' && tt === 'substance') {
+    result = convertTime(simple / M, toU.Time);
+  } else if (ft === 'mass' && tt === 'volume') {
+    const d = calculateDensity(T, P, M);
+    result = convertTime(convertVolume(simple / d, toU.Unit), toU.Time);
+  } else if (ft === 'substance' && tt === 'mass') {
+    result = convertTime(convertWeight(simple * M, toU.Unit), toU.Time);
+  } else if (ft === 'substance' && tt === 'substance') {
+    result = convertTime(simple, toU.Time);
+  } else if (ft === 'substance' && tt === 'volume') {
+    const iter = simple * R_CONST * T / P;
+    result = convertTime(convertVolume(iter, toU.Unit), toU.Time);
+  } else if (ft === 'volume' && tt === 'mass') {
+    const d = calculateDensity(T, P, M);
+    result = convertTime(convertWeight(simple * d, toU.Unit), toU.Time);
+  } else if (ft === 'volume' && tt === 'substance') {
+    const d = calculateDensity(T, P, M);
+    result = convertTime((simple * d) / M, toU.Time);
+  } else if (ft === 'volume' && tt === 'volume') {
+    result = convertTime(convertVolume(simple, toU.Unit), toU.Time);
+  }
+
+  const rounded = Math.round(result * 1e6) / 1e6; // NOT NEEDED BECAUSE toFixed(6) rounds for me
+  const display = formatResult(rounded);
+  document.getElementById('toValue').value = display;
+  //setResult(display, `${fromVal} ${fromU.Title}  →  ${toU.Title}`);
+}
+
+function formatResult(val) {
+  if (val === 0) return '0';
+  const abs = Math.abs(val);
+  if (abs >= 1e6 || (abs < 0.0001 && abs > 0)) return val.toExponential(4);
+  if (abs >= 100) return val.toFixed(4);
+  //return val.toPrecision(6).replace(/\.?0+$/, '');  // OLD CODE
+   return val.toFixed(6); // For everything else, force exactly 6 decimal places
+}
+
+function setResult(val, label) {
+  const big = document.getElementById('resultBig');
+  const lbl = document.getElementById('resultLabel');
+  big.classList.add('pulse');
+  setTimeout(() => big.classList.remove('pulse'), 300);
+  big.textContent = val;
+  lbl.textContent = label;
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+//const gasList = [{"ID":"1","Title":"Acetic Acid","Formula":"C2H4F2","GCF":"0.4155","Derived":"4","Density 1":"2.700","Density 2":"2.947","Synonyms":"Ethanoic Acid","Gamma":"1.2","R":"125.88"},{"ID":"2","Title":"Acetic Acid, Anhydride","Formula":"C4H6O3","GCF":"0.2580","Derived":"4","Density 1":"4.173","Density 2":"4.555","Synonyms":"Aceticanhydride","Gamma":"1.2","R":"81.44"},{"ID":"3","Title":"Acetone","Formula":"C3H6O","GCF":"0.3556","Derived":"4","Density 1":"2.374","Density 2":"2.591","Synonyms":"2-propanone","Gamma":"1.2","R":"143.16"},{"ID":"4","Title":"Acetonitryl","Formula":"C2H3N","GCF":"0.5178","Derived":"4","Density 1":"1.678","Density 2":"1.832","Synonyms":"Methyl Cyanide","Gamma":"1.2","R":"202.54"},{"ID":"5","Title":"Acetylene","Formula":"C2H2","GCF":"0.6255","Derived":"4","Density 1":"1.064","Density 2":"1.162","Synonyms":"Ethyne","Gamma":"1.23","R":"319.33"},{"ID":"6","Title":"Air","Formula":"Air","GCF":"1.0015","Derived":"1","Density 1":"1.185","Density 2":"1.293","Synonyms":"NA","Gamma":"1.4","R":"287.00"},{"ID":"7","Title":"Allene","Formula":"C3H4","GCF":"0.4514","Derived":"4","Density 1":"1.638","Density 2":"1.787","Synonyms":"Propadiene","Gamma":"1.2","R":"207.53"},{"ID":"8","Title":"Ammonia","Formula":"NH3","GCF":"0.7807","Derived":"2","Density 1":"0.696","Density 2":"0.760","Synonyms":"NA","Gamma":"1.32","R":"488.21"},{"ID":"9","Title":"Argon","Formula":"Ar","GCF":"1.4047","Derived":"1","Density 1":"1.633","Density 2":"1.782","Synonyms":"NA","Gamma":"1.66","R":"208.13"},{"ID":"10","Title":"Arsine","Formula":"AsH3","GCF":"0.7592","Derived":"5","Density 1":"3.186","Density 2":"3.478","Synonyms":"NA","Gamma":"1.2","R":"106.67"},{"ID":"11","Title":"Benzene","Formula":"C6H6","GCF":"0.3057","Derived":"4","Density 1":"3.193","Density 2":"3.485","Synonyms":"NA","Gamma":"1.2","R":"106.44"},{"ID":"12","Title":"Boron Trichloride","Formula":"BCl3","GCF":"0.4421","Derived":"4","Density 1":"4.789","Density 2":"5.228","Synonyms":"NA","Gamma":"1.2","R":"70.96"},{"ID":"13","Title":"Boron Triflouride","Formula":"BF3","GCF":"0.5431","Derived":"4","Density 1":"2.772","Density 2":"3.025","Synonyms":"NA","Gamma":"1.2","R":"122.62"},{"ID":"14","Title":"Bromine","Formula":"Br2","GCF":"0.8007","Derived":"4","Density 1":"6.532","Density 2":"7.130","Synonyms":"NA","Gamma":"1.4","R":"52.03"},{"ID":"15","Title":"Bromochlorodifluoromethane","Formula":"CBrClF2","GCF":"0.3684","Derived":"4","Density 1":"6.759","Density 2":"7.378","Synonyms":"NA","Gamma":"1.2","R":"50.28"},{"ID":"16","Title":"Bromodifluoromethane","Formula":"CHBrF2","GCF":"0.4644","Derived":"4","Density 1":"5.351","Density 2":"5.841","Synonyms":"NA","Gamma":"1.2","R":"63.51"},{"ID":"17","Title":"Bromotrifluormethane","Formula":"CBrF3","GCF":"0.3943","Derived":"4","Density 1":"6.087","Density 2":"6.644","Synonyms":"NA","Gamma":"1.2","R":"55.84"},{"ID":"18","Title":"Butane","Formula":"C4H10","GCF":"0.2622","Derived":"2","Density 1":"2.376","Density 2":"2.593","Synonyms":"NA","Gamma":"1.09","R":"143.05"},{"ID":"19","Title":"Butanol","Formula":"C4H10O","GCF":"0.2406","Derived":"4","Density 1":"3.030","Density 2":"3.307","Synonyms":"1-Butanol, Butyl Alcohol","Gamma":"1.2","R":"112.17"},{"ID":"20","Title":"Butene","Formula":"C4H8","GCF":"0.3056","Derived":"4","Density 1":"2.293","Density 2":"2.503","Synonyms":"1-Butene, 1-Butylene","Gamma":"1.2","R":"148.19"},{"ID":"21","Title":"Carbon Dioxide","Formula":"CO2","GCF":"0.7526","Derived":"1","Density 1":"1.799","Density 2":"1.964","Synonyms":"NA","Gamma":"1.22","R":"188.93"},{"ID":"22","Title":"Carbon Disulfide","Formula":"CS2","GCF":"0.6160","Derived":"4","Density 1":"3.112","Density 2":"3.397","Synonyms":"NA","Gamma":"1.2","R":"109.20"},{"ID":"23","Title":"Carbon Monoxide","Formula":"CO","GCF":"1.0012","Derived":"4","Density 1":"1.145","Density 2":"1.250","Synonyms":"NA","Gamma":"1.4","R":"296.84"},{"ID":"24","Title":"Carbon Tetrachloride","Formula":"CCl4","GCF":"0.3333","Derived":"4","Density 1":"6.287","Density 2":"6.863","Synonyms":"Tetrachloromethane","Gamma":"1.2","R":"54.05"},{"ID":"25","Title":"Carbonyl Sulfide","Formula":"COS","GCF":"0.6680","Derived":"4","Density 1":"2.456","Density 2":"2.680","Synonyms":"Carbon Oxysulfide","Gamma":"1.2","R":"138.40"},{"ID":"26","Title":"Chlorine","Formula":"Cl2","GCF":"0.8451","Derived":"4","Density 1":"2.898","Density 2":"3.163","Synonyms":"NA","Gamma":"1.4","R":"117.26"},{"ID":"27","Title":"Chlorine Trifluoride","Formula":"ClF3","GCF":"0.4496","Derived":"5","Density 1":"3.779","Density 2":"4.125","Synonyms":"NA","Gamma":"1.2","R":"89.94"},{"ID":"28","Title":"Chlorobenzene","Formula":"C6H5Cl","GCF":"0.2614","Derived":"4","Density 1":"4.601","Density 2":"5.022","Synonyms":"NA","Gamma":"1.2","R":"73.87"},{"ID":"29","Title":"Chlorodifluoroethane","Formula":"C2H3ClF2","GCF":"0.3216","Derived":"4","Density 1":"4.108","Density 2":"4.484","Synonyms":"Ethane, 2-chloro-1,1-difluoro-","Gamma":"1.2","R":"82.74"},{"ID":"30","Title":"Chloroform","Formula":"CHCl3","GCF":"0.4192","Derived":"4","Density 1":"4.879","Density 2":"5.326","Synonyms":"Trichloromethane","Gamma":"1.2","R":"69.65"},{"ID":"31","Title":"Chloropentafluoroethane","Formula":"C2ClF5","GCF":"0.2437","Derived":"4","Density 1":"6.314","Density 2":"6.892","Synonyms":"NA","Gamma":"1.2","R":"53.83"},{"ID":"32","Title":"Chloropropane","Formula":"C3H7Cl","GCF":"0.3080","Derived":"4","Density 1":"3.210","Density 2":"3.504","Synonyms":"Propylchloride","Gamma":"1.2","R":"105.86"},{"ID":"33","Title":"Cisbutene","Formula":"C4H8","GCF":"0.3004","Derived":"4","Density 1":"2.293","Density 2":"2.503","Synonyms":"Cis-2-butene","Gamma":"1.2","R":"148.19"},{"ID":"34","Title":"Cyanogen","Formula":"C2N2","GCF":"0.4924","Derived":"4","Density 1":"2.127","Density 2":"2.322","Synonyms":"NA","Gamma":"1.2","R":"159.79"},{"ID":"35","Title":"Cyanogen Chloride","Formula":"ClCN","GCF":"0.6486","Derived":"5","Density 1":"2.513","Density 2":"2.743","Synonyms":"NA","Gamma":"1.2","R":"135.26"},{"ID":"36","Title":"Cyclobutane","Formula":"C4H8","GCF":"0.3562","Derived":"4","Density 1":"2.293","Density 2":"2.503","Synonyms":"Tetramethylene","Gamma":"1.2","R":"148.19"},{"ID":"37","Title":"Cyclopropane","Formula":"C3H6","GCF":"0.4562","Derived":"4","Density 1":"1.720","Density 2":"1.877","Synonyms":"Trimethylene","Gamma":"1.2","R":"197.59"},{"ID":"38","Title":"Deuterium","Formula":"H22","GCF":"1.0003","Derived":"4","Density 1":"0.165","Density 2":"0.180","Synonyms":"D2","Gamma":"1.4","R":"2062.13"},{"ID":"39","Title":"Diborane","Formula":"B2H6","GCF":"0.5063","Derived":"5","Density 1":"1.131","Density 2":"1.235","Synonyms":"NA","Gamma":"1.2","R":"300.49"},{"ID":"40","Title":"Dibromodifluoromethane","Formula":"CBr2F2","GCF":"0.3590","Derived":"4","Density 1":"8.576","Density 2":"9.361","Synonyms":"NA","Gamma":"1.2","R":"39.63"},{"ID":"41","Title":"Dichlorofluoromethane","Formula":"CHCl2F","GCF":"0.4481","Derived":"4","Density 1":"4.207","Density 2":"4.592","Synonyms":"R21","Gamma":"1.2","R":"80.78"},{"ID":"42","Title":"Dichloromethane","Formula":"CH2Cl2","GCF":"0.5322","Derived":"4","Density 1":"3.472","Density 2":"3.789","Synonyms":"Methylene Chloride","Gamma":"1.2","R":"97.90"},{"ID":"43","Title":"Dichloropropane","Formula":"C3H6Cl2","GCF":"0.2698","Derived":"4","Density 1":"4.618","Density 2":"5.041","Synonyms":"1,2-dichloropropane,","Gamma":"1.2","R":"73.59"},{"ID":"44","Title":"Dichlorosilane","Formula":"H2SiCl2","GCF":"0.4716","Derived":"5","Density 1":"4.129","Density 2":"4.506","Synonyms":"NA","Gamma":"1.2","R":"82.32"},{"ID":"45","Title":"Diethyl Amine","Formula":"C4H11N","GCF":"0.2256","Derived":"4","Density 1":"2.989","Density 2":"3.263","Synonyms":"NA","Gamma":"1.2","R":"113.68"},{"ID":"46","Title":"Diethyl Ether","Formula":"C4H10O","GCF":"0.2235","Derived":"4","Density 1":"3.030","Density 2":"3.307","Synonyms":"1,1-oxybisethane","Gamma":"1.2","R":"112.17"},{"ID":"47","Title":"Diethyl Sulfide","Formula":"C4H10S","GCF":"0.2255","Derived":"4","Density 1":"3.686","Density 2":"4.024","Synonyms":"3-thiapentane, UN-2375","Gamma":"1.2","R":"92.19"},{"ID":"48","Title":"Difluoroethylene","Formula":"C2H2F2","GCF":"0.4492","Derived":"4","Density 1":"2.617","Density 2":"2.857","Synonyms":"Vinylidenefluoride, G-1132A, Difluoroethene","Gamma":"1.2","R":"129.85"},{"ID":"49","Title":"Dimethylamine","Formula":"C2H7N","GCF":"0.3705","Derived":"4","Density 1":"1.843","Density 2":"2.011","Synonyms":"N-methylmethanamine","Gamma":"1.2","R":"184.42"},{"ID":"50","Title":"Dimethyl Ether","Formula":"C2H6O","GCF":"0.4088","Derived":"4","Density 1":"1.883","Density 2":"2.055","Synonyms":"Methylether; Methane, Oxybis-","Gamma":"1.2","R":"180.48"},{"ID":"51","Title":"Dimethyl Sulfide","Formula":"C2H6S","GCF":"0.3623","Derived":"4","Density 1":"2.540","Density 2":"2.772","Synonyms":"2-thiopropane, Thiobismethane","Gamma":"1.2","R":"133.81"},{"ID":"52","Title":"Divinyl","Formula":"C4H6","GCF":"0.3248","Derived":"4","Density 1":"2.211","Density 2":"2.413","Synonyms":"1,3-butadiene","Gamma":"1.2","R":"153.71"},{"ID":"53","Title":"Ethane","Formula":"C2H6","GCF":"0.4998","Derived":"2","Density 1":"1.229","Density 2":"1.342","Synonyms":"NA","Gamma":"1.19","R":"276.51"},{"ID":"54","Title":"Ethane, 1-chloro-1,1,2,2-tetrafluoro-","Formula":"C2HClF4","GCF":"0.2684","Derived":"4","Density 1":"5.578","Density 2":"6.089","Synonyms":"Chlorotetrafluoroethane, F124, R124","Gamma":"1.2","R":"60.92"},{"ID":"55","Title":"Ethane, 1-chloro-1,2,2,2-tetrafluoro-","Formula":"C2HClF4","GCF":"0.2719","Derived":"4","Density 1":"5.578","Density 2":"6.089","Synonyms":"Chlorotetrafluoroethane","Gamma":"1.2","R":"60.92"},{"ID":"56","Title":"Ethanol","Formula":"C2H6O","GCF":"0.4046","Derived":"4","Density 1":"1.883","Density 2":"2.055","Synonyms":"Ethyl Alcohol","Gamma":"1.2","R":"180.48"},{"ID":"57","Title":"Ethylacetylene","Formula":"C4H6","GCF":"0.3256","Derived":"4","Density 1":"2.211","Density 2":"2.413","Synonyms":"1-butyne","Gamma":"1.2","R":"153.71"},{"ID":"58","Title":"Ethyl Amine","Formula":"C2H7N","GCF":"0.3694","Derived":"4","Density 1":"1.843","Density 2":"2.011","Synonyms":"Ethanamine","Gamma":"1.2","R":"184.42"},{"ID":"59","Title":"Ethylbenzene","Formula":"C8H10","GCF":"0.2001","Derived":"4","Density 1":"4.339","Density 2":"4.737","Synonyms":"1-butyne","Gamma":"1.2","R":"78.32"},{"ID":"60","Title":"Ethyl Bromide","Formula":"C2H5Br","GCF":"0.4124","Derived":"4","Density 1":"4.454","Density 2":"4.862","Synonyms":"NA","Gamma":"1.2","R":"75.60"},{"ID":"61","Title":"Ethyl Chloride","Formula":"C2H5Cl","GCF":"0.4212","Derived":"4","Density 1":"2.637","Density 2":"2.878","Synonyms":"Chloroethane","Gamma":"1.2","R":"128.88"},{"ID":"62","Title":"Ethyl Fluoride","Formula":"C2H5F","GCF":"0.4430","Derived":"4","Density 1":"1.964","Density 2":"2.144","Synonyms":"Fluoroethane, R-161","Gamma":"1.2","R":"173.00"},{"ID":"63","Title":"Ethylene","Formula":"C2H4","GCF":"0.6062","Derived":"1","Density 1":"1.147","Density 2":"1.252","Synonyms":"Ethene","Gamma":"1.21","R":"296.38"},{"ID":"64","Title":"Ethylene Dibromide","Formula":"C2H4Br2","GCF":"0.3173","Derived":"4","Density 1":"7.679","Density 2":"8.382","Synonyms":"1,2-dibromoethane","Gamma":"1.2","R":"44.26"},{"ID":"65","Title":"Ethylene Dichloride","Formula":"C2H4Cl2","GCF":"0.3475","Derived":"4","Density 1":"4.045","Density 2":"4.415","Synonyms":"1,2-dichloroethane","Gamma":"1.2","R":"84.02"},{"ID":"66","Title":"Ethylene Oxide","Formula":"C2H4O","GCF":"0.5308","Derived":"4","Density 1":"1.801","Density 2":"1.965","Synonyms":"Acetaldehide","Gamma":"1.2","R":"188.74"},{"ID":"67","Title":"Ethyleneimine","Formula":"C2H4N","GCF":"0.4790","Derived":"4","Density 1":"1.719","Density 2":"1.877","Synonyms":"Aziridine","Gamma":"1.2","R":"197.71"},{"ID":"68","Title":"Ethylidene Dichloride","Formula":"C2H4Cl2","GCF":"0.3506","Derived":"4","Density 1":"4.045","Density 2":"4.415","Synonyms":"1,1-dichloroethane","Gamma":"1.2","R":"84.02"},{"ID":"69","Title":"Ethyl Mercaptan","Formula":"C2H6S","GCF":"0.3654","Derived":"4","Density 1":"2.540","Density 2":"2.772","Synonyms":"Ethanethiol","Gamma":"1.2","R":"133.81"},{"ID":"70","Title":"Fluorine","Formula":"F2","GCF":"0.9115","Derived":"4","Density 1":"1.553","Density 2":"1.695","Synonyms":"NA","Gamma":"1.4","R":"218.82"},{"ID":"71","Title":"Formaldehyde","Formula":"CH2O","GCF":"0.7912","Derived":"4","Density 1":"1.227","Density 2":"1.340","Synonyms":"NA","Gamma":"1.2","R":"276.91"},{"ID":"72","Title":"Freon 11","Formula":"CCl3F","GCF":"0.3535","Derived":"4","Density 1":"5.615","Density 2":"6.129","Synonyms":"Trichloro,fluoromethane","Gamma":"1.2","R":"60.53"},{"ID":"73","Title":"Freon 12","Formula":"CCl2F2","GCF":"0.3712","Derived":"4","Density 1":"4.942","Density 2":"5.395","Synonyms":"Dichloro,difluoromethane","Gamma":"1.2","R":"68.76"},{"ID":"74","Title":"Freon 13","Formula":"CClF3","GCF":"0.3792","Derived":"4","Density 1":"4.270","Density 2":"4.661","Synonyms":"Chloro, trifluoromethane","Gamma":"1.2","R":"79.60"},{"ID":"75","Title":"Freon 14","Formula":"CF4","GCF":"0.4422","Derived":"4","Density 1":"3.597","Density 2":"3.926","Synonyms":"Carb. Tetrafluoride","Gamma":"1.2","R":"94.48"},{"ID":"76","Title":"Freon 22","Formula":"CHClF2","GCF":"0.4857","Derived":"4","Density 1":"3.534","Density 2":"3.858","Synonyms":"Chloro, difluoromethane","Gamma":"1.2","R":"96.16"},{"ID":"77","Title":"Freon 23","Formula":"CHF3","GCF":"0.5282","Derived":"4","Density 1":"2.862","Density 2":"3.124","Synonyms":"Trifluoromethane, Fluoroform","Gamma":"1.2","R":"118.76"},{"ID":"78","Title":"Freon 114","Formula":"C2Cl2F4","GCF":"0.2327","Derived":"4","Density 1":"6.986","Density 2":"7.626","Synonyms":"1,2-dichloro, 1,1,2,2-tetrafluoroethane","Gamma":"1.2","R":"48.65"},{"ID":"79","Title":"Furan","Formula":"C4H4O","GCF":"0.3889","Derived":"4","Density 1":"2.783","Density 2":"3.037","Synonyms":"Oxacylopentadiene","Gamma":"1.2","R":"122.139"},{"ID":"80","Title":"Helium","Formula":"He","GCF":"1.4005","Derived":"1","Density 1":"0.164","Density 2":"0.179","Synonyms":"NA","Gamma":"1.66","R":"2077.28"},{"ID":"81","Title":"Heptafluoropropane","Formula":"C3HF7","GCF":"0.1987","Derived":"4","Density 1":"6.950","Density 2":"7.586","Synonyms":"Freon 227, R-227ea","Gamma":"1.2","R":"48.90"},{"ID":"82","Title":"Hexamethyldisilazane","Formula":"C6H19NSi2","GCF":"0.1224","Derived":"4","Density 1":"6.597","Density 2":"7.201","Synonyms":"HMDS","Gamma":"1.2","R":"51.52"},{"ID":"83","Title":"Hexamethyldisiloxane","Formula":"C6H18OSi2","GCF":"0.1224","Derived":"4","Density 1":"6.637","Density 2":"7.245","Synonyms":"NA","Gamma":"1.2","R":"51.20"},{"ID":"84","Title":"Hexane","Formula":"C6H14","GCF":"0.1828","Derived":"4","Density 1":"3.522","Density 2":"3.845","Synonyms":"NA","Gamma":"1.2","R":"96.48"},{"ID":"85","Title":"Hexafluorobenzene","Formula":"C6F6","GCF":"0.1733","Derived":"4","Density 1":"7.605","Density 2":"8.301","Synonyms":"Perfluorobenzene","Gamma":"1.2","R":"44.69"},{"ID":"86","Title":"Hexene","Formula":"C6H12","GCF":"0.1918","Derived":"4","Density 1":"3.440","Density 2":"3.755","Synonyms":"1-Hexene","Gamma":"1.2","R":"98.79"},{"ID":"87","Title":"Hydrazine","Formula":"N2H4","GCF":"0.5506","Derived":"4","Density 1":"1.310","Density 2":"1.430","Synonyms":"NA","Gamma":"1.2","R":"259.46"},{"ID":"88","Title":"Hydrogen","Formula":"H2","GCF":"1.0038","Derived":"1","Density 1":"0.082","Density 2":"0.090","Synonyms":"NA","Gamma":"1.38","R":"4124.51"},{"ID":"89","Title":"Hydrogen Bromide","Formula":"HBr","GCF":"1.0028","Derived":"4","Density 1":"3.307","Density 2":"3.610","Synonyms":"NA","Gamma":"1.38","R":"102.76"},{"ID":"90","Title":"Hydrogen Chloride","Formula":"HCl","GCF":"1.0034","Derived":"4","Density 1":"1.490","Density 2":"1.627","Synonyms":"NA","Gamma":"1.4","R":"228.04"},{"ID":"91","Title":"Hydrogen Cyanide","Formula":"CHN","GCF":"0.7772","Derived":"4","Density 1":"1.105","Density 2":"1.206","Synonyms":"Hydrocyanic Acid","Gamma":"1.2","R":"307.66"},{"ID":"92","Title":"Hydrogen Fluoride","Formula":"HF","GCF":"1.0039","Derived":"4","Density 1":"0.818","Density 2":"0.893","Synonyms":"NA","Gamma":"1.4","R":"415.59"},{"ID":"93","Title":"Hydrogen Iodide","Formula":"HI","GCF":"0.9996","Derived":"4","Density 1":"5.228","Density 2":"5.707","Synonyms":"NA","Gamma":"1.4","R":"65.00"},{"ID":"94","Title":"Hydrogen Selenide","Formula":"H2Se","GCF":"0.8412","Derived":"5","Density 1":"3.309","Density 2":"3.612","Synonyms":"NA","Gamma":"1.2","R":"102.68"},{"ID":"95","Title":"Hydrogen Sulfide","Formula":"H2S","GCF":"0.8420","Derived":"4","Density 1":"1.393","Density 2":"1.521","Synonyms":"NA","Gamma":"1.2","R":"243.96"},{"ID":"96","Title":"Isobutane","Formula":"C4H10","GCF":"0.2725","Derived":"2","Density 1":"2.376","Density 2":"2.593","Synonyms":"2-Methylpropane","Gamma":"1.2","R":"143.05"},{"ID":"97","Title":"Isobutanol","Formula":"C4H10O","GCF":"0.2391","Derived":"4","Density 1":"3.030","Density 2":"3.307","Synonyms":"2-methyl-1-propanol","Gamma":"1.2","R":"112.17"},{"ID":"98","Title":"Isobutene","Formula":"C4H8","GCF":"0.2984","Derived":"4","Density 1":"2.293","Density 2":"2.503","Synonyms":"Isobutylene, Methylpropene","Gamma":"1.2","R":"148.19"},{"ID":"99","Title":"Isopentane","Formula":"C5H12","GCF":"0.2175","Derived":"4","Density 1":"2.949","Density 2":"3.219","Synonyms":"2-methylbutane","Gamma":"1.2","R":"115.24"},{"ID":"100","Title":"Isopropyl Alcohol","Formula":"C3H8O","GCF":"0.2931","Derived":"4","Density 1":"2.456","Density 2":"2.681","Synonyms":"2-propanol","Gamma":"1.2","R":"138.356"},{"ID":"104","Title":"Methane","Formula":"CH4","GCF":"0.7787","Derived":"1","Density 1":"0.656","Density 2":"0.716","Synonyms":"NA","Gamma":"1.31","R":"518.28"},{"ID":"105","Title":"Methanol","Formula":"CH4O","GCF":"0.6167","Derived":"4","Density 1":"1.310","Density 2":"1.430","Synonyms":"Methyl Alcohol","Gamma":"1.2","R":"259.49"},{"ID":"121","Title":"Neon","Formula":"Ne","GCF":"1.4043","Derived":"4","Density 1":"0.825","Density 2":"0.900","Synonyms":"NA","Gamma":"1.6","R":"412.02"},{"ID":"123","Title":"Nitrogen","Formula":"N2","GCF":"1.0000","Derived":"1","Density 1":"1.145","Density 2":"1.250","Synonyms":"NA","Gamma":"1.40","R":"296.80"},{"ID":"129","Title":"Nitrous Oxide","Formula":"N2O","GCF":"0.7121","Derived":"1","Density 1":"1.799","Density 2":"1.964","Synonyms":"NA","Gamma":"1.2","R":"188.91"},{"ID":"132","Title":"Oxygen","Formula":"O2","GCF":"0.9779","Derived":"1","Density 1":"1.308","Density 2":"1.428","Synonyms":"NA","Gamma":"1.48","R":"259.84"},{"ID":"145","Title":"Propane","Formula":"C3H8","GCF":"0.3499","Derived":"1","Density 1":"1.802","Density 2":"1.967","Synonyms":"NA","Gamma":"1.13","R":"188.56"},{"ID":"148","Title":"Propylene","Formula":"C3H6","GCF":"0.4048","Derived":"2","Density 1":"1.720","Density 2":"1.877","Synonyms":"Propene","Gamma":"1.2","R":"197.59"},{"ID":"150","Title":"R32","Formula":"CH2F2","GCF":"0.6197","Derived":"2","Density 1":"2.126","Density 2":"2.321","Synonyms":"Difluoromethane","Gamma":"1.2","R":"153.91"},{"ID":"163","Title":"Silane","Formula":"SiH4","GCF":"0.6809","Derived":"5","Density 1":"1.313","Density 2":"1.433","Synonyms":"NA","Gamma":"1.2","R":"258.88"},{"ID":"165","Title":"Sulfur Dioxide","Formula":"SO2","GCF":"0.6878","Derived":"4","Density 1":"2.619","Density 2":"2.858","Synonyms":"NA","Gamma":"1.2","R":"129.78"},{"ID":"166","Title":"Sulfur Hexafluoride","Formula":"SF6","GCF":"0.2701","Derived":"1","Density 1":"5.970","Density 2":"6.516","Synonyms":"NA","Gamma":"1.2","R":"56.93"},{"ID":"187","Title":"Water Vapor","Formula":"H2O","GCF":"0.7992","Derived":"5","Density 1":"0.742","Density 2":"0.810","Synonyms":"NA","Gamma":"1.33","R":"461.53"},{"ID":"188","Title":"Xenon","Formula":"Xe","GCF":"1.4042","Derived":"4","Density 1":"5.366","Density 2":"5.858","Synonyms":"NA","Gamma":"1.6","R":"63.33"}];
+
+const nobleIds = ["9","80","121","123","188","38"];
+const commonIds = ["6","8","21","23","88","90","92","104","123","132","129","163","165","166","187"];
+const haloFormulas = ["Cl","F","Br","CCl","CBr","CF","Freon","R1","CHCl","BCl","BF","ClF"];
+
+function filterCat(g, cat) {
+  if(cat==="all") return true;
+  if(cat==="noble") return nobleIds.includes(g.ID);
+  if(cat==="common") return commonIds.includes(g.ID);
+  if(cat==="hydro") return /^C\d*H/.test(g.Formula) && !g.Title.includes("Chlor") && !g.Title.includes("Fluor") && !g.Title.includes("Brom") && !g.Title.includes("Freon");
+  if(cat==="halo") return g.Title.includes("Chlor")||g.Title.includes("Fluor")||g.Title.includes("Brom")||g.Title.includes("Freon")||g.Formula.includes("Cl")||g.Formula.includes("F2")||g.Formula.includes("Br");
+  return true;
+}
+
+const PAGE = 20;
+let page = 0, filtered = [...gasList], activeFilter = "all", searchQ = "";
+
+function applyFilters() {
+  const q = searchQ.toLowerCase();
+  filtered = gasList.filter(g => {
+    const matchCat = filterCat(g, activeFilter);
+    const matchQ = !q || g.Title.toLowerCase().includes(q) || g.Formula.toLowerCase().includes(q) || (g.Synonyms||"").toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+  page = 0;
+  render();
+}
+
+function render() {
+  const tbody = document.getElementById("gasTableBody");
+  const start = page * PAGE, end = Math.min(start + PAGE, filtered.length);
+  const slice = filtered.slice(start, end);
+  tbody.innerHTML = slice.map(g => {
+    const syn = g.Synonyms === "NA" ? "—" : g.Synonyms;
+    return `<tr>
+      <td><strong>${g.Title}</strong></td>
+      <td class="mono">${g.Formula}</td>
+      <td class="gcf">${g.GCF}</td>
+      <td class="mono">${g.Gamma}</td>
+      <td class="mono">${parseFloat(g.R).toFixed(2)}</td>
+      <td class="mono">${g["Density 1"]} kg/m³</td>
+      <td class="mono">${g["Density 2"]} kg/m³</td>
+      <td style="font-size:13px;color:#555;">${syn}</td>
+    </tr>`;
+  }).join("");
+  const totalPages = Math.ceil(filtered.length / PAGE);
+  document.getElementById("pageInfo").textContent = `Page ${page+1} of ${totalPages}`;
+  document.getElementById("countInfo").textContent = `${filtered.length} gas${filtered.length!==1?"es":""} shown`;
+  document.getElementById("prevBtn").disabled = page === 0;
+  document.getElementById("nextBtn").disabled = page >= totalPages - 1;
+}
+
+document.getElementById("prevBtn").addEventListener("click", () => { if(page>0){page--;render();} });
+document.getElementById("nextBtn").addEventListener("click", () => { if((page+1)*PAGE<filtered.length){page++;render();} });
+
+document.getElementById("gasSearch").addEventListener("input", e => { searchQ = e.target.value; applyFilters(); });
+
+document.querySelectorAll(".gas-tag").forEach(tag => {
+  tag.addEventListener("click", () => {
+    document.querySelectorAll(".gas-tag").forEach(t => t.classList.remove("active"));
+    tag.classList.add("active");
+    activeFilter = tag.dataset.filter;
+    applyFilters();
+  });
+});
+
+render();
+</script>
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-5XLCN0GJQ0');
+</script>
+
+</body>
+</html>
