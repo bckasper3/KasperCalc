@@ -180,6 +180,56 @@
         box-shadow: 0 3px 5px 0 rgba(0,0,0,.4);
         padding: 10px 12px;
       }
+      /* ── Sketch Simulator ───────────────────────────────────────────────── */
+      #sim-code-in {
+        width: 100%;
+        height: 120px;
+        font-family: monospace;
+        font-size: 11px;
+        resize: vertical;
+        padding: 6px;
+        border: 2px solid var(--calc-outline-color);
+        border-radius: var(--border-radius-small);
+        background: #fff;
+        color: var(--p-color);
+      }
+      #sim-log {
+        display: none;
+        font-family: monospace;
+        font-size: 11px;
+        color: var(--section-title-color);
+        background: var(--calc-result-color);
+        border: 2px solid var(--calc-outline-color);
+        border-radius: var(--border-radius-small);
+        padding: 6px 10px;
+        max-height: 90px;
+        overflow-y: auto;
+        margin-top: 6px;
+        white-space: pre;
+        line-height: 1.5;
+      }
+      #sim-canvas-wrap {
+        display: none;
+        overflow: auto;
+        border: 2px solid var(--calc-outline-color);
+        border-radius: var(--border-radius-small);
+        background: #111;
+        max-height: 520px;
+        min-height: 60px;
+        box-shadow: 0 3px 5px 0 rgba(0,0,0,.4);
+        align-items: center;
+        justify-content: center;
+      }
+      #sim-canvas {
+        display: block;
+        image-rendering: pixelated;
+        margin: auto;
+      }
+      #sim-status {
+        font-size: 12px;
+        font-family: var(--body-font-family);
+        color: var(--section-title-color);
+      }
     </style>
   </head>
 
@@ -354,7 +404,7 @@
         <div class="col-lg-12 col-12">
           <div class="banner section-title-wrap">
             <div class="h1 section-title bannertext">
-              Bitmap Editor
+              OLED Sketch Simulator
             </div>
           </div>
         </div>
@@ -467,6 +517,24 @@
                   <button id="btn-save-bmp">Save BMP</button>
                 </div>
                 <textarea id="export-out" readonly></textarea>
+              </div>
+
+              <!-- SKETCH SIMULATOR -->
+              <div class="bmp-section">
+                <div class="bmp-section-label">Sketch Simulator &mdash; paste or drop a full .ino / .c / .cpp file</div>
+                <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-bottom:6px;">
+                  <input type="file" id="sim-file-input" accept=".ino,.c,.cpp,.h,.txt" style="font-size:13px; font-family:var(--body-font-family);">
+                  <button id="btn-run-sketch" class="bmp-toolbar" style="padding:4px 12px; cursor:pointer; border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small); background:#fff; color:var(--p-color); font-size:13px; font-family:var(--body-font-family);">&#9654; Run Sketch</button>
+                  <button id="btn-clear-sim" class="bmp-toolbar" style="padding:4px 10px; cursor:pointer; border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small); background:#fff; color:var(--p-color); font-size:13px; font-family:var(--body-font-family);">&#215; Clear</button>
+                  <span id="sim-status"></span>
+                </div>
+                <textarea id="sim-code-in" placeholder="Paste a full Arduino .ino sketch or bare-metal C file here, or use the file picker above.&#10;&#10;Supported: Adafruit SSD1306/SH1106, u8g2, direct I2C page mode (including the bare-metal AVR example generated above).&#10;Phase 1 renders geometry and bitmaps. Text/font calls are silently skipped (Phase 2)."></textarea>
+                <div id="sim-log"></div>
+              </div>
+
+              <!-- SIM OUTPUT CANVAS -->
+              <div id="sim-canvas-wrap">
+                <canvas id="sim-canvas"></canvas>
               </div>
 
             </div><!-- /#bmp-app -->
@@ -1938,6 +2006,508 @@ int main(void)
 `;
   triggerDownload('baremetal_avr_sh1106.c', sketch);
 }
+
+// ═══════════════════════════════════════════════════════════════
+// SKETCH SIMULATOR — Phase 1
+// Supports: Adafruit GFX, u8g2, direct I2C / page-mode
+// Renders: bitmaps, lines, rects, circles, all geometric prims
+// Skips:   text/font calls (Phase 2), hardware I/O calls
+// ═══════════════════════════════════════════════════════════════
+
+// ── Brace-aware statement splitter ──────────────────────────
+function simSplit(body) {
+  const out = []; let depth = 0, start = 0, inStr = false, sc = '';
+  for (let i = 0; i < body.length; i++) {
+    const c = body[i];
+    if (inStr) { if (c === sc && body[i-1] !== '\\') inStr = false; continue; }
+    if (c === '"' || c === "'") { inStr = true; sc = c; continue; }
+    if (c === '{') { depth++; }
+    else if (c === '}') { if (--depth === 0) { out.push(body.slice(start, i+1).trim()); start = i+1; } }
+    else if (c === ';' && depth === 0) { const s = body.slice(start, i).trim(); if (s) out.push(s); start = i+1; }
+  }
+  const rem = body.slice(start).trim(); if (rem) out.push(rem);
+  return out.filter(Boolean);
+}
+
+// ── Find matching closing bracket ────────────────────────────
+function simClose(s, openPos, op, cl) {
+  op = op || '('; cl = cl || ')';
+  let d = 0;
+  for (let i = openPos; i < s.length; i++) {
+    if (s[i] === op) d++;
+    else if (s[i] === cl) { if (--d === 0) return i; }
+  }
+  return -1;
+}
+
+// ── Comma-split respecting nested parens/strings ─────────────
+function simArgs(str) {
+  const out = []; let d = 0, start = 0, inStr = false, sc = '';
+  for (let i = 0; i < str.length; i++) {
+    const c = str[i];
+    if (inStr) { if (c === sc && str[i-1] !== '\\') inStr = false; continue; }
+    if (c === '"' || c === "'") { inStr = true; sc = c; continue; }
+    if (c === '(' || c === '{') d++;
+    else if (c === ')' || c === '}') d--;
+    else if (c === ',' && d === 0) { out.push(str.slice(start, i).trim()); start = i+1; }
+  }
+  const last = str.slice(start).trim(); if (last) out.push(last);
+  return out;
+}
+
+// ── DisplaySim: 1-bit pixel framebuffer + drawing primitives ─
+class DisplaySim {
+  constructor(w, h) { this.w=w; this.h=h; this.fb=new Uint8Array(w*h); this.inverted=false; }
+  idx(x,y) { return y*this.w+x; }
+  inB(x,y) { return x>=0&&x<this.w&&y>=0&&y<this.h; }
+  sp(x,y,v) { x=x|0; y=y|0; if(this.inB(x,y)) this.fb[this.idx(x,y)]=v?1:0; }
+  clear() { this.fb.fill(0); }
+
+  // Horizontal MSB — Adafruit drawBitmap
+  drawBmpMSB(x0,y0,bytes,bw,bh,col) {
+    const rb=Math.ceil(bw/8);
+    for(let r=0;r<bh;r++) for(let c=0;c<bw;c++) {
+      const bi=r*rb+(c>>3);
+      if(bi<bytes.length&&(bytes[bi]>>(7-(c&7)))&1) this.sp(x0+c,y0+r,col!==undefined?col:1);
+    }
+  }
+  // Horizontal LSB — u8g2 drawXBMP
+  drawBmpLSB(x0,y0,bytes,bw,bh) {
+    const rb=Math.ceil(bw/8);
+    for(let r=0;r<bh;r++) for(let c=0;c<bw;c++) {
+      const bi=r*rb+(c>>3);
+      if(bi<bytes.length&&(bytes[bi]>>(c&7))&1) this.sp(x0+c,y0+r,1);
+    }
+  }
+  // Vertical LSB — page mode
+  drawBmpVLSB(x0,y0,bytes,bw,bh) {
+    const pages=Math.ceil(bh/8);
+    for(let p=0;p<pages;p++) for(let col=0;col<bw;col++) {
+      const bi=p*bw+col; if(bi>=bytes.length) continue;
+      for(let bit=0;bit<8;bit++) { const y=y0+p*8+bit; if(y<y0+bh&&(bytes[bi]>>bit)&1) this.sp(x0+col,y,1); }
+    }
+  }
+
+  drawLine(x0,y0,x1,y1,col) {
+    x0=x0|0;y0=y0|0;x1=x1|0;y1=y1|0;
+    let dx=Math.abs(x1-x0),dy=Math.abs(y1-y0),sx=x0<x1?1:-1,sy=y0<y1?1:-1,err=dx-dy;
+    for(;;){this.sp(x0,y0,col); if(x0===x1&&y0===y1)break; const e2=2*err; if(e2>-dy){err-=dy;x0+=sx;} if(e2<dx){err+=dx;y0+=sy;}}
+  }
+  drawFH(x,y,w,col) { for(let i=0;i<w;i++) this.sp(x+i,y,col); }
+  drawFV(x,y,h,col) { for(let i=0;i<h;i++) this.sp(x,y+i,col); }
+  drawRect(x,y,w,h,col) { this.drawFH(x,y,w,col);this.drawFH(x,y+h-1,w,col);this.drawFV(x,y,h,col);this.drawFV(x+w-1,y,h,col); }
+  fillRect(x,y,w,h,col) { for(let r=0;r<h;r++) for(let c=0;c<w;c++) this.sp(x+c,y+r,col); }
+  drawCircle(cx,cy,r,col) {
+    let x=0,y=r,d=3-2*r;
+    const p=(a,b)=>{this.sp(cx+a,cy+b,col);this.sp(cx-a,cy+b,col);this.sp(cx+a,cy-b,col);this.sp(cx-a,cy-b,col);
+                     this.sp(cx+b,cy+a,col);this.sp(cx-b,cy+a,col);this.sp(cx+b,cy-a,col);this.sp(cx-b,cy-a,col);};
+    while(y>=x){p(x,y);if(d<0)d+=4*x+6;else{d+=4*(x-y)+10;y--;}x++;}
+  }
+  fillCircle(cx,cy,r,col) { for(let dy=-r;dy<=r;dy++) for(let dx=-r;dx<=r;dx++) if(dx*dx+dy*dy<=r*r) this.sp(cx+dx,cy+dy,col); }
+  _arc(cx,cy,r,q,col) {
+    let x=0,y=r,d=3-2*r;
+    while(y>=x){
+      if(q&4){this.sp(cx+x,cy+y,col);this.sp(cx+y,cy+x,col);}
+      if(q&2){this.sp(cx+x,cy-y,col);this.sp(cx+y,cy-x,col);}
+      if(q&8){this.sp(cx-x,cy+y,col);this.sp(cx-y,cy+x,col);}
+      if(q&1){this.sp(cx-x,cy-y,col);this.sp(cx-y,cy-x,col);}
+      if(d<0)d+=4*x+6;else{d+=4*(x-y)+10;y--;}x++;
+    }
+  }
+  _fillArc(cx,cy,r,q,col,delta) {
+    let x=0,y=r,d=3-2*r;
+    while(y>=x){
+      if(q&1)this.drawFH(cx-x,cy-y,2*x+1+delta,col);
+      if(q&8)this.drawFH(cx-x,cy+y,2*x+1+delta,col);
+      if(x){if(q&1)this.drawFH(cx-y,cy-x,2*y+1+delta,col);if(q&8)this.drawFH(cx-y,cy+x,2*y+1+delta,col);}
+      if(d<0)d+=4*x+6;else{d+=4*(x-y)+10;y--;}x++;
+    }
+  }
+  drawRoundRect(x,y,w,h,r,col) {
+    this.drawFH(x+r,y,w-2*r,col);this.drawFH(x+r,y+h-1,w-2*r,col);
+    this.drawFV(x,y+r,h-2*r,col);this.drawFV(x+w-1,y+r,h-2*r,col);
+    this._arc(x+r,y+r,r,1,col);this._arc(x+w-r-1,y+r,r,2,col);
+    this._arc(x+w-r-1,y+h-r-1,r,4,col);this._arc(x+r,y+h-r-1,r,8,col);
+  }
+  fillRoundRect(x,y,w,h,r,col) {
+    this.fillRect(x+r,y,w-2*r,h,col);
+    this._fillArc(x+r,y+r,r,1,col,w-2*r-1);this._fillArc(x+r,y+h-r-1,r,8,col,w-2*r-1);
+  }
+  drawTriangle(x0,y0,x1,y1,x2,y2,col) { this.drawLine(x0,y0,x1,y1,col);this.drawLine(x1,y1,x2,y2,col);this.drawLine(x2,y2,x0,y0,col); }
+
+  render(canvas, zoom) {
+    const ctx = canvas.getContext('2d');
+    canvas.width = this.w*zoom; canvas.height = this.h*zoom;
+    ctx.fillStyle = this.inverted ? '#fff' : '#111';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = this.inverted ? '#111' : '#fff';
+    for(let y=0;y<this.h;y++) for(let x=0;x<this.w;x++) if(this.fb[this.idx(x,y)]) ctx.fillRect(x*zoom,y*zoom,zoom,zoom);
+  }
+}
+
+// ── SketchParser ─────────────────────────────────────────────
+class SketchParser {
+  constructor(src) {
+    this.src = src; this.defines={}; this.arrays={}; this.funcs={};
+    this.library='unknown'; this.displayW=128; this.displayH=64; this.log=[];
+  }
+  parse() {
+    const s = this.src.replace(/\/\/[^\n]*/g,'').replace(/\/\*[\s\S]*?\*\//g,'');
+    this._defs(s); this._arrays(s); this._detect(s); this._funcs(s);
+    return this;
+  }
+  _num(v) {
+    if(/^0[xX][0-9a-fA-F]+$/.test(v)) return parseInt(v,16);
+    if(/^-?\d+[uUlL]*$/.test(v)) return parseInt(v);
+    if(/^-?\d+\.\d+f?$/.test(v)) return parseFloat(v);
+    return null;
+  }
+  _defs(s) {
+    const re=/#define\s+(\w+)\s+([^\n\\]+)/g; let m;
+    while((m=re.exec(s))!==null) { const raw=m[2].trim(); const n=this._num(raw); this.defines[m[1]]=n!==null?n:raw; }
+  }
+  _arrays(s) {
+    const re=/(?:static\s+)?(?:const\s+)?(?:uint8_t|unsigned\s+char|uint16_t)\s+(?:PROGMEM\s+)?(\w+)\s*\[[^\]]*\]\s*(?:PROGMEM\s*)?=\s*\{([^}]*)\}/g;
+    let m;
+    while((m=re.exec(s))!==null) {
+      const nums=m[2].match(/0[xX][0-9a-fA-F]+|\b\d+\b/g);
+      if(nums) this.arrays[m[1]]=new Uint8Array(nums.map(n=>parseInt(n)&0xFF));
+    }
+  }
+  _detect(s) {
+    if(/Adafruit_SSD1306|Adafruit_SH1106|Adafruit_SH110/.test(s)) {
+      this.library='adafruit';
+      const m=s.match(/Adafruit_\w+\s+\w+\s*\(\s*(\d+)\s*,\s*(\d+)/);
+      if(m){this.displayW=+m[1];this.displayH=+m[2];}
+    } else if(/U8G2_\w+_(\d+)X(\d+)/.test(s)) {
+      this.library='u8g2';
+      const m=s.match(/U8G2_\w+_(\d+)X(\d+)/);
+      if(m){this.displayW=+m[1];this.displayH=+m[2];}
+    } else if(/sh1106_|SH1106_WIDTH|oledDrawBitmap/.test(s)) {
+      this.library='baremetal';
+    } else if(/oledInit|oledCmd|Wire\.beginTransmission/.test(s)) {
+      this.library='pagedirect';
+    }
+    const d=this.defines;
+    if(d.SCREEN_WIDTH) this.displayW=+d.SCREEN_WIDTH;
+    if(d.SCREEN_HEIGHT) this.displayH=+d.SCREEN_HEIGHT;
+    if(d.SCREEN_W) this.displayW=+d.SCREEN_W;
+    if(d.SCREEN_H) this.displayH=+d.SCREEN_H;
+    if(d.SH1106_WIDTH) this.displayW=+d.SH1106_WIDTH;
+    if(d.SH1106_HEIGHT) this.displayH=+d.SH1106_HEIGHT;
+  }
+  _funcs(s) {
+    const re=/(?:static\s+)?(?:void|int|bool|uint8_t|int8_t|uint16_t)\s+(\w+)\s*\([^)]*\)\s*\{/g;
+    let m;
+    while((m=re.exec(s))!==null) {
+      const name=m[1]; const bs=m.index+m[0].length-1;
+      const be=simClose(s,bs,'{','}');
+      if(be>0) this.funcs[name]=s.slice(bs+1,be);
+    }
+  }
+}
+
+// ── SketchExecutor ───────────────────────────────────────────
+class SketchExecutor {
+  constructor(parser, sim) {
+    this.p=parser; this.sim=sim; this.log=[];
+    this.calls=0; this.MAX=3000;
+    this.vars=Object.assign({},parser.defines,{
+      WHITE:1,BLACK:0,INVERSE:2,SSD1306_WHITE:1,SSD1306_BLACK:0,
+      SCREEN_WIDTH:sim.w,SCREEN_HEIGHT:sim.h,SCREEN_W:sim.w,SCREEN_H:sim.h,
+      HIGH:1,LOW:0,NULL:0,nullptr:0,
+      BMP_W:parser.defines.BMP_W||sim.w,
+      BMP_H:parser.defines.BMP_H||sim.h,
+    });
+  }
+
+  run() {
+    const p=this.p;
+    if(p.funcs.setup) {
+      this.log.push(`Library: ${p.library}  Display: ${p.displayW}×${p.displayH}`);
+      this._body(p.funcs.setup);
+    } else if(p.funcs.main) {
+      this.log.push(`Library: ${p.library} (bare-metal)  Display: ${p.displayW}×${p.displayH}`);
+      this._body(p.funcs.main);
+    }
+    if(p.funcs.loop) {
+      const inf=/while\s*\(\s*(?:1|true)\s*\)/.test(p.funcs.loop);
+      if(!inf) this._body(p.funcs.loop);
+      else { const wp=p.funcs.loop.search(/while\s*\(\s*(?:1|true)\s*\)/); if(wp>0) this._body(p.funcs.loop.slice(0,wp)); }
+    }
+    return this.log;
+  }
+
+  _body(src) { this._stmts(simSplit(src)); }
+
+  _stmts(stmts) {
+    for(const s of stmts) {
+      if(this.calls++>this.MAX){this.log.push('⚠ Call limit reached');break;}
+      if(!s) continue;
+      this._one(s);
+    }
+  }
+
+  _one(s) {
+    if(/^if\s*\(/.test(s))    { this._if(s);    return; }
+    if(/^for\s*\(/.test(s))   { this._for(s);   return; }
+    if(/^while\s*\(/.test(s)) { this._while(s); return; }
+
+    // Variable declaration: [type] name = expr
+    const decl=s.match(/^(?:(?:static|const|volatile)\s+)*(?:int|uint8_t|uint16_t|uint32_t|int8_t|int16_t|float|double|bool|char|size_t)\s+(\w+)\s*(?:=\s*(.+))?$/);
+    if(decl){ this.vars[decl[1]]=decl[2]?this._e(decl[2]):0; return; }
+
+    // Assignment without call
+    if(!s.includes('(')) {
+      const asgn=s.match(/^(\w+)\s*([+\-*\/%]?=)\s*(.+)$/);
+      if(asgn){ const n=asgn[1],op=asgn[2],v=this._e(asgn[3]);
+        if(op==='=')this.vars[n]=v; else if(op==='+=')this.vars[n]=(this.vars[n]||0)+v;
+        else if(op==='-=')this.vars[n]=(this.vars[n]||0)-v; return; }
+      if(/\+\+/.test(s)){const n=s.replace(/\+\+/g,'').trim();this.vars[n]=(this.vars[n]||0)+1;return;}
+      if(/--/.test(s))  {const n=s.replace(/--/g,'').trim(); this.vars[n]=(this.vars[n]||0)-1;return;}
+    }
+
+    if(s.includes('(')) this._call(s);
+  }
+
+  _if(s) {
+    const po=s.indexOf('('); if(po<0) return;
+    const pc=simClose(s,po); if(pc<0) return;
+    const cond=s.slice(po+1,pc);
+    const bo=s.indexOf('{',pc); if(bo<0) return;
+    const bc=simClose(s,bo,'{','}'); if(bc<0) return;
+    const thenBody=s.slice(bo+1,bc);
+    const after=s.slice(bc+1).trim();
+    let elseBody='';
+    if(after.startsWith('else')){ const eo=after.indexOf('{'); if(eo>=0){const ec=simClose(after,eo,'{','}');if(ec>=0)elseBody=after.slice(eo+1,ec);}}
+    if(this._cond(cond)) this._body(thenBody);
+    else if(elseBody) this._body(elseBody);
+  }
+
+  _for(s) {
+    const po=s.indexOf('('); if(po<0) return;
+    const pc=simClose(s,po); if(pc<0) return;
+    const hdr=s.slice(po+1,pc);
+    const s1=hdr.indexOf(';'), s2=hdr.indexOf(';',s1+1);
+    if(s1<0||s2<0) return;
+    const bo=s.indexOf('{',pc); if(bo<0) return;
+    const bc=simClose(s,bo,'{','}'); if(bc<0) return;
+    const body=s.slice(bo+1,bc);
+    this._one(hdr.slice(0,s1).trim());
+    let n=0;
+    while(n++<1024&&this.calls<this.MAX){
+      if(!this._cond(hdr.slice(s1+1,s2).trim())) break;
+      this._body(body);
+      this._one(hdr.slice(s2+1).trim());
+    }
+  }
+
+  _while(s) {
+    if(/while\s*\(\s*(?:1|true)\s*\)/.test(s)) return;
+    const po=s.indexOf('('); if(po<0) return;
+    const pc=simClose(s,po); if(pc<0) return;
+    const cond=s.slice(po+1,pc);
+    const bo=s.indexOf('{',pc); if(bo<0) return;
+    const bc=simClose(s,bo,'{','}'); if(bc<0) return;
+    const body=s.slice(bo+1,bc);
+    let n=0;
+    while(n++<64&&this.calls<this.MAX){ if(!this._cond(cond)) break; this._body(body); }
+  }
+
+  _cond(c) {
+    c=c.trim();
+    if(c.includes('&&')) return c.split('&&').every(p=>this._cond(p.trim()));
+    if(c.includes('||')) return c.split('||').some(p=>this._cond(p.trim()));
+    for(const op of ['<=','>=','!=','==','<','>']){
+      const i=c.indexOf(op); if(i<0) continue;
+      const L=this._e(c.slice(0,i)),R=this._e(c.slice(i+op.length));
+      switch(op){case'<=':return L<=R;case'>=':return L>=R;case'!=':return L!==R;case'==':return L===R;case'<':return L<R;case'>':return L>R;}
+    }
+    if(c.startsWith('!')) return !this._cond(c.slice(1).trim());
+    return !!this._e(c);
+  }
+
+  _e(expr) {
+    expr=(expr||'').trim();
+    if(!expr||expr==='NULL'||expr==='nullptr') return 0;
+    if(/^"[^"]*"$/.test(expr)||/^'[^']*'$/.test(expr)) return expr.slice(1,-1);
+    if(/^0[xX][0-9a-fA-F]+$/.test(expr)) return parseInt(expr,16);
+    if(/^-?\d+[uUlL]*$/.test(expr)) return parseInt(expr);
+    if(/^-?\d+\.\d+f?$/.test(expr)) return parseFloat(expr);
+    if(this.vars.hasOwnProperty(expr)) return this.vars[expr];
+    // Cast: (type)expr
+    const cast=expr.match(/^\(\s*[\w\s\*]+\s*\)\s*(.+)$/);
+    if(cast) return this._e(cast[1]);
+    // Parens
+    if(expr[0]==='('&&simClose(expr,0)===expr.length-1) return this._e(expr.slice(1,-1));
+    // strlen("...")
+    const sl=expr.match(/^strlen\s*\(\s*"([^"]*)"\s*\)$/); if(sl) return sl[1].length;
+    // Arithmetic — substitute known vars then eval with Function
+    try {
+      const resolved=expr.replace(/\b([A-Za-z_]\w*)\b/g,m=>this.vars.hasOwnProperty(m)?+this.vars[m]||0:0);
+      const safe=resolved.replace(/[^0-9+\-*/%().|\s]/g,'0');
+      const v=new Function('return('+safe+'|0)')();
+      return isFinite(v)?v:0;
+    } catch(e){ return 0; }
+  }
+
+  _call(s) {
+    const po=s.indexOf('('); if(po<0) return;
+    const pc=simClose(s,po); if(pc<0) return;
+    const prefix=s.slice(0,po).trim();
+    const argStr=s.slice(po+1,pc).trim();
+    const sep=Math.max(prefix.lastIndexOf('.'),prefix.lastIndexOf('>'));
+    const obj=sep>=0?prefix.slice(0,prefix[sep]==='-'?sep:sep).trim():'';
+    const fn =sep>=0?prefix.slice(prefix[sep]==='-'?sep+2:sep+1).trim():prefix;
+
+    // Hardware / comms — ignore
+    const SKIP=new Set(['delay','delayMicroseconds','millis','micros','yield','Wire','SPI',
+      'Serial','oledCmd','oledCmd2','sh1106_cmd','sh1106_cmd2','twi_start','twi_stop',
+      'twi_write_byte','sh1106_set_page_col','oledInit','sh1106_init','delay_ms',
+      'pinMode','digitalWrite','digitalRead','analogRead','analogWrite',
+      'beginTransmission','endTransmission','write','read','available','setClock',
+      'begin_begin','pgm_read_byte','pgm_read_word','memset','memcpy','snprintf','sprintf',
+      'F','begin']); // 'begin' is a u8g2 exception handled below
+    if(SKIP.has(fn)&&fn!=='begin') return;
+    if(fn==='begin'&&!obj) return;
+
+    const rawArgs=argStr?simArgs(argStr):[];
+    const a=rawArgs.map(r=>this._e(r));
+
+    // Resolve array name → bytes
+    const arr=(raw)=>{
+      if(!raw) return new Uint8Array(0);
+      const name=raw.replace(/^\(.*?\)\s*/,'').trim();
+      return this.p.arrays[name]||new Uint8Array(0);
+    };
+
+    // User function
+    if(this.p.funcs[fn]&&fn!=='setup'&&fn!=='loop'){ this._body(this.p.funcs[fn]); return; }
+
+    const sim=this.sim;
+    switch(fn) {
+      // ── Adafruit GFX ──────────────────────────────────────────────────────
+      case 'clearDisplay':  sim.clear(); break;
+      case 'display':       break;
+      case 'invertDisplay': sim.inverted=!!a[0]; break;
+      case 'fillScreen':    sim.fillRect(0,0,sim.w,sim.h,a[0]!==undefined?a[0]:1); break;
+      case 'drawPixel':     sim.sp(a[0],a[1],a[2]!==undefined?a[2]:1); break;
+      case 'drawLine':      sim.drawLine(a[0],a[1],a[2],a[3],a[4]!==undefined?a[4]:1); break;
+      case 'drawFastHLine': sim.drawFH(a[0],a[1],a[2],a[3]!==undefined?a[3]:1); break;
+      case 'drawFastVLine': sim.drawFV(a[0],a[1],a[2],a[3]!==undefined?a[3]:1); break;
+      case 'drawRect':      sim.drawRect(a[0],a[1],a[2],a[3],a[4]!==undefined?a[4]:1); break;
+      case 'fillRect':      sim.fillRect(a[0],a[1],a[2],a[3],a[4]!==undefined?a[4]:1); break;
+      case 'drawCircle':    sim.drawCircle(a[0],a[1],a[2],a[3]!==undefined?a[3]:1); break;
+      case 'fillCircle':    sim.fillCircle(a[0],a[1],a[2],a[3]!==undefined?a[3]:1); break;
+      case 'drawRoundRect': sim.drawRoundRect(a[0],a[1],a[2],a[3],a[4],a[5]!==undefined?a[5]:1); break;
+      case 'fillRoundRect': sim.fillRoundRect(a[0],a[1],a[2],a[3],a[4],a[5]!==undefined?a[5]:1); break;
+      case 'drawTriangle':  sim.drawTriangle(a[0],a[1],a[2],a[3],a[4],a[5],a[6]!==undefined?a[6]:1); break;
+      case 'drawBitmap': {
+        // drawBitmap(x, y, bmp, w, h [, color [, bg]])
+        const bytes=arr(rawArgs[2]); const bw=a[3]||sim.w,bh=a[4]||sim.h,col=a[5]!==undefined?a[5]:1;
+        sim.drawBmpMSB(a[0],a[1],bytes,bw,bh,col);
+        this.log.push(`✓ drawBitmap(${a[0]},${a[1]}, ${rawArgs[2]?.trim()}, ${bw}×${bh})  ${bytes.length}B`);
+        break;
+      }
+      // Font / text — Phase 2
+      case 'setTextSize': case 'setTextColor': case 'setCursor':
+      case 'setTextWrap': case 'setFont': case 'print': case 'println':
+      case 'drawChar': break;
+
+      // ── u8g2 ──────────────────────────────────────────────────────────────
+      case 'clearBuffer':   sim.clear(); break;
+      case 'sendBuffer':    break;
+      case 'begin':         break;
+      case 'setDrawColor':  break;
+      case 'drawFrame':     sim.drawRect(a[0],a[1],a[2],a[3],1); break;
+      case 'drawBox':       sim.fillRect(a[0],a[1],a[2],a[3],1); break;
+      case 'drawHLine':     sim.drawFH(a[0],a[1],a[2],1); break;
+      case 'drawVLine':     sim.drawFV(a[0],a[1],a[2],1); break;
+      case 'drawDisc':      sim.fillCircle(a[0],a[1],a[2],1); break;
+      case 'drawRFrame':    sim.drawRoundRect(a[0],a[1],a[2],a[3],a[4],1); break;
+      case 'drawRBox':      sim.fillRoundRect(a[0],a[1],a[2],a[3],a[4],1); break;
+      case 'drawXBM':
+      case 'drawXBMP': {
+        const bytes=arr(rawArgs[4]);
+        sim.drawBmpLSB(a[0],a[1],a[2],a[3],bytes);
+        this.log.push(`✓ drawXBMP(${a[0]},${a[1]}, ${rawArgs[4]?.trim()}, ${a[2]}×${a[3]})  ${bytes.length}B`);
+        break;
+      }
+      case 'drawStr': case 'drawUTF8': case 'drawGlyph': break; // Phase 2
+
+      // ── Bare-metal helpers (our generated sketches) ───────────────────────
+      case 'sh1106_clear':  sim.clear(); break;
+      case 'sh1106_fill':   sim.fillRect(0,0,sim.w,sim.h,1); break;
+      case 'sh1106_flush':  break;
+      case 'sh1106_set_pixel':  sim.sp(a[0],a[1],a[2]?1:0); break;
+      case 'sh1106_fill_rect':  sim.fillRect(a[0],a[1],a[2],a[3],a[4]?1:0); break;
+      case 'sh1106_draw_bitmap_pgm':
+      case 'oledDrawBitmap': {
+        const bytes=arr(rawArgs[4]);
+        sim.drawBmpVLSB(a[0],a[1],a[2],a[3],bytes);
+        this.log.push(`✓ oledDrawBitmap(${a[0]},${a[1]}, ${rawArgs[4]?.trim()}, ${a[2]}×${a[3]})  ${bytes.length}B`);
+        break;
+      }
+    }
+  }
+}
+
+// ── Simulator UI ─────────────────────────────────────────────
+const simCanvas    = document.getElementById('sim-canvas');
+const simCanvasWrap= document.getElementById('sim-canvas-wrap');
+const simLogEl     = document.getElementById('sim-log');
+const simStatusEl  = document.getElementById('sim-status');
+
+function runSketch(src) {
+  src = src.trim();
+  if (!src) return;
+  try {
+    const parser = new SketchParser(src).parse();
+    const sim    = new DisplaySim(parser.displayW, parser.displayH);
+    const exec   = new SketchExecutor(parser, sim);
+    const log    = exec.run();
+
+    // Auto-pick zoom to fit 480px height
+    const zoom = Math.max(2, Math.min(8, Math.floor(480 / parser.displayH)));
+    sim.render(simCanvas, zoom);
+    simCanvasWrap.style.display = 'flex';
+
+    const arrNames = Object.keys(parser.arrays);
+    const fnNames  = Object.keys(parser.funcs);
+    const lines = [
+      `Library: ${parser.library}  |  Display: ${parser.displayW}×${parser.displayH}  |  Zoom: ${zoom}×`,
+      `Arrays: ${arrNames.length ? arrNames.map(n=>`${n}[${parser.arrays[n].length}]`).join(', ') : 'none'}`,
+      `Functions: ${fnNames.join(', ') || 'none'}`,
+      ...log
+    ];
+    simLogEl.textContent = lines.join('\n');
+    simLogEl.style.display = 'block';
+    simStatusEl.textContent = `✓ ${parser.displayW}×${parser.displayH}`;
+  } catch(err) {
+    simLogEl.textContent = '✗ ' + err.message;
+    simLogEl.style.display = 'block';
+    simStatusEl.textContent = '✗ error';
+    console.error(err);
+  }
+}
+
+document.getElementById('btn-run-sketch').addEventListener('click', () => {
+  runSketch(document.getElementById('sim-code-in').value);
+});
+
+document.getElementById('btn-clear-sim').addEventListener('click', () => {
+  document.getElementById('sim-code-in').value = '';
+  simCanvasWrap.style.display = 'none';
+  simLogEl.style.display = 'none';
+  simStatusEl.textContent = '';
+});
+
+document.getElementById('sim-file-input').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const txt = await f.text();
+  document.getElementById('sim-code-in').value = txt;
+  runSketch(txt);
+});
 
 resize(128, 64);
 </script>
