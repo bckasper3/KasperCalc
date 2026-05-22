@@ -7,12 +7,6 @@ let density1_kgm;
 let density2_kgm;
 let result;
 
-let Temp1InputNum = parseFloat(document.getElementById('Temp1InputNum').value) || 0;
-let tempUnit1 = document.getElementById('tempUnit1').value;
-let Temp2InputNum = parseFloat(document.getElementById('Temp2InputNum').value) || 0;
-let tempUnit2 = document.getElementById('tempUnit2').value;
-
-
 let denseWater3 = 998; //kg per m^3, for water at 70°F
 let denseWater4 = 998; //kg per m^3, for water at 70°F
 let denseWater5 = 998; //kg per m^3, for water at 70°F
@@ -26,42 +20,100 @@ let density4_kgm;
 let density5_kgm;
 let result1;
 
-let Temp3InputNum = parseFloat(document.getElementById('Temp3InputNum').value) || 0;
-let tempUnit3 = document.getElementById('tempUnit3').value;
-let Temp4InputNum = parseFloat(document.getElementById('Temp4InputNum').value) || 0;
-let tempUnit4 = document.getElementById('tempUnit4').value;
-let Temp5InputNum = parseFloat(document.getElementById('Temp5InputNum').value) || 0;
-let tempUnit5 = document.getElementById('tempUnit5').value;
-
 const csvFiles1 = [
-  '../csvData/densityofWater-combined.csv', // Replace with actual file paths or URLs
+  '../csvData/densityofWater-combined.csv',
 ];
 
 let switchIndex = 0;
 let flag = false;
 let fallData1;
-let nonChartData; // Declare a global variable to store the result
+let nonChartData;
 
-// ─── Unit Conversion Factors ─────────────────────────────────────────────────
-// All mass-flow units are converted to/from PPH (pounds per hour)
-// 1 PPH = 1 lb/hr
-const PPH_PER_LBSEC   = 3600;           // 1 lb/sec  = 3600 lb/hr
-const PPH_PER_LBMIN   = 60;             // 1 lb/min  = 60   lb/hr
-const PPH_PER_KGMIN   = 132.2773573;    // 1 kg/min  = 132.2773573 lb/hr
-const PPH_PER_KGHR    = 2.204622622;    // 1 kg/hr   = 2.204622622 lb/hr
-const PPH_PER_GRAMSEC = 7.936641439;    // 1 g/sec   = 7.936641439 lb/hr  (same as gramM factor already used)
-const PPH_PER_TONHR   = 2204.622622;    // 1 metric ton/hr = 2204.622622 lb/hr
+// ─── Unit Conversion Factors ──────────────────────────────────────────────────
+const PPH_PER_LBSEC   = 3600;
+const PPH_PER_LBMIN   = 60;
+const PPH_PER_KGMIN   = 132.2773573;
+const PPH_PER_KGHR    = 2.204622622;
+const PPH_PER_GRAMSEC = 7.936641439;
+const PPH_PER_TONHR   = 2204.622622;
 
-transformedData = function (parameter1) {
-  const transformedDataintermediate = fallData1.map(dataset =>
-    dataset.map(point => [point.x, point.y])
-  );
-  return transformedDataintermediate;
+// ─── Unit Label Lookup ────────────────────────────────────────────────────────
+const unitLabels = {
+  PPH:     'lb/hr (PPH)',
+  GPM:     'GPM',
+  kgPs:    'kg/sec',
+  gramM:   'gram/min',
+  lbSec:   'lb/sec',
+  lbMin:   'lb/min',
+  kgMin:   'kg/min',
+  kgHr:    'kg/hr',
+  gramSec: 'gram/sec',
+  tonHr:   'ton/hr (metric)',
+  inSec:   'in³/sec',
+  ftSec:   'ft³/sec',
+  mSEc:    'm³/sec',
+  mmSec:   'mm³/sec',
+  lMin:    'L/min',
+};
+
+// Maps flowUnit value → result label span ID for Calculator 1 (Flow 2 output)
+const resultLabelIds1 = {
+  PPH:     'FlowResult1',
+  GPM:     'FlowResult2',
+  kgPs:    'FlowResult3',
+  gramM:   'FlowResult4',
+  lbSec:   'FlowResult10',
+  lbMin:   'FlowResult11_lbsec',
+  kgMin:   'FlowResult12_lbmin',
+  kgHr:    'FlowResult13_kgmin',
+  gramSec: 'FlowResult14_kghr',
+  tonHr:   'FlowResult15_tonhr',
+  inSec:   'FlowResult5',
+  ftSec:   'FlowResult6',
+  mSEc:    'FlowResult7',
+  mmSec:   'FlowResult8',
+  lMin:    'FlowResult9',
+};
+
+// Maps flowUnit value → result label span ID for Calculator 2 (Flow 5 output)
+const resultLabelIds2 = {
+  PPH:     'FlowResult11',
+  GPM:     'FlowResult12',
+  kgPs:    'FlowResult13',
+  gramM:   'FlowResult14',
+  lbSec:   'FlowResult20_gramsec',
+  lbMin:   'FlowResult21_lbsec',
+  kgMin:   'FlowResult22_lbmin',
+  kgHr:    'FlowResult23_kgmin',
+  gramSec: 'FlowResult24_kghr',
+  tonHr:   'FlowResult25_tonhr',
+  inSec:   'FlowResult15',
+  ftSec:   'FlowResult16',
+  mSEc:    'FlowResult17',
+  mmSec:   'FlowResult18',
+  lMin:    'FlowResult19',
+};
+
+function updateResultLabel(labelIds, selectedUnit) {
+  Object.values(labelIds).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  const activeId = labelIds[selectedUnit];
+  if (activeId) {
+    const el = document.getElementById(activeId);
+    if (el) el.style.display = '';
+  }
+}
+
+// ─── CSV Load & Init ──────────────────────────────────────────────────────────
+transformedData = function () {
+  return fallData1.map(dataset => dataset.map(point => [point.x, point.y]));
 };
 
 processCSVFiles(csvFiles1)
   .then(allData1 => {
-    fallData1 = allData1;
+    fallData1   = allData1;
     nonChartData = transformedData();
     calculate();
     calculate6();
@@ -94,47 +146,21 @@ function calculate() {
   const HideableTemp1waterdensity = document.getElementById('HideableTemp1waterdensity');
   const HideableTemp2waterdensity = document.getElementById('HideableTemp2waterdensity');
 
-  // Result display elements — original 9 + 6 new units
-  const resultIDs = [
-    'FlowResult1',  'FlowResult2',  'FlowResult3',  'FlowResult4',  'FlowResult5',
-    'FlowResult6',  'FlowResult7',  'FlowResult8',  'FlowResult9',
-    // New units
-    'FlowResult10', 'FlowResult11_lbsec', 'FlowResult12_lbmin',
-    'FlowResult13_kgmin', 'FlowResult14_kghr', 'FlowResult15_tonhr',
-  ];
-  resultIDs.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-  });
+  // Show / hide S.G. temperature fields
+  toggleSGFields(densUnit1, HideableTemp1, HideableTemp1waterdensity);
+  toggleSGFields(densUnit2, HideableTemp2, HideableTemp2waterdensity);
 
-  // Show / hide density & temp fields based on selected density unit
-  if (densUnit1 === 'S.G.') {
-    HideableTemp1.style.display             = 'flex';
-    HideableTemp1waterdensity.style.display = 'flex';
-  } else {
-    HideableTemp1.style.display             = 'none';
-    HideableTemp1waterdensity.style.display = 'none';
-  }
-
-  if (densUnit2 === 'S.G.') {
-    HideableTemp2.style.display             = 'flex';
-    HideableTemp2waterdensity.style.display = 'flex';
-  } else {
-    HideableTemp2.style.display             = 'none';
-    HideableTemp2waterdensity.style.display = 'none';
-  }
-
-  // Convert input density → kg/m³
+  // Convert densities → kg/m³
   density1_kgm = toDensityKGM(densUnit1, dens1InputNum, denseWater1);
   density2_kgm = toDensityKGM(densUnit2, dens2InputNum, denseWater2);
 
-  // Convert input flow → PPH (internal working unit)
+  // Convert input flow → PPH, then PPH → desired output unit
   flow1PPH = toFlowPPH(flowUnit1, flow1InputNum, density1_kgm, HideableDensity1, HideableTemp1);
+  result   = fromFlowPPH(flowUnit2, flow1PPH, density2_kgm, HideableDensity2, HideableTemp2);
 
-  // Convert PPH → desired output unit and display result
-  result = fromFlowPPH(flowUnit2, flow1PPH, density2_kgm, HideableDensity2, HideableTemp2);
-
-  document.getElementById('result_selectedUnit').innerText = result.toFixed(3);
+  // Write result and update label to match selected output unit
+  document.getElementById('result_selectedUnit').innerText  = result.toFixed(3);
+  updateResultLabel(resultLabelIds1, flowUnit2);
 }
 
 
@@ -171,20 +197,7 @@ function calculate6() {
   const HideableTemp4waterdensity = document.getElementById('HideableTemp4waterdensity');
   const HideableTemp5waterdensity = document.getElementById('HideableTemp5waterdensity');
 
-  // Result display elements — original 9 + 6 new units
-  const resultIDs = [
-    'FlowResult11', 'FlowResult12', 'FlowResult13', 'FlowResult14', 'FlowResult15',
-    'FlowResult16', 'FlowResult17', 'FlowResult18', 'FlowResult19',
-    // New units
-    'FlowResult20_gramsec', 'FlowResult21_lbsec', 'FlowResult22_lbmin',
-    'FlowResult23_kgmin',   'FlowResult24_kghr',  'FlowResult25_tonhr',
-  ];
-  resultIDs.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-  });
-
-  // Show / hide density & temp fields
+  // Show / hide S.G. temperature fields
   toggleSGFields(densUnit3, HideableTemp3, HideableTemp3waterdensity);
   toggleSGFields(densUnit4, HideableTemp4, HideableTemp4waterdensity);
   toggleSGFields(densUnit5, HideableTemp5, HideableTemp5waterdensity);
@@ -194,43 +207,42 @@ function calculate6() {
   density4_kgm = toDensityKGM(densUnit4, dens4InputNum, denseWater4);
   density5_kgm = toDensityKGM(densUnit5, dens5InputNum, denseWater5);
 
-  // Convert each input flow → PPH
+  // Convert each input flow → PPH, sum, then convert to desired output
   flow3PPH = toFlowPPH(flowUnit3, flow3InputNum, density3_kgm, HideableDensity3, HideableTemp3);
   flow4PPH = toFlowPPH(flowUnit4, flow4InputNum, density4_kgm, HideableDensity4, HideableTemp4);
+  result1  = fromFlowPPH(flowUnit5, flow3PPH + flow4PPH, density5_kgm, HideableDensity5, HideableTemp5);
 
-  // Sum the two streams and convert to desired output
-  result1 = fromFlowPPH(flowUnit5, flow3PPH + flow4PPH, density5_kgm, HideableDensity5, HideableTemp5);
-
+  // Write result and update label to match selected output unit
   document.getElementById('result_selectedUnit1').innerText = result1.toFixed(3);
+  updateResultLabel(resultLabelIds2, flowUnit5);
 }
 
 
-// ─── Helper: toggle SG-dependent fields ───────────────────────────────────────
+// ─── Helper: toggle S.G.-dependent temperature & water density fields ─────────
 function toggleSGFields(densUnit, hideableTemp, hideableTempWaterDensity) {
   const show = densUnit === 'S.G.' ? 'flex' : 'none';
-  hideableTemp.style.display             = show;
-  hideableTempWaterDensity.style.display = show;
+  hideableTemp.style.display              = show;
+  hideableTempWaterDensity.style.display  = show;
 }
 
 
 // ─── Helper: convert any density unit → kg/m³ ────────────────────────────────
 function toDensityKGM(densUnit, value, waterDensity) {
   switch (densUnit) {
-    case 'kgm':      return value;
-    case 'S.G.':     return value * waterDensity;
-    case 'LB / Gal': return value * (1 / 231) * 27679.90471;
-    case 'lbin':     return value * 27679.90471;
-    default:         return 999; // safe fallback
+    case 'kgm':       return value;
+    case 'S.G.':      return value * waterDensity;
+    case 'LB / Gal':  return value * (1 / 231) * 27679.90471;
+    case 'lbin':      return value * 27679.90471;
+    default:          return 999;
   }
 }
 
 
-// ─── Helper: convert any volumetric/mass flow unit → PPH ─────────────────────
-// Also manages show/hide of density & temp UI elements.
+// ─── Helper: convert any flow unit → PPH ─────────────────────────────────────
 function toFlowPPH(flowUnit, flowValue, density_kgm, hideableDensity, hideableTemp) {
   let pph;
   switch (flowUnit) {
-    // ── Mass flow units (no density needed) ──
+    // Mass flow — no density needed
     case 'PPH':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
@@ -239,45 +251,44 @@ function toFlowPPH(flowUnit, flowValue, density_kgm, hideableDensity, hideableTe
     case 'kgPs':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      pph = flowValue * 7936.6414387;          // kg/s → PPH
+      pph = flowValue * 7936.6414387;
       break;
     case 'gramM':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      pph = flowValue * PPH_PER_GRAMSEC;       // g/min → PPH  (0.1322773573 lb/hr per g/min)
+      pph = flowValue * 0.1322773573;           // gram/min → PPH
       break;
     case 'lbSec':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      pph = flowValue * PPH_PER_LBSEC;         // lb/sec → PPH
+      pph = flowValue * PPH_PER_LBSEC;
       break;
     case 'lbMin':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      pph = flowValue * PPH_PER_LBMIN;         // lb/min → PPH
+      pph = flowValue * PPH_PER_LBMIN;
       break;
     case 'kgMin':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      pph = flowValue * PPH_PER_KGMIN;         // kg/min → PPH
+      pph = flowValue * PPH_PER_KGMIN;
       break;
     case 'kgHr':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      pph = flowValue * PPH_PER_KGHR;          // kg/hr  → PPH
+      pph = flowValue * PPH_PER_KGHR;
       break;
     case 'gramSec':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      pph = flowValue * PPH_PER_GRAMSEC;       // g/sec  → PPH
+      pph = flowValue * PPH_PER_GRAMSEC;
       break;
     case 'tonHr':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      pph = flowValue * PPH_PER_TONHR;         // metric ton/hr → PPH
+      pph = flowValue * PPH_PER_TONHR;
       break;
-
-    // ── Volumetric flow units (density required) ──
+    // Volumetric flow — density required
     case 'GPM':
       hideableDensity.style.display = 'flex';
       pph = flowValue * 60 * density_kgm * (1 / 27679.90471) * 231;
@@ -302,7 +313,6 @@ function toFlowPPH(flowUnit, flowValue, density_kgm, hideableDensity, hideableTe
       hideableDensity.style.display = 'flex';
       pph = flowValue * 61.0237 * 60 * density_kgm * (1 / 27679.90471);
       break;
-
     default:
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
@@ -313,11 +323,10 @@ function toFlowPPH(flowUnit, flowValue, density_kgm, hideableDensity, hideableTe
 
 
 // ─── Helper: convert PPH → any output unit ───────────────────────────────────
-// Also manages show/hide of density & temp UI elements.
 function fromFlowPPH(flowUnit, pph, density_kgm, hideableDensity, hideableTemp) {
   let value;
   switch (flowUnit) {
-    // ── Mass flow outputs (no density needed) ──
+    // Mass flow — no density needed
     case 'PPH':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
@@ -326,45 +335,44 @@ function fromFlowPPH(flowUnit, pph, density_kgm, hideableDensity, hideableTemp) 
     case 'kgPs':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      value = pph * 0.0001259979;              // PPH → kg/s
+      value = pph * 0.0001259979;
       break;
     case 'gramM':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      value = pph * 7.5598728333;              // PPH → g/min
+      value = pph * 7.5598728333;               // PPH → gram/min
       break;
     case 'lbSec':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      value = pph / PPH_PER_LBSEC;            // PPH → lb/sec
+      value = pph / PPH_PER_LBSEC;
       break;
     case 'lbMin':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      value = pph / PPH_PER_LBMIN;            // PPH → lb/min
+      value = pph / PPH_PER_LBMIN;
       break;
     case 'kgMin':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      value = pph / PPH_PER_KGMIN;            // PPH → kg/min
+      value = pph / PPH_PER_KGMIN;
       break;
     case 'kgHr':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      value = pph / PPH_PER_KGHR;             // PPH → kg/hr
+      value = pph / PPH_PER_KGHR;
       break;
     case 'gramSec':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      value = pph / PPH_PER_GRAMSEC;          // PPH → g/sec
+      value = pph / PPH_PER_GRAMSEC;
       break;
     case 'tonHr':
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
-      value = pph / PPH_PER_TONHR;            // PPH → metric ton/hr
+      value = pph / PPH_PER_TONHR;
       break;
-
-    // ── Volumetric flow outputs (density required) ──
+    // Volumetric flow — density required
     case 'GPM':
       hideableDensity.style.display = 'flex';
       value = pph * (1 / 60) * 27679.90471 * (1 / density_kgm) * (1 / 231);
@@ -389,7 +397,6 @@ function fromFlowPPH(flowUnit, pph, density_kgm, hideableDensity, hideableTemp) 
       hideableDensity.style.display = 'flex';
       value = pph * (1 / 3600) * 27679.90471 * (1 / density_kgm) * 0.0163871;
       break;
-
     default:
       hideableDensity.style.display = 'none';
       hideableTemp.style.display    = 'none';
@@ -402,7 +409,6 @@ function fromFlowPPH(flowUnit, pph, density_kgm, hideableDensity, hideableTemp) 
 // ─── CSV Processing ───────────────────────────────────────────────────────────
 async function processCSVFiles(filePaths) {
   const allData = [];
-
   for (const filePath of filePaths) {
     try {
       const response = await fetch(filePath);
@@ -412,58 +418,39 @@ async function processCSVFiles(filePaths) {
       console.error(`Error processing file ${filePath}:`, error);
     }
   }
-
   return allData;
 }
 
 function parseCSV(csvData) {
   const rows       = csvData.trim().split('\n');
   const parsedData = [];
-
   rows.forEach(row => {
     const columns = row.split(',');
     if (columns.length >= 2) {
       const x = parseFloat(columns[0].trim());
       const y = parseFloat(columns[1].trim());
-      if (!isNaN(x) && !isNaN(y)) {
-        parsedData.push({ x, y });
-      }
+      if (!isNaN(x) && !isNaN(y)) parsedData.push({ x, y });
     }
   });
-
   return parsedData;
 }
 
-// Secondary CSV call retained for backwards compatibility (fallData global)
-processCSVFiles(csvFiles1)
-  .then(allData => {
-    fallData = allData;
-  })
-  .catch(error => {
-    console.error('Error processing CSV files:', error);
-  });
 
-
-// ─── Linear Interpolation ────────────────────────────────────────────────────
+// ─── Linear Interpolation ─────────────────────────────────────────────────────
 function linearInterpolation(x, data) {
-  x    = parseFloat(x);
-  const minX = Math.min(...data.map(point => point[0]));
-  const maxX = Math.max(...data.map(point => point[0]));
-
+  x = parseFloat(x);
+  const minX = Math.min(...data.map(p => p[0]));
+  const maxX = Math.max(...data.map(p => p[0]));
   flag = (x < minX || x > maxX);
 
-  // Exact match check
   for (let i = 0; i < data.length; i++) {
     if (data[i][0] === x) return data[i][1];
   }
-
-  // Interpolation
   for (let i = 0; i < data.length - 1; i++) {
     const x0 = parseFloat(data[i][0]);
     const y0  = parseFloat(data[i][1]);
     const x1  = parseFloat(data[i + 1][0]);
     const y1  = parseFloat(data[i + 1][1]);
-
     if (x >= x0 && x <= x1) {
       return y0 + ((x - x0) * (y1 - y0)) / (x1 - x0);
     }
@@ -471,56 +458,40 @@ function linearInterpolation(x, data) {
 }
 
 
-// ─── Water density calculators (temperature → water density via interpolation) ─
-
+// ─── Water Density Calculators ────────────────────────────────────────────────
 function calculate1() {
-  const tempUnit1      = document.getElementById('tempUnit1').value;
-  const Temp1InputNum  = parseFloat(document.getElementById('Temp1InputNum').value) || 60;
-  const result_temp_F  = toFahrenheit(Temp1InputNum || 60, tempUnit1);
-
-  waterDensity1 = linearInterpolation(result_temp_F, nonChartData[switchIndex]);
-  document.getElementById('waterDensity1').innerText =
-    flag ? 'Out of Range' : waterDensity1.toFixed(2);
+  const tempUnit1     = document.getElementById('tempUnit1').value;
+  const Temp1InputNum = parseFloat(document.getElementById('Temp1InputNum').value) || 60;
+  waterDensity1 = linearInterpolation(toFahrenheit(Temp1InputNum, tempUnit1), nonChartData[switchIndex]);
+  document.getElementById('waterDensity1').innerText = flag ? 'Out of Range' : waterDensity1.toFixed(2);
 }
 
 function calculate2() {
-  const tempUnit2      = document.getElementById('tempUnit2').value;
-  const Temp2InputNum  = parseFloat(document.getElementById('Temp2InputNum').value) || 60;
-  const result_temp_F  = toFahrenheit(Temp2InputNum || 60, tempUnit2);
-
-  waterDensity2 = linearInterpolation(result_temp_F, nonChartData[switchIndex]);
-  document.getElementById('waterDensity2').innerText =
-    flag ? 'Out of Range' : waterDensity2.toFixed(2);
+  const tempUnit2     = document.getElementById('tempUnit2').value;
+  const Temp2InputNum = parseFloat(document.getElementById('Temp2InputNum').value) || 60;
+  waterDensity2 = linearInterpolation(toFahrenheit(Temp2InputNum, tempUnit2), nonChartData[switchIndex]);
+  document.getElementById('waterDensity2').innerText = flag ? 'Out of Range' : waterDensity2.toFixed(2);
 }
 
 function calculate3() {
-  const tempUnit3      = document.getElementById('tempUnit3').value;
-  const Temp3InputNum  = parseFloat(document.getElementById('Temp3InputNum').value) || 60;
-  const result_temp_F  = toFahrenheit(Temp3InputNum || 60, tempUnit3);
-
-  waterDensity3 = linearInterpolation(result_temp_F, nonChartData[switchIndex]);
-  document.getElementById('waterDensity3').innerText =
-    flag ? 'Out of Range' : waterDensity3.toFixed(2);
+  const tempUnit3     = document.getElementById('tempUnit3').value;
+  const Temp3InputNum = parseFloat(document.getElementById('Temp3InputNum').value) || 60;
+  waterDensity3 = linearInterpolation(toFahrenheit(Temp3InputNum, tempUnit3), nonChartData[switchIndex]);
+  document.getElementById('waterDensity3').innerText = flag ? 'Out of Range' : waterDensity3.toFixed(2);
 }
 
 function calculate4() {
-  const tempUnit4      = document.getElementById('tempUnit4').value;
-  const Temp4InputNum  = parseFloat(document.getElementById('Temp4InputNum').value) || 60;
-  const result_temp_F  = toFahrenheit(Temp4InputNum || 60, tempUnit4);
-
-  waterDensity4 = linearInterpolation(result_temp_F, nonChartData[switchIndex]);
-  document.getElementById('waterDensity4').innerText =
-    flag ? 'Out of Range' : waterDensity4.toFixed(2);
+  const tempUnit4     = document.getElementById('tempUnit4').value;
+  const Temp4InputNum = parseFloat(document.getElementById('Temp4InputNum').value) || 60;
+  waterDensity4 = linearInterpolation(toFahrenheit(Temp4InputNum, tempUnit4), nonChartData[switchIndex]);
+  document.getElementById('waterDensity4').innerText = flag ? 'Out of Range' : waterDensity4.toFixed(2);
 }
 
 function calculate5() {
-  const tempUnit5      = document.getElementById('tempUnit5').value;
-  const Temp5InputNum  = parseFloat(document.getElementById('Temp5InputNum').value) || 60;
-  const result_temp_F  = toFahrenheit(Temp5InputNum || 60, tempUnit5);
-
-  waterDensity5 = linearInterpolation(result_temp_F, nonChartData[switchIndex]);
-  document.getElementById('waterDensity5').innerText =
-    flag ? 'Out of Range' : waterDensity5.toFixed(2);
+  const tempUnit5     = document.getElementById('tempUnit5').value;
+  const Temp5InputNum = parseFloat(document.getElementById('Temp5InputNum').value) || 60;
+  waterDensity5 = linearInterpolation(toFahrenheit(Temp5InputNum, tempUnit5), nonChartData[switchIndex]);
+  document.getElementById('waterDensity5').innerText = flag ? 'Out of Range' : waterDensity5.toFixed(2);
 }
 
 
