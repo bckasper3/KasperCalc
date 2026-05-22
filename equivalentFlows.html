@@ -260,10 +260,16 @@
                       <span class="output inputbox">
                         <input class= "calcinput1" type="number" id="flow1InputNum" oninput="calculate()" value="1" aria-label="Input box for flow rate, either volumetric or mass flow rate"/>
                         <select class="dropdowncalc dropdown-menu-end" id="flowUnit1" onchange="calculate()" aria-label="Configurable units selector dropdown for flow rate">
-                          <option value="PPH">PPH</option>
+                          <option value="PPH">lb/hr (PPH)</option>
                           <option value="GPM">GPM</option>
                           <option value="kgPs">kg/sec</option>
                           <option value="gramM">Gram/Min</option>
+                          <option value="lbSec">lb/sec</option>
+                          <option value="lbMin">lb/min</option>
+                          <option value="kgMin">kg/min</option>
+                          <option value="kgHr">kg/hr</option>
+                          <option value="gramSec">gram/sec</option>
+                          <option value="tonHr">ton/hr (metric)</option>
                           <option value="inSec">in³/sec</option>
                           <option value="ftSec">ft³/sec</option>
                           <option value="mSEc">m³/sec</option>
@@ -338,10 +344,16 @@
                     </span>
                       <span class="output inputbox">
                         <select class="dropdowncalc dropdown-menu-end" id="flowUnit2" onchange="calculate()" aria-label="Input box for flow rate, either volumetric or mass flow rate, flow flow 2">
-                          <option value="PPH">PPH</option>
+                          <option value="PPH">lb/hr (PPH)</option>
                           <option value="GPM">GPM</option>
                           <option value="kgPs">kg/sec</option>
                           <option value="gramM">Gram/Min</option>
+                          <option value="lbSec">lb/sec</option>
+                          <option value="lbMin">lb/min</option>
+                          <option value="kgMin">kg/min</option>
+                          <option value="kgHr">kg/hr</option>
+                          <option value="gramSec">gram/sec</option>
+                          <option value="tonHr">ton/hr (metric)</option>
                           <option value="inSec">in³/sec</option>
                           <option value="ftSec">ft³/sec</option>
                           <option value="mSEc">m³/sec</option>
@@ -396,10 +408,16 @@
 
           <div class="group result">
             <span class="label">
-              <span id="FlowResult1">Result (PPH):</span>
+              <span id="FlowResult1">Result (lb/hr / PPH):</span>
               <span id="FlowResult2">Result (GPM):</span>
               <span id="FlowResult3">Result (kg/sec):</span>
               <span id="FlowResult4">Result (gram/min):</span>
+              <span id="FlowResult10">Result (lb/sec):</span>
+              <span id="FlowResult11_lbsec">Result (lb/min):</span>
+              <span id="FlowResult12_lbmin">Result (kg/min):</span>
+              <span id="FlowResult13_kgmin">Result (kg/hr):</span>
+              <span id="FlowResult14_kghr">Result (gram/sec):</span>
+              <span id="FlowResult15_tonhr">Result (ton/hr metric):</span>
               <span id="FlowResult5">Result (in³/sec):</span>
               <span id="FlowResult6">Result (ft³/sec):</span>
               <span id="FlowResult7">Result (m³/sec):</span>
@@ -462,10 +480,16 @@
                       <span class="output inputbox">
                         <input class= "calcinput1" type="number" id="flow3InputNum" oninput="calculate6()" value="0.5" aria-label="Input box for flow rate, either volumetric or mass flow rate"/>
                         <select class="dropdowncalc dropdown-menu-end" id="flowUnit3" onchange="calculate6()" aria-label="Configurable units selector dropdown for flow rate">
-                          <option value="PPH">PPH</option>
+                          <option value="PPH">lb/hr (PPH)</option>
                           <option value="GPM">GPM</option>
                           <option value="kgPs">kg/sec</option>
                           <option value="gramM">Gram/Min</option>
+                          <option value="lbSec">lb/sec</option>
+                          <option value="lbMin">lb/min</option>
+                          <option value="kgMin">kg/min</option>
+                          <option value="kgHr">kg/hr</option>
+                          <option value="gramSec">gram/sec</option>
+                          <option value="tonHr">ton/hr (metric)</option>
                           <option value="inSec">in³/sec</option>
                           <option value="ftSec">ft³/sec</option>
                           <option value="mSEc">m³/sec</option>
@@ -543,10 +567,16 @@
                         <span class="output inputbox">
                           <input class= "calcinput1" type="number" id="flow4InputNum" oninput="calculate6()" value="0.5" aria-label="Input box for flow rate, either volumetric or mass flow rate"/>
                           <select class="dropdowncalc dropdown-menu-end" id="flowUnit4" onchange="calculate6()" aria-label="Configurable units selector dropdown for flow rate">
-                            <option value="PPH">PPH</option>
+                            <option value="PPH">lb/hr (PPH)</option>
                             <option value="GPM">GPM</option>
                             <option value="kgPs">kg/sec</option>
                             <option value="gramM">Gram/Min</option>
+                            <option value="lbSec">lb/sec</option>
+                            <option value="lbMin">lb/min</option>
+                            <option value="kgMin">kg/min</option>
+                            <option value="kgHr">kg/hr</option>
+                            <option value="gramSec">gram/sec</option>
+                            <option value="tonHr">ton/hr (metric)</option>
                             <option value="inSec">in³/sec</option>
                             <option value="ftSec">ft³/sec</option>
                             <option value="mSEc">m³/sec</option>
@@ -609,7 +639,7 @@
 
               <!-- FLOW 5 -->
               <!-- FLOW RATE UNITS-->
-              <div class="d-flexbck flex-wrap" style="flex: 1; min-width: fit-content;"">
+              <div class="d-flexbck flex-wrap" style="flex: 1; min-width: fit-content;">
               <div class="flex-wrap" style="flex: 1; min-width: fit-content;">
                 <div class="group12">
                   <div class="group12">
@@ -626,10 +656,16 @@
                     </span>
                       <span class="output inputbox">
                         <select class="dropdowncalc dropdown-menu-end" id="flowUnit5" onchange="calculate6()" aria-label="Input box for flow rate, either volumetric or mass flow rate, flow flow 2">
-                          <option value="PPH">PPH</option>
+                          <option value="PPH">lb/hr (PPH)</option>
                           <option value="GPM">GPM</option>
                           <option value="kgPs">kg/sec</option>
                           <option value="gramM">Gram/Min</option>
+                          <option value="lbSec">lb/sec</option>
+                          <option value="lbMin">lb/min</option>
+                          <option value="kgMin">kg/min</option>
+                          <option value="kgHr">kg/hr</option>
+                          <option value="gramSec">gram/sec</option>
+                          <option value="tonHr">ton/hr (metric)</option>
                           <option value="inSec">in³/sec</option>
                           <option value="ftSec">ft³/sec</option>
                           <option value="mSEc">m³/sec</option>
@@ -683,10 +719,16 @@
           
           <div class="group result">
             <span class="label">
-              <span id="FlowResult11">Result (PPH):</span>
+              <span id="FlowResult11">Result (lb/hr / PPH):</span>
               <span id="FlowResult12">Result (GPM):</span>
               <span id="FlowResult13">Result (kg/sec):</span>
               <span id="FlowResult14">Result (gram/min):</span>
+              <span id="FlowResult20_gramsec">Result (lb/sec):</span>
+              <span id="FlowResult21_lbsec">Result (lb/min):</span>
+              <span id="FlowResult22_lbmin">Result (kg/min):</span>
+              <span id="FlowResult23_kgmin">Result (kg/hr):</span>
+              <span id="FlowResult24_kghr">Result (gram/sec):</span>
+              <span id="FlowResult25_tonhr">Result (ton/hr metric):</span>
               <span id="FlowResult15">Result (in³/sec):</span>
               <span id="FlowResult16">Result (ft³/sec):</span>
               <span id="FlowResult17">Result (m³/sec):</span>
