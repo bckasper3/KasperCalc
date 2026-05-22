@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -32,7 +32,7 @@
     <link rel="manifest" href="/favicon/site.webmanifest" />
 
     <style>
-      /* Bitmap editor styles — colors matched to KasperCalc theme */
+      /* OLED Sketch Simulator styles — colors matched to KasperCalc theme */
       #bmp-app {
         padding: 12px;
         display: flex;
@@ -75,74 +75,6 @@
         background: var(--calc-outline-color);
         margin: 0 2px;
         opacity: .35;
-      }
-      #bmp-canvas-wrap {
-        overflow: auto;
-        border: 2px solid var(--calc-outline-color);
-        border-radius: var(--border-radius-small);
-        background: #c5c5c5;
-        position: relative;
-        max-height: 480px;
-        box-shadow: 0 3px 5px 0 rgba(0,0,0,.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      #main-canvas {
-        display: block;
-        cursor: crosshair;
-        image-rendering: pixelated;
-      }
-      .bmp-info-bar {
-        display: flex;
-        gap: 16px;
-        padding: 6px 10px;
-        background: var(--calc-background-color);
-        border: 2px solid var(--calc-outline-color);
-        border-radius: var(--border-radius-small);
-        font-size: 13px;
-        color: var(--primary-color);
-        flex-wrap: wrap;
-        box-shadow: 0 3px 5px 0 rgba(0,0,0,.4);
-        font-family: var(--body-font-family);
-      }
-      .bmp-info-bar span b {
-        color: var(--p-color);
-      }
-      #bmp-import-area {
-        display: flex;
-        gap: 6px;
-        align-items: center;
-        flex-wrap: wrap;
-        margin-bottom: 4px;
-      }
-      #bmp-import-area input[type=file] {
-        font-size: 13px;
-        font-family: var(--body-font-family);
-      }
-      #code-in {
-        width: 100%;
-        height: 80px;
-        font-family: monospace;
-        font-size: 11px;
-        resize: vertical;
-        padding: 6px;
-        border: 2px solid var(--calc-outline-color);
-        border-radius: var(--border-radius-small);
-        background: #fff;
-        color: var(--p-color);
-      }
-      #export-out {
-        width: 100%;
-        height: 80px;
-        font-family: monospace;
-        font-size: 11px;
-        resize: vertical;
-        padding: 6px;
-        border: 2px solid var(--calc-outline-color);
-        border-radius: var(--border-radius-small);
-        background: var(--calc-result-color);
-        color: var(--p-color);
       }
       .bmp-section-label {
         font-size: 14px;
@@ -417,118 +349,44 @@
         <div class="col-lg-12 col-12 px-3">
           <div style="max-width:900px; margin:0 auto;">
 
-            <h2 class="visually-hidden">Bitmap editor for black and white OLED-style images</h2>
+            <h2 class="visually-hidden">OLED Sketch Simulator &mdash; paste an Arduino or bare-metal C sketch to preview on a simulated display</h2>
 
             <div id="bmp-app">
 
-              <!-- TOOLBAR -->
+              <!-- SIMULATOR TOOLBAR -->
               <div class="bmp-toolbar">
-                <label>New:</label>
+                <label>Fallback display:</label>
                 <select id="preset-size">
-                  <option value="128,64">128×64 (OLED)</option>
-                  <option value="128,32">128×32 (OLED)</option>
-                  <option value="64,48">64×48</option>
-                  <option value="96,64">96×64</option>
-                  <option value="32,32">32×32</option>
-                  <option value="16,16">16×16</option>
-                </select>
-                <button id="btn-new">New</button>
-                <div class="bmp-sep"></div>
-                <button id="btn-rot90">&#8635; 90&deg;</button>
-                <button id="btn-flipx">&#8646; Flip X</button>
-                <button id="btn-flipy">&#8645; Flip Y</button>
-                <button id="btn-invert">&#8861; Invert</button>
-                <button id="btn-clear">Clear</button>
-                <div class="bmp-sep"></div>
-                <button id="btn-undo" title="Undo (Ctrl+Z)">&#8617; Undo</button>
-                <button id="btn-redo" title="Redo (Ctrl+Y)">&#8618; Redo</button>
-                <div class="bmp-sep"></div>
-                <label>Tool:</label>
-                <select id="tool-sel">
-                  <option value="draw">Draw</option>
-                  <option value="erase">Erase</option>
-                  <option value="fill">Fill</option>
-                  <option value="line">Line</option>
-                  <option value="rect">Rect</option>
+                  <option value="128,64">128&times;64 (OLED)</option>
+                  <option value="128,32">128&times;32 (OLED)</option>
+                  <option value="64,48">64&times;48</option>
+                  <option value="96,64">96&times;64</option>
+                  <option value="32,32">32&times;32</option>
+                  <option value="16,16">16&times;16</option>
                 </select>
                 <div class="bmp-sep"></div>
                 <div class="bmp-zoom-wrap">
                   <label>Zoom:</label>
                   <select id="zoom-sel">
                     <option value="2">2&times;</option>
+                    <option value="3">3&times;</option>
                     <option value="4" selected>4&times;</option>
                     <option value="6">6&times;</option>
                     <option value="8">8&times;</option>
-                    <option value="10">10&times;</option>
-                    <option value="12">12&times;</option>
                   </select>
                 </div>
-                <div class="bmp-sep"></div>
-                <label>Byte Layout:</label>
-                <select id="byte-layout" title="Controls how C array bytes are decoded on import and encoded on export">
-                  <option value="horizontal_msb" selected>Horizontal MSB (Adafruit GFX)</option>
-                  <option value="horizontal_lsb">Horizontal LSB (XBM-style)</option>
-                  <option value="vertical_lsb">Vertical LSB (SSD1306 page)</option>
-                  <option value="vertical_msb">Vertical MSB</option>
-                </select>
               </div>
 
-              <!-- INFO BAR -->
-              <div class="bmp-info-bar">
-                <span>Size: <b id="info-size">128&times;64</b></span>
-                <span>Cursor: <b id="info-xy">&mdash;</b></span>
-                <span>Byte addr: <b id="info-byte">&mdash;</b></span>
-                <span>Bit: <b id="info-bit">&mdash;</b></span>
-                <span>Pixel index: <b id="info-idx">&mdash;</b></span>
-                <span>Set pixels: <b id="info-count">0</b></span>
-              </div>
-
-              <!-- CANVAS -->
-              <div id="bmp-canvas-wrap">
-                <canvas id="main-canvas"></canvas>
-              </div>
-
-              <!-- IMPORT -->
+              <!-- SKETCH INPUT -->
               <div class="bmp-section">
-                <div class="bmp-section-label">Import &mdash; paste C/C++ array, XBM, PBM, or drop .bmp/.bin file</div>
-                <div id="bmp-import-area">
-                  <input type="file" id="file-input" accept=".bmp,.bin,.pbm,.xbm,.h,.c,.cpp,.txt">
-                  <button id="btn-parse-code">Parse text below &darr;</button>
-                </div>
-                <textarea id="code-in" placeholder="Paste C array: const uint8_t img[] = {0xFF, 0x00, ...};&#10;Or XBM: #define img_width 16 ...&#10;Or raw hex bytes: FF 00 AA ..."></textarea>
-              </div>
-
-              <!-- EXPORT -->
-              <div class="bmp-section">
-                <div class="bmp-section-label">Export</div>
-                <div class="bmp-toolbar" style="margin-bottom:6px; box-shadow:none;">
-                  <select id="export-fmt">
-                    <option value="c_horizontal">C array &mdash; horizontal, MSB (Adafruit GFX)</option>
-                    <option value="c_horizontal_lsb">C array &mdash; horizontal, LSB (XBM-style)</option>
-                    <option value="c_vertical">C array &mdash; vertical / page, LSB (SSD1306)</option>
-                    <option value="c_vertical_msb">C array &mdash; vertical / page, MSB</option>
-                    <option value="xbm">XBM</option>
-                    <option value="pbm">PBM (P1 ascii)</option>
-                    <option value="hex">Raw hex</option>
-                    <option value="bin_str">Binary strings</option>
-                  </select>
-                  <button id="btn-export">Export</button>
-                  <button id="btn-copy">Copy</button>
-                  <button id="btn-save-bmp">Save BMP</button>
-                </div>
-                <textarea id="export-out" readonly></textarea>
-              </div>
-
-              <!-- SKETCH SIMULATOR -->
-              <div class="bmp-section">
-                <div class="bmp-section-label">Sketch Simulator &mdash; paste or drop a full .ino / .c / .cpp file</div>
+                <div class="bmp-section-label">Paste or drop a .ino / .c / .cpp sketch file</div>
                 <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-bottom:6px;">
                   <input type="file" id="sim-file-input" accept=".ino,.c,.cpp,.h,.txt" style="font-size:13px; font-family:var(--body-font-family);">
                   <button id="btn-run-sketch" class="bmp-toolbar" style="padding:4px 12px; cursor:pointer; border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small); background:#fff; color:var(--p-color); font-size:13px; font-family:var(--body-font-family);">&#9654; Run Sketch</button>
                   <button id="btn-clear-sim" class="bmp-toolbar" style="padding:4px 10px; cursor:pointer; border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small); background:#fff; color:var(--p-color); font-size:13px; font-family:var(--body-font-family);">&#215; Clear</button>
                   <span id="sim-status"></span>
                 </div>
-                <textarea id="sim-code-in" placeholder="Paste a full Arduino .ino sketch or bare-metal C file here, or use the file picker above.&#10;&#10;Supported: Adafruit SSD1306/SH1106, u8g2, direct I2C page mode (including the bare-metal AVR example generated above).&#10;Phase 1 renders geometry and bitmaps. Text/font calls are silently skipped (Phase 2)."></textarea>
+                <textarea id="sim-code-in" placeholder="Paste a full Arduino .ino sketch or bare-metal C file here, or use the file picker above.&#10;&#10;Supported: Adafruit SSD1306/SH1106, u8g2, direct I2C page mode, bare-metal AVR C.&#10;If the library is not detected automatically, the Fallback display size from the toolbar is used.&#10;Phase 1 renders geometry and bitmaps. Text/font calls are silently skipped (Phase 2)."></textarea>
                 <div id="sim-log"></div>
               </div>
 
@@ -548,117 +406,80 @@
         <div class="col-lg-12 col-12 px-3">
           <div style="max-width:900px; margin:0 auto; line-height:1.7;">
 
-            <h4 style="color:var(--section-title-color); border-bottom:1px solid var(--border-color); padding-bottom:.3rem; margin-top:2rem;">Canvas &amp; Toolbar</h4>
+            <h4 style="color:var(--section-title-color); border-bottom:1px solid var(--border-color); padding-bottom:.3rem; margin-top:2rem;">How It Works</h4>
 
-            <p><b>New</b> creates a blank canvas at the selected preset size. Standard OLED sizes (128&times;64, 128&times;32) are included along with several others. <b>&#8635;&nbsp;90&deg;</b> rotates the entire image clockwise, swapping width and height. <b>&#8646;&nbsp;Flip&nbsp;X</b> mirrors left-to-right. <b>&#8645;&nbsp;Flip&nbsp;Y</b> mirrors top-to-bottom. <b>&#8861;&nbsp;Invert</b> flips every pixel. <b>Clear</b> sets every pixel to black.</p>
+            <p>Paste a full <code>.ino</code>, <code>.c</code>, or <code>.cpp</code> file into the text area — or use the file picker to load one from disk. Click <b>&#9654;&nbsp;Run&nbsp;Sketch</b> and the simulator will parse the source, extract array definitions and function bodies, then replay every draw call against a virtual framebuffer. The result is rendered on the canvas below at the selected zoom level. No compilation takes place: the simulator pattern-matches known API calls and redraws them in JavaScript.</p>
 
-            <p><b>&#8617;&nbsp;Undo</b> and <b>&#8618;&nbsp;Redo</b> step through your edit history. Keyboard shortcuts are <b>Ctrl+Z</b> to undo and <b>Ctrl+Y</b> or <b>Ctrl+Shift+Z</b> to redo. Up to 50 steps are stored. All drawing operations, transforms, clear, and invert are undoable.</p>
-
-            <p><b>Tool</b> selects the drawing mode. <b>Draw</b> sets pixels white on click or drag. <b>Erase</b> sets them black. <b>Fill</b> flood-fills the connected region of the same color starting from the clicked pixel. <b>Line</b> and <b>Rect</b> show a live preview while dragging and commit the shape when you release. Keyboard shortcuts: <b>D</b> draw, <b>E</b> erase, <b>F</b> fill, <b>L</b> line, <b>R</b> rect. Shortcuts are disabled when typing in a text box. A teal highlight box follows the cursor to show exactly which pixel you are hovering over.</p>
-
-            <p><b>Zoom</b> scales the canvas for easier editing. The pixel grid appears at 4&times; and above. Drawing works with a mouse, stylus, or touch on supported devices.</p>
-
-            <h4 style="color:var(--section-title-color); border-bottom:1px solid var(--border-color); padding-bottom:.3rem; margin-top:2rem;">Byte Layout</h4>
-
-            <p>This is the most important setting when importing from or exporting to a specific display library. It controls how each byte in the C array maps to a group of pixels on screen. Getting this wrong causes the image to appear scrambled, striped, or mirrored. Changing the Byte Layout selector automatically updates the Export Format dropdown to match, and vice versa, so the two are always kept consistent.</p>
-
-            <p>If you import an image and it looks like noise or diagonal stripes, try a different Byte Layout and re-parse. For a 128&times;64 image that occupies 1024 bytes, both horizontal and vertical layouts are numerically valid — the layout selector is the only way to tell them apart.</p>
+            <p>If the library is not detected automatically from the source (for example, a bare sketch with no recognizable constructor), the <b>Fallback display</b> size chosen in the toolbar is used to set the canvas dimensions. To generate ready-to-run example sketches in any of the supported formats, use the <a href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>.</p>
 
             <div class="table-responsive mt-2 mb-3">
               <table class="table table-striped table-bordered table-hover table-sm">
                 <thead style="background-color: var(--section-title-color); color: #fff;">
-                  <tr><th>Layout</th><th>How bytes map to pixels</th><th>Common libraries</th></tr>
+                  <tr><th>Category</th><th>Simulated &mdash; Phase 1</th><th>Not yet simulated &mdash; Phase 2</th></tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td><b>Horizontal MSB</b></td>
-                    <td>Bytes run row by row, left to right. Bit&nbsp;7 (MSB) is the leftmost pixel in each group of 8.</td>
-                    <td>Adafruit GFX <code>drawBitmap()</code>, LVGL, most general-purpose libraries</td>
+                    <td><b>Pixels &amp; geometry</b></td>
+                    <td>drawPixel, drawLine, drawFastHLine, drawFastVLine, drawRect, fillRect, drawCircle, fillCircle, drawRoundRect, fillRoundRect, drawTriangle, fillScreen, clearDisplay / clearBuffer</td>
+                    <td>&mdash;</td>
                   </tr>
                   <tr>
-                    <td><b>Horizontal LSB</b></td>
-                    <td>Same row-by-row order, but bit&nbsp;0 (LSB) is the leftmost pixel.</td>
-                    <td>XBM format, u8g2 <code>drawXBMP()</code>, ThingPulse <code>drawXbm()</code></td>
+                    <td><b>Bitmaps</b></td>
+                    <td>drawBitmap (H-MSB &mdash; Adafruit), drawXBMP / drawXBM (H-LSB &mdash; u8g2), oledDrawBitmap / sh1106_draw_bitmap_pgm (V-LSB page mode)</td>
+                    <td>&mdash;</td>
                   </tr>
                   <tr>
-                    <td><b>Vertical LSB</b></td>
-                    <td>Bytes run column by column within 8-pixel tall horizontal pages. Bit&nbsp;0 is the top pixel of each column in the page. Pages run top to bottom.</td>
-                    <td>SSD1306 direct / page mode, many bare-metal OLED drivers</td>
+                    <td><b>Text &amp; fonts</b></td>
+                    <td>&mdash;</td>
+                    <td>setFont, setTextSize, setTextColor, setCursor, print, println, drawStr, drawChar</td>
                   </tr>
                   <tr>
-                    <td><b>Vertical MSB</b></td>
-                    <td>Same page-column layout as Vertical LSB, but bit&nbsp;7 is the top pixel.</td>
-                    <td>Some custom firmware and lesser-used OLED libraries</td>
+                    <td><b>Hardware / I&mdash;O</b></td>
+                    <td><i>silently ignored</i></td>
+                    <td>delay, Wire, SPI, Serial, GPIO</td>
+                  </tr>
+                  <tr>
+                    <td><b>Control flow</b></td>
+                    <td>if / else, for loops, while loops (up to 64 iterations), user-defined helper functions</td>
+                    <td>Infinite <code>while(1)</code> in <code>loop()</code> &mdash; only code before it runs</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
-            <h4 style="color:var(--section-title-color); border-bottom:1px solid var(--border-color); padding-bottom:.3rem; margin-top:2rem;">Import</h4>
-
-            <p>Click <b>Browse</b> or drop a file directly onto the canvas to load a <code>.bmp</code>, <code>.bin</code>, <code>.pbm</code>, <code>.xbm</code>, <code>.h</code>, <code>.c</code>, or <code>.txt</code> file. BMP files are decoded automatically in 1-bit, 8-bit, 24-bit, and 32-bit depth; color BMPs are converted to black and white using a brightness threshold. All other file types are read as text and passed through the same parser as the text box.</p>
-
-            <p>To import from source code, paste the array into the text box and click <b>Parse text below</b>. The parser accepts C/C++ arrays (<code>uint8_t</code>, <code>unsigned char</code>, etc.), XBM <code>#define</code> headers, PBM P1 ASCII, and raw space-separated hex bytes. Width and height are read from any <code>width&nbsp;=&nbsp;N</code> or <code>height&nbsp;=&nbsp;N</code> comments or defines found in the text. If none are found, common display sizes are matched by byte count. Adding a comment such as <code>// width: 96 height: 48</code> forces those dimensions. The array-size bracket in declarations like <code>img[1024]</code> is stripped before parsing so the size number does not become a spurious byte.</p>
-
-            <h4 style="color:var(--section-title-color); border-bottom:1px solid var(--border-color); padding-bottom:.3rem; margin-top:2rem;">Export</h4>
-
-            <p>Select a format, click <b>Export</b> to generate the output, then <b>Copy</b> to copy to clipboard. <b>Save BMP</b> writes a standard 1-bit monochrome BMP file that can be opened in any image editor. The BMP uses bottom-up row order and horizontal MSB pixel order as required by the BMP specification, independent of the Byte Layout selector.</p>
-
-            <div class="table-responsive mt-2 mb-3">
-              <table class="table table-striped table-bordered table-hover table-sm">
-                <thead style="background-color: var(--section-title-color); color: #fff;">
-                  <tr><th>Format</th><th>Description</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td>C array — horizontal, MSB</td><td>Row-major, bit 7 = leftmost pixel. Use with Adafruit GFX <code>drawBitmap()</code>.</td></tr>
-                  <tr><td>C array — horizontal, LSB</td><td>Row-major, bit 0 = leftmost pixel. Use with u8g2 <code>drawXBMP()</code> or ThingPulse <code>drawXbm()</code>.</td></tr>
-                  <tr><td>C array — vertical / page, LSB</td><td>Page-column, bit 0 = top of page. Standard SSD1306 direct mode and most bare-metal OLED drivers.</td></tr>
-                  <tr><td>C array — vertical / page, MSB</td><td>Page-column, bit 7 = top of page. Some custom firmware.</td></tr>
-                  <tr><td>XBM</td><td>X BitMap C header format. Horizontal LSB. Recognized by Linux tools, GIMP, and many embedded utilities.</td></tr>
-                  <tr><td>PBM P1</td><td>Portable Bitmap ASCII. One character per pixel. Human-readable and easy to diff.</td></tr>
-                  <tr><td>Raw hex</td><td>Space-separated hex bytes, horizontal MSB. Useful for direct memory inspection or custom parsers.</td></tr>
-                  <tr><td>Binary strings</td><td>One row per line as 1s and 0s. Makes the bitmap structure immediately visible by eye.</td></tr>
-                </tbody>
-              </table>
-            </div>
-
-            <h4 style="color:var(--section-title-color); border-bottom:1px solid var(--border-color); padding-bottom:.3rem; margin-top:2rem;">Display Drivers</h4>
+            <h4 style="color:var(--section-title-color); border-bottom:1px solid var(--border-color); padding-bottom:.3rem; margin-top:2rem;">Supported Libraries</h4>
 
             <div class="row mt-2 mb-3 g-3">
               <div class="col-md-4">
                 <div class="bmp-section h-100">
-                  <p><b style="color:var(--section-title-color);">SSD1306</b></p>
-                  <p>The most common OLED controller. Used in the ubiquitous 0.96" 128&times;64 and 0.91" 128&times;32 displays from virtually every supplier. Made by Solomon Systech. Supports I2C (address 0x3C or 0x3D) and SPI. The internal frame buffer is organized as 8 horizontal pages of 128 bytes each, which is the physical origin of the vertical LSB page format. At high level, any major Arduino library wraps this into either horizontal MSB (Adafruit GFX) or horizontal LSB (u8g2, ThingPulse) depending on what <code>drawBitmap</code>-type function you call.</p>
+                  <p><b style="color:var(--section-title-color);">Adafruit SSD1306 / SH1106</b></p>
+                  <p>Detected from <code>Adafruit_SSD1306</code>, <code>Adafruit_SH1106</code>, or <code>Adafruit_SH110</code> in the source. Display size is read from the constructor call. Supports all <code>Adafruit_GFX</code> geometry primitives and <code>drawBitmap()</code> with horizontal MSB byte layout.</p>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="bmp-section h-100">
-                  <p><b style="color:var(--section-title-color);">SH1106</b></p>
-                  <p>Very similar to the SSD1306 but has 132 columns of internal RAM instead of 128. The visible area is offset by 2 pixels, so libraries add a 2-column correction automatically — you do not need to account for this in your bitmap. Common in 1.3" 128&times;64 white OLED modules. Pinout and wiring are often identical to 0.96" SSD1306 modules, making them easy to swap. The same Adafruit, u8g2, and ThingPulse libraries support it; just change the display constructor or <code>#define</code> and the byte layout stays the same.</p>
+                  <p><b style="color:var(--section-title-color);">u8g2</b></p>
+                  <p>Detected from a <code>U8G2_</code> constructor. Display size is parsed from the constructor name, e.g. <code>U8G2_SSD1306_128X64</code>. Supports <code>drawXBMP</code>, <code>drawFrame</code>, <code>drawBox</code>, <code>drawHLine</code>, <code>drawVLine</code>, <code>drawDisc</code>, <code>drawRFrame</code>, <code>drawRBox</code>, and <code>clearBuffer</code> / <code>sendBuffer</code>.</p>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="bmp-section h-100">
-                  <p><b style="color:var(--section-title-color);">CH1116 &amp; Others</b></p>
-                  <p><b>CH1116</b> is found in some inexpensive white OLED modules and is largely register-compatible with the SSD1306. <b>SH1107</b> drives 128&times;128 square OLEDs with a rotated page layout. <b>SSD1309</b> is a higher-drive-current variant of the SSD1306, pin-compatible and software-compatible. For all of these, the correct byte layout depends entirely on which library you use, not the controller chip itself. u8g2 supports all of them and always uses horizontal LSB for <code>drawXBMP()</code>, making it a reliable cross-controller choice.</p>
+                  <p><b style="color:var(--section-title-color);">Bare-metal AVR C / Direct I2C</b></p>
+                  <p>Detected from <code>sh1106_</code> function prefixes, <code>SH1106_WIDTH</code>, or <code>oledDrawBitmap</code> / <code>oledInit</code>. Supports <code>sh1106_draw_bitmap_pgm</code>, <code>sh1106_fill_rect</code>, <code>sh1106_set_pixel</code>, <code>oledDrawBitmap</code>, and the <code>clear</code> / <code>fill</code> / <code>flush</code> helpers. User-defined drawing functions (<code>build_splash()</code>, <code>drawSplash()</code>, etc.) are called automatically.</p>
                 </div>
               </div>
             </div>
 
-            <h4 style="color:var(--section-title-color); border-bottom:1px solid var(--border-color); padding-bottom:.3rem; margin-top:2rem;">Example Code Downloads</h4>
+            <h4 style="color:var(--section-title-color); border-bottom:1px solid var(--border-color); padding-bottom:.3rem; margin-top:2rem;">Tips</h4>
 
-            <p>Each button generates a ready-to-run file with your current canvas bitmap embedded in the correct byte format for that library or driver. The first group shows only the bitmap on a blank screen. The second group adds extra content so you can confirm text rendering, animation, or the full hardware driver all in one go. Arduino <code>.ino</code> files can be opened directly in the IDE; the bare-metal AVR file is a plain <code>.c</code> that compiles with avr-gcc targeting the new-style TWI0 peripheral (ATtiny816/ATmega4809 families).</p>
-
-            <div class="d-flex flex-wrap gap-2 mt-3 mb-5">
-              <div class="w-100"><span class="bmp-section-label">Bitmap on blank background</span></div>
-              <button onclick="downloadAdafruitExample()" class="custom-btn btn d-inline-block"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none" style="vertical-align:-2px; margin-right:5px;"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Adafruit SSD1306 / SH1106</button>
-              <button onclick="downloadU8G2Example()" class="custom-btn btn d-inline-block"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none" style="vertical-align:-2px; margin-right:5px;"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>u8g2 (SSD1306 &bull; SH1106 &bull; CH1116)</button>
-              <button onclick="downloadPageModeExample()" class="custom-btn btn d-inline-block"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none" style="vertical-align:-2px; margin-right:5px;"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Direct I2C / Page Mode</button>
-              <div class="w-100 mt-2"><span class="bmp-section-label">Bitmap + extra content</span></div>
-              <button onclick="downloadAdafruitSplashExample()" class="custom-btn btn d-inline-block"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none" style="vertical-align:-2px; margin-right:5px;"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Adafruit &mdash; Splash Screen</button>
-              <button onclick="downloadU8G2AnimExample()" class="custom-btn btn d-inline-block"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none" style="vertical-align:-2px; margin-right:5px;"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>u8g2 &mdash; Multi-frame</button>
-              <button onclick="downloadBaremetalAVRExample()" class="custom-btn btn d-inline-block"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none" style="vertical-align:-2px; margin-right:5px;"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Bare-metal AVR C (SH1106)</button>
-            </div>
+            <ul style="margin-bottom:2rem;">
+              <li>The simulator runs <code>setup()</code> first, then one pass of <code>loop()</code>. For bare-metal <code>.c</code> files it runs <code>main()</code> instead.</li>
+              <li>User-defined helper functions (e.g. <code>drawSplash()</code>, <code>build_splash()</code>) are resolved and executed automatically when called from <code>setup()</code> or <code>loop()</code>.</li>
+              <li>Variable declarations and arithmetic expressions are evaluated, so centering math like <code>(SCREEN_WIDTH - BMP_W) / 2</code> produces the correct pixel coordinates.</li>
+              <li><code>#define</code> constants are extracted and resolved. <code>SCREEN_WIDTH</code>, <code>SCREEN_HEIGHT</code>, <code>BMP_W</code>, <code>BMP_H</code>, <code>WHITE</code>, <code>BLACK</code>, and <code>SH1106_WIDTH</code> / <code>SH1106_HEIGHT</code> are pre-seeded.</li>
+              <li>If the bitmap appears garbled or off-center, check that the byte layout in the sketch matches what the simulator expects for that library: <b>H-MSB</b> for Adafruit, <b>H-LSB</b> for u8g2, <b>V-LSB</b> for direct / bare-metal.</li>
+              <li>After running a sketch, changing the <b>Zoom</b> selector immediately re-renders the last result without re-parsing.</li>
+            </ul>
 
           </div>
         </div>
@@ -681,1331 +502,15 @@
 </script>
 
 <script>
-// Cached element references
-const els = {
-  infoSize:  document.getElementById('info-size'),
-  infoXY:    document.getElementById('info-xy'),
-  infoByte:  document.getElementById('info-byte'),
-  infoBit:   document.getElementById('info-bit'),
-  infoIdx:   document.getElementById('info-idx'),
-  infoCount: document.getElementById('info-count'),
-  exportOut: document.getElementById('export-out'),
-  codeIn:    document.getElementById('code-in'),
-  toolSel:   document.getElementById('tool-sel')
-};
+// ── Simulator state ──────────────────────────────────────────
+let simZoom = 4;
+let lastSim = null;
 
-const canvas = document.getElementById('main-canvas');
-const ctx = canvas.getContext('2d');
-canvas.style.touchAction = 'none'; // #5 prevent scroll/zoom during pointer interaction
-
-let W = 128, H = 64;
-let pixels = new Uint8Array(W * H);
-let zoom = 4;
-let tool = 'draw';
-let painting = false;
-let lineStart = null;
-let rectStart = null;
-let hoverX = null, hoverY = null; // #14 hover highlight
-
-// #7 Undo / redo
-const undoStack = [];
-const redoStack = [];
-const MAX_UNDO = 50;
-
-function pushUndo() {
-  undoStack.push(pixels.slice());
-  if (undoStack.length > MAX_UNDO) undoStack.shift();
-  redoStack.length = 0;
-}
-function undo() {
-  if (!undoStack.length) return;
-  redoStack.push(pixels.slice());
-  pixels = undoStack.pop();
-  requestRender();
-}
-function redo() {
-  if (!redoStack.length) return;
-  undoStack.push(pixels.slice());
-  pixels = redoStack.pop();
-  requestRender();
-}
-
-// #17 rAF render queue
-let renderPending = false;
-let pendingPreview = null;
-
-function requestRender(preview) {
-  pendingPreview = preview || null;
-  if (renderPending) return;
-  renderPending = true;
-  requestAnimationFrame(() => {
-    renderPending = false;
-    render(pendingPreview);
-    pendingPreview = null;
-  });
-}
-
-function idx(x, y) { return y * W + x; }
-
-function resize(w, h) {
-  W = w; H = h;
-  pixels = new Uint8Array(W * H);
-  canvas.width = W * zoom; canvas.height = H * zoom;
-  els.infoSize.textContent = W + '×' + H;
-  requestRender();
-}
-
-function setZoom(z) {
-  zoom = z;
-  canvas.width = W * zoom; canvas.height = H * zoom;
-  requestRender();
-}
-
-function render(preview) {
-  const data = preview || pixels;
-
-  ctx.fillStyle = '#111';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // #10 Grid lines — translate 0.5px so 1px strokes snap to exact screen pixels
-  if (zoom >= 4) {
-    ctx.save();
-    ctx.translate(0.5, 0.5);
-    ctx.strokeStyle = '#2a2a2a';
-    ctx.lineWidth = 0.5;
-    for (let x = 0; x <= W; x++) {
-      ctx.beginPath(); ctx.moveTo(x * zoom, 0); ctx.lineTo(x * zoom, H * zoom); ctx.stroke();
-    }
-    for (let y = 0; y <= H; y++) {
-      ctx.beginPath(); ctx.moveTo(0, y * zoom); ctx.lineTo(W * zoom, y * zoom); ctx.stroke();
-    }
-    ctx.restore();
-  }
-
-  // Set pixels
-  ctx.fillStyle = '#ffffff';
-  for (let i = 0; i < W * H; i++) {
-    if (data[i]) {
-      const x = i % W, y = Math.floor(i / W);
-      ctx.fillRect(x * zoom + 1, y * zoom + 1, zoom - 1, zoom - 1);
-    }
-  }
-
-  // #14 Hover pixel highlight
-  if (hoverX !== null && inBounds(hoverX, hoverY)) {
-    ctx.save();
-    ctx.translate(0.5, 0.5);
-    ctx.strokeStyle = '#61828A';
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(hoverX * zoom, hoverY * zoom, zoom, zoom);
-    ctx.restore();
-  }
-
-  els.infoCount.textContent = pixels.reduce((a, b) => a + b, 0);
-}
-
-function getXY(e) {
-  const r = canvas.getBoundingClientRect();
-  return [Math.floor((e.clientX - r.left) / zoom), Math.floor((e.clientY - r.top) / zoom)];
-}
-
-function inBounds(x, y) { return x >= 0 && x < W && y >= 0 && y < H; }
-
-function floodFill(x, y, val) {
-  const target = pixels[idx(x, y)];
-  if (target === val) return;
-  const stack = [x, y];
-  while (stack.length) {
-    const cy = stack.pop(), cx = stack.pop();
-    if (!inBounds(cx, cy) || pixels[idx(cx, cy)] !== target) continue;
-    pixels[idx(cx, cy)] = val;
-    stack.push(cx + 1, cy, cx - 1, cy, cx, cy + 1, cx, cy - 1);
-  }
-}
-
-function drawLine(x0, y0, x1, y1, buf, val) {
-  let dx = Math.abs(x1 - x0), dy = Math.abs(y1 - y0);
-  let sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1, err = dx - dy;
-  while (true) {
-    if (inBounds(x0, y0)) buf[idx(x0, y0)] = val;
-    if (x0 === x1 && y0 === y1) break;
-    let e2 = 2 * err;
-    if (e2 > -dy) { err -= dy; x0 += sx; }
-    if (e2 < dx) { err += dx; y0 += sy; }
-  }
-}
-
-function drawRect(x0, y0, x1, y1, buf, val) {
-  const lx = Math.min(x0, x1), rx = Math.max(x0, x1);
-  const ty = Math.min(y0, y1), by = Math.max(y0, y1);
-  for (let x = lx; x <= rx; x++) {
-    if (inBounds(x, ty)) buf[idx(x, ty)] = val;
-    if (inBounds(x, by)) buf[idx(x, by)] = val;
-  }
-  for (let y = ty; y <= by; y++) {
-    if (inBounds(lx, y)) buf[idx(lx, y)] = val;
-    if (inBounds(rx, y)) buf[idx(rx, y)] = val;
-  }
-}
-
-function updateInfo(x, y) {
-  if (!inBounds(x, y)) { els.infoXY.textContent = '—'; return; }
-  const i = idx(x, y);
-  const byteAddr = Math.floor(i / 8);
-  const bit = 7 - (i % 8);
-  els.infoXY.textContent = x + ', ' + y;
-  els.infoByte.textContent = '0x' + byteAddr.toString(16).toUpperCase().padStart(4, '0') + ' (' + byteAddr + ')';
-  els.infoBit.textContent = bit;
-  els.infoIdx.textContent = i;
-}
-
-// #5 Pointer events — replaces mouse events, works for mouse, touch, and stylus
-canvas.addEventListener('pointermove', e => {
-  const [x, y] = getXY(e);
-  hoverX = x; hoverY = y;
-  updateInfo(x, y);
-  if (!painting) { requestRender(); return; }
-  if (tool === 'draw' || tool === 'erase') {
-    if (inBounds(x, y)) pixels[idx(x, y)] = tool === 'draw' ? 1 : 0;
-    requestRender();
-  } else if (tool === 'line' && lineStart) {
-    const prev = pixels.slice();
-    drawLine(lineStart[0], lineStart[1], x, y, prev, 1);
-    requestRender(prev);
-  } else if (tool === 'rect' && rectStart) {
-    const prev = pixels.slice();
-    drawRect(rectStart[0], rectStart[1], x, y, prev, 1);
-    requestRender(prev);
-  }
+document.getElementById('zoom-sel').addEventListener('change', e => {
+  simZoom = +e.target.value;
+  if (lastSim) lastSim.render(document.getElementById('sim-canvas'), simZoom);
 });
 
-canvas.addEventListener('pointerdown', e => {
-  canvas.setPointerCapture(e.pointerId);
-  painting = true;
-  const [x, y] = getXY(e);
-  if (!inBounds(x, y)) return;
-  pushUndo(); // #7 save before any edit
-  if (tool === 'draw' || tool === 'erase') { pixels[idx(x, y)] = tool === 'draw' ? 1 : 0; requestRender(); }
-  else if (tool === 'fill') { floodFill(x, y, 1); requestRender(); }
-  else if (tool === 'line') { lineStart = [x, y]; }
-  else if (tool === 'rect') { rectStart = [x, y]; }
-});
-
-canvas.addEventListener('pointerup', e => {
-  const [x, y] = getXY(e);
-  if (tool === 'line' && lineStart) { drawLine(lineStart[0], lineStart[1], x, y, pixels, 1); lineStart = null; requestRender(); }
-  else if (tool === 'rect' && rectStart) { drawRect(rectStart[0], rectStart[1], x, y, pixels, 1); rectStart = null; requestRender(); }
-  painting = false;
-});
-
-canvas.addEventListener('pointerleave', () => {
-  hoverX = null; hoverY = null;
-  els.infoXY.textContent = '—';
-  els.infoByte.textContent = '—';
-  els.infoBit.textContent = '—';
-  els.infoIdx.textContent = '—';
-  requestRender();
-});
-
-// Toolbar buttons
-document.getElementById('btn-new').addEventListener('click', () => {
-  const [w, h] = document.getElementById('preset-size').value.split(',').map(Number);
-  resize(w, h);
-});
-document.getElementById('zoom-sel').addEventListener('change', e => setZoom(+e.target.value));
-document.getElementById('tool-sel').addEventListener('change', e => tool = e.target.value);
-document.getElementById('btn-undo').addEventListener('click', undo);
-document.getElementById('btn-redo').addEventListener('click', redo);
-
-document.getElementById('btn-rot90').addEventListener('click', () => {
-  pushUndo();
-  const np = new Uint8Array(W * H);
-  const nw = H, nh = W;
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) np[x * nw + (H - 1 - y)] = pixels[idx(x, y)];
-  [W, H] = [nw, nh];
-  pixels = np;
-  canvas.width = W * zoom; canvas.height = H * zoom;
-  els.infoSize.textContent = W + '×' + H;
-  requestRender();
-});
-document.getElementById('btn-flipx').addEventListener('click', () => {
-  pushUndo();
-  const np = new Uint8Array(W * H);
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) np[idx(W - 1 - x, y)] = pixels[idx(x, y)];
-  pixels = np; requestRender();
-});
-document.getElementById('btn-flipy').addEventListener('click', () => {
-  pushUndo();
-  const np = new Uint8Array(W * H);
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) np[idx(x, H - 1 - y)] = pixels[idx(x, y)];
-  pixels = np; requestRender();
-});
-document.getElementById('btn-invert').addEventListener('click', () => {
-  pushUndo();
-  for (let i = 0; i < pixels.length; i++) pixels[i] = pixels[i] ? 0 : 1;
-  requestRender();
-});
-document.getElementById('btn-clear').addEventListener('click', () => { pushUndo(); pixels.fill(0); requestRender(); });
-
-// #12 Drag-and-drop onto the canvas area
-const canvasWrap = document.getElementById('bmp-canvas-wrap');
-canvasWrap.addEventListener('dragover', e => {
-  e.preventDefault();
-  canvasWrap.style.outline = '3px dashed #61828A';
-});
-canvasWrap.addEventListener('dragleave', () => { canvasWrap.style.outline = ''; });
-canvasWrap.addEventListener('drop', e => {
-  e.preventDefault();
-  canvasWrap.style.outline = '';
-  const file = e.dataTransfer.files[0];
-  if (file) handleFile(file);
-});
-
-// #9 Keyboard shortcuts
-document.addEventListener('keydown', e => {
-  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
-  if (e.ctrlKey || e.metaKey) {
-    if (e.key === 'z') { e.preventDefault(); undo(); return; }
-    if (e.key === 'y' || (e.key === 'Z' && e.shiftKey)) { e.preventDefault(); redo(); return; }
-  }
-  const toolKeys = { d: 'draw', e: 'erase', f: 'fill', l: 'line', r: 'rect' };
-  const t = toolKeys[e.key.toLowerCase()];
-  if (t) { tool = t; els.toolSel.value = t; }
-});
-
-// Image loading
-function getLayout() {
-  return document.getElementById('byte-layout').value;
-}
-
-function loadBytes(bytes, w, h, layout) {
-  W = w; H = h;
-  pixels = new Uint8Array(W * H);
-  canvas.width = W * zoom; canvas.height = H * zoom;
-  els.infoSize.textContent = W + '×' + H;
-  layout = layout || 'horizontal_msb';
-  if (layout === 'horizontal_msb') {
-    for (let i = 0; i < bytes.length && i * 8 < W * H; i++)
-      for (let b = 7; b >= 0; b--) { const pi = i * 8 + (7 - b); if (pi < W * H) pixels[pi] = (bytes[i] >> b) & 1; }
-  } else if (layout === 'horizontal_lsb') {
-    for (let i = 0; i < bytes.length && i * 8 < W * H; i++)
-      for (let b = 0; b < 8; b++) { const pi = i * 8 + b; if (pi < W * H) pixels[pi] = (bytes[i] >> b) & 1; }
-  } else if (layout === 'vertical_lsb') {
-    const pages = Math.ceil(H / 8);
-    for (let p = 0; p < pages; p++) for (let x = 0; x < W; x++) {
-      const bi = p * W + x; if (bi >= bytes.length) continue;
-      for (let bit = 0; bit < 8; bit++) { const y = p * 8 + bit; if (y < H) pixels[idx(x, y)] = (bytes[bi] >> bit) & 1; }
-    }
-  } else if (layout === 'vertical_msb') {
-    const pages = Math.ceil(H / 8);
-    for (let p = 0; p < pages; p++) for (let x = 0; x < W; x++) {
-      const bi = p * W + x; if (bi >= bytes.length) continue;
-      for (let bit = 0; bit < 8; bit++) { const y = p * 8 + bit; if (y < H) pixels[idx(x, y)] = (bytes[bi] >> (7 - bit)) & 1; }
-    }
-  }
-  requestRender();
-}
-
-function parseCArray(txt) {
-  const wm = txt.match(/(?:width|Width|_w|W)\s*[=:]\s*(\d+)/);
-  const hm = txt.match(/(?:height|Height|_h|H)\s*[=:]\s*(\d+)/);
-  // Strip array-size brackets (e.g. logo_bitmap[1024]) so the declared
-  // size doesn't land as a spurious leading byte.
-  const stripped = txt.replace(/\w+\s*\[\s*\d+\s*\]/g, '');
-  const nums = stripped.match(/0[xX][0-9a-fA-F]+|\b\d+\b/g);
-  if (!nums) return false;
-  const bytes = nums.map(n => parseInt(n));
-  let w = 128, h = 64;
-  if (wm && hm) { w = +wm[1]; h = +hm[1]; }
-  else {
-    const common = [[128,64],[128,32],[96,64],[64,48],[32,32],[16,16],[240,135],[320,240]];
-    const matched = common.find(([cw, ch]) => Math.ceil(cw * ch / 8) === bytes.length);
-    if (matched) { [w, h] = matched; }
-    else { const total = bytes.length * 8; const sq = Math.round(Math.sqrt(total)); w = sq; h = Math.ceil(total / sq); }
-  }
-  loadBytes(new Uint8Array(bytes), w, h, getLayout());
-  return true;
-}
-
-function parseXBM(txt) {
-  const wm = txt.match(/#define\s+\w+_width\s+(\d+)/);
-  const hm = txt.match(/#define\s+\w+_height\s+(\d+)/);
-  if (!wm || !hm) return false;
-  const w = +wm[1], h = +hm[1];
-  const nums = txt.match(/0x[0-9a-fA-F]+/g);
-  if (!nums) return false;
-  const bytes = new Uint8Array(nums.map(n => parseInt(n, 16)));
-  W = w; H = h; pixels = new Uint8Array(W * H);
-  canvas.width = W * zoom; canvas.height = H * zoom;
-  els.infoSize.textContent = W + '×' + H;
-  const rowBytes = Math.ceil(w / 8);
-  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-    const bi = y * rowBytes + Math.floor(x / 8);
-    pixels[idx(x, y)] = (bytes[bi] >> (x % 8)) & 1;
-  }
-  requestRender(); return true;
-}
-
-function parsePBM(txt) {
-  const lines = txt.trim().split('\n').filter(l => !l.startsWith('#'));
-  if (lines[0].trim() !== 'P1') return false;
-  const [w, h] = lines[1].trim().split(/\s+/).map(Number);
-  const bits = lines.slice(2).join(' ').match(/[01]/g);
-  if (!bits) return false;
-  W = w; H = h; pixels = new Uint8Array(W * H);
-  canvas.width = W * zoom; canvas.height = H * zoom;
-  els.infoSize.textContent = W + '×' + H;
-  bits.forEach((b, i) => { if (i < W * H) pixels[i] = +b; });
-  requestRender(); return true;
-}
-
-function parseHex(txt) {
-  const nums = txt.match(/[0-9a-fA-F]{2}/g);
-  if (!nums || nums.length < 2) return false;
-  const bytes = new Uint8Array(nums.map(n => parseInt(n, 16)));
-  const total = bytes.length * 8;
-  const sq = Math.round(Math.sqrt(total));
-  loadBytes(bytes, sq, Math.ceil(total / sq));
-  return true;
-}
-
-document.getElementById('btn-parse-code').addEventListener('click', () => {
-  const txt = els.codeIn.value;
-  if (!parseCArray(txt) && !parseXBM(txt) && !parsePBM(txt) && !parseHex(txt))
-    alert('Could not parse. Try a C uint8_t array, XBM, PBM P1, or space-separated hex bytes.');
-});
-
-async function handleFile(file) {
-  const name = file.name.toLowerCase();
-  if (name.endsWith('.bmp')) {
-    const buf = await file.arrayBuffer();
-    const view = new DataView(buf);
-    if (view.getUint16(0, false) !== 0x424D) { alert('Not a valid BMP'); return; }
-    const bw = view.getInt32(18, true), bh = view.getInt32(22, true);
-    const bpp = view.getUint16(28, true);
-    const off = view.getUint32(10, true);
-    const absH = Math.abs(bh), topDown = bh < 0;
-    W = bw; H = absH; pixels = new Uint8Array(W * H);
-    canvas.width = W * zoom; canvas.height = H * zoom;
-    els.infoSize.textContent = W + '×' + H;
-    const rowBytes = Math.ceil(bw * bpp / 8);
-    const stride = Math.ceil(rowBytes / 4) * 4;
-    for (let row = 0; row < absH; row++) {
-      const y = topDown ? row : (absH - 1 - row);
-      for (let x = 0; x < bw; x++) {
-        let lit = 0;
-        if (bpp === 1) { lit = (view.getUint8(off + row * stride + Math.floor(x / 8)) >> (7 - x % 8)) & 1; }
-        else if (bpp === 8) { const v = view.getUint8(off + row * stride + x); lit = v > 127 ? 1 : 0; }
-        else if (bpp === 24) { const base = off + row * stride + x * 3; const r = view.getUint8(base), g = view.getUint8(base + 1), b = view.getUint8(base + 2); lit = (r + g + b) > 382 ? 1 : 0; }
-        else if (bpp === 32) { const base = off + row * stride + x * 4; const r = view.getUint8(base), g = view.getUint8(base + 1), b = view.getUint8(base + 2); lit = (r + g + b) > 382 ? 1 : 0; }
-        pixels[idx(x, y)] = lit;
-      }
-    }
-    requestRender();
-  } else {
-    const txt = await file.text();
-    els.codeIn.value = txt;
-    if (!parseCArray(txt) && !parseXBM(txt) && !parsePBM(txt) && !parseHex(txt))
-      els.codeIn.focus();
-  }
-}
-
-document.getElementById('file-input').addEventListener('change', async e => {
-  const file = e.target.files[0]; if (!file) return;
-  handleFile(file);
-});
-
-function exportData() {
-  const fmt = document.getElementById('export-fmt').value;
-  const rowBytes = Math.ceil(W / 8);
-  let out = '';
-  if (fmt === 'c_horizontal') {
-    const bytes = [];
-    for (let i = 0; i < W * H; i += 8) {
-      let b = 0;
-      for (let bit = 0; bit < 8; bit++) { const pi = i + bit; if (pi < W * H && pixels[pi]) b |= (1 << (7 - bit)); }
-      bytes.push(b);
-    }
-    out = `const uint8_t bitmap[${bytes.length}] PROGMEM = {\n`;
-    for (let i = 0; i < bytes.length; i++) {
-      out += (i % rowBytes === 0 ? '  ' : '') + ' 0x' + bytes[i].toString(16).padStart(2, '0').toUpperCase() + ',';
-      if (i % rowBytes === rowBytes - 1) out += '\n';
-    }
-    out += '};\n// Width: ' + W + ', Height: ' + H;
-  } else if (fmt === 'c_vertical') {
-    const pages = Math.ceil(H / 8);
-    const bytes = [];
-    for (let p = 0; p < pages; p++) for (let x = 0; x < W; x++) {
-      let b = 0;
-      for (let bit = 0; bit < 8; bit++) { const y = p * 8 + bit; if (y < H && pixels[idx(x, y)]) b |= (1 << bit); }
-      bytes.push(b);
-    }
-    out = `// SSD1306 page-column format, Width: ${W}, Height: ${H}, Pages: ${pages}\n`;
-    out += `const uint8_t bitmap[${bytes.length}] PROGMEM = {\n`;
-    for (let i = 0; i < bytes.length; i++) {
-      out += (i % W === 0 ? '  ' : '') + ' 0x' + bytes[i].toString(16).padStart(2, '0').toUpperCase() + ',';
-      if (i % W === W - 1) out += '\n';
-    }
-    out += '};';
-  } else if (fmt === 'c_horizontal_lsb') {
-    const bytes = [];
-    for (let y = 0; y < H; y++) for (let bx = 0; bx < rowBytes; bx++) {
-      let b = 0;
-      for (let bit = 0; bit < 8; bit++) { const x = bx * 8 + bit; if (x < W && pixels[idx(x, y)]) b |= (1 << bit); }
-      bytes.push(b);
-    }
-    out = `const uint8_t bitmap[${bytes.length}] PROGMEM = {\n`;
-    for (let i = 0; i < bytes.length; i++) {
-      out += (i % rowBytes === 0 ? '  ' : '') + ' 0x' + bytes[i].toString(16).padStart(2, '0').toUpperCase() + ',';
-      if (i % rowBytes === rowBytes - 1) out += '\n';
-    }
-    out += '};\n// Width: ' + W + ', Height: ' + H + ' — horizontal LSB';
-  } else if (fmt === 'c_vertical_msb') {
-    const pages = Math.ceil(H / 8);
-    const bytes = [];
-    for (let p = 0; p < pages; p++) for (let x = 0; x < W; x++) {
-      let b = 0;
-      for (let bit = 0; bit < 8; bit++) { const y = p * 8 + bit; if (y < H && pixels[idx(x, y)]) b |= (1 << (7 - bit)); }
-      bytes.push(b);
-    }
-    out = `// Vertical page format, MSB first. Width: ${W}, Height: ${H}, Pages: ${pages}\n`;
-    out += `const uint8_t bitmap[${bytes.length}] PROGMEM = {\n`;
-    for (let i = 0; i < bytes.length; i++) {
-      out += (i % W === 0 ? '  ' : '') + ' 0x' + bytes[i].toString(16).padStart(2, '0').toUpperCase() + ',';
-      if (i % W === W - 1) out += '\n';
-    }
-    out += '};';
-  } else if (fmt === 'xbm') {
-    out = `#define img_width ${W}\n#define img_height ${H}\nstatic unsigned char img_bits[] = {\n`;
-    const rb = Math.ceil(W / 8);
-    for (let y = 0; y < H; y++) {
-      out += '  ';
-      for (let bx = 0; bx < rb; bx++) {
-        let b = 0;
-        for (let bit = 0; bit < 8; bit++) { const x = bx * 8 + bit; if (x < W && pixels[idx(x, y)]) b |= (1 << bit); }
-        out += '0x' + b.toString(16).padStart(2, '0').toUpperCase() + (y === H - 1 && bx === rb - 1 ? '' : ', ');
-      }
-      out += '\n';
-    }
-    out += '};';
-  } else if (fmt === 'pbm') {
-    out = `P1\n${W} ${H}\n`;
-    for (let y = 0; y < H; y++) { out += Array.from({length: W}, (_, x) => pixels[idx(x, y)]).join(' ') + '\n'; }
-  } else if (fmt === 'hex') {
-    const bytes = [];
-    for (let i = 0; i < W * H; i += 8) {
-      let b = 0;
-      for (let bit = 0; bit < 8; bit++) { const pi = i + bit; if (pi < W * H && pixels[pi]) b |= (1 << (7 - bit)); }
-      bytes.push(b);
-    }
-    out = bytes.map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ');
-  } else if (fmt === 'bin_str') {
-    for (let y = 0; y < H; y++) { out += Array.from({length: W}, (_, x) => pixels[idx(x, y)]).join('') + '\n'; }
-  }
-  els.exportOut.value = out;
-}
-
-// Bidirectional sync: byte-layout <-> export-fmt (C array formats only)
-const layoutToExport = { horizontal_msb:'c_horizontal', horizontal_lsb:'c_horizontal_lsb', vertical_lsb:'c_vertical', vertical_msb:'c_vertical_msb' };
-const exportToLayout = { c_horizontal:'horizontal_msb', c_horizontal_lsb:'horizontal_lsb', c_vertical:'vertical_lsb', c_vertical_msb:'vertical_msb' };
-document.getElementById('byte-layout').addEventListener('change', e => {
-  const f = layoutToExport[e.target.value]; if (f) document.getElementById('export-fmt').value = f;
-});
-document.getElementById('export-fmt').addEventListener('change', e => {
-  const l = exportToLayout[e.target.value]; if (l) document.getElementById('byte-layout').value = l;
-});
-
-function saveBMP() {
-  // 1-bit monochrome BMP: file header (14) + DIB header (40) + color table (8) + pixel data
-  const rowStride = Math.ceil(Math.ceil(W / 8) / 4) * 4; // padded to 4-byte boundary
-  const pixelDataSize = rowStride * H;
-  const fileSize = 14 + 40 + 8 + pixelDataSize;
-  const buf = new ArrayBuffer(fileSize);
-  const v = new DataView(buf);
-
-  // File header
-  v.setUint8(0, 0x42); v.setUint8(1, 0x4D); // 'BM'
-  v.setUint32(2, fileSize, true);             // file size
-  v.setUint32(6, 0, true);                    // reserved
-  v.setUint32(10, 62, true);                  // pixel data offset (14+40+8)
-
-  // BITMAPINFOHEADER
-  v.setUint32(14, 40, true);   // header size
-  v.setInt32(18, W, true);     // width
-  v.setInt32(22, H, true);     // height (positive = bottom-up storage)
-  v.setUint16(26, 1, true);    // color planes
-  v.setUint16(28, 1, true);    // bits per pixel
-  v.setUint32(30, 0, true);    // compression (BI_RGB)
-  v.setUint32(34, pixelDataSize, true);
-  v.setUint32(38, 0, true); v.setUint32(42, 0, true); // pixels/meter
-  v.setUint32(46, 2, true); v.setUint32(50, 2, true); // colors used/important
-
-  // Color table: index 0 = black, index 1 = white
-  v.setUint8(54, 0x00); v.setUint8(55, 0x00); v.setUint8(56, 0x00); v.setUint8(57, 0x00);
-  v.setUint8(58, 0xFF); v.setUint8(59, 0xFF); v.setUint8(60, 0xFF); v.setUint8(61, 0x00);
-
-  // Pixel data — BMP stores rows bottom-to-top, MSB = leftmost pixel
-  const dataStart = 62;
-  for (let row = 0; row < H; row++) {
-    const y = H - 1 - row;
-    for (let bx = 0; bx < rowStride; bx++) {
-      let byte = 0;
-      for (let bit = 0; bit < 8; bit++) {
-        const x = bx * 8 + bit;
-        if (x < W && pixels[idx(x, y)]) byte |= (1 << (7 - bit));
-      }
-      v.setUint8(dataStart + row * rowStride + bx, byte);
-    }
-  }
-
-  const blob = new Blob([buf], { type: 'image/bmp' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'bitmap.bmp'; a.click();
-  URL.revokeObjectURL(url);
-}
-
-document.getElementById('btn-save-bmp').addEventListener('click', saveBMP);
-
-document.getElementById('btn-export').addEventListener('click', exportData);
-document.getElementById('btn-copy').addEventListener('click', () => {
-  if (!els.exportOut.value) exportData();
-  navigator.clipboard.writeText(els.exportOut.value).catch(() => { els.exportOut.select(); document.execCommand('copy'); });
-});
-
-// ── Example code download helpers ─────────────────────────────────────────
-
-function bytesToCArray(bytes, perLine) {
-  let out = '';
-  for (let i = 0; i < bytes.length; i++) {
-    if (i % perLine === 0) out += '  ';
-    out += '0x' + bytes[i].toString(16).padStart(2, '0').toUpperCase() + ',';
-    if ((i + 1) % perLine === 0 || i === bytes.length - 1) out += '\n';
-    else out += ' ';
-  }
-  return out;
-}
-
-function getRawHorizMSB() {
-  const rb = Math.ceil(W / 8);
-  const b = [];
-  for (let y = 0; y < H; y++)
-    for (let bx = 0; bx < rb; bx++) {
-      let v = 0;
-      for (let bit = 0; bit < 8; bit++) {
-        const x = bx * 8 + bit;
-        if (x < W && pixels[idx(x, y)]) v |= (1 << (7 - bit));
-      }
-      b.push(v);
-    }
-  return b;
-}
-
-function getRawHorizLSB() {
-  const rb = Math.ceil(W / 8);
-  const b = [];
-  for (let y = 0; y < H; y++)
-    for (let bx = 0; bx < rb; bx++) {
-      let v = 0;
-      for (let bit = 0; bit < 8; bit++) {
-        const x = bx * 8 + bit;
-        if (x < W && pixels[idx(x, y)]) v |= (1 << bit);
-      }
-      b.push(v);
-    }
-  return b;
-}
-
-function getRawVertLSB() {
-  const pages = Math.ceil(H / 8);
-  const b = [];
-  for (let p = 0; p < pages; p++)
-    for (let x = 0; x < W; x++) {
-      let v = 0;
-      for (let bit = 0; bit < 8; bit++) {
-        const y = p * 8 + bit;
-        if (y < H && pixels[idx(x, y)]) v |= (1 << bit);
-      }
-      b.push(v);
-    }
-  return b;
-}
-
-function triggerDownload(filename, content) {
-  const blob = new Blob([content], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = filename; a.click();
-  URL.revokeObjectURL(url);
-}
-
-function downloadAdafruitExample() {
-  const bytes = getRawHorizMSB();
-  const perLine = Math.ceil(W / 8);
-  const sketch =
-`// Adafruit SSD1306 / SH1106 example — Horizontal MSB byte layout
-// Generated by KasperCalc Bitmap Editor (kaspercalc.com/bitmapfileviewer.html)
-//
-// Library manager: search "Adafruit SSD1306" and install it plus its dependencies.
-// For SH1106 (1.3" 128x64 modules): install "Adafruit SH110x" instead and swap
-// the constructor below.
-//
-// Byte layout: Horizontal MSB — each row is stored left-to-right, most significant
-// bit first.  Bit 7 of byte 0 = pixel (0,0); bit 6 = pixel (1,0), etc.
-// This is the native format expected by Adafruit_GFX drawBitmap().
-
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-// For SH1106 use: #include <Adafruit_SH110X.h>
-
-#define SCREEN_WIDTH  ${W}
-#define SCREEN_HEIGHT ${H}
-#define OLED_RESET    -1
-
-// SSD1306 on I2C address 0x3C (most common; try 0x3D if nothing appears)
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-// For SH1106: Adafruit_SH1106G display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-
-// Bitmap: ${W}x${H} px, ${bytes.length} bytes, Horizontal MSB
-static const uint8_t PROGMEM myBitmap[${bytes.length}] = {
-${bytesToCArray(bytes, perLine)}};
-
-void setup() {
-  Serial.begin(115200);
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    // For SH1106: if (!display.begin(0x3C, true)) {
-    Serial.println(F("OLED init failed — check wiring and I2C address"));
-    for (;;);
-  }
-  display.clearDisplay();
-  // Draw bitmap centered on the display
-  int x = (SCREEN_WIDTH  - ${W}) / 2;
-  int y = (SCREEN_HEIGHT - ${H}) / 2;
-  display.drawBitmap(x, y, myBitmap, ${W}, ${H}, WHITE);
-  display.display();
-}
-
-void loop() {}
-`;
-  triggerDownload('adafruit_ssd1306_example.ino', sketch);
-}
-
-function downloadU8G2Example() {
-  const bytes = getRawHorizLSB();
-  const perLine = Math.ceil(W / 8);
-  const sketch =
-`// u8g2 example — Horizontal LSB (XBM) byte layout
-// Generated by KasperCalc Bitmap Editor (kaspercalc.com/bitmapfileviewer.html)
-//
-// Library manager: search "U8g2" by olikraus and install it.
-// u8g2 supports SSD1306, SH1106, CH1116, SSD1309, SH1107, and many others.
-// Change the constructor line below to match your display and bus type.
-// Full constructor list: https://github.com/olikraus/u8g2/wiki/u8g2setupcpp
-//
-// Byte layout: Horizontal LSB — each row stored left-to-right, least significant
-// bit first.  Bit 0 of byte 0 = pixel (0,0); bit 1 = pixel (1,0), etc.
-// This is the XBM format used by u8g2's drawXBMP() function.
-
-#include <Arduino.h>
-#include <U8g2lib.h>
-#include <Wire.h>
-
-// ── Pick the ONE constructor that matches your hardware ──────────────────────
-// 128x64 SSD1306 on I2C (most common 0.96" module):
-U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
-// 128x64 SH1106 on I2C (most common 1.3" module):
-// U8G2_SH1106_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
-// 128x32 SSD1306 on I2C (0.91" module):
-// U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
-// 128x64 SSD1306 on SPI (adjust pin numbers as needed):
-// U8G2_SSD1306_128X64_NONAME_F_4W_SW_SPI u8g2(U8G2_R0, 13, 11, 10, 9, 8);
-// ─────────────────────────────────────────────────────────────────────────────
-
-// Bitmap: ${W}x${H} px, ${bytes.length} bytes, Horizontal LSB (XBM)
-// NOTE: drawXBMP requires width to be a multiple of 8. The editor pads automatically.
-static const uint8_t myBitmap[${bytes.length}] PROGMEM = {
-${bytesToCArray(bytes, perLine)}};
-
-void setup() {
-  u8g2.begin();
-}
-
-void loop() {
-  int x = (u8g2.getDisplayWidth()  - ${W}) / 2;
-  int y = (u8g2.getDisplayHeight() - ${H}) / 2;
-  u8g2.clearBuffer();
-  u8g2.drawXBMP(x, y, ${W}, ${H}, myBitmap);
-  u8g2.sendBuffer();
-  delay(5000);
-}
-`;
-  triggerDownload('u8g2_example.ino', sketch);
-}
-
-function downloadPageModeExample() {
-  const bytes = getRawVertLSB();
-  const pages = Math.ceil(H / 8);
-  const sketch =
-`// Direct I2C page-mode example — Vertical LSB byte layout
-// Generated by KasperCalc Bitmap Editor (kaspercalc.com/bitmapfileviewer.html)
-//
-// No third-party library required — writes directly to the SSD1306/SH1106 over I2C
-// using only the Arduino Wire library. Useful for minimal RAM/flash budgets, porting
-// to new platforms, or learning how the controller hardware actually works.
-//
-// Byte layout: Vertical LSB page mode — the display is divided into horizontal
-// "pages" of 8 rows each (${pages} page(s) for ${H}px height).  Each byte covers one
-// column within a page: bit 0 = topmost row of the page, bit 7 = bottom row.
-// This mirrors the SSD1306 GDDRAM layout exactly.
-//
-// Wiring (I2C):
-//   SDA → A4 (Uno/Nano)  |  GPIO21 (ESP32)  |  pin 20 (Mega)
-//   SCL → A5 (Uno/Nano)  |  GPIO22 (ESP32)  |  pin 21 (Mega)
-//   VCC → 3.3 V or 5 V (check your module label)
-//   GND → GND
-
-#include <Wire.h>
-
-#define OLED_ADDR  0x3C   // Change to 0x3D if nothing appears
-#define SCREEN_W   128
-#define SCREEN_H   64
-
-void oledCmd(uint8_t cmd) {
-  Wire.beginTransmission(OLED_ADDR);
-  Wire.write(0x00); // Co=0, D/C=0 → command byte
-  Wire.write(cmd);
-  Wire.endTransmission();
-}
-
-void oledInit() {
-  oledCmd(0xAE);        // display off
-  oledCmd(0xD5); oledCmd(0x80); // clock divide ratio / oscillator frequency
-  oledCmd(0xA8); oledCmd(SCREEN_H - 1); // multiplex ratio
-  oledCmd(0xD3); oledCmd(0x00); // display offset = 0
-  oledCmd(0x40);        // start line = 0
-  oledCmd(0x8D); oledCmd(0x14); // charge pump enabled
-  oledCmd(0x20); oledCmd(0x00); // page addressing mode (0x00 = horizontal, used here)
-  oledCmd(0xA1);        // segment remap: col 127 → SEG0 (mirrors X)
-  oledCmd(0xC8);        // COM scan: row N-1 → COM0 (mirrors Y)
-  oledCmd(0xDA); oledCmd(SCREEN_H == 32 ? 0x02 : 0x12); // COM pins config
-  oledCmd(0x81); oledCmd(0xCF); // contrast
-  oledCmd(0xD9); oledCmd(0xF1); // pre-charge period
-  oledCmd(0xDB); oledCmd(0x40); // VCOMH deselect level
-  oledCmd(0xA4);        // output follows RAM (not all-on)
-  oledCmd(0xA6);        // normal display (0xA7 = inverted)
-  oledCmd(0xAF);        // display on
-}
-
-// Bitmap: ${W}x${H} px, ${bytes.length} bytes, Vertical LSB
-// Layout: ${pages} page(s) x ${W} columns
-static const uint8_t PROGMEM myBitmap[${bytes.length}] = {
-${bytesToCArray(bytes, W)}};
-
-void oledDrawBitmap(int x0, int y0, int bmpW, int bmpH, const uint8_t* bmp) {
-  int bmpPages = (bmpH + 7) / 8;
-  for (int p = 0; p < bmpPages; p++) {
-    int sp = (y0 / 8) + p; // screen page index
-    if (sp < 0 || sp >= (SCREEN_H / 8)) continue;
-    oledCmd(0xB0 | sp);                          // set page address
-    oledCmd(0x00 | ((x0)      & 0x0F));          // column low nibble
-    oledCmd(0x10 | ((x0 >> 4) & 0x0F));          // column high nibble
-    Wire.beginTransmission(OLED_ADDR);
-    Wire.write(0x40); // Co=0, D/C=1 → data stream
-    for (int col = 0; col < bmpW; col++) {
-      if (x0 + col >= SCREEN_W) break;
-      Wire.write(pgm_read_byte(&bmp[p * bmpW + col]));
-    }
-    Wire.endTransmission();
-  }
-}
-
-void setup() {
-  Wire.begin();
-  Wire.setClock(400000); // 400 kHz I2C fast mode
-  delay(100);            // let the display power up
-  oledInit();
-  int x = (SCREEN_W - ${W}) / 2;
-  int y = (SCREEN_H - ${H}) / 2;
-  oledDrawBitmap(x, y, ${W}, ${H}, myBitmap);
-}
-
-void loop() {}
-`;
-  triggerDownload('direct_i2c_page_mode_example.ino', sketch);
-}
-
-// ── Bitmap + extra-content example downloads ──────────────────────────────
-
-function downloadAdafruitSplashExample() {
-  const bytes = getRawHorizMSB();
-  const perLine = Math.ceil(W / 8);
-  const sketch =
-`// Adafruit SSD1306 / SH1106 — Splash screen with border frame and text label
-// Generated by KasperCalc Bitmap Editor (kaspercalc.com/bitmapfileviewer.html)
-//
-// What this sketch does:
-//   • Draws a decorative double-line border filling the display
-//   • Centers your bitmap inside the border
-//   • If the bitmap is 46 px tall or shorter, adds a horizontal separator
-//     and a centered text label below the bitmap
-//   • loop() blinks the display every 4 s so you can confirm it is running
-//
-// Library: search "Adafruit SSD1306" in the Arduino Library Manager and install
-// it along with its Adafruit GFX dependency.
-// For SH1106 modules (1.3" 128x64): install "Adafruit SH110x" instead and swap
-// the constructor as shown in the comments.
-//
-// Byte layout: Horizontal MSB — native format for Adafruit_GFX drawBitmap()
-
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-// For SH1106: #include <Adafruit_SH110X.h>
-
-#define SCREEN_W   128
-#define SCREEN_H    64
-#define OLED_RESET  -1
-#define BMP_W       ${W}
-#define BMP_H       ${H}
-
-Adafruit_SSD1306 display(SCREEN_W, SCREEN_H, &Wire, OLED_RESET);
-// For SH1106: Adafruit_SH1106G display(SCREEN_W, SCREEN_H, &Wire, OLED_RESET);
-
-// Bitmap: ${W}x${H} px, ${bytes.length} bytes, Horizontal MSB
-static const uint8_t PROGMEM myBitmap[${bytes.length}] = {
-${bytesToCArray(bytes, perLine)}};
-
-// ── Change this to whatever label you want shown below the bitmap ──────────
-const char* SPLASH_LABEL = "KasperCalc";
-// ─────────────────────────────────────────────────────────────────────────────
-
-void drawSplash() {
-  display.clearDisplay();
-
-  // Double-line border fills the whole display
-  display.drawRect(0, 0, SCREEN_W, SCREEN_H, WHITE);
-  display.drawRect(2, 2, SCREEN_W - 4, SCREEN_H - 4, WHITE);
-
-  int bmpX = (SCREEN_W - BMP_W) / 2;
-
-#if BMP_H <= 46
-  // Bitmap in the upper area with a text label below
-  int bmpY = (SCREEN_H - BMP_H - 16) / 2 + 4;
-  if (bmpY < 4) bmpY = 4;
-  display.drawBitmap(bmpX, bmpY, myBitmap, BMP_W, BMP_H, WHITE);
-
-  int lineY = bmpY + BMP_H + 3;
-  display.drawFastHLine(6, lineY, SCREEN_W - 12, WHITE);
-
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  int labelW = strlen(SPLASH_LABEL) * 6;
-  int labelX = (SCREEN_W - labelW) / 2;
-  display.setCursor(labelX, lineY + 3);
-  display.print(SPLASH_LABEL);
-#else
-  // Bitmap fills most of the screen — just center it inside the border
-  int bmpY = (SCREEN_H - BMP_H) / 2;
-  display.drawBitmap(bmpX, bmpY, myBitmap, BMP_W, BMP_H, WHITE);
-#endif
-
-  display.display();
-}
-
-void setup() {
-  Serial.begin(115200);
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    // For SH1106: if (!display.begin(0x3C, true)) {
-    Serial.println(F("OLED init failed — check wiring and I2C address"));
-    for (;;);
-  }
-  drawSplash();
-}
-
-void loop() {
-  // Short invert-blink every 4 s confirms the sketch is still running
-  delay(4000);
-  display.invertDisplay(true);
-  delay(120);
-  display.invertDisplay(false);
-}
-`;
-  triggerDownload('adafruit_splash_example.ino', sketch);
-}
-
-function downloadU8G2AnimExample() {
-  const bytes = getRawHorizLSB();
-  const perLine = Math.ceil(W / 8);
-  const sketch =
-`// u8g2 — Multi-frame animation: bitmap frame + text info frame
-// Generated by KasperCalc Bitmap Editor (kaspercalc.com/bitmapfileviewer.html)
-//
-// What this sketch does:
-//   Frame A — your bitmap centered inside a double-line display border
-//   Frame B — text-only screen: large title, separator line, subtitle, and a
-//              small corner label showing the bitmap dimensions
-//   The two frames alternate every 2.5 seconds indefinitely.
-//   This confirms both bitmap rendering and font rendering in one sketch.
-//
-// Library: search "U8g2" by olikraus in the Arduino Library Manager and install.
-// Change the U8G2_... constructor below to match your display and connection.
-// Full constructor list: https://github.com/olikraus/u8g2/wiki/u8g2setupcpp
-//
-// Byte layout: Horizontal LSB (XBM format) — used by u8g2 drawXBMP()
-
-#include <Arduino.h>
-#include <U8g2lib.h>
-#include <Wire.h>
-
-// ── Choose ONE constructor that matches your hardware ────────────────────────
-// 128x64 SSD1306 on I2C (0.96" module):
-U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
-// 128x64 SH1106 on I2C (1.3" module):
-// U8G2_SH1106_128X64_NONAME_F_HW_I2C  u8g2(U8G2_R0, U8X8_PIN_NONE);
-// 128x32 SSD1306 on I2C (0.91" module):
-// U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
-// 128x64 SSD1306 on SPI (adjust pins):
-// U8G2_SSD1306_128X64_NONAME_F_4W_SW_SPI u8g2(U8G2_R0, 13, 11, 10, 9, 8);
-// ─────────────────────────────────────────────────────────────────────────────
-
-#define BMP_W ${W}
-#define BMP_H ${H}
-
-// Bitmap: ${W}x${H} px, ${bytes.length} bytes, Horizontal LSB (XBM)
-static const uint8_t myBitmap[${bytes.length}] PROGMEM = {
-${bytesToCArray(bytes, perLine)}};
-
-// ── Customise these strings ──────────────────────────────────────────────────
-const char* TITLE    = "KasperCalc";
-const char* SUBTITLE = "Bitmap Editor";
-// ─────────────────────────────────────────────────────────────────────────────
-
-void drawBitmapFrame() {
-  int dw = u8g2.getDisplayWidth();
-  int dh = u8g2.getDisplayHeight();
-  int bmpX = (dw - BMP_W) / 2;
-  int bmpY = (dh - BMP_H) / 2;
-
-  u8g2.clearBuffer();
-  u8g2.drawFrame(0, 0, dw, dh);          // outer border
-  u8g2.drawFrame(2, 2, dw - 4, dh - 4); // inner border
-  u8g2.drawXBMP(bmpX, bmpY, BMP_W, BMP_H, myBitmap);
-  u8g2.sendBuffer();
-}
-
-void drawTextFrame() {
-  int dw = u8g2.getDisplayWidth();
-  int dh = u8g2.getDisplayHeight();
-
-  u8g2.clearBuffer();
-
-  // Large title — centered vertically in the upper half
-  u8g2.setFont(u8g2_font_10x20_tf);
-  int tw = u8g2.getStrWidth(TITLE);
-  u8g2.drawStr((dw - tw) / 2, 26, TITLE);
-
-  // Separator line
-  u8g2.drawHLine(6, 30, dw - 12);
-
-  // Subtitle — centered below the separator
-  u8g2.setFont(u8g2_font_6x10_tf);
-  int sw = u8g2.getStrWidth(SUBTITLE);
-  u8g2.drawStr((dw - sw) / 2, 44, SUBTITLE);
-
-  // Bitmap dimensions in the bottom-left corner
-  char info[16];
-  snprintf(info, sizeof(info), "%dx%d px", BMP_W, BMP_H);
-  u8g2.setFont(u8g2_font_5x7_tf);
-  u8g2.drawStr(2, dh - 2, info);
-
-  u8g2.sendBuffer();
-}
-
-void setup() {
-  u8g2.begin();
-  drawBitmapFrame();
-  delay(3000);
-}
-
-void loop() {
-  drawTextFrame();
-  delay(2500);
-  drawBitmapFrame();
-  delay(2500);
-}
-`;
-  triggerDownload('u8g2_animated_example.ino', sketch);
-}
-
-function downloadBaremetalAVRExample() {
-  const bytes = getRawVertLSB();
-  const pages = Math.ceil(H / 8);
-  const sketch =
-`// Bare-metal AVR C — SH1106 OLED, direct TWI0 register access
-// Generated by KasperCalc Bitmap Editor (kaspercalc.com/bitmapfileviewer.html)
-//
-// No Arduino framework, no third-party libraries — only avr-libc headers.
-//
-// Target chip family: ATtiny816, ATtiny3216, ATmega4809 and any other AVR
-// with the new-style TWI0 peripheral (Microchip "megaAVR-0" / "tinyAVR-1/2").
-//
-// !! Classic megaAVR (ATmega328P, Uno, Nano) uses different TWI registers
-//    (TWCR, TWDR, etc.) and will NOT compile with this file as-is. !!
-//
-// What this sketch does:
-//   1. Inits the SH1106 via TWI0
-//   2. Draws your bitmap centered on screen, with a 1-pixel border frame
-//   3. Loops: flashes the full display on/off and redraws the splash so you
-//      can confirm the driver is running
-//
-// Byte layout: Vertical LSB page mode — each byte covers 8 vertical pixels
-// within a page (bit 0 = top of the 8-px group, bit 7 = bottom).
-// This is identical to the SH1106/SSD1306 internal GDDRAM layout.
-//
-// Wiring: SDA -> PB1 (alt mapping)  |  SCL -> PB2 (alt mapping)
-//         VCC -> 3.3 V              |  GND -> GND
-//
-// Build example (ATtiny816 at 3.33 MHz internal oscillator):
-//   avr-gcc -Os -mmcu=attiny816 -DF_CPU=3333333UL -o out.elf main.c
-//   avr-objcopy -O ihex out.elf out.hex
-//   pymcuprog write -t uart -u /dev/ttyUSB0 -d attiny816 --erase -f out.hex
-
-#include <avr/io.h>
-#include <avr/pgmspace.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <string.h>
-
-// ── Config ────────────────────────────────────────────────────────────────────
-#define SH1106_ADDR       0x3C   // Change to 0x3D if SA0 pin is high
-#define SH1106_WIDTH      128
-#define SH1106_HEIGHT      64
-#define SH1106_PAGES        8
-#define SH1106_COL_OFFSET   2   // SH1106 has 132 internal cols; visible area offset
-#define SH1106_TIMEOUT  30000U
-#define MBAUD_100KHZ       12
-
-#define BMP_W  ${W}
-#define BMP_H  ${H}
-// ─────────────────────────────────────────────────────────────────────────────
-
-// Framebuffer — 8 pages x 128 columns, vertical LSB
-static uint8_t buf[SH1106_PAGES][SH1106_WIDTH];
-
-// Bitmap: ${W}x${H} px, ${bytes.length} bytes, Vertical LSB
-// Organised as ${pages} page(s) x ${W} columns — directly compatible with buf[][].
-static const uint8_t myBitmap[${bytes.length}] PROGMEM = {
-${bytesToCArray(bytes, W)}};
-
-// ── Busy-loop delay (replace with a hardware timer for production code) ───────
-static void delay_ms(uint16_t ms)
-{
-    for (uint16_t i = 0; i < ms; i++)
-        for (volatile uint16_t j = 0; j < 333; j++)
-            __asm__ volatile("nop");
-}
-
-// ── TWI helpers ───────────────────────────────────────────────────────────────
-static bool twi_start(uint8_t addr_rw)
-{
-    uint16_t t;
-    TWI0.MADDR = addr_rw;
-    t = SH1106_TIMEOUT;
-    while (!(TWI0.MSTATUS & (TWI_WIF_bm | TWI_ARBLOST_bm | TWI_BUSERR_bm)))
-        if (--t == 0) { TWI0.MCTRLB = TWI_MCMD_STOP_gc; return false; }
-    if (TWI0.MSTATUS & (TWI_RXACK_bm | TWI_ARBLOST_bm | TWI_BUSERR_bm))
-        { TWI0.MCTRLB = TWI_MCMD_STOP_gc; return false; }
-    return true;
-}
-
-static bool twi_write_byte(uint8_t data)
-{
-    uint16_t t;
-    TWI0.MDATA = data;
-    t = SH1106_TIMEOUT;
-    while (!(TWI0.MSTATUS & (TWI_WIF_bm | TWI_ARBLOST_bm | TWI_BUSERR_bm)))
-        if (--t == 0) { TWI0.MCTRLB = TWI_MCMD_STOP_gc; return false; }
-    if (TWI0.MSTATUS & (TWI_RXACK_bm | TWI_ARBLOST_bm | TWI_BUSERR_bm))
-        { TWI0.MCTRLB = TWI_MCMD_STOP_gc; return false; }
-    return true;
-}
-
-static void twi_stop(void)
-{
-    TWI0.MCTRLB  = TWI_MCMD_STOP_gc;
-    TWI0.MSTATUS = TWI_BUSSTATE_IDLE_gc;
-}
-
-// ── SH1106 command helpers ────────────────────────────────────────────────────
-static bool sh1106_cmd(uint8_t cmd)
-{
-    if (!twi_start((SH1106_ADDR << 1) | 0)) return false;
-    if (!twi_write_byte(0x00)) return false;
-    if (!twi_write_byte(cmd))  return false;
-    twi_stop();
-    return true;
-}
-
-static bool sh1106_cmd2(uint8_t cmd, uint8_t arg)
-{
-    if (!twi_start((SH1106_ADDR << 1) | 0)) return false;
-    if (!twi_write_byte(0x00)) return false;
-    if (!twi_write_byte(cmd))  return false;
-    if (!twi_write_byte(arg))  return false;
-    twi_stop();
-    return true;
-}
-
-static bool sh1106_set_page_col(uint8_t page, uint8_t col)
-{
-    col += SH1106_COL_OFFSET;
-    if (!sh1106_cmd(0xB0 | (page & 0x07)))       return false;
-    if (!sh1106_cmd(0x00 | (col & 0x0F)))        return false;
-    if (!sh1106_cmd(0x10 | ((col >> 4) & 0x0F))) return false;
-    return true;
-}
-
-// ── Initialise the display ────────────────────────────────────────────────────
-static bool sh1106_init(void)
-{
-    delay_ms(10);
-    bool ok = true;
-    ok &= sh1106_cmd (0xAE);
-    ok &= sh1106_cmd2(0xD5, 0x80);
-    ok &= sh1106_cmd2(0xA8, 0x3F);
-    ok &= sh1106_cmd2(0xD3, 0x00);
-    ok &= sh1106_cmd (0x40);
-    ok &= sh1106_cmd2(0xAD, 0x8B);
-    ok &= sh1106_cmd (0xA1);
-    ok &= sh1106_cmd (0xC8);
-    ok &= sh1106_cmd2(0xDA, 0x12);
-    ok &= sh1106_cmd2(0x81, 0x80);
-    ok &= sh1106_cmd2(0xD9, 0xF1);
-    ok &= sh1106_cmd2(0xDB, 0x40);
-    ok &= sh1106_cmd (0xA4);
-    ok &= sh1106_cmd (0xA6);
-    ok &= sh1106_cmd (0xAF);
-    delay_ms(5);
-    return ok;
-}
-
-// ── Push framebuffer to display ───────────────────────────────────────────────
-static bool sh1106_flush(void)
-{
-    for (uint8_t page = 0; page < SH1106_PAGES; page++)
-    {
-        if (!sh1106_set_page_col(page, 0)) return false;
-        if (!twi_start((SH1106_ADDR << 1) | 0)) return false;
-        if (!twi_write_byte(0x40)) return false;
-        for (uint8_t col = 0; col < SH1106_WIDTH; col++)
-            if (!twi_write_byte(buf[page][col])) return false;
-        twi_stop();
-    }
-    return true;
-}
-
-// ── Framebuffer drawing primitives ───────────────────────────────────────────
-static void sh1106_clear(void) { memset(buf, 0x00, sizeof(buf)); }
-static void sh1106_fill(void)  { memset(buf, 0xFF, sizeof(buf)); }
-
-static void sh1106_set_pixel(uint8_t x, uint8_t y, uint8_t on)
-{
-    if (x >= SH1106_WIDTH || y >= SH1106_HEIGHT) return;
-    if (on) buf[y / 8][x] |=  (1u << (y % 8));
-    else    buf[y / 8][x] &= ~(1u << (y % 8));
-}
-
-static void sh1106_fill_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t on)
-{
-    for (uint8_t row = y; row < y + h && row < SH1106_HEIGHT; row++)
-        for (uint8_t col = x; col < x + w && col < SH1106_WIDTH; col++)
-            sh1106_set_pixel(col, row, on);
-}
-
-// ── Bitmap blit from PROGMEM ──────────────────────────────────────────────────
-// Copies a vertical-LSB page-mode bitmap into the framebuffer at (x0, y0).
-// y0 must be a multiple of 8 (page boundary) for correct rendering.
-// OR-blits so existing pixels are preserved — call sh1106_clear() first if
-// you want a clean slate.
-static void sh1106_draw_bitmap_pgm(uint8_t x0, uint8_t y0,
-                                   uint8_t bmpW, uint8_t bmpH,
-                                   const uint8_t *bmp)
-{
-    uint8_t bmpPages = (bmpH + 7u) / 8u;
-    for (uint8_t p = 0; p < bmpPages; p++)
-    {
-        uint8_t sp = (y0 / 8u) + p;
-        if (sp >= SH1106_PAGES) break;
-        for (uint8_t col = 0; col < bmpW; col++)
-        {
-            if ((uint8_t)(x0 + col) >= SH1106_WIDTH) continue;
-            buf[sp][x0 + col] |= pgm_read_byte(&bmp[(uint16_t)p * bmpW + col]);
-        }
-    }
-}
-
-// ── Helper: draw the border + bitmap into buf (no flush) ─────────────────────
-static void build_splash(uint8_t bx, uint8_t by)
-{
-    sh1106_clear();
-    sh1106_draw_bitmap_pgm(bx, by, BMP_W, BMP_H, myBitmap);
-    sh1106_fill_rect(0,                 0,                SH1106_WIDTH, 1,            1);
-    sh1106_fill_rect(0,                 SH1106_HEIGHT - 1, SH1106_WIDTH, 1,           1);
-    sh1106_fill_rect(0,                 0,                1, SH1106_HEIGHT,            1);
-    sh1106_fill_rect(SH1106_WIDTH - 1,  0,                1, SH1106_HEIGHT,            1);
-}
-
-// ── main ──────────────────────────────────────────────────────────────────────
-int main(void)
-{
-    /* TWI on PB1=SDA  PB2=SCL (alternate mapping) */
-    PORTMUX.CTRLB  = PORTMUX_TWI0_bm;
-    PORTB.DIRCLR   = PIN1_bm | PIN2_bm;
-    PORTB.PIN1CTRL = PORT_ISC_INTDISABLE_gc;
-    PORTB.PIN2CTRL = PORT_ISC_INTDISABLE_gc;
-
-    TWI0.MCTRLA  = 0x00;
-    TWI0.MCTRLB  = TWI_FLUSH_bm;
-    TWI0.MBAUD   = 0x00;
-    TWI0.MSTATUS = TWI_BUSSTATE_IDLE_gc;
-    TWI0.CTRLA   = TWI_SDAHOLD_50NS_gc;
-    TWI0.MBAUD   = MBAUD_100KHZ;
-    TWI0.MCTRLA  = TWI_ENABLE_bm;
-    TWI0.MSTATUS = TWI_BUSSTATE_IDLE_gc;
-
-    delay_ms(20);
-    while (!sh1106_init())
-        delay_ms(200);
-
-    /* Center bitmap; snap y to page boundary (round down to multiple of 8) */
-    uint8_t bx = (SH1106_WIDTH  - BMP_W) / 2u;
-    uint8_t by = ((SH1106_HEIGHT - BMP_H) / 2u) & ~7u;
-
-    /* ── Splash: bitmap + border frame ── */
-    build_splash(bx, by);
-    sh1106_flush();
-    delay_ms(3000);
-
-    /* ── Loop: full-on flash then back to splash to confirm alive ── */
-    while (1)
-    {
-        sh1106_fill();
-        sh1106_flush();
-        delay_ms(300);
-
-        sh1106_clear();
-        sh1106_flush();
-        delay_ms(300);
-
-        build_splash(bx, by);
-        sh1106_flush();
-        delay_ms(2000);
-    }
-}
-`;
-  triggerDownload('baremetal_avr_sh1106.c', sketch);
-}
 
 // ═══════════════════════════════════════════════════════════════
 // SKETCH SIMULATOR — Phase 1
@@ -2463,19 +968,25 @@ function runSketch(src) {
   if (!src) return;
   try {
     const parser = new SketchParser(src).parse();
-    const sim    = new DisplaySim(parser.displayW, parser.displayH);
-    const exec   = new SketchExecutor(parser, sim);
-    const log    = exec.run();
 
-    // Auto-pick zoom to fit 480px height
-    const zoom = Math.max(2, Math.min(8, Math.floor(480 / parser.displayH)));
-    sim.render(simCanvas, zoom);
+    // When library is not recognised, fall back to the toolbar preset size
+    if (parser.library === 'unknown') {
+      const [fw, fh] = document.getElementById('preset-size').value.split(',').map(Number);
+      parser.displayW = fw; parser.displayH = fh;
+    }
+
+    const sim  = new DisplaySim(parser.displayW, parser.displayH);
+    const exec = new SketchExecutor(parser, sim);
+    const log  = exec.run();
+
+    sim.render(simCanvas, simZoom);
+    lastSim = sim;
     simCanvasWrap.style.display = 'flex';
 
     const arrNames = Object.keys(parser.arrays);
     const fnNames  = Object.keys(parser.funcs);
     const lines = [
-      `Library: ${parser.library}  |  Display: ${parser.displayW}×${parser.displayH}  |  Zoom: ${zoom}×`,
+      `Library: ${parser.library}  |  Display: ${parser.displayW}×${parser.displayH}  |  Zoom: ${simZoom}×`,
       `Arrays: ${arrNames.length ? arrNames.map(n=>`${n}[${parser.arrays[n].length}]`).join(', ') : 'none'}`,
       `Functions: ${fnNames.join(', ') || 'none'}`,
       ...log
@@ -2500,6 +1011,7 @@ document.getElementById('btn-clear-sim').addEventListener('click', () => {
   simCanvasWrap.style.display = 'none';
   simLogEl.style.display = 'none';
   simStatusEl.textContent = '';
+  lastSim = null;
 });
 
 document.getElementById('sim-file-input').addEventListener('change', async e => {
@@ -2509,7 +1021,6 @@ document.getElementById('sim-file-input').addEventListener('change', async e => 
   runSketch(txt);
 });
 
-resize(128, 64);
 </script>
 
   </body>
