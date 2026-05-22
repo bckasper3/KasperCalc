@@ -130,6 +130,7 @@ function calculatetemp(rhoOverride) {
   const input1 = parseFloat(document.getElementById("input1temp").value) || 0;
 
   const data = fuelData[fuel];
+  if (rhoOverride === undefined && !data) return;
   const rho = rhoOverride !== undefined ? rhoOverride : linInterp(fahr, data);
   if (rho === null) return;
 
