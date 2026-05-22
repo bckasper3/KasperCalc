@@ -48,6 +48,7 @@
           <div class="footerlink"><a href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a></div>
           <div class="footerlink"><a href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a></div>
           <div class="footerlink"><a href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a></div>
+          <div class="footerlink"><a href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a></div>
         </div>
 
         <div class="footerRow">
