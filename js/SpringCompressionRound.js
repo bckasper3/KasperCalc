@@ -114,8 +114,12 @@ const LM_SCALES = {
 
 function buildVariableVector() {
   return LM_VARIABLES.map(id => {
-    const v = readFieldValue(id);
-    return (v !== null && v > 0) ? v : (LM_DEFAULTS[id] || 1.0);
+    if (userEnteredFieldIds.has(id)) {
+      const v = readFieldValue(id);
+      return (v !== null && v > 0) ? v : (LM_DEFAULTS[id] || 1.0);
+    }
+    // For un-pinned fields, always start from defaults — not DOM
+    return LM_DEFAULTS[id] || 1.0;
   });
 }
 
