@@ -382,6 +382,8 @@
                   <option value="96,64">96×64</option>
                   <option value="32,32">32×32</option>
                   <option value="16,16">16×16</option>
+                  <option value="10,14">10×14 (Font char)</option>
+                  <option value="5,7">5×7 (Font char)</option>
                 </select>
                 <button id="btn-new">New</button>
                 <div class="bmp-sep"></div>
@@ -412,6 +414,8 @@
                     <option value="8">8&times;</option>
                     <option value="10">10&times;</option>
                     <option value="12">12&times;</option>
+                    <option value="16">16&times;</option>
+                    <option value="24">24&times;</option>
                   </select>
                 </div>
                 <div class="bmp-sep"></div>
@@ -861,6 +865,11 @@ canvas.addEventListener('pointerleave', () => {
 // Toolbar buttons
 document.getElementById('btn-new').addEventListener('click', () => {
   const [w, h] = document.getElementById('preset-size').value.split(',').map(Number);
+  // Auto-zoom for font-character canvases so individual pixels are easy to hit
+  if (w <= 16 && h <= 16) {
+    zoom = 16;
+    document.getElementById('zoom-sel').value = '16';
+  }
   resize(w, h);
 });
 document.getElementById('zoom-sel').addEventListener('change', e => setZoom(+e.target.value));
@@ -969,10 +978,11 @@ function parseCArray(txt) {
   // Extract width/height from the original text (may be in comments) before stripping
   const wm = txt.match(/(?:width|Width|_w|W)\s*[=:]\s*(\d+)/);
   const hm = txt.match(/(?:height|Height|_h|H)\s*[=:]\s*(\d+)/);
-  // Strip single-line comments FIRST so decimal numbers in leading comments
-  // (e.g. "Pages: 8" in the c_vertical header) don't get prepended to the
-  // byte array and shift all data — then strip array-size brackets.
-  const noComments = txt.replace(/\/\/[^\n]*/g, '');
+  // Strip block comments (/* ... */) and line comments (// ...) before extracting
+  // bytes so stray decimal numbers inside comments (like "/* 1: 0 */" in font
+  // arrays, or "Pages: 8" in c_vertical headers) don't pollute the byte sequence.
+  // Width/height are already captured from the original text above.
+  const noComments = txt.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');
   const stripped = noComments.replace(/\w+\s*\[\s*\d+\s*\]/g, '');
   const nums = stripped.match(/0[xX][0-9a-fA-F]+|\b\d+\b/g);
   if (!nums) return false;
@@ -980,8 +990,13 @@ function parseCArray(txt) {
   let w = 128, h = 64;
   if (wm && hm) { w = +wm[1]; h = +hm[1]; }
   else {
-    const common = [[128,64],[128,32],[132,64],[96,64],[64,48],[32,32],[16,16],[240,135],[320,240]];
-    const matched = common.find(([cw, ch]) => Math.ceil(cw * ch / 8) === bytes.length);
+    // Check both horizontal (ceil(W/8)*H bytes) and vertical (ceil(H/8)*W bytes)
+    // layouts so font-character sizes like 10×14 and 5×7 are detected correctly.
+    const common = [[128,64],[128,32],[132,64],[96,64],[64,48],[32,32],[16,16],[10,14],[5,7],[240,135],[320,240]];
+    const matched = common.find(([cw, ch]) =>
+      bytes.length === Math.ceil(cw / 8) * ch ||   // horizontal format
+      bytes.length === Math.ceil(ch / 8) * cw       // vertical format
+    );
     if (matched) { [w, h] = matched; }
     else { const total = bytes.length * 8; const sq = Math.round(Math.sqrt(total)); w = sq; h = Math.ceil(total / sq); }
   }
