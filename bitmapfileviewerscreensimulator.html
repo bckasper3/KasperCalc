@@ -167,6 +167,9 @@
       /* Variable overrides panel */
       #sim-overrides-wrap[open] #sim-overrides-arrow { transform: rotate(90deg); }
       #sim-overrides-wrap summary::-webkit-details-marker { display:none; }
+      /* Mock sensor inputs panel */
+      #sim-mock-wrap[open] #sim-mock-arrow { transform: rotate(90deg); }
+      #sim-mock-wrap summary::-webkit-details-marker { display:none; }
 
       /* View-transform button active state */
       .view-btn-on {
@@ -471,6 +474,29 @@
                   </div>
                 </details>
 
+                <!-- MOCK SENSOR INPUTS ──────────────────────────────────── -->
+                <details id="sim-mock-wrap" style="margin-bottom:6px;">
+                  <summary style="cursor:pointer; font-size:12px; color:var(--section-title-color); font-family:var(--body-font-family); user-select:none; padding:2px 0; list-style:none; display:flex; align-items:center; gap:6px;">
+                    <span id="sim-mock-arrow" style="display:inline-block; transition:transform .2s;">&#9654;</span>
+                    <span>Mock sensor inputs</span>
+                    <span style="font-size:11px; opacity:.55; font-family:var(--body-font-family);">&#8212; stub hardware calls so sensor-derived text can render</span>
+                  </summary>
+                  <div style="margin-top:5px; padding:8px 10px; background:var(--calc-result-color); border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small);">
+                    <div style="font-size:11px; color:var(--section-title-color); font-family:var(--body-font-family); margin-bottom:5px;">
+                      One <code style="background:none;">call(args) = value</code> per line. Intercepts hardware calls before they are skipped, so
+                      sensor-derived variables get real-looking values instead of always being&nbsp;1.<br>
+                      Examples: &nbsp;<code style="background:none;">analogRead(A0) = 512</code> &nbsp; <code style="background:none;">analogRead(HALL_PIN) = 300</code> &nbsp; <code style="background:none;">digitalRead(BUTTON_PIN) = 0</code>
+                    </div>
+                    <textarea id="sim-mock-inputs" rows="3"
+                      placeholder="analogRead(A0) = 512&#10;analogRead(HALL_PIN) = 300&#10;digitalRead(BUTTON_PIN) = 0"
+                      style="width:100%; font-family:monospace; font-size:11px; padding:5px; border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small); background:#fff; color:var(--p-color); resize:vertical; box-sizing:border-box;"></textarea>
+                    <div style="display:flex; gap:6px; margin-top:5px; align-items:center;">
+                      <button id="btn-mock-clear" style="font-size:12px; padding:3px 10px; cursor:pointer; border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small); background:#fff; color:var(--p-color); font-family:var(--body-font-family);">&#215; Clear</button>
+                      <span style="font-size:11px; font-family:var(--body-font-family); color:var(--section-title-color); opacity:.7;">Hardware calls not listed here return&nbsp;1 by default.</span>
+                    </div>
+                  </div>
+                </details>
+
                 <textarea id="sim-code-in" placeholder="Paste a full Arduino .ino sketch or bare-metal C file here, or use the file picker above.&#10;&#10;Supported: Adafruit SSD1306/SH1106, u8g2, direct I2C page mode, bare-metal AVR C.&#10;If the library is not detected automatically, the Fallback display size from the toolbar is used.&#10;Phase 1 renders geometry and bitmaps. Text/font calls are silently skipped (Phase 2)."></textarea>
                 <div id="sim-log"></div>
               </div>
@@ -677,8 +703,8 @@ simCodeIn.addEventListener('paste', e => {
 // ═══════════════════════════════════════════════════════════════
 // SKETCH SIMULATOR — Phase 1
 // Supports: Adafruit GFX, u8g2, direct I2C / page-mode
-// Renders: bitmaps, lines, rects, circles, all geometric prims
-// Skips:   text/font calls (Phase 2), hardware I/O calls
+// Renders: bitmaps, lines, rects, circles, text (Adafruit/u8g2/bare-metal)
+// Skips:   hardware I/O calls, GFX custom font objects
 // ═══════════════════════════════════════════════════════════════
 
 // ── Brace-and-paren-aware statement splitter ────────────────
@@ -689,7 +715,20 @@ function simSplit(body) {
     if (inStr) { if (c === sc && body[i-1] !== '\\') inStr = false; continue; }
     if (c === '"' || c === "'") { inStr = true; sc = c; continue; }
     if      (c === '{') { bdepth++; }
-    else if (c === '}') { if (--bdepth === 0) { out.push(body.slice(start, i+1).trim()); start = i+1; } }
+    else if (c === '}') {
+      if (--bdepth === 0) {
+        // Peek ahead: if next non-whitespace token is 'else', keep accumulating —
+        // the else clause belongs to this same if-statement and must not be split.
+        let j = i + 1;
+        while (j < body.length && ' \t\n\r'.includes(body[j])) j++;
+        if (body.slice(j, j + 4) === 'else') {
+          // don't flush yet — continue until the else clause closes
+        } else {
+          out.push(body.slice(start, i + 1).trim());
+          start = i + 1;
+        }
+      }
+    }
     else if (c === '(') { pdepth++; }
     else if (c === ')') { pdepth--; }
     else if (c === ';' && bdepth === 0 && pdepth === 0) { const s = body.slice(start, i).trim(); if (s) out.push(s); start = i+1; }
@@ -724,14 +763,116 @@ function simArgs(str) {
   return out;
 }
 
+// ── Standard Adafruit GFX 5×7 bitmap font ─────────────────────
+// ASCII 32 (space) … 127 (DEL), 5 bytes per glyph (one byte per column),
+// bit 0 = topmost pixel of that column (Vertical LSB order, 7 rows used).
+const SIM_FONT5X7 = new Uint8Array([
+  0x00,0x00,0x00,0x00,0x00, // ' '
+  0x00,0x00,0x5F,0x00,0x00, // '!'
+  0x00,0x07,0x00,0x07,0x00, // '"'
+  0x14,0x7F,0x14,0x7F,0x14, // '#'
+  0x24,0x2A,0x7F,0x2A,0x12, // '$'
+  0x23,0x13,0x08,0x64,0x62, // '%'
+  0x36,0x49,0x55,0x22,0x50, // '&'
+  0x00,0x05,0x03,0x00,0x00, // '\''
+  0x00,0x1C,0x22,0x41,0x00, // '('
+  0x00,0x41,0x22,0x1C,0x00, // ')'
+  0x14,0x08,0x3E,0x08,0x14, // '*'
+  0x08,0x08,0x3E,0x08,0x08, // '+'
+  0x00,0x50,0x30,0x00,0x00, // ','
+  0x08,0x08,0x08,0x08,0x08, // '-'
+  0x00,0x60,0x60,0x00,0x00, // '.'
+  0x20,0x10,0x08,0x04,0x02, // '/'
+  0x3E,0x51,0x49,0x45,0x3E, // '0'
+  0x00,0x42,0x7F,0x40,0x00, // '1'
+  0x42,0x61,0x51,0x49,0x46, // '2'
+  0x21,0x41,0x45,0x4B,0x31, // '3'
+  0x18,0x14,0x12,0x7F,0x10, // '4'
+  0x27,0x45,0x45,0x45,0x39, // '5'
+  0x3C,0x4A,0x49,0x49,0x30, // '6'
+  0x01,0x71,0x09,0x05,0x03, // '7'
+  0x36,0x49,0x49,0x49,0x36, // '8'
+  0x06,0x49,0x49,0x29,0x1E, // '9'
+  0x00,0x36,0x36,0x00,0x00, // ':'
+  0x00,0x56,0x36,0x00,0x00, // ';'
+  0x08,0x14,0x22,0x41,0x00, // '<'
+  0x14,0x14,0x14,0x14,0x14, // '='
+  0x00,0x41,0x22,0x14,0x08, // '>'
+  0x02,0x01,0x51,0x09,0x06, // '?'
+  0x32,0x49,0x79,0x41,0x3E, // '@'
+  0x7E,0x11,0x11,0x11,0x7E, // 'A'
+  0x7F,0x49,0x49,0x49,0x36, // 'B'
+  0x3E,0x41,0x41,0x41,0x22, // 'C'
+  0x7F,0x41,0x41,0x22,0x1C, // 'D'
+  0x7F,0x49,0x49,0x49,0x41, // 'E'
+  0x7F,0x09,0x09,0x09,0x01, // 'F'
+  0x3E,0x41,0x49,0x49,0x7A, // 'G'
+  0x7F,0x08,0x08,0x08,0x7F, // 'H'
+  0x00,0x41,0x7F,0x41,0x00, // 'I'
+  0x20,0x40,0x41,0x3F,0x01, // 'J'
+  0x7F,0x08,0x14,0x22,0x41, // 'K'
+  0x7F,0x40,0x40,0x40,0x40, // 'L'
+  0x7F,0x02,0x04,0x02,0x7F, // 'M'
+  0x7F,0x04,0x08,0x10,0x7F, // 'N'
+  0x3E,0x41,0x41,0x41,0x3E, // 'O'
+  0x7F,0x09,0x09,0x09,0x06, // 'P'
+  0x3E,0x41,0x51,0x21,0x5E, // 'Q'
+  0x7F,0x09,0x19,0x29,0x46, // 'R'
+  0x46,0x49,0x49,0x49,0x31, // 'S'
+  0x01,0x01,0x7F,0x01,0x01, // 'T'
+  0x3F,0x40,0x40,0x40,0x3F, // 'U'
+  0x1F,0x20,0x40,0x20,0x1F, // 'V'
+  0x3F,0x40,0x38,0x40,0x3F, // 'W'
+  0x63,0x14,0x08,0x14,0x63, // 'X'
+  0x03,0x04,0x78,0x04,0x03, // 'Y'
+  0x61,0x51,0x49,0x45,0x43, // 'Z'
+  0x00,0x7F,0x41,0x41,0x00, // '['
+  0x02,0x04,0x08,0x10,0x20, // '\\'
+  0x00,0x41,0x41,0x7F,0x00, // ']'
+  0x04,0x02,0x01,0x02,0x04, // '^'
+  0x40,0x40,0x40,0x40,0x40, // '_'
+  0x00,0x01,0x02,0x04,0x00, // '`'
+  0x20,0x54,0x54,0x54,0x78, // 'a'
+  0x7F,0x48,0x44,0x44,0x38, // 'b'
+  0x38,0x44,0x44,0x44,0x20, // 'c'
+  0x38,0x44,0x44,0x48,0x7F, // 'd'
+  0x38,0x54,0x54,0x54,0x18, // 'e'
+  0x08,0x7E,0x09,0x01,0x02, // 'f'
+  0x0C,0x52,0x52,0x52,0x3E, // 'g'
+  0x7F,0x08,0x04,0x04,0x78, // 'h'
+  0x00,0x44,0x7D,0x40,0x00, // 'i'
+  0x20,0x40,0x44,0x3D,0x00, // 'j'
+  0x7F,0x10,0x28,0x44,0x00, // 'k'
+  0x00,0x41,0x7F,0x40,0x00, // 'l'
+  0x7C,0x04,0x18,0x04,0x78, // 'm'
+  0x7C,0x08,0x04,0x04,0x78, // 'n'
+  0x38,0x44,0x44,0x44,0x38, // 'o'
+  0x7C,0x14,0x14,0x14,0x08, // 'p'
+  0x08,0x14,0x14,0x18,0x7C, // 'q'
+  0x7C,0x08,0x04,0x04,0x08, // 'r'
+  0x48,0x54,0x54,0x54,0x20, // 's'
+  0x04,0x3F,0x44,0x40,0x20, // 't'
+  0x3C,0x40,0x40,0x40,0x3C, // 'u'
+  0x1C,0x20,0x40,0x20,0x1C, // 'v'
+  0x3C,0x40,0x30,0x40,0x3C, // 'w'
+  0x44,0x28,0x10,0x28,0x44, // 'x'
+  0x0C,0x50,0x50,0x50,0x3E, // 'y'
+  0x44,0x64,0x54,0x4C,0x44, // 'z'
+  0x00,0x08,0x36,0x41,0x00, // '{'
+  0x00,0x00,0x7F,0x00,0x00, // '|'
+  0x00,0x41,0x36,0x08,0x00, // '}'
+  0x10,0x08,0x08,0x10,0x08, // '~'
+  0x78,0x46,0x41,0x46,0x78  // DEL
+]);
+
 // ── DisplaySim: 1-bit pixel framebuffer + drawing primitives ─
 class DisplaySim {
-  constructor(w, h) { this.w=w; this.h=h; this.fb=new Uint8Array(w*h); this.inverted=false; this.frames=[]; this.driverFmt='vlsb'; }
+  constructor(w, h) { this.w=w; this.h=h; this.fb=new Uint8Array(w*h); this.inverted=false; this.frames=[]; this.driverFmt='vlsb'; this.pwTotal=0; }
   idx(x,y) { return y*this.w+x; }
   inB(x,y) { return x>=0&&x<this.w&&y>=0&&y<this.h; }
   sp(x,y,v) { x=x|0; y=y|0; if(this.inB(x,y)) this.fb[this.idx(x,y)]=v?1:0; }
-  clear() { this.fb.fill(0); }
-  snapshot() { this.frames.push(new Uint8Array(this.fb)); }
+  clear() { this.fb.fill(0); this.pwTotal=0; }
+  snapshot() { this.frames.push(new Uint8Array(this.fb)); this.pwTotal=0; }
 
   // Horizontal MSB — Adafruit drawBitmap
   drawBmpMSB(x0,y0,bytes,bw,bh,col) {
@@ -795,6 +936,7 @@ class DisplaySim {
   }
   // Write one packed byte into the pixel framebuffer using the current driver format
   pagedWrite(d1,d2,op,val) {
+    this.pwTotal++;
     val=val&0xFF;
     const nv = op==='=' ? val
              : op==='|=' ? (this._pagedRead(d1,d2)|val)&0xFF
@@ -823,6 +965,39 @@ class DisplaySim {
     while(y>=x){p(x,y);if(d<0)d+=4*x+6;else{d+=4*(x-y)+10;y--;}x++;}
   }
   fillCircle(cx,cy,r,col) { for(let dy=-r;dy<=r;dy++) for(let dx=-r;dx<=r;dx++) if(dx*dx+dy*dy<=r*r) this.sp(cx+dx,cy+dy,col); }
+
+  // ── Text rendering using the built-in 5×7 font ──────────────
+  // drawChar: x,y = top-left corner; c = ASCII code; color = 0/1; size = pixel scale
+  drawChar(x, y, c, color, size) {
+    c = (typeof c === 'string') ? c.charCodeAt(0) : (c | 0);
+    if (c < 32 || c > 127) return;
+    size = size || 1; color = color !== undefined ? color : 1;
+    const gi = (c - 32) * 5;
+    for (let col = 0; col < 5; col++) {
+      const colData = SIM_FONT5X7[gi + col];
+      for (let row = 0; row < 7; row++) {
+        if ((colData >> row) & 1) {
+          if (size === 1) this.sp(x + col, y + row, color);
+          else this.fillRect(x + col * size, y + row * size, size, size, color);
+        }
+      }
+    }
+  }
+  // drawStr: x,y = top-left; text = JS string; returns new x after last glyph
+  // yIsBaseline: true for u8g2 (y=baseline), false for Adafruit (y=top)
+  drawStr(x, y, text, color, size, yIsBaseline) {
+    size = size || 1; color = color !== undefined ? color : 1;
+    if (yIsBaseline) y = y - 6 * size; // convert baseline → top for 7-row font
+    const step = 6 * size; // 5px glyph + 1px kerning gap
+    for (let i = 0; i < text.length; i++) {
+      const ch = text.charCodeAt(i);
+      if (ch === 10) { x = 0; y += 8 * size; continue; } // '\n'
+      this.drawChar(x, y, ch, color, size);
+      x += step;
+    }
+    return x;
+  }
+
   _arc(cx,cy,r,q,col) {
     let x=0,y=r,d=3-2*r;
     while(y>=x){
@@ -868,11 +1043,13 @@ class DisplaySim {
 class SketchParser {
   constructor(src) {
     this.src = src; this.defines={}; this.arrays={}; this.arrayDims={}; this.funcs={}; this.funcParams={};
+    this.globalScalars = new Set(); // top-level non-array variable names
+    this.noInitArrays  = new Set(); // top-level array names declared without an initializer
     this.library='unknown'; this.displayW=128; this.displayH=64; this.log=[];
   }
   parse() {
     const s = this.src.replace(/\/\/[^\n]*/g,'').replace(/\/\*[\s\S]*?\*\//g,'');
-    this._defs(s); this._arrays(s); this._detect(s); this._funcs(s);
+    this._defs(s); this._arrays(s); this._globals(s); this._detect(s); this._funcs(s);
     return this;
   }
   _num(v) {
@@ -886,21 +1063,28 @@ class SketchParser {
     while((m=re.exec(s))!==null) { const raw=m[2].trim(); const n=this._num(raw); this.defines[m[1]]=n!==null?n:raw; }
   }
   _arrays(s) {
+    // Helper: pick the right typed array based on declared C type
+    const _mkArr=(typeStr, nums) => {
+      const isU16 = /uint16_t/.test(typeStr);
+      return isU16
+        ? new Uint16Array(nums.map(n=>parseInt(n)&0xFFFF))
+        : new Uint8Array(nums.map(n=>parseInt(n)&0xFF));
+    };
     // Pass 1 — 1D arrays: simple flat content, no nested braces
-    const re1D=/(?:static\s+)?(?:const\s+)?(?:uint8_t|unsigned\s+char|uint16_t)\s+(?:PROGMEM\s+)?(\w+)\s*\[[^\]]*\]\s*(?:PROGMEM\s*)?=\s*\{([^}]*)\}/g;
+    const re1D=/((?:static\s+)?(?:const\s+)?(?:uint8_t|unsigned\s+char|uint16_t))\s+(?:PROGMEM\s+)?(\w+)\s*\[[^\]]*\]\s*(?:PROGMEM\s*)?=\s*\{([^}]*)\}/g;
     let m;
     while((m=re1D.exec(s))!==null) {
-      const nums=m[2].match(/0[xX][0-9a-fA-F]+|\b\d+\b/g);
-      if(nums) this.arrays[m[1]]=new Uint8Array(nums.map(n=>parseInt(n)&0xFF));
+      const nums=m[3].match(/0[xX][0-9a-fA-F]+|\b\d+\b/g);
+      if(nums) this.arrays[m[2]]=_mkArr(m[1], nums);
     }
     // Pass 2 — multi-dimensional arrays (2+ dimensions, nested braces in content)
     // Match: [type] [PROGMEM] name[N][M][K]... =  (requires ≥2 dimension specs)
-    const re2D=/(?:static\s+)?(?:const\s+)?(?:uint8_t|unsigned\s+char|uint16_t)\s+(?:PROGMEM\s+)?(\w+)((?:\s*\[\d+\]){2,})\s*(?:PROGMEM\s*)?=/g;
+    const re2D=/((?:static\s+)?(?:const\s+)?(?:uint8_t|unsigned\s+char|uint16_t))\s+(?:PROGMEM\s+)?(\w+)((?:\s*\[\d+\]){2,})\s*(?:PROGMEM\s*)?=/g;
     while((m=re2D.exec(s))!==null) {
-      const name=m[1];
+      const typeStr=m[1], name=m[2];
       // Extract each dimension size: "[17][2][10]" → [17,2,10]
       const dims=[]; const dimRe=/\[(\d+)\]/g; let dm;
-      while((dm=dimRe.exec(m[2]))!==null) dims.push(parseInt(dm[1]));
+      while((dm=dimRe.exec(m[3]))!==null) dims.push(parseInt(dm[1]));
       // Find opening brace for the initialiser
       const openB=s.indexOf('{', m.index+m[0].length); if(openB<0) continue;
       // Balanced-brace scan to find the matching closing brace
@@ -914,8 +1098,68 @@ class SketchParser {
       const content=s.slice(openB+1,closeB);
       const nums=content.match(/0[xX][0-9a-fA-F]+|\b\d+\b/g);
       if(!nums) continue;
-      this.arrays[name]=new Uint8Array(nums.map(n=>parseInt(n)&0xFF));
+      this.arrays[name]=_mkArr(typeStr, nums);
       this.arrayDims[name]=dims;
+    }
+  }
+  _globals(s) {
+    // Scan top-level (outside function bodies) variable declarations.
+    // Populates:
+    //   globalScalars — scalar variable names (genuine sensor/computed values)
+    //   noInitArrays  — array names declared without an initializer (e.g. uint8_t oled_buf[1024];)
+    //
+    // Strategy: strip all function bodies first so we only see file-scope lines,
+    // then match scalar and array declarations.
+    let stripped = s;
+    // Remove function bodies (matched brace pairs after any fn header)
+    stripped = stripped.replace(/\b(?:void|int|bool|uint8_t|int8_t|int16_t|uint16_t|uint32_t|float|double)\s+\w+\s*\([^)]*\)\s*\{/g, m => {
+      // Replace the opening brace placeholder; the balanced-scan below trims the rest
+      return m.replace(/\{$/, '\x00'); // mark opening brace
+    });
+    // Balanced brace removal: delete from \x00 to its matching }
+    let out = '';
+    let depth = 0, skip = false;
+    for (let i = 0; i < stripped.length; i++) {
+      const c = stripped[i];
+      if (!skip && c === '\x00') { skip = true; depth = 1; continue; }
+      if (skip) {
+        if (c === '{') depth++;
+        else if (c === '}') { if (--depth === 0) { skip = false; } }
+        continue;
+      }
+      out += c;
+    }
+    // Now match scalar declarations (possibly multi-var, possibly with initializer)
+    // e.g.  volatile int16_t base_temp_f = 0, debris_temp_f = 0;
+    //        float field_percent;
+    const reScalar = /^[ \t]*(?:volatile\s+|static\s+|extern\s+|const\s+)*(?:int8_t|int16_t|int32_t|uint8_t|uint16_t|uint32_t|float|double|bool|int|long|short)\s+([\w,\s=\-+.*()\[\]]+?)\s*;/gm;
+    let m;
+    while ((m = reScalar.exec(out)) !== null) {
+      // Split on commas that are NOT inside parens
+      const varList = m[1];
+      let depth2 = 0, cur = '', parts = [];
+      for (let i = 0; i < varList.length; i++) {
+        const c = varList[i];
+        if (c === '(') depth2++;
+        else if (c === ')') depth2--;
+        if (c === ',' && depth2 === 0) { parts.push(cur.trim()); cur = ''; }
+        else cur += c;
+      }
+      if (cur.trim()) parts.push(cur.trim());
+      parts.forEach(part => {
+        // Strip initializer: everything after first =
+        const noInit = part.replace(/=[\s\S]*$/, '').trim();
+        // Check if this is an array declaration: name[...]
+        const arrMatch = noInit.match(/^(\w+)\s*\[/);
+        if (arrMatch) {
+          // Array without initializer — add to noInitArrays (only if not already parsed by _arrays)
+          if (!this.arrays[arrMatch[1]]) this.noInitArrays.add(arrMatch[1]);
+        } else {
+          // Plain scalar name
+          const nm = noInit.match(/^(\w+)$/);
+          if (nm) this.globalScalars.add(nm[1]);
+        }
+      });
     }
   }
   _detect(s) {
@@ -1023,6 +1267,14 @@ class SketchExecutor {
     this.returning    = false;
     this.breaking     = false;  // set by 'break' inside loops
     this.undefinedVars = new Set(); // identifiers resolved to 0 because not found in vars
+    this._hasAutoSnapped = false;   // set true once we auto-snapshot before first cleanup fn
+    this.mockInputs = {};           // fn(rawArgs) → return value for stubbed hardware calls
+    // Text rendering state (Adafruit GFX / u8g2 cursor & style)
+    this._cursorX  = 0;
+    this._cursorY  = 0;
+    this._textSize = 1;
+    this._textColor= 1;
+    this._textBg   = 0;   // background color for drawChar (BLACK by default)
     // Hardware / comms functions to skip (never execute their bodies).
     // Functions with hardware-polling loops must stay here or they hang.
     // User-defined functions NOT in this set are executed normally.
@@ -1051,6 +1303,48 @@ class SketchExecutor {
       saved[p] = this.vars.hasOwnProperty(p) ? this.vars[p] : undefined;
       this.vars[p] = args[i] !== undefined ? args[i] : 0;
     });
+    // Auto-snapshot: if a full framebuffer page-write cycle just completed
+    // (pwTotal >= w * ceil(h/8)) and we haven't snapped yet, capture the
+    // clean bitmap NOW — before this user function potentially corrupts it.
+    if (!this._hasAutoSnapped) {
+      const target = this.sim.w * Math.ceil(this.sim.h / 8);
+      if (this.sim.pwTotal >= target) {
+        this.sim.snapshot();
+        this._hasAutoSnapped = true;
+      }
+    }
+    // Parse any local static/const array declarations inside this function body
+    // (e.g. static const uint16_t e_rows[10] = {...}; inside a cleanup function)
+    // Run this once per call so fresh arrays are available when the body executes.
+    {
+      const _fnSrc = this.p.funcs[fn];
+      const _mkArr = (typeStr, nums) => /uint16_t/.test(typeStr)
+        ? new Uint16Array(nums.map(n=>parseInt(n)&0xFFFF))
+        : new Uint8Array(nums.map(n=>parseInt(n)&0xFF));
+      // 1D locals
+      const _re1 = /((?:static\s+)?(?:const\s+)?(?:uint8_t|unsigned\s+char|uint16_t))\s+(\w+)\s*\[[^\]]*\]\s*=\s*\{([^}]*)\}/g;
+      let _lm;
+      while((_lm=_re1.exec(_fnSrc))!==null){
+        const _nums=_lm[3].match(/0[xX][0-9a-fA-F]+|\b\d+\b/g);
+        if(_nums) this.p.arrays[_lm[2]]=_mkArr(_lm[1],_nums);
+      }
+      // 2D+ locals
+      const _re2 = /((?:static\s+)?(?:const\s+)?(?:uint8_t|unsigned\s+char|uint16_t))\s+(\w+)((?:\s*\[\d+\]){2,})\s*=/g;
+      while((_lm=_re2.exec(_fnSrc))!==null){
+        const _dims=[]; const _dr=/\[(\d+)\]/g; let _dd;
+        while((_dd=_dr.exec(_lm[3]))!==null) _dims.push(parseInt(_dd[1]));
+        const _ob=_fnSrc.indexOf('{',_lm.index+_lm[0].length); if(_ob<0) continue;
+        let _dep=0, _cb=-1;
+        for(let _i=_ob;_i<_fnSrc.length;_i++){
+          if(_fnSrc[_i]==='{')_dep++; else if(_fnSrc[_i]==='}'){if(--_dep===0){_cb=_i;break;}}
+        }
+        if(_cb<0) continue;
+        const _nums=_fnSrc.slice(_ob+1,_cb).match(/0[xX][0-9a-fA-F]+|\b\d+\b/g);
+        if(!_nums) continue;
+        this.p.arrays[_lm[2]]=_mkArr(_lm[1],_nums);
+        this.p.arrayDims[_lm[2]]=_dims;
+      }
+    }
     const wasReturning = this.returning;
     const prevRetVal   = this.retVal;
     this.returning     = false;
@@ -1117,9 +1411,27 @@ class SketchExecutor {
       return;
     }
 
+    // Multi-variable declaration: type a = expr, b, c = expr2;
+    // Must contain a comma and no open-paren (to avoid matching fn calls)
+    if(s.includes(',') && !s.includes('(')) {
+      const multiDecl=s.match(/^(?:(?:static|const|volatile)\s+)*(?:int|uint8_t|uint16_t|uint32_t|int8_t|int16_t|int32_t|float|double|bool|char|size_t)\s+([\w\s,=\-+.*()]+)$/);
+      if(multiDecl){
+        multiDecl[1].split(',').forEach(part=>{
+          const mm=part.trim().match(/^(\w+)\s*(?:=\s*(.+))?$/);
+          if(mm) this.vars[mm[1]]=mm[2]?this._e(mm[2].trim()):0;
+        });
+        return;
+      }
+    }
     // Variable declaration: [type] name = expr
     const decl=s.match(/^(?:(?:static|const|volatile)\s+)*(?:int|uint8_t|uint16_t|uint32_t|int8_t|int16_t|float|double|bool|char|size_t)\s+(\w+)\s*(?:=\s*(.+))?$/);
     if(decl){ this.vars[decl[1]]=decl[2]?this._e(decl[2]):0; return; }
+    // char buf[N] array declaration → initialise as empty string (filled by sprintf etc.)
+    const charArr=s.match(/^(?:(?:static|const|volatile)\s+)*char\s+(\w+)\s*\[\s*\d*\s*\]\s*(?:=\s*(.+))?$/);
+    if(charArr){ this.vars[charArr[1]]=charArr[2]?String(this._e(charArr[2])):''; return; }
+    // const char * pointer declaration
+    const charPtr=s.match(/^(?:const\s+)?char\s*\*\s*(\w+)\s*(?:=\s*(.+))?$/);
+    if(charPtr){ this.vars[charPtr[1]]=charPtr[2]?String(this._e(charPtr[2])):''; return; }
 
     // 2D array assignment/compound: buf[d1][d2] = | |= | &= byte
     // Decoding is driver-format-aware — vertical page (SSD1306) or horizontal row (Adafruit/XBM)
@@ -1147,7 +1459,13 @@ class SketchExecutor {
       if(asgn){ const n=asgn[1],op=asgn[2],v=this._e(asgn[3]);
         if(op==='=')this.vars[n]=v; else if(op==='+=')this.vars[n]=(this.vars[n]||0)+v;
         else if(op==='-=')this.vars[n]=(this.vars[n]||0)-v; return; }
-      if(/\+\+/.test(s)){const n=s.replace(/\+\+/g,'').trim();this.vars[n]=(this.vars[n]||0)+1;return;}
+      if(/\+\+/.test(s)){
+        let n=s.replace(/\+\+/g,'').replace(/[*()]/g,'').trim();
+        // char-pointer advance: if the variable holds a JS string, slice off the first character
+        if(typeof this.vars[n]==='string') this.vars[n]=this.vars[n].slice(1);
+        else this.vars[n]=(this.vars[n]||0)+1;
+        return;
+      }
       if(/--/.test(s))  {const n=s.replace(/--/g,'').trim(); this.vars[n]=(this.vars[n]||0)-1;return;}
     }
 
@@ -1158,14 +1476,38 @@ class SketchExecutor {
     const po=s.indexOf('('); if(po<0) return;
     const pc=simClose(s,po); if(pc<0) return;
     const cond=s.slice(po+1,pc);
-    const bo=s.indexOf('{',pc); if(bo<0) return;
-    const bc=simClose(s,bo,'{','}'); if(bc<0) return;
-    const thenBody=s.slice(bo+1,bc);
-    const after=s.slice(bc+1).trim();
-    let elseBody='';
-    if(after.startsWith('else')){ const eo=after.indexOf('{'); if(eo>=0){const ec=simClose(after,eo,'{','}');if(ec>=0)elseBody=after.slice(eo+1,ec);}}
-    if(this._cond(cond)) this._body(thenBody);
-    else if(elseBody) this._body(elseBody);
+    // then-body may be braced { … } or a single unbraced statement ending at ';'
+    let thenBody='', afterThen='';
+    const bo=s.indexOf('{',pc);
+    const sc=s.indexOf(';',pc);
+    if(bo>=0&&(sc<0||bo<sc)){
+      // braced then-body
+      const bc=simClose(s,bo,'{','}'); if(bc<0) return;
+      thenBody=s.slice(bo+1,bc);
+      afterThen=s.slice(bc+1).trim();
+    } else if(sc>=0) {
+      // unbraced single statement
+      thenBody=s.slice(pc+1,sc).trim();
+      afterThen=s.slice(sc+1).trim();
+    } else return;
+    const condTrue=this._cond(cond);
+    if(condTrue) { this._body(thenBody); return; }
+    // Execute the else / else-if branch
+    if(!afterThen.startsWith('else')) return;
+    const afterElse=afterThen.slice(4).trim(); // strip 'else'
+    if(afterElse.startsWith('if')) {
+      // else if — recurse: treat the remainder as a new if statement
+      this._one(afterElse);
+    } else {
+      // else { body } or else singleStatement;
+      const eo=afterElse.indexOf('{');
+      const es=afterElse.indexOf(';');
+      if(eo>=0&&(es<0||eo<es)){
+        const ec=simClose(afterElse,eo,'{','}'); if(ec>=0) this._body(afterElse.slice(eo+1,ec));
+      } else if(es>=0) {
+        this._body(afterElse.slice(0,es).trim());
+      }
+    }
   }
 
   _for(s) {
@@ -1213,7 +1555,7 @@ class SketchExecutor {
     }
     const cond=s.slice(po+1,pc);
     let n=0;
-    while(n++<64&&this.calls<this.MAX&&!this.returning&&!this.breaking){
+    while(n++<256&&this.calls<this.MAX&&!this.returning&&!this.breaking){
       if(!this._cond(cond)) break;
       this._body(body);
       if(this.breaking){this.breaking=false;break;}
@@ -1300,11 +1642,36 @@ class SketchExecutor {
     if(!expr||expr==='NULL'||expr==='nullptr') return 0;
     if(expr==='true') return 1;
     if(expr==='false') return 0;
-    if(/^"[^"]*"$/.test(expr)||/^'[^']*'$/.test(expr)) return expr.slice(1,-1);
+    // Double-quoted string literal → JS string
+    if(/^"[^"]*"$/.test(expr)) return expr.slice(1,-1);
+    // Single-quoted char literal → char code (C semantics: 'A' == 65)
+    if(/^'[^']*'$/.test(expr)) {
+      const _s=expr.slice(1,-1);
+      if(_s.length===2&&_s[0]==='\\'){
+        const _esc={'n':10,'t':9,'r':13,'0':0,'\\':92,"'":39,'"':34};
+        return _esc[_s[1]]!==undefined?_esc[_s[1]]:_s.charCodeAt(1);
+      }
+      return _s.charCodeAt(0)||0;
+    }
     if(/^0[xX][0-9a-fA-F]+$/.test(expr)) return parseInt(expr,16);
     if(/^-?\d+[uUlL]*$/.test(expr)) return parseInt(expr);
     if(/^-?\d+\.\d+f?$/.test(expr)) return parseFloat(expr);
     if(this.vars.hasOwnProperty(expr)) return this.vars[expr];
+    // Pointer dereference with post-increment: *ptr++ → read char, advance pointer
+    { const _m=expr.match(/^\*(\w+)\+\+$/);
+      if(_m){ const _vn=_m[1],_sv=this.vars[_vn];
+        const _code=typeof _sv==='string'?(_sv.length?_sv.charCodeAt(0):0):0;
+        if(typeof _sv==='string') this.vars[_vn]=_sv.slice(1); return _code; } }
+    // Pre-increment dereference: *++ptr → advance then read
+    { const _m=expr.match(/^\*\+\+(\w+)$/);
+      if(_m){ const _vn=_m[1],_sv=this.vars[_vn];
+        if(typeof _sv==='string') this.vars[_vn]=_sv.slice(1);
+        const _nsv=this.vars[_vn];
+        return typeof _nsv==='string'?(_nsv.length?_nsv.charCodeAt(0):0):0; } }
+    // Plain pointer dereference: *ptr → char code at current position
+    { const _m=expr.match(/^\*([A-Za-z_]\w*)$/);
+      if(_m){ const _sv=this.vars[_m[1]];
+        return typeof _sv==='string'?(_sv.length?_sv.charCodeAt(0):0):0; } }
     // Array element read: arrName[i], arrName[i][j], arrName[i][j][k] …
     // Supports 1-D through N-D; uses stored arrayDims[] for stride computation.
     if(expr.includes('[') && !/^\s*\[/.test(expr)){
@@ -1345,8 +1712,9 @@ class SketchExecutor {
     if(cast) return this._e(cast[1]);
     // Parens
     if(expr[0]==='('&&simClose(expr,0)===expr.length-1) return this._e(expr.slice(1,-1));
-    // strlen("...")
-    const sl=expr.match(/^strlen\s*\(\s*"([^"]*)"\s*\)$/); if(sl) return sl[1].length;
+    // strlen("literal") or strlen(varName)
+    { const sl=expr.match(/^strlen\s*\(\s*(.+?)\s*\)$/);
+      if(sl){ const sv=this._e(sl[1]); return typeof sv==='string'?sv.length:0; } }
     // Ternary operator: cond ? a : b  (paren-depth-aware scan)
     { let pd=0;
       for(let i=0;i<expr.length;i++){
@@ -1375,31 +1743,62 @@ class SketchExecutor {
       if(_pc===expr.length-1){
         const _fn=expr.slice(0,_po).trim();
         if(/^\w+$/.test(_fn)){
+          // Flash-string helpers: F("text") / PSTR("text") → unwrap to plain JS string
+          if((_fn==='F'||_fn==='PSTR')) {
+            const _inner=expr.slice(_po+1,_pc).trim();
+            const _sm=_inner.match(/^"([^"]*)"$/);
+            if(_sm) return _sm[1];
+          }
           if(this.p.funcs[_fn]&&_fn!=='setup'&&_fn!=='loop'&&!this.SKIP.has(_fn)){
             const _argStr=expr.slice(_po+1,_pc).trim();
             const _a=(_argStr?simArgs(_argStr):[]).map(r=>this._e(r));
             return this._callUser(_fn,_a);
           }
-          if(this.SKIP.has(_fn)) return 1; // hardware call — assume success
+          if(this.SKIP.has(_fn)){
+            // Check mock sensor table — key is "fnName(rawArgStr)" e.g. "analogRead(A0)"
+            const _rawArgs=expr.slice(_po+1,_pc).trim();
+            const _mk1=`${_fn}(${_rawArgs})`;
+            if(this.mockInputs.hasOwnProperty(_mk1)) return this.mockInputs[_mk1];
+            // Also try with the raw args string normalised (no spaces)
+            const _mk2=`${_fn}(${_rawArgs.replace(/\s+/g,'')})`;
+            if(this.mockInputs.hasOwnProperty(_mk2)) return this.mockInputs[_mk2];
+            return 1; // hardware call — assume success
+          }
         }
       }
     }
     // Arithmetic — substitute known vars then eval with Function
     // Extended safe-chars to include bitwise ops (~, &, ^, <<, >>)
     try {
-      // Strip C-style type casts before identifier substitution so that
-      // (uint16_t)x doesn't become (0)x which is invalid JS syntax.
+      // Step 1: strip C-style type casts
       const deCast=expr.replace(/\(\s*(?:u?int(?:8|16|32|64)?_t|unsigned\s*\w*|signed\s*\w*|char|bool|float|double|size_t)\s*\)\s*/g,'');
-      const resolved=deCast.replace(/\b([A-Za-z_]\w*)\b/g,m=>{
-        if(this.vars.hasOwnProperty(m)) return +this.vars[m]||0;
+      // Step 2: convert C char literals embedded in expressions: 'A' → 65, '\n' → 10, etc.
+      const deCharLit=deCast.replace(/'(\\?.)'(?!')/g,(_,c)=>{
+        if(c.length===2&&c[0]==='\\'){const _esc={'n':10,'t':9,'r':13,'0':0,'\\':92,"'":39,'"':34};return String(_esc[c[1]]!==undefined?_esc[c[1]]:c.charCodeAt(1));}
+        return String(c.charCodeAt(0)||0);
+      });
+      // Step 3: substitute *varname pointer dereferences with their char codes
+      // Uses negative lookbehind to avoid matching the * in multiplication (a*b stays a*b)
+      const dePtr=deCharLit.replace(/(?<![A-Za-z0-9_])\*([A-Za-z_]\w*)/g,(_,vn)=>{
+        const sv=this.vars[vn];
+        return typeof sv==='string'?String(sv.length?sv.charCodeAt(0):0):'0';
+      });
+      // Step 4: substitute known variable names with numeric values
+      const resolved=dePtr.replace(/\b([A-Za-z_]\w*)\b/g,m=>{
+        if(this.vars.hasOwnProperty(m)){
+          const v=this.vars[m];
+          // single-char string variable → treat as its char code in arithmetic
+          if(typeof v==='string') return v.length===1?String(v.charCodeAt(0)):'0';
+          return +v||0;
+        }
         // Record genuinely unknown identifiers (not C/AVR noise) for the override prompt
         if(m.length>1 && !SIM_KNOWN_IDENTS.has(m) && !SIM_NOISE_RE.test(m))
           this.undefinedVars.add(m);
         return 0;
       });
       const safe=resolved.replace(/[^0-9+\-*/%().|\s&^~<>]/g,'0');
-      const v=new Function('return('+safe+'|0)')();
-      return isFinite(v)?v:0;
+      const v=new Function('return('+safe+')')();
+      return Number.isFinite(v)?v:0;
     } catch(e){ return 0; }
   }
 
@@ -1452,10 +1851,45 @@ class SketchExecutor {
         this.log.push(`✓ drawBitmap(${a[0]},${a[1]}, ${rawArgs[2]?.trim()}, ${bw}×${bh})  ${bytes.length}B`);
         break;
       }
-      // Font / text — Phase 2
-      case 'setTextSize': case 'setTextColor': case 'setCursor':
-      case 'setTextWrap': case 'setFont': case 'print': case 'println':
-      case 'drawChar': break;
+      // ── Adafruit GFX text ──────────────────────────────────────────────────
+      case 'setCursor':     this._cursorX=a[0]|0; this._cursorY=a[1]|0; break;
+      case 'setTextSize':   this._textSize=Math.max(1,(a[0]|0)||1); break;
+      case 'setTextColor':
+        this._textColor=a[0]!==undefined?a[0]:1;
+        if(a[1]!==undefined) this._textBg=a[1];
+        break;
+      case 'setTextWrap':   break; // no-op — canvas is always clipped
+      case 'setFont':       break; // custom GFX font objects not supported; use built-in 5×7
+      case 'print':
+      case 'println': {
+        // Resolve argument to a string
+        let _str;
+        if(typeof a[0]==='string') _str=a[0];
+        else if(a[0]!==undefined){
+          // Numeric: integer if whole, fixed-2 if float; respect optional base arg (a[1])
+          const _base=a[1];
+          if(_base===16) _str=(Math.trunc(a[0])>>>0).toString(16).toUpperCase();
+          else if(_base===2)  _str=(Math.trunc(a[0])>>>0).toString(2);
+          else if(_base===8)  _str=(Math.trunc(a[0])>>>0).toString(8);
+          else _str=Number.isInteger(a[0])?String(Math.trunc(a[0])):a[0].toFixed(2);
+        } else _str='';
+        if(fn==='println') _str+='\n';
+        // Render and advance cursor
+        for(let _i=0;_i<_str.length;_i++){
+          const _ch=_str.charCodeAt(_i);
+          if(_ch===10){this._cursorX=0;this._cursorY+=8*this._textSize;continue;}
+          sim.drawChar(this._cursorX,this._cursorY,_ch,this._textColor,this._textSize);
+          this._cursorX+=6*this._textSize;
+        }
+        this.log.push(`✓ ${fn}(${JSON.stringify(_str.replace(/\n$/,''))})`);
+        break;
+      }
+      case 'drawChar': {
+        // drawChar(x, y, c, color, bg, size)
+        const _dc=typeof a[2]==='string'?a[2].charCodeAt(0):(a[2]|0);
+        sim.drawChar(a[0]|0,a[1]|0,_dc,a[3]!==undefined?a[3]:1,a[5]||1);
+        break;
+      }
 
       // ── u8g2 ──────────────────────────────────────────────────────────────
       case 'clearBuffer':   sim.clear(); break;
@@ -1477,12 +1911,21 @@ class SketchExecutor {
         this.log.push(`✓ drawXBMP(${a[0]},${a[1]}, ${rawArgs[4]?.trim()}, ${a[2]}×${a[3]})  ${bytes.length}B`);
         break;
       }
-      case 'drawStr': case 'drawUTF8': case 'drawGlyph': break; // Phase 2
+      // u8g2 text — y is the baseline (bottom of glyph), not the top
+      case 'drawStr':
+      case 'drawUTF8': {
+        const _txt=typeof a[2]==='string'?a[2]:String(a[2]||'');
+        sim.drawStr(a[0]|0, a[1]|0, _txt, 1, 1, /*yIsBaseline*/true);
+        this.log.push(`✓ ${fn}(${a[0]|0},${a[1]|0},"${_txt}")`);
+        break;
+      }
+      case 'drawGlyph': break; // bitmap glyph objects not supported
 
       // ── Bare-metal helpers (our generated sketches) ───────────────────────
       case 'sh1106_clear':  sim.clear(); break;
       case 'sh1106_fill':   sim.fillRect(0,0,sim.w,sim.h,1); break;
-      case 'sh1106_flush':  sim.snapshot(); break;
+      case 'sh1106_flush':
+      case 'sh1106_render': sim.snapshot(); break;
       case 'sh1106_set_pixel':  sim.sp(a[0],a[1],a[2]?1:0); break;
       case 'sh1106_fill_rect':  sim.fillRect(a[0],a[1],a[2],a[3],a[4]?1:0); break;
       case 'sh1106_draw_bitmap_pgm':
@@ -1496,12 +1939,17 @@ class SketchExecutor {
       // ── Memory / string helpers ───────────────────────────────────────────
       case 'memset': {
         const dest=rawArgs[0]?.trim();
-        const fillVal=a[1]|0;
-        if(dest&&fillVal===0){
-          // If dest is the paged framebuffer (size = w * h/8), clear the sim
+        const fillByte=(a[1]|0)&0xFF;
+        if(dest){
           const da=this.p.arrays[dest];
-          if(da&&da.length===sim.w*(sim.h>>3)) sim.clear();
-          else this.vars[dest]='';  // clear string / scalar
+          const isFrameBuf=da&&da.length===sim.w*(sim.h>>3);
+          if(fillByte===0){
+            if(isFrameBuf) sim.clear();
+            else this.vars[dest]=''; // clear string / scalar
+          } else if(isFrameBuf){
+            // e.g. memset(oled_buf, 0xFF, …) — fill entire display with the byte
+            for(let _p=0;_p<(sim.h>>3);_p++) for(let _c=0;_c<sim.w;_c++) sim.pagedWrite(_p,_c,'=',fillByte);
+          }
         }
         break;
       }
@@ -1527,6 +1975,22 @@ class SketchExecutor {
         const dest=rawArgs[0]?.trim();
         if(!dest) break;
         this.vars[dest]=String(this.vars[dest]||'')+String(a[1]||'');
+        break;
+      }
+      // dtostrf(float, width, precision, buf) — AVR float-to-string
+      case 'dtostrf': {
+        const dest=rawArgs[3]?.trim();
+        if(!dest) break;
+        const prec=Math.max(0,(a[2]|0));
+        this.vars[dest]=(+a[0]||0).toFixed(prec);
+        break;
+      }
+      // itoa(int, buf, base) — integer to string
+      case 'itoa': case 'ltoa': case 'ultoa': {
+        const dest=rawArgs[1]?.trim();
+        if(!dest) break;
+        const base=a[2]||10;
+        this.vars[dest]=(Math.trunc(a[0]||0)).toString(base|0);
         break;
       }
       case 'strcpy': {
@@ -1589,6 +2053,22 @@ function runSketch(src) {
       });
     }
 
+    // ── Inject mock sensor return values ─────────────────────
+    // Format: "analogRead(A0) = 512" — intercepts hardware calls in _e()
+    {
+      const raw = (document.getElementById('sim-mock-inputs').value || '');
+      raw.split('\n').forEach(line => {
+        // Match: fnName(anything) = value
+        const m = line.match(/^\s*(\w+\s*\([^)]*\))\s*=\s*(.+?)\s*$/);
+        if (!m) return;
+        const k = m[1].replace(/\s+/g,''); // normalise whitespace in key
+        const v = m[2].trim();
+        exec.mockInputs[k] = /^0[xX][0-9a-fA-F]+$/.test(v) ? parseInt(v,16)
+                           : /^-?\d+(\.\d+)?$/.test(v)      ? +v
+                           :                                   v;
+      });
+    }
+
     // ── Apply user-supplied function skip list ────────────────
     {
       const skipRaw = (document.getElementById('sim-skip-fns').value || '').trim();
@@ -1600,15 +2080,32 @@ function runSketch(src) {
     const log  = exec.run();
 
     // ── Post-run: surface undefined variables ─────────────────
-    // Filter out names already in overrides (user already set them) and parser defines
+    // Only show Group 1 variables: genuine global scalars that were undefined at run time.
+    // Filter out:
+    //   • anything already set (defines, initialised arrays, exec.vars)
+    //   • uninitialised arrays (oled_buf, debris_raw, etc.) → noInitArrays
+    //   • function parameter names (rows, src_col, etc.) → funcParams
+    //   • variables that ARE global scalars but were already assigned in exec.vars
     {
+      // Collect every function parameter name into one flat set
+      const allParams = new Set();
+      Object.values(parser.funcParams).forEach(params => params.forEach(p => allParams.add(p)));
+
       const alreadySet = new Set([
         ...Object.keys(parser.defines),
         ...Object.keys(parser.arrays),
         ...Object.keys(exec.vars),
+        ...parser.noInitArrays,
+        ...allParams,
       ]);
+
+      // Positive filter: only keep names that appear in globalScalars
+      // (If globalScalars is empty — e.g. parse produced nothing — fall back to no filter)
+      const useScalarFilter = parser.globalScalars.size > 0;
+
       const undefs = [...exec.undefinedVars]
         .filter(v => !alreadySet.has(v))
+        .filter(v => !useScalarFilter || parser.globalScalars.has(v))
         .sort();
       // Store on window for the "Suggest" button to read
       window._simLastUndefs = undefs;
@@ -1732,7 +2229,7 @@ document.getElementById('btn-overrides-suggest').addEventListener('click', () =>
     return;
   }
   const prefix = ta.value.trim() ? ta.value.trimEnd() + '\n' : '';
-  ta.value = prefix + toAdd.map(v => `${v} = 0`).join('\n');
+  ta.value = prefix + toAdd.map(v => `${v} = ${Math.floor(Math.random()*7)+1}`).join('\n');
   document.getElementById('sim-overrides-hint').textContent =
     `Added ${toAdd.length} variable${toAdd.length>1?'s':''} — set values then re-run.`;
   document.getElementById('sim-overrides-wrap').open = true;
@@ -1741,6 +2238,11 @@ document.getElementById('btn-overrides-suggest').addEventListener('click', () =>
 document.getElementById('btn-overrides-clear').addEventListener('click', () => {
   document.getElementById('sim-var-overrides').value = '';
   document.getElementById('sim-overrides-hint').textContent = '';
+});
+
+// ── Mock sensor panel button ──────────────────────────────────
+document.getElementById('btn-mock-clear').addEventListener('click', () => {
+  document.getElementById('sim-mock-inputs').value = '';
 });
 
 // ── Example sketch: SH1106 bare-metal test patterns ─────────
