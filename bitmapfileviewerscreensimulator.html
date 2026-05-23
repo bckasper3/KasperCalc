@@ -115,15 +115,17 @@
       /* ── Sketch Simulator ───────────────────────────────────────────────── */
       #sim-code-in {
         width: 100%;
-        height: 120px;
+        min-height: 120px;
         font-family: monospace;
         font-size: 11px;
-        resize: vertical;
+        resize: none;
+        overflow: hidden;
         padding: 6px;
         border: 2px solid var(--calc-outline-color);
         border-radius: var(--border-radius-small);
         background: #fff;
         color: var(--p-color);
+        box-sizing: border-box;
       }
       #sim-log {
         display: none;
@@ -145,7 +147,7 @@
         overflow: auto;
         border: 2px solid var(--calc-outline-color);
         border-radius: var(--border-radius-small);
-        background: #111;
+        background: #c5c5c5;
         max-height: 520px;
         min-height: 60px;
         box-shadow: 0 3px 5px 0 rgba(0,0,0,.4);
@@ -161,6 +163,16 @@
         font-size: 12px;
         font-family: var(--body-font-family);
         color: var(--section-title-color);
+      }
+      /* Variable overrides panel */
+      #sim-overrides-wrap[open] #sim-overrides-arrow { transform: rotate(90deg); }
+      #sim-overrides-wrap summary::-webkit-details-marker { display:none; }
+
+      /* View-transform button active state */
+      .view-btn-on {
+        background: var(--section-title-color) !important;
+        color: #fff !important;
+        border-color: var(--section-title-color) !important;
       }
     </style>
   </head>
@@ -354,7 +366,7 @@
             <div id="bmp-app">
 
               <!-- SIMULATOR TOOLBAR -->
-              <div class="bmp-toolbar">
+              <div class="bmp-toolbar" id="sim-main-toolbar">
                 <label>Fallback display:</label>
                 <select id="preset-size">
                   <option value="128,64">128&times;64 (OLED)</option>
@@ -375,6 +387,49 @@
                     <option value="8">8&times;</option>
                   </select>
                 </div>
+                <div class="bmp-sep"></div>
+                <label title="How raw framebuffer bytes are packed into pixels. Affects buf[page][col] writes and bare-metal bitmap calls. Library-specific calls (Adafruit drawBitmap, u8g2 drawXBMP) always use their own fixed format.">Driver format:</label>
+                <select id="sim-driver-fmt" title="How raw framebuffer bytes are packed into pixels. Affects buf[page][col] writes and bare-metal bitmap calls.">
+                  <option value="auto">Auto-detect</option>
+                  <option value="vlsb">Vert. LSB &mdash; SSD1306 / SH1106</option>
+                  <option value="vmsb">Vert. MSB</option>
+                  <option value="hlsb">Horiz. LSB &mdash; ZBM / XBM</option>
+                  <option value="hmsb">Horiz. MSB &mdash; Adafruit GFX</option>
+                </select>
+              </div>
+
+              <!-- SIM OUTPUT CANVAS -->
+              <div id="sim-canvas-wrap">
+                <canvas id="sim-canvas"></canvas>
+              </div>
+
+              <!-- VIEW TRANSFORMS -->
+              <div id="sim-view-toolbar" style="display:none;">
+                <div class="bmp-toolbar" style="margin-top:4px; border-radius:var(--border-radius-small);">
+                  <button id="btn-view-flip"     title="Mirror both axes (180°)">&#8661; Flip</button>
+                  <button id="btn-view-rotate"   title="+90° clockwise each click">&#8635; Rotate: 0°</button>
+                  <div class="bmp-sep"></div>
+                  <button id="btn-view-invert-x" title="Mirror left ↔ right">&#8596; Invert X</button>
+                  <button id="btn-view-invert-y" title="Mirror top ↔ bottom">&#8597; Invert Y</button>
+                </div>
+              </div>
+
+              <!-- ANIMATION PLAYER -->
+              <div id="sim-player" style="display:none;">
+                <div class="bmp-toolbar" style="margin-top:4px;">
+                  <button id="btn-play-pause">&#9654; Play</button>
+                  <button id="btn-anim-loop" title="Toggle loop">&#8635; Loop: On</button>
+                  <div class="bmp-sep"></div>
+                  <label>Speed:</label>
+                  <select id="anim-speed">
+                    <option value="1000">Slow</option>
+                    <option value="400" selected>Medium</option>
+                    <option value="120">Fast</option>
+                    <option value="50">Very Fast</option>
+                  </select>
+                  <div class="bmp-sep"></div>
+                  <span id="sim-frame-counter" style="font-size:12px; font-family:var(--body-font-family); color:var(--section-title-color); min-width:90px; display:inline-block;">Frame 1 / 1</span>
+                </div>
               </div>
 
               <!-- SKETCH INPUT -->
@@ -383,16 +438,41 @@
                 <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-bottom:6px;">
                   <input type="file" id="sim-file-input" accept=".ino,.c,.cpp,.h,.txt" style="font-size:13px; font-family:var(--body-font-family);">
                   <button id="btn-run-sketch" class="bmp-toolbar" style="padding:4px 12px; cursor:pointer; border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small); background:#fff; color:var(--p-color); font-size:13px; font-family:var(--body-font-family);">&#9654; Run Sketch</button>
+                  <button id="btn-load-example" class="bmp-toolbar" title="Load SH1106 bare-metal test patterns example" style="padding:4px 10px; cursor:pointer; border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small); background:#fff; color:var(--p-color); font-size:13px; font-family:var(--body-font-family);">&#128196; Example</button>
                   <button id="btn-clear-sim" class="bmp-toolbar" style="padding:4px 10px; cursor:pointer; border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small); background:#fff; color:var(--p-color); font-size:13px; font-family:var(--body-font-family);">&#215; Clear</button>
                   <span id="sim-status"></span>
                 </div>
+                <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-bottom:6px;">
+                  <label style="font-size:12px; color:var(--section-title-color); font-family:var(--body-font-family); white-space:nowrap;" title="Comma-separated user function names to treat as no-ops. Use this to bypass post-processing functions that depend on sensor/runtime data (e.g. logo_clear_white_side_fields, logo_make_r_letters_match).">&#x26D4; Skip functions:</label>
+                  <input type="text" id="sim-skip-fns" placeholder="e.g. logo_clear_white_side_fields, logo_make_r_letters_match" title="Comma-separated user function names to skip (treat as no-ops). Useful for functions that depend on sensor/runtime values not available in the simulator." style="flex:1; min-width:200px; font-size:12px; font-family:monospace; padding:3px 6px; border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small); background:#fff; color:var(--p-color);">
+                </div>
+
+                <!-- VARIABLE OVERRIDES ──────────────────────────────────── -->
+                <details id="sim-overrides-wrap" style="margin-bottom:6px;">
+                  <summary style="cursor:pointer; font-size:12px; color:var(--section-title-color); font-family:var(--body-font-family); user-select:none; padding:2px 0; list-style:none; display:flex; align-items:center; gap:6px;">
+                    <span id="sim-overrides-arrow" style="display:inline-block; transition:transform .2s;">&#9654;</span>
+                    <span>Variable overrides</span>
+                    <span id="sim-overrides-badge" style="display:none; font-size:11px; background:var(--section-title-color); color:#fff; border-radius:8px; padding:1px 7px; font-family:var(--body-font-family);"></span>
+                    <span style="font-size:11px; opacity:.55; font-family:var(--body-font-family);">— set runtime values the simulator cannot compute</span>
+                  </summary>
+                  <div style="margin-top:5px; padding:8px 10px; background:var(--calc-result-color); border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small);">
+                    <div style="font-size:11px; color:var(--section-title-color); font-family:var(--body-font-family); margin-bottom:5px;">
+                      One <code style="background:none;">NAME = value</code> per line &mdash; injects the value into the simulator before the sketch runs.
+                      Use this for sensor outputs, scale factors, or any variable your sketch computes at runtime from hardware.
+                    </div>
+                    <textarea id="sim-var-overrides" rows="4"
+                      placeholder="LOGO_SCALED_W = 128&#10;LOGO_SCALED_X_OFFSET = 0&#10;mt_x10 = 220&#10;temp_f = 720"
+                      style="width:100%; font-family:monospace; font-size:11px; padding:5px; border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small); background:#fff; color:var(--p-color); resize:vertical; box-sizing:border-box;"></textarea>
+                    <div style="display:flex; gap:6px; margin-top:5px; align-items:center; flex-wrap:wrap;">
+                      <button id="btn-overrides-suggest" style="font-size:12px; padding:3px 10px; cursor:pointer; border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small); background:#fff; color:var(--p-color); font-family:var(--body-font-family);">&#10010; Suggest from last run</button>
+                      <button id="btn-overrides-clear" style="font-size:12px; padding:3px 10px; cursor:pointer; border:1px solid var(--calc-outline-color); border-radius:var(--border-radius-small); background:#fff; color:var(--p-color); font-family:var(--body-font-family);">&#215; Clear</button>
+                      <span id="sim-overrides-hint" style="font-size:11px; font-family:var(--body-font-family); color:var(--section-title-color); opacity:.7;"></span>
+                    </div>
+                  </div>
+                </details>
+
                 <textarea id="sim-code-in" placeholder="Paste a full Arduino .ino sketch or bare-metal C file here, or use the file picker above.&#10;&#10;Supported: Adafruit SSD1306/SH1106, u8g2, direct I2C page mode, bare-metal AVR C.&#10;If the library is not detected automatically, the Fallback display size from the toolbar is used.&#10;Phase 1 renders geometry and bitmaps. Text/font calls are silently skipped (Phase 2)."></textarea>
                 <div id="sim-log"></div>
-              </div>
-
-              <!-- SIM OUTPUT CANVAS -->
-              <div id="sim-canvas-wrap">
-                <canvas id="sim-canvas"></canvas>
               </div>
 
             </div><!-- /#bmp-app -->
@@ -508,7 +588,89 @@ let lastSim = null;
 
 document.getElementById('zoom-sel').addEventListener('change', e => {
   simZoom = +e.target.value;
-  if (lastSim) lastSim.render(document.getElementById('sim-canvas'), simZoom);
+  if (lastSim) {
+    lastSim.fb = animFrames.length ? animFrames[animIdx] : lastSim.fb;
+    lastSim.render(document.getElementById('sim-canvas'), simZoom);
+  }
+});
+
+// ── Animation player ─────────────────────────────────────────
+let animTimer    = null;
+let animFrames   = [];
+let animIdx      = 0;
+let animLooping  = true;
+let animInterval = 400; // ms — synced with #anim-speed default
+
+const simPlayer      = document.getElementById('sim-player');
+const btnPlayPause   = document.getElementById('btn-play-pause');
+const btnAnimLoop    = document.getElementById('btn-anim-loop');
+const animSpeedSel   = document.getElementById('anim-speed');
+const simFrameCounter= document.getElementById('sim-frame-counter');
+
+function animRender() {
+  if (!animFrames.length || !lastSim) return;
+  lastSim.fb = animFrames[animIdx];
+  lastSim.render(document.getElementById('sim-canvas'), simZoom);
+  simFrameCounter.textContent = `Frame ${animIdx + 1} / ${animFrames.length}`;
+}
+
+function animAdvance() {
+  animIdx++;
+  if (animIdx >= animFrames.length) {
+    if (animLooping) { animIdx = 0; }
+    else             { animIdx = animFrames.length - 1; animStop(); return; }
+  }
+  animRender();
+}
+
+function animPlay() {
+  if (animTimer || animFrames.length < 2) return;
+  btnPlayPause.innerHTML = '&#9646;&#9646; Pause';
+  animTimer = setInterval(animAdvance, animInterval);
+}
+
+function animStop() {
+  clearInterval(animTimer); animTimer = null;
+  btnPlayPause.innerHTML = '&#9654; Play';
+}
+
+btnPlayPause.addEventListener('click', () => {
+  if (animTimer) animStop(); else animPlay();
+});
+
+btnAnimLoop.addEventListener('click', () => {
+  animLooping = !animLooping;
+  btnAnimLoop.innerHTML  = animLooping ? '&#8635; Loop: On' : '&#8635; Loop: Off';
+  btnAnimLoop.style.opacity = animLooping ? '1' : '0.5';
+});
+
+animSpeedSel.addEventListener('change', e => {
+  animInterval = +e.target.value;
+  if (animTimer) { animStop(); animPlay(); } // restart at new speed
+});
+
+// ── Auto-expanding textarea ───────────────────────────────────
+const simCodeIn = document.getElementById('sim-code-in');
+function autoResize() {
+  const savedY = window.scrollY;
+  simCodeIn.style.height = 'auto';
+  simCodeIn.style.height = simCodeIn.scrollHeight + 'px';
+  window.scrollTo(0, savedY);
+}
+simCodeIn.addEventListener('input', autoResize);
+
+// Intercept paste so the cursor never lands at the bottom.
+// We insert the text ourselves, move the cursor to position 0,
+// then resize — all synchronously before the browser paints.
+simCodeIn.addEventListener('paste', e => {
+  e.preventDefault();
+  const text  = (e.clipboardData || window.clipboardData).getData('text');
+  const start = simCodeIn.selectionStart;
+  const end   = simCodeIn.selectionEnd;
+  simCodeIn.value = simCodeIn.value.slice(0, start) + text + simCodeIn.value.slice(end);
+  simCodeIn.setSelectionRange(0, 0);   // cursor → top, no scroll jump
+  simCodeIn.scrollTop = 0;             // textarea internal scroll → top
+  autoResize();                        // expand height, preserves window.scrollY
 });
 
 
@@ -519,16 +681,18 @@ document.getElementById('zoom-sel').addEventListener('change', e => {
 // Skips:   text/font calls (Phase 2), hardware I/O calls
 // ═══════════════════════════════════════════════════════════════
 
-// ── Brace-aware statement splitter ──────────────────────────
+// ── Brace-and-paren-aware statement splitter ────────────────
 function simSplit(body) {
-  const out = []; let depth = 0, start = 0, inStr = false, sc = '';
+  const out = []; let bdepth = 0, pdepth = 0, start = 0, inStr = false, sc = '';
   for (let i = 0; i < body.length; i++) {
     const c = body[i];
     if (inStr) { if (c === sc && body[i-1] !== '\\') inStr = false; continue; }
     if (c === '"' || c === "'") { inStr = true; sc = c; continue; }
-    if (c === '{') { depth++; }
-    else if (c === '}') { if (--depth === 0) { out.push(body.slice(start, i+1).trim()); start = i+1; } }
-    else if (c === ';' && depth === 0) { const s = body.slice(start, i).trim(); if (s) out.push(s); start = i+1; }
+    if      (c === '{') { bdepth++; }
+    else if (c === '}') { if (--bdepth === 0) { out.push(body.slice(start, i+1).trim()); start = i+1; } }
+    else if (c === '(') { pdepth++; }
+    else if (c === ')') { pdepth--; }
+    else if (c === ';' && bdepth === 0 && pdepth === 0) { const s = body.slice(start, i).trim(); if (s) out.push(s); start = i+1; }
   }
   const rem = body.slice(start).trim(); if (rem) out.push(rem);
   return out.filter(Boolean);
@@ -562,11 +726,12 @@ function simArgs(str) {
 
 // ── DisplaySim: 1-bit pixel framebuffer + drawing primitives ─
 class DisplaySim {
-  constructor(w, h) { this.w=w; this.h=h; this.fb=new Uint8Array(w*h); this.inverted=false; }
+  constructor(w, h) { this.w=w; this.h=h; this.fb=new Uint8Array(w*h); this.inverted=false; this.frames=[]; this.driverFmt='vlsb'; }
   idx(x,y) { return y*this.w+x; }
   inB(x,y) { return x>=0&&x<this.w&&y>=0&&y<this.h; }
   sp(x,y,v) { x=x|0; y=y|0; if(this.inB(x,y)) this.fb[this.idx(x,y)]=v?1:0; }
   clear() { this.fb.fill(0); }
+  snapshot() { this.frames.push(new Uint8Array(this.fb)); }
 
   // Horizontal MSB — Adafruit drawBitmap
   drawBmpMSB(x0,y0,bytes,bw,bh,col) {
@@ -584,12 +749,61 @@ class DisplaySim {
       if(bi<bytes.length&&(bytes[bi]>>(c&7))&1) this.sp(x0+c,y0+r,1);
     }
   }
-  // Vertical LSB — page mode
+  // Vertical LSB — page mode, bit 0 = top of page  (SSD1306 / SH1106)
   drawBmpVLSB(x0,y0,bytes,bw,bh) {
     const pages=Math.ceil(bh/8);
     for(let p=0;p<pages;p++) for(let col=0;col<bw;col++) {
       const bi=p*bw+col; if(bi>=bytes.length) continue;
-      for(let bit=0;bit<8;bit++) { const y=y0+p*8+bit; if(y<y0+bh&&(bytes[bi]>>bit)&1) this.sp(x0+col,y,1); }
+      for(let k=0;k<8;k++) { const y=y0+p*8+k; if(y<y0+bh&&(bytes[bi]>>k)&1) this.sp(x0+col,y,1); }
+    }
+  }
+  // Vertical MSB — page mode, bit 7 = top of page
+  drawBmpVMSB(x0,y0,bytes,bw,bh) {
+    const pages=Math.ceil(bh/8);
+    for(let p=0;p<pages;p++) for(let col=0;col<bw;col++) {
+      const bi=p*bw+col; if(bi>=bytes.length) continue;
+      for(let k=0;k<8;k++) { const y=y0+p*8+k; if(y<y0+bh&&(bytes[bi]>>(7-k))&1) this.sp(x0+col,y,1); }
+    }
+  }
+  // Dispatch to the right drawBmp* based on driverFmt
+  drawBmpFmt(x0,y0,bytes,bw,bh,col) {
+    switch(this.driverFmt){
+      case 'vmsb': this.drawBmpVMSB(x0,y0,bytes,bw,bh); break;
+      case 'hlsb': this.drawBmpLSB(x0,y0,bytes,bw,bh); break;
+      case 'hmsb': this.drawBmpMSB(x0,y0,bytes,bw,bh,col!==undefined?col:1); break;
+      default:     this.drawBmpVLSB(x0,y0,bytes,bw,bh); break; // vlsb
+    }
+  }
+  // Read one packed byte back from the pixel framebuffer using the current driver format
+  // d1/d2 are the two array indices (page/col for vertical; row/byte-col for horizontal)
+  _pagedRead(d1,d2) {
+    const fmt=this.driverFmt; let cur=0;
+    if(fmt==='vlsb'||fmt==='vmsb'){
+      // Vertical: d1=page, d2=col; k=pixel row within page (0=top)
+      for(let k=0;k<8;k++){
+        const py=d1*8+k; if(!this.inB(d2,py)) continue;
+        cur|=(this.fb[this.idx(d2,py)]<<(fmt==='vlsb'?k:7-k));
+      }
+    } else {
+      // Horizontal: d1=row, d2=byte-column; k=pixel offset within byte (0=left)
+      for(let k=0;k<8;k++){
+        const x=d2*8+k; if(!this.inB(x,d1)) continue;
+        cur|=(this.fb[this.idx(x,d1)]<<(fmt==='hlsb'?k:7-k));
+      }
+    }
+    return cur;
+  }
+  // Write one packed byte into the pixel framebuffer using the current driver format
+  pagedWrite(d1,d2,op,val) {
+    val=val&0xFF;
+    const nv = op==='=' ? val
+             : op==='|=' ? (this._pagedRead(d1,d2)|val)&0xFF
+             :              (this._pagedRead(d1,d2)&val)&0xFF;
+    const fmt=this.driverFmt;
+    if(fmt==='vlsb'||fmt==='vmsb'){
+      for(let k=0;k<8;k++) this.sp(d2, d1*8+k, (nv>>(fmt==='vlsb'?k:7-k))&1);
+    } else {
+      for(let k=0;k<8;k++) this.sp(d2*8+k, d1, (nv>>(fmt==='hlsb'?k:7-k))&1);
     }
   }
 
@@ -653,7 +867,7 @@ class DisplaySim {
 // ── SketchParser ─────────────────────────────────────────────
 class SketchParser {
   constructor(src) {
-    this.src = src; this.defines={}; this.arrays={}; this.funcs={};
+    this.src = src; this.defines={}; this.arrays={}; this.arrayDims={}; this.funcs={}; this.funcParams={};
     this.library='unknown'; this.displayW=128; this.displayH=64; this.log=[];
   }
   parse() {
@@ -672,11 +886,36 @@ class SketchParser {
     while((m=re.exec(s))!==null) { const raw=m[2].trim(); const n=this._num(raw); this.defines[m[1]]=n!==null?n:raw; }
   }
   _arrays(s) {
-    const re=/(?:static\s+)?(?:const\s+)?(?:uint8_t|unsigned\s+char|uint16_t)\s+(?:PROGMEM\s+)?(\w+)\s*\[[^\]]*\]\s*(?:PROGMEM\s*)?=\s*\{([^}]*)\}/g;
+    // Pass 1 — 1D arrays: simple flat content, no nested braces
+    const re1D=/(?:static\s+)?(?:const\s+)?(?:uint8_t|unsigned\s+char|uint16_t)\s+(?:PROGMEM\s+)?(\w+)\s*\[[^\]]*\]\s*(?:PROGMEM\s*)?=\s*\{([^}]*)\}/g;
     let m;
-    while((m=re.exec(s))!==null) {
+    while((m=re1D.exec(s))!==null) {
       const nums=m[2].match(/0[xX][0-9a-fA-F]+|\b\d+\b/g);
       if(nums) this.arrays[m[1]]=new Uint8Array(nums.map(n=>parseInt(n)&0xFF));
+    }
+    // Pass 2 — multi-dimensional arrays (2+ dimensions, nested braces in content)
+    // Match: [type] [PROGMEM] name[N][M][K]... =  (requires ≥2 dimension specs)
+    const re2D=/(?:static\s+)?(?:const\s+)?(?:uint8_t|unsigned\s+char|uint16_t)\s+(?:PROGMEM\s+)?(\w+)((?:\s*\[\d+\]){2,})\s*(?:PROGMEM\s*)?=/g;
+    while((m=re2D.exec(s))!==null) {
+      const name=m[1];
+      // Extract each dimension size: "[17][2][10]" → [17,2,10]
+      const dims=[]; const dimRe=/\[(\d+)\]/g; let dm;
+      while((dm=dimRe.exec(m[2]))!==null) dims.push(parseInt(dm[1]));
+      // Find opening brace for the initialiser
+      const openB=s.indexOf('{', m.index+m[0].length); if(openB<0) continue;
+      // Balanced-brace scan to find the matching closing brace
+      let depth=0, closeB=-1;
+      for(let i=openB;i<s.length;i++){
+        if(s[i]==='{')depth++;
+        else if(s[i]==='}'){if(--depth===0){closeB=i;break;}}
+      }
+      if(closeB<0) continue;
+      // Flatten: extract every hex/decimal number in order (row-major)
+      const content=s.slice(openB+1,closeB);
+      const nums=content.match(/0[xX][0-9a-fA-F]+|\b\d+\b/g);
+      if(!nums) continue;
+      this.arrays[name]=new Uint8Array(nums.map(n=>parseInt(n)&0xFF));
+      this.arrayDims[name]=dims;
     }
   }
   _detect(s) {
@@ -702,21 +941,76 @@ class SketchParser {
     if(d.SH1106_HEIGHT) this.displayH=+d.SH1106_HEIGHT;
   }
   _funcs(s) {
-    const re=/(?:static\s+)?(?:void|int|bool|uint8_t|int8_t|uint16_t)\s+(\w+)\s*\([^)]*\)\s*\{/g;
+    const re=/(?:static\s+)?(?:void|int|bool|uint8_t|int8_t|int16_t|uint16_t|uint32_t|float|double)\s+(\w+)\s*\(([^)]*)\)\s*\{/g;
     let m;
     while((m=re.exec(s))!==null) {
       const name=m[1]; const bs=m.index+m[0].length-1;
       const be=simClose(s,bs,'{','}');
-      if(be>0) this.funcs[name]=s.slice(bs+1,be);
+      if(be>0) {
+        this.funcs[name]=s.slice(bs+1,be);
+        // Extract ordered parameter names for argument passing
+        const paramStr=m[2].trim();
+        this.funcParams[name] = paramStr ? paramStr.split(',').map(p=>{
+          const parts=p.trim().split(/\s+/);
+          return parts[parts.length-1].replace(/[*[\]]/g,'').trim();
+        }).filter(Boolean) : [];
+      }
     }
   }
 }
+
+// ── printf-style formatter used by sprintf/snprintf cases ────
+function simSprintf(fmt, args) {
+  fmt = String(fmt||'');
+  let result='', ai=0, i=0;
+  while(i<fmt.length){
+    if(fmt[i]!=='%'){result+=fmt[i++];continue;}
+    i++;
+    if(i>=fmt.length) break;
+    // Flags (skip)
+    while(i<fmt.length&&'-+ #0'.includes(fmt[i])) i++;
+    // Width (skip)
+    while(i<fmt.length&&fmt[i]>='0'&&fmt[i]<='9') i++;
+    // Precision
+    let prec=-1;
+    if(fmt[i]==='.'){
+      i++; prec=0;
+      while(i<fmt.length&&fmt[i]>='0'&&fmt[i]<='9'){prec=prec*10+parseInt(fmt[i]);i++;}
+    }
+    // Length modifier (skip)
+    while(i<fmt.length&&'hlLzjt'.includes(fmt[i])) i++;
+    const spec=fmt[i++];
+    const v=args[ai++];
+    switch(spec){
+      case 'd':case 'i': result+=String(Math.trunc(+(v||0))); break;
+      case 'u':          result+=String((+(v||0))>>>0); break;
+      case 'f':          result+=prec>=0?(+(v||0)).toFixed(prec):(+(v||0)).toFixed(2); break;
+      case 'e':          result+=prec>=0?(+(v||0)).toExponential(prec):(+(v||0)).toExponential(2); break;
+      case 'g':          result+=String(+(v||0)); break;
+      case 's':          result+=String(v||''); break;
+      case 'c':          result+=typeof v==='number'?String.fromCharCode(v&0xFF):String(v||''); break;
+      case '%':          result+='%'; ai--; break;
+      default:           result+='%'+spec; break;
+    }
+  }
+  return result;
+}
+
+// Identifiers that are NOT user variables — suppress from "undefined var" suggestions
+// Covers: C types, AVR/megaAVR hardware registers, bit-masks, gc-values, Arduino API symbols
+const SIM_KNOWN_IDENTS = new Set([
+  'uint8_t','uint16_t','uint32_t','uint64_t','int8_t','int16_t','int32_t','int64_t',
+  'unsigned','signed','char','int','long','short','float','double','bool','void','size_t',
+  'NULL','nullptr','true','false','sizeof',
+]);
+// Prefix pattern for AVR hardware registers / generated identifiers
+const SIM_NOISE_RE = /^(TWI|PORT|PIN|MCLK|OSC|AC0|AC1|ZCD|BOD|RTC|TCA|TCB|USART|EVSYS|CCL|NVMCTRL|RSTCTRL|SLPCTRL|VREF|FUSE|SIGROW|USERROW|SYSCFG|CPUINT|CLKCTRL|CLKSEL|PORTA|PORTB|PORTC|PORTD|PORTE|PORTF|ADC|SPI|EEPROM|WDT|SREG|MCUSR|PMIC|DIDR|TIMSK|TCCR|TCNT|OCR|DDR|TWI_|TWI0|TWI1|PORT_|PIN_|ADC_|SPI_|WDT_|EEPROM_|GPIOR|PCICR|PCMSK|PCIFR|EICRA|EICRB|EIMSK|EIFR)/;
 
 // ── SketchExecutor ───────────────────────────────────────────
 class SketchExecutor {
   constructor(parser, sim) {
     this.p=parser; this.sim=sim; this.log=[];
-    this.calls=0; this.MAX=3000;
+    this.calls=0; this.MAX=200000; this.MAX_FRAMES=30;
     this.vars=Object.assign({},parser.defines,{
       WHITE:1,BLACK:0,INVERSE:2,SSD1306_WHITE:1,SSD1306_BLACK:0,
       SCREEN_WIDTH:sim.w,SCREEN_HEIGHT:sim.h,SCREEN_W:sim.w,SCREEN_H:sim.h,
@@ -724,6 +1018,54 @@ class SketchExecutor {
       BMP_W:parser.defines.BMP_W||sim.w,
       BMP_H:parser.defines.BMP_H||sim.h,
     });
+    // Return-value tracking for user-defined functions
+    this.retVal       = 0;
+    this.returning    = false;
+    this.breaking     = false;  // set by 'break' inside loops
+    this.undefinedVars = new Set(); // identifiers resolved to 0 because not found in vars
+    // Hardware / comms functions to skip (never execute their bodies).
+    // Functions with hardware-polling loops must stay here or they hang.
+    // User-defined functions NOT in this set are executed normally.
+    this.SKIP = new Set([
+      'delay','delayMicroseconds','millis','micros','yield','Wire','SPI',
+      'Serial','oledCmd','oledCmd2','sh1106_cmd','sh1106_cmd2',
+      'twi_start','twi_stop','twi_write_byte','twi_read_reg',
+      'sh1106_set_page_col','sh1106_set_page_col_raw','oledInit','delay_ms',
+      'pinMode','digitalWrite','digitalRead','analogRead','analogWrite',
+      'beginTransmission','endTransmission','write','read','available','setClock',
+      'begin_begin','pgm_read_byte','pgm_read_word',
+      'strlen_user',
+      'F','begin',
+    ]);
+  }
+
+  // Execute a user-defined function body and return its return value.
+  // Saves/restores the caller's returning state so nested calls work correctly.
+  _callUser(fn, args=[]) {
+    if (!this.p.funcs[fn] || fn==='setup' || fn==='loop') return 0;
+    // Bind call arguments to parameter names; save/restore callers' values
+    const params = (this.p.funcParams && this.p.funcParams[fn]) || [];
+    const saved = {};
+    params.forEach((p, i) => {
+      if (!p) return;
+      saved[p] = this.vars.hasOwnProperty(p) ? this.vars[p] : undefined;
+      this.vars[p] = args[i] !== undefined ? args[i] : 0;
+    });
+    const wasReturning = this.returning;
+    const prevRetVal   = this.retVal;
+    this.returning     = false;
+    this.retVal        = 0;
+    this._body(this.p.funcs[fn]);
+    const result       = this.retVal;
+    this.returning     = wasReturning;
+    this.retVal        = prevRetVal;
+    // Restore caller's variable values
+    params.forEach(p => {
+      if (!p) return;
+      if (saved[p] === undefined) delete this.vars[p];
+      else this.vars[p] = saved[p];
+    });
+    return result;
   }
 
   run() {
@@ -735,10 +1077,12 @@ class SketchExecutor {
       this.log.push(`Library: ${p.library} (bare-metal)  Display: ${p.displayW}×${p.displayH}`);
       this._body(p.funcs.main);
     }
+    // Run loop() repeatedly to build animation frames (while(1) bodies handled by _while)
     if(p.funcs.loop) {
-      const inf=/while\s*\(\s*(?:1|true)\s*\)/.test(p.funcs.loop);
-      if(!inf) this._body(p.funcs.loop);
-      else { const wp=p.funcs.loop.search(/while\s*\(\s*(?:1|true)\s*\)/); if(wp>0) this._body(p.funcs.loop.slice(0,wp)); }
+      for(let i=0; i<this.MAX_FRAMES && this.calls<this.MAX; i++) {
+        this._body(p.funcs.loop);
+        if(this.sim.frames.length>=this.MAX_FRAMES) break;
+      }
     }
     return this.log;
   }
@@ -747,6 +1091,7 @@ class SketchExecutor {
 
   _stmts(stmts) {
     for(const s of stmts) {
+      if(this.returning||this.breaking) break;  // unwind from return or break
       if(this.calls++>this.MAX){this.log.push('⚠ Call limit reached');break;}
       if(!s) continue;
       this._one(s);
@@ -754,13 +1099,47 @@ class SketchExecutor {
   }
 
   _one(s) {
-    if(/^if\s*\(/.test(s))    { this._if(s);    return; }
-    if(/^for\s*\(/.test(s))   { this._for(s);   return; }
-    if(/^while\s*\(/.test(s)) { this._while(s); return; }
+    if(/^if\s*\(/.test(s))     { this._if(s);     return; }
+    if(/^for\s*\(/.test(s))    { this._for(s);    return; }
+    if(/^while\s*\(/.test(s))  { this._while(s);  return; }
+    if(/^switch\s*\(/.test(s)) { this._switch(s); return; }
+
+    // break — signals switch/loop exit (sets flag; _switch and _while check it)
+    if(s==='break'||s==='break;'){ this.breaking=true; return; }
+    // continue — skip rest of loop body (treat as no-op at stmt level)
+    if(s==='continue'||s==='continue;') return;
+
+    // return statement — capture value and unwind
+    if(/^return(\s|;|$)/.test(s)){
+      const expr=s.slice(6).trim().replace(/;$/,'');
+      this.retVal=expr?this._e(expr):0;
+      this.returning=true;
+      return;
+    }
 
     // Variable declaration: [type] name = expr
     const decl=s.match(/^(?:(?:static|const|volatile)\s+)*(?:int|uint8_t|uint16_t|uint32_t|int8_t|int16_t|float|double|bool|char|size_t)\s+(\w+)\s*(?:=\s*(.+))?$/);
     if(decl){ this.vars[decl[1]]=decl[2]?this._e(decl[2]):0; return; }
+
+    // 2D array assignment/compound: buf[d1][d2] = | |= | &= byte
+    // Decoding is driver-format-aware — vertical page (SSD1306) or horizontal row (Adafruit/XBM)
+    const twoD=s.match(/^(\w+)\s*\[([^\]]+)\]\s*\[([^\]]+)\]\s*([|&]?=)\s*(.+)$/);
+    if(twoD){
+      const d1=this._e(twoD[2])|0, d2=this._e(twoD[3])|0;
+      const op=twoD[4], val=this._e(twoD[5])&0xFF;
+      this.sim.pagedWrite(d1, d2, op, val);
+      return;
+    }
+
+    // Compound bitwise assignment: name &= expr, name |= expr, name ^= expr
+    const bwasgn=s.match(/^(\w+)\s*([&|^]=)\s*(.+)$/);
+    if(bwasgn){
+      const n=bwasgn[1],op=bwasgn[2],v=this._e(bwasgn[3]);
+      if(op==='&=')this.vars[n]=((this.vars[n]|0)&v);
+      else if(op==='|=')this.vars[n]=((this.vars[n]|0)|v);
+      else this.vars[n]=((this.vars[n]|0)^v);
+      return;
+    }
 
     // Assignment without call
     if(!s.includes('(')) {
@@ -795,32 +1174,116 @@ class SketchExecutor {
     const hdr=s.slice(po+1,pc);
     const s1=hdr.indexOf(';'), s2=hdr.indexOf(';',s1+1);
     if(s1<0||s2<0) return;
-    const bo=s.indexOf('{',pc); if(bo<0) return;
-    const bc=simClose(s,bo,'{','}'); if(bc<0) return;
-    const body=s.slice(bo+1,bc);
+    let body;
+    const bo=s.indexOf('{',pc);
+    if(bo>=0) {
+      const bc=simClose(s,bo,'{','}'); if(bc<0) return;
+      body=s.slice(bo+1,bc);
+    } else {
+      // Brace-free single-statement body: for(...) stmt;
+      body=s.slice(pc+1).trim();
+      if(!body) return;
+    }
     this._one(hdr.slice(0,s1).trim());
     let n=0;
-    while(n++<1024&&this.calls<this.MAX){
+    while(n++<65536&&this.calls<this.MAX&&!this.returning&&!this.breaking){
       if(!this._cond(hdr.slice(s1+1,s2).trim())) break;
       this._body(body);
-      this._one(hdr.slice(s2+1).trim());
+      if(this.breaking){this.breaking=false;break;} // break inside for-body exits for
+      if(!this.returning) this._one(hdr.slice(s2+1).trim());
     }
   }
 
   _while(s) {
-    if(/while\s*\(\s*(?:1|true)\s*\)/.test(s)) return;
     const po=s.indexOf('('); if(po<0) return;
     const pc=simClose(s,po); if(pc<0) return;
-    const cond=s.slice(po+1,pc);
     const bo=s.indexOf('{',pc); if(bo<0) return;
     const bc=simClose(s,bo,'{','}'); if(bc<0) return;
     const body=s.slice(bo+1,bc);
+    if(/while\s*\(\s*(?:1|true)\s*\)/.test(s)) {
+      // Infinite loop — run body to capture animation frames
+      let n=0;
+      while(n++<this.MAX_FRAMES && this.calls<this.MAX && !this.returning && !this.breaking) {
+        this._body(body);
+        if(this.breaking){this.breaking=false;break;}
+        if(this.sim.frames.length>=this.MAX_FRAMES) break;
+      }
+      this.returning=false;   // returning out of while(1) just exits the loop
+      return;
+    }
+    const cond=s.slice(po+1,pc);
     let n=0;
-    while(n++<64&&this.calls<this.MAX){ if(!this._cond(cond)) break; this._body(body); }
+    while(n++<64&&this.calls<this.MAX&&!this.returning&&!this.breaking){
+      if(!this._cond(cond)) break;
+      this._body(body);
+      if(this.breaking){this.breaking=false;break;}
+    }
+  }
+
+  _switch(s) {
+    const po=s.indexOf('('); if(po<0) return;
+    const pc=simClose(s,po); if(pc<0) return;
+    const val=this._e(s.slice(po+1,pc));
+    const bo=s.indexOf('{',pc); if(bo<0) return;
+    const bc=simClose(s,bo,'{','}'); if(bc<0) return;
+    const body=s.slice(bo+1,bc);
+
+    // Collect case/default label positions at top-level depth only
+    const markers=[];
+    let depth=0, i=0;
+    while(i<body.length){
+      const ch=body[i];
+      if(ch==='{'){depth++;i++;continue;}
+      if(ch==='}'){depth--;i++;continue;}
+      if(depth>0){i++;continue;}
+      // Skip string literals to avoid false matches inside strings
+      if(ch==='"'||ch==="'"){
+        const q=ch; i++;
+        while(i<body.length&&!(body[i]===q&&body[i-1]!=='\\')){i++;}
+        i++; continue;
+      }
+      const caseM=body.slice(i).match(/^case\s+((?:'[^']*'|-?\d+|\w+))\s*:/);
+      if(caseM){markers.push({end:i+caseM[0].length,isDefault:false,rawVal:caseM[1]});i+=caseM[0].length;continue;}
+      const defM=body.slice(i).match(/^default\s*:/);
+      if(defM){markers.push({end:i+defM[0].length,isDefault:true,rawVal:null});i+=defM[0].length;continue;}
+      i++;
+    }
+    if(!markers.length) return;
+
+    // Find matching marker; handle char-literal ('A') vs int (65) comparison
+    let matchIdx=-1, defaultIdx=-1;
+    for(let mi=0;mi<markers.length;mi++){
+      if(markers[mi].isDefault){defaultIdx=mi;continue;}
+      const cv=this._e(markers[mi].rawVal);
+      const hit = cv===val
+        || (typeof cv==='string'&&cv.length===1&&cv.charCodeAt(0)===val)
+        || (typeof val==='string'&&val.length===1&&val.charCodeAt(0)===cv);
+      if(hit){matchIdx=mi;break;}
+    }
+    if(matchIdx<0) matchIdx=defaultIdx;
+    if(matchIdx<0) return;
+
+    // Execute case body; strip fall-through labels; stop on break or return
+    const execText=body.slice(markers[matchIdx].end);
+    const stmts=simSplit(execText);
+    const prevBreaking=this.breaking; this.breaking=false;
+    for(const stmt of stmts){
+      if(this.returning||this.breaking) break;
+      if(this.calls++>this.MAX){this.log.push('⚠ Call limit');break;}
+      // Strip leading case/default label (fall-through scenario)
+      let t=stmt.trim()
+        .replace(/^case\s+(?:'[^']*'|-?\d+|\w+)\s*:\s*/,'')
+        .replace(/^default\s*:\s*/,'').trim();
+      if(!t||t==='break'||t==='break;'){this.breaking=true;break;}
+      this._one(t);
+    }
+    this.breaking=prevBreaking; // restore so outer loop isn't poisoned
   }
 
   _cond(c) {
     c=c.trim();
+    // Strip outer parens before anything else: (expr) → expr
+    if(c[0]==='('&&simClose(c,0)===c.length-1) return this._cond(c.slice(1,-1));
     if(c.includes('&&')) return c.split('&&').every(p=>this._cond(p.trim()));
     if(c.includes('||')) return c.split('||').some(p=>this._cond(p.trim()));
     for(const op of ['<=','>=','!=','==','<','>']){
@@ -835,11 +1298,48 @@ class SketchExecutor {
   _e(expr) {
     expr=(expr||'').trim();
     if(!expr||expr==='NULL'||expr==='nullptr') return 0;
+    if(expr==='true') return 1;
+    if(expr==='false') return 0;
     if(/^"[^"]*"$/.test(expr)||/^'[^']*'$/.test(expr)) return expr.slice(1,-1);
     if(/^0[xX][0-9a-fA-F]+$/.test(expr)) return parseInt(expr,16);
     if(/^-?\d+[uUlL]*$/.test(expr)) return parseInt(expr);
     if(/^-?\d+\.\d+f?$/.test(expr)) return parseFloat(expr);
     if(this.vars.hasOwnProperty(expr)) return this.vars[expr];
+    // Array element read: arrName[i], arrName[i][j], arrName[i][j][k] …
+    // Supports 1-D through N-D; uses stored arrayDims[] for stride computation.
+    if(expr.includes('[') && !/^\s*\[/.test(expr)){
+      const bo=expr.indexOf('[');
+      if(bo>0){
+        const arrName=expr.slice(0,bo).trim();
+        if(/^\w+$/.test(arrName)&&this.p.arrays&&this.p.arrays[arrName]){
+          // Collect ALL consecutive subscript expressions: [a][b][c]
+          const subs=[]; let pos=bo;
+          while(pos<expr.length&&expr[pos]==='['){
+            const bc=simClose(expr,pos,'[',']'); if(bc<0) break;
+            subs.push(expr.slice(pos+1,bc));
+            pos=bc+1;
+          }
+          // Only treat as a pure array read if nothing trails the subscripts
+          if(pos>=expr.length||expr.slice(pos).trim()===''){
+            const arr=this.p.arrays[arrName];
+            const dims=this.p.arrayDims&&this.p.arrayDims[arrName];
+            const indices=subs.map(e=>this._e(e)|0);
+            let flatIdx=0;
+            if(dims&&dims.length===indices.length){
+              // Row-major stride computation: stride[last]=1, stride[d]=stride[d+1]*dims[d+1]
+              let stride=1;
+              const strides=new Array(dims.length);
+              for(let d=dims.length-1;d>=0;d--){strides[d]=stride;stride*=dims[d];}
+              for(let d=0;d<indices.length;d++) flatIdx+=indices[d]*strides[d];
+            } else {
+              // 1-D or dims unknown: use first index directly
+              flatIdx=indices[0]||0;
+            }
+            return (flatIdx>=0&&flatIdx<arr.length)?arr[flatIdx]:0;
+          }
+        }
+      }
+    }
     // Cast: (type)expr
     const cast=expr.match(/^\(\s*[\w\s\*]+\s*\)\s*(.+)$/);
     if(cast) return this._e(cast[1]);
@@ -847,10 +1347,57 @@ class SketchExecutor {
     if(expr[0]==='('&&simClose(expr,0)===expr.length-1) return this._e(expr.slice(1,-1));
     // strlen("...")
     const sl=expr.match(/^strlen\s*\(\s*"([^"]*)"\s*\)$/); if(sl) return sl[1].length;
+    // Ternary operator: cond ? a : b  (paren-depth-aware scan)
+    { let pd=0;
+      for(let i=0;i<expr.length;i++){
+        const ch=expr[i];
+        if(ch==='(')pd++;else if(ch===')')pd--;
+        else if(ch==='?'&&pd===0){
+          let cd=0;
+          for(let j=i+1;j<expr.length;j++){
+            const cj=expr[j];
+            if(cj==='(')cd++;else if(cj===')')cd--;
+            else if(cj===':'&&cd===0){
+              return this._cond(expr.slice(0,i).trim())
+                ? this._e(expr.slice(i+1,j).trim())
+                : this._e(expr.slice(j+1).trim());
+            }
+          }
+        }
+      }
+    }
+    // User function call in expression context: fn(args)
+    // User functions not in SKIP are executed and their return value used.
+    // SKIP functions (hardware I/O) are assumed to succeed and return 1.
+    if(expr.includes('(') && !/^[(]/.test(expr)){
+      const _po=expr.indexOf('(');
+      const _pc=simClose(expr,_po);
+      if(_pc===expr.length-1){
+        const _fn=expr.slice(0,_po).trim();
+        if(/^\w+$/.test(_fn)){
+          if(this.p.funcs[_fn]&&_fn!=='setup'&&_fn!=='loop'&&!this.SKIP.has(_fn)){
+            const _argStr=expr.slice(_po+1,_pc).trim();
+            const _a=(_argStr?simArgs(_argStr):[]).map(r=>this._e(r));
+            return this._callUser(_fn,_a);
+          }
+          if(this.SKIP.has(_fn)) return 1; // hardware call — assume success
+        }
+      }
+    }
     // Arithmetic — substitute known vars then eval with Function
+    // Extended safe-chars to include bitwise ops (~, &, ^, <<, >>)
     try {
-      const resolved=expr.replace(/\b([A-Za-z_]\w*)\b/g,m=>this.vars.hasOwnProperty(m)?+this.vars[m]||0:0);
-      const safe=resolved.replace(/[^0-9+\-*/%().|\s]/g,'0');
+      // Strip C-style type casts before identifier substitution so that
+      // (uint16_t)x doesn't become (0)x which is invalid JS syntax.
+      const deCast=expr.replace(/\(\s*(?:u?int(?:8|16|32|64)?_t|unsigned\s*\w*|signed\s*\w*|char|bool|float|double|size_t)\s*\)\s*/g,'');
+      const resolved=deCast.replace(/\b([A-Za-z_]\w*)\b/g,m=>{
+        if(this.vars.hasOwnProperty(m)) return +this.vars[m]||0;
+        // Record genuinely unknown identifiers (not C/AVR noise) for the override prompt
+        if(m.length>1 && !SIM_KNOWN_IDENTS.has(m) && !SIM_NOISE_RE.test(m))
+          this.undefinedVars.add(m);
+        return 0;
+      });
+      const safe=resolved.replace(/[^0-9+\-*/%().|\s&^~<>]/g,'0');
       const v=new Function('return('+safe+'|0)')();
       return isFinite(v)?v:0;
     } catch(e){ return 0; }
@@ -865,14 +1412,8 @@ class SketchExecutor {
     const obj=sep>=0?prefix.slice(0,prefix[sep]==='-'?sep:sep).trim():'';
     const fn =sep>=0?prefix.slice(prefix[sep]==='-'?sep+2:sep+1).trim():prefix;
 
-    // Hardware / comms — ignore
-    const SKIP=new Set(['delay','delayMicroseconds','millis','micros','yield','Wire','SPI',
-      'Serial','oledCmd','oledCmd2','sh1106_cmd','sh1106_cmd2','twi_start','twi_stop',
-      'twi_write_byte','sh1106_set_page_col','oledInit','sh1106_init','delay_ms',
-      'pinMode','digitalWrite','digitalRead','analogRead','analogWrite',
-      'beginTransmission','endTransmission','write','read','available','setClock',
-      'begin_begin','pgm_read_byte','pgm_read_word','memset','memcpy','snprintf','sprintf',
-      'F','begin']); // 'begin' is a u8g2 exception handled below
+    // Hardware / comms — skip (but user-defined functions always run via default/callUser)
+    const SKIP=this.SKIP;
     if(SKIP.has(fn)&&fn!=='begin') return;
     if(fn==='begin'&&!obj) return;
 
@@ -886,14 +1427,11 @@ class SketchExecutor {
       return this.p.arrays[name]||new Uint8Array(0);
     };
 
-    // User function
-    if(this.p.funcs[fn]&&fn!=='setup'&&fn!=='loop'){ this._body(this.p.funcs[fn]); return; }
-
     const sim=this.sim;
     switch(fn) {
       // ── Adafruit GFX ──────────────────────────────────────────────────────
       case 'clearDisplay':  sim.clear(); break;
-      case 'display':       break;
+      case 'display':       sim.snapshot(); break;
       case 'invertDisplay': sim.inverted=!!a[0]; break;
       case 'fillScreen':    sim.fillRect(0,0,sim.w,sim.h,a[0]!==undefined?a[0]:1); break;
       case 'drawPixel':     sim.sp(a[0],a[1],a[2]!==undefined?a[2]:1); break;
@@ -921,7 +1459,7 @@ class SketchExecutor {
 
       // ── u8g2 ──────────────────────────────────────────────────────────────
       case 'clearBuffer':   sim.clear(); break;
-      case 'sendBuffer':    break;
+      case 'sendBuffer':    sim.snapshot(); break;
       case 'begin':         break;
       case 'setDrawColor':  break;
       case 'drawFrame':     sim.drawRect(a[0],a[1],a[2],a[3],1); break;
@@ -933,8 +1471,9 @@ class SketchExecutor {
       case 'drawRBox':      sim.fillRoundRect(a[0],a[1],a[2],a[3],a[4],1); break;
       case 'drawXBM':
       case 'drawXBMP': {
+        // u8g2 signature: drawXBMP(x, y, w, h, xbm_data) — always Horiz. LSB regardless of driver format
         const bytes=arr(rawArgs[4]);
-        sim.drawBmpLSB(a[0],a[1],a[2],a[3],bytes);
+        sim.drawBmpLSB(a[0],a[1],bytes,a[2],a[3]);
         this.log.push(`✓ drawXBMP(${a[0]},${a[1]}, ${rawArgs[4]?.trim()}, ${a[2]}×${a[3]})  ${bytes.length}B`);
         break;
       }
@@ -943,16 +1482,64 @@ class SketchExecutor {
       // ── Bare-metal helpers (our generated sketches) ───────────────────────
       case 'sh1106_clear':  sim.clear(); break;
       case 'sh1106_fill':   sim.fillRect(0,0,sim.w,sim.h,1); break;
-      case 'sh1106_flush':  break;
+      case 'sh1106_flush':  sim.snapshot(); break;
       case 'sh1106_set_pixel':  sim.sp(a[0],a[1],a[2]?1:0); break;
       case 'sh1106_fill_rect':  sim.fillRect(a[0],a[1],a[2],a[3],a[4]?1:0); break;
       case 'sh1106_draw_bitmap_pgm':
       case 'oledDrawBitmap': {
+        // Bare-metal signature: oledDrawBitmap(x, y, w, h, bitmap) — follows selected driver format
         const bytes=arr(rawArgs[4]);
-        sim.drawBmpVLSB(a[0],a[1],a[2],a[3],bytes);
-        this.log.push(`✓ oledDrawBitmap(${a[0]},${a[1]}, ${rawArgs[4]?.trim()}, ${a[2]}×${a[3]})  ${bytes.length}B`);
+        sim.drawBmpFmt(a[0],a[1],bytes,a[2],a[3],1);
+        this.log.push(`✓ oledDrawBitmap(${a[0]},${a[1]}, ${rawArgs[4]?.trim()}, ${a[2]}×${a[3]})  ${bytes.length}B [${sim.driverFmt}]`);
         break;
       }
+      // ── Memory / string helpers ───────────────────────────────────────────
+      case 'memset': {
+        const dest=rawArgs[0]?.trim();
+        const fillVal=a[1]|0;
+        if(dest&&fillVal===0){
+          // If dest is the paged framebuffer (size = w * h/8), clear the sim
+          const da=this.p.arrays[dest];
+          if(da&&da.length===sim.w*(sim.h>>3)) sim.clear();
+          else this.vars[dest]='';  // clear string / scalar
+        }
+        break;
+      }
+      case 'memcpy': {
+        const dName=rawArgs[0]?.trim();
+        const sName=rawArgs[1]?.trim().replace(/^\(.*?\)\s*/,'');
+        if(dName&&sName&&this.p.arrays[dName]&&this.p.arrays[sName]){
+          const d=this.p.arrays[dName], src=this.p.arrays[sName], n=a[2]||d.length;
+          for(let i=0;i<n&&i<d.length&&i<src.length;i++) d[i]=src[i];
+        }
+        break;
+      }
+      case 'sprintf':
+      case 'snprintf': {
+        const dest=rawArgs[0]?.trim();
+        if(!dest) break;
+        const fi=fn==='sprintf'?1:2;  // format-string arg index
+        const fmt=String(a[fi]||'');
+        this.vars[dest]=simSprintf(fmt, a.slice(fi+1));
+        break;
+      }
+      case 'strcat': {
+        const dest=rawArgs[0]?.trim();
+        if(!dest) break;
+        this.vars[dest]=String(this.vars[dest]||'')+String(a[1]||'');
+        break;
+      }
+      case 'strcpy': {
+        const dest=rawArgs[0]?.trim();
+        if(!dest) break;
+        this.vars[dest]=String(a[1]||'');
+        break;
+      }
+
+      default:
+        // User-defined helper function — only reached when no built-in case matched
+        if(this.p.funcs[fn]&&fn!=='setup'&&fn!=='loop') this._callUser(fn, a);
+        break;
     }
   }
 }
@@ -976,24 +1563,127 @@ function runSketch(src) {
     }
 
     const sim  = new DisplaySim(parser.displayW, parser.displayH);
+    // Apply driver format — auto-detect picks the library's native format
+    {
+      const fmtSel = document.getElementById('sim-driver-fmt').value;
+      if(fmtSel === 'auto'){
+        sim.driverFmt = parser.library === 'adafruit' ? 'hmsb'
+                      : parser.library === 'u8g2'     ? 'hlsb'
+                      :                                  'vlsb'; // baremetal / pagedirect / unknown
+      } else {
+        sim.driverFmt = fmtSel;
+      }
+    }
     const exec = new SketchExecutor(parser, sim);
+
+    // ── Inject user variable overrides ───────────────────────
+    {
+      const raw = (document.getElementById('sim-var-overrides').value || '');
+      raw.split('\n').forEach(line => {
+        const m = line.match(/^\s*(\w+)\s*=\s*(.+?)\s*$/);
+        if (!m) return;
+        const v = m[2].trim();
+        exec.vars[m[1]] = /^0[xX][0-9a-fA-F]+$/.test(v) ? parseInt(v,16)
+                        : /^-?\d+(\.\d+)?$/.test(v)      ? +v
+                        :                                   v;
+      });
+    }
+
+    // ── Apply user-supplied function skip list ────────────────
+    {
+      const skipRaw = (document.getElementById('sim-skip-fns').value || '').trim();
+      if (skipRaw) {
+        skipRaw.split(',').map(s => s.trim()).filter(Boolean).forEach(fn => exec.SKIP.add(fn));
+      }
+    }
+
     const log  = exec.run();
 
-    sim.render(simCanvas, simZoom);
+    // ── Post-run: surface undefined variables ─────────────────
+    // Filter out names already in overrides (user already set them) and parser defines
+    {
+      const alreadySet = new Set([
+        ...Object.keys(parser.defines),
+        ...Object.keys(parser.arrays),
+        ...Object.keys(exec.vars),
+      ]);
+      const undefs = [...exec.undefinedVars]
+        .filter(v => !alreadySet.has(v))
+        .sort();
+      // Store on window for the "Suggest" button to read
+      window._simLastUndefs = undefs;
+      // Update badge
+      const badge = document.getElementById('sim-overrides-badge');
+      const hint  = document.getElementById('sim-overrides-hint');
+      if (undefs.length) {
+        badge.textContent = `${undefs.length} undefined`;
+        badge.style.display = '';
+        hint.textContent = `Last run found: ${undefs.slice(0,6).join(', ')}${undefs.length>6?'…':''}`;
+        log.push(`⚠ Undefined variables (→0): ${undefs.join(', ')}`);
+        log.push(`  → Open "Variable overrides", click "Suggest from last run", set values, re-run`);
+        // Auto-open the panel to draw attention
+        document.getElementById('sim-overrides-wrap').open = true;
+      } else {
+        badge.style.display = 'none';
+        hint.textContent = '';
+        window._simLastUndefs = [];
+      }
+    }
+
     lastSim = sim;
     simCanvasWrap.style.display = 'flex';
+    simViewToolbar.style.display = 'block';
 
-    const arrNames = Object.keys(parser.arrays);
-    const fnNames  = Object.keys(parser.funcs);
+    // ── Animation setup ──────────────────────────────────────
+    animStop();
+    animFrames = sim.frames;
+    animIdx    = 0;
+
+    // ── Direct array fallback ─────────────────────────────────
+    // If the sketch ran but produced no pixels (e.g. only an array was pasted,
+    // or no flush was reached), find a correctly-sized array and decode it directly.
+    if (sim.frames.length === 0 && sim.fb.every(v => v === 0)) {
+      const target = parser.displayW * (parser.displayH >> 3); // bytes for one full page-mode framebuffer
+      const found  = Object.entries(parser.arrays).find(([, v]) => v.length === target);
+      if (found) {
+        sim.drawBmpFmt(0, 0, found[1], parser.displayW, parser.displayH, 1);
+        sim.snapshot();
+        log.push(`ℹ Direct decode: ${found[0]}[${found[1].length}] as ${sim.driverFmt.toUpperCase()}`);
+      }
+    }
+
+    animStop();
+    animFrames = sim.frames;
+    animIdx    = 0;
+
+    simPlayer.style.display = 'block';
+    if (animFrames.length > 1) {
+      // Multi-frame: show first frame and start playing
+      animRender();
+      animPlay();
+    } else if (animFrames.length === 1) {
+      // Single frame from a flush call
+      animRender();
+    } else {
+      // No flush calls — render the raw framebuffer directly
+      sim.render(simCanvas, simZoom);
+    }
+
+    const arrNames  = Object.keys(parser.arrays);
+    const fnNames   = Object.keys(parser.funcs);
+    const fmtLabels = { vlsb:'Vert. LSB', vmsb:'Vert. MSB', hlsb:'Horiz. LSB', hmsb:'Horiz. MSB' };
+    const skipRaw   = (document.getElementById('sim-skip-fns').value || '').trim();
+    const userSkips = skipRaw ? skipRaw.split(',').map(s=>s.trim()).filter(Boolean) : [];
     const lines = [
-      `Library: ${parser.library}  |  Display: ${parser.displayW}×${parser.displayH}  |  Zoom: ${simZoom}×`,
+      `Library: ${parser.library}  |  Display: ${parser.displayW}×${parser.displayH}  |  Zoom: ${simZoom}×  |  Frames: ${animFrames.length}  |  Driver: ${fmtLabels[sim.driverFmt]||sim.driverFmt}`,
       `Arrays: ${arrNames.length ? arrNames.map(n=>`${n}[${parser.arrays[n].length}]`).join(', ') : 'none'}`,
       `Functions: ${fnNames.join(', ') || 'none'}`,
+      ...(userSkips.length ? [`⊘ Skipped: ${userSkips.join(', ')}`] : []),
       ...log
     ];
     simLogEl.textContent = lines.join('\n');
     simLogEl.style.display = 'block';
-    simStatusEl.textContent = `✓ ${parser.displayW}×${parser.displayH}`;
+    simStatusEl.textContent = `✓ ${parser.displayW}×${parser.displayH}  [${fmtLabels[sim.driverFmt]||sim.driverFmt}]` + (animFrames.length > 1 ? `  ${animFrames.length} frames` : '');
   } catch(err) {
     simLogEl.textContent = '✗ ' + err.message;
     simLogEl.style.display = 'block';
@@ -1003,23 +1693,381 @@ function runSketch(src) {
 }
 
 document.getElementById('btn-run-sketch').addEventListener('click', () => {
-  runSketch(document.getElementById('sim-code-in').value);
+  runSketch(simCodeIn.value);
 });
 
 document.getElementById('btn-clear-sim').addEventListener('click', () => {
-  document.getElementById('sim-code-in').value = '';
-  simCanvasWrap.style.display = 'none';
+  animStop();
+  animFrames = []; animIdx = 0;
+  simCodeIn.value = '';
+  autoResize();
   simLogEl.style.display = 'none';
   simStatusEl.textContent = '';
   lastSim = null;
+  // Reset view transforms then restore placeholder
+  viewInvertX = false; viewInvertY = false; viewRotate = 0;
+  updateCanvasTransform();
+  showPlaceholder();
+  // Clear override state
+  document.getElementById('sim-overrides-badge').style.display = 'none';
+  document.getElementById('sim-overrides-hint').textContent = '';
+  window._simLastUndefs = [];
+});
+
+// ── Variable override panel buttons ──────────────────────────
+document.getElementById('btn-overrides-suggest').addEventListener('click', () => {
+  const undefs = window._simLastUndefs || [];
+  if (!undefs.length) {
+    document.getElementById('sim-overrides-hint').textContent = 'No undefined variables from last run.';
+    return;
+  }
+  const ta = document.getElementById('sim-var-overrides');
+  // Parse what's already in the textarea so we don't duplicate
+  const existing = new Set(
+    ta.value.split('\n').map(l => { const m=l.match(/^\s*(\w+)\s*=/); return m?m[1]:''; }).filter(Boolean)
+  );
+  const toAdd = undefs.filter(v => !existing.has(v));
+  if (!toAdd.length) {
+    document.getElementById('sim-overrides-hint').textContent = 'All detected variables already listed.';
+    return;
+  }
+  const prefix = ta.value.trim() ? ta.value.trimEnd() + '\n' : '';
+  ta.value = prefix + toAdd.map(v => `${v} = 0`).join('\n');
+  document.getElementById('sim-overrides-hint').textContent =
+    `Added ${toAdd.length} variable${toAdd.length>1?'s':''} — set values then re-run.`;
+  document.getElementById('sim-overrides-wrap').open = true;
+});
+
+document.getElementById('btn-overrides-clear').addEventListener('click', () => {
+  document.getElementById('sim-var-overrides').value = '';
+  document.getElementById('sim-overrides-hint').textContent = '';
+});
+
+// ── Example sketch: SH1106 bare-metal test patterns ─────────
+const EXAMPLE_SKETCH = `#include <avr/io.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <string.h>
+
+/* =========================================================================
+ * Config — change SH1106_ADDR to 0x3D if SA0 pin is high
+ * ========================================================================= */
+#define SH1106_ADDR       0x3C
+#define SH1106_WIDTH      128
+#define SH1106_HEIGHT     64
+#define SH1106_PAGES      8
+#define SH1106_COL_OFFSET 2
+#define SH1106_TIMEOUT    30000U
+#define MBAUD_100KHZ      12
+
+/* =========================================================================
+ * Framebuffer
+ * ========================================================================= */
+static uint8_t buf[SH1106_PAGES][SH1106_WIDTH];
+
+/* =========================================================================
+ * Delay
+ * ========================================================================= */
+static void delay_ms(uint16_t ms)
+{
+    for (uint16_t i = 0; i < ms; i++)
+        for (volatile uint16_t j = 0; j < 333; j++)
+            __asm__ volatile("nop");
+}
+
+/* =========================================================================
+ * TWI
+ * ========================================================================= */
+static bool twi_start(uint8_t addr_rw)
+{
+    uint16_t t;
+    TWI0.MADDR = addr_rw;
+    t = SH1106_TIMEOUT;
+    while (!(TWI0.MSTATUS & (TWI_WIF_bm | TWI_ARBLOST_bm | TWI_BUSERR_bm)))
+        if (--t == 0) { TWI0.MCTRLB = TWI_MCMD_STOP_gc; return false; }
+    if (TWI0.MSTATUS & (TWI_RXACK_bm | TWI_ARBLOST_bm | TWI_BUSERR_bm))
+        { TWI0.MCTRLB = TWI_MCMD_STOP_gc; return false; }
+    return true;
+}
+
+static bool twi_write_byte(uint8_t data)
+{
+    uint16_t t;
+    TWI0.MDATA = data;
+    t = SH1106_TIMEOUT;
+    while (!(TWI0.MSTATUS & (TWI_WIF_bm | TWI_ARBLOST_bm | TWI_BUSERR_bm)))
+        if (--t == 0) { TWI0.MCTRLB = TWI_MCMD_STOP_gc; return false; }
+    if (TWI0.MSTATUS & (TWI_RXACK_bm | TWI_ARBLOST_bm | TWI_BUSERR_bm))
+        { TWI0.MCTRLB = TWI_MCMD_STOP_gc; return false; }
+    return true;
+}
+
+static void twi_stop(void)
+{
+    TWI0.MCTRLB  = TWI_MCMD_STOP_gc;
+    TWI0.MSTATUS = TWI_BUSSTATE_IDLE_gc;
+}
+
+/* =========================================================================
+ * SH1106 commands
+ * ========================================================================= */
+static bool sh1106_cmd(uint8_t cmd)
+{
+    if (!twi_start((SH1106_ADDR << 1) | 0)) return false;
+    if (!twi_write_byte(0x00))               return false;
+    if (!twi_write_byte(cmd))                return false;
+    twi_stop();
+    return true;
+}
+
+static bool sh1106_cmd2(uint8_t cmd, uint8_t arg)
+{
+    if (!twi_start((SH1106_ADDR << 1) | 0)) return false;
+    if (!twi_write_byte(0x00))               return false;
+    if (!twi_write_byte(cmd))                return false;
+    if (!twi_write_byte(arg))                return false;
+    twi_stop();
+    return true;
+}
+
+static bool sh1106_set_page_col(uint8_t page, uint8_t col)
+{
+    col += SH1106_COL_OFFSET;
+    if (!sh1106_cmd(0xB0 | (page & 0x07)))       return false;
+    if (!sh1106_cmd(0x00 | (col & 0x0F)))        return false;
+    if (!sh1106_cmd(0x10 | ((col >> 4) & 0x0F))) return false;
+    return true;
+}
+
+/* =========================================================================
+ * Init
+ * ========================================================================= */
+static bool sh1106_init(void)
+{
+    delay_ms(10);
+    bool ok = true;
+    ok &= sh1106_cmd(0xAE);
+    ok &= sh1106_cmd2(0xD5, 0x80);
+    ok &= sh1106_cmd2(0xA8, 0x3F);
+    ok &= sh1106_cmd2(0xD3, 0x00);
+    ok &= sh1106_cmd(0x40);
+    ok &= sh1106_cmd2(0xAD, 0x8B);
+    ok &= sh1106_cmd(0xA1);
+    ok &= sh1106_cmd(0xC8);
+    ok &= sh1106_cmd2(0xDA, 0x12);
+    ok &= sh1106_cmd2(0x81, 0x80);
+    ok &= sh1106_cmd2(0xD9, 0xF1);
+    ok &= sh1106_cmd2(0xDB, 0x40);
+    ok &= sh1106_cmd(0xA4);
+    ok &= sh1106_cmd(0xA6);
+    ok &= sh1106_cmd(0xAF);
+    delay_ms(5);
+    return ok;
+}
+
+/* =========================================================================
+ * Flush
+ * ========================================================================= */
+static bool sh1106_flush(void)
+{
+    for (uint8_t page = 0; page < SH1106_PAGES; page++)
+    {
+        if (!sh1106_set_page_col(page, 0)) return false;
+        if (!twi_start((SH1106_ADDR << 1) | 0)) return false;
+        if (!twi_write_byte(0x40))               return false;
+        for (uint8_t col = 0; col < SH1106_WIDTH; col++)
+            if (!twi_write_byte(buf[page][col]))  return false;
+        twi_stop();
+    }
+    return true;
+}
+
+/* =========================================================================
+ * Drawing
+ * ========================================================================= */
+static void sh1106_clear(void)
+{
+    memset(buf, 0, sizeof(buf));
+}
+
+static void sh1106_fill(void)
+{
+    memset(buf, 0xFF, sizeof(buf));
+}
+
+static void sh1106_set_pixel(uint8_t x, uint8_t y, uint8_t on)
+{
+    if (x >= SH1106_WIDTH || y >= SH1106_HEIGHT) return;
+    if (on) buf[y / 8][x] |=  (1 << (y % 8));
+    else    buf[y / 8][x] &= ~(1 << (y % 8));
+}
+
+static void sh1106_fill_rect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t on)
+{
+    for (uint8_t row = y; row < y + h && row < SH1106_HEIGHT; row++)
+        for (uint8_t col = x; col < x + w && col < SH1106_WIDTH; col++)
+            sh1106_set_pixel(col, row, on);
+}
+
+/* =========================================================================
+ * Main
+ * ========================================================================= */
+int main(void)
+{
+    /* ── TWI on PB1=SDA PB2=SCL (alternate mapping) ── */
+    PORTMUX.CTRLB  = PORTMUX_TWI0_bm;
+    PORTB.DIRCLR   = PIN1_bm | PIN2_bm;
+    PORTB.PIN1CTRL = PORT_ISC_INTDISABLE_gc;
+    PORTB.PIN2CTRL = PORT_ISC_INTDISABLE_gc;
+
+    TWI0.MCTRLA  = 0x00;
+    TWI0.MCTRLB  = TWI_FLUSH_bm;
+    TWI0.MBAUD   = 0x00;
+    TWI0.MSTATUS = TWI_BUSSTATE_IDLE_gc;
+    TWI0.CTRLA   = TWI_SDAHOLD_50NS_gc;
+    TWI0.MBAUD   = MBAUD_100KHZ;
+    TWI0.MCTRLA  = TWI_ENABLE_bm;
+    TWI0.MSTATUS = TWI_BUSSTATE_IDLE_gc;
+
+    delay_ms(20);
+
+    /* ── Retry init until display ACKs ── */
+    while (!sh1106_init())
+        delay_ms(200);
+
+    /* ── Test pattern 1: all pixels on ── */
+    sh1106_fill();
+    sh1106_flush();
+    delay_ms(2000);
+
+    /* ── Test pattern 2: all pixels off ── */
+    sh1106_clear();
+    sh1106_flush();
+    delay_ms(2000);
+
+    /* ── Test pattern 3: checkerboard ── */
+    for (uint8_t page = 0; page < SH1106_PAGES; page++)
+        for (uint8_t col = 0; col < SH1106_WIDTH; col++)
+            buf[page][col] = (col % 2) ? 0xAA : 0x55;
+    sh1106_flush();
+    delay_ms(2000);
+
+    /* ── Test pattern 4: border rectangle ── */
+    sh1106_clear();
+    sh1106_fill_rect(0,  0,   128, 1,  1);   /* top    */
+    sh1106_fill_rect(0,  63,  128, 1,  1);   /* bottom */
+    sh1106_fill_rect(0,  0,   1,   64, 1);   /* left   */
+    sh1106_fill_rect(127,0,   1,   64, 1);   /* right  */
+    sh1106_flush();
+    delay_ms(2000);
+
+    /* ── Loop: flash full/empty so you can confirm it's alive ── */
+    while (1)
+    {
+        sh1106_fill();
+        sh1106_flush();
+        delay_ms(500);
+
+        sh1106_clear();
+        sh1106_flush();
+        delay_ms(500);
+    }
+}`;
+
+document.getElementById('btn-load-example').addEventListener('click', () => {
+  simCodeIn.value = EXAMPLE_SKETCH;
+  autoResize();
+  runSketch(EXAMPLE_SKETCH);
 });
 
 document.getElementById('sim-file-input').addEventListener('change', async e => {
   const f = e.target.files[0]; if (!f) return;
   const txt = await f.text();
-  document.getElementById('sim-code-in').value = txt;
+  simCodeIn.value = txt;
+  autoResize();
   runSketch(txt);
 });
+
+// ── View Transforms ───────────────────────────────────────────
+// Applied as CSS canvas transforms — no re-render needed.
+//   Flip     = mirror both axes simultaneously (180° visual flip)
+//   Rotate   = +90° CW per click, cycles 0 / 90 / 180 / 270
+//   Invert X = horizontal mirror (left ↔ right)
+//   Invert Y = vertical mirror   (top ↔ bottom)
+const simViewToolbar  = document.getElementById('sim-view-toolbar');
+const btnViewFlip     = document.getElementById('btn-view-flip');
+const btnViewRotate   = document.getElementById('btn-view-rotate');
+const btnViewInvertX  = document.getElementById('btn-view-invert-x');
+const btnViewInvertY  = document.getElementById('btn-view-invert-y');
+
+let viewInvertX = false;
+let viewInvertY = false;
+let viewRotate  = 0;   // degrees: 0, 90, 180, 270
+
+function updateCanvasTransform() {
+  let t = '';
+  if (viewRotate)  t += `rotate(${viewRotate}deg) `;
+  if (viewInvertX) t += 'scaleX(-1) ';
+  if (viewInvertY) t += 'scaleY(-1) ';
+  simCanvas.style.transform       = t.trim() || 'none';
+  simCanvas.style.transformOrigin = 'center center';
+
+  // Sync button active states
+  const flipped = viewInvertX && viewInvertY;
+  btnViewFlip   .classList.toggle('view-btn-on', flipped);
+  btnViewRotate .classList.toggle('view-btn-on', viewRotate !== 0);
+  btnViewRotate .textContent = `↻ Rotate: ${viewRotate}°`;
+  btnViewInvertX.classList.toggle('view-btn-on', viewInvertX);
+  btnViewInvertY.classList.toggle('view-btn-on', viewInvertY);
+}
+
+btnViewFlip.addEventListener('click', () => {
+  // Toggle both axes at once — repeated clicks toggle 180° on/off
+  viewInvertX = !viewInvertX;
+  viewInvertY = !viewInvertY;
+  updateCanvasTransform();
+});
+
+btnViewRotate.addEventListener('click', () => {
+  viewRotate = (viewRotate + 90) % 360;
+  updateCanvasTransform();
+});
+
+btnViewInvertX.addEventListener('click', () => {
+  viewInvertX = !viewInvertX;
+  updateCanvasTransform();
+});
+
+btnViewInvertY.addEventListener('click', () => {
+  viewInvertY = !viewInvertY;
+  updateCanvasTransform();
+});
+
+// ── Default placeholder ───────────────────────────────────────
+// Shown on page load and after Clear, before any sketch runs.
+function showPlaceholder() {
+  const zoom = simZoom;
+  simCanvas.width  = 128 * zoom;
+  simCanvas.height =  64 * zoom;
+  const ctx = simCanvas.getContext('2d');
+  // Background
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, simCanvas.width, simCanvas.height);
+  // "Try Me!" — big
+  ctx.fillStyle    = '#fff';
+  ctx.textAlign    = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = `bold ${Math.round(zoom * 9)}px monospace`;
+  ctx.fillText('Try Me!', simCanvas.width / 2, simCanvas.height * 0.36);
+  // Subtitle — smaller
+  ctx.font = `${Math.round(zoom * 4)}px monospace`;
+  ctx.fillText('← click Example, or paste a sketch below ↓', simCanvas.width / 2, simCanvas.height * 0.70);
+  // Make sure canvas, view toolbar, and player are all visible
+  simCanvasWrap.style.display  = 'flex';
+  simViewToolbar.style.display = 'block';
+  simPlayer.style.display      = 'block';
+}
+showPlaceholder();
 
 </script>
 
