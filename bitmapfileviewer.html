@@ -122,7 +122,7 @@
       }
       #code-in {
         width: 100%;
-        height: 80px;
+        height: 200px;
         font-family: monospace;
         font-size: 11px;
         resize: vertical;
@@ -376,6 +376,7 @@
                 <label>New:</label>
                 <select id="preset-size">
                   <option value="128,64">128×64 (OLED)</option>
+                  <option value="132,64">132×64 (SH1106 GDDRAM)</option>
                   <option value="128,32">128×32 (OLED)</option>
                   <option value="64,48">64×48</option>
                   <option value="96,64">96×64</option>
@@ -444,6 +445,7 @@
                 <div id="bmp-import-area">
                   <input type="file" id="file-input" accept=".bmp,.bin,.pbm,.xbm,.h,.c,.cpp,.txt">
                   <button id="btn-parse-code">Parse text below &darr;</button>
+                  <button id="btn-clear-code">Clear</button>
                 </div>
                 <textarea id="code-in" placeholder="Paste C array: const uint8_t img[] = {0xFF, 0x00, ...};&#10;Or XBM: #define img_width 16 ...&#10;Or raw hex bytes: FF 00 AA ..."></textarea>
               </div>
@@ -733,6 +735,23 @@ function render(preview) {
     ctx.restore();
   }
 
+  // SH1106 visible-window overlay: 132-col GDDRAM has a 2-col blind margin on each side
+  if (W === 132) {
+    ctx.save();
+    ctx.translate(0.5, 0.5);
+    // Dim the two invisible margin columns on each side
+    ctx.fillStyle = 'rgba(255,140,0,0.18)';
+    ctx.fillRect(0,       0, 2 * zoom, H * zoom);
+    ctx.fillRect(130 * zoom, 0, 2 * zoom, H * zoom);
+    // Dashed boundary lines marking the 128-px visible area
+    ctx.strokeStyle = 'rgba(255,160,0,0.9)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(2 * zoom, 0); ctx.lineTo(2 * zoom, H * zoom); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(130 * zoom, 0); ctx.lineTo(130 * zoom, H * zoom); ctx.stroke();
+    ctx.restore();
+  }
+
   els.infoCount.textContent = pixels.reduce((a, b) => a + b, 0);
 }
 
@@ -917,11 +936,19 @@ function loadBytes(bytes, w, h, layout) {
   els.infoSize.textContent = W + '×' + H;
   layout = layout || 'horizontal_msb';
   if (layout === 'horizontal_msb') {
-    for (let i = 0; i < bytes.length && i * 8 < W * H; i++)
-      for (let b = 7; b >= 0; b--) { const pi = i * 8 + (7 - b); if (pi < W * H) pixels[pi] = (bytes[i] >> b) & 1; }
+    const rb = Math.ceil(W / 8);
+    for (let y = 0; y < H; y++)
+      for (let bx = 0; bx < rb; bx++) {
+        const bi = y * rb + bx; if (bi >= bytes.length) break;
+        for (let bit = 0; bit < 8; bit++) { const x = bx * 8 + bit; if (x < W) pixels[idx(x, y)] = (bytes[bi] >> (7 - bit)) & 1; }
+      }
   } else if (layout === 'horizontal_lsb') {
-    for (let i = 0; i < bytes.length && i * 8 < W * H; i++)
-      for (let b = 0; b < 8; b++) { const pi = i * 8 + b; if (pi < W * H) pixels[pi] = (bytes[i] >> b) & 1; }
+    const rb = Math.ceil(W / 8);
+    for (let y = 0; y < H; y++)
+      for (let bx = 0; bx < rb; bx++) {
+        const bi = y * rb + bx; if (bi >= bytes.length) break;
+        for (let bit = 0; bit < 8; bit++) { const x = bx * 8 + bit; if (x < W) pixels[idx(x, y)] = (bytes[bi] >> bit) & 1; }
+      }
   } else if (layout === 'vertical_lsb') {
     const pages = Math.ceil(H / 8);
     for (let p = 0; p < pages; p++) for (let x = 0; x < W; x++) {
@@ -939,18 +966,21 @@ function loadBytes(bytes, w, h, layout) {
 }
 
 function parseCArray(txt) {
+  // Extract width/height from the original text (may be in comments) before stripping
   const wm = txt.match(/(?:width|Width|_w|W)\s*[=:]\s*(\d+)/);
   const hm = txt.match(/(?:height|Height|_h|H)\s*[=:]\s*(\d+)/);
-  // Strip array-size brackets (e.g. logo_bitmap[1024]) so the declared
-  // size doesn't land as a spurious leading byte.
-  const stripped = txt.replace(/\w+\s*\[\s*\d+\s*\]/g, '');
+  // Strip single-line comments FIRST so decimal numbers in leading comments
+  // (e.g. "Pages: 8" in the c_vertical header) don't get prepended to the
+  // byte array and shift all data — then strip array-size brackets.
+  const noComments = txt.replace(/\/\/[^\n]*/g, '');
+  const stripped = noComments.replace(/\w+\s*\[\s*\d+\s*\]/g, '');
   const nums = stripped.match(/0[xX][0-9a-fA-F]+|\b\d+\b/g);
   if (!nums) return false;
   const bytes = nums.map(n => parseInt(n));
   let w = 128, h = 64;
   if (wm && hm) { w = +wm[1]; h = +hm[1]; }
   else {
-    const common = [[128,64],[128,32],[96,64],[64,48],[32,32],[16,16],[240,135],[320,240]];
+    const common = [[128,64],[128,32],[132,64],[96,64],[64,48],[32,32],[16,16],[240,135],[320,240]];
     const matched = common.find(([cw, ch]) => Math.ceil(cw * ch / 8) === bytes.length);
     if (matched) { [w, h] = matched; }
     else { const total = bytes.length * 8; const sq = Math.round(Math.sqrt(total)); w = sq; h = Math.ceil(total / sq); }
@@ -1052,12 +1082,7 @@ function exportData() {
   const rowBytes = Math.ceil(W / 8);
   let out = '';
   if (fmt === 'c_horizontal') {
-    const bytes = [];
-    for (let i = 0; i < W * H; i += 8) {
-      let b = 0;
-      for (let bit = 0; bit < 8; bit++) { const pi = i + bit; if (pi < W * H && pixels[pi]) b |= (1 << (7 - bit)); }
-      bytes.push(b);
-    }
+    const bytes = getRawHorizMSB();
     out = `const uint8_t bitmap[${bytes.length}] PROGMEM = {\n`;
     for (let i = 0; i < bytes.length; i++) {
       out += (i % rowBytes === 0 ? '  ' : '') + ' 0x' + bytes[i].toString(16).padStart(2, '0').toUpperCase() + ',';
@@ -1124,12 +1149,7 @@ function exportData() {
     out = `P1\n${W} ${H}\n`;
     for (let y = 0; y < H; y++) { out += Array.from({length: W}, (_, x) => pixels[idx(x, y)]).join(' ') + '\n'; }
   } else if (fmt === 'hex') {
-    const bytes = [];
-    for (let i = 0; i < W * H; i += 8) {
-      let b = 0;
-      for (let bit = 0; bit < 8; bit++) { const pi = i + bit; if (pi < W * H && pixels[pi]) b |= (1 << (7 - bit)); }
-      bytes.push(b);
-    }
+    const bytes = getRawHorizMSB();
     out = bytes.map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ');
   } else if (fmt === 'bin_str') {
     for (let y = 0; y < H; y++) { out += Array.from({length: W}, (_, x) => pixels[idx(x, y)]).join('') + '\n'; }
@@ -1200,8 +1220,9 @@ function saveBMP() {
 document.getElementById('btn-save-bmp').addEventListener('click', saveBMP);
 
 document.getElementById('btn-export').addEventListener('click', exportData);
+document.getElementById('btn-clear-code').addEventListener('click', () => { els.codeIn.value = ''; });
 document.getElementById('btn-copy').addEventListener('click', () => {
-  if (!els.exportOut.value) exportData();
+  exportData();
   navigator.clipboard.writeText(els.exportOut.value).catch(() => { els.exportOut.select(); document.execCommand('copy'); });
 });
 
@@ -1378,6 +1399,10 @@ void loop() {
 function downloadPageModeExample() {
   const bytes = getRawVertLSB();
   const pages = Math.ceil(H / 8);
+  // SH1106 has 132-col GDDRAM; visible 128-col window starts at column 2.
+  // SSD1306 has 128-col GDDRAM; no offset needed.
+  const colOffset = (W === 132) ? 2 : 0;
+  const screenW   = (W === 132) ? 128 : W;
   const sketch =
 `// Direct I2C page-mode example — Vertical LSB byte layout
 // Generated by KasperCalc Bitmap Editor (kaspercalc.com/bitmapfileviewer.html)
@@ -1399,9 +1424,12 @@ function downloadPageModeExample() {
 
 #include <Wire.h>
 
-#define OLED_ADDR  0x3C   // Change to 0x3D if nothing appears
-#define SCREEN_W   128
-#define SCREEN_H   64
+#define OLED_ADDR   0x3C   // Change to 0x3D if nothing appears
+#define SCREEN_W    ${screenW}
+#define SCREEN_H    ${H}
+// SH1106 has 132-column GDDRAM; the visible 128-column window starts at column 2.
+// SSD1306 has exactly 128 columns, so no offset is needed.
+#define COL_OFFSET  ${colOffset}   // SH1106 = 2, SSD1306 = 0
 
 void oledCmd(uint8_t cmd) {
   Wire.beginTransmission(OLED_ADDR);
@@ -1439,9 +1467,10 @@ void oledDrawBitmap(int x0, int y0, int bmpW, int bmpH, const uint8_t* bmp) {
   for (int p = 0; p < bmpPages; p++) {
     int sp = (y0 / 8) + p; // screen page index
     if (sp < 0 || sp >= (SCREEN_H / 8)) continue;
+    int col = x0 + COL_OFFSET;                    // apply SH1106 column offset if needed
     oledCmd(0xB0 | sp);                          // set page address
-    oledCmd(0x00 | ((x0)      & 0x0F));          // column low nibble
-    oledCmd(0x10 | ((x0 >> 4) & 0x0F));          // column high nibble
+    oledCmd(0x00 | (col & 0x0F));               // column low nibble
+    oledCmd(0x10 | ((col >> 4) & 0x0F));        // column high nibble
     Wire.beginTransmission(OLED_ADDR);
     Wire.write(0x40); // Co=0, D/C=1 → data stream
     for (int col = 0; col < bmpW; col++) {
