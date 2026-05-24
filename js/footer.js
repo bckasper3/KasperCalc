@@ -92,6 +92,8 @@
         <div class="footerRow">
           <h4 class="FooterRowTitle"><span class="footerflexbox">Misc Properties</span></h4>
           <div class="footerlink"><a href="densityWater.html">Water Density</a></div>
+          <div class="footerlink"><a href="WaterSpecificHeatCapacity.html">Water Specific Heat Capacity</a></div>
+          <div class="footerlink"><a href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a></div>
           <div class="footerlink"><a href="densityAirAltitude.html">Air Pressure from Altitude</a></div>
           <div class="footerlink"><a href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a></div>
           <div class="footerlink"><a href="SpecificGravityExplanation.html">Specific Gravity Explanation</a></div>
