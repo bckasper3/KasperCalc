@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- META DATA FOR -->
-    <title>KasperCalc: Distillation Curves</title>
+    <title>KasperCalc: Gases Dissolved in Water: Diffusion Coefficients</title>
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, bckasper3, Jet Fuel, Jet Fuel  Distillation Curves, CRC 530" />
-    <meta name="description" content="View distillation curve data for jet fuel and simulate cut-point behaviors with KasperCalc." />
+    <meta name="keywords" content="KasperCalc, bckasper3, Gas Diffusion Coefficients Water, Fick’s Law, dissolved gas water diffusion" />
+    <meta name="description" content="Diffusion coefficients for common gases dissolved in water at temperatures from 10 to 35 °C, with Fick’s Law reference." />
 
     <!-- DEFERRED JAVASCRIPT -->
     
@@ -18,25 +18,25 @@
     <script defer src="js/footer.js"></script>
     <script defer src="js/header-active-class.js"></script>
     <script defer src="js/navsearch.js"></script>
-    <script defer type="text/javascript" src="js/distillationCurves.js"></script>
+    <script defer type="text/javascript" src="js/WaterDissolvedGasDiffusionCoefficients.js"></script>
 
     <!-- CSS FILES -->
     <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> --> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
     <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
     <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
 
 <!-- Google tag (gtag.js) -->
-<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
   gtag('config', 'G-5XLCN0GJQ0');
-</script> -->
+</script>
 
     <!-- FAVICON -->
     <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
@@ -222,123 +222,150 @@
           <div class="col-lg-12 col-12">
             <div class="banner section-title-wrap">
               <div class="h1 section-title bannertext">
-                Distillation Curves
+                Gases Dissolved in Water: Diffusion Coefficients
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- UNDER THE BANNER -->
-
-       <!-- Jet Fuel -->
-       <section>
-        <div class="csscontainer">
-          <div class="col-lg-12 col-12">
-  
-            <div class="section-title-wrap">
-              <div class="h1 section-title">Distillation Curves Chart</div>
-            </div>
-  
-            <div class="canvasdiv">
-              <button id="toggleTooltipButton">Hide Tooltips</button>
-              <a style="font-size: medium; text-decoration: none;" href="img/DistallationCurveOfJetFuel(Temp_VS_RecoveredPercent).png" download="DistallationCurveOfJetFuel(Temp_VS_RecoveredPercent).png">
-                <button>Download Chart</button>
-              </a>
-              <a style="font-size: medium; text-decoration: none;" href="img/DistallationCurveOfJetFuel(Temp_VS_RecoveredPercent).png" target="_blank">
-                <button>Open In New Tab</button>
-              </a>
-              <img src="img/DistallationCurveOfJetFuel(Temp_VS_RecoveredPercent).png" alt="Distalation Curve for Common of Jet Fuels" style="position:absolute; width:1px; height:1px; overflow:hidden; opacity:0;">                        
-              <div class="canvascontainer">
-  
-                    <!-- <script defer type="text/javascript" src="js/chart.min.js"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-                
-  
-                <!-- <canvas id="myChart"></canvas> -->
-                <canvas id="myChart"aria-label="Alt Text Here" width="400" height="600" role="img" class="chartcanvas"> <!-- width="400" height="600" -->
-                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p></canvas>
-  
-  
-              </div>
-            </div>
-            <p class="text-center"> Data from "Coordinating Research Council", <a href="https://apps.dtic.mil/sti/pdfs/ADA132106.pdf" target="_blank">CRC 530</a></p>
-            <p class="text-center">Toggle data sets by clicking the legend.</p>
-            <!-- <p class="text-center">*This chart is in process*
-            </p> -->
-          </div>
-        </div>
-      </section>
-  
-  
-      <!-- CALCULATOR -->
+      <!-- CHART -->
       <section>
         <div class="csscontainer">
-          <div class="col-lg-12 col-12 px-3">
-  
-            <div class="wrapper">
-              <div class="header text-center">Distillation Curve Calculator
-              </div>
-  
-            <!-- <div class="toggle-container">
-              <label class="toggle-switch">
-                <input type="checkbox" id="fuelheadcalctoggle" class="toggle-input">
-                <span class="slider">
-                  <span class="option left">Inches of Fuel</span>
-                  <span class="option right">PSI</span>
-                </span>
-              </label>
-            </div> -->
-        
-              <div class="group1 d-flex flex-wrap">
-                <label class="dropdownlabel" for="operation">Select Fuel:</label>
-  
-                <span class="output">
-                  <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="calculate()" aria-label="Drop Down for Jet Fuel Type">
-                    <option value="Jet A, Jet A-1, JP-8">Jet A, Jet A-1, JP-8</option>
-                    <option value="Av. Gas">Av. Gas</option>
-                    <option value="JP-4, Jet B">JP-4, Jet B</option>
-                    <option value="TS">TS</option>
-                    <option value="JP-7">JP-7</option>
-                    <option value="JP-5">JP-5</option>
-                    <option value="JP-9">JP-9</option>
-                  </select>
-  
-                </span>
-              </div>
-        
-              <div class="group">
-                <div class="outputrow">
-                <span class="label">
-                  <span id="nominalDensityOption1">Percent Recovered:</span>
-                </span> 
-                <span class="output inputbox">
-                  <input class= "calcinput" type="number" id="fahrenheit" oninput="calculate()" value="50" aria-label="Percent recovered input box"/> <!-- oninput="convertToCelsius()" -->
-                </span>
-                </div>
-              </div>
-        
-              <div class="group">
-                <div class="outputrow">
-                  <span class="label">Temperature (°F)</span>
-                  <span class="output" id="result_density1">&nbsp</span>
-                </div>
-        
-                <div class="outputrow">
-                  <span class="label">Temperature (°C)</span>
-                  <span class="output" id="result_density2">&nbsp</span>
-                </div>
-              </div>
-  
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Diffusion Coefficient vs. Temperature</div>
             </div>
+
+            <div class="canvasdiv">
+              <button id="toggleTooltipButton">Hide Tooltips</button>
+              <a style="font-size: medium; text-decoration: none;" href="img/GasesDissolvdInWaterDiffusionCoefficients(cm2s_VS_TempF).png" download="GasesDissolvdInWaterDiffusionCoefficients(cm2s_VS_TempF).png">
+                <button>Download Chart</button>
+              </a>
+              <a style="font-size: medium; text-decoration: none;" href="img/GasesDissolvdInWaterDiffusionCoefficients(cm2s_VS_TempF).png" target="_blank">
+                <button>Open In New Tab</button>
+              </a>
+              <img src="img/GasesDissolvdInWaterDiffusionCoefficients(cm2s_VS_TempF).png" alt="Diffusion Coefficients of Gases in Water vs Temperature Graph" style="position:absolute; width:1px; height:1px; overflow:hidden; opacity:0;">
+              <div class="canvascontainer">
+
+                    <!-- <script defer type="text/javascript" src="js/chart.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+                <!-- <canvas id="myChart"></canvas> -->
+                <canvas id="myChart" aria-label="Diffusion Coefficients of Gases in Water vs Temperature Graph" width="400" height="600" role="img" class="chartcanvas"> <!-- width="400" height="600" -->
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p></canvas>
+
+              </div>
+            </div>
+            <p class="text-center">At atmospheric pressure. Only gases with 4 or more data points are plotted.</p>
+            <p class="text-center">Toggle data sets by clicking the legend.</p>
           </div>
-  
-          <!-- <p class="text-center">* This calculator is in process *</p> -->
-  
         </div>
-        <!-- <p class="text-center">*S.G. based on the density of</br>water at 39.2°F  = 1000kg/m³*
-        </p> -->
       </section>
+
+
+      <!-- FICK'S LAW DESCRIPTION -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+
+            <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
+              <div class="custom-heading">Diffusion Coefficients of Gases in Water</div>
+
+              <div style="text-align: left" class="mt-3">
+                <div class="custom-subheading">Fick's First Law</div>
+                <p class="mt-2">
+                  A substance dissolved in a liquid flows from regions of high concentration to regions of low concentration.
+                  Fick's first law quantifies this flux:
+                </p>
+                <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">J = &minus;D &nbsp;d&phi;/dx</p>
+                <p class="mt-2">where:</p>
+                <ul class="mt-1">
+                  <li><span style="font-weight:var(--font-weight-medium)">J</span> — diffusion flux: amount of substance flowing through a unit area per unit time (kg/(m²·s) or mol/(m²·s))</li>
+                  <li><span style="font-weight:var(--font-weight-medium)">D</span> — diffusion coefficient (m²/s)</li>
+                  <li><span style="font-weight:var(--font-weight-medium)">d&phi;</span> — change in concentration (kg/m³ or mol/m³)</li>
+                  <li><span style="font-weight:var(--font-weight-medium)">dx</span> — change in length (m)</li>
+                </ul>
+                <p class="mt-2">
+                  For simple one-dimensional transport, D describes the time-rate of change of concentration.
+                  It varies from substance to substance and increases with temperature.
+                </p>
+              </div>
+
+              <p class="mt-3 text-start"><span style="font-weight:var(--font-weight-normal)">Note:</span> Gas–liquid diffusion coefficients are difficult to measure. Values below are compiled from different sources and measuring methods, so some uncertainty in the values should be expected.</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- DATA TABLE -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+
+            <div class="mx-auto d-inline-block mt-4" style="max-width:900px; width:100%;">
+              <div class="custom-heading">Gases Dissolved in Water: Diffusion Coefficients</div>
+              <p class="mt-2 text-start">Diffusion coefficient D (×10⁻⁵ cm²/s) at atmospheric pressure</p>
+
+              <div class="table-responsive mt-2 mb-3">
+                <table class="table table-striped table-bordered table-hover table-sm">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th rowspan="2" class="align-middle">Name</th>
+                      <th rowspan="2" class="align-middle">Formula</th>
+                      <th class="text-center">10&nbsp;°C</th>
+                      <th class="text-center">15&nbsp;°C</th>
+                      <th class="text-center">20&nbsp;°C</th>
+                      <th class="text-center">25&nbsp;°C</th>
+                      <th class="text-center">30&nbsp;°C</th>
+                      <th class="text-center">35&nbsp;°C</th>
+                    </tr>
+                    <tr>
+                      <th class="text-center">50&nbsp;°F</th>
+                      <th class="text-center">59&nbsp;°F</th>
+                      <th class="text-center">68&nbsp;°F</th>
+                      <th class="text-center">77&nbsp;°F</th>
+                      <th class="text-center">86&nbsp;°F</th>
+                      <th class="text-center">95&nbsp;°F</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Acetylene</td><td>C₂H₂</td><td>1.43</td><td>1.59</td><td>1.78</td><td>1.99</td><td>2.23</td><td></td></tr>
+                    <tr><td>Ammonia</td><td>NH₃</td><td></td><td>1.30</td><td>1.50</td><td></td><td></td><td></td></tr>
+                    <tr><td>Argon</td><td>Ar</td><td></td><td></td><td></td><td>2.50</td><td></td><td></td></tr>
+                    <tr><td>Bromomethane</td><td>CH₃Br</td><td></td><td></td><td></td><td>1.35</td><td></td><td></td></tr>
+                    <tr><td>Carbon dioxide</td><td>CO₂</td><td>1.26</td><td>1.45</td><td>1.67</td><td>1.91</td><td>2.17</td><td>2.47</td></tr>
+                    <tr><td>Chlorine</td><td>Cl₂</td><td></td><td>1.13</td><td>1.50</td><td>1.89</td><td></td><td></td></tr>
+                    <tr><td>Chloromethane</td><td>CH₃Cl</td><td></td><td></td><td></td><td>1.40</td><td></td><td></td></tr>
+                    <tr><td>Dichlorofluoromethane</td><td>CHCl₂F</td><td></td><td></td><td></td><td>1.80</td><td></td><td></td></tr>
+                    <tr><td>Helium</td><td>He</td><td>5.67</td><td>6.18</td><td>6.71</td><td>7.28</td><td>7.87</td><td>8.48</td></tr>
+                    <tr><td>Hydrogen</td><td>H₂</td><td>3.62</td><td>4.08</td><td>4.58</td><td>5.11</td><td>5.69</td><td>6.31</td></tr>
+                    <tr><td>Hydrogen bromide</td><td>HBr</td><td></td><td></td><td></td><td>3.15</td><td></td><td></td></tr>
+                    <tr><td>Hydrogen chloride</td><td>HCl</td><td></td><td></td><td></td><td>3.07</td><td></td><td></td></tr>
+                    <tr><td>Hydrogen sulfide</td><td>H₂S</td><td></td><td></td><td></td><td>1.36</td><td></td><td></td></tr>
+                    <tr><td>Krypton</td><td>Kr</td><td>1.20</td><td>1.39</td><td>1.60</td><td>1.84</td><td>2.11</td><td>2.40</td></tr>
+                    <tr><td>Methane</td><td>CH₄</td><td>1.24</td><td>1.43</td><td>1.62</td><td>1.84</td><td>2.08</td><td>2.35</td></tr>
+                    <tr><td>Neon</td><td>Ne</td><td>2.93</td><td>3.27</td><td>3.64</td><td>4.03</td><td>4.45</td><td>4.89</td></tr>
+                    <tr><td>Nitrogen</td><td>N₂</td><td></td><td></td><td></td><td>2.00</td><td></td><td></td></tr>
+                    <tr><td>Nitrogen dioxide</td><td>NO₂</td><td></td><td></td><td>1.23</td><td>1.40</td><td>1.59</td><td></td></tr>
+                    <tr><td>Nitrous oxide</td><td>N₂O</td><td></td><td>1.62</td><td>2.11</td><td>2.57</td><td></td><td></td></tr>
+                    <tr><td>Oxygen</td><td>O₂</td><td></td><td>1.67</td><td>2.01</td><td>2.42</td><td></td><td></td></tr>
+                    <tr><td>Radon</td><td>Rn</td><td>0.81</td><td>0.96</td><td>1.13</td><td>1.33</td><td>1.55</td><td>1.80</td></tr>
+                    <tr><td>Sulfur dioxide</td><td>SO₂</td><td></td><td></td><td>1.62</td><td>1.83</td><td>2.07</td><td>2.32</td></tr>
+                    <tr><td>Xenon</td><td>Xe</td><td>0.93</td><td>1.08</td><td>1.27</td><td>1.47</td><td>1.70</td><td>1.95</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="text-start small">Values are from different sources and measuring methods, some uncertainty should be expected.</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
 
       <section class="mt-5 pt-3">
         <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
@@ -356,21 +383,12 @@
       </section>
 
 
-    </main>   
-    
+    </main>
+
     <!-- FOOTER -->
     <footer id="site-footer"></footer>
     <script src="js/footer.js"></script>
-    <!-- END FOOTER -->    
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-5XLCN0GJQ0');
-</script>
+    <!-- END FOOTER -->
 
   </body>
 </html>

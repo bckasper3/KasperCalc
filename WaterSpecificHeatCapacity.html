@@ -1,0 +1,532 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA FOR -->
+    <title>KasperCalc: Water Specific Heat Capacity</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, bckasper3, Water Specific Heat Capacity, Water Cv Cp Calculator, Isochoric Isobaric Specific Heat Water" />
+    <meta name="description" content="Look up and calculate specific heat capacity (Cv and Cp) of liquid water at temperatures from 0 to 360 °C." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+
+        <!-- <script defer type="text/javascript" src="js/bootstrap.min.js"></script> -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <script defer type="text/javascript" src="js/waterHeatCapacity.js"></script>
+
+    <!-- CSS FILES -->
+    <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5XLCN0GJQ0');
+</script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+
+   </head>
+
+  <!-- BODY -->
+  <body>
+
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityWater.html">Water Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Water Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item" style="padding-right: 0px;">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                Water Specific Heat Capacity
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHART -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Water Specific Heat Capacity Chart</div>
+            </div>
+
+            <div class="canvasdiv">
+              <button id="toggleTooltipButton">Hide Tooltips</button>
+              <a style="font-size: medium; text-decoration: none;" href="img/WaterSpecificHeatCapacity.png" download="WaterSpecificHeatCapacity.png">
+                <button>Download Chart</button>
+              </a>
+              <a style="font-size: medium; text-decoration: none;" href="img/WaterSpecificHeatCapacity.png" target="_blank">
+                <button>Open In New Tab</button>
+              </a>
+              <img src="img/WaterSpecificHeatCapacity.png" alt="Water Specific Heat Capacity vs Temperature Graph" style="position:absolute; width:1px; height:1px; overflow:hidden; opacity:0;">
+              <div class="canvascontainer">
+
+                    <!-- <script defer type="text/javascript" src="js/chart.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+                <!-- <canvas id="myChart"></canvas> -->
+                <canvas id="myChart" aria-label="Water Specific Heat Capacity (Cv and Cp) vs Temperature Graph" width="400" height="600" role="img" class="chartcanvas"> <!-- width="400" height="600" -->
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p></canvas>
+
+              </div>
+            </div>
+            <p class="text-center">At saturation pressure (equivalent to atmospheric pressure below 100&nbsp;°C / 212&nbsp;°F)</p>
+            <p class="text-center">Toggle data sets by clicking the legend.</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- CALCULATOR -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+
+            <div class="wrapper"  style="max-width:36rem;">
+              <div class="header text-center">Water Specific Heat Capacity Calculator</div>
+
+              <div class="group1 d-flex flex-wrap">
+                <label class="dropdownlabel" for="operation">Select Input Unit:</label>
+                <span class="output">
+                  <select class="dropdowncalc dropdown-menu-end" style="width: 6rem;" id="operation" onchange="calculate()" aria-label="Temperature unit selector">
+                    <option value="degF">°F</option>
+                    <option value="degC">°C</option>
+                    <option value="degK">&nbsp;K</option>
+                    <option value="degR">°R</option>
+                  </select>
+                </span>
+              </div>
+
+              <div class="group2">
+                <span class="label"><span id="tempLabel">°F:</span></span>
+                <span class="output inputbox">
+                  <input class="calcinput" type="number" id="input2" oninput="calculate()" value="70" aria-label="Temperature input" />
+                </span>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-medium)">Isochoric Specific Heat (Cv):</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Cv [J/(mol·K)]:</span>
+                  <span class="output" id="result_cv_jmolk">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Cv [kJ/(kg·K)]:</span>
+                  <span class="output" id="result_cv_kjkgk">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Cv [kWh/(kg·K)]:</span>
+                  <span class="output" id="result_cv_kwh">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Cv [kcal/(kg·K)] = Btu(IT)/(lbm·°F):</span>
+                  <span class="output" id="result_cv_kcal">&nbsp;</span>
+                </div>
+
+                <div class="outputrow" style="margin-top: 0.75rem;">
+                  <span class="label" style="font-weight:var(--font-weight-medium)">Isobaric Specific Heat (Cp):</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Cp [J/(mol·K)]:</span>
+                  <span class="output" id="result_cp_jmolk">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Cp [kJ/(kg·K)]:</span>
+                  <span class="output" id="result_cp_kjkgk">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Cp [kWh/(kg·K)]:</span>
+                  <span class="output" id="result_cp_kwh">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Cp [kcal/(kg·K)] = Btu(IT)/(lbm·°F):</span>
+                  <span class="output" id="result_cp_kcal">&nbsp;</span>
+                </div>
+              </div>
+
+            </div>
+            <p class="text-center">Valid range: 0.01–360&nbsp;°C &nbsp;|&nbsp; 32–680&nbsp;°F &nbsp;|&nbsp; 273–633&nbsp;K &nbsp;|&nbsp; 492–1140&nbsp;°R</p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- DESCRIPTION -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+
+            <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
+              <div class="custom-heading">Specific Heat Capacity of Water</div>
+
+              <div style="text-align: left" class="mt-3">
+                <div class="custom-subheading">What Is Specific Heat Capacity?</div>
+                <p class="mt-2">
+                  Specific heat capacity (C) is the amount of heat required to raise the temperature of a unit mass by one degree.
+                  For water it is measured in <span style="font-weight:var(--font-weight-medium)">kJ/(kg·K)</span> [SI] or
+                  <span style="font-weight:var(--font-weight-medium)">Btu/(lbm·°F)</span> [Imperial], and governs sizing of heat exchangers,
+                  heaters, and cooling systems. The heat transfer equation is:
+                </p>
+                <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">Q = ṁ × C × ΔT</p>
+                <p class="mt-1">
+                  where <em>Q</em> is heat flow (W or BTU/hr), <em>ṁ</em> is mass flow rate, and <em>ΔT</em> is the temperature
+                  difference across the heat exchanger or system boundary.
+                </p>
+              </div>
+
+              <div style="text-align: left" class="mt-4">
+                <div class="custom-subheading">Isochoric (Cv) vs. Isobaric (Cp)</div>
+                <p class="mt-2">
+                  <span style="font-weight:var(--font-weight-medium)">Isochoric specific heat (Cv)</span> applies to a constant-volume
+                  closed system. All added heat goes into raising the internal energy of the fluid with no work done on the surroundings.
+                </p>
+                <p class="mt-2">
+                  <span style="font-weight:var(--font-weight-medium)">Isobaric specific heat (Cp)</span> applies to a constant-pressure
+                  open system. Added heat raises internal energy and also does expansion work, so Cp &gt; Cv.
+                  For practical liquid-water engineering — open pipes, heat exchangers, and boilers below saturation — Cp is the correct value to use.
+                </p>
+                <p class="mt-2">
+                  Both values vary with temperature. Cp reaches a minimum near 35–40&nbsp;°C and rises steeply above 280&nbsp;°C
+                  as water approaches the critical point (374&nbsp;°C). When calculating mass and volume flow in water heating
+                  systems at elevated temperatures, specific heat should be corrected for temperature using the table above.
+                </p>
+              </div>
+
+              <p class="mt-3 text-start"><span style="font-weight:var(--font-weight-normal)">Note:</span> All tabulated values are at saturation pressure. Above 100&nbsp;°C this exceeds atmospheric pressure, but gives the same result as atmospheric for practical calculations below 100&nbsp;°C.</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- DATA TABLE -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+
+            <div class="mx-auto d-inline-block mt-4" style="max-width:960px; width:100%;">
+              <div class="custom-heading">Water — Specific Heat vs. Temperature (°C)</div>
+
+              <div class="table-responsive mt-3 mb-3">
+                <table class="table table-striped table-bordered table-hover table-sm">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th rowspan="2" class="align-middle">Temperature<br>(°C)</th>
+                      <th colspan="4" class="text-center">Isochoric Specific Heat (Cv)</th>
+                      <th colspan="4" class="text-center">Isobaric Specific Heat (Cp)</th>
+                    </tr>
+                    <tr>
+                      <th>J/(mol·K)</th>
+                      <th>kJ/(kg·K)</th>
+                      <th>kWh/(kg·K)</th>
+                      <th>kcal/(kg·K)<br>Btu(IT)/(lbm·°F)</th>
+                      <th>J/(mol·K)</th>
+                      <th>kJ/(kg·K)</th>
+                      <th>kWh/(kg·K)</th>
+                      <th>kcal/(kg·K)<br>Btu(IT)/(lbm·°F)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>0.01</td><td>75.981</td><td>4.2174</td><td>0.001172</td><td>1.0073</td><td>76.026</td><td>4.2199</td><td>0.001172</td><td>1.0079</td></tr>
+                    <tr><td>10</td><td>75.505</td><td>4.1910</td><td>0.001164</td><td>1.0010</td><td>75.586</td><td>4.1955</td><td>0.001165</td><td>1.0021</td></tr>
+                    <tr><td>20</td><td>74.893</td><td>4.1570</td><td>0.001155</td><td>0.9929</td><td>75.386</td><td>4.1844</td><td>0.001162</td><td>0.9994</td></tr>
+                    <tr><td>25</td><td>74.548</td><td>4.1379</td><td>0.001149</td><td>0.9883</td><td>75.336</td><td>4.1816</td><td>0.001162</td><td>0.9988</td></tr>
+                    <tr><td>30</td><td>74.181</td><td>4.1175</td><td>0.001144</td><td>0.9834</td><td>75.309</td><td>4.1801</td><td>0.001161</td><td>0.9984</td></tr>
+                    <tr><td>40</td><td>73.392</td><td>4.0737</td><td>0.001132</td><td>0.9730</td><td>75.300</td><td>4.1796</td><td>0.001161</td><td>0.9983</td></tr>
+                    <tr><td>50</td><td>72.540</td><td>4.0264</td><td>0.001118</td><td>0.9617</td><td>75.334</td><td>4.1815</td><td>0.001162</td><td>0.9987</td></tr>
+                    <tr><td>60</td><td>71.644</td><td>3.9767</td><td>0.001105</td><td>0.9498</td><td>75.399</td><td>4.1851</td><td>0.001163</td><td>0.9996</td></tr>
+                    <tr><td>70</td><td>70.716</td><td>3.9252</td><td>0.001090</td><td>0.9375</td><td>75.491</td><td>4.1902</td><td>0.001164</td><td>1.0008</td></tr>
+                    <tr><td>80</td><td>69.774</td><td>3.8729</td><td>0.001076</td><td>0.9250</td><td>75.611</td><td>4.1969</td><td>0.001166</td><td>1.0024</td></tr>
+                    <tr><td>90</td><td>68.828</td><td>3.8204</td><td>0.001061</td><td>0.9125</td><td>75.763</td><td>4.2053</td><td>0.001168</td><td>1.0044</td></tr>
+                    <tr><td>100</td><td>67.888</td><td>3.7682</td><td>0.001047</td><td>0.9000</td><td>75.950</td><td>4.2157</td><td>0.001171</td><td>1.0069</td></tr>
+                    <tr><td>110</td><td>66.960</td><td>3.7167</td><td>0.001032</td><td>0.8877</td><td>76.177</td><td>4.2283</td><td>0.001175</td><td>1.0099</td></tr>
+                    <tr><td>120</td><td>66.050</td><td>3.6662</td><td>0.001018</td><td>0.8757</td><td>76.451</td><td>4.2435</td><td>0.001179</td><td>1.0135</td></tr>
+                    <tr><td>140</td><td>64.306</td><td>3.5694</td><td>0.000992</td><td>0.8525</td><td>77.155</td><td>4.2826</td><td>0.001190</td><td>1.0229</td></tr>
+                    <tr><td>160</td><td>62.674</td><td>3.4788</td><td>0.000966</td><td>0.8309</td><td>78.107</td><td>4.3354</td><td>0.001204</td><td>1.0355</td></tr>
+                    <tr><td>180</td><td>61.163</td><td>3.3949</td><td>0.000943</td><td>0.8109</td><td>79.360</td><td>4.4050</td><td>0.001224</td><td>1.0521</td></tr>
+                    <tr><td>200</td><td>59.775</td><td>3.3179</td><td>0.000922</td><td>0.7925</td><td>80.996</td><td>4.4958</td><td>0.001249</td><td>1.0738</td></tr>
+                    <tr><td>220</td><td>58.514</td><td>3.2479</td><td>0.000902</td><td>0.7757</td><td>83.137</td><td>4.6146</td><td>0.001282</td><td>1.1022</td></tr>
+                    <tr><td>240</td><td>57.381</td><td>3.1850</td><td>0.000885</td><td>0.7607</td><td>85.971</td><td>4.7719</td><td>0.001326</td><td>1.1397</td></tr>
+                    <tr><td>260</td><td>56.392</td><td>3.1301</td><td>0.000869</td><td>0.7476</td><td>89.821</td><td>4.9856</td><td>0.001385</td><td>1.1908</td></tr>
+                    <tr><td>280</td><td>55.578</td><td>3.0849</td><td>0.000857</td><td>0.7368</td><td>95.285</td><td>5.2889</td><td>0.001469</td><td>1.2632</td></tr>
+                    <tr><td>300</td><td>55.003</td><td>3.0530</td><td>0.000848</td><td>0.7292</td><td>103.60</td><td>5.7504</td><td>0.001597</td><td>1.3735</td></tr>
+                    <tr><td>320</td><td>54.819</td><td>3.0428</td><td>0.000845</td><td>0.7268</td><td>117.78</td><td>6.5373</td><td>0.001816</td><td>1.5614</td></tr>
+                    <tr><td>340</td><td>55.455</td><td>3.0781</td><td>0.000855</td><td>0.7352</td><td>147.88</td><td>8.2080</td><td>0.002280</td><td>1.9604</td></tr>
+                    <tr><td>360</td><td>59.402</td><td>3.2972</td><td>0.000916</td><td>0.7875</td><td>270.31</td><td>15.004</td><td>0.004168</td><td>3.5836</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="text-start small">Data at saturation pressure. Below 100&nbsp;°C this is equivalent to atmospheric pressure for practical purposes.</p>
+
+              <div class="custom-heading mt-5">Water — Specific Heat vs. Temperature (°F)</div>
+
+              <div class="table-responsive mt-3 mb-3">
+                <table class="table table-striped table-bordered table-hover table-sm">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th rowspan="2" class="align-middle">Temperature<br>(°F)</th>
+                      <th colspan="3" class="text-center">Isochoric Specific Heat (Cv)</th>
+                      <th colspan="3" class="text-center">Isobaric Specific Heat (Cp)</th>
+                    </tr>
+                    <tr>
+                      <th>Btu(IT)/(kmol·°R)</th>
+                      <th>Btu(IT)/(lbm·°F)<br>kcal/(kg·K)</th>
+                      <th>kJ/(kg·K)</th>
+                      <th>Btu(IT)/(kmol·°R)</th>
+                      <th>Btu(IT)/(lbm·°F)<br>kcal/(kg·K)</th>
+                      <th>kJ/(kg·K)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>32.2</td><td>40.0</td><td>1.007</td><td>4.217</td><td>40.032</td><td>1.008</td><td>4.220</td></tr>
+                    <tr><td>40</td><td>39.9</td><td>1.005</td><td>4.208</td><td>39.916</td><td>1.005</td><td>4.208</td></tr>
+                    <tr><td>50</td><td>39.8</td><td>1.001</td><td>4.191</td><td>39.801</td><td>1.002</td><td>4.196</td></tr>
+                    <tr><td>60</td><td>39.6</td><td>0.996</td><td>4.169</td><td>39.739</td><td>1.001</td><td>4.189</td></tr>
+                    <tr><td>80</td><td>39.2</td><td>0.986</td><td>4.128</td><td>39.660</td><td>0.999</td><td>4.181</td></tr>
+                    <tr><td>100</td><td>38.7</td><td>0.975</td><td>4.082</td><td>39.643</td><td>0.998</td><td>4.179</td></tr>
+                    <tr><td>120</td><td>38.3</td><td>0.963</td><td>4.033</td><td>39.662</td><td>0.999</td><td>4.181</td></tr>
+                    <tr><td>140</td><td>37.7</td><td>0.950</td><td>3.977</td><td>39.702</td><td>1.000</td><td>4.185</td></tr>
+                    <tr><td>160</td><td>37.2</td><td>0.937</td><td>3.923</td><td>39.761</td><td>1.001</td><td>4.191</td></tr>
+                    <tr><td>180</td><td>36.7</td><td>0.923</td><td>3.865</td><td>39.835</td><td>1.003</td><td>4.199</td></tr>
+                    <tr><td>200</td><td>36.1</td><td>0.909</td><td>3.805</td><td>39.927</td><td>1.005</td><td>4.209</td></tr>
+                    <tr><td>212</td><td>35.7</td><td>0.900</td><td>3.768</td><td>39.993</td><td>1.007</td><td>4.216</td></tr>
+                    <tr><td>220</td><td>35.5</td><td>0.895</td><td>3.745</td><td>40.042</td><td>1.008</td><td>4.221</td></tr>
+                    <tr><td>240</td><td>35.0</td><td>0.880</td><td>3.686</td><td>40.186</td><td>1.012</td><td>4.236</td></tr>
+                    <tr><td>260</td><td>34.4</td><td>0.867</td><td>3.629</td><td>40.364</td><td>1.016</td><td>4.255</td></tr>
+                    <tr><td>280</td><td>33.9</td><td>0.854</td><td>3.574</td><td>40.580</td><td>1.022</td><td>4.278</td></tr>
+                    <tr><td>300</td><td>33.4</td><td>0.841</td><td>3.522</td><td>40.838</td><td>1.028</td><td>4.305</td></tr>
+                    <tr><td>350</td><td>32.3</td><td>0.813</td><td>3.404</td><td>41.685</td><td>1.050</td><td>4.394</td></tr>
+                    <tr><td>400</td><td>31.3</td><td>0.789</td><td>3.302</td><td>42.902</td><td>1.080</td><td>4.522</td></tr>
+                    <tr><td>450</td><td>30.4</td><td>0.767</td><td>3.209</td><td>44.009</td><td>1.108</td><td>4.639</td></tr>
+                    <tr><td>500</td><td>29.7</td><td>0.748</td><td>3.130</td><td>47.296</td><td>1.191</td><td>4.986</td></tr>
+                    <tr><td>550</td><td>28.8</td><td>0.725</td><td>3.035</td><td>51.318</td><td>1.292</td><td>5.410</td></tr>
+                    <tr><td>600</td><td>28.3</td><td>0.713</td><td>2.987</td><td>59.690</td><td>1.503</td><td>6.292</td></tr>
+                    <tr><td>625</td><td>28.4</td><td>0.716</td><td>2.997</td><td>66.611</td><td>1.677</td><td>7.022</td></tr>
+                    <tr><td>650</td><td>28.9</td><td>0.728</td><td>3.047</td><td>82.851</td><td>2.086</td><td>8.734</td></tr>
+                    <tr><td>675</td><td>29.9</td><td>0.754</td><td>3.156</td><td>126.670</td><td>3.189</td><td>13.353</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="text-start small">Data at saturation pressure. Above 212&nbsp;°F all values are at saturation pressure.</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary p-4 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+            <div id="citationText" class="font-monospace text-dark-emphasis small pt-2">
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->
+
+  </body>
+</html>
