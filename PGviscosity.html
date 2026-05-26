@@ -7,7 +7,7 @@
     <!-- META DATA FOR -->
     <title>KasperCalc: Propylene Glycol Viscosity</title>
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, bckasper3, Propylene Glycol Dynamic Viscosity, Propylene Glycol Absolute Viscosity, Propylene Glycol, Propylene Glycol Viscosity Calculator" />
+    <meta name="keywords" content="KasperCalc, bckasper3, Propylene Glycol Dynamic Viscosity, Propylene Glycol Dynamic (Absolute) Viscosity, Propylene Glycol Absolute Viscosity, Propylene Glycol, Propylene Glycol Viscosity Calculator" />
     <meta name="description" content="Calculate and reference the viscosity of propylene glycol across concentration and temperature ranges." />
 
     <!-- DEFERRED JAVASCRIPT -->
@@ -18,7 +18,7 @@
     <script defer src="js/footer.js"></script>
     <script defer src="js/header-active-class.js"></script>
     <script defer src="js/navsearch.js"></script>
-    <script defer type="text/javascript" src="js/pgViscosity.js"></script>
+    <script defer type="text/javascript" src="js/pgViscKinematic.js"></script>
 
     <!-- CSS FILES -->
     <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> --> 
@@ -88,7 +88,7 @@
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
                   <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
-                  <a class="dropdown-item" href="kinematicViscosity.html">Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
                   <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
                   <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
                   <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
@@ -124,11 +124,39 @@
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
-                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
-                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699BoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Dynamic and Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699EnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thremal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="Waterviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterLiquidGasEquilibrium.html">Liquid Gas Equilibrium</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thremal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
                 </div>
               </li>
               <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
@@ -142,6 +170,9 @@
           </div>
           <div class="d-md-flex d-block justify-content-end">
             <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
                 <div class="dropdown-menu dropdown-menu-end">
@@ -162,12 +193,17 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a class="dropdown-item" href="densityWater.html">Water Density</a>
-                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Water Specific Heat Capacity</a>
-                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
                   <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
                   <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
                   <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
                 </div>
               </li>
               <li class="nav-item" style="padding-right: 0px;">
@@ -223,7 +259,7 @@
           <div class="col-lg-12 col-12">
             <div class="banner section-title-wrap">
               <div class="h1 section-title bannertext">
-                Propylene Glycol Dynamic Viscosity
+                Propylene Glycol Dynamic (Absolute) Viscosity
               </div>
             </div>
           </div>
@@ -239,7 +275,7 @@
         <div class="col-lg-12 col-12">
 
           <div class="section-title-wrap">
-            <div class="h1 section-title">Propylene Glycol Dynamic Viscosity Chart</div>
+            <div class="h1 section-title">Propylene Glycol Dynamic (Absolute) Viscosity Chart</div>
           </div>
 
           <div class="canvasdiv">
@@ -265,13 +301,36 @@
             </div>
           </div>
           <p class="text-center">Data from "Propylene Glycol Industrial Grade", <a href="https://www.carpemar.com/images/pdf/FT/Propilenglicol_IND/FT_Propilenglicol_IND_EN.pdf" target="_blank">Carpemar 2016</a></p>
-          <p class="text-center">Toggle data sets by clicking the legend.</p>
-          <!-- <p class="text-center">*This chart is in process*
-          </p> -->
+          <p class="text-center">Toggle data sets by clicking the legend. Y-axis is logarithmic.</p>
         </div>
       </div>
     </section>
 
+    <!-- KINEMATIC VISCOSITY CHART -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Propylene Glycol Kinematic Viscosity Chart</div>
+          </div>
+          <div class="canvasdiv">
+            <button id="toggleTooltipButtonKin">Hide Tooltips</button>
+            <a style="font-size: medium; text-decoration: none;" href="img/PropyleneGlycolKinematicViscosity.png" download="PropyleneGlycolKinematicViscosity.png">
+              <button>Download Chart</button>
+            </a>
+            <a style="font-size: medium; text-decoration: none;" href="img/PropyleneGlycolKinematicViscosity.png" target="_blank">
+              <button>Open In New Tab</button>
+            </a>
+            <div class="canvascontainer">
+              <canvas id="kinChart" aria-label="Propylene Glycol Kinematic Viscosity vs Temperature °F by % Concentration" width="400" height="600" role="img" class="chartcanvas">
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+              </canvas>
+            </div>
+          </div>
+          <p class="text-center">Computed from dynamic (absolute) viscosity ÷ density (same source). Toggle data sets by clicking the legend. Y-axis is logarithmic.</p>
+        </div>
+      </div>
+    </section>
 
     <!-- CALCULATOR -->
     <section>
@@ -279,24 +338,12 @@
         <div class="col-lg-12 col-12 px-3">
 
           <div class="wrapper" style="max-width:33rem;">
-            <div class="header text-center">Propylene Glycol Dynamic Viscosity Calculator
-            </div>
+            <div class="header text-center">Propylene Glycol Viscosity Calculator</div>
 
-          <!-- <div class="toggle-container">
-            <label class="toggle-switch">
-              <input type="checkbox" id="fuelheadcalctoggle" class="toggle-input">
-              <span class="slider">
-                <span class="option left">Inches of Fuel</span>
-                <span class="option right">PSI</span>
-              </span>
-            </label>
-          </div> -->
-      
             <div class="group1 d-flex flex-wrap">
               <label class="dropdownlabel" for="operation">Select Mixture %:</label>
-
               <span class="output">
-                <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="calculate()" aria-label="Drop down for the freeze curve or the concentration of proylene glycol">
+                <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="calculate()" aria-label="Drop down for the freeze curve or the concentration of propylene glycol">
                   <option value="50">50%</option>
                   <option value="45">45%</option>
                   <option value="40">40%</option>
@@ -305,59 +352,81 @@
                   <option value="25">25%</option>
                   <option value="Freeze Curve">Freeze Curve</option>
                 </select>
-
               </span>
             </div>
-      
+
             <div class="group">
               <div class="outputrow">
-              <span class="label">
-                <span id="nominalDensityOption1">Degrees (°F)</span>
-              </span> 
-              <span class="output inputbox">
-                <input class= "calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" value="70" aria-label="Input box for degrees Fahrenheit"/>
-              </span>
-              </div>
-      
-              <div class="outputrow">
-                <span class="label">
-                  <span id="nominalDensityOption2">Degrees (°C)</span>
-                </span> 
+                <span class="label">Degrees (°F):</span>
                 <span class="output inputbox">
-                  <input class= "calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" aria-label="Input for degrees celcius"/>
+                  <input class="calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" value="70" aria-label="Input box for degrees Fahrenheit" />
+                </span>
+              </div>
+              <div class="outputrow">
+                <span class="label">Degrees (°C):</span>
+                <span class="output inputbox">
+                  <input class="calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" aria-label="Input for degrees Celsius" />
                 </span>
               </div>
             </div>
-      
+
             <div class="group">
               <div class="outputrow">
-                <span class="label">mPa-sec:</span>
-                <span class="output" id="result_density1">&nbsp</span>
+                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Dynamic (Absolute) Viscosity</span>
               </div>
-      
               <div class="outputrow">
-                <span class="label">Centipoise:</span>
-                <span class="output" id="result_density4">&nbsp</span>
+                <span class="label">mPa·s (= cP):</span>
+                <span class="output" id="result_density1">&nbsp;</span>
               </div>
+              <div class="outputrow">
+                <span class="label">Centipoise (cP):</span>
+                <span class="output" id="result_density4">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">Poise (g/(cm·s)):</span>
+                <span class="output" id="result_density3">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">Pa·s (Poiseuille):</span>
+                <span class="output" id="result_density2">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">lbm/(ft·s):</span>
+                <span class="output" id="result_density5">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">kg/(m·h):</span>
+                <span class="output" id="result_density6">&nbsp;</span>
+              </div>
+            </div>
 
+            <div class="group">
               <div class="outputrow">
-                <span class="label">Poise (dyne s/cm2, g/cm s):</span>
-                <span class="output" id="result_density3">&nbsp</span>
+                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Kinematic Viscosity</span>
               </div>
-
               <div class="outputrow">
-                <span class="label">Poiseuille (Pa-s):</span>
-                <span class="output" id="result_density2">&nbsp</span>
+                <span class="label">mm²/s (= cSt):</span>
+                <span class="output" id="result_kin1">&nbsp;</span>
               </div>
-
               <div class="outputrow">
-                <span class="label">lbm/(ft-sec):</span>
-                <span class="output" id="result_density5">&nbsp</span>
+                <span class="label">Centistokes (cSt):</span>
+                <span class="output" id="result_kin2">&nbsp;</span>
               </div>
-
               <div class="outputrow">
-                <span class="label">kg/(m-h):</span>
-                <span class="output" id="result_density6">&nbsp</span>
+                <span class="label">Stokes (cm²/s):</span>
+                <span class="output" id="result_kin3">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">m²/s:</span>
+                <span class="output" id="result_kin4">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">in²/s:</span>
+                <span class="output" id="result_kin5">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">ft²/s:</span>
+                <span class="output" id="result_kin6">&nbsp;</span>
               </div>
             </div>
 
@@ -377,10 +446,10 @@
           <div class="mx-md-5 mx-3 section-content-wrap">
 
             <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
-              <div class="custom-heading">Dynamic Viscosity of Propylene Glycol</div>
+              <div class="custom-heading">Dynamic (Absolute) Viscosity of Propylene Glycol</div>
 
               <div style="text-align: left" class="mt-3">
-                <div class="custom-subheading">What Is Dynamic Viscosity?</div>
+                <div class="custom-subheading">What Is Dynamic (Absolute) Viscosity?</div>
                 <p class="mt-2">
                   Dynamic (absolute) viscosity (<span style="font-weight:var(--font-weight-medium)">μ</span>) measures a fluid's resistance to shear flow.
                   It is measured in <span style="font-weight:var(--font-weight-medium)">mPa·s</span> (millipascal-seconds), equivalent to
@@ -416,6 +485,79 @@
           </div>
         </div>
       </section>
+
+    <!-- DYNAMIC VS KINEMATIC EXPLANATION -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
+            <div class="custom-heading">Dynamic (Absolute) vs. Kinematic Viscosity</div>
+
+            <div style="text-align:left" class="mt-3">
+              <div class="custom-subheading">Dynamic (Absolute) Viscosity — μ</div>
+              <p class="mt-2">
+                Dynamic viscosity (also called absolute viscosity or static viscosity) measures a fluid's resistance
+                to shear — the internal force per unit area required to make one layer of fluid slide past another.
+                It is independent of density. The SI unit is the pascal-second (Pa·s); the common engineering unit
+                is the millipascal-second (mPa·s), numerically equal to centipoise (cP).
+              </p>
+              <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
+                τ = μ × (du / dy)
+              </p>
+              <p class="mt-1">
+                where τ is shear stress [Pa] and du/dy is the velocity gradient [s⁻¹].
+              </p>
+            </div>
+
+            <div style="text-align:left" class="mt-4">
+              <div class="custom-subheading">Kinematic Viscosity — ν</div>
+              <p class="mt-2">
+                Kinematic viscosity is the ratio of dynamic viscosity to fluid density. It describes how easily
+                a fluid flows under the influence of gravity or pressure, without needing to separately account for
+                the applied force. The SI unit is m²/s; the common unit is mm²/s, numerically equal to centistokes (cSt).
+              </p>
+              <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
+                ν = μ / ρ
+              </p>
+            </div>
+
+            <div style="text-align:left" class="mt-4">
+              <div class="custom-subheading">Relationship and Unit Conversion</div>
+              <p class="mt-2">
+                Kinematic viscosity is derived from dynamic viscosity and density:
+              </p>
+              <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
+                ν [cSt] = μ [mPa·s] × 1000 / ρ [kg/m³]
+              </p>
+              <p class="mt-1">
+                Because denser fluids have higher internal inertia, a greater dynamic viscosity is required to
+                produce the same kinematic viscosity. Glycol solutions are significantly denser than water, so their
+                kinematic viscosity rises more slowly with concentration than their dynamic viscosity does.
+              </p>
+            </div>
+
+            <div style="text-align:left" class="mt-4">
+              <div class="custom-subheading">When to Use Each</div>
+              <p class="mt-2">
+                Use <strong>dynamic (absolute) viscosity</strong> for: pump power calculations, pipe pressure drop
+                (Darcy–Weisbach), Reynolds number (Re = ρvD/μ), and any situation where force or stress is the
+                driving input.
+              </p>
+              <p class="mt-2">
+                Use <strong>kinematic viscosity</strong> for: gravity-driven flow, lubrication ratings, most
+                viscometer measurements, and flow calculations where density is already embedded in the formula
+                (e.g., Stokes' law, ASTM oil viscosity grades).
+              </p>
+              <p class="mt-3 text-start">
+                <span style="font-weight:var(--font-weight-normal)">Note:</span> "Absolute viscosity" and
+                "static viscosity" are synonyms for dynamic viscosity — they all refer to the same physical property.
+                "Static" distinguishes it from apparent viscosity measured at elevated shear rates in non-Newtonian fluids.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
       <section class="mt-5 pt-3">
         <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">

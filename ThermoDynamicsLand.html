@@ -1,0 +1,2948 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- SEO META DATA -->
+    <title>KasperCalc: Thermodynamics Calculator — Steam Tables &amp; Fluid Properties</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="thermodynamic calculator, steam tables, water steam tables, fluid thermodynamic properties, enthalpy calculator, entropy calculator, CoolProp calculator, NIST WebBook alternative, thermophysical properties, saturated steam properties, superheated steam tables, subcooled liquid, specific heat capacity, thermal conductivity calculator, dynamic viscosity, kinematic viscosity, Prandtl number, density calculator, saturation pressure, vapor pressure table, R-134a refrigerant properties, R-22 refrigerant properties, R-12 refrigerant properties, ammonia thermodynamic properties R-717, air properties calculator, nitrogen properties, oxygen properties, hydrogen thermodynamics, methane natural gas thermodynamics, propane properties, ethane properties, refrigerant property tables, phase diagram, critical point, triple point, two-phase region, superheated vapor, compressed liquid, KasperCalc, thermodynamics, engineering fluid properties" />
+    <meta name="description" content="Engineering thermodynamic property calculator for 400+ fluids including water, steam, refrigerants, gases, and cryogens. Look up enthalpy, entropy, density, specific heat, viscosity, thermal conductivity, and Prandtl number. Available in SI, US customary, and custom unit systems. Precomputed from CoolProp equations of state." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <script src="js/thermodynamicsland.js"></script>
+    <script src="js/thermographs.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <!-- Chart.js 4 for property graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+
+    <!-- Calculator component styles (Spring Calculator pattern) -->
+    <style>
+    .wrapper{margin:0 auto;max-width:62rem;background:#6a746a;border-radius:20px;border:3px solid rgb(67,67,67)}
+    .hdr{background:#eee;display:flex;justify-content:center;align-items:center;gap:10px;padding:0.4rem 0.6rem;margin:0.5rem;font-size:22px;font-weight:200;box-shadow:0 3px 5px rgba(0,0,0,.4);border-radius:10px;border:2px solid rgb(67,67,67);font-family:"Roboto",Arial,sans-serif}
+    .toolbar{background:#eee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:5px 8px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+    .tbtn{font-size:13px;padding:3px 10px;border-radius:6px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;cursor:pointer;font-family:"Roboto",Arial,sans-serif;font-weight:400;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;line-height:1.4}
+    .tbtn:hover{background:#eee}
+    .tbtn.accent{background:#699dad;color:#fff;border-color:rgb(67,67,67)}
+    .tbtn.accent:hover{background:#5a8a9a}
+    .tbtn.active{background:#A3C3CD;border-color:rgb(67,67,67);font-weight:600}
+    .tlabel{font-size:12px;color:#555;font-weight:400;margin-right:2px}
+    .grp{background:#eee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:6px 8px}
+    .grp-title{font-size:12px;font-weight:600;color:#61828A;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid #c0c0c0;padding-bottom:4px;margin-bottom:6px}
+    .thermo-g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+    .thermo-g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+    .thermo-f{display:flex;flex-direction:column;gap:2px}
+    .thermo-f label{font-size:12px;color:#444;font-weight:400}
+    .thermo-f input,.thermo-f select{font-size:12px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;width:100%;font-family:"Roboto",Arial,sans-serif;height:22px}
+    .thermo-f input:focus,.thermo-f select:focus{outline:none;border-color:#61828A;background:#e8f0f3}
+    .itype-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+    .it{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;padding:4px 8px;border:1.5px solid rgb(67,67,67);border-radius:6px;gap:6px;cursor:pointer;font-size:12px;color:#000;background:#d9d9d9;transition:background 0.15s}
+    .it:hover{background:#eee}
+    .it input[type=radio]{accent-color:#61828A;width:11px;height:11px;flex-shrink:0}
+    .it.sel{background:#A3C3CD;border-color:#3a6270;font-weight:600}
+    .sst{font-size:12px;font-weight:600;color:#61828A;margin-bottom:0;text-transform:uppercase;letter-spacing:0.05em;display:block}
+    .graph-banner{background:#eeeeee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);overflow:hidden}
+    .graph-tab-row{display:flex;border-bottom:2px solid rgb(67,67,67);background:#d9d9d9}
+    .graph-tab{flex:1;padding:5px 4px;font-size:12px;font-weight:500;color:#555;text-align:center;cursor:pointer;border-right:1px solid #b0b0b0;font-family:"Roboto",Arial,sans-serif;background:transparent;border-top:none;border-left:none;border-bottom:none}
+    .graph-tab:last-child{border-right:none}
+    .graph-tab:hover{background:#eee}
+    .graph-tab.active{background:#eeeeee;color:#1a3a40;font-weight:700;border-bottom:2px solid #eeeeee;margin-bottom:-2px}
+    .graph-content{padding:8px;display:none}
+    .graph-content.visible{display:block}
+    .bottom-bar{background:#eee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:6px 10px;display:flex;align-items:flex-start;gap:8px}
+    .status-dot{width:9px;height:9px;border-radius:50%;background:#aaa;flex-shrink:0;margin-top:2px}
+    .status-dot.ok{background:#2a7a2a}
+    .status-dot.warn{background:#cc7700}
+    .status-dot.err{background:#cc2222}
+    .prop-panel{background:#eee;margin:0 .5rem .5rem;border-radius:10px;border:2px solid #434343;box-shadow:0 3px 5px rgba(0,0,0,.4);padding:6px 8px}
+    .prop-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 14px;align-items:start}
+    .prop-col{display:flex;flex-direction:column;gap:0}
+    .prop-col-title{font-size:11px;font-weight:700;color:#61828A;text-transform:uppercase;letter-spacing:0.05em;padding:2px 0 3px;border-bottom:1px solid #ccc;margin-bottom:3px}
+    .prop-row{display:grid;grid-template-columns:108px 88px 1fr;align-items:center;gap:3px;padding:2px 0;border-bottom:.5px solid #d8d8d8}
+    .prop-row:last-child{border-bottom:none}
+    .prop-row-label{font-size:11px;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:2px}
+    .prop-row-label.italic{font-style:italic}
+    .prop-row input[type="number"]{font-size:12px;padding:1px 4px;border-radius:4px;border:1.5px solid #434343;background:#fff;color:#000;height:20px;font-family:"Roboto",Arial,sans-serif;width:100%;text-align:right}
+    .prop-row input[type="number"]:focus{outline:none;border-color:#61828a;background:#e8f0f3}
+    .prop-row input[type="number"][readonly]{background:#f5f5f5;color:#444}
+    /* Hide spinner arrows on all read-only output fields */
+    .prop-row input[type="number"][readonly]::-webkit-inner-spin-button,
+    .prop-row input[type="number"][readonly]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+    .prop-row input[type="number"][readonly]{-moz-appearance:textfield}
+    .prop-row-unit{font-size:11px;color:#666;text-align:left;padding:1px 0 1px 2px;white-space:nowrap;min-width:0;overflow:hidden}
+    .prop-output{display:inline-flex;align-items:center;justify-content:center;height:20px;min-width:90px;font-size:12px;padding:0 4px;border-radius:4px;border:1.5px solid #434343;background:#f5f5f5;white-space:nowrap;color:#444}
+    .lt{width:100%;border-collapse:collapse;font-size:11.5px;min-width:560px}
+    .lt th{font-size:12px;font-weight:600;color:#fff;text-align:center;padding:4px 5px;background:#61828A;position:sticky;top:0;z-index:1}
+    .lt th:first-child{text-align:left}
+    .lt td{padding:2px 5px;vertical-align:middle;border-bottom:.5px solid #e0e0e0;text-align:right}
+    .lt td:first-child{text-align:left;color:#333;font-weight:500}
+    .lt tr:hover td{background:#f0f6f8}
+    .lt-wrap{overflow-x:auto;max-height:600px;overflow-y:auto}
+    .report-row{margin:0 0.5rem 0.5rem;display:flex;gap:8px;flex-wrap:wrap}
+    .report-row .grp{flex:1 1 240px;margin:0}
+    .calc-lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+    .calc-lightbox-overlay.active{display:flex}
+    .calc-lightbox-img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:6px;box-shadow:0 8px 32px rgba(0,0,0,.6)}
+    .calc-lightbox-close{position:fixed;top:16px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:100000}
+    .calc-lightbox-close:hover{background:rgba(255,255,255,.3)}
+    @media(max-width:600px){
+      .prop-cols{grid-template-columns:1fr}
+      .itype-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+      .thermo-g3{grid-template-columns:1fr}
+      .thermo-g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
+    /* ── Reference card accordion (Spring Calculator pattern) ──── */
+    .ref-wrapper{margin:0 auto;max-width:62rem;font-family:"Roboto",Arial,sans-serif}
+    .ref-section-wrap{padding:1rem 0.5rem 0.5rem}
+    .ref-section-title{font-size:15px;font-weight:700;color:#6a746a;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.75rem;padding-left:2px}
+    .ref-card{background:#eee;border:2px solid rgb(67,67,67);border-radius:10px;box-shadow:0 3px 5px rgba(0,0,0,.4);margin:0 0 0.75rem;overflow:hidden}
+    .ref-card-header{background:#6a746a;padding:8px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+    .ref-card-header h2{font-size:13px;font-weight:700;color:#eee;text-transform:uppercase;letter-spacing:0.07em;margin:0;flex:1}
+    .ref-card-header .ref-num{font-size:12px;color:#A3C3CD;font-weight:600;letter-spacing:0.04em;white-space:nowrap}
+    .ref-chevron{width:14px;height:14px;flex-shrink:0;transition:transform 0.2s ease;color:#A3C3CD}
+    .ref-card.collapsed .ref-chevron{transform:rotate(-90deg)}
+    .ref-card.collapsed .ref-body{display:none}
+    .ref-body{padding:14px 16px;display:grid;grid-template-columns:1fr;gap:12px}
+    .ref-body.two-col{grid-template-columns:1fr 1fr;gap:12px 24px}
+    @media(max-width:640px){.ref-body.two-col{grid-template-columns:1fr}}
+    .full-col{grid-column:1 / -1}
+    .ref-sub{font-size:12px;font-weight:700;color:#61828A;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid #c0c0c0;padding-bottom:3px;margin-bottom:6px}
+    .ref-body p{font-size:13px;color:#333;line-height:1.65;margin:0 0 8px}
+    .ref-body p:last-child{margin-bottom:0}
+    .ref-body ul{font-size:13px;color:#333;line-height:1.7;padding-left:18px;margin:0 0 8px}
+    .ref-eq-block{background:#d9d9d9;border:1.5px solid rgb(67,67,67);border-radius:6px;padding:10px 16px 8px;margin:4px 0 8px;overflow-x:auto}
+    .ref-eq-tag{font-size:12px;color:#61828A;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;display:block;margin-bottom:4px}
+    .ref-eq{font-size:14px;font-family:"Courier New",Courier,monospace;color:#1a3a40;line-height:1.6;display:block;padding:2px 0}
+    .ref-callout{background:#e8f0f3;border-left:3px solid #61828A;border-radius:0 6px 6px 0;padding:8px 12px;font-size:12px;color:#1a3a40;line-height:1.55}
+    .ref-callout strong{color:#3a6270}
+    .ref-warn{background:#fff8e6;border-left:3px solid #cc7700;border-radius:0 6px 6px 0;padding:8px 12px;font-size:12px;color:#5a3a00;line-height:1.55}
+    .ref-table{width:100%;border-collapse:collapse;font-size:12px;margin:4px 0}
+    .ref-table th{background:#d9d9d9;border:1px solid #bbb;padding:4px 8px;font-weight:600;color:#444;text-align:left}
+    .ref-table td{border:1px solid #ccc;padding:3px 8px;color:#333;vertical-align:top}
+    .ref-table tr:nth-child(even) td{background:#f5f5f5}
+    .fluid-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px 12px}
+    @media(max-width:560px){.fluid-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    .fluid-item{font-size:11.5px;color:#333;padding:1px 0;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .fluid-item code{font-size:10.5px;color:#555;background:#e0e0e0;border-radius:3px;padding:0 3px}
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699BoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Dynamic and Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699EnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thremal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="Waterviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterLiquidGasEquilibrium.html">Liquid Gas Equilibrium</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thremal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item" style="padding-right: 0px;">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         BANNER
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              Thermodynamics Land
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hidden H1 for SEO / screen readers -->
+    <h1 class="visually-hidden">Thermodynamic Property Calculator — Steam Tables, Refrigerant Properties, Gas and Fluid Thermophysical Data</h1>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         THERMODYNAMICS PROPERTY CALCULATOR
+    ═══════════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+
+          <div class="section-title-wrap">
+            <!-- <div class="h1 section-title">Thermodynamics Calculator</div> -->
+          </div>
+
+          <div class="mx-md-2 mx-1 mt-3 pb-3">
+            <div class="wrapper">
+
+              <!-- ── HEADER ──────────────────────────────────────────── -->
+              <div class="hdr">
+                Thermodynamics Property Calculator
+              </div>
+
+              <!-- ── TOOLBAR ──────────────────────────────────────────── -->
+              <!-- <div class="toolbar">
+                <span class="tlabel">Config:</span>
+                <button class="tbtn" title="Import saved configuration">&#x1F4C2; Import</button>
+                <button class="tbtn" title="Export current configuration">&#x1F4BE; Export</button>
+                <button class="tbtn" title="Clear all inputs and outputs">&#x2716; Clear All</button>
+              </div> -->
+
+              <!-- ── GROUP: QUICK FLUID SELECTION ────────────────────── -->
+              <div class="grp" id="thermoQuickFluidGrp">
+                <div class="grp-title">Quick Fluid Selection</div>
+                <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;">
+
+                  <!-- Left: compact quick-pick buttons -->
+                  <div style="flex:1;min-width:240px;">
+                    <span class="sst" style="margin-bottom:3px;">Water &amp; Steam</span>
+                    <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:5px;">
+                      <button class="tbtn" onclick="setFluid('Water')">Water / Steam</button>
+                      <button class="tbtn" onclick="setFluid('HeavyWater')">Heavy Water</button>
+                    </div>
+                    <span class="sst" style="margin-bottom:3px;">Refrigerants</span>
+                    <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:5px;">
+                      <button class="tbtn" onclick="setFluid('R134a')">R-134a</button>
+                      <button class="tbtn" onclick="setFluid('R22')">R-22</button>
+                      <button class="tbtn" onclick="setFluid('R12')">R-12</button>
+                      <button class="tbtn" onclick="setFluid('R410A')">R-410A</button>
+                      <button class="tbtn" onclick="setFluid('Ammonia')">Ammonia</button>
+                      <button class="tbtn" onclick="setFluid('CarbonDioxide')">CO&#x2082; / R-744</button>
+                      <button class="tbtn" onclick="setFluid('R1234yf')">R-1234yf</button>
+                      <button class="tbtn" onclick="setFluid('R32')">R-32</button>
+                    </div>
+                    <span class="sst" style="margin-bottom:3px;">Air &amp; Atmospheric</span>
+                    <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:2px;">
+                      <button class="tbtn" onclick="setFluid('Air')">Air</button>
+                      <button class="tbtn" onclick="setFluid('Nitrogen')">N&#x2082;</button>
+                      <button class="tbtn" onclick="setFluid('Oxygen')">O&#x2082;</button>
+                      <button class="tbtn" onclick="setFluid('Hydrogen')">H&#x2082;</button>
+                      <button class="tbtn" onclick="setFluid('Argon')">Ar</button>
+                      <button class="tbtn" onclick="setFluid('Methane')">CH&#x2084;</button>
+                      <button class="tbtn" onclick="setFluid('Ethane')">C&#x2082;H&#x2086;</button>
+                      <button class="tbtn" onclick="setFluid('n-Propane')">C&#x2083;H&#x2088;</button>
+                      <button class="tbtn" onclick="setFluid('n-Butane')">n-C&#x2084;</button>
+                      <button class="tbtn" onclick="setFluid('IsoButane')">i-C&#x2084;</button>
+                      <button class="tbtn" onclick="setFluid('Helium')">He</button>
+                    </div>
+                  </div>
+
+                  <!-- Right: full 402-fluid dropdown -->
+                  <div style="flex-shrink:0;width:320px;">
+                    <span class="sst" style="margin-bottom:0px;">Browse All 402 Fluids</span>
+                    <select id="calcFluidSelect" onchange="setFluid(this.value)"
+                      title="All CoolProp HEOS and INCOMP fluids"
+                      style="width:90%;font-size:11.5px;padding:5px 6px 5px 6px;border-radius:6px;border:2.5px solid #3a6270;background:#d4e4e8;color:#1a3a40;font-family:'Roboto',Arial,sans-serif;cursor:pointer;line-height:1.5;box-shadow:0 2px 5px rgba(0,0,0,0.25);">
+                      <optgroup label="── Water &amp; Steam ──">
+                        <option value="Water">Water / Steam (H&#x2082;O)</option>
+                        <option value="HeavyWater">Heavy Water (D&#x2082;O)</option>
+                      </optgroup>
+                      <optgroup label="── Air &amp; Atmospheric ──">
+                        <option value="Air">Air</option>
+                        <option value="Nitrogen">Nitrogen (N&#x2082;)</option>
+                        <option value="Oxygen">Oxygen (O&#x2082;)</option>
+                        <option value="Argon">Argon (Ar)</option>
+                        <option value="NitrousOxide">Nitrous Oxide (N&#x2082;O)</option>
+                      </optgroup>
+                      <optgroup label="── Noble Gases ──">
+                        <option value="Helium">Helium (He)</option>
+                        <option value="Neon">Neon (Ne)</option>
+                        <option value="Krypton">Krypton (Kr)</option>
+                        <option value="Xenon">Xenon (Xe)</option>
+                      </optgroup>
+                      <optgroup label="── Hydrogen &amp; Isotopes ──">
+                        <option value="Hydrogen">Hydrogen (H&#x2082;)</option>
+                        <option value="OrthoHydrogen">Ortho-Hydrogen</option>
+                        <option value="ParaHydrogen">Para-Hydrogen</option>
+                        <option value="Deuterium">Deuterium (D&#x2082;)</option>
+                        <option value="OrthoDeuterium">Ortho-Deuterium</option>
+                        <option value="ParaDeuterium">Para-Deuterium</option>
+                      </optgroup>
+                      <optgroup label="── Carbon, Sulfur &amp; Inorganics ──">
+                        <option value="Ammonia">Ammonia (NH&#x2083; / R-717)</option>
+                        <option value="CarbonDioxide">Carbon Dioxide (CO&#x2082; / R-744)</option>
+                        <option value="CarbonMonoxide">Carbon Monoxide (CO)</option>
+                        <option value="CarbonylSulfide">Carbonyl Sulfide (COS)</option>
+                        <option value="SulfurDioxide">Sulfur Dioxide (SO&#x2082;)</option>
+                        <option value="SulfurHexafluoride">Sulfur Hexafluoride (SF&#x2086;)</option>
+                        <option value="HydrogenSulfide">Hydrogen Sulfide (H&#x2082;S)</option>
+                        <option value="HydrogenChloride">Hydrogen Chloride (HCl)</option>
+                        <option value="Fluorine">Fluorine (F&#x2082;)</option>
+                      </optgroup>
+                      <optgroup label="── Refrigerants — HFC ──">
+                        <option value="R23">R-23 (HFC-23)</option>
+                        <option value="R32">R-32 (HFC-32)</option>
+                        <option value="R125">R-125 (HFC-125)</option>
+                        <option value="R134a">R-134a (HFC-134a)</option>
+                        <option value="R143a">R-143a (HFC-143a)</option>
+                        <option value="R152A">R-152a (HFC-152a)</option>
+                        <option value="R161">R-161 (HFC-161)</option>
+                        <option value="R116">R-116 (HFC-116)</option>
+                        <option value="R218">R-218 (PFC-218)</option>
+                        <option value="R236EA">R-236ea</option>
+                        <option value="R236FA">R-236fa</option>
+                        <option value="R245ca">R-245ca</option>
+                        <option value="R245fa">R-245fa</option>
+                        <option value="R365MFC">R-365mfc</option>
+                      </optgroup>
+                      <optgroup label="── Refrigerants — HFO Low-GWP ──">
+                        <option value="R1234yf">R-1234yf (HFO)</option>
+                        <option value="R1234ze(E)">R-1234ze(E) (HFO)</option>
+                        <option value="R1234ze(Z)">R-1234ze(Z) (HFO)</option>
+                        <option value="R1243zf">R-1243zf (HFO)</option>
+                        <option value="R1233zd(E)">R-1233zd(E) (HCFO)</option>
+                        <option value="R1336mzz(E)">R-1336mzz(E) (HFO)</option>
+                      </optgroup>
+                      <optgroup label="── Refrigerants — CFC / HCFC Legacy ──">
+                        <option value="R11">R-11 (CFC-11)</option>
+                        <option value="R12">R-12 (CFC-12)</option>
+                        <option value="R13">R-13 (CFC-13)</option>
+                        <option value="R14">R-14 (CFC-14)</option>
+                        <option value="R21">R-21 (HCFC-21)</option>
+                        <option value="R22">R-22 (HCFC-22)</option>
+                        <option value="R113">R-113 (CFC-113)</option>
+                        <option value="R114">R-114 (CFC-114)</option>
+                        <option value="R115">R-115 (CFC-115)</option>
+                        <option value="R123">R-123 (HCFC-123)</option>
+                        <option value="R124">R-124 (HCFC-124)</option>
+                        <option value="R141b">R-141b (HCFC-141b)</option>
+                        <option value="R142b">R-142b (HCFC-142b)</option>
+                        <option value="RC318">RC-318 (CFC-318)</option>
+                      </optgroup>
+                      <optgroup label="── Refrigerant Blends &amp; Special ──">
+                        <option value="R404A">R-404A (blend)</option>
+                        <option value="R407C">R-407C (blend)</option>
+                        <option value="R410A">R-410A (blend)</option>
+                        <option value="R507A">R-507A (blend)</option>
+                        <option value="SES36">SES36</option>
+                        <option value="Novec649">Novec 649</option>
+                        <option value="HFE143m">HFE-143m</option>
+                        <option value="R40">R-40 (Methyl Chloride)</option>
+                        <option value="R41">R-41 (Methyl Fluoride)</option>
+                        <option value="R13I1">R-13I1 (CF&#x2083;I)</option>
+                      </optgroup>
+                      <optgroup label="── Alkanes C1&#x2013;C5 ──">
+                        <option value="Methane">Methane (CH&#x2084;)</option>
+                        <option value="Ethane">Ethane (C&#x2082;H&#x2086;)</option>
+                        <option value="n-Propane">n-Propane (C&#x2083;H&#x2088;)</option>
+                        <option value="n-Butane">n-Butane (C&#x2084;H&#x2081;&#x2080;)</option>
+                        <option value="IsoButane">Isobutane (i-C&#x2084;H&#x2081;&#x2080;)</option>
+                        <option value="n-Pentane">n-Pentane (C&#x2085;H&#x2081;&#x2082;)</option>
+                        <option value="Isopentane">Isopentane</option>
+                        <option value="Neopentane">Neopentane</option>
+                      </optgroup>
+                      <optgroup label="── Alkanes C6&#x2013;C12 ──">
+                        <option value="n-Hexane">n-Hexane (C&#x2086;H&#x2081;&#x2084;)</option>
+                        <option value="Isohexane">Isohexane</option>
+                        <option value="n-Heptane">n-Heptane (C&#x2087;H&#x2081;&#x2086;)</option>
+                        <option value="n-Octane">n-Octane (C&#x2088;H&#x2081;&#x2088;)</option>
+                        <option value="n-Nonane">n-Nonane (C&#x2089;H&#x2082;&#x2080;)</option>
+                        <option value="n-Decane">n-Decane (C&#x2081;&#x2080;H&#x2082;&#x2082;)</option>
+                        <option value="n-Undecane">n-Undecane</option>
+                        <option value="n-Dodecane">n-Dodecane</option>
+                      </optgroup>
+                      <optgroup label="── Alkenes, Alkynes &amp; Dienes ──">
+                        <option value="Ethylene">Ethylene (C&#x2082;H&#x2084;)</option>
+                        <option value="Propylene">Propylene (C&#x2083;H&#x2086;)</option>
+                        <option value="1-Butene">1-Butene</option>
+                        <option value="cis-2-Butene">cis-2-Butene</option>
+                        <option value="trans-2-Butene">trans-2-Butene</option>
+                        <option value="IsoButene">Isobutene</option>
+                        <option value="Propyne">Propyne (Methylacetylene)</option>
+                        <option value="EthyleneOxide">Ethylene Oxide</option>
+                      </optgroup>
+                      <optgroup label="── Cyclic Hydrocarbons ──">
+                        <option value="CycloHexane">Cyclohexane</option>
+                        <option value="Cyclopentane">Cyclopentane</option>
+                        <option value="CycloPropane">Cyclopropane</option>
+                      </optgroup>
+                      <optgroup label="── Aromatics ──">
+                        <option value="Benzene">Benzene</option>
+                        <option value="Toluene">Toluene</option>
+                        <option value="EthylBenzene">Ethylbenzene</option>
+                        <option value="m-Xylene">m-Xylene</option>
+                        <option value="o-Xylene">o-Xylene</option>
+                        <option value="p-Xylene">p-Xylene</option>
+                      </optgroup>
+                      <optgroup label="── Oxygenates &amp; Alcohols ──">
+                        <option value="Acetone">Acetone</option>
+                        <option value="Methanol">Methanol (CH&#x2083;OH)</option>
+                        <option value="Ethanol">Ethanol (C&#x2082;H&#x2085;OH)</option>
+                        <option value="DiethylEther">Diethyl Ether</option>
+                        <option value="DimethylCarbonate">Dimethyl Carbonate</option>
+                        <option value="DimethylEther">Dimethyl Ether</option>
+                        <option value="Dichloroethane">1,2-Dichloroethane</option>
+                      </optgroup>
+                      <optgroup label="── Siloxanes ──">
+                        <option value="MM">MM &#x2014; Hexamethyldisiloxane</option>
+                        <option value="MDM">MDM &#x2014; Octamethyltrisiloxane</option>
+                        <option value="MD2M">MD2M &#x2014; Decamethyltetrasiloxane</option>
+                        <option value="MD3M">MD3M &#x2014; Dodecamethylpentasiloxane</option>
+                        <option value="MD4M">MD4M &#x2014; Tetradecamethylhexasiloxane</option>
+                        <option value="D4">D4 &#x2014; Octamethylcyclotetrasiloxane</option>
+                        <option value="D5">D5 &#x2014; Decamethylcyclopentasiloxane</option>
+                        <option value="D6">D6 &#x2014; Dodecamethylcyclohexasiloxane</option>
+                      </optgroup>
+                      <optgroup label="── FAMEs / Biodiesel ──">
+                        <option value="MethylLinoleate">Methyl Linoleate (C19:2)</option>
+                        <option value="MethylLinolenate">Methyl Linolenate (C19:3)</option>
+                        <option value="MethylOleate">Methyl Oleate (C19:1)</option>
+                        <option value="MethylPalmitate">Methyl Palmitate (C17:0)</option>
+                        <option value="MethylStearate">Methyl Stearate (C19:0)</option>
+                      </optgroup>
+                      <optgroup label="── INCOMP &#x2014; Pure / Process Fluids ──">
+                        <option value="INCOMP::Acetone">Acetone (INCOMP)</option>
+                        <option value="INCOMP::Air">Air (INCOMP)</option>
+                        <option value="INCOMP::AS10">AS10 &#x2014; Antifrogen S 10%</option>
+                        <option value="INCOMP::AS20">AS20 &#x2014; Antifrogen S 20%</option>
+                        <option value="INCOMP::AS30">AS30 &#x2014; Antifrogen S 30%</option>
+                        <option value="INCOMP::AS40">AS40 &#x2014; Antifrogen S 40%</option>
+                        <option value="INCOMP::AS55">AS55 &#x2014; Antifrogen S 55%</option>
+                        <option value="INCOMP::DEB">DEB &#x2014; Di-Ethylbenzene</option>
+                        <option value="INCOMP::DowJ">Dowtherm J</option>
+                        <option value="INCOMP::DowJ2">Dowtherm J2</option>
+                        <option value="INCOMP::DowQ">Dowtherm Q</option>
+                        <option value="INCOMP::DowQ2">Dowtherm Q2</option>
+                        <option value="INCOMP::DSF">DSF &#x2014; Dynalene SF</option>
+                        <option value="INCOMP::Ethanol">Ethanol (INCOMP)</option>
+                        <option value="INCOMP::FoodAsh">Food &#x2014; Ash</option>
+                        <option value="INCOMP::FoodCarbohydrate">Food &#x2014; Carbohydrate</option>
+                        <option value="INCOMP::FoodFat">Food &#x2014; Fat</option>
+                        <option value="INCOMP::FoodFiber">Food &#x2014; Fiber</option>
+                        <option value="INCOMP::FoodIce">Food &#x2014; Ice</option>
+                        <option value="INCOMP::FoodProtein">Food &#x2014; Protein</option>
+                        <option value="INCOMP::FoodWater">Food &#x2014; Water</option>
+                        <option value="INCOMP::HC10">HC10 &#x2014; Hydrocarbon 10%</option>
+                        <option value="INCOMP::HC20">HC20 &#x2014; Hydrocarbon 20%</option>
+                        <option value="INCOMP::HC30">HC30 &#x2014; Hydrocarbon 30%</option>
+                        <option value="INCOMP::HC40">HC40 &#x2014; Hydrocarbon 40%</option>
+                        <option value="INCOMP::HC50">HC50 &#x2014; Hydrocarbon 50%</option>
+                        <option value="INCOMP::HCB">HCB &#x2014; Hydrocarbon B</option>
+                        <option value="INCOMP::HCM">HCM &#x2014; Hydrocarbon M</option>
+                        <option value="INCOMP::Hexane">Hexane (INCOMP)</option>
+                        <option value="INCOMP::HFE">HFE-7100</option>
+                        <option value="INCOMP::HFE2">HFE-7200</option>
+                        <option value="INCOMP::HY20">HY20 &#x2014; Dynalene HY 20%</option>
+                        <option value="INCOMP::HY30">HY30 &#x2014; Dynalene HY 30%</option>
+                        <option value="INCOMP::HY40">HY40 &#x2014; Dynalene HY 40%</option>
+                        <option value="INCOMP::HY45">HY45 &#x2014; Dynalene HY 45%</option>
+                        <option value="INCOMP::HY50">HY50 &#x2014; Dynalene HY 50%</option>
+                        <option value="INCOMP::LiqNa">Liquid Sodium (Na)</option>
+                        <option value="INCOMP::NaK">Sodium-Potassium (NaK)</option>
+                        <option value="INCOMP::NBS">NBS Reference Fluid</option>
+                        <option value="INCOMP::PBB">PBB &#x2014; Polybromobiphenyl</option>
+                        <option value="INCOMP::PCL">PCL &#x2014; Parachlor</option>
+                        <option value="INCOMP::PCR">PCR &#x2014; Perichlor</option>
+                        <option value="INCOMP::PGLT">PGLT &#x2014; Propylene Glycol LT</option>
+                        <option value="INCOMP::PHE">PHE &#x2014; Phenol</option>
+                        <option value="INCOMP::PHR">PHR &#x2014; Phenol R</option>
+                        <option value="INCOMP::PLR">PLR</option>
+                        <option value="INCOMP::PMR">PMR</option>
+                        <option value="INCOMP::PMS1">PMS1 &#x2014; Polydimethylsiloxane 1</option>
+                        <option value="INCOMP::PMS2">PMS2 &#x2014; Polydimethylsiloxane 2</option>
+                        <option value="INCOMP::PNF">PNF &#x2014; Perfluorocarbon</option>
+                        <option value="INCOMP::PNF2">PNF2 &#x2014; Perfluorocarbon 2</option>
+                        <option value="INCOMP::S800">S800 &#x2014; Solutia</option>
+                        <option value="INCOMP::SAB">SAB &#x2014; Synthetic A/B Lube</option>
+                        <option value="INCOMP::T66">Therminol 66</option>
+                        <option value="INCOMP::T72">Therminol 72</option>
+                        <option value="INCOMP::TCO">TCO &#x2014; Synthetic Oil</option>
+                        <option value="INCOMP::TD12">TD12</option>
+                        <option value="INCOMP::TVP1">TVP1 &#x2014; Texatherm VP1</option>
+                        <option value="INCOMP::TVP1869">Therminol VP-1</option>
+                        <option value="INCOMP::TX22">TX22 &#x2014; Texatherm 22</option>
+                        <option value="INCOMP::TY10">TY10 &#x2014; Tyfoxit 10%</option>
+                        <option value="INCOMP::TY15">TY15 &#x2014; Tyfoxit 15%</option>
+                        <option value="INCOMP::TY20">TY20 &#x2014; Tyfoxit 20%</option>
+                        <option value="INCOMP::TY24">TY24 &#x2014; Tyfoxit 24%</option>
+                        <option value="INCOMP::Water">Water (INCOMP)</option>
+                        <option value="INCOMP::XLT">XLT &#x2014; Syltherm XLT</option>
+                        <option value="INCOMP::XLT2">XLT2 &#x2014; Syltherm XLT 2</option>
+                        <option value="INCOMP::ZS10">ZS10 &#x2014; Zitrec S 10%</option>
+                        <option value="INCOMP::ZS25">ZS25 &#x2014; Zitrec S 25%</option>
+                        <option value="INCOMP::ZS40">ZS40 &#x2014; Zitrec S 40%</option>
+                        <option value="INCOMP::ZS45">ZS45 &#x2014; Zitrec S 45%</option>
+                        <option value="INCOMP::ZS55">ZS55 &#x2014; Zitrec S 55%</option>
+                      </optgroup>
+                      <optgroup label="── INCOMP &#x2014; Ethylene Glycol Solutions ──">
+                        <option value="INCOMP::AEG[0.1]">AEG 10% (Antifrogen EG)</option>
+                        <option value="INCOMP::AEG[0.2]">AEG 20%</option>
+                        <option value="INCOMP::AEG[0.3]">AEG 30%</option>
+                        <option value="INCOMP::AEG[0.4]">AEG 40%</option>
+                        <option value="INCOMP::AEG[0.5]">AEG 50%</option>
+                        <option value="INCOMP::AEG[0.6]">AEG 60%</option>
+                        <option value="INCOMP::AL[0.1]">AL 10% (Antifrogen L)</option>
+                        <option value="INCOMP::AL[0.2]">AL 20%</option>
+                        <option value="INCOMP::AL[0.3]">AL 30%</option>
+                        <option value="INCOMP::AL[0.4]">AL 40%</option>
+                        <option value="INCOMP::AL[0.5]">AL 50%</option>
+                        <option value="INCOMP::AL[0.6]">AL 60%</option>
+                        <option value="INCOMP::AN[0.1]">AN 10% (Antifrogen N)</option>
+                        <option value="INCOMP::AN[0.2]">AN 20%</option>
+                        <option value="INCOMP::AN[0.3]">AN 30%</option>
+                        <option value="INCOMP::AN[0.4]">AN 40%</option>
+                        <option value="INCOMP::AN[0.5]">AN 50%</option>
+                        <option value="INCOMP::AN[0.6]">AN 60%</option>
+                        <option value="INCOMP::MEG[0.1]">MEG 10% (Monoethylene Glycol)</option>
+                        <option value="INCOMP::MEG[0.2]">MEG 20%</option>
+                        <option value="INCOMP::MEG[0.3]">MEG 30%</option>
+                        <option value="INCOMP::MEG[0.4]">MEG 40%</option>
+                        <option value="INCOMP::MEG[0.5]">MEG 50%</option>
+                        <option value="INCOMP::MEG[0.6]">MEG 60%</option>
+                        <option value="INCOMP::MEG2[0.1]">MEG2 10%</option>
+                        <option value="INCOMP::MEG2[0.2]">MEG2 20%</option>
+                        <option value="INCOMP::MEG2[0.3]">MEG2 30%</option>
+                        <option value="INCOMP::MEG2[0.4]">MEG2 40%</option>
+                        <option value="INCOMP::MEG2[0.5]">MEG2 50%</option>
+                      </optgroup>
+                      <optgroup label="── INCOMP &#x2014; Propylene Glycol Solutions ──">
+                        <option value="INCOMP::APG[0.1]">APG 10% (Antifrogen PG)</option>
+                        <option value="INCOMP::APG[0.2]">APG 20%</option>
+                        <option value="INCOMP::APG[0.3]">APG 30%</option>
+                        <option value="INCOMP::APG[0.4]">APG 40%</option>
+                        <option value="INCOMP::APG[0.5]">APG 50%</option>
+                        <option value="INCOMP::APG[0.6]">APG 60%</option>
+                        <option value="INCOMP::MGL[0.1]">MGL 10% (Monopropylene Glycol)</option>
+                        <option value="INCOMP::MGL[0.2]">MGL 20%</option>
+                        <option value="INCOMP::MGL[0.3]">MGL 30%</option>
+                        <option value="INCOMP::MGL[0.4]">MGL 40%</option>
+                        <option value="INCOMP::MGL[0.5]">MGL 50%</option>
+                        <option value="INCOMP::MGL[0.6]">MGL 60%</option>
+                        <option value="INCOMP::MGL2[0.2]">MGL2 20%</option>
+                        <option value="INCOMP::MGL2[0.3]">MGL2 30%</option>
+                        <option value="INCOMP::MGL2[0.4]">MGL2 40%</option>
+                        <option value="INCOMP::MGL2[0.5]">MGL2 50%</option>
+                        <option value="INCOMP::MGL2[0.6]">MGL2 60%</option>
+                        <option value="INCOMP::MPG[0.1]">MPG 10% (Prop. Glycol)</option>
+                        <option value="INCOMP::MPG[0.2]">MPG 20%</option>
+                        <option value="INCOMP::MPG[0.3]">MPG 30%</option>
+                        <option value="INCOMP::MPG[0.4]">MPG 40%</option>
+                        <option value="INCOMP::MPG[0.5]">MPG 50%</option>
+                        <option value="INCOMP::MPG[0.6]">MPG 60%</option>
+                        <option value="INCOMP::MPG2[0.2]">MPG2 20%</option>
+                        <option value="INCOMP::MPG2[0.3]">MPG2 30%</option>
+                        <option value="INCOMP::MPG2[0.4]">MPG2 40%</option>
+                        <option value="INCOMP::MPG2[0.5]">MPG2 50%</option>
+                        <option value="INCOMP::VMG[0.1]">VMG 10% (vol-frac PG)</option>
+                        <option value="INCOMP::VMG[0.2]">VMG 20%</option>
+                      </optgroup>
+                      <optgroup label="── INCOMP &#x2014; Methanol &amp; Ethanol Solutions ──">
+                        <option value="INCOMP::MMA[0.1]">MMA 10% (Methanol aq.)</option>
+                        <option value="INCOMP::MMA[0.2]">MMA 20%</option>
+                        <option value="INCOMP::MMA[0.3]">MMA 30%</option>
+                        <option value="INCOMP::MMA[0.4]">MMA 40%</option>
+                        <option value="INCOMP::MMA[0.5]">MMA 50%</option>
+                        <option value="INCOMP::MMA[0.6]">MMA 60%</option>
+                        <option value="INCOMP::MMA2[0.1]">MMA2 10%</option>
+                        <option value="INCOMP::MMA2[0.2]">MMA2 20%</option>
+                        <option value="INCOMP::MMA2[0.3]">MMA2 30%</option>
+                        <option value="INCOMP::MMA2[0.4]">MMA2 40%</option>
+                        <option value="INCOMP::MAM[0.1]">MAM 10% (Methanolamine)</option>
+                        <option value="INCOMP::MAM[0.2]">MAM 20%</option>
+                        <option value="INCOMP::MAM[0.3]">MAM 30%</option>
+                        <option value="INCOMP::MAM2[0.1]">MAM2 10%</option>
+                        <option value="INCOMP::MAM2[0.2]">MAM2 20%</option>
+                        <option value="INCOMP::VMA[0.1]">VMA 10% (vol-frac Methanol)</option>
+                        <option value="INCOMP::VMA[0.2]">VMA 20%</option>
+                        <option value="INCOMP::VMA[0.3]">VMA 30%</option>
+                        <option value="INCOMP::VMA[0.4]">VMA 40%</option>
+                        <option value="INCOMP::VMA[0.5]">VMA 50%</option>
+                        <option value="INCOMP::VMA[0.6]">VMA 60%</option>
+                        <option value="INCOMP::VMA[0.7]">VMA 70%</option>
+                        <option value="INCOMP::VMA[0.8]">VMA 80%</option>
+                        <option value="INCOMP::VMA[0.9]">VMA 90%</option>
+                        <option value="INCOMP::MEA[0.1]">MEA 10% (Ethanol aq.)</option>
+                        <option value="INCOMP::MEA[0.2]">MEA 20%</option>
+                        <option value="INCOMP::MEA[0.3]">MEA 30%</option>
+                        <option value="INCOMP::MEA[0.4]">MEA 40%</option>
+                        <option value="INCOMP::MEA[0.5]">MEA 50%</option>
+                        <option value="INCOMP::MEA[0.6]">MEA 60%</option>
+                        <option value="INCOMP::MEA2[0.2]">MEA2 20%</option>
+                        <option value="INCOMP::MEA2[0.3]">MEA2 30%</option>
+                        <option value="INCOMP::MEA2[0.4]">MEA2 40%</option>
+                        <option value="INCOMP::MEA2[0.5]">MEA2 50%</option>
+                        <option value="INCOMP::MEA2[0.6]">MEA2 60%</option>
+                      </optgroup>
+                      <optgroup label="── INCOMP &#x2014; Potassium Salt Solutions ──">
+                        <option value="INCOMP::AKF[0.4]">AKF 40% (Antifrogen KF)</option>
+                        <option value="INCOMP::AKF[0.5]">AKF 50%</option>
+                        <option value="INCOMP::AKF[0.6]">AKF 60%</option>
+                        <option value="INCOMP::AKF[0.7]">AKF 70%</option>
+                        <option value="INCOMP::AKF[0.8]">AKF 80%</option>
+                        <option value="INCOMP::AKF[0.9]">AKF 90%</option>
+                        <option value="INCOMP::FRE[0.2]">FRE 20% (Freezium)</option>
+                        <option value="INCOMP::FRE[0.3]">FRE 30%</option>
+                        <option value="INCOMP::FRE[0.4]">FRE 40%</option>
+                        <option value="INCOMP::FRE[0.5]">FRE 50%</option>
+                        <option value="INCOMP::GKN[0.1]">GKN 10% (Glykosol N)</option>
+                        <option value="INCOMP::GKN[0.2]">GKN 20%</option>
+                        <option value="INCOMP::GKN[0.3]">GKN 30%</option>
+                        <option value="INCOMP::GKN[0.4]">GKN 40%</option>
+                        <option value="INCOMP::GKN[0.5]">GKN 50%</option>
+                        <option value="INCOMP::GKN[0.6]">GKN 60%</option>
+                        <option value="INCOMP::MKA[0.1]">MKA 10% (Potassium Acetate)</option>
+                        <option value="INCOMP::MKA[0.2]">MKA 20%</option>
+                        <option value="INCOMP::MKA[0.3]">MKA 30%</option>
+                        <option value="INCOMP::MKA[0.4]">MKA 40%</option>
+                        <option value="INCOMP::MKA2[0.2]">MKA2 20%</option>
+                        <option value="INCOMP::MKA2[0.3]">MKA2 30%</option>
+                        <option value="INCOMP::MKA2[0.4]">MKA2 40%</option>
+                        <option value="INCOMP::MKC[0.1]">MKC 10% (Potassium Carbonate)</option>
+                        <option value="INCOMP::MKC[0.2]">MKC 20%</option>
+                        <option value="INCOMP::MKC[0.3]">MKC 30%</option>
+                        <option value="INCOMP::MKC[0.4]">MKC 40%</option>
+                        <option value="INCOMP::MKC2[0.1]">MKC2 10%</option>
+                        <option value="INCOMP::MKC2[0.2]">MKC2 20%</option>
+                        <option value="INCOMP::MKC2[0.3]">MKC2 30%</option>
+                        <option value="INCOMP::MKF[0.1]">MKF 10% (Potassium Formate)</option>
+                        <option value="INCOMP::MKF[0.2]">MKF 20%</option>
+                        <option value="INCOMP::MKF[0.3]">MKF 30%</option>
+                        <option value="INCOMP::MKF[0.4]">MKF 40%</option>
+                        <option value="INCOMP::PK2[0.3]">PK2 30% (Tyfoxit)</option>
+                        <option value="INCOMP::PK2[0.4]">PK2 40%</option>
+                        <option value="INCOMP::PK2[0.5]">PK2 50%</option>
+                        <option value="INCOMP::PK2[0.6]">PK2 60%</option>
+                        <option value="INCOMP::PK2[0.7]">PK2 70%</option>
+                        <option value="INCOMP::PK2[0.8]">PK2 80%</option>
+                        <option value="INCOMP::PK2[0.9]">PK2 90%</option>
+                        <option value="INCOMP::PKL[0.1]">PKL 10% (Pekasol)</option>
+                        <option value="INCOMP::PKL[0.2]">PKL 20%</option>
+                        <option value="INCOMP::PKL[0.3]">PKL 30%</option>
+                        <option value="INCOMP::PKL[0.4]">PKL 40%</option>
+                        <option value="INCOMP::PKL[0.5]">PKL 50%</option>
+                        <option value="INCOMP::PKL[0.6]">PKL 60%</option>
+                      </optgroup>
+                      <optgroup label="── INCOMP &#x2014; Chloride &amp; Salt Solutions ──">
+                        <option value="INCOMP::LiBr[0.1]">LiBr 10% (Lithium Bromide)</option>
+                        <option value="INCOMP::LiBr[0.2]">LiBr 20%</option>
+                        <option value="INCOMP::LiBr[0.3]">LiBr 30%</option>
+                        <option value="INCOMP::LiBr[0.4]">LiBr 40%</option>
+                        <option value="INCOMP::LiBr[0.5]">LiBr 50%</option>
+                        <option value="INCOMP::LiBr[0.6]">LiBr 60%</option>
+                        <option value="INCOMP::LiBr[0.7]">LiBr 70%</option>
+                        <option value="INCOMP::MCA[0.1]">MCA 10% (Calcium Chloride)</option>
+                        <option value="INCOMP::MCA[0.2]">MCA 20%</option>
+                        <option value="INCOMP::MCA[0.3]">MCA 30%</option>
+                        <option value="INCOMP::MCA2[0.1]">MCA2 10%</option>
+                        <option value="INCOMP::MCA2[0.2]">MCA2 20%</option>
+                        <option value="INCOMP::MLI[0.1]">MLI 10% (Lithium Chloride)</option>
+                        <option value="INCOMP::MLI[0.2]">MLI 20%</option>
+                        <option value="INCOMP::MMG[0.1]">MMG 10% (Magnesium Chloride)</option>
+                        <option value="INCOMP::MMG[0.2]">MMG 20%</option>
+                        <option value="INCOMP::MMG[0.3]">MMG 30%</option>
+                        <option value="INCOMP::MMG2[0.1]">MMG2 10%</option>
+                        <option value="INCOMP::MMG2[0.2]">MMG2 20%</option>
+                        <option value="INCOMP::MNA[0.1]">MNA 10% (Sodium Chloride)</option>
+                        <option value="INCOMP::MNA[0.2]">MNA 20%</option>
+                        <option value="INCOMP::MNA2[0.1]">MNA2 10%</option>
+                        <option value="INCOMP::MNA2[0.2]">MNA2 20%</option>
+                        <option value="INCOMP::VCA[0.2]">VCA 20% (vol-frac CaCl&#x2082;)</option>
+                        <option value="INCOMP::VKC[0.2]">VKC 20% (vol-frac K&#x2082;CO&#x2083;)</option>
+                        <option value="INCOMP::VKC[0.3]">VKC 30%</option>
+                        <option value="INCOMP::VNA[0.1]">VNA 10% (vol-frac NaCl)</option>
+                        <option value="INCOMP::VNA[0.2]">VNA 20%</option>
+                        <option value="INCOMP::ZAC[0.1]">ZAC 10% (Zitrec AC)</option>
+                        <option value="INCOMP::ZAC[0.2]">ZAC 20%</option>
+                        <option value="INCOMP::ZAC[0.3]">ZAC 30%</option>
+                        <option value="INCOMP::ZAC[0.4]">ZAC 40%</option>
+                        <option value="INCOMP::ZAC[0.5]">ZAC 50%</option>
+                        <option value="INCOMP::ZFC[0.3]">ZFC 30% (Zitrec FC)</option>
+                        <option value="INCOMP::ZFC[0.4]">ZFC 40%</option>
+                        <option value="INCOMP::ZFC[0.5]">ZFC 50%</option>
+                        <option value="INCOMP::ZFC[0.6]">ZFC 60%</option>
+                        <option value="INCOMP::ZLC[0.3]">ZLC 30% (Zitrec LC)</option>
+                        <option value="INCOMP::ZLC[0.4]">ZLC 40%</option>
+                        <option value="INCOMP::ZLC[0.5]">ZLC 50%</option>
+                        <option value="INCOMP::ZLC[0.6]">ZLC 60%</option>
+                        <option value="INCOMP::ZLC[0.7]">ZLC 70%</option>
+                        <option value="INCOMP::ZM[0.1]">ZM 10% (Zitrec M)</option>
+                        <option value="INCOMP::ZM[0.2]">ZM 20%</option>
+                        <option value="INCOMP::ZM[0.3]">ZM 30%</option>
+                        <option value="INCOMP::ZM[0.4]">ZM 40%</option>
+                        <option value="INCOMP::ZM[0.5]">ZM 50%</option>
+                        <option value="INCOMP::ZM[0.6]">ZM 60%</option>
+                        <option value="INCOMP::ZM[0.7]">ZM 70%</option>
+                        <option value="INCOMP::ZM[0.8]">ZM 80%</option>
+                        <option value="INCOMP::ZM[0.9]">ZM 90%</option>
+                        <option value="INCOMP::ZMC[0.3]">ZMC 30% (Zitrec MC)</option>
+                        <option value="INCOMP::ZMC[0.4]">ZMC 40%</option>
+                        <option value="INCOMP::ZMC[0.5]">ZMC 50%</option>
+                        <option value="INCOMP::ZMC[0.6]">ZMC 60%</option>
+                        <option value="INCOMP::ZMC[0.7]">ZMC 70%</option>
+                      </optgroup>
+                      <optgroup label="── INCOMP &#x2014; Ice Slurries &amp; Seawater ──">
+                        <option value="INCOMP::IceEA[0.1]">IceEA 10% (Ice / Ethanol)</option>
+                        <option value="INCOMP::IceEA[0.2]">IceEA 20%</option>
+                        <option value="INCOMP::IceEA[0.3]">IceEA 30%</option>
+                        <option value="INCOMP::IceNA[0.1]">IceNA 10% (Ice / NH&#x2083;)</option>
+                        <option value="INCOMP::IceNA[0.2]">IceNA 20%</option>
+                        <option value="INCOMP::IceNA[0.3]">IceNA 30%</option>
+                        <option value="INCOMP::IcePG[0.1]">IcePG 10% (Ice / Prop. Glycol)</option>
+                        <option value="INCOMP::IcePG[0.2]">IcePG 20%</option>
+                        <option value="INCOMP::IcePG[0.3]">IcePG 30%</option>
+                        <option value="INCOMP::MITSW[0.1]">MITSW (MIT Seawater)</option>
+                      </optgroup>
+                    </select>
+                  </div>
+
+                </div><!-- /flex row -->
+              </div><!-- /.grp quick fluids -->
+
+              <!-- ── GROUP: UNIT SYSTEM ───────────────────────────────── -->
+              <div class="grp" id="thermoUnitSystemGrp">
+                <div class="grp-title">Unit System</div>
+                <div class="itype-grid" style="grid-template-columns:repeat(3,minmax(0,1fr));">
+                  <label class="it">
+                    <input type="radio" name="calcUnits" value="si-strict" checked>
+                    SI Strict &mdash; K, Pa, J/kg
+                  </label>
+                  <label class="it">
+                    <input type="radio" name="calcUnits" value="si-eng">
+                    SI Engineering &mdash; &deg;C, kPa, kJ/kg
+                  </label>
+                  <label class="it">
+                    <input type="radio" name="calcUnits" value="us-customary">
+                    US Customary &mdash; &deg;F, psia, BTU/lbm
+                  </label>
+                  <label class="it">
+                    <input type="radio" name="calcUnits" value="us-process">
+                    US Process / HVAC &mdash; &deg;F, psia, cP/cSt
+                  </label>
+                  <label class="it">
+                    <input type="radio" name="calcUnits" value="textbook-si">
+                    Textbook SI &mdash; K, kPa, kJ/kg
+                  </label>
+                  <label class="it">
+                    <input type="radio" name="calcUnits" value="textbook-us">
+                    Textbook US &mdash; &deg;R, psia, BTU/lbm
+                  </label>
+
+
+                  <!-- 7th card: Custom Units — dual-button ───────────── -->
+                  <div style="display:flex;align-items:stretch;gap:0;">
+                    <!-- Left: selects this preset (matches .it radio cards) -->
+                    <label class="it" id="cuSelectLabel"
+                      style="flex:1;min-width:0;margin:0;border-radius:5px 0 0 5px;border-right:none;cursor:pointer;">
+                      <input type="radio" name="calcUnits" value="custom">
+                      Custom Units
+                    </label>
+                    <!-- Right: toggle panel open/closed -->
+                    <button id="cuToggleBtn" type="button" onclick="toggleCustomUnits()"
+                      title="Show custom unit selectors"
+                      aria-expanded="false" aria-controls="customUnitPanel"
+                      style="flex-shrink:0;width:28px;border-radius:0 5px 5px 0;
+                             border:1.5px solid #888;border-left:none;
+                             background:#b8c4b8;color:#3a3a3a;
+                             cursor:pointer;font-size:13px;line-height:1;padding:0;
+                             display:flex;align-items:center;justify-content:center;
+                             transition:background 0.15s,color 0.15s;">
+                      <svg id="cuToggleIcon" viewBox="0 0 12 12" width="12" height="12"
+                           fill="none" stroke="currentColor" stroke-width="2"
+                           stroke-linecap="round" stroke-linejoin="round"
+                           style="transition:transform 0.2s ease;">
+                        <polyline points="2,4 6,8 10,4"/>
+                      </svg>
+                    </button>
+                  </div>
+
+                  <!-- Custom unit panel — spans all 3 columns ────────────── -->
+                  <div id="customUnitPanel"
+                    style="display:none;grid-column:1/-1;
+                           border:1.5px solid rgb(67,67,67);
+                           border-radius:8px;padding:10px 12px 8px;margin-top:0;">
+
+                    <div style="font-size:11px;color:#61828A;font-weight:600;text-transform:uppercase;
+                                letter-spacing:0.06em;margin-bottom:8px;">
+                      Per-Property Unit Overrides &mdash; applied on top of any base preset
+                    </div>
+
+                    <!-- 3-column selector grid -->
+                    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 10px;">
+
+                      <!-- Temperature -->
+                      <div>
+                        <div class="sst" style="margin-bottom:2px;font-size:10.5px;">Temperature</div>
+                        <select id="cu-temp" style="width:100%;font-size:11.5px;padding:2px 4px;border-radius:4px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;font-family:'Roboto',Arial,sans-serif;">
+                          <option value="K">Kelvin (K)</option>
+                          <option value="C">Celsius (&deg;C)</option>
+                          <option value="F">Fahrenheit (&deg;F)</option>
+                          <option value="R">Rankine (&deg;R)</option>
+                        </select>
+                      </div>
+
+                      <!-- Pressure -->
+                      <div>
+                        <div class="sst" style="margin-bottom:2px;font-size:10.5px;">Pressure</div>
+                        <select id="cu-pressure" style="width:100%;font-size:11.5px;padding:2px 4px;border-radius:4px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;font-family:'Roboto',Arial,sans-serif;">
+                          <option value="Pa">Pascals (Pa)</option>
+                          <option value="kPa">Kilopascals (kPa)</option>
+                          <option value="MPa">Megapascals (MPa)</option>
+                          <option value="bar">Bar (bar)</option>
+                          <option value="mbar">Millibar (mbar)</option>
+                          <option value="psia">psia (lbf/in&sup2; abs.)</option>
+                          <option value="psig">psig (lbf/in&sup2; gauge)</option>
+                          <option value="atm">Atmospheres (atm)</option>
+                          <option value="mmHg">mmHg / Torr</option>
+                          <option value="inHg">inHg</option>
+                          <option value="inH2O">inH&#x2082;O</option>
+                        </select>
+                      </div>
+
+                      <!-- Density -->
+                      <div>
+                        <div class="sst" style="margin-bottom:2px;font-size:10.5px;">Density (&rho;)</div>
+                        <select id="cu-density" style="width:100%;font-size:11.5px;padding:2px 4px;border-radius:4px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;font-family:'Roboto',Arial,sans-serif;">
+                          <option value="kg_m3">kg/m&sup3;</option>
+                          <option value="g_cm3">g/cm&sup3; (g/mL)</option>
+                          <option value="g_L">g/L</option>
+                          <option value="kg_L">kg/L</option>
+                          <option value="lbm_ft3">lbm/ft&sup3;</option>
+                          <option value="lbm_galUS">lbm/gal (US)</option>
+                          <option value="lbm_galUK">lbm/gal (UK)</option>
+                        </select>
+                      </div>
+
+                      <!-- Specific Energy -->
+                      <div>
+                        <div class="sst" style="margin-bottom:2px;font-size:10.5px;">Sp. Energy (h, u)</div>
+                        <select id="cu-energy" style="width:100%;font-size:11.5px;padding:2px 4px;border-radius:4px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;font-family:'Roboto',Arial,sans-serif;">
+                          <option value="J_kg">J/kg</option>
+                          <option value="kJ_kg">kJ/kg</option>
+                          <option value="BTU_lbm">BTU/lbm</option>
+                          <option value="cal_g">cal/g</option>
+                          <option value="kcal_kg">kcal/kg</option>
+                          <option value="Wh_kg">Wh/kg</option>
+                          <option value="kWh_kg">kWh/kg</option>
+                        </select>
+                      </div>
+
+                      <!-- Entropy / Heat -->
+                      <div>
+                        <div class="sst" style="margin-bottom:2px;font-size:10.5px;">Sp. Entropy / Heat (s, c<sub>p</sub>)</div>
+                        <select id="cu-entropy" style="width:100%;font-size:11.5px;padding:2px 4px;border-radius:4px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;font-family:'Roboto',Arial,sans-serif;">
+                          <option value="J_kgK">J/(kg&middot;K)</option>
+                          <option value="kJ_kgK">kJ/(kg&middot;K)</option>
+                          <option value="BTU_lbmR">BTU/(lbm&middot;&deg;R)</option>
+                          <option value="BTU_lbmF">BTU/(lbm&middot;&deg;F)</option>
+                          <option value="cal_gC">cal/(g&middot;&deg;C)</option>
+                          <option value="kcal_kgK">kcal/(kg&middot;K)</option>
+                        </select>
+                      </div>
+
+                      <!-- Conductivity -->
+                      <div>
+                        <div class="sst" style="margin-bottom:2px;font-size:10.5px;">Conductivity (&lambda;)</div>
+                        <select id="cu-conductivity" style="width:100%;font-size:11.5px;padding:2px 4px;border-radius:4px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;font-family:'Roboto',Arial,sans-serif;">
+                          <option value="W_mK">W/(m&middot;K)</option>
+                          <option value="W_mC">W/(m&middot;&deg;C)</option>
+                          <option value="mW_mK">mW/(m&middot;K)</option>
+                          <option value="BTU_hrftF">BTU/(hr&middot;ft&middot;&deg;F)</option>
+                          <option value="BTUin_hrft2F">BTU&middot;in/(hr&middot;ft&sup2;&middot;&deg;F)</option>
+                          <option value="cal_scmC">cal/(s&middot;cm&middot;&deg;C)</option>
+                        </select>
+                      </div>
+
+                      <!-- Dynamic Viscosity -->
+                      <div>
+                        <div class="sst" style="margin-bottom:2px;font-size:10.5px;">Dyn. Viscosity (&mu;)</div>
+                        <select id="cu-dyn-visc" style="width:100%;font-size:11.5px;padding:2px 4px;border-radius:4px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;font-family:'Roboto',Arial,sans-serif;">
+                          <option value="Pas">Pa&middot;s</option>
+                          <option value="mPas">mPa&middot;s (= cP)</option>
+                          <option value="cP">cP (centipoise)</option>
+                          <option value="uPas">&mu;Pa&middot;s</option>
+                          <option value="P">Poise (P = g/(cm&middot;s))</option>
+                          <option value="lbm_fts">lbm/(ft&middot;s)</option>
+                          <option value="lbm_fthr">lbm/(ft&middot;hr)</option>
+                          <option value="lbfs_ft2">lbf&middot;s/ft&sup2;</option>
+                          <option value="kg_mh">kg/(m&middot;h)</option>
+                        </select>
+                      </div>
+
+                      <!-- Kinematic Viscosity -->
+                      <div>
+                        <div class="sst" style="margin-bottom:2px;font-size:10.5px;">Kin. Viscosity (&nu;)</div>
+                        <select id="cu-kin-visc" style="width:100%;font-size:11.5px;padding:2px 4px;border-radius:4px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;font-family:'Roboto',Arial,sans-serif;">
+                          <option value="m2_s">m&sup2;/s</option>
+                          <option value="mm2_s">mm&sup2;/s (= cSt)</option>
+                          <option value="cSt">cSt (centistokes)</option>
+                          <option value="St">cm&sup2;/s (Stokes)</option>
+                          <option value="ft2_s">ft&sup2;/s</option>
+                          <option value="ft2_hr">ft&sup2;/hr</option>
+                          <option value="in2_s">in&sup2;/s</option>
+                        </select>
+                      </div>
+
+                      <!-- Prandtl (locked) -->
+                      <div>
+                        <div class="sst" style="margin-bottom:2px;font-size:10.5px;">Prandtl (Pr)</div>
+                        <select id="cu-prandtl" disabled style="width:100%;font-size:11.5px;padding:2px 4px;border-radius:4px;border:1.5px solid #bbb;background:#ccc;color:#888;font-family:'Roboto',Arial,sans-serif;cursor:not-allowed;">
+                          <option>Dimensionless</option>
+                        </select>
+                        <div style="font-size:10px;color:#888;margin-top:2px;">Always dimensionless</div>
+                      </div>
+
+                    </div><!-- /selector grid -->
+
+                    <!-- Action buttons -->
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;padding-top:8px;border-top:1px solid #bfcccc;">
+                      <button type="button" class="tbtn accent" onclick="applyCustomUnits()">&#x2714; Apply Custom Units</button>
+                      <button type="button" class="tbtn" onclick="resetToSIEng()">&#x21BA; Reset to SI Engineering</button>
+                    </div>
+
+                  </div><!-- /#customUnitPanel -->
+
+                </div><!-- /.itype-grid -->
+              </div><!-- /.grp unit system -->
+
+              <!-- ── GROUP: LOOKUP MODE ───────────────────────────────── -->
+              <div class="grp" id="thermoLookupModeGrp">
+                <div class="grp-title">Lookup Mode</div>
+                <div class="itype-grid" style="grid-template-columns:repeat(4,minmax(0,1fr));">
+                  <label class="it sel">
+                    <input type="radio" name="calcMode" value="point" checked>
+                    Point Lookup (T, P)
+                  </label>
+                  <label class="it">
+                    <input type="radio" name="calcMode" value="t-sweep">
+                    T-Sweep at Fixed P
+                  </label>
+                  <label class="it">
+                    <input type="radio" name="calcMode" value="p-sweep">
+                    P-Sweep at Fixed T
+                  </label>
+                  <label class="it">
+                    <input type="radio" name="calcMode" value="saturation">
+                    Saturation Curve
+                  </label>
+                </div>
+              </div><!-- /.grp lookup mode -->
+
+              <!-- ── GROUP: INPUTS ────────────────────────────────────── -->
+              <div class="grp">
+                <div class="grp-title">Inputs</div>
+                <div class="thermo-g3 mb-2" style="align-items:end;">
+
+                  <div class="thermo-f ms-2 me-5">
+                    <label style="font-size:14px">Selected Fluid</label>
+                    <div id="calcFluidDisplay"
+                      data-fluid="Water"
+                      style="font-size:14px;padding:2px 7px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#c5d5d9;color:#1a3a40;font-family:'Roboto',Arial,sans-serif;height:28px;display:flex;align-items:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-weight:600;cursor:default;"
+                      title="Use Quick Fluid Selection or the Browse dropdown above to change fluid">
+                      Water / Steam (H&#x2082;O)
+                    </div>
+                  </div>
+
+                  <div class="thermo-f ms-2 me-2">
+                    <label for="calcTInput" style="font-size:14px">Temperature</label>
+                    <div style="display:flex;align-items:center;gap:3px;">
+                      <input type="number" id="calcTInput" placeholder="e.g. 300"
+                             style="font-size:14px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;width:100%;font-family:'Roboto',Arial,sans-serif;height:28px;">
+                      <span id="calcTUnit" style="font-size:14px;color:#555;white-space:nowrap;" class="ms-2">K</span>
+                    </div>
+                  </div>
+
+                  <div class="thermo-f ms-5 me-2">
+                    <label for="calcPInput" style="font-size:14px">Pressure</label>
+                    <div style="display:flex;align-items:center;gap:3px;">
+                      <input type="number" id="calcPInput" placeholder="e.g. 101325"
+                             style="font-size:14px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;width:100%;font-family:'Roboto',Arial,sans-serif;height:28px;">
+                      <span id="calcPUnit" style="font-size:14px;color:#555;white-space:nowrap;" class="ms-2">Pa</span>
+                    </div>
+                  </div>
+
+                </div><!-- /.thermo-g3 -->
+              </div><!-- /.grp inputs -->
+
+              <!-- ── PROP-PANEL: OUTPUT PROPERTIES ────────────────────── -->
+              <div class="prop-panel">
+                <div class="grp-title">Output Properties</div>
+                <div class="prop-cols">
+
+                  <!-- Column 1: Thermodynamic State -->
+                  <div class="prop-col">
+                    <div class="prop-col-title">Thermodynamic State</div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Temperature T</span>
+                      <input type="number" id="outT" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outTUnit">K</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Pressure P</span>
+                      <input type="number" id="outP" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outPUnit">Pa</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Density &rho;</span>
+                      <input type="number" id="outRho" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outRhoUnit">kg/m&sup3;</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label italic">Sp. Volume v</span>
+                      <input type="number" id="outV" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outVUnit">m&sup3;/kg</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Sp. Enthalpy h</span>
+                      <input type="number" id="outH" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outHUnit">J/kg</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Sp. Int. Energy u</span>
+                      <input type="number" id="outU" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outUUnit">J/kg</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Sp. Entropy s</span>
+                      <input type="number" id="outS" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outSUnit">J/(kg&middot;K)</span>
+                    </div>
+                  </div>
+
+                  <!-- Column 2: Heat & Transport -->
+                  <div class="prop-col">
+                    <div class="prop-col-title">Heat &amp; Transport</div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Sp. Heat c<sub>p</sub></span>
+                      <input type="number" id="outCp" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outCpUnit">J/(kg&middot;K)</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Sp. Heat c<sub>v</sub></span>
+                      <input type="number" id="outCv" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outCvUnit">J/(kg&middot;K)</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Dyn. Viscosity &mu;</span>
+                      <input type="number" id="outMu" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outMuUnit">Pa&middot;s</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label italic">Kin. Viscosity &nu;</span>
+                      <input type="number" id="outNu" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outNuUnit">m&sup2;/s</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Thermal Cond. &lambda;</span>
+                      <input type="number" id="outLambda" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outLambdaUnit">W/(m&middot;K)</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label italic">Thermal Diff. &alpha;</span>
+                      <input type="number" id="outAlpha" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outAlphaUnit">m&sup2;/s</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Prandtl Number Pr</span>
+                      <input type="number" id="outPr" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit">&mdash;</span>
+                    </div>
+                  </div>
+
+                  <!-- Column 3: Phase & Saturation -->
+                  <div class="prop-col">
+                    <div class="prop-col-title">Phase &amp; Saturation</div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Phase</span>
+                      <span class="prop-output" style="min-width:9rem;" id="outPhase">&mdash;</span>
+                      <!-- <span class="prop-row-unit"></span> -->
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Quality x</span>
+                      <input type="number" id="outX" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit">0&ndash;1</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Sat. Temp T<sub>sat</sub></span>
+                      <input type="number" id="outTsat" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outTsatUnit">K</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Sat. Press P<sub>sat</sub></span>
+                      <input type="number" id="outPsat" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outPsatUnit">Pa</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Sat. Liq. h<sub>f</sub></span>
+                      <input type="number" id="outHf" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outHfUnit">J/kg</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Sat. Vap. h<sub>g</sub></span>
+                      <input type="number" id="outHg" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outHgUnit">J/kg</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Latent Heat h<sub>fg</sub></span>
+                      <input type="number" id="outHfg" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outHfgUnit">J/kg</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Sat. Liq. s<sub>f</sub></span>
+                      <input type="number" id="outSf" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outSfUnit">J/(kg·K)</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Sat. Vap. s<sub>g</sub></span>
+                      <input type="number" id="outSg" placeholder="&mdash;" readonly>
+                      <span class="prop-row-unit" id="outSgUnit">J/(kg·K)</span>
+                    </div>
+                  </div>
+
+                </div><!-- /.prop-cols -->
+              </div><!-- /.prop-panel -->
+
+              <!-- ── REPORTS + STATUS / WARNINGS ──────────────────────── -->
+              <div class="report-row">
+                <div class="grp" id="thermoReportBtnsGrp">
+                  <div class="grp-title">Generate Report</div>
+                  <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                    <button class="tbtn accent" onclick="thermoGenerateReport()" aria-label="Generate thermodynamic property report as PDF"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="10" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 5h6M5 8h6M5 11h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg> Report</button>
+                    <button class="tbtn accent" onclick="thermoGenerateReportWithTables()" aria-label="Generate thermodynamic property report with data tables as PDF"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="10" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 5h6M5 8h6M5 11h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg> Report With Tables</button>
+                    <button class="tbtn accent" onclick="thermoExportCSV()" aria-label="Export thermodynamic properties as CSV spreadsheet"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Export CSV</button>
+                  </div>
+                </div>
+                <div class="grp">
+                  <div class="grp-title">Status &amp; Warnings</div>
+                  <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;">
+                    <div class="status-dot ok" id="calcStatusDot"></div>
+                    <span id="calcStatusText" style="font-size:12px;font-family:'Roboto',Arial,sans-serif;">
+                      Ready &mdash; enter T and P above to calculate
+                    </span>
+                  </div>
+                  <div id="calcWarnings" style="font-size:11px;color:#c07000;font-family:'Roboto',Arial,sans-serif;line-height:1.5;"></div>
+                </div>
+              </div><!-- /.report-row -->
+
+              <!-- ── GRAPHS (3 tabs) ───────────────────────────────────── -->
+              <div class="graph-banner" role="region" aria-label="Property graphs">
+                <div class="grp-title" style="padding:6px 8px 0;margin:0;">Graphs</div>
+                <div class="graph-tab-row" role="tablist">
+                  <button class="graph-tab active" role="tab" aria-selected="true"
+                          onclick="switchGraphTab(1, this)">Property vs Temperature</button>
+                  <button class="graph-tab" role="tab" aria-selected="false"
+                          onclick="switchGraphTab(2, this)">Property vs Pressure</button>
+                  <button class="graph-tab" role="tab" aria-selected="false"
+                          onclick="switchGraphTab(3, this)">Phase Diagram &amp; Sat. Curve</button>
+                </div>
+                <div id="graphContent1" class="graph-content visible" role="tabpanel">
+                  <p style="font-size:11px;color:#888;margin:0 0 6px;">
+                    T-sweep at the entered pressure. Select a property to plot after calculating.
+                  </p>
+                  <div style="position:relative;height:400px;width:100%;max-height:500px;">
+                    <canvas id="chartPropVsT"></canvas>
+                  </div>
+                </div>
+                <div id="graphContent2" class="graph-content" role="tabpanel">
+                  <p style="font-size:11px;color:#888;margin:0 0 6px;">
+                    P-sweep at the entered temperature. Select a property to plot after calculating.
+                  </p>
+                  <div style="position:relative;height:400px;width:100%;max-height:500px;">
+                    <canvas id="chartPropVsP"></canvas>
+                  </div>
+                </div>
+                <div id="graphContent3" class="graph-content" role="tabpanel">
+                  <p style="font-size:11px;color:#888;margin:0 0 6px;">
+                    Saturation envelope and critical point for the selected fluid in T&ndash;P space.
+                  </p>
+                  <div style="position:relative;height:400px;width:100%;max-height:500px;">
+                    <canvas id="chartPhaseDiagram"></canvas>
+                  </div>
+                </div>
+              </div><!-- /.graph-banner graphs -->
+
+              <!-- ── TABLES (3 tabs) ───────────────────────────────────── -->
+              <div class="graph-banner" role="region" aria-label="Property tables">
+                <div class="grp-title" style="padding:6px 8px 0;margin:0;">Property Tables</div>
+                <div class="graph-tab-row" role="tablist">
+                  <button class="graph-tab active" role="tab" aria-selected="true"
+                          onclick="switchTableTab(1, this)">Saturation by Temperature</button>
+                  <button class="graph-tab" role="tab" aria-selected="false"
+                          onclick="switchTableTab(2, this)">Saturation by Pressure</button>
+                  <button class="graph-tab" role="tab" aria-selected="false"
+                          onclick="switchTableTab(3, this)">Property Grid</button>
+                </div>
+
+                <!-- Tab 1: Saturation by T -->
+                <div id="tableContent1" class="graph-content visible" role="tabpanel">
+                  <div class="lt-wrap">
+                    <table class="lt" id="tblSatByT">
+                      <thead>
+                        <tr>
+                          <th>T (K)</th>
+                          <th>P<sub>sat</sub> (Pa)</th>
+                          <th>&rho;<sub>f</sub> (kg/m&sup3;)</th>
+                          <th>&rho;<sub>g</sub> (kg/m&sup3;)</th>
+                          <th>h<sub>f</sub> (J/kg)</th>
+                          <th>h<sub>fg</sub> (J/kg)</th>
+                          <th>h<sub>g</sub> (J/kg)</th>
+                          <th>s<sub>f</sub> (J/kg&middot;K)</th>
+                          <th>s<sub>g</sub> (J/kg&middot;K)</th>
+                          <th>&mu;<sub>f</sub> (Pa&middot;s)</th>
+                          <th>&lambda;<sub>f</sub> (W/m&middot;K)</th>
+                          <th>Pr<sub>f</sub></th>
+                        </tr>
+                      </thead>
+                      <tbody id="tblSatByTBody">
+                        <tr>
+                          <td colspan="12" style="text-align:center;color:#888;padding:20px;font-style:italic;">
+                            Select a fluid and press Calculate to populate the saturation table
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Tab 2: Saturation by P -->
+                <div id="tableContent2" class="graph-content" role="tabpanel">
+                  <div class="lt-wrap">
+                    <table class="lt" id="tblSatByP">
+                      <thead>
+                        <tr>
+                          <th>P<sub>sat</sub> (Pa)</th>
+                          <th>T<sub>sat</sub> (K)</th>
+                          <th>&rho;<sub>f</sub> (kg/m&sup3;)</th>
+                          <th>&rho;<sub>g</sub> (kg/m&sup3;)</th>
+                          <th>h<sub>f</sub> (J/kg)</th>
+                          <th>h<sub>fg</sub> (J/kg)</th>
+                          <th>h<sub>g</sub> (J/kg)</th>
+                          <th>s<sub>f</sub> (J/kg&middot;K)</th>
+                          <th>s<sub>g</sub> (J/kg&middot;K)</th>
+                          <th>c<sub>p,f</sub> (J/kg&middot;K)</th>
+                          <th>&mu;<sub>f</sub> (Pa&middot;s)</th>
+                          <th>Pr<sub>f</sub></th>
+                        </tr>
+                      </thead>
+                      <tbody id="tblSatByPBody">
+                        <tr>
+                          <td colspan="12" style="text-align:center;color:#888;padding:20px;font-style:italic;">
+                            Select a fluid and press Calculate to populate the saturation table
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Tab 3: Property Grid -->
+                <div id="tableContent3" class="graph-content" role="tabpanel">
+                  <div class="lt-wrap">
+                    <table class="lt" id="tblGrid">
+                      <thead>
+                        <tr>
+                          <th>T (K)</th>
+                          <th>P (Pa)</th>
+                          <th>Phase</th>
+                          <th>&rho; (kg/m&sup3;)</th>
+                          <th>h (J/kg)</th>
+                          <th>s (J/kg&middot;K)</th>
+                          <th>c<sub>p</sub> (J/kg&middot;K)</th>
+                          <th>u (J/kg)</th>
+                          <th>&mu; (Pa&middot;s)</th>
+                          <th>&lambda; (W/m&middot;K)</th>
+                          <th>Pr</th>
+                        </tr>
+                      </thead>
+                      <tbody id="tblGridBody">
+                        <tr>
+                          <td colspan="11" style="text-align:center;color:#888;padding:20px;font-style:italic;">
+                            Select a fluid and mode, then press Calculate to populate the property grid
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div><!-- /.graph-banner tables -->
+
+              <!-- ── BOTTOM BAR ────────────────────────────────────────── -->
+              <div class="bottom-bar" role="contentinfo">
+                <p style="font-size:14px;color:#555;margin:0;line-height:1.6;">
+                  All values derived from CoolProp 7.2.0 equations of state, precomputed as interpolated T/P grid tables.
+                  Results are approximations &mdash; not suitable for safety-critical design without independent verification.
+                  &nbsp;<em>Italic properties (&nu;, &alpha;, v) are derived at display time:
+                  &nu;&thinsp;=&thinsp;&mu;/&rho;&thinsp;&thinsp;|&thinsp;&thinsp;&alpha;&thinsp;=&thinsp;&lambda;/(&rho;c<sub>p</sub>)&thinsp;&thinsp;|&thinsp;&thinsp;v&thinsp;=&thinsp;1/&rho;.</em>
+                </p>
+              </div>
+
+            </div><!-- /.wrapper -->
+          </div><!-- /mx-md-2 -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         REFERENCE GUIDE — THERMODYNAMICS
+    ═══════════════════════════════════════════════════════════════ -->
+    <section aria-label="Thermodynamics reference guide">
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12 px-3">
+          <div class="ref-wrapper">
+            <div class="ref-section-wrap">
+              <div class="ref-section-title">Reference Guide &mdash; Thermodynamics</div>
+
+
+              <!-- ══ CARD 01: HOW KASPERCALC WORKS ══════════════════ -->
+              <div class="ref-card" id="thermoCard1">
+                <div class="ref-card-header" onclick="toggleRefCard('thermoCard1')" role="button" tabindex="0" aria-expanded="true">
+                  <span class="ref-num">01</span>
+                  <h2>How KasperCalc Thermodynamics Works</h2>
+                  <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="ref-body two-col">
+                  <div>
+                    <p class="fs-6">KasperCalc computes thermodynamic properties using a precomputed, structured T/P grid derived from <a href="https://www.coolprop.org" target="_blank" rel="noopener" class="fs-6">CoolProp 7.2.0</a> equations of state. Each fluid is solved across a dense mesh &mdash; log-spaced in pressure, linearly-spaced in temperature, with adaptive refinement near critical points, saturation curves, and phase boundaries.</p>
+                    <p class="fs-6">Results are stored as compressed lookup tables and served directly in the browser &mdash; no server calls, no runtime equation solving, and no internet connection required after the initial page load. The calculator interpolates between precomputed grid points to return property values at arbitrary T and P.</p>
+                    <p class="fs-6">For fluids with a two-phase region, the saturation curve is stored separately at 500 temperature points from T<sub>triple</sub> to T<sub>crit</sub>, with full liquid and vapor properties at each point. Bulk grid properties inside the two-phase dome are stored as NaN; phase behavior is resolved from the saturation table instead.</p>
+                    <div class="ref-callout fs-6">
+                      <strong>Accuracy Note:</strong> KasperCalc values are grid-interpolated approximations of CoolProp equations of state. Near phase boundaries and critical points, precision is reduced. Results are suitable for engineering estimates and education but should not be used for safety-critical design without independent verification.
+                    </div>
+                  </div>
+                  <div>
+                    <div class="ref-sub fs-6">Computed Properties (per T/P Node)</div>
+                    <ul>
+                      <li class="fs-6">Density &mdash; &rho; (kg/m&sup3;)</li>
+                      <li class="fs-6">Isobaric specific heat &mdash; c<sub>p</sub> (J/kg&middot;K)</li>
+                      <li class="fs-6">Isochoric specific heat &mdash; c<sub>v</sub> (J/kg&middot;K)</li>
+                      <li class="fs-6">Specific enthalpy &mdash; h (J/kg)</li>
+                      <li class="fs-6">Specific entropy &mdash; s (J/kg&middot;K)</li>
+                      <li class="fs-6">Specific internal energy &mdash; u (J/kg)</li>
+                      <li class="fs-6">Dynamic viscosity &mdash; &mu; (Pa&middot;s)</li>
+                      <li class="fs-6">Thermal conductivity &mdash; &lambda; (W/m&middot;K)</li>
+                      <li class="fs-6">Prandtl number &mdash; Pr (dimensionless)</li>
+                    </ul>
+                    <div class="ref-sub fs-6" style="margin-top:10px;">Derived at Display Time</div>
+                    <ul>
+                      <li class="fs-6">Kinematic viscosity &mdash; &nu; = &mu;/&rho; (m&sup2;/s)</li>
+                      <li class="fs-6">Thermal diffusivity &mdash; &alpha; = &lambda;/(&rho;c<sub>p</sub>) (m&sup2;/s)</li>
+                      <li class="fs-6">Specific volume &mdash; v = 1/&rho; (m&sup3;/kg)</li>
+                    </ul>
+                    <div class="ref-sub fs-6" style="margin-top:10px;">Phase Flag Codes</div>
+                    <table class="ref-table">
+                      <thead><tr><th>Flag</th><th>Phase Region</th></tr></thead>
+                      <tbody>
+                        <tr><td>0</td><td>Liquid (subcooled)</td></tr>
+                        <tr><td>1</td><td>Gas / Supercritical vapor</td></tr>
+                        <tr><td>2</td><td>Two-phase &mdash; bulk NaN; sat. liq/vap stored separately</td></tr>
+                        <tr><td>3</td><td>Supercritical liquid</td></tr>
+                        <tr><td>4</td><td>Supercritical gas</td></tr>
+                        <tr><td>255</td><td>Failed / out-of-range (NaN)</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- ══ CARD 02: SOURCE COMPARISON ════════════════════ -->
+              <div class="ref-card" id="thermoCard2">
+                <div class="ref-card-header" onclick="toggleRefCard('thermoCard2')" role="button" tabindex="0" aria-expanded="false">
+                  <span class="ref-num">02</span>
+                  <h2>Comparing Property Sources: NIST &middot; CoolProp &middot; KasperCalc</h2>
+                  <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="ref-body">
+                  <div class="full-col" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;">
+                    <div style="border:1px solid #ccc;border-radius:6px;border-top:3px solid #6c757d;padding:10px;">
+                      <div class="ref-sub fs-6">NIST WebBook</div>
+                      <p style="font-size:14px;color:#666;font-style:italic;margin-bottom:6px;">Experimental Authority</p>
+                      <p style="font-size:14px;">Authoritative thermophysical and thermochemical database backed by evaluated experimental data. The primary reference standard for validation and benchmark comparisons.</p>
+                      <ul>
+                        <li class="fs-6">&#10003; Highest experimental accuracy</li>
+                        <li class="fs-6">&#10003; Peer-reviewed, documented lineage</li>
+                        <li class="fs-6">&#10003; Trusted reference standard</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Clunky UI</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Paid service advertisement</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Not designed for engineers</li>
+                      </ul>
+                    </div>
+                    <div style="border:1px solid #ccc;border-radius:6px;border-top:3px solid #429666;padding:10px;">
+                      <div class="ref-sub fs-6">KasperCalc</div>
+                      <p style="font-size:14px;color:#666;font-style:italic;margin-bottom:6px;">Fast Browser Lookup</p>
+                      <p style="font-size:14px;">Lightweight, precomputed property database optimized for browser lookup, embedded tools, and offline use. Approximates CoolProp via a structured, pre-solved T/P grid.</p>
+                      <ul>
+                        <li class="fs-6">&#10003; Instant browser-native lookup</li>
+                        <li class="fs-6">&#10003; Works fully offline</li>
+                        <li class="fs-6">&#10003; SI and US customary units</li>
+                        <li class="fs-6">&#10003; Deterministic performance</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Grid-interpolated (approx.)</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Reduced precision near T<sub>crit</sub></li>
+                      </ul>
+                    </div>                    
+                    <div style="border:1px solid #ccc;border-radius:6px;border-top:3px solid #61828A;padding:10px;">
+                      <div class="ref-sub fs-6">CoolProp</div>
+                      <p style="font-size:14px;color:#666;font-style:italic;margin-bottom:6px;">High-Fidelity Physics Engine</p>
+                      <p style="font-size:14px;">Open-source thermophysical library solving equations of state (EOS) on demand. Supports 400+ fluids, refrigerants, incompressible mixtures, and full phase behavior via iterative numerical solvers.</p>
+                      <ul>
+                        <li class="fs-6">&#10003; High-fidelity, all phases</li>
+                        <li class="fs-6">&#10003; Critical &amp; two-phase region</li>
+                        <li class="fs-6">&#10003; 400+ fluids &amp; mixtures</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Requires Python / C++</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Computational overhead</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Not browser-native</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <!-- <div class="full-col">
+                    <div class="ref-sub">Engineering Tradeoff Summary</div>
+                    <table class="ref-table">
+                      <thead>
+                        <tr>
+                          <th style="width:16%;">System</th>
+                          <th>Primary Strength</th>
+                          <th>Primary Tradeoff</th>
+                          <th>Best Use Case</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><strong>NIST WebBook</strong></td>
+                          <td>Experimental authority &amp; validated data</td>
+                          <td>Clunky UI</td>
+                          <td>Reference validation, academic research</td>
+                        </tr>
+                        <tr>
+                          <td><strong>CoolProp</strong></td>
+                          <td>High-fidelity equations of state, all phases</td>
+                          <td>Requires Python/C++</td>
+                          <td>Simulation tools, research code, Python scripts</td>
+                        </tr>
+                        <tr>
+                          <td><strong>KasperCalc</strong></td>
+                          <td>Fast, browser-native, offline-capable</td>
+                          <td>Grid-interpolated approximation</td>
+                          <td>Engineering lookup, embedded tools, education</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div> -->
+                </div>
+              </div>
+
+
+              <!-- ══ CARD 03: GRID & DATA STRATEGY ════════════════ -->
+              <div class="ref-card" id="thermoCard3">
+                <div class="ref-card-header" onclick="toggleRefCard('thermoCard3')" role="button" tabindex="0" aria-expanded="false">
+                  <span class="ref-num">03</span>
+                  <h2>Grid &amp; Data Strategy &mdash; Mesh, Resolution &amp; Storage</h2>
+                  <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="ref-body two-col">
+                  <div>
+                    <div style="font-size:14px;" class="ref-sub">Temperature Axis</div>
+                    <p style="font-size:14px;">500 linearly-spaced points from T<sub>min</sub> to T<sub>max</sub>, plus 50 adaptive points clustered within &plusmn;20% of T<sub>crit</sub>. Total: up to ~530 unique T-points per fluid.</p>
+                    <div style="font-size:14px;" class="ref-sub" style="margin-top:8px;">Pressure Axis</div>
+                    <p style="font-size:14px;">200 log-spaced points from P<sub>triple</sub> (or 101,325 Pa) to P<sub>max</sub>, plus 50 linear points within &plusmn;20% of P<sub>crit</sub>, plus a guaranteed 101,325 Pa (1 atm) point. Total: up to ~240 unique P-points per fluid.</p>
+                    <div style="font-size:14px;" class="ref-sub" style="margin-top:8px;">Pressure Bands</div>
+                    <p style="font-size:14px;">The pressure axis is divided into bands of 20 pressure points each to enable partial-file loading. Each band is stored as a separate <code>.bin</code> and <code>.json</code> file. A fluid with 240 pressure points has ~12 bands.</p>
+                    <div style="font-size:14px;" class="ref-sub" style="margin-top:8px;">Saturation Curve</div>
+                    <p style="font-size:14px;">500 temperature points from T<sub>triple</sub> to T<sub>crit</sub>. Both saturated liquid (Q=0) and saturated vapor (Q=1) properties stored at each point: density, c<sub>p</sub>, enthalpy, entropy, viscosity, and conductivity.</p>
+                    <div style="font-size:14px;" class="ref-sub" style="margin-top:8px;">Incompressible Fluids (INCOMP)</div>
+                    <p style="font-size:14px;">INCOMP fluids (always single-phase liquid) use the same T/P grid structure but are evaluated via PropsSI with the full fluid string (e.g. <code>INCOMP::MEG[0.3]</code>). No saturation curve. c<sub>v</sub> is stored as NaN. Phase flag is always 0 (liquid).</p>
+                  </div>
+                  <div>
+                    <div class="ref-sub">File Format</div>
+                    <table class="ref-table">
+                      <thead><tr><th>File</th><th>Contents</th><th>Format</th></tr></thead>
+                      <tbody>
+                        <tr><td><code>meta.json</code></td><td>Fluid metadata, T/P axes info, band list, critical &amp; triple points</td><td>JSON (UTF-8)</td></tr>
+                        <tr><td><code>meta.bin</code></td><td>Same as meta.json (UTF-8 encoded)</td><td>Raw bytes</td></tr>
+                        <tr><td><code>grid_band_NNN_*.bin</code></td><td>Grid property data: T, P, rho, cp, cv, h, s, u, visc, cond, Pr, phase flag</td><td>Float32 &times; 11 + uint8</td></tr>
+                        <tr><td><code>saturation.bin</code></td><td>Saturation curve: T, P, liq/vap density, cp, h, s, visc, cond + phase flag</td><td>Float32 &times; 14 + uint8</td></tr>
+                      </tbody>
+                    </table>
+                    <div style="font-size:14px;" class="ref-sub" style="margin-top:10px;">Float32 Precision</div>
+                    <p style="font-size:14px;">All grid and saturation values are stored as 32-bit IEEE 754 floats (~7 significant decimal digits). This is sufficient for engineering calculations but introduces small rounding errors relative to CoolProp double-precision output.</p>
+                    <div style="font-size:14px;" class="ref-sub" style="margin-top:10px;">NaN Encoding</div>
+                    <p style="font-size:14px;">Failed or undefined properties (two-phase bulk, out-of-range, INCOMP c<sub>v</sub>) are stored as IEEE 754 NaN in binary files and as JSON <code>null</code> in text files.</p>
+                    <div class="ref-callout" style="margin-top:8px;">
+                      <strong style="font-size:14px;">Typical grid sizes:</strong> Water: ~104,000 grid points. R-134a: ~93,000 grid points. A simple incompressible fluid (e.g. MEG[0.3]): ~100,500 grid points.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- ══ CARD 04: AVAILABLE FLUIDS ═════════════════════ -->
+              <div class="ref-card" id="thermoCard4">
+                <div class="ref-card-header" onclick="toggleRefCard('thermoCard4')" role="button" tabindex="0" aria-expanded="false">
+                  <span class="ref-num">04</span>
+                  <h2>Available Fluids: All 400+ CoolProp Fluids</h2>
+                  <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="ref-body">
+
+                  <!-- Pure HEOS fluids -->
+                  <div class="full-col">
+                    <div class="ref-sub">Water &amp; Steam</div>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">Water (H&#x2082;O) <code>Water</code></span>
+                      <span class="fluid-item">Heavy Water (D&#x2082;O) <code>HeavyWater</code></span>
+                    </div>
+                  </div>
+
+                  <div class="full-col">
+                    <div class="ref-sub">Light Gases &amp; Noble Gases</div>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">Air (pseudo-pure) <code>Air</code></span>
+                      <span class="fluid-item">Nitrogen (N&#x2082;) <code>Nitrogen</code></span>
+                      <span class="fluid-item">Oxygen (O&#x2082;) <code>Oxygen</code></span>
+                      <span class="fluid-item">Hydrogen (H&#x2082;) <code>Hydrogen</code></span>
+                      <span class="fluid-item">Parahydrogen <code>ParaHydrogen</code></span>
+                      <span class="fluid-item">Deuterium (D&#x2082;) <code>Deuterium</code></span>
+                      <span class="fluid-item">Helium (He) <code>Helium</code></span>
+                      <span class="fluid-item">Neon (Ne) <code>Neon</code></span>
+                      <span class="fluid-item">Argon (Ar) <code>Argon</code></span>
+                      <span class="fluid-item">Krypton (Kr) <code>Krypton</code></span>
+                      <span class="fluid-item">Xenon (Xe) <code>Xenon</code></span>
+                      <span class="fluid-item">Fluorine (F&#x2082;) <code>Fluorine</code></span>
+                    </div>
+                  </div>
+
+                  <div class="full-col">
+                    <div class="ref-sub">Inorganic Compounds</div>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">Ammonia (NH&#x2083;) <code>Ammonia</code></span>
+                      <span class="fluid-item">Carbon Dioxide (CO&#x2082;) <code>CarbonDioxide</code></span>
+                      <span class="fluid-item">Carbon Monoxide (CO) <code>CarbonMonoxide</code></span>
+                      <span class="fluid-item">Carbonyl Sulfide (COS) <code>CarbonylSulfide</code></span>
+                      <span class="fluid-item">Hydrogen Chloride (HCl) <code>HydrogenChloride</code></span>
+                      <span class="fluid-item">Hydrogen Sulfide (H&#x2082;S) <code>HydrogenSulfide</code></span>
+                      <span class="fluid-item">Nitrous Oxide (N&#x2082;O) <code>NitrousOxide</code></span>
+                      <span class="fluid-item">Sulfur Dioxide (SO&#x2082;) <code>SulfurDioxide</code></span>
+                      <span class="fluid-item">Sulfur Hexafluoride (SF&#x2086;) <code>SulfurHexafluoride</code></span>
+                    </div>
+                  </div>
+
+                  <div class="full-col">
+                    <div class="ref-sub">Alkanes (Paraffins) &mdash; C1 through C10</div>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">Methane (CH&#x2084;) <code>Methane</code></span>
+                      <span class="fluid-item">Ethane (C&#x2082;H&#x2086;) <code>Ethane</code></span>
+                      <span class="fluid-item">Propane (C&#x2083;H&#x2088;) <code>Propane</code></span>
+                      <span class="fluid-item">n-Butane <code>n-Butane</code></span>
+                      <span class="fluid-item">Isobutane <code>IsoButane</code></span>
+                      <span class="fluid-item">n-Pentane <code>n-Pentane</code></span>
+                      <span class="fluid-item">Isopentane <code>Isopentane</code></span>
+                      <span class="fluid-item">Neopentane <code>Neopentane</code></span>
+                      <span class="fluid-item">n-Hexane <code>n-Hexane</code></span>
+                      <span class="fluid-item">n-Heptane <code>n-Heptane</code></span>
+                      <span class="fluid-item">n-Octane <code>n-Octane</code></span>
+                      <span class="fluid-item">n-Nonane <code>n-Nonane</code></span>
+                      <span class="fluid-item">n-Decane <code>n-Decane</code></span>
+                    </div>
+                  </div>
+
+                  <div class="full-col">
+                    <div class="ref-sub">Cyclic Hydrocarbons &amp; Aromatics</div>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">Cyclopropane <code>CycloPropane</code></span>
+                      <span class="fluid-item">Cyclopentane <code>Cyclopentane</code></span>
+                      <span class="fluid-item">Cyclohexane <code>CycloHexane</code></span>
+                      <span class="fluid-item">Benzene (C&#x2086;H&#x2086;) <code>Benzene</code></span>
+                      <span class="fluid-item">Toluene (C&#x2087;H&#x2088;) <code>Toluene</code></span>
+                      <span class="fluid-item">Ethylbenzene <code>EthylBenzene</code></span>
+                      <span class="fluid-item">m-Xylene <code>m-Xylene</code></span>
+                      <span class="fluid-item">o-Xylene <code>o-Xylene</code></span>
+                      <span class="fluid-item">p-Xylene <code>p-Xylene</code></span>
+                    </div>
+                  </div>
+
+                  <div class="full-col">
+                    <div class="ref-sub">Alkenes, Alkynes &amp; Dienes</div>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">Ethylene (C&#x2082;H&#x2084;) <code>Ethylene</code></span>
+                      <span class="fluid-item">Propylene (C&#x2083;H&#x2086;) <code>Propylene</code></span>
+                      <span class="fluid-item">1-Butene <code>1Butene</code></span>
+                      <span class="fluid-item">cis-2-Butene <code>cis-2-Butene</code></span>
+                      <span class="fluid-item">trans-2-Butene <code>trans-2-Butene</code></span>
+                      <span class="fluid-item">Isobutene <code>IsoButene</code></span>
+                      <span class="fluid-item">Propyne <code>Propyne</code></span>
+                      <span class="fluid-item">Propadiene <code>Propadiene</code></span>
+                    </div>
+                  </div>
+
+                  <div class="full-col">
+                    <div class="ref-sub">Oxygenates, Alcohols &amp; Ethers</div>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">Methanol (CH&#x2083;OH) <code>Methanol</code></span>
+                      <span class="fluid-item">Ethanol (C&#x2082;H&#x2085;OH) <code>Ethanol</code></span>
+                      <span class="fluid-item">Acetone (C&#x2083;H&#x2086;O) <code>Acetone</code></span>
+                      <span class="fluid-item">Dimethyl Ether <code>DimethylEther</code></span>
+                      <span class="fluid-item">Diethyl Ether <code>DiethylEther</code></span>
+                      <span class="fluid-item">Dimethyl Carbonate <code>DimethylCarbonate</code></span>
+                      <span class="fluid-item">Methyl Formate <code>MethylFormate</code></span>
+                    </div>
+                  </div>
+
+                  <div class="full-col">
+                    <div class="ref-sub">Siloxanes (Organic Silicon Compounds)</div>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">MM (hexamethyldisiloxane) <code>MM</code></span>
+                      <span class="fluid-item">MDM (octamethyltrisiloxane) <code>MDM</code></span>
+                      <span class="fluid-item">MD2M (decamethyltetrasiloxane) <code>MD2M</code></span>
+                      <span class="fluid-item">MD3M <code>MD3M</code></span>
+                      <span class="fluid-item">MD4M <code>MD4M</code></span>
+                      <span class="fluid-item">D4 (cyclo-octamethyltetrasiloxane) <code>D4</code></span>
+                      <span class="fluid-item">D5 (cyclo-decamethylpentasiloxane) <code>D5</code></span>
+                      <span class="fluid-item">D6 (cyclo-dodecamethylhexasiloxane) <code>D6</code></span>
+                    </div>
+                  </div>
+
+                  <div class="full-col">
+                    <div class="ref-sub">Fatty Acid Methyl Esters (Biodiesel / FAME)</div>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">Methyl Linoleate <code>MethylLinoleate</code></span>
+                      <span class="fluid-item">Methyl Linolenate <code>MethylLinolenate</code></span>
+                      <span class="fluid-item">Methyl Oleate <code>MethylOleate</code></span>
+                      <span class="fluid-item">Methyl Palmitate <code>MethylPalmitate</code></span>
+                      <span class="fluid-item">Methyl Stearate <code>MethylStearate</code></span>
+                    </div>
+                  </div>
+
+                  <div class="full-col">
+                    <div class="ref-sub">Refrigerants &mdash; CFC / HCFC (Legacy, Phase-Out)</div>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">R-11 (CCl&#x2083;F) <code>R11</code></span>
+                      <span class="fluid-item">R-12 (CCl&#x2082;F&#x2082;) <code>R12</code></span>
+                      <span class="fluid-item">R-13 (CClF&#x2083;) <code>R13</code></span>
+                      <span class="fluid-item">R-14 (CF&#x2084;) <code>R14</code></span>
+                      <span class="fluid-item">R-21 (CHCl&#x2082;F) <code>R21</code></span>
+                      <span class="fluid-item">R-22 (CHClF&#x2082;) <code>R22</code></span>
+                      <span class="fluid-item">R-23 (CHF&#x2083;) <code>R23</code></span>
+                      <span class="fluid-item">R-113 (C&#x2082;Cl&#x2083;F&#x2083;) <code>R113</code></span>
+                      <span class="fluid-item">R-114 (C&#x2082;Cl&#x2082;F&#x2084;) <code>R114</code></span>
+                      <span class="fluid-item">R-115 (C&#x2082;ClF&#x2085;) <code>R115</code></span>
+                      <span class="fluid-item">R-123 <code>R123</code></span>
+                      <span class="fluid-item">R-124 <code>R124</code></span>
+                      <span class="fluid-item">R-141b <code>R141b</code></span>
+                      <span class="fluid-item">R-142b <code>R142b</code></span>
+                      <span class="fluid-item">R-152a <code>R152A</code></span>
+                      <span class="fluid-item">R-161 <code>R161</code></span>
+                      <span class="fluid-item">RC-318 (cyclo-C&#x2084;F&#x2088;) <code>RC318</code></span>
+                    </div>
+                  </div>
+
+                  <div class="full-col">
+                    <div class="ref-sub">Refrigerants &mdash; HFC (Hydrofluorocarbons)</div>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">R-32 (CH&#x2082;F&#x2082;) <code>R32</code></span>
+                      <span class="fluid-item">R-41 (CH&#x2083;F) <code>R41</code></span>
+                      <span class="fluid-item">R-116 (C&#x2082;F&#x2086;) <code>R116</code></span>
+                      <span class="fluid-item">R-125 (CHF&#x2082;CF&#x2083;) <code>R125</code></span>
+                      <span class="fluid-item">R-134a (CH&#x2082;FCF&#x2083;) <code>R134a</code></span>
+                      <span class="fluid-item">R-143a (CH&#x2083;CF&#x2083;) <code>R143a</code></span>
+                      <span class="fluid-item">R-218 (C&#x2083;F&#x2088;) <code>R218</code></span>
+                      <span class="fluid-item">R-227ea (CF&#x2083;CHFCF&#x2083;) <code>R227EA</code></span>
+                      <span class="fluid-item">R-236ea <code>R236EA</code></span>
+                      <span class="fluid-item">R-236fa <code>R236FA</code></span>
+                      <span class="fluid-item">R-245ca <code>R245ca</code></span>
+                      <span class="fluid-item">R-245fa <code>R245fa</code></span>
+                      <span class="fluid-item">R-365mfc <code>R365MFC</code></span>
+                    </div>
+                  </div>
+
+                  <div class="full-col">
+                    <div class="ref-sub">Refrigerants &mdash; HFO (Hydrofluoroolefins, Low-GWP)</div>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">R-1234yf (CF&#x2083;CF=CH&#x2082;) <code>R1234yf</code></span>
+                      <span class="fluid-item">R-1234ze(E) (trans) <code>R1234ze(E)</code></span>
+                      <span class="fluid-item">R-1234ze(Z) (cis) <code>R1234ze(Z)</code></span>
+                      <span class="fluid-item">R-1243zf <code>R1243zf</code></span>
+                      <span class="fluid-item">R-1233zd(E) <code>R1233zd(E)</code></span>
+                      <span class="fluid-item">R-1336mzz(E) <code>R1336mzz(E)</code></span>
+                      <span class="fluid-item">R-1336mzz(Z) <code>R1336mzz(Z)</code></span>
+                      <span class="fluid-item">R-1123 (CF&#x2082;=CHF) <code>R1123</code></span>
+                      <span class="fluid-item">R-13I1 (CF&#x2083;I) <code>R13I1</code></span>
+                    </div>
+                  </div>
+
+                  <div class="full-col">
+                    <div class="ref-sub">Refrigerant Blends (Pseudo-Pure)</div>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">R-404A (R125/R134a/R143a) <code>R404A</code></span>
+                      <span class="fluid-item">R-407C (R32/R125/R134a) <code>R407C</code></span>
+                      <span class="fluid-item">R-410A (R32/R125) <code>R410A</code></span>
+                      <span class="fluid-item">R-507A (R125/R143a) <code>R507A</code></span>
+                    </div>
+                  </div>
+
+                  <div class="full-col">
+                    <div class="ref-sub">INCOMP &mdash; Pure Incompressible Heat Transfer Fluids (~74 fluids)</div>
+                    <p>Single-phase liquid fluids evaluated via the INCOMP backend. No saturation curve. c<sub>v</sub> = NaN. Phase is always 0 (liquid). These include aviation heat transfer fluids, silicone oils, Therminol series, and industrial brines.</p>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">AS10, AS20, AS30 (aviation)</span>
+                      <span class="fluid-item">AS40, AS47, AS55 (aviation)</span>
+                      <span class="fluid-item">DEB, DSF (diethylbenzene, dowtherm SF)</span>
+                      <span class="fluid-item">HC10, HC2, HC2L, HC50, HC5L (hydrocarbons)</span>
+                      <span class="fluid-item">HFE-7100, HFE-7200, HFE-7500, HFE-7600</span>
+                      <span class="fluid-item">HIGHFREEZER55, HIGHFREEZER60, HIGHFLOW20</span>
+                      <span class="fluid-item">Marlotherm N, Marlotherm SH</span>
+                      <span class="fluid-item">NaK (sodium-potassium alloy)</span>
+                      <span class="fluid-item">PAG46 (polyalkylene glycol oil)</span>
+                      <span class="fluid-item">SH70, SH72, SH105, SH110, SH200 (silicone oils)</span>
+                      <span class="fluid-item">SilTherm (silicone heat transfer)</span>
+                      <span class="fluid-item">T66, T73, TC4, TX22</span>
+                      <span class="fluid-item">Therminol 59, 66, D12, VP-1, XP</span>
+                      <span class="fluid-item">Xceltherm 600, MK1, XT</span>
+                    </div>
+                  </div>
+
+                  <div class="full-col">
+                    <div class="ref-sub">INCOMP &mdash; Aqueous Mixtures with Concentration [0.0&ndash;1.0]</div>
+                    <p>Mixture fluids accessed as <code>INCOMP::BaseFluid[massFraction]</code>, e.g. <code>INCOMP::MEG[0.3]</code> for 30% Mono-Ethylene Glycol. Concentrations outside the valid range return NaN (phase=255).</p>
+                    <div class="fluid-grid">
+                      <span class="fluid-item">MEG &mdash; Mono-Ethylene Glycol / Water <code>MEG</code></span>
+                      <span class="fluid-item">MEG2 &mdash; EG / Water (alt formulation) <code>MEG2</code></span>
+                      <span class="fluid-item">MPG &mdash; Mono-Propylene Glycol / Water <code>MPG</code></span>
+                      <span class="fluid-item">AEG &mdash; Ethylene Glycol / Water (automotive) <code>AEG</code></span>
+                      <span class="fluid-item">APG &mdash; Propylene Glycol / Water (aircraft) <code>APG</code></span>
+                      <span class="fluid-item">MEA / MEA2 &mdash; Mono-Ethanolamine / Water <code>MEA</code></span>
+                      <span class="fluid-item">MCA / MCA2 &mdash; Calcium Chloride / Water <code>MCA</code></span>
+                      <span class="fluid-item">MAM / MAM2 &mdash; Ammonium Chloride / Water <code>MAM</code></span>
+                      <span class="fluid-item">MGL &mdash; Glycerol / Water <code>MGL</code></span>
+                      <span class="fluid-item">MGP &mdash; Glycerol / Propylene Glycol <code>MGP</code></span>
+                      <span class="fluid-item">MK / MKA / MKF &mdash; Potassium Acetate/Formate / Water <code>MK</code></span>
+                      <span class="fluid-item">GKN / AKF &mdash; Potassium Acetate / Water <code>GKN</code></span>
+                      <span class="fluid-item">AN &mdash; Ammonium Nitrate / Water <code>AN</code></span>
+                      <span class="fluid-item">AL &mdash; Lithium Chloride / Water <code>AL</code></span>
+                      <span class="fluid-item">LiBr &mdash; Lithium Bromide / Water <code>LiBr</code></span>
+                      <span class="fluid-item">MLO &mdash; LiBr / Organic Solvent <code>MLO</code></span>
+                      <span class="fluid-item">MMG &mdash; Magnesium Chloride / Water <code>MMG</code></span>
+                      <span class="fluid-item">MNaK &mdash; NaCl+KCl / Water <code>MNaK</code></span>
+                      <span class="fluid-item">MSZ &mdash; Sodium Chloride / Water (brine) <code>MSZ</code></span>
+                      <span class="fluid-item">MVG &mdash; Vinyl Glycol / Water <code>MVG</code></span>
+                      <span class="fluid-item">MWM &mdash; EG / Water (high-temp) <code>MWM</code></span>
+                      <span class="fluid-item">MXP &mdash; PG / Water (extended) <code>MXP</code></span>
+                      <span class="fluid-item">MRC &mdash; Refrigerant mixture <code>MRC</code></span>
+                      <span class="fluid-item">MMA &mdash; Methyl Acetate / Methanol <code>MMA</code></span>
+                      <span class="fluid-item">PK2 / PKL &mdash; Potassium Carbonate/Lactate <code>PK2</code></span>
+                      <span class="fluid-item">ZAC / ZFC / ZLC &mdash; Zinc Acetate/Formate/Lactate <code>ZAC</code></span>
+                      <span class="fluid-item">ZM / ZMC &mdash; Zinc mixtures <code>ZM</code></span>
+                    </div>
+                  </div>
+
+                </div><!-- /.ref-body -->
+              </div><!-- /#thermoCard4 -->
+
+
+              <!-- ══ CARD 05: THERMODYNAMIC FORMULAS ══════════════ -->
+              <div class="ref-card" id="thermoCard5">
+                <div class="ref-card-header" onclick="toggleRefCard('thermoCard5')" role="button" tabindex="0" aria-expanded="false">
+                  <span class="ref-num">05</span>
+                  <h2>Key Thermodynamic Formulas &amp; Relationships</h2>
+                  <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="ref-body two-col">
+
+                  <!-- Left column -->
+                  <div>
+                    <div class="ref-sub">Derived Properties (Computed at Display Time)</div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Specific Volume</span>
+                      <span class="ref-eq">v = 1 / &rho;&nbsp;&nbsp;&nbsp;[m&sup3;/kg]</span>
+                    </div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Kinematic Viscosity</span>
+                      <span class="ref-eq">&nu; = &mu; / &rho;&nbsp;&nbsp;&nbsp;[m&sup2;/s]</span>
+                    </div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Thermal Diffusivity</span>
+                      <span class="ref-eq">&alpha; = &lambda; / (&rho; &middot; c<sub>p</sub>)&nbsp;&nbsp;&nbsp;[m&sup2;/s]</span>
+                    </div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Prandtl Number</span>
+                      <span class="ref-eq">Pr = &mu; &middot; c<sub>p</sub> / &lambda;&nbsp;&nbsp;&nbsp;[dimensionless]</span>
+                      <span class="ref-eq">Pr = &nu; / &alpha;&nbsp;&nbsp;&nbsp;(alternate form)</span>
+                    </div>
+
+                    <div class="ref-sub" style="margin-top:12px;">Saturation &amp; Quality</div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Quality (Dryness Fraction)</span>
+                      <span class="ref-eq">x = (h &minus; h<sub>f</sub>) / h<sub>fg</sub>&nbsp;&nbsp;&nbsp;[0&ndash;1]</span>
+                      <span class="ref-eq">where h<sub>fg</sub> = h<sub>g</sub> &minus; h<sub>f</sub>&nbsp;&nbsp;(latent heat)</span>
+                    </div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Two-Phase Mixture Properties</span>
+                      <span class="ref-eq">h = h<sub>f</sub> + x &middot; h<sub>fg</sub></span>
+                      <span class="ref-eq">s = s<sub>f</sub> + x &middot; s<sub>fg</sub></span>
+                      <span class="ref-eq">v = v<sub>f</sub> + x &middot; v<sub>fg</sub></span>
+                    </div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Clausius-Clapeyron Equation</span>
+                      <span class="ref-eq">dP/dT = h<sub>fg</sub> / (T &middot; v<sub>fg</sub>)</span>
+                      <span class="ref-eq">Relates slope of saturation curve to latent heat</span>
+                    </div>
+
+                    <div class="ref-sub" style="margin-top:12px;">Ideal Gas Relations</div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Ideal Gas Law</span>
+                      <span class="ref-eq">P v = R T&nbsp;&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;P = &rho; R T</span>
+                      <span class="ref-eq">R = R&#x1D544; / M&nbsp;&nbsp;&nbsp;(specific gas constant)</span>
+                    </div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Mayer Relation</span>
+                      <span class="ref-eq">c<sub>p</sub> &minus; c<sub>v</sub> = R&nbsp;&nbsp;&nbsp;[J/(kg&middot;K)]</span>
+                    </div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Heat Capacity Ratio</span>
+                      <span class="ref-eq">&gamma; = c<sub>p</sub> / c<sub>v</sub>&nbsp;&nbsp;&nbsp;[dimensionless]</span>
+                      <span class="ref-eq">Air: &gamma; &asymp; 1.4&nbsp;&nbsp;&nbsp;Steam: &gamma; &asymp; 1.3</span>
+                    </div>
+                  </div>
+
+                  <!-- Right column -->
+                  <div>
+                    <div class="ref-sub">First &amp; Second Law of Thermodynamics</div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">First Law (Closed System)</span>
+                      
+                      <span class="ref-eq">dh = du + d(Pv) = &delta;q + v dP</span>
+                    </div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">First Law (Open/Flow System)</span>
+                      <span class="ref-eq">q &minus; w = &Delta;h + &Delta;KE + &Delta;PE</span>
+                      <span class="ref-eq">For pumps &amp; turbines: w = h<sub>in</sub> &minus; h<sub>out</sub></span>
+                    </div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Second Law / Entropy Relations</span>
+                      <span class="ref-eq">T ds = du + P dv&nbsp;&nbsp;&nbsp;(1st Gibbs equation)</span>
+                      <span class="ref-eq">T ds = dh &minus; v dP&nbsp;&nbsp;&nbsp;(2nd Gibbs equation)</span>
+                      <span class="ref-eq">ds &ge; &delta;q / T&nbsp;&nbsp;&nbsp;(Clausius inequality)</span>
+                    </div>
+
+                    <div class="ref-sub" style="margin-top:12px;">Isentropic Processes (Ideal, Reversible Adiabatic)</div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Isentropic Relations (Ideal Gas)</span>
+                      <span class="ref-eq">T<sub>2</sub>/T<sub>1</sub> = (P<sub>2</sub>/P<sub>1</sub>)<sup>(&gamma;&minus;1)/&gamma;</sup></span>
+                      <span class="ref-eq">T<sub>2</sub>/T<sub>1</sub> = (v<sub>1</sub>/v<sub>2</sub>)<sup>&gamma;&minus;1</sup></span>
+                    </div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Isentropic Efficiency (Turbine)</span>
+                      <span class="ref-eq">&eta;<sub>T</sub> = (h<sub>1</sub>&minus;h<sub>2</sub>) / (h<sub>1</sub>&minus;h<sub>2s</sub>)</span>
+                    </div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Isentropic Efficiency (Compressor)</span>
+                      <span class="ref-eq">&eta;<sub>C</sub> = (h<sub>2s</sub>&minus;h<sub>1</sub>) / (h<sub>2</sub>&minus;h<sub>1</sub>)</span>
+                    </div>
+
+                    <div class="ref-sub" style="margin-top:12px;">Heat Transfer Dimensionless Numbers</div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Reynolds Number</span>
+                      <span class="ref-eq">Re = &rho; V D / &mu; = V D / &nu;</span>
+                    </div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Nusselt Number</span>
+                      <span class="ref-eq">Nu = h<sub>conv</sub> D / &lambda;</span>
+                    </div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Stanton Number</span>
+                      <span class="ref-eq">St = Nu / (Re &middot; Pr) = h<sub>conv</sub> / (&rho; V c<sub>p</sub>)</span>
+                    </div>
+                    <div class="ref-callout" style="margin-top:8px;">
+                      <strong>Note:</strong> Subscripts <em>f</em> and <em>g</em> denote saturated liquid and saturated vapor respectively. Subscript <em>fg</em> denotes the difference (g &minus; f). Subscript <em>s</em> denotes isentropic (reversible adiabatic) conditions.
+                    </div>
+                  </div>
+
+                </div><!-- /.ref-body -->
+              </div><!-- /#thermoCard5 -->
+
+
+              <!-- ─── CARD 06:  Unit System Presets ─────────────────────── -->
+              <div class="ref-card" id="thermoCard6">
+                <div class="ref-card-header" onclick="toggleRefCard('thermoCard6')" role="button" tabindex="0" aria-expanded="false">
+                  <span class="ref-num">CARD 06</span>
+                  <h2>Unit System Presets</h2>
+                  <svg class="ref-chevron" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2,4 7,10 12,4"/></svg>
+                </div>
+                <div class="ref-body" style="grid-template-columns:1fr;">
+
+                  <div class="ref-callout">
+                    The calculator offers six unit presets. Each preset applies a consistent set of conversions to every displayed output: temperature, pressure, energy, transport properties, and so on. The raw data is always stored in base SI (CoolProp native); unit conversion happens at display time, so you can switch presets without re-running a calculation.
+                  </div>
+
+                  <!-- ── comparison table ──────────────────────────────── -->
+                  <div class="ref-sub">Side-by-Side Unit Comparison</div>
+                  <div style="overflow-x:auto;">
+                    <table class="ref-table" style="min-width:660px;">
+                      <thead>
+                        <tr>
+                          <th style="min-width:110px;">Property</th>
+                          <th style="background:#c8d8dc;color:#1a3a40;">SI Strict</th>
+                          <th style="background:#c8d8dc;color:#1a3a40;">SI Engineering</th>
+                          <th style="background:#ddd;color:#333;">US Customary</th>
+                          <th style="background:#ddd;color:#333;">US Process-HVAC</th>
+                          <th style="background:#c8d8dc;color:#1a3a40;">Textbook SI</th>
+                          <th style="background:#ddd;color:#333;">Textbook US</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><strong>Temperature</strong></td>
+                          <td>K</td>
+                          <td>°C</td>
+                          <td>°F</td>
+                          <td>°F</td>
+                          <td>°C</td>
+                          <td>°F</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Pressure</strong></td>
+                          <td>Pa</td>
+                          <td>kPa</td>
+                          <td>psia</td>
+                          <td>psia</td>
+                          <td>kPa</td>
+                          <td>psia</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Density</strong></td>
+                          <td>kg/m³</td>
+                          <td>kg/m³</td>
+                          <td>lbm/ft³</td>
+                          <td>lbm/ft³</td>
+                          <td>kg/m³</td>
+                          <td>lbm/ft³</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Spec. Volume</strong></td>
+                          <td>m³/kg</td>
+                          <td>m³/kg</td>
+                          <td>ft³/lbm</td>
+                          <td>ft³/lbm</td>
+                          <td>m³/kg</td>
+                          <td>ft³/lbm</td>
+                        </tr>
+                        <tr>
+                          <td><strong>cp / cv</strong></td>
+                          <td>J/(kg·K)</td>
+                          <td>kJ/(kg·K)</td>
+                          <td>BTU/(lbm·°R)</td>
+                          <td>BTU/(lbm·°F)</td>
+                          <td>kJ/(kg·K)</td>
+                          <td>BTU/(lbm·°R)</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Enthalpy (h)</strong></td>
+                          <td>J/kg</td>
+                          <td>kJ/kg</td>
+                          <td>BTU/lbm</td>
+                          <td>BTU/lbm</td>
+                          <td>kJ/kg</td>
+                          <td>BTU/lbm</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Entropy (s)</strong></td>
+                          <td>J/(kg·K)</td>
+                          <td>kJ/(kg·K)</td>
+                          <td>BTU/(lbm·°R)</td>
+                          <td>BTU/(lbm·°R)</td>
+                          <td>kJ/(kg·K)</td>
+                          <td>BTU/(lbm·°R)</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Int. Energy (u)</strong></td>
+                          <td>J/kg</td>
+                          <td>kJ/kg</td>
+                          <td>BTU/lbm</td>
+                          <td>BTU/lbm</td>
+                          <td>kJ/kg</td>
+                          <td>BTU/lbm</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Dyn. Viscosity</strong></td>
+                          <td>Pa·s</td>
+                          <td>mPa·s</td>
+                          <td>lbm/(ft·s)</td>
+                          <td>cP</td>
+                          <td>Pa·s</td>
+                          <td>cP</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Conductivity</strong></td>
+                          <td>W/(m·K)</td>
+                          <td>W/(m·K)</td>
+                          <td>BTU/(hr·ft·°F)</td>
+                          <td>BTU/(hr·ft·°F)</td>
+                          <td>W/(m·K)</td>
+                          <td>BTU/(hr·ft·°F)</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Prandtl</strong></td>
+                          <td colspan="6" style="text-align:start;color:#888;font-style:italic;">dimensionless</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- ── individual preset descriptions ────────────────── -->
+                  <div class="ref-sub" style="margin-top:6px;">Preset Descriptions</div>
+
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;">
+
+                    <div>
+                      <div class="ref-sub" style="color:#1a6a6a;">SI Strict</div>
+                      <div style="font-size:12px;color:#333;line-height:1.6;">
+                        All outputs exactly as returned by CoolProp (no conversion applied). Temperature in Kelvin, pressure in Pascals, energies in J/kg. Best for verifying raw data, feeding other software, or writing equations where absolute temperature is required. Entropy and enthalpy offsets are CoolProp reference-state values; treat absolute numbers as deltas only.
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="ref-sub" style="color:#1a6a6a;">SI Engineering</div>
+                      <div style="font-size:12px;color:#333;line-height:1.6;">
+                        Practical metric units standard in European and international engineering practice. Temperature shifts to °C for intuitive feel; pressures scale to kPa; energies scale to kJ/kg. Viscosity displayed in mPa·s (= cP numerically), which is more legible for liquids than Pa·s. Matches the output style of most modern SI-based engineering textbooks and process simulators.
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="ref-sub" style="color:#6a4a1a;">US Customary</div>
+                      <div style="font-size:12px;color:#333;line-height:1.6;">
+                        Traditional US engineering units used in mechanical, aerospace, and general US practice. Pressure in psia (absolute), density in lbm/ft³, energies in BTU/lbm. Viscosity in lbm/(ft·s) for use with the BTU/ft/hr system. Consistent with ASHRAE fundamentals handbooks and many US mechanical engineering references.
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="ref-sub" style="color:#6a4a1a;">US Process-HVAC</div>
+                      <div style="font-size:12px;color:#333;line-height:1.6;">
+                        Tuned for process engineering and HVAC applications in the United States. Matches US Customary in most respects, but viscosity is displayed in centipoise (cP). This is the universal industrial standard found in Perry's, GPSA, and most process datasheets and specific heat labels °F in the denominator (numerically identical to °R for Δ values). Common in oil &amp; gas, refrigeration, and building systems work.
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="ref-sub" style="color:#1a6a6a;">Textbook SI</div>
+                      <div style="font-size:12px;color:#333;line-height:1.6;">
+                        Matches the conventions of leading thermodynamics textbooks in SI edition: Çengel &amp; Boles, Moran &amp; Shapiro, Smith, Van Ness &amp; Abbott. Temperature in °C, pressure in kPa, energies in kJ/kg, entropy in kJ/(kg·K). Viscosity kept in Pa·s (= kg/(m·s)) as shown in most textbook tables. Ideal for checking homework or worked examples against a reference book.
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="ref-sub" style="color:#6a4a1a;">Textbook US</div>
+                      <div style="font-size:12px;color:#333;line-height:1.6;">
+                        Matches US-edition thermodynamics textbooks: Çengel &amp; Boles (US), Faires &amp; Simmang, and steam tables common in US universities. Temperature in °F, absolute temperature in °R where needed, pressure in psia, energies in BTU/lbm. Viscosity in cP for readability. Entropy uses °R in the denominator to match steam table formatting. Use this when cross-referencing textbook appendix tables.
+                      </div>
+                    </div>
+
+                  </div><!-- /preset grid -->
+
+                  <!-- ── notes ─────────────────────────────────────────── -->
+                  <div class="ref-warn" style="margin-top:4px;">
+                    <strong>Absolute vs. Relative Temperature:</strong> BTU/lbm·°R and BTU/lbm·°F are numerically identical for <em>differences</em> (Δ1 °F = Δ1 °R), but absolute temperature for ideal-gas or isentropic calculations always requires Rankine (°R) or Kelvin (K). The calculator uses the correct absolute scale internally regardless of the display preset.
+                  </div>
+
+                  <div class="ref-callout">
+                    <strong>Tip:</strong> cP (centipoise) = mPa·s exactly. 1 cP = 0.001 Pa·s. Water at 20 °C ≈ 1.002 cP. This equivalence makes it easy to switch between US Process and SI Engineering viscosity values with no arithmetic.
+                  </div>
+
+                </div><!-- /.ref-body -->
+              </div><!-- /#thermoCard6 -->
+
+
+            </div><!-- /ref-section-wrap -->
+          </div><!-- /ref-wrapper -->
+        </div>
+      </div>
+    </section>
+
+
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         CITATION
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="mt-5 pt-3">
+      <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+        <div class="citation-block bg-body-tertiary p-4 shadow-sm"
+             style="border-left: 4px solid; border-color: var(--section-title-color);
+                    border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+          <div class="d-flex align-items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                 class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);"
+                 viewBox="0 0 16 16">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+            <h4 style="font-weight: var(--font-weight-bold);"
+                class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+          </div>
+          <div id="citationText" class="font-monospace text-dark-emphasis small pt-2"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- LIGHTBOX -->
+  <div class="calc-lightbox-overlay" id="calcLightboxOverlay"
+       onclick="this.classList.remove('active')">
+    <button class="calc-lightbox-close"
+            onclick="event.stopPropagation();document.getElementById('calcLightboxOverlay').classList.remove('active')">
+      &#x2715;
+    </button>
+    <img class="calc-lightbox-img" id="calcLightboxImg" src="" alt="">
+  </div>
+
+  <script>
+  /* ── Graph tab switching (scoped to .graph-banner parent) ─────── */
+  function switchGraphTab(n, btn) {
+    var banner = btn.closest('.graph-banner');
+    banner.querySelectorAll('.graph-tab').forEach(function(t) {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    banner.querySelectorAll('[id^="graphContent"]').forEach(function(c) {
+      c.classList.remove('visible');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    var content = banner.querySelector('#graphContent' + n);
+    if (content) content.classList.add('visible');
+  }
+
+  /* ── Table tab switching ──────────────────────────────────────── */
+  function switchTableTab(n, btn) {
+    var banner = btn.closest('.graph-banner');
+    banner.querySelectorAll('.graph-tab').forEach(function(t) {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    banner.querySelectorAll('[id^="tableContent"]').forEach(function(c) {
+      c.classList.remove('visible');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    var content = banner.querySelector('#tableContent' + n);
+    if (content) content.classList.add('visible');
+  }
+
+  /* ── .it radio card highlight + unit-preset wiring ───────────── */
+  document.addEventListener('DOMContentLoaded', function () {
+
+    /* Helper: sync .sel across every card in a radio group.
+       Clears the whole group first so there is never more than one highlighted,
+       even if the HTML had a hardcoded .sel or the browser restored a different
+       selection from session history. */
+    function _syncGroupSel(groupName) {
+      document.querySelectorAll('.it input[type=radio][name="' + groupName + '"]').forEach(function(r) {
+        var l = r.closest('.it');
+        if (l) l.classList.toggle('sel', r.checked);
+      });
+    }
+
+    /* On page load: clear + re-apply .sel to exactly the checked card, then
+       apply the matching unit preset so labels are correct from the start. */
+    _syncGroupSel('calcUnits');
+    var initialUnits = document.querySelector('input[name="calcUnits"]:checked');
+    if (initialUnits) applyUnitPreset(initialUnits.value);
+
+    /* Wire up change listeners for every .it radio group on the page */
+    document.querySelectorAll('.it input[type=radio]').forEach(function(radio) {
+      radio.addEventListener('change', function() {
+        var name = radio.getAttribute('name');
+        _syncGroupSel(name);
+        /* Live-update units when the calcUnits group changes */
+        if (name === 'calcUnits') {
+          applyUnitPreset(radio.value);
+          /* Re-display last result in the new unit system (no network request) */
+          if (typeof ThermoCalc   !== 'undefined') ThermoCalc.repopulate();
+          if (typeof ThermoGraphs !== 'undefined') ThermoGraphs.repopulate();
+        }
+      });
+    });
+
+    /* Auto-calculate on page load if T and P already have values.
+       Covers browser autofill and any default values set in the HTML.
+       triggerAutoCalc() is a no-op when either field is empty or NaN. */
+    if (typeof ThermoCalc !== 'undefined') {
+      ThermoCalc.triggerAutoCalc();
+    }
+  });
+
+  /* ── Report & CSV export ──────────────────────────────────────── */
+
+  function thermoGenerateReport() {
+    document.body.classList.add('print-report');
+    window.print();
+    document.body.classList.remove('print-report');
+  }
+
+  function thermoGenerateReportWithTables() {
+    /* Expand all table panels so they are visible in print */
+    var allTablePanels = document.querySelectorAll('[aria-label="Property tables"] .graph-content');
+    allTablePanels.forEach(function(p) { p.dataset._printHidden = p.classList.contains('visible') ? '' : '1'; p.classList.add('visible'); });
+    document.body.classList.add('print-report', 'print-with-tables');
+    window.print();
+    document.body.classList.remove('print-report', 'print-with-tables');
+    /* Restore table panels to original visibility */
+    allTablePanels.forEach(function(p) { if (p.dataset._printHidden === '1') p.classList.remove('visible'); delete p.dataset._printHidden; });
+  }
+
+  function thermoExportCSV() {
+    /* Read a field value (input or span) */
+    function r(id) {
+      var el = document.getElementById(id);
+      if (!el) return '';
+      return ((el.tagName === 'SPAN' ? el.textContent : el.value) || '').trim();
+    }
+    /* Read a unit label span */
+    function u(id) {
+      var el = document.getElementById(id);
+      return el ? el.textContent.replace(/ /g, ' ').trim() : '';
+    }
+    /* RFC 4180 quoting */
+    function esc(v) {
+      var s = String(v == null ? '' : v);
+      return (s.indexOf(',') >= 0 || s.indexOf('"') >= 0 || s.indexOf('\n') >= 0)
+        ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }
+    function row() { return Array.prototype.slice.call(arguments).map(esc).join(','); }
+
+    var fluid  = (document.getElementById('calcFluidDisplay') || {}).textContent || '';
+    var T_in   = r('calcTInput');
+    var P_in   = r('calcPInput');
+    var tUnit  = (document.getElementById('calcTUnit')  || {}).textContent || 'K';
+    var pUnit  = (document.getElementById('calcPUnit')  || {}).textContent || 'Pa';
+
+    var lines = [
+      row('KasperCalc — Thermodynamic Properties Export'),
+      row('Generated',       new Date().toISOString()),
+      row('Fluid',           fluid.trim()),
+      row('Input T',         T_in, tUnit.trim()),
+      row('Input P',         P_in, pUnit.trim()),
+      row(''),
+      row('--- THERMODYNAMIC STATE ---'),
+      row('Parameter',       'Value',      'Unit'),
+      row('Temperature T',   r('outT'),    u('outTUnit')),
+      row('Pressure P',      r('outP'),    u('outPUnit')),
+      row('Density ρ',  r('outRho'),  u('outRhoUnit')),
+      row('Sp. Volume v',    r('outV'),    u('outVUnit')),
+      row('Sp. Enthalpy h',  r('outH'),    u('outHUnit')),
+      row('Sp. Int. Energy u', r('outU'),  u('outUUnit')),
+      row('Sp. Entropy s',   r('outS'),    u('outSUnit')),
+      row(''),
+      row('--- HEAT & TRANSPORT ---'),
+      row('Parameter',       'Value',      'Unit'),
+      row('Sp. Heat cp',     r('outCp'),   u('outCpUnit')),
+      row('Sp. Heat cv',     r('outCv'),   u('outCvUnit')),
+      row('Dyn. Viscosity μ',  r('outMu'),    u('outMuUnit')),
+      row('Kin. Viscosity ν',  r('outNu'),    u('outNuUnit')),
+      row('Thermal Cond. λ',   r('outLambda'), u('outLambdaUnit')),
+      row('Thermal Diff. α',   r('outAlpha'),  u('outAlphaUnit')),
+      row('Prandtl Number Pr',      r('outPr'),    '—'),
+      row(''),
+      row('--- PHASE & SATURATION ---'),
+      row('Parameter',       'Value',      'Unit'),
+      row('Phase',           r('outPhase'), ''),
+      row('Quality x',       r('outX'),    '0–1'),
+      row('Sat. Temp Tsat',  r('outTsat'), u('outTsatUnit')),
+      row('Sat. Press Psat', r('outPsat'), u('outPsatUnit')),
+      row('Sat. Liq. hf',    r('outHf'),   u('outHfUnit')),
+      row('Sat. Vap. hg',    r('outHg'),   u('outHgUnit')),
+      row('Latent Heat hfg', r('outHfg'),  u('outHfgUnit')),
+      row('Sat. Liq. sf',    r('outSf'),   u('outSfUnit')),
+      row('Sat. Vap. sg',    r('outSg'),   u('outSgUnit')),
+    ];
+
+    var csv  = lines.join('\r\n');
+    var blob = new Blob([csv], { type: 'text/csv' });
+    var a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = 'thermo-props-' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+  }
+
+  /* ── Quick fluid button / dropdown helper ────────────────────── */
+  function setFluid(fluidName) {
+    var sel  = document.getElementById('calcFluidSelect');
+    var disp = document.getElementById('calcFluidDisplay');
+
+    // Store the raw CoolProp fluid name as a data attribute so runCalc() can read it
+    if (disp) disp.dataset.fluid = fluidName;
+
+    if (!sel) return;
+    // Sync dropdown selection and update display label
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === fluidName) {
+        sel.selectedIndex = i;
+        if (disp) disp.textContent = sel.options[i].text;
+        break;
+      }
+    }
+    // If no exact match, still show the raw name
+    if (disp && sel.options[sel.selectedIndex] && sel.options[sel.selectedIndex].value !== fluidName) {
+      disp.textContent = fluidName;
+    }
+
+    // Purge cached data, clear outputs/charts, pre-fetch meta+sat for new fluid, then auto-recalculate
+    if (typeof ThermoCalc !== 'undefined') {
+      ThermoCalc.purgeCache();
+      ThermoCalc.clearOutputs();
+      if (typeof ThermoGraphs !== 'undefined') ThermoGraphs.clear();
+      // Pre-fetch meta and saturation files immediately so they're cached before runCalc fires
+      ThermoCalc.getFluidMeta(fluidName)
+        .then(function() { return ThermoCalc.getSaturationCurve(fluidName); })
+        .catch(function(err) { console.warn('[setFluid] prefetch failed:', err); });
+      ThermoCalc.triggerAutoCalc();
+    }
+  }
+
+  /* ── Custom Units panel toggle ────────────────────────────────── */
+  function toggleCustomUnits() {
+    var panel  = document.getElementById('customUnitPanel');
+    var btn    = document.getElementById('cuToggleBtn');
+    var icon   = document.getElementById('cuToggleIcon');
+    if (!panel) return;
+    var isOpen = panel.style.display !== 'none';
+    if (isOpen) {
+      // Collapse
+      panel.style.display = 'none';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.title = 'Show custom unit selectors';
+      // Animate chevron back to pointing down
+      icon.style.transform = '';
+      // Swap to ✕ → chevron: already showing chevron, no swap needed (we use SVG)
+    } else {
+      // Expand
+      panel.style.display = 'block';
+      btn.setAttribute('aria-expanded', 'true');
+      btn.title = 'Hide custom unit selectors';
+      // Rotate chevron 180° to point up (acts as an × / close indicator)
+      icon.style.transform = 'rotate(180deg)';
+    }
+  }
+
+  /* ── Apply Custom Units ────────────────────────────────────────── */
+  function applyCustomUnits() {
+    // Select the custom radio button
+    var radio = document.querySelector('input[name="calcUnits"][value="custom"]');
+    if (radio) {
+      radio.checked = true;
+      // Sync .sel highlight
+      document.querySelectorAll('.it input[name="calcUnits"]').forEach(function(r) {
+        var lbl = r.closest('.it');
+        if (lbl) lbl.classList.toggle('sel', r.checked);
+      });
+      // Also highlight the container label
+      var cuLabel = document.getElementById('cuSelectLabel');
+      if (cuLabel) cuLabel.classList.add('sel');
+    }
+    // Push custom unit labels to all input/output spans
+    applyCustomUnitDisplay();
+    /* Re-display last result in the new custom units (no network request) */
+    if (typeof ThermoCalc   !== 'undefined') ThermoCalc.repopulate();
+    if (typeof ThermoGraphs !== 'undefined') ThermoGraphs.repopulate();
+    // Collapse the panel after applying
+    var panel = document.getElementById('customUnitPanel');
+    var btn   = document.getElementById('cuToggleBtn');
+    var icon  = document.getElementById('cuToggleIcon');
+    if (panel && panel.style.display !== 'none') {
+      panel.style.display = 'none';
+      if (btn)  btn.setAttribute('aria-expanded', 'false');
+      if (btn)  btn.title = 'Show custom unit selectors';
+      if (icon) icon.style.transform = '';
+    }
+    var dot  = document.getElementById('calcStatusDot');
+    var text = document.getElementById('calcStatusText');
+    if (dot)  { dot.className  = 'status-dot ok'; }
+    if (text) { text.textContent = 'Custom units applied'; }
+  }
+
+  /* ── Reset to SI Engineering ───────────────────────────────────── */
+  function resetToSIEng() {
+    var radio = document.querySelector('input[name="calcUnits"][value="si-eng"]');
+    if (radio) {
+      radio.checked = true;
+      document.querySelectorAll('.it input[name="calcUnits"]').forEach(function(r) {
+        var lbl = r.closest('.it');
+        if (lbl) lbl.classList.toggle('sel', r.checked);
+      });
+    }
+    // Reset all per-property selects to their first option (SI base)
+    var defaults = {
+      'cu-temp': 'C', 'cu-pressure': 'kPa', 'cu-density': 'kg_m3',
+      'cu-energy': 'kJ_kg', 'cu-entropy': 'kJ_kgK', 'cu-conductivity': 'W_mK',
+      'cu-dyn-visc': 'mPas', 'cu-kin-visc': 'mm2_s'
+    };
+    Object.keys(defaults).forEach(function(id) {
+      var sel = document.getElementById(id);
+      if (sel) sel.value = defaults[id];
+    });
+    var dot  = document.getElementById('calcStatusDot');
+    var text = document.getElementById('calcStatusText');
+    if (dot)  { dot.className  = 'status-dot ok'; }
+    if (text) { text.textContent = 'Reset to SI Engineering'; }
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+     UNIT SYSTEM — preset definitions and live-update logic
+     ══════════════════════════════════════════════════════════════ */
+
+  /* Each preset defines display strings for every unit span.
+     T and P also carry placeholder text for the input fields.   */
+  var UNIT_PRESETS = {
+    'si-strict': {
+      T:{ u:'K',      ph:'e.g. 300'    }, P:{ u:'Pa',    ph:'e.g. 101325' },
+      rho:'kg/m³', v:'m³/kg',
+      h:'J/kg',  u_:'J/kg',  s:'J/(kg·K)',
+      cp:'J/(kg·K)', cv:'J/(kg·K)',
+      mu:'Pa·s', nu:'m²/s', lam:'W/(m·K)', alp:'m²/s',
+      Tsat:'K', Psat:'Pa',
+      hf:'J/kg', hg:'J/kg', hfg:'J/kg',
+      sf:'J/(kg·K)', sg:'J/(kg·K)'
+    },
+    'si-eng': {
+      T:{ u:'°C', ph:'e.g. 25'   }, P:{ u:'kPa',  ph:'e.g. 101.3'  },
+      rho:'kg/m³', v:'m³/kg',
+      h:'kJ/kg', u_:'kJ/kg', s:'kJ/(kg·K)',
+      cp:'kJ/(kg·K)', cv:'kJ/(kg·K)',
+      mu:'mPa·s', nu:'mm²/s', lam:'W/(m·K)', alp:'mm²/s',
+      Tsat:'°C', Psat:'kPa',
+      hf:'kJ/kg', hg:'kJ/kg', hfg:'kJ/kg',
+      sf:'kJ/(kg·K)', sg:'kJ/(kg·K)'
+    },
+    'us-customary': {
+      T:{ u:'°F', ph:'e.g. 77'   }, P:{ u:'psia', ph:'e.g. 14.70'  },
+      rho:'lbm/ft³', v:'ft³/lbm',
+      h:'BTU/lbm', u_:'BTU/lbm', s:'BTU/(lbm·°R)',
+      cp:'BTU/(lbm·°R)', cv:'BTU/(lbm·°R)',
+      mu:'lbm/(ft·s)', nu:'ft²/s',
+      lam:'BTU/(hr·ft·°F)', alp:'ft²/s',
+      Tsat:'°F', Psat:'psia',
+      hf:'BTU/lbm', hg:'BTU/lbm', hfg:'BTU/lbm',
+      sf:'BTU/(lbm·°R)', sg:'BTU/(lbm·°R)'
+    },
+    'us-process': {
+      T:{ u:'°F', ph:'e.g. 77'   }, P:{ u:'psia', ph:'e.g. 14.70'  },
+      rho:'lbm/ft³', v:'ft³/lbm',
+      h:'BTU/lbm', u_:'BTU/lbm', s:'BTU/(lbm·°R)',
+      cp:'BTU/(lbm·°F)', cv:'BTU/(lbm·°F)',
+      mu:'cP', nu:'cSt',
+      lam:'BTU/(hr·ft·°F)', alp:'ft²/hr',
+      Tsat:'°F', Psat:'psia',
+      hf:'BTU/lbm', hg:'BTU/lbm', hfg:'BTU/lbm',
+      sf:'BTU/(lbm·°R)', sg:'BTU/(lbm·°R)'
+    },
+    'textbook-si': {
+      T:{ u:'°C', ph:'e.g. 25'   }, P:{ u:'kPa',  ph:'e.g. 101.3'  },
+      rho:'kg/m³', v:'m³/kg',
+      h:'kJ/kg', u_:'kJ/kg', s:'kJ/(kg·K)',
+      cp:'kJ/(kg·K)', cv:'kJ/(kg·K)',
+      mu:'Pa·s', nu:'m²/s', lam:'W/(m·K)', alp:'m²/s',
+      Tsat:'°C', Psat:'kPa',
+      hf:'kJ/kg', hg:'kJ/kg', hfg:'kJ/kg',
+      sf:'kJ/(kg·K)', sg:'kJ/(kg·K)'
+    },
+    'textbook-us': {
+      T:{ u:'°F', ph:'e.g. 77'   }, P:{ u:'psia', ph:'e.g. 14.70'  },
+      rho:'lbm/ft³', v:'ft³/lbm',
+      h:'BTU/lbm', u_:'BTU/lbm', s:'BTU/(lbm·°R)',
+      cp:'BTU/(lbm·°R)', cv:'BTU/(lbm·°R)',
+      mu:'cP', nu:'ft²/s',
+      lam:'BTU/(hr·ft·°F)', alp:'ft²/s',
+      Tsat:'°F', Psat:'psia',
+      hf:'BTU/lbm', hg:'BTU/lbm', hfg:'BTU/lbm',
+      sf:'BTU/(lbm·°R)', sg:'BTU/(lbm·°R)'
+    }
+  };
+
+  /* Short display labels for each custom-unit select value */
+  var CU_LABELS = {
+    'cu-temp':         { K:'K', C:'°C', F:'°F', R:'°R' },
+    'cu-pressure':     { Pa:'Pa', kPa:'kPa', MPa:'MPa', bar:'bar', mbar:'mbar',
+                         psia:'psia', psig:'psig', atm:'atm',
+                         mmHg:'mmHg', inHg:'inHg', inH2O:'inH₂O' },
+    'cu-density':      { kg_m3:'kg/m³', g_cm3:'g/cm³', g_L:'g/L',
+                         kg_L:'kg/L', lbm_ft3:'lbm/ft³',
+                         lbm_galUS:'lbm/gal', lbm_galUK:'lbm/gal(UK)' },
+    'cu-energy':       { J_kg:'J/kg', kJ_kg:'kJ/kg', BTU_lbm:'BTU/lbm',
+                         cal_g:'cal/g', kcal_kg:'kcal/kg',
+                         Wh_kg:'Wh/kg', kWh_kg:'kWh/kg' },
+    'cu-entropy':      { J_kgK:'J/(kg·K)', kJ_kgK:'kJ/(kg·K)',
+                         BTU_lbmR:'BTU/(lbm·°R)',
+                         BTU_lbmF:'BTU/(lbm·°F)',
+                         cal_gC:'cal/(g·°C)',
+                         kcal_kgK:'kcal/(kg·K)' },
+    'cu-conductivity': { W_mK:'W/(m·K)', W_mC:'W/(m·°C)',
+                         mW_mK:'mW/(m·K)',
+                         BTU_hrftF:'BTU/(hr·ft·°F)',
+                         BTUin_hrft2F:'BTU·in/(hr·ft²·°F)',
+                         cal_scmC:'cal/(s·cm·°C)' },
+    'cu-dyn-visc':     { Pas:'Pa·s', mPas:'mPa·s', cP:'cP',
+                         uPas:'µPa·s', P:'Poise',
+                         lbm_fts:'lbm/(ft·s)', lbm_fthr:'lbm/(ft·hr)',
+                         lbfs_ft2:'lbf·s/ft²', kg_mh:'kg/(m·h)' },
+    'cu-kin-visc':     { m2_s:'m²/s', mm2_s:'mm²/s', cSt:'cSt',
+                         St:'St', ft2_s:'ft²/s',
+                         ft2_hr:'ft²/hr', in2_s:'in²/s' }
+  };
+
+  /* Specific volume units — inverse of density unit */
+  var V_FROM_RHO = {
+    kg_m3:'m³/kg', g_cm3:'cm³/g', g_L:'L/g', kg_L:'L/kg',
+    lbm_ft3:'ft³/lbm', lbm_galUS:'gal/lbm', lbm_galUK:'gal/lbm(UK)'
+  };
+
+  /* T placeholder text keyed by unit code */
+  var T_PH = { K:'e.g. 300', C:'e.g. 25', F:'e.g. 77', R:'e.g. 537' };
+
+  /* P placeholder text keyed by unit code */
+  var P_PH = {
+    Pa:'e.g. 101325', kPa:'e.g. 101.3', MPa:'e.g. 0.101',
+    bar:'e.g. 1.013', mbar:'e.g. 1013',
+    psia:'e.g. 14.70', psig:'e.g. 0.00', atm:'e.g. 1.00',
+    mmHg:'e.g. 760', inHg:'e.g. 29.92', inH2O:'e.g. 407.2'
+  };
+
+  /* Write a unit string to a span by id (no-op if el missing) */
+  function _setUnit(id, text) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = text;
+  }
+
+  /* Apply a full preset by name ('si-strict', 'si-eng', …, 'custom') */
+  function applyUnitPreset(preset) {
+    var p;
+    if (preset === 'custom') {
+      applyCustomUnitDisplay();
+      return;
+    }
+    p = UNIT_PRESETS[preset];
+    if (!p) return;
+
+    /* Input labels + placeholders */
+    _setUnit('calcTUnit', p.T.u);
+    _setUnit('calcPUnit', p.P.u);
+    var tIn = document.getElementById('calcTInput');
+    var pIn = document.getElementById('calcPInput');
+    if (tIn) tIn.placeholder = p.T.ph;
+    if (pIn) pIn.placeholder = p.P.ph;
+
+    /* Output unit spans */
+    _setUnit('outTUnit',     p.T.u);
+    _setUnit('outPUnit',     p.P.u);
+    _setUnit('outRhoUnit',   p.rho);
+    _setUnit('outVUnit',     p.v);
+    _setUnit('outHUnit',     p.h);
+    _setUnit('outUUnit',     p.u_);
+    _setUnit('outSUnit',     p.s);
+    _setUnit('outCpUnit',    p.cp);
+    _setUnit('outCvUnit',    p.cv);
+    _setUnit('outMuUnit',    p.mu);
+    _setUnit('outNuUnit',    p.nu);
+    _setUnit('outLambdaUnit',p.lam);
+    _setUnit('outAlphaUnit', p.alp);
+    _setUnit('outTsatUnit',  p.Tsat);
+    _setUnit('outPsatUnit',  p.Psat);
+    _setUnit('outHfUnit',    p.hf);
+    _setUnit('outHgUnit',    p.hg);
+    _setUnit('outHfgUnit',   p.hfg);
+    _setUnit('outSfUnit',    p.sf);
+    _setUnit('outSgUnit',    p.sg);
+  }
+
+  /* Apply custom unit display — reads the per-property dropdowns */
+  function applyCustomUnitDisplay() {
+    function selVal(id) {
+      var el = document.getElementById(id);
+      return el ? el.value : '';
+    }
+    function lbl(selectId) {
+      var v = selVal(selectId);
+      return (CU_LABELS[selectId] && CU_LABELS[selectId][v]) || v;
+    }
+
+    var tempLbl = lbl('cu-temp');
+    var presLbl = lbl('cu-pressure');
+    var rhoV    = selVal('cu-density');
+    var rhoLbl  = (CU_LABELS['cu-density'][rhoV]) || rhoV;
+    var vLbl    = V_FROM_RHO[rhoV] || 'm³/kg';
+    var eLbl    = lbl('cu-energy');
+    var sLbl    = lbl('cu-entropy');
+    var condLbl = lbl('cu-conductivity');
+    var muLbl   = lbl('cu-dyn-visc');
+    var nuLbl   = lbl('cu-kin-visc');
+    var tPh     = T_PH[selVal('cu-temp')]  || 'e.g. 300';
+    var pPh     = P_PH[selVal('cu-pressure')] || 'e.g. 101325';
+
+    /* Input labels + placeholders */
+    _setUnit('calcTUnit', tempLbl);
+    _setUnit('calcPUnit', presLbl);
+    var tIn = document.getElementById('calcTInput');
+    var pIn = document.getElementById('calcPInput');
+    if (tIn) tIn.placeholder = tPh;
+    if (pIn) pIn.placeholder = pPh;
+
+    /* Output unit spans */
+    _setUnit('outTUnit',     tempLbl);
+    _setUnit('outPUnit',     presLbl);
+    _setUnit('outRhoUnit',   rhoLbl);
+    _setUnit('outVUnit',     vLbl);
+    _setUnit('outHUnit',     eLbl);
+    _setUnit('outUUnit',     eLbl);
+    _setUnit('outSUnit',     sLbl);
+    _setUnit('outCpUnit',    sLbl);
+    _setUnit('outCvUnit',    sLbl);
+    _setUnit('outMuUnit',    muLbl);
+    _setUnit('outNuUnit',    nuLbl);
+    _setUnit('outLambdaUnit',condLbl);
+    _setUnit('outAlphaUnit', nuLbl);   /* thermal diffusivity ~ same dim as ν */
+    _setUnit('outTsatUnit',  tempLbl);
+    _setUnit('outPsatUnit',  presLbl);
+    _setUnit('outHfUnit',    eLbl);
+    _setUnit('outHgUnit',    eLbl);
+    _setUnit('outHfgUnit',   eLbl);
+    _setUnit('outSfUnit',    sLbl);
+    _setUnit('outSgUnit',    sLbl);
+  }
+
+  /* ── Calculate button handler ─────────────────────────────────── */
+  function runCalc() {
+    var dot  = document.getElementById('calcStatusDot');
+    var txt  = document.getElementById('calcStatusText');
+    var warn = document.getElementById('calcWarnings');
+
+    // Guard: ThermoCalc module must be loaded
+    if (typeof ThermoCalc === 'undefined') {
+      if (dot)  dot.className  = 'status-dot warn';
+      if (txt)  txt.textContent = 'thermodynamicsland.js not loaded.';
+      if (warn) warn.textContent = '⚠ Cannot locate ThermoCalc module.';
+      return;
+    }
+
+    // Read inputs
+    var tRaw = parseFloat(document.getElementById('calcTInput').value);
+    var pRaw = parseFloat(document.getElementById('calcPInput').value);
+
+    if (isNaN(tRaw) || isNaN(pRaw)) {
+      if (dot)  dot.className  = 'status-dot warn';
+      if (txt)  txt.textContent = 'Enter both T and P to calculate.';
+      if (warn) warn.textContent = '';
+      return;
+    }
+
+    // Convert inputs from display units to SI
+    var T_K  = ThermoCalc.inputToSI_T(tRaw);
+    var P_Pa = ThermoCalc.inputToSI_P(pRaw);
+
+    // Get selected fluid
+    var fluidDisplayEl = document.getElementById('calcFluidDisplay');
+    var fluid = (fluidDisplayEl && fluidDisplayEl.dataset.fluid) || 'Water';
+
+    // Status: waiting on meta / calculating
+    if (dot)  dot.className  = 'status-dot warn';
+    if (txt)  txt.textContent = 'Checking range for ' + fluid + ' …';
+    if (warn) warn.textContent = '';
+
+    // ── Step 1: load meta (cached after first call), then range-check ──────────
+    ThermoCalc.getFluidMeta(fluid)
+      .then(function(meta) {
+        var T_min  = meta.valid_range.T_min_K;
+        var T_max  = meta.valid_range.T_max_K;
+        var bands  = meta.grid.pressure_bands;
+        var P_min  = bands[0].p_min;
+        var P_max  = bands[bands.length - 1].p_max;
+
+        // Build a human-readable range string for the warning line
+        var rangeStr = 'Valid range — T: ' + T_min.toFixed(2) + ' – ' + T_max.toFixed(2) +
+                       ' K    P: ' + P_min.toExponential(3) + ' – ' + P_max.toExponential(3) + ' Pa';
+
+        var rangeErr = null;
+        if      (T_K < T_min) rangeErr = 'T = ' + T_K.toFixed(2) + ' K is below the minimum ' + T_min.toFixed(2) + ' K for ' + fluid + '.';
+        else if (T_K > T_max) rangeErr = 'T = ' + T_K.toFixed(2) + ' K exceeds the maximum ' + T_max.toFixed(2) + ' K for ' + fluid + '.';
+        else if (P_Pa < P_min) rangeErr = 'P = ' + P_Pa.toFixed(0) + ' Pa is below the minimum ' + P_min.toFixed(0) + ' Pa for ' + fluid + '.';
+        else if (P_Pa > P_max) rangeErr = 'P = ' + P_Pa.toFixed(0) + ' Pa exceeds the maximum ' + P_max.toFixed(0) + ' Pa for ' + fluid + '.';
+
+        if (rangeErr) {
+          if (dot)  dot.className  = 'status-dot err';
+          if (txt)  txt.textContent = rangeErr;
+          if (warn) warn.textContent = '⚠ ' + rangeStr;
+          ThermoCalc.clearOutputs();
+          if (typeof ThermoGraphs !== 'undefined') ThermoGraphs.clear();
+          return null;   // signal to skip the calculation step
+        }
+
+        // ── Step 2: in-range → calculate ──────────────────────────────────────
+        if (txt) txt.textContent = 'Looking up ' + fluid + ' at T=' + tRaw + ', P=' + pRaw + ' …';
+        return ThermoCalc.calcAndDisplay(fluid, T_K, P_Pa);
+      })
+      .then(function(props) {
+        if (!props) return;   // was out of range — already handled above
+        if (dot) dot.className  = 'status-dot ok';
+        if (txt) txt.textContent = 'Calculated — ' + fluid +
+                                   (ThermoCalc.PHASE_NAMES[props.phase]
+                                     ? '  |  Phase: ' + ThermoCalc.PHASE_NAMES[props.phase]
+                                     : '');
+        if (warn) warn.textContent = '';
+        if (typeof ThermoGraphs !== 'undefined') ThermoGraphs.update(fluid, T_K, P_Pa, props);
+      })
+      .catch(function(err) {
+        if (dot)  dot.className  = 'status-dot err';
+        if (txt)  txt.textContent = 'Error: ' + err.message;
+        if (warn) warn.textContent = '⚠ Check that the coolprop_data_v7.2.0/gz/ directory is being served correctly.';
+        console.error('[ThermoCalc] runCalc error:', err);
+        ThermoCalc.clearOutputs();
+        if (typeof ThermoGraphs !== 'undefined') ThermoGraphs.clear();
+      });
+  }
+
+  /* ── Reference card accordion toggle ─────────────────────────── */
+  function toggleRefCard(id) {
+    var card = document.getElementById(id);
+    if (!card) return;
+    var isCollapsed = card.classList.contains('collapsed');
+    card.classList.toggle('collapsed', !isCollapsed);
+    var header = card.querySelector('.ref-card-header');
+    if (header) header.setAttribute('aria-expanded', isCollapsed ? 'true' : 'false');
+  }
+
+  /* Keyboard accessibility for ref card headers */
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.ref-card-header').forEach(function(header) {
+      header.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          header.click();
+        }
+      });
+    });
+  });
+  </script>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+  <script src="js/footer.js"></script>
+  <!-- END FOOTER -->
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5XLCN0GJQ0');
+  </script>
+
+  </body>
+</html>

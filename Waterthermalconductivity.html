@@ -1,0 +1,808 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA FOR -->
+    <title>KasperCalc: Water Thermal Conductivity</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, bckasper3, Water Thermal Conductivity, water k-value, steam thermal conductivity, water thermal conductivity vs temperature, mW/mK water, Btu/h ft F water" />
+    <meta name="description" content="Online calculator, figures and tables showing thermal conductivity of water (liquid and gas/steam phase) at temperatures from 0.01 to 900 °C (32 to 1600 °F). Values in mW/(m·K), Btu(IT)/(h·ft·°F), and kcal(IT)/(h·m·K)." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+
+        <!-- <script defer type="text/javascript" src="js/bootstrap.min.js"></script> -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5XLCN0GJQ0');
+</script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+
+   </head>
+
+  <!-- BODY -->
+  <body>
+
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699BoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Dynamic and Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699EnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thremal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="Waterviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterLiquidGasEquilibrium.html">Liquid Gas Equilibrium</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thremal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item" style="padding-right: 0px;">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                Water Thermal Conductivity
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- UNDER THE BANNER -->
+      <h1 class="visually-hidden">Water Thermal Conductivity – Data &amp; Calculator</h1>
+
+      <!-- DESCRIPTION -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
+              <div class="custom-heading">Water Thermal Conductivity</div>
+              <div style="text-align: left" class="mt-3">
+                <p class="mt-2">
+                  Figures and tables showing thermal conductivity of water (liquid and gas phase) with varying temperature and pressure, SI and Imperial units.
+                </p>
+                <p class="mt-2">
+                  Thermal conductivity is a material property that describes ability to conduct heat. Thermal conductivity can be defined as "the quantity of heat transmitted through a unit thickness of a material — in a direction normal to a surface of unit area — due to a unit temperature gradient under steady state conditions."
+                </p>
+                <p class="mt-2">
+                  The thermal conductivity of water depends on temperature and pressure as shown in the figures and tables below.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LIQUID THERMAL CONDUCTIVITY CHART -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Liquid Water Thermal Conductivity vs. Temperature Chart</div>
+            </div>
+
+            <div class="canvasdiv">
+              <button id="toggleTooltipButton">Hide Tooltips</button>
+              <a style="font-size: medium; text-decoration: none;" href="img/SteamThermalConductivity(DegreesF).png" download="SteamThermalConductivity(DegreesF).png">
+                <button>Download Chart</button>
+              </a>
+              <a style="font-size: medium; text-decoration: none;" href="img/SteamThermalConductivity(DegreesF).png" target="_blank">
+                <button>Open In New Tab</button>
+              </a>
+              <div class="canvascontainer">
+
+                    <!-- <script defer type="text/javascript" src="js/chart.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+                <canvas id="liquidChart" aria-label="Liquid Water Thermal Conductivity vs Temperature Graph" width="400" height="600" role="img" class="chartcanvas">
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p></canvas>
+
+              </div>
+            </div>
+            <p class="text-center">At 1 bara (atmospheric pressure). Toggle data sets by clicking the legend.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- GAS THERMAL CONDUCTIVITY CHART -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Steam (Gas) Thermal Conductivity vs. Temperature Chart</div>
+            </div>
+            <div class="canvasdiv">
+              <button id="toggleTooltipButton2">Hide Tooltips</button>
+              <a style="font-size: medium; text-decoration: none;" href="img/LiquidWaterThermalConductivity(DegreesF).png" download="LiquidWaterThermalConductivity(DegreesF).png">
+                <button>Download Chart</button>
+              </a>
+              <a style="font-size: medium; text-decoration: none;" href="img/LiquidWaterThermalConductivity(DegreesF).png" target="_blank">
+                <button>Open In New Tab</button>
+              </a>
+              <div class="canvascontainer">
+                <canvas id="gasChart" aria-label="Steam Gas Water Thermal Conductivity vs Temperature Graph" width="400" height="600" role="img" class="chartcanvas">
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p></canvas>
+              </div>
+            </div>
+            <p class="text-center">At 1 bara (atmospheric pressure). Toggle data sets by clicking the legend.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CALCULATOR -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+
+            <div class="wrapper" style="max-width:50rem;">
+              <div class="header text-center">Online Water Thermal Conductivity Calculator</div>
+
+              <!-- <p class="mt-2" style="text-align:left;">Enter a temperature to calculate thermal conductivity for both liquid water and steam simultaneously.</p> -->
+
+              <div class="group1 d-flex flex-wrap">
+                <label class="dropdownlabel" for="tempUnit">Unit of Temperature:</label>
+                <span class="output">
+                  <select class="dropdowncalc dropdown-menu-end" style="width: 7rem;" id="tempUnit" onchange="updateTempLabel(); calcTC();" aria-label="Temperature unit selector">
+                    <option value="C" selected>°C</option>
+                    <option value="F">°F</option>
+                  </select>
+                </span>
+              </div>
+
+              <div class="group2">
+                <span class="label"><span id="tempLabel">Temperature (°C):</span></span>
+                <span class="output inputbox">
+                  <input class="calcinput" type="number" id="tempInput" oninput="calcTC()" value="20" step="any" aria-label="Temperature input" />
+                </span>
+              </div>
+
+              <div class="group">
+                <div style="font-weight: bold; margin-bottom: 0.4rem;">Liquid Water (0.01 – 99.6 °C / 32 – 211 °F)</div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (mW/(m·K)):</span>
+                  <span class="output" id="liq_mw">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (Btu/(h·ft·°F)):</span>
+                  <span class="output" id="liq_btu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (kcal(IT)/(h·m·K)):</span>
+                  <span class="output" id="liq_kcal">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div style="font-weight: bold; margin-bottom: 0.4rem;">Steam / Gas (100 – 900 °C / 212 – 1600 °F)</div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (mW/(m·K)):</span>
+                  <span class="output" id="gas_mw">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (Btu/(h·ft·°F)):</span>
+                  <span class="output" id="gas_btu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (kcal(IT)/(h·m·K)):</span>
+                  <span class="output" id="gas_kcal">&nbsp;</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- DATA TABLE °C (1 bara) -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+
+            <div class="mx-auto d-inline-block mt-4" style="max-width:960px; width:100%;">
+              <div class="custom-heading">Water – Thermal Conductivity vs. Temperature (1 bara)</div>
+
+              <div class="table-responsive mt-3 mb-3">
+                <table class="table table-striped table-bordered table-hover table-sm">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th>State of water</th>
+                      <th>Temperature (°C)</th>
+                      <th>Thermal Conductivity (mW/(m·K))</th>
+                      <th>kcal(IT)/(h·m·K)</th>
+                      <th>Btu(IT)/(h·ft·°F)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td rowspan="11">Liquid</td><td>0.01</td><td>555.75</td><td>0.4779</td><td>0.3211</td></tr>
+                    <tr><td>10</td><td>578.64</td><td>0.4975</td><td>0.3343</td></tr>
+                    <tr><td>20</td><td>598.03</td><td>0.5142</td><td>0.3455</td></tr>
+                    <tr><td>30</td><td>614.50</td><td>0.5284</td><td>0.3551</td></tr>
+                    <tr><td>40</td><td>628.56</td><td>0.5405</td><td>0.3632</td></tr>
+                    <tr><td>50</td><td>640.60</td><td>0.5508</td><td>0.3701</td></tr>
+                    <tr><td>60</td><td>650.91</td><td>0.5597</td><td>0.3761</td></tr>
+                    <tr><td>70</td><td>659.69</td><td>0.5672</td><td>0.3812</td></tr>
+                    <tr><td>80</td><td>667.02</td><td>0.5735</td><td>0.3854</td></tr>
+                    <tr><td>90</td><td>672.88</td><td>0.5786</td><td>0.3888</td></tr>
+                    <tr><td>99.6</td><td>677.03</td><td>0.5821</td><td>0.3912</td></tr>
+                    <tr><td rowspan="18">Gas</td><td>100</td><td>24.57</td><td>0.0211</td><td>0.0142</td></tr>
+                    <tr><td>125</td><td>26.66</td><td>0.0229</td><td>0.0154</td></tr>
+                    <tr><td>150</td><td>28.83</td><td>0.0248</td><td>0.0167</td></tr>
+                    <tr><td>175</td><td>31.09</td><td>0.0267</td><td>0.0180</td></tr>
+                    <tr><td>200</td><td>33.43</td><td>0.0287</td><td>0.0193</td></tr>
+                    <tr><td>225</td><td>35.85</td><td>0.0308</td><td>0.0207</td></tr>
+                    <tr><td>250</td><td>38.34</td><td>0.0330</td><td>0.0222</td></tr>
+                    <tr><td>275</td><td>40.91</td><td>0.0352</td><td>0.0236</td></tr>
+                    <tr><td>300</td><td>43.53</td><td>0.0374</td><td>0.0252</td></tr>
+                    <tr><td>350</td><td>48.98</td><td>0.0421</td><td>0.0283</td></tr>
+                    <tr><td>400</td><td>54.65</td><td>0.0470</td><td>0.0316</td></tr>
+                    <tr><td>450</td><td>60.52</td><td>0.0520</td><td>0.0350</td></tr>
+                    <tr><td>500</td><td>66.58</td><td>0.0573</td><td>0.0385</td></tr>
+                    <tr><td>550</td><td>72.81</td><td>0.0626</td><td>0.0421</td></tr>
+                    <tr><td>600</td><td>79.17</td><td>0.0681</td><td>0.0457</td></tr>
+                    <tr><td>700</td><td>92.28</td><td>0.0794</td><td>0.0533</td></tr>
+                    <tr><td>800</td><td>105.81</td><td>0.0910</td><td>0.0611</td></tr>
+                    <tr><td>900</td><td>119.67</td><td>0.1029</td><td>0.0691</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- DATA TABLE °F (14.5 psia) -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+
+            <div class="mx-auto d-inline-block mt-4" style="max-width:960px; width:100%;">
+              <div class="custom-heading">Water – Thermal Conductivity vs. Temperature (14.5 psia)</div>
+
+              <div class="table-responsive mt-3 mb-3">
+                <table class="table table-striped table-bordered table-hover table-sm">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th>State of water</th>
+                      <th>Temperature (°F)</th>
+                      <th>Btu(IT)/(h·ft·°F)</th>
+                      <th>Btu(IT)·in/(h·ft²·°F)</th>
+                      <th>mW/(m·K)</th>
+                      <th>×10<sup>−3</sup> cal(IT)/(s·cm²·K)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td rowspan="11">Liquid</td><td>32</td><td>0.3211</td><td>3.853</td><td>555.73</td><td>1.327</td></tr>
+                    <tr><td>40</td><td>0.3273</td><td>3.927</td><td>566.39</td><td>1.353</td></tr>
+                    <tr><td>60</td><td>0.3408</td><td>4.089</td><td>589.80</td><td>1.409</td></tr>
+                    <tr><td>80</td><td>0.3520</td><td>4.225</td><td>609.30</td><td>1.455</td></tr>
+                    <tr><td>100</td><td>0.3615</td><td>4.338</td><td>625.62</td><td>1.494</td></tr>
+                    <tr><td>120</td><td>0.3694</td><td>4.433</td><td>639.35</td><td>1.527</td></tr>
+                    <tr><td>140</td><td>0.3761</td><td>4.513</td><td>650.91</td><td>1.555</td></tr>
+                    <tr><td>160</td><td>0.3817</td><td>4.580</td><td>660.57</td><td>1.578</td></tr>
+                    <tr><td>180</td><td>0.3862</td><td>4.635</td><td>668.45</td><td>1.597</td></tr>
+                    <tr><td>200</td><td>0.3897</td><td>4.677</td><td>674.49</td><td>1.611</td></tr>
+                    <tr><td>211.3</td><td>0.3912</td><td>4.694</td><td>677.03</td><td>1.617</td></tr>
+                    <tr><td rowspan="18">Gas</td><td>212</td><td>0.0142</td><td>0.170</td><td>24.57</td><td>0.059</td></tr>
+                    <tr><td>250</td><td>0.0152</td><td>0.183</td><td>26.33</td><td>0.063</td></tr>
+                    <tr><td>300</td><td>0.0166</td><td>0.199</td><td>28.73</td><td>0.069</td></tr>
+                    <tr><td>350</td><td>0.0181</td><td>0.217</td><td>31.25</td><td>0.075</td></tr>
+                    <tr><td>400</td><td>0.0196</td><td>0.235</td><td>33.86</td><td>0.081</td></tr>
+                    <tr><td>450</td><td>0.0211</td><td>0.254</td><td>36.56</td><td>0.087</td></tr>
+                    <tr><td>550</td><td>0.0244</td><td>0.293</td><td>42.24</td><td>0.101</td></tr>
+                    <tr><td>600</td><td>0.0261</td><td>0.313</td><td>45.20</td><td>0.108</td></tr>
+                    <tr><td>650</td><td>0.0279</td><td>0.334</td><td>48.24</td><td>0.115</td></tr>
+                    <tr><td>700</td><td>0.0297</td><td>0.356</td><td>51.35</td><td>0.123</td></tr>
+                    <tr><td>750</td><td>0.0315</td><td>0.378</td><td>54.52</td><td>0.130</td></tr>
+                    <tr><td>800</td><td>0.0334</td><td>0.400</td><td>57.76</td><td>0.138</td></tr>
+                    <tr><td>900</td><td>0.0372</td><td>0.447</td><td>64.41</td><td>0.154</td></tr>
+                    <tr><td>1000</td><td>0.0412</td><td>0.494</td><td>71.27</td><td>0.170</td></tr>
+                    <tr><td>1100</td><td>0.0453</td><td>0.543</td><td>78.32</td><td>0.187</td></tr>
+                    <tr><td>1200</td><td>0.0494</td><td>0.593</td><td>85.53</td><td>0.204</td></tr>
+                    <tr><td>1400</td><td>0.0580</td><td>0.696</td><td>100.35</td><td>0.240</td></tr>
+                    <tr><td>1600</td><td>0.0668</td><td>0.802</td><td>115.63</td><td>0.276</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <p class="text-start small">1 W/(m·K) = 0.577789 Btu(IT)/(h·ft·°F) = 0.860421 kcal(IT)/(h·m·K)</p>
+              <p class="text-start small">T (°C) = 5/9 × (T (°F) − 32)</p>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary p-4 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+            <div id="citationText" class="font-monospace text-dark-emphasis small pt-2">
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->
+
+<script>
+// ── Data: [°C, mW/(m·K), Btu/(h·ft·°F)] at 1 bara ───────────────────────────
+const liquidTCdata = [
+  [0.01, 555.75, 0.3211],
+  [10,   578.64, 0.3343],
+  [20,   598.03, 0.3455],
+  [30,   614.50, 0.3551],
+  [40,   628.56, 0.3632],
+  [50,   640.60, 0.3701],
+  [60,   650.91, 0.3761],
+  [70,   659.69, 0.3812],
+  [80,   667.02, 0.3854],
+  [90,   672.88, 0.3888],
+  [99.6, 677.03, 0.3912]
+];
+
+const gasTCdata = [
+  [100, 24.57,  0.0142],
+  [125, 26.66,  0.0154],
+  [150, 28.83,  0.0167],
+  [175, 31.09,  0.0180],
+  [200, 33.43,  0.0193],
+  [225, 35.85,  0.0207],
+  [250, 38.34,  0.0222],
+  [275, 40.91,  0.0236],
+  [300, 43.53,  0.0252],
+  [350, 48.98,  0.0283],
+  [400, 54.65,  0.0316],
+  [450, 60.52,  0.0350],
+  [500, 66.58,  0.0385],
+  [550, 72.81,  0.0421],
+  [600, 79.17,  0.0457],
+  [700, 92.28,  0.0533],
+  [800, 105.81, 0.0611],
+  [900, 119.67, 0.0691]
+];
+
+// ── Unit conversions from mW/(m·K) ───────────────────────────────────────────
+const MW_TO_BTU  = 0.000577789;
+const MW_TO_KCAL = 0.000860421;
+
+// ── Linear interpolation ──────────────────────────────────────────────────────
+function interpTC(tempC, data) {
+  const temps = data.map(r => r[0]);
+  const vals  = data.map(r => r[1]);
+  if (tempC <= temps[0]) return vals[0];
+  if (tempC >= temps[temps.length - 1]) return vals[vals.length - 1];
+  for (let i = 0; i < temps.length - 1; i++) {
+    if (tempC >= temps[i] && tempC <= temps[i + 1]) {
+      const t = (tempC - temps[i]) / (temps[i + 1] - temps[i]);
+      return vals[i] + t * (vals[i + 1] - vals[i]);
+    }
+  }
+}
+
+// ── Calculator ────────────────────────────────────────────────────────────────
+function updateTempLabel() {
+  const unit = document.getElementById('tempUnit').value;
+  document.getElementById('tempLabel').textContent = unit === 'F' ? 'Temperature (°F):' : 'Temperature (°C):';
+}
+
+function calcTC() {
+  const unit = document.getElementById('tempUnit').value;
+  const val  = parseFloat(document.getElementById('tempInput').value);
+
+  const liqIds = ['liq_mw', 'liq_btu', 'liq_kcal'];
+  const gasIds = ['gas_mw', 'gas_btu', 'gas_kcal'];
+
+  if (isNaN(val)) {
+    [...liqIds, ...gasIds].forEach(id => { document.getElementById(id).textContent = '—'; });
+    return;
+  }
+
+  const tempC = unit === 'F' ? (val - 32) * 5 / 9 : val;
+
+  const LIQ_MIN = liquidTCdata[0][0];
+  const LIQ_MAX = liquidTCdata[liquidTCdata.length - 1][0];
+  const GAS_MIN = gasTCdata[0][0];
+  const GAS_MAX = gasTCdata[gasTCdata.length - 1][0];
+
+  if (tempC >= LIQ_MIN && tempC <= LIQ_MAX) {
+    const mw = interpTC(tempC, liquidTCdata);
+    document.getElementById('liq_mw').textContent   = mw.toFixed(2) + ' mW/(m·K)';
+    document.getElementById('liq_btu').textContent  = (mw * MW_TO_BTU).toFixed(4) + ' Btu/(h·ft·°F)';
+    document.getElementById('liq_kcal').textContent = (mw * MW_TO_KCAL).toFixed(4) + ' kcal/(h·m·K)';
+  } else {
+    liqIds.forEach(id => { document.getElementById(id).textContent = '— out of range'; });
+  }
+
+  if (tempC >= GAS_MIN && tempC <= GAS_MAX) {
+    const mw = interpTC(tempC, gasTCdata);
+    document.getElementById('gas_mw').textContent   = mw.toFixed(2) + ' mW/(m·K)';
+    document.getElementById('gas_btu').textContent  = (mw * MW_TO_BTU).toFixed(4) + ' Btu/(h·ft·°F)';
+    document.getElementById('gas_kcal').textContent = (mw * MW_TO_KCAL).toFixed(4) + ' kcal/(h·m·K)';
+  } else {
+    gasIds.forEach(id => { document.getElementById(id).textContent = '— out of range'; });
+  }
+}
+
+// ── Charts ────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function () {
+  calcTC();
+
+  const liqMwData  = liquidTCdata.map(r => ({ x: r[0] * 9/5 + 32, y: r[1] }));
+  const liqBtuData = liquidTCdata.map(r => ({ x: r[0] * 9/5 + 32, y: r[2] }));
+  const gasMwData  = gasTCdata.map(r => ({ x: r[0] * 9/5 + 32, y: r[1] }));
+  const gasBtuData = gasTCdata.map(r => ({ x: r[0] * 9/5 + 32, y: r[2] }));
+
+  function makeChartOptions(xLabel, tooltipUnit) {
+    return {
+      maintainAspectRatio: false,
+      responsive: true,
+      layout: {
+        padding: { left: 10, right: 25, top: 5, bottom: 5 }
+      },
+      plugins: {
+        customCanvasBackgroundColor: { color: 'white' },
+        legend: {
+          position: 'top',
+          labels: {
+            align: 'top',
+            padding: 20,
+            usePointStyle: false,
+            boxHeight: 2,
+            font: { size: 18 }
+          },
+          onClick: function (e, legendItem, legend) {
+            const datasetIndex = legendItem.datasetIndex;
+            const ci = legend.chart;
+            const meta = ci.getDatasetMeta(datasetIndex);
+            meta.hidden = meta.hidden === null ? !ci.data.datasets[datasetIndex].hidden : null;
+            ci.update();
+          }
+        },
+        tooltip: {
+          enabled: true,
+          mode: 'nearest',
+          intersect: false,
+          axis: 'x',
+          callbacks: {
+            title: function (items) { return items[0].parsed.x.toFixed(2) + tooltipUnit; },
+            label: function (item) {
+              if (item.dataset.yAxisID === 'y') {
+                return item.dataset.label + ': ' + item.parsed.y.toFixed(2) + ' mW/(m·K)';
+              }
+              return item.dataset.label + ': ' + item.parsed.y.toFixed(4) + ' Btu/(h·ft·°F)';
+            }
+          }
+        }
+      },
+      interaction: { mode: 'nearest', axis: 'x' },
+      elements: { point: { radius: 0 } },
+      scales: {
+        x: {
+          type: 'linear',
+          ticks: { maxRotation: 0, font: { size: 16 } },
+          title: { display: true, text: xLabel, font: { size: 20 } }
+        },
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          ticks: { font: { size: 16 } },
+          title: { display: true, text: 'Thermal Conductivity (mW/(m·K))', padding: 10, font: { size: 18 } }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          ticks: { font: { size: 16 } },
+          title: { display: true, text: 'Thermal Conductivity (Btu/(h·ft·°F))', padding: 10, font: { size: 18 } },
+          grid: { drawOnChartArea: false }
+        }
+      }
+    };
+  }
+
+  // Liquid chart
+  const ctxLiq = document.getElementById('liquidChart').getContext('2d');
+  const liquidChart = new Chart(ctxLiq, {
+    type: 'line',
+    data: {
+      datasets: [
+        {
+          label: 'mW/(m·K)',
+          data: liqMwData,
+          yAxisID: 'y',
+          fill: false,
+          borderColor: 'rgb(68,119,170)',
+          tension: 0.1
+        },
+        {
+          label: 'Btu/(h·ft·°F)',
+          data: liqBtuData,
+          yAxisID: 'y1',
+          fill: false,
+          borderColor: 'rgb(238,102,119)',
+          tension: 0.1
+        }
+      ]
+    },
+    options: makeChartOptions('Temperature (°F)', ' °F')
+  });
+
+  document.getElementById('toggleTooltipButton').addEventListener('click', function () {
+    const current = liquidChart.options.plugins.tooltip.enabled;
+    liquidChart.options.plugins.tooltip.enabled = !current;
+    liquidChart.update();
+    this.textContent = liquidChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+  });
+
+  // Gas chart
+  const ctxGas = document.getElementById('gasChart').getContext('2d');
+  const gasChart = new Chart(ctxGas, {
+    type: 'line',
+    data: {
+      datasets: [
+        {
+          label: 'mW/(m·K)',
+          data: gasMwData,
+          yAxisID: 'y',
+          fill: false,
+          borderColor: 'rgb(68,119,170)',
+          tension: 0.1
+        },
+        {
+          label: 'Btu/(h·ft·°F)',
+          data: gasBtuData,
+          yAxisID: 'y1',
+          fill: false,
+          borderColor: 'rgb(238,102,119)',
+          tension: 0.1
+        }
+      ]
+    },
+    options: makeChartOptions('Temperature (°F)', ' °F')
+  });
+
+  document.getElementById('toggleTooltipButton2').addEventListener('click', function () {
+    const current = gasChart.options.plugins.tooltip.enabled;
+    gasChart.options.plugins.tooltip.enabled = !current;
+    gasChart.update();
+    this.textContent = gasChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+  });
+});
+</script>
+
+  </body>
+</html>

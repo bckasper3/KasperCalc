@@ -1,14 +1,14 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- META DATA FOR -->
-    <title>KasperCalc: Ethylene Glycol Thermal Expansion Coefficient</title>
+    <!-- META DATA -->
+    <title>KasperCalc: Water Thermal and Thermodynamic Properties</title>
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, bckasper3, Ethylene Glycol Thermal Expansion Coefficient, Ethylene Glycol Thermal Expansion, Ethylene Glycol Expansion Calculator" />
-    <meta name="description" content="Calculate and reference the thermal expansion coefficient of Ethylene glycol solutions across concentration and temperature ranges." />
+    <meta name="keywords" content="KasperCalc, water, H2O, thermodynamic properties, specific heat, latent heat, triple point, critical point, boiling point, molar mass, pKw" />
+    <meta name="description" content="Water thermal and thermodynamic properties including boiling point, melting point, triple point, critical point, specific heat, latent heat of vaporization, and molecular properties." />
 
     <!-- DEFERRED JAVASCRIPT -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -16,7 +16,6 @@
     <script defer src="js/footer.js"></script>
     <script defer src="js/header-active-class.js"></script>
     <script defer src="js/navsearch.js"></script>
-    <!-- chart and calculator JS embedded below -->
 
     <!-- CSS FILES -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -25,14 +24,14 @@
     <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
 
-<!-- Google tag (gtag.js) -->
-<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-5XLCN0GJQ0');
-</script> -->
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XLCN0GJQ0');
+    </script>
 
     <!-- FAVICON -->
     <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
@@ -243,312 +242,276 @@
     </div>
   </div>
 
-  <!-- MAIN -->
-  <main data-pagefind-body>
-    <!-- BANNER -->
-    <section class="banner">
-      <div class="cssbannercontainer">
-        <div class="col-lg-12 col-12">
-          <div class="banner section-title-wrap">
-            <div class="h1 section-title bannertext">
-              Ethylene Glycol Thermal Expansion Coefficient
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- MAIN -->
+    <main data-pagefind-body>
 
-    <h1 class="visually-hidden">Ethylene Glycol Thermal Expansion Coefficient Calculator by Concentration and Temperature</h1>
-
-    <!-- CHART -->
-    <section>
-      <div class="csscontainer">
-        <div class="col-lg-12 col-12">
-          <div class="section-title-wrap">
-            <div class="h1 section-title">Ethylene Glycol Thermal Expansion Coefficient Chart</div>
-          </div>
-          <div class="canvasdiv">
-            <button id="toggleTooltipButton">Hide Tooltips</button>
-            <a style="font-size: medium; text-decoration: none;" href="img/EthyleneGlycolThermalExpansionCoefficientChart(B_VS_Temperature).png" download="EthyleneGlycolThermalExpansionCoefficientChart(B_VS_Temperature).png">
-              <button>Download Chart</button>
-            </a>
-            <a style="font-size: medium; text-decoration: none;" href="img/EthyleneGlycolThermalExpansionCoefficientChart(B_VS_Temperature).png" target="_blank">
-              <button>Open In New Tab</button>
-            </a>
-            <div class="canvascontainer">
-              <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-              <canvas id="myChart" aria-label="Ethylene Glycol Thermal Expansion Coefficient vs Temperature °F by % V/V Concentration" width="400" height="600" role="img" class="chartcanvas">
-                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
-              </canvas>
-            </div>
-          </div>
-          <p class="text-center">β computed from density data: <a href="https://www.engineeringtoolbox.com/ethylene-glycol-d_146.html" target="_blank">Engineering Toolbox — Ethylene Glycol</a></p>
-          <p class="text-center">Toggle data sets by clicking the legend.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- CALCULATOR -->
-    <section>
-      <div class="csscontainer">
-        <div class="col-lg-12 col-12 px-3">
-          <div class="wrapper" style="max-width:33rem;">
-            <div class="header text-center">Ethylene Glycol Thermal Expansion Coefficient Calculator</div>
-
-            <div class="group1 d-flex flex-wrap">
-              <label class="dropdownlabel" for="concentration">Select Mixture %:</label>
-              <span class="output">
-                <select class="dropdowncalc dropdown-menu-end" id="concentration" onchange="egTeCalc()" aria-label="Select % V/V Ethylene glycol concentration">
-                  <option value="10">10% V/V</option>
-                  <option value="20">20% V/V</option>
-                  <option value="30">30% V/V</option>
-                  <option value="40">40% V/V</option>
-                  <option value="50">50% V/V</option>
-                  <option value="60">60% V/V</option>
-                </select>
-              </span>
-            </div>
-
-            <div class="group">
-              <div class="outputrow">
-                <span class="label">Degrees (°F):</span>
-                <span class="output inputbox">
-                  <input class="calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" value="70" aria-label="Input temperature in Fahrenheit" />
-                </span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Degrees (°C):</span>
-                <span class="output inputbox">
-                  <input class="calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" aria-label="Input temperature in Celsius" />
-                </span>
-              </div>
-            </div>
-
-            <div class="group">
-              <div class="outputrow">
-                <span class="label">β × 10⁻⁵ (1/K):</span>
-                <span class="output" id="result_te">&nbsp;</span>
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                Water Thermal and Thermodynamic Properties
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-      <!-- THERMAL EXPANSION REFERENCE -->
+
+      <!-- OVERVIEW -->
       <section>
         <div class="csscontainer">
           <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-2" style="max-width:820px;">
 
-            <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
-              <div class="custom-heading">Thermal Expansion Coefficient of Ethylene Glycol</div>
+              <div class="custom-heading">Water as a Thermal Engineering Fluid</div>
+              <p class="mt-3 text-start">
+                Water (H&#8322;O) is the most studied and widely used thermal fluid in engineering. Its exceptionally
+                high specific heat capacity, latent heat of vaporization, and thermal conductivity &mdash; combined with
+                its availability and non-toxicity &mdash; make it the baseline reference fluid for virtually all heat
+                transfer and thermodynamic calculations. Water's thermodynamic properties are strongly temperature-
+                and pressure-dependent, exhibiting well-characterized phase transitions at its triple point, normal
+                boiling point, and critical point. The anomalous density maximum at 4&thinsp;&deg;C, the large
+                latent heats at fusion and vaporization, and the high dielectric constant further distinguish water
+                from other common fluids and underpin its unique role in natural and industrial systems.
+              </p>
 
-              <div style="text-align: left" class="mt-3">
-                <div class="custom-subheading">What Is the Volumetric Thermal Expansion Coefficient?</div>
-                <p class="mt-2">
-                  The volumetric thermal expansion coefficient (<span style="font-weight:var(--font-weight-medium)">β</span>) describes how much a fluid
-                  expands per degree of temperature rise. It is reported here in units of
-                  <span style="font-weight:var(--font-weight-medium)">β × 10<sup>−5</sup> 1/K</span>. The volume change is:
-                </p>
-                <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
-                  ΔV = V<sub>0</sub> × β × ΔT
-                </p>
-                <p class="mt-1">
-                  where <em>V<sub>0</sub></em> is the initial volume and <em>ΔT</em> is the temperature change in Kelvin.
-                </p>
-              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-              <div style="text-align: left" class="mt-4">
-                <div class="custom-subheading">Why It Matters for Closed-Loop Systems</div>
-                <p class="mt-2">
-                  In closed-loop heating and cooling systems, fluid volume changes with temperature must be accommodated
-                  by an expansion tank. Undersizing the expansion tank (by using water's expansion coefficient when the
-                  system actually contains a Ethylene glycol solution) can result in system overpressure, relief valve
-                  discharge, or pipe damage. Ethylene glycol solutions expand more than water at equivalent temperatures,
-                  making accurate β values essential for expansion tank sizing calculations.
-                </p>
-              </div>
 
-              <p class= "mt-3 text-start"><span style="font-weight:var(--font-weight-normal)">Note:</span> β increases with both temperature and glycol concentration. Always size expansion tanks using the highest expected operating temperature.</p>
+      <!-- GENERAL THERMODYNAMIC PROPERTIES -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">General Thermodynamic Properties</div>
+            </div>
+
+            <div class="mx-auto" style="max-width:820px; overflow-x:auto;">
+              <table class="table table-striped table-bordered table-hover table-sm text-center">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th>Property</th>
+                    <th>SI Units</th>
+                    <th>US Customary Units</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Boiling Temperature (at 101.325&thinsp;kPa)</td>
+                    <td>99.974&thinsp;&deg;C</td>
+                    <td>211.953&thinsp;&deg;F</td>
+                  </tr>
+                  <tr>
+                    <td>Melting Temperature (at 101.325&thinsp;kPa)</td>
+                    <td>0&thinsp;&deg;C</td>
+                    <td>32&thinsp;&deg;F</td>
+                  </tr>
+                  <tr>
+                    <td>Triple Point Temperature</td>
+                    <td>0.01&thinsp;&deg;C</td>
+                    <td>32.02&thinsp;&deg;F</td>
+                  </tr>
+                  <tr>
+                    <td>Triple Point Pressure</td>
+                    <td colspan="2">0.00604&thinsp;atm &nbsp;|&nbsp; 0.00612&thinsp;bar &nbsp;|&nbsp; 611.657&thinsp;Pa &nbsp;|&nbsp; 0.08871&thinsp;psi</td>
+                  </tr>
+                  <tr>
+                    <td>Critical Temperature</td>
+                    <td>373.946&thinsp;&deg;C</td>
+                    <td>705.103&thinsp;&deg;F</td>
+                  </tr>
+                  <tr>
+                    <td>Critical Pressure</td>
+                    <td colspan="2">217.7&thinsp;atm &nbsp;|&nbsp; 220.6&thinsp;bar &nbsp;|&nbsp; 22.06&thinsp;MPa &nbsp;|&nbsp; 3200&thinsp;psi</td>
+                  </tr>
+                  <tr>
+                    <td>Critical Density</td>
+                    <td>0.322&thinsp;g/cm&sup3;</td>
+                    <td>20.10&thinsp;lbm/ft&sup3;</td>
+                  </tr>
+                  <tr>
+                    <td>Maximum Density (at 4&thinsp;&deg;C / 39.2&thinsp;&deg;F)</td>
+                    <td>999.975&thinsp;kg/m&sup3;</td>
+                    <td>8.345&thinsp;lbm/gal (US)</td>
+                  </tr>
+                  <tr>
+                    <td>Specific Weight (at 4&thinsp;&deg;C / 39.2&thinsp;&deg;F)</td>
+                    <td>9.806&thinsp;kN/m&sup3;</td>
+                    <td>62.43&thinsp;lbf/ft&sup3;</td>
+                  </tr>
+                  <tr>
+                    <td>Bulk Modulus of Elasticity</td>
+                    <td colspan="2">2.15&thinsp;&times;&thinsp;10&sup9;&thinsp;Pa</td>
+                  </tr>
+                  <tr>
+                    <td>Thermal Expansion Coefficient (avg 4&ndash;100&thinsp;&deg;C, non-linear)</td>
+                    <td colspan="2">4.2&thinsp;&times;&thinsp;10<sup>&minus;4</sup>&thinsp;1/K</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
 
           </div>
         </div>
       </section>
 
-    <section class="mt-5 pt-3">
-      <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
-        <div class="citation-block bg-body-tertiary p-4 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
-          <div class="d-flex align-items-center mb-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
-              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
-            </svg>
-            <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+
+      <!-- HEAT CAPACITY AND THERMAL ENERGY PROPERTIES -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Heat Capacity and Thermal Energy Properties</div>
+            </div>
+
+            <div class="mx-auto" style="max-width:820px; overflow-x:auto;">
+              <table class="table table-striped table-bordered table-hover table-sm text-center">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th>Property</th>
+                    <th>SI Units</th>
+                    <th>US Customary Units</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Specific Heat &mdash; Liquid Water (at 15&thinsp;&deg;C)</td>
+                    <td>4.187&thinsp;kJ/(kg&middot;K)</td>
+                    <td>1.001&thinsp;Btu/(lbm&middot;&deg;F)</td>
+                  </tr>
+                  <tr>
+                    <td>Specific Heat &mdash; Ice</td>
+                    <td>2.108&thinsp;kJ/(kg&middot;K)</td>
+                    <td>0.5035&thinsp;Btu/(lbm&middot;&deg;F)</td>
+                  </tr>
+                  <tr>
+                    <td>Specific Heat &mdash; Water Vapor</td>
+                    <td>1.996&thinsp;kJ/(kg&middot;K)</td>
+                    <td>0.4767&thinsp;Btu/(lbm&middot;&deg;F)</td>
+                  </tr>
+                  <tr>
+                    <td>Latent Heat of Fusion (at 0&thinsp;&deg;C)</td>
+                    <td>334&thinsp;kJ/kg</td>
+                    <td>144&thinsp;Btu/lb</td>
+                  </tr>
+                  <tr>
+                    <td>Latent Heat of Vaporization (at 100&thinsp;&deg;C)</td>
+                    <td>2256&thinsp;kJ/kg</td>
+                    <td>970&thinsp;Btu/lb</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
           </div>
-          <div id="citationText" class="font-monospace text-dark-emphasis small pt-2"></div>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
 
-  <!-- FOOTER -->
-  <footer id="site-footer"></footer>
-  <script src="js/footer.js"></script>
-  <!-- END FOOTER -->
 
-<script>
-// ── EG Thermal Expansion Coefficient Data ─────────────────────────────────────
-// β × 10⁻⁵ (1/K) computed from Engineering Toolbox EG density data.
-// β = −(1/ρ)(dρ/dT); values smoothed from density table.
-const egThermalExpData = {
-  p10: { label: '10% V/V',  tempsC: [  0,  20,  40,  60,  80, 100], values: [25, 50, 57, 64, 71, 77] },
-  p20: { label: '20% V/V',  tempsC: [ -8,   0,  20,  40,  60,  80, 100], values: [26, 35, 54, 61, 68, 75, 81] },
-  p30: { label: '30% V/V',  tempsC: [-14,   0,  20,  40,  60,  80, 100], values: [30, 44, 57, 65, 72, 78, 84] },
-  p40: { label: '40% V/V',  tempsC: [-24,  -10,   0,  20,  40,  60,  80, 100], values: [25, 38, 50, 61, 68, 75, 82, 88] },
-  p50: { label: '50% V/V',  tempsC: [-37,  -20,   0,  20,  40,  60,  80, 100], values: [22, 36, 55, 64, 72, 79, 85, 91] },
-  p60: { label: '60% V/V',  tempsC: [-53,  -30,   0,  20,  40,  60,  80, 100], values: [19, 33, 58, 67, 75, 82, 88, 94] }
-};
+      <!-- CHEMICAL AND MOLECULAR PROPERTIES -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-function egInterp(x, xs, ys) {
-  if (x <= xs[0]) return ys[0];
-  if (x >= xs[xs.length - 1]) return ys[ys.length - 1];
-  for (let i = 0; i < xs.length - 1; i++) {
-    if (x >= xs[i] && x <= xs[i + 1]) {
-      const t = (x - xs[i]) / (xs[i + 1] - xs[i]);
-      return ys[i] + t * (ys[i + 1] - ys[i]);
-    }
-  }
-}
-function cToF(c) { return c * 9 / 5 + 32; }
-function fToC(f) { return (f - 32) * 5 / 9; }
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Chemical and Molecular Properties</div>
+            </div>
 
-function denseByTempF(tempsC, values) {
-  const minF = Math.round(cToF(Math.min(...tempsC)));
-  const maxF = Math.round(cToF(Math.max(...tempsC)));
-  const pts = [];
-  for (let f = minF; f <= maxF; f++) {
-    const val = egInterp(fToC(f), tempsC, values);
-    if (val !== undefined) pts.push({ x: f, y: parseFloat(val.toFixed(2)) });
-  }
-  return pts;
-}
+            <div class="mx-auto" style="max-width:560px; overflow-x:auto;">
+              <table class="table table-striped table-bordered table-hover table-sm text-center">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th>Property</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Molar Mass</td>
+                    <td>18.01527&thinsp;g/mol</td>
+                  </tr>
+                  <tr>
+                    <td>Ionization Constant pK<sub>w</sub> (at 25&thinsp;&deg;C)</td>
+                    <td>13.995</td>
+                  </tr>
+                  <tr>
+                    <td>Neutral pH (at 25&thinsp;&deg;C)</td>
+                    <td>6.9976</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-// ── Calculator ────────────────────────────────────────────────────────────────
-function convertToFahrenheit() {
-  const c = parseFloat(document.getElementById('celsius').value);
-  if (!isNaN(c)) document.getElementById('fahrenheit').value = cToF(c).toFixed(1);
-  egTeCalc();
-}
-function convertToCelsius() {
-  const f = parseFloat(document.getElementById('fahrenheit').value);
-  if (!isNaN(f)) document.getElementById('celsius').value = fToC(f).toFixed(1);
-  egTeCalc();
-}
-function egTeCalc() {
-  const conc = document.getElementById('concentration').value;
-  const fahr = parseFloat(document.getElementById('fahrenheit').value);
-  const out  = document.getElementById('result_te');
-  if (isNaN(fahr)) { out.textContent = '—'; return; }
-  const map = { '10': egThermalExpData.p10, '20': egThermalExpData.p20, '30': egThermalExpData.p30,
-                '40': egThermalExpData.p40, '50': egThermalExpData.p50, '60': egThermalExpData.p60 };
-  const ds = map[conc] || egThermalExpData.p30;
-  const celsius = fToC(fahr);
-  if (celsius < ds.tempsC[0] || celsius > ds.tempsC[ds.tempsC.length - 1]) {
-    out.textContent = 'Out of range'; return;
-  }
-  out.textContent = egInterp(celsius, ds.tempsC, ds.values).toFixed(1);
-}
+          </div>
+        </div>
+      </section>
 
-// ── Chart ─────────────────────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('celsius').value = fToC(70).toFixed(1);
-  egTeCalc();
 
-  const customBg = {
-    id: 'customCanvasBackgroundColor',
-    beforeDraw(chart, args, options) {
-      const { ctx } = chart;
-      ctx.save();
-      ctx.globalCompositeOperation = 'destination-over';
-      ctx.fillStyle = options.color || 'white';
-      ctx.fillRect(0, 0, chart.width, chart.height);
-      ctx.restore();
-    }
-  };
+      <!-- ALSO SEE — LINKS TO OTHER WATER PAGES -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
 
-  const colors = ['rgb(68,119,170)','rgb(34,136,51)','rgb(204,187,68)','rgb(238,102,119)','rgb(170,51,119)','rgb(102,204,238)'];
-  const keys   = ['p10','p20','p30','p40','p50','p60'];
-  const datasets = keys.map((key, i) => ({
-    label: egThermalExpData[key].label,
-    data:  denseByTempF(egThermalExpData[key].tempsC, egThermalExpData[key].values),
-    fill: false,
-    borderColor: colors[i],
-    tension: 0.1
-  }));
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Water Property Calculators</div>
+            </div>
 
-  const ctx = document.getElementById('myChart').getContext('2d');
-  const teChart = new Chart(ctx, {
-    type: 'line',
-    data: { datasets },
-    options: {
-      maintainAspectRatio: false,
-      responsive: true,
-      layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
-      plugins: {
-        customCanvasBackgroundColor: { color: 'white' },
-        legend: {
-          position: 'top',
-          labels: { align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 } },
-          onClick: function (e, legendItem, legend) {
-            const ci = legend.chart;
-            const meta = ci.getDatasetMeta(legendItem.datasetIndex);
-            meta.hidden = meta.hidden === null ? !ci.data.datasets[legendItem.datasetIndex].hidden : null;
-            ci.update();
-          }
-        },
-        tooltip: {
-          enabled: true, mode: 'nearest', intersect: false, axis: 'x',
-          callbacks: {
-            title: items => items[0].parsed.x + ' °F',
-            label: item  => item.dataset.label + ': ' + item.parsed.y.toFixed(1) + ' ×10⁻⁵ 1/K'
-          }
-        }
-      },
-      interaction: { mode: 'nearest', axis: 'x' },
-      elements: { point: { radius: 0 } },
-      scales: {
-        x: {
-          type: 'linear',
-          ticks: { maxRotation: 0, font: { size: 16 } },
-          title: { display: true, text: 'Temperature (°F)', font: { size: 20 } }
-        },
-        y: {
-          type: 'linear',
-          ticks: { font: { size: 16 } },
-          title: { display: true, text: 'β × 10⁻⁵ (1/K)', padding: 10, font: { size: 20 } }
-        }
-      }
-    },
-    plugins: [customBg]
-  });
+            <div class="mx-auto mt-3 mb-4 text-center" style="max-width:820px;">
+              <p>Explore the full set of water property calculators on KasperCalc:</p>
+              <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                <a href="densityWater.html" class="custom-link custom-btn btn d-inline-block">Density</a>
+                <a href="WaterSpecificHeatCapacity.html" class="custom-link custom-btn btn d-inline-block">Specific Heat Capacity</a>
+                <a href="WaterBoilingHighPressure.html" class="custom-link custom-btn btn d-inline-block">Boiling Points at Pressures</a>
+                <a href="Waterthermalconductivity.html" class="custom-link custom-btn btn d-inline-block">Thermal Conductivity</a>
+                <a href="Waterviscosity.html" class="custom-link custom-btn btn d-inline-block">Viscosity</a>
+                <a href="WaterPrandltNumber.html" class="custom-link custom-btn btn d-inline-block">Prandtl Number</a>
+                <a href="WaterEnthalpyEntropy.html" class="custom-link custom-btn btn d-inline-block">Enthalpy and Entropy</a>
+                <a href="WaterIonizationConstant.html" class="custom-link custom-btn btn d-inline-block">Ionization Constant (pK<sub>w</sub>)</a>
+                <a href="WaterHeatVaporization.html" class="custom-link custom-btn btn d-inline-block">Heat of Vaporization</a>
+                <a href="WaterSaturationPressure.html" class="custom-link custom-btn btn d-inline-block">Saturation Pressure</a>
+                <a href="WaterLiquidGasEquilibrium.html" class="custom-link custom-btn btn d-inline-block">Liquid Gas Equilibrium</a>
+                <a href="WaterMeltingPointsHighPressure.html" class="custom-link custom-btn btn d-inline-block">Melting Points at High Pressure</a>
+                <a href="WaterThermalExpansionCoefficient.html" class="custom-link custom-btn btn d-inline-block">Thermal Expansion Coefficient</a>
+                <a href="WaterThermalDiffusivity.html" class="custom-link custom-btn btn d-inline-block">Thermal Diffusivity</a>
+                <a href="WaterDissolvedGasDiffusionCoefficients.html" class="custom-link custom-btn btn d-inline-block">Gasses Dissolved in Water &mdash; Diffusion Coefficients</a>
+              </div>
+            </div>
 
-  document.getElementById('toggleTooltipButton').addEventListener('click', function () {
-    const cur = teChart.options.plugins.tooltip.enabled;
-    teChart.options.plugins.tooltip.enabled = !cur;
-    teChart.update();
-    this.textContent = teChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
-  });
-});
-</script>
+          </div>
+        </div>
+      </section>
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-5XLCN0GJQ0');
-</script>
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary p-4 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+            <div id="citationText" class="font-monospace text-dark-emphasis small pt-2">
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    </main>   
+    
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->    
+
 
   </body>
 </html>
