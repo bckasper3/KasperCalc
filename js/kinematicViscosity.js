@@ -1,6 +1,6 @@
-//URLs of the CSV files (replace with your own file paths or URLs)
+// Kinematic viscosity CSVs: [RJ-5, JP-4/Jet B, TS, JP-5/Jet A/JP-8, JP-7, JP-9/JP-10, RJ-4, RJ-6, Av.Gas]
 const csvFiles = [
-  '../csvData/55.csv', // Replace with actual file paths or URLs
+  '../csvData/55.csv',
   '../csvData/48.csv',
   '../csvData/49.csv',
   '../csvData/50.csv',
@@ -9,24 +9,34 @@ const csvFiles = [
   '../csvData/53.csv',
   '../csvData/54.csv',
   '../csvData/47.csv',
- ];
-
-const fixedColors = [ //for setting the rgb values of the lines //https://personal.sron.nl/~pault/#sec:qualitative
-  'rgb(68,119,170)',   // Blue
-  'rgb(34,136,51)',    // Green
-  'rgb(204,187,68)',   // Yellow
-  'rgb(238,102,119)',  // Red
-  'rgb(170,51,119)',   // Purple
-  'rgb(187,187,187)',  // Grey
-  'rgb(102,204,238)',  // Cyan
-  'rgb(238,119,51)',   // Orange
-  'rgb(204,51,17)',    // Red
-  'rgb(0,153,136)',    // Teal
-  'rgb(153,153,51)',   // Olive
-  'rgb(136,34,85)',    // Wine
 ];
 
-const fixedLabels = [ //for the data labels because they aren't in the csv files
+// Density CSVs matched to the kinematic viscosity order above
+const densFilesForKin = [
+  '../csvData/10.csv', // RJ-5
+  '../csvData/2.csv',  // JP-4, Jet B
+  '../csvData/3.csv',  // TS  (shares density curve with JP-7)
+  '../csvData/4.csv',  // JP-5, Jet A, Jet A-1, JP-8
+  '../csvData/3.csv',  // JP-7 (shares density curve with TS)
+  '../csvData/8.csv',  // JP-9, JP-10 (using JP-9 nominal density)
+  '../csvData/6.csv',  // RJ-4
+  '../csvData/9.csv',  // RJ-6
+  '../csvData/1.csv',  // Av. Gas
+];
+
+const fixedColors = [
+  'rgb(68,119,170)',
+  'rgb(34,136,51)',
+  'rgb(204,187,68)',
+  'rgb(238,102,119)',
+  'rgb(170,51,119)',
+  'rgb(187,187,187)',
+  'rgb(102,204,238)',
+  'rgb(238,119,51)',
+  'rgb(204,51,17)',
+];
+
+const fixedLabels = [
   'RJ-5',
   'JP-4, Jet B',
   'TS',
@@ -38,425 +48,221 @@ const fixedLabels = [ //for the data labels because they aren't in the csv files
   'Av. Gas',
 ];
 
-// let densityWater = [
-//   [-40 , 999.9],
-//   [32.2, 999.9],
-//   [34  , 999.9],
-//   [39.2, 1000 ],
-//   [40  , 1000 ],
-//   [50  , 999.7],
-//   [60  , 999.0],
-//   [70  , 998.0],
-//   [80  , 996.6],
-//   [90  , 995.0],
-//   [100 , 993.1],
-//   [110 , 990.9],
-//   [120 , 988.6],
-//   [130 , 986.0],
-//   [140 , 983.2],
-//   [150 , 980.2],
-//   [160 , 977.1],
-//   [170 , 973.8],
-//   [180 , 970.4],
-//   [190 , 966.8],
-//   [200 , 963.0],
-//   [212 , 958.4],
-//   [220 , 955.2],
-//   [240 , 946.7],
-//   [260 , 937.5],
-// ];
-
-// Function to fetch and parse CSV files, returning an array of separate datasets
 async function processCSVFiles(filePaths) {
-  const allData = [];  // This will store an array of data for each CSV file
-
+  const allData = [];
   for (const filePath of filePaths) {
     try {
-      // Fetch the CSV file
       const response = await fetch(filePath);
       const csvData = await response.text();
-
-      // Parse the CSV file
-      const parsedData = parseCSV(csvData);
-
-      // Store the parsed data for this file as a separate array
-      allData.push(parsedData);
+      allData.push(parseCSV(csvData));
     } catch (error) {
       console.error(`Error processing file ${filePath}:`, error);
+      allData.push([]);
     }
   }
-
-  return allData;  // Return an array of arrays
+  return allData;
 }
 
-// Function to parse the CSV content into { x, y } objects
 function parseCSV(csvData) {
-  const rows = csvData.trim().split('\n');  // Split the CSV into rows
+  const rows = csvData.trim().split('\n');
   const parsedData = [];
-
   rows.forEach(row => {
-    const columns = row.split(',');  // Split each row by commas (assuming CSV format)
-
-    // Assuming the file has no header, so the first column is x and the second is y
+    const columns = row.split(',');
     if (columns.length >= 2) {
-      const x = parseFloat(columns[0].trim());  // Parse x value
-      const y = parseFloat(columns[1].trim());  // Parse y value
-
-      // Only add to the array if both x and y are valid numbers
-      if (!isNaN(x) && !isNaN(y)) {
-        parsedData.push({ x, y });
-      }
+      const x = parseFloat(columns[0].trim());
+      const y = parseFloat(columns[1].trim());
+      if (!isNaN(x) && !isNaN(y)) parsedData.push({ x, y });
     }
   });
-
   return parsedData;
 }
 
-// Example usage of the processCSVFiles function
-processCSVFiles(csvFiles)
-  .then(allData => {
-    // allData is now an array of arrays, where each inner array represents the data of one CSV file
-    fallData = allData;
+let fallData = null;
+let densData = null;
+let myChart  = null;
+let dynChart  = null;
+
+Promise.all([processCSVFiles(csvFiles), processCSVFiles(densFilesForKin)])
+  .then(([kinData, dData]) => {
+    fallData = kinData;
+    densData = dData;
     createGraph();
     convertToCelsius();
-    calculate()
+    calculate();
   })
-  .catch(error => {
-    console.error('Error processing CSV files:', error);
-  });
+  .catch(error => console.error('Error processing CSV files:', error));
 
-function createGraph() {
-  // Code to run after the delay
-  console.log('the big array', fallData);
-
-  fallData.forEach((dataSet, index) => {
-  // You can now use each `dataSet` (an array of { x, y } objects) for a different chart
-  console.log(`Data from file ${csvFiles[index]}:`, dataSet);
-    });
-
-  const datasets = fallData.map((dataSet, index) => {
-      return {
-        label: fixedLabels[index % fixedLabels.length],  //`Dataset ${index + 1}`,  // Give each dataset a unique label
-        data: dataSet.map(item => ({ x: item.x, y: item.y })),  // Map to Chart.js format
-        fill: false,  // Set to `true` if you want the area under the line to be filled
-        borderColor:  fixedColors[index % fixedColors.length],//`hsl(${index * 60}, 100%, 50%)`,  // Set a unique color for each line (based on index)
-        tension: 0.1  // Line smoothing (0 = no smoothing, 1 = highly smoothed)
-      };
-    });
-
-    // console.log('the data set');
-    // console.log(datasets);
-
-  const config = {
-        type: 'line',  // Line chart type
-        data: {
-          datasets: datasets  // Use the datasets we created
-        },
-        options: {
-          decimation: {
-          enabled: false // Disable data decimation completely [2, 7]
-          },
-          plugins:{
-            // decimation: {
-            //   enabled: false, // Disable data decimation completely [2, 7]
-            //   algorithm: 'min-max',
-            // },
-            legend: {
-              position: 'top',  // Position of the legend (optional)
-            },
-            tooltip: {
-              enabled: true,
-              mode: 'nearest',
-              intersect: false,
-              axis: 'x',
-            },
-            customCanvasBackgroundColor:{
-              color: 'white',
-            },
-            // title:{
-            //   align: 'center',
-            //   display: true,
-            //   text: 'Nominal Density',
-            //   fullSize: true,
-            // },
-            legend:{
-              labels:{
-                align: 'top',
-                padding: 20,
-                usePointStyle: false,
-                boxHeight: 2,
-                font: {
-                  size: 18, // Set the desired font size for legend labels
-                },
-              },
-
-            //makes the lines disappear faster
-              onClick: function(e, legendItem, legend) {
-                // This will toggle the dataset visibility when the legend item is clicked
-                const datasetIndex = legendItem.datasetIndex;
-                const ci = legend.chart;
-                const meta = ci.getDatasetMeta(datasetIndex);
-                meta.hidden = meta.hidden === null ? !ci.data.datasets[datasetIndex].hidden : null;
-                ci.update();
-            },
-
-            },
-          },
-          maintainAspectRatio: false,
-          layout: {
-            padding: {
-            left: 10,
-            right: 25,
-            top: 5,
-            bottom: 5,
-            },
-          },
-          interaction: {
-            mode: 'nearest', // Change interaction mode if needed
-            //intersect: false,
-            axis: 'x',
-          },
-          elements: {
-            point:{
-                radius: 0,
-            },
-          },
-          responsive: true,
-          scales: {
-            x:{
-              type: 'linear',
-              //beginAtZero: true,
-              min: -40,
-              max: 356,
-              //suggestedMax: 194, 
-              ticks:{
-                //stepSize:10,
-                //autoSkip: true,
-                //maxTicksLimit: 26,
-                maxRotation: 0,
-                font: {
-                  size: 16,
-                },
-              },
-              title: {
-                display:true,
-                text: 'Temperature °F',
-                font: {
-                  size: 20,
-                },
-              }
-            },
-            y:{
-              type: 'logarithmic',
-              tick:{
-                crossAlign:'far',
-              },
-              //beginAtZero: true,
-              //min: 620,
-              //max:1200, 
-              ticks:{
-                //stepSize:20,
-                font: {
-                size: 16,
-              },
-              },
-              title: {
-                display:true,
-                text: 'Kinematic Viscosity, mm²/sec (centistokes)',
-                padding: 10,
-                font: {
-                  size: 20,
-                },
-              }
-            },
-          }
-        }
-      };
-
-  const ctx = document.getElementById('myChart').getContext('2d');
- myChart =  new Chart(ctx, config);
-
+const customBg = {
+  id: 'customCanvasBackgroundColor',
+  beforeDraw(chart) {
+    const { ctx } = chart;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, chart.width, chart.height);
+    ctx.restore();
+  }
 };
 
+function makeJetFuelChart(canvasId, datasets, yLabel) {
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  return new Chart(ctx, {
+    type: 'line',
+    data: { datasets },
+    plugins: [customBg],
+    options: {
+      maintainAspectRatio: false,
+      layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
+      interaction: { mode: 'nearest', axis: 'x' },
+      elements: { point: { radius: 0 } },
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: { align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 } },
+          onClick(e, legendItem, legend) {
+            const i = legendItem.datasetIndex;
+            const ci = legend.chart;
+            const meta = ci.getDatasetMeta(i);
+            meta.hidden = meta.hidden === null ? !ci.data.datasets[i].hidden : null;
+            ci.update();
+          }
+        },
+        tooltip: { enabled: true, mode: 'nearest', intersect: false, axis: 'x' },
+        customCanvasBackgroundColor: { color: 'white' }
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          min: -40,
+          max: 356,
+          ticks: { maxRotation: 0, font: { size: 16 } },
+          title: { display: true, text: 'Temperature °F', font: { size: 20 } }
+        },
+        y: {
+          type: 'logarithmic',
+          ticks: { font: { size: 16 } },
+          title: { display: true, text: yLabel, padding: 10, font: { size: 20 } }
+        }
+      }
+    }
+  });
+}
 
+// Linear interpolation on {x,y} object array
+function kinLinInterp(xTarget, data) {
+  if (!data || data.length === 0) return NaN;
+  for (let i = 0; i < data.length - 1; i++) {
+    if (xTarget >= data[i].x && xTarget <= data[i + 1].x) {
+      return data[i].y + (xTarget - data[i].x) * (data[i + 1].y - data[i].y) / (data[i + 1].x - data[i].x);
+    }
+  }
+  return NaN;
+}
 
-//Listening for the Tooptips Toggle Button
-document.getElementById('toggleTooltipButton').addEventListener('click', function() {
-  // Toggle the enabled property of tooltips
-  const currentTooltipState = myChart.options.plugins.tooltip.enabled;
-  myChart.options.plugins.tooltip.enabled = !currentTooltipState;
+function createGraph() {
+  // Kinematic viscosity chart
+  const kinDatasets = fallData.map((dataSet, i) => ({
+    label: fixedLabels[i],
+    data: dataSet.map(p => ({ x: p.x, y: p.y })),
+    fill: false,
+    borderColor: fixedColors[i],
+    tension: 0.1
+  }));
+  myChart = makeJetFuelChart('myChart', kinDatasets, 'Kinematic Viscosity (cSt = mm²/s)');
 
-  // Update the chart to apply the change
-  myChart.update();
+  // Dynamic (absolute) viscosity chart: μ [mPa·s] = ν [cSt] × ρ [kg/m³] / 1000
+  const dynDatasets = fallData.map((kinSet, i) => {
+    const dSet = densData[i];
+    if (!dSet || dSet.length === 0) return { label: fixedLabels[i], data: [], fill: false, borderColor: fixedColors[i], tension: 0.1 };
+    const minF = Math.max(kinSet[0].x, dSet[0].x);
+    const maxF = Math.min(kinSet[kinSet.length - 1].x, dSet[dSet.length - 1].x);
+    const pts = [];
+    for (let t = minF; t <= maxF; t += 1) {
+      const nu  = kinLinInterp(t, kinSet);
+      const rho = kinLinInterp(t, dSet);
+      if (!isNaN(nu) && !isNaN(rho) && rho > 0)
+        pts.push({ x: t, y: parseFloat((nu * rho / 1000).toFixed(4)) });
+    }
+    return { label: fixedLabels[i], data: pts, fill: false, borderColor: fixedColors[i], tension: 0.1 };
+  });
+  dynChart = makeJetFuelChart('dynChart', dynDatasets, 'Dynamic (Absolute) Viscosity (mPa·s)');
 
-  // Change the button text based on the tooltip state
-  const buttonText = myChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
-  document.getElementById('toggleTooltipButton').textContent = buttonText;
-});
+  // Tooltip toggles
+  document.getElementById('toggleTooltipButton').addEventListener('click', function () {
+    myChart.options.plugins.tooltip.enabled = !myChart.options.plugins.tooltip.enabled;
+    myChart.update();
+    this.textContent = myChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+  });
 
+  document.getElementById('toggleTooltipButtonDyn').addEventListener('click', function () {
+    dynChart.options.plugins.tooltip.enabled = !dynChart.options.plugins.tooltip.enabled;
+    dynChart.update();
+    this.textContent = dynChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+  });
+}
 
-// Convert Celsius to Fahrenheit
 function convertToFahrenheit() {
-  var celsius = document.getElementById("celsius").value;
-  var fahrenheit = (parseFloat(celsius) * 9/5) + 32;
-  document.getElementById("fahrenheit").value = fahrenheit.toFixed(2); // Update Fahrenheit box
+  const c = parseFloat(document.getElementById('celsius').value);
+  document.getElementById('fahrenheit').value = ((c * 9 / 5) + 32).toFixed(2);
   calculate();
 }
 
-// Convert Fahrenheit to Celsius
 function convertToCelsius() {
-  var fahrenheit = document.getElementById("fahrenheit").value;
-  var celsius = (parseFloat(fahrenheit) - 32) * 5/9;
-  document.getElementById("celsius").value = celsius.toFixed(2); // Update Celsius box
+  const f = parseFloat(document.getElementById('fahrenheit').value);
+  document.getElementById('celsius').value = ((f - 32) * 5 / 9).toFixed(2);
   calculate();
-}
-
-//Performing Linear Interpolation to calculate the Y value
-function linearInterpolation(x, data) {
-  //console.log('tis is the data into the interp function', data);
-  // Step 1: Check if the x is within the bounds of the data
-  x = parseFloat(x); //papaParse is returning strings instead of numbers
-  minX = Math.min(...data.map(point => point[0])); // Minimum x value
-  maxX = Math.max(...data.map(point => point[0])); // Maximum x value
-
-  //console.log('min', minX);
-  //console.log('max', maxX);
-
-  if (x < minX || x > maxX) {
-    flag = true;
-  } else {
-    flag = false;
-  }
-
-  // Step 2: Check if x is already in the data array
-  for (let i = 0; i < data.length; i++) {
-    if (data[i][0] === x) {
-      //console.log('value is predefined');
-      return data[i][1]; // If x is already in the array, no interpolation is needed
-    }
-  }
-
-  // Step 3: Find the two data points (x0, y0) and (x1, y1)
-  for (let i = 0; i < data.length - 1; i++) {
-    let x0 = parseFloat(data[i][0]);
-    let y0 = parseFloat(data[i][1]);
-    let x1 = parseFloat(data[i+1][0]);
-    let y1 = parseFloat(data[i+1][1]);
-
-    // Check if x is between x0 and x1 (i.e., find the two surrounding points)
-    if (x >= x0 && x <= x1) {
-    
-      // Step 4: Perform linear interpolation
-      let y = y0 + ((x - x0) * (y1 - y0)) / (x1 - x0);
-      return y; // Return the interpolated y value
-    }
-  }
-}
-
-//Does Linear interpolation on the water data
-function linearInterpolationWater(x, data) {
-  // Step 1: Check if the x is within the bounds of the data
-  //x = parseFloat(x); //papaParse is returning strings instead of numbers
-  minX = Math.min(...data.map(point => point[0])); // Minimum x value
-  maxX = Math.max(...data.map(point => point[0])); // Maximum x value
-
-  if (x < minX || x > maxX) {
-    console.log('outside of water density data');
-  }
-
-  // Step 2: Check if x is already in the data array
-  for (let i = 0; i < data.length; i++) {
-    if (data[i][0] === x) {
-      console.log('value is predefined');
-      return data[i][1]; // If x is already in the array, no interpolation is needed
-    }
-  }
-
-  // Step 3: Find the two data points (x0, y0) and (x1, y1)
-  for (let i = 0; i < data.length - 1; i++) {
-    let x0 = parseFloat(data[i][0]);
-    let y0 = parseFloat(data[i][1]);
-    let x1 = parseFloat(data[i+1][0]);
-    let y1 = parseFloat(data[i+1][1]);
-
-    // Check if x is between x0 and x1 (i.e., find the two surrounding points)
-    if (x >= x0 && x <= x1) {
-    
-      // Step 4: Perform linear interpolation
-      let y = y0 + ((x - x0) * (y1 - y0)) / (x1 - x0);
-      return y; // Return the interpolated y value
-    }
-  }
 }
 
 let switchIndex = 0;
-let flag = false;
-let nonChartData = null; // Declare a global variable to store the result
 
-transformedData = function(parameter1){
-  const transformedDataintermediate = fallData.map(dataset => 
-    dataset.map(point => [point.x, point.y])  // Create an array with x and y values
-  );
-  return transformedDataintermediate;
-};
-
-// Example usage:
 function calculate() {
-  const operation = document.getElementById("operation").value;
+  if (!fallData || !densData) return;
+
+  const operation = document.getElementById('operation').value;
   switch (operation) {
-    case "RJ-5":
-      switchIndex = 0;
-      break;
-    case "JP-4, Jet B":
-      switchIndex = 1;
-      break;
-    case "TS":
-      switchIndex = 2;
-      break;
-    case "JP-5, Jet A, Jet A-1, JP-8":
-      switchIndex = 3;
-      break;
-    case "JP-7":
-      switchIndex = 4;
-      break;
-    case "JP-9, JP-10":
-      switchIndex = 5;
-      break;
-    case "RJ-4":
-      switchIndex = 6;
-      break;  
-    case "RJ-6":
-      switchIndex = 7;
-      break;  
-    case "Av. Gas":
-      switchIndex = 8;
-      break;  
-    }
+    case 'RJ-5':                        switchIndex = 0; break;
+    case 'JP-4, Jet B':                 switchIndex = 1; break;
+    case 'TS':                          switchIndex = 2; break;
+    case 'JP-5, Jet A, Jet A-1, JP-8': switchIndex = 3; break;
+    case 'JP-7':                        switchIndex = 4; break;
+    case 'JP-9, JP-10':                 switchIndex = 5; break;
+    case 'RJ-4':                        switchIndex = 6; break;
+    case 'RJ-6':                        switchIndex = 7; break;
+    case 'Av. Gas':                     switchIndex = 8; break;
+  }
 
-    let fahrenheit = document.getElementById("fahrenheit").value;
+  const fahr    = parseFloat(document.getElementById('fahrenheit').value);
+  const kinSet  = fallData[switchIndex];
+  const densSet = densData[switchIndex];
 
-    if (nonChartData == null) {
-    nonChartData = transformedData();
-    };
-    
-    let interpolatedValue = linearInterpolation(fahrenheit, nonChartData[switchIndex]);
-    console.log(`Interpolated value at x = ${fahrenheit} is y = ${interpolatedValue}`);
-  
-    //let interp_densityWater = linearInterpolationWater(fahrenheit, densityWater);
+  const kinIds = ['result_density1','result_density2','result_density3','result_density4','result_density5','result_density6'];
+  const dynIds = ['result_dyn1','result_dyn2','result_dyn3','result_dyn4','result_dyn5'];
 
-  if (flag == true) {
-      document.getElementById("result_density1").innerText = ("Out of Range");
-      document.getElementById("result_density2").innerText = ("Out of Range");
-      document.getElementById("result_density3").innerText = ("Out of Range");
-      document.getElementById("result_density4").innerText = ("Out of Range");
-      document.getElementById("result_density5").innerText = ("Out of Range");
-      document.getElementById("result_density6").innerText = ("Out of Range");
+  const kinOK  = kinSet  && kinSet.length  > 0 && !isNaN(fahr) && fahr >= kinSet[0].x  && fahr <= kinSet[kinSet.length - 1].x;
+  const densOK = densSet && densSet.length > 0 && !isNaN(fahr) && fahr >= densSet[0].x && fahr <= densSet[densSet.length - 1].x;
+
+  if (kinOK) {
+    const nu = kinLinInterp(fahr, kinSet);
+    document.getElementById('result_density1').textContent = nu.toFixed(4);                    // mm²/s
+    document.getElementById('result_density2').textContent = nu.toFixed(4);                    // cSt (= mm²/s)
+    document.getElementById('result_density3').textContent = (nu * 0.01).toFixed(6);           // Stokes
+    document.getElementById('result_density4').textContent = (nu * 1e-6).toExponential(3);     // m²/s
+    document.getElementById('result_density5').textContent = (nu * 0.0015500031).toFixed(6);   // in²/s
+    document.getElementById('result_density6').textContent = (nu * 0.0000107639).toFixed(7);   // ft²/s
   } else {
-      document.getElementById("result_density1").innerText = ((interpolatedValue).toFixed(3));
-      document.getElementById("result_density2").innerText = ((interpolatedValue).toFixed(3));
-      document.getElementById("result_density3").innerText = ((interpolatedValue*.01).toFixed(5));
-      document.getElementById("result_density4").innerText = ((interpolatedValue*0.000001).toFixed(8));
-      document.getElementById("result_density5").innerText = ((interpolatedValue*0.0015500031).toFixed(5));
-      document.getElementById("result_density6").innerText = ((interpolatedValue*0.0000107639).toFixed(5));
+    kinIds.forEach(id => { document.getElementById(id).textContent = 'Out of Range'; });
+  }
+
+  if (kinOK && densOK) {
+    const nu  = kinLinInterp(fahr, kinSet);
+    const rho = kinLinInterp(fahr, densSet);
+    const mu  = nu * rho / 1000;
+    document.getElementById('result_dyn1').textContent = mu.toFixed(4);                        // mPa·s
+    document.getElementById('result_dyn2').textContent = mu.toFixed(4);                        // cP (= mPa·s)
+    document.getElementById('result_dyn3').textContent = (mu * 0.01).toFixed(6);               // Poise
+    document.getElementById('result_dyn4').textContent = (mu * 0.001).toFixed(7);              // Pa·s
+    document.getElementById('result_dyn5').textContent = (mu * 0.000671969).toFixed(6);        // lbm/(ft·s)
+  } else {
+    dynIds.forEach(id => { document.getElementById(id).textContent = 'Out of Range'; });
   }
 }
