@@ -1,14 +1,14 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- META DATA FOR -->
-    <title>KasperCalc: Ethylene Glycol Viscosity</title>
+    <title>KasperCalc: Water Viscosity</title>
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, bckasper3, Ethylene Glycol Viscosity, Ethylene Glycol Dynamic (Absolute) Viscosity, Ethylene Glycol Kinematic Viscosity, Ethylene Glycol Viscosity Calculator" />
-    <meta name="description" content="Calculate and reference the dynamic (absolute) viscosity of Ethylene glycol solutions across concentration and temperature ranges." />
+    <meta name="keywords" content="KasperCalc, bckasper3, Water Viscosity, Water Dynamic Viscosity, Water Kinematic Viscosity, Water Absolute Viscosity, Water Viscosity Calculator" />
+    <meta name="description" content="Calculate and reference the dynamic (absolute) and kinematic viscosity of water at temperatures from 32 to 675°F." />
 
     <!-- DEFERRED JAVASCRIPT -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -251,39 +251,38 @@
         <div class="col-lg-12 col-12">
           <div class="banner section-title-wrap">
             <div class="h1 section-title bannertext">
-              Ethylene Glycol Viscosity
+              Water Dynamic and Kinematic Viscosity
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <h1 class="visually-hidden">Ethylene Glycol Dynamic (Absolute) Viscosity Calculator by Concentration and Temperature</h1>
+    <h1 class="visually-hidden">Water Dynamic (Absolute) and Kinematic Viscosity Calculator</h1>
 
-    <!-- CHART -->
+    <!-- DYNAMIC VISCOSITY CHART -->
     <section>
       <div class="csscontainer">
         <div class="col-lg-12 col-12">
           <div class="section-title-wrap">
-            <div class="h1 section-title">Ethylene Glycol Dynamic (Absolute) Viscosity Chart</div>
+            <div class="h1 section-title">Water Dynamic (Absolute) Viscosity Chart</div>
           </div>
           <div class="canvasdiv">
             <button id="toggleTooltipButton">Hide Tooltips</button>
-            <a style="font-size: medium; text-decoration: none;" href="img/EthyleneGlycolDynamicViscosity(mPa-s_VS_Temperature).png" download="EthyleneGlycolDynamicViscosity(mPa-s_VS_Temperature).png">
+            <a style="font-size: medium; text-decoration: none;" href="img/WaterDynamicViscosity(DegreesF).png" download="WaterDynamicViscosity(DegreesF).png">
               <button>Download Chart</button>
             </a>
-            <a style="font-size: medium; text-decoration: none;" href="img/EthyleneGlycolDynamicViscosity(mPa-s_VS_Temperature).png" target="_blank">
+            <a style="font-size: medium; text-decoration: none;" href="img/WaterDynamicViscosity(DegreesF).png" target="_blank">
               <button>Open In New Tab</button>
             </a>
             <div class="canvascontainer">
               <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-              <canvas id="myChart" aria-label="Ethylene Glycol Dynamic (Absolute) Viscosity vs Temperature °F by % V/V Concentration" width="400" height="600" role="img" class="chartcanvas">
+              <canvas id="myChart" aria-label="Water Dynamic (Absolute) Viscosity vs Temperature °F" width="400" height="600" role="img" class="chartcanvas">
                 <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
               </canvas>
             </div>
           </div>
-          <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/ethylene-glycol-d_146.html" target="_blank">Engineering Toolbox — Ethylene Glycol</a></p>
-          <p class="text-center">Toggle data sets by clicking the legend. Y-axis is logarithmic.</p>
+          <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/water-dynamic-kinematic-viscosity-d_596.html" target="_blank">Engineering Toolbox — Water Viscosity</a>. Y-axis is logarithmic.</p>
         </div>
       </div>
     </section>
@@ -293,23 +292,90 @@
       <div class="csscontainer">
         <div class="col-lg-12 col-12">
           <div class="section-title-wrap">
-            <div class="h1 section-title">Ethylene Glycol Kinematic Viscosity Chart</div>
+            <div class="h1 section-title">Water Kinematic Viscosity Chart</div>
           </div>
           <div class="canvasdiv">
             <button id="toggleTooltipButtonKin">Hide Tooltips</button>
-            <a style="font-size: medium; text-decoration: none;" href="img/EthyleneGlycolKinematicViscosity.png" download="EthyleneGlycolKinematicViscosity.png">
+            <a style="font-size: medium; text-decoration: none;" href="img/WaterKinematicViscosity(DegreesF).png" download="WaterKinematicViscosity(DegreesF).png">
               <button>Download Chart</button>
             </a>
-            <a style="font-size: medium; text-decoration: none;" href="img/EthyleneGlycolKinematicViscosity.png" target="_blank">
+            <a style="font-size: medium; text-decoration: none;" href="img/WaterKinematicViscosity(DegreesF).png" target="_blank">
               <button>Open In New Tab</button>
             </a>
             <div class="canvascontainer">
-              <canvas id="kinChart" aria-label="Ethylene Glycol Kinematic Viscosity vs Temperature °F by % V/V Concentration" width="400" height="600" role="img" class="chartcanvas">
+              <canvas id="kinChart" aria-label="Water Kinematic Viscosity vs Temperature °F" width="400" height="600" role="img" class="chartcanvas">
                 <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
               </canvas>
             </div>
           </div>
-          <p class="text-center">Computed from dynamic (absolute) viscosity ÷ density (same source). Toggle data sets by clicking the legend. Y-axis is logarithmic.</p>
+          <p class="text-center">Kinematic viscosity in cSt converted from tabulated ft²/s values. Y-axis is logarithmic.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATA TABLE -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Water Viscosity Data Table</div>
+          </div>
+          <div class="table-responsive mx-md-5 mx-1">
+            <table class="table table-striped table-bordered table-sm text-center align-middle">
+              <thead class="table-dark">
+                <tr>
+                  <th rowspan="2" class="align-middle">Temp<br>(°F)</th>
+                  <th rowspan="2" class="align-middle">Pressure<br>(psia)</th>
+                  <th colspan="3" class="text-center">Dynamic Viscosity</th>
+                  <th colspan="1" class="text-center">Kinematic Viscosity</th>
+                </tr>
+                <tr>
+                  <th>lbf·s/ft²<br>(×10⁻⁵)</th>
+                  <th>lbm/(ft·h)</th>
+                  <th>cP (mPa·s)</th>
+                  <th>ft²/s<br>(×10⁻⁵)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>32.02</td><td>0.9506</td><td>3.7414</td><td>4.3336</td><td>1.7914</td><td>1.9287</td></tr>
+                <tr><td>34</td><td>0.0962</td><td>3.6047</td><td>4.1752</td><td>1.7259</td><td>1.8579</td></tr>
+                <tr><td>39.2</td><td>0.1180</td><td>3.2801</td><td>3.7992</td><td>1.5705</td><td>1.6906</td></tr>
+                <tr><td>40</td><td>0.1217</td><td>3.2340</td><td>3.7458</td><td>1.5484</td><td>1.6668</td></tr>
+                <tr><td>50</td><td>0.1781</td><td>2.7276</td><td>3.1593</td><td>1.3060</td><td>1.4063</td></tr>
+                <tr><td>60</td><td>0.2563</td><td>2.3405</td><td>2.7109</td><td>1.1206</td><td>1.2075</td></tr>
+                <tr><td>70</td><td>0.3634</td><td>2.0337</td><td>2.3556</td><td>0.9737</td><td>1.0503</td></tr>
+                <tr><td>80</td><td>0.5076</td><td>1.7888</td><td>2.0719</td><td>0.8565</td><td>0.9250</td></tr>
+                <tr><td>90</td><td>0.6992</td><td>1.5896</td><td>1.8411</td><td>0.7611</td><td>0.8234</td></tr>
+                <tr><td>100</td><td>0.9506</td><td>1.4243</td><td>1.6497</td><td>0.6820</td><td>0.7392</td></tr>
+                <tr><td>110</td><td>1.277</td><td>1.2847</td><td>1.4880</td><td>0.6151</td><td>0.6682</td></tr>
+                <tr><td>120</td><td>1.695</td><td>1.1652</td><td>1.3496</td><td>0.5579</td><td>0.6075</td></tr>
+                <tr><td>130</td><td>2.226</td><td>1.0620</td><td>1.2300</td><td>0.5085</td><td>0.5551</td></tr>
+                <tr><td>140</td><td>2.893</td><td>0.9733</td><td>1.1273</td><td>0.4660</td><td>0.5102</td></tr>
+                <tr><td>150</td><td>3.723</td><td>0.8950</td><td>1.0366</td><td>0.4285</td><td>0.4706</td></tr>
+                <tr><td>160</td><td>4.747</td><td>0.8279</td><td>0.9589</td><td>0.3964</td><td>0.4367</td></tr>
+                <tr><td>170</td><td>6.000</td><td>0.7698</td><td>0.8916</td><td>0.3686</td><td>0.4074</td></tr>
+                <tr><td>180</td><td>7.520</td><td>0.7192</td><td>0.8330</td><td>0.3444</td><td>0.3820</td></tr>
+                <tr><td>190</td><td>9.349</td><td>0.6745</td><td>0.7813</td><td>0.3230</td><td>0.3596</td></tr>
+                <tr><td>200</td><td>11.537</td><td>0.6300</td><td>0.7297</td><td>0.3016</td><td>0.3371</td></tr>
+                <tr><td>212</td><td>14.710</td><td>0.5881</td><td>0.6812</td><td>0.2816</td><td>0.3163</td></tr>
+                <tr><td>220</td><td>17.203</td><td>0.5619</td><td>0.6508</td><td>0.2690</td><td>0.3032</td></tr>
+                <tr><td>240</td><td>25.001</td><td>0.5050</td><td>0.5850</td><td>0.2418</td><td>0.2750</td></tr>
+                <tr><td>260</td><td>35.263</td><td>0.4575</td><td>0.5299</td><td>0.2191</td><td>0.2515</td></tr>
+                <tr><td>280</td><td>49.286</td><td>0.4176</td><td>0.4837</td><td>0.2000</td><td>0.2320</td></tr>
+                <tr><td>300</td><td>67.264</td><td>0.3840</td><td>0.4448</td><td>0.1839</td><td>0.2157</td></tr>
+                <tr><td>350</td><td>134.73</td><td>0.3202</td><td>0.3708</td><td>0.1533</td><td>0.1853</td></tr>
+                <tr><td>400</td><td>247.01</td><td>0.2750</td><td>0.3185</td><td>0.1317</td><td>0.1648</td></tr>
+                <tr><td>450</td><td>422.32</td><td>0.2404</td><td>0.2785</td><td>0.1151</td><td>0.1504</td></tr>
+                <tr><td>500</td><td>680.56</td><td>0.2126</td><td>0.2463</td><td>0.1018</td><td>0.1398</td></tr>
+                <tr><td>550</td><td>1045.0</td><td>0.1888</td><td>0.2187</td><td>0.0904</td><td>0.1322</td></tr>
+                <tr><td>600</td><td>1542.1</td><td>0.1673</td><td>0.1937</td><td>0.0801</td><td>0.1270</td></tr>
+                <tr><td>625</td><td>1851.2</td><td>0.1562</td><td>0.1809</td><td>0.0748</td><td>0.1252</td></tr>
+                <tr><td>650</td><td>2207.8</td><td>0.1438</td><td>0.1666</td><td>0.0689</td><td>0.1239</td></tr>
+                <tr><td>675</td><td>2618.7</td><td>0.1292</td><td>0.1496</td><td>0.0619</td><td>0.1230</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-center">At saturation pressure. For temperatures below 212°F this is effectively atmospheric pressure.</p>
         </div>
       </div>
     </section>
@@ -319,34 +385,19 @@
       <div class="csscontainer">
         <div class="col-lg-12 col-12 px-3">
           <div class="wrapper" style="max-width:33rem;">
-            <div class="header text-center">Ethylene Glycol Viscosity Calculator</div>
-
-            <div class="group1 d-flex flex-wrap">
-              <label class="dropdownlabel" for="concentration">Select Mixture %:</label>
-              <span class="output">
-                <select class="dropdowncalc dropdown-menu-end" id="concentration" onchange="egViscCalc()" aria-label="Select % V/V Ethylene glycol concentration">
-                  <option value="0">0% V/V (Water)</option>
-                  <option value="10">10% V/V</option>
-                  <option value="20">20% V/V</option>
-                  <option value="30">30% V/V</option>
-                  <option value="40">40% V/V</option>
-                  <option value="50">50% V/V</option>
-                  <option value="60">60% V/V</option>
-                </select>
-              </span>
-            </div>
+            <div class="header text-center">Water Viscosity Calculator</div>
 
             <div class="group">
               <div class="outputrow">
                 <span class="label">Degrees (°F):</span>
                 <span class="output inputbox">
-                  <input class="calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" value="70" aria-label="Input temperature in Fahrenheit" />
+                  <input class="calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" value="70" aria-label="Input box for degrees Fahrenheit" />
                 </span>
               </div>
               <div class="outputrow">
                 <span class="label">Degrees (°C):</span>
                 <span class="output inputbox">
-                  <input class="calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" aria-label="Input temperature in Celsius" />
+                  <input class="calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" aria-label="Input for degrees Celsius" />
                 </span>
               </div>
             </div>
@@ -360,7 +411,7 @@
                 <span class="output" id="result_visc1">&nbsp;</span>
               </div>
               <div class="outputrow">
-                <span class="label">Pa·s (Poiseuille):</span>
+                <span class="label">Centipoise (cP):</span>
                 <span class="output" id="result_visc2">&nbsp;</span>
               </div>
               <div class="outputrow">
@@ -368,12 +419,16 @@
                 <span class="output" id="result_visc3">&nbsp;</span>
               </div>
               <div class="outputrow">
-                <span class="label">lbm/(ft·s):</span>
+                <span class="label">Pa·s (Poiseuille):</span>
                 <span class="output" id="result_visc4">&nbsp;</span>
               </div>
               <div class="outputrow">
-                <span class="label">kg/(m·h):</span>
+                <span class="label">lbm/(ft·s):</span>
                 <span class="output" id="result_visc5">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">kg/(m·h):</span>
+                <span class="output" id="result_visc6">&nbsp;</span>
               </div>
             </div>
 
@@ -406,6 +461,7 @@
                 <span class="output" id="result_kin6">&nbsp;</span>
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -415,15 +471,14 @@
     <section>
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap">
-
           <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
-            <div class="custom-heading">Viscosity of Ethylene Glycol</div>
+            <div class="custom-heading">Dynamic (Absolute) Viscosity of Water</div>
 
             <div style="text-align: left" class="mt-3">
               <div class="custom-subheading">What Is Dynamic (Absolute) Viscosity?</div>
               <p class="mt-2">
                 Dynamic (absolute) viscosity (<span style="font-weight:var(--font-weight-medium)">μ</span>) measures a fluid's resistance to shear flow.
-                It is reported in <span style="font-weight:var(--font-weight-medium)">mPa·s</span> (millipascal-seconds), equivalent to
+                It is measured in <span style="font-weight:var(--font-weight-medium)">mPa·s</span> (millipascal-seconds), equivalent to
                 <span style="font-weight:var(--font-weight-medium)">cP</span> (centipoise). Newton's law of viscosity is:
               </p>
               <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
@@ -435,25 +490,24 @@
             </div>
 
             <div style="text-align: left" class="mt-4">
-              <div class="custom-subheading">Why It Matters for Ethylene Glycol Systems</div>
+              <div class="custom-subheading">Why It Matters for Water Systems</div>
               <p class="mt-2">
-                Ethylene glycol viscosity increases dramatically at low temperatures, especially at higher concentrations.
-                This affects pressure drop, pump power requirements, and — critically — flow regime. The Reynolds number
+                Water viscosity decreases significantly with increasing temperature — by nearly a factor of 30 from
+                32°F to 675°F. This affects pressure drop, pump power requirements, and flow regime. The Reynolds number
                 determines whether flow is laminar or turbulent:
               </p>
               <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
                 Re = ρ × v × D / μ
               </p>
               <p class="mt-1">
-                At low temperatures, high viscosity pushes systems into laminar flow (Re &lt; 2300), where heat transfer
-                efficiency drops sharply. Ethylene glycol is more viscous than propylene glycol at equivalent concentrations
-                below 0 °C, so pump curves must be re-evaluated whenever glycol is added to a system sized for water.
+                At low temperatures, higher viscosity can push systems toward laminar flow (Re &lt; 2300) where heat
+                transfer efficiency drops sharply. At elevated temperatures and pressures (above 212°F), water remains
+                liquid only under pressure — the saturation pressure values in the data table reflect this condition.
               </p>
             </div>
 
             <p class="mt-3 text-start"><span style="font-weight:var(--font-weight-normal)">Note:</span> Viscosity is highly temperature-dependent. Always check viscosity at the lowest expected operating temperature, not just at design conditions.</p>
           </div>
-
         </div>
       </div>
     </section>
@@ -502,9 +556,9 @@
                 ν [cSt] = μ [mPa·s] × 1000 / ρ [kg/m³]
               </p>
               <p class="mt-1">
-                Because denser fluids have higher internal inertia, a greater dynamic viscosity is required to
-                produce the same kinematic viscosity. Glycol solutions are significantly denser than water, so their
-                kinematic viscosity rises more slowly with concentration than their dynamic viscosity does.
+                Because water has a density very close to 1000 kg/m³ near room temperature, its kinematic viscosity
+                in cSt is numerically very close to its dynamic viscosity in cP. At elevated temperatures, water
+                density decreases, so kinematic viscosity diverges slightly above the cP value.
               </p>
             </div>
 
@@ -531,6 +585,43 @@
       </div>
     </section>
 
+    <!-- UNIT CONVERSION REFERENCE -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
+            <div class="custom-heading">Viscosity Unit Conversion Reference</div>
+
+            <div style="text-align:left" class="mt-3">
+              <div class="custom-subheading">Dynamic (Absolute) Viscosity</div>
+              <p class="mt-2">Units: centipoise (cP), poise (P), pascal-second (Pa·s), pound/(foot second) (lb/(ft·s)), pound/(foot hour) (lb/(ft·h))</p>
+              <ul class="mt-2" style="font-size: 0.95rem;">
+                <li>1 cP = 0.001 Pa·s = 0.01 P = 6.72197×10⁻⁴ lb/(ft·s) = 2.4191 lb/(ft·h)</li>
+                <li>1 lb/(ft·h) = 2.7778×10⁻⁴ lb/(ft·s) = 4.1338×10⁻⁴ Pa·s = 0.41338 cP</li>
+                <li>1 lb/(ft·s) = 3600 lb/(ft·h) = 1.48816 Pa·s = 1488.16 cP</li>
+                <li>1 Pa·s = 1 kg/(m·s) = 1 (N·s)/m² = 10 P = 1000 cP = 0.672197 lb/(ft·s) = 2419.08 lb/(ft·h)</li>
+                <li>1 P = 1 g/(cm·s) = 0.1 Pa·s = 100 cP = 0.067197 lb/(ft·s) = 241.909 lb/(ft·h)</li>
+                <li>1 Pa·s = 0.00014504 reyn; 1 reyn = 6894.76 Pa·s</li>
+              </ul>
+            </div>
+
+            <div style="text-align:left" class="mt-4">
+              <div class="custom-subheading">Kinematic Viscosity</div>
+              <p class="mt-2">Units: centistoke (cSt), stoke (St), ft²/s, ft²/h, in²/s, m²/s</p>
+              <ul class="mt-2" style="font-size: 0.95rem;">
+                <li>1 cSt = 1 mm²/s = 10⁻⁶ m²/s = 1.07639×10⁻⁵ ft²/s = 0.03875 ft²/h = 1.55×10⁻³ in²/s</li>
+                <li>1 St = 1 cm²/s = 100 cSt = 10⁻⁴ m²/s = 1.076×10⁻³ ft²/s = 3.875 ft²/h</li>
+                <li>1 ft²/s = 92903 cSt = 929.03 St = 0.09290 m²/s = 3600 ft²/h = 144 in²/s</li>
+                <li>1 ft²/h = 2.7778×10⁻⁴ ft²/s = 25.806 cSt = 0.25806 St</li>
+                <li>1 in²/s = 6.944×10⁻³ ft²/s = 645.16 cSt = 6.4516 St</li>
+                <li>1 m²/s = 10⁶ cSt = 10⁴ St = 10.764 ft²/s = 1550 in²/s</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="mt-5 pt-3">
       <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
         <div class="citation-block bg-body-tertiary p-4 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
@@ -544,6 +635,7 @@
         </div>
       </div>
     </section>
+
   </main>
 
   <!-- FOOTER -->
@@ -552,138 +644,126 @@
   <!-- END FOOTER -->
 
 <script>
-// ── EG Dynamic (Absolute) Viscosity Data ──────────────────────────────────────
-// Source: Engineering Toolbox — Ethylene Glycol
-// Format: [temperature_°F, viscosity_mPa·s]
-const egViscData = {
-  vv0:  [[32,1.79],[50,1.31],[68,1.00],[86,0.80],[104,0.65],[122,0.55],[140,0.47],[176,0.35],[212,0.28]],
-  vv10: [[14,15],[32,7.0],[50,4.0],[68,2.6],[86,1.8],[104,1.3],[122,1.0],[140,0.80],[176,0.56],[212,0.42]],
-  vv20: [[-4,60],[14,30],[32,15],[50,8.5],[68,5.0],[86,3.3],[104,2.3],[122,1.7],[140,1.3],[176,0.85],[212,0.65]],
-  vv30: [[-22,220],[-4,110],[14,55],[32,28],[50,16],[68,9.5],[86,6.2],[104,4.3],[122,3.2],[140,2.5],[176,1.7],[212,1.2]],
-  vv40: [[-40,700],[-22,350],[-4,200],[14,100],[32,50],[50,28],[68,17],[86,11],[104,7.5],[122,5.5],[140,4.2],[176,2.7],[212,1.9]],
-  vv50: [[-40,10000],[-22,3200],[-4,800],[14,290],[32,130],[50,65],[68,36],[86,22],[104,15],[122,10],[140,7.5],[176,4.5],[212,3.2]],
-  vv60: [[-4,8000],[14,2000],[32,700],[50,300],[68,130],[86,70],[104,40],[122,24],[140,16],[176,9],[212,6]]
-};
+// ── Water Dynamic and Kinematic Viscosity Data ────────────────────────────────
+// Source: Engineering Toolbox — Water Viscosity
+// Format: [temp_F, dyn_lbf_s_ft2_e5, lbm_ft_h, cP_mPas, kin_ft2_s_e5]
+const waterViscFull = [
+  [32.02, 3.7414, 4.3336, 1.7914, 1.9287],
+  [34,    3.6047, 4.1752, 1.7259, 1.8579],
+  [39.2,  3.2801, 3.7992, 1.5705, 1.6906],
+  [40,    3.2340, 3.7458, 1.5484, 1.6668],
+  [50,    2.7276, 3.1593, 1.3060, 1.4063],
+  [60,    2.3405, 2.7109, 1.1206, 1.2075],
+  [70,    2.0337, 2.3556, 0.9737, 1.0503],
+  [80,    1.7888, 2.0719, 0.8565, 0.9250],
+  [90,    1.5896, 1.8411, 0.7611, 0.8234],
+  [100,   1.4243, 1.6497, 0.6820, 0.7392],
+  [110,   1.2847, 1.4880, 0.6151, 0.6682],
+  [120,   1.1652, 1.3496, 0.5579, 0.6075],
+  [130,   1.0620, 1.2300, 0.5085, 0.5551],
+  [140,   0.9733, 1.1273, 0.4660, 0.5102],
+  [150,   0.8950, 1.0366, 0.4285, 0.4706],
+  [160,   0.8279, 0.9589, 0.3964, 0.4367],
+  [170,   0.7698, 0.8916, 0.3686, 0.4074],
+  [180,   0.7192, 0.8330, 0.3444, 0.3820],
+  [190,   0.6745, 0.7813, 0.3230, 0.3596],
+  [200,   0.6300, 0.7297, 0.3016, 0.3371],
+  [212,   0.5881, 0.6812, 0.2816, 0.3163],
+  [220,   0.5619, 0.6508, 0.2690, 0.3032],
+  [240,   0.5050, 0.5850, 0.2418, 0.2750],
+  [260,   0.4575, 0.5299, 0.2191, 0.2515],
+  [280,   0.4176, 0.4837, 0.2000, 0.2320],
+  [300,   0.3840, 0.4448, 0.1839, 0.2157],
+  [350,   0.3202, 0.3708, 0.1533, 0.1853],
+  [400,   0.2750, 0.3185, 0.1317, 0.1648],
+  [450,   0.2404, 0.2785, 0.1151, 0.1504],
+  [500,   0.2126, 0.2463, 0.1018, 0.1398],
+  [550,   0.1888, 0.2187, 0.0904, 0.1322],
+  [600,   0.1673, 0.1937, 0.0801, 0.1270],
+  [625,   0.1562, 0.1809, 0.0748, 0.1252],
+  [650,   0.1438, 0.1666, 0.0689, 0.1239],
+  [675,   0.1292, 0.1496, 0.0619, 0.1230]
+];
 
-// ── EG Density Data ───────────────────────────────────────────────────────────
-// Source: Engineering Toolbox — Ethylene Glycol
-// Format: [temperature_°F, density_kg/m³]
-const egDensData = {
-  vv0:  [[-40,999.8],[32,999.8],[39,1000],[50,999.7],[60,999.0],[70,998.0],[80,996.6],[100,993.1],[120,988.6],[140,983.2],[160,977.1],[180,970.4],[200,963.0],[212,958.4]],
-  vv10: [[25,1021],[32,1020],[50,1015],[68,1009],[86,1004],[104,998],[122,993],[140,987],[158,982],[176,976],[194,971],[212,965]],
-  vv20: [[17,1040],[32,1035],[50,1029],[68,1023],[86,1017],[104,1012],[122,1006],[140,1000],[158,994],[176,988],[194,983],[212,977]],
-  vv30: [[7,1057],[32,1049],[50,1043],[68,1037],[86,1031],[104,1025],[122,1019],[140,1013],[158,1007],[176,1001],[194,995],[212,989]],
-  vv40: [[-10,1081],[32,1067],[50,1060],[68,1054],[86,1048],[104,1041],[122,1035],[140,1029],[158,1022],[176,1016],[194,1010],[212,1003]],
-  vv50: [[-35,1108],[-22,1104],[32,1084],[50,1077],[68,1071],[86,1064],[104,1057],[122,1051],[140,1044],[158,1038],[176,1031],[194,1024],[212,1018]],
-  vv60: [[-65,1139],[-40,1130],[-22,1123],[32,1102],[50,1095],[68,1088],[86,1081],[104,1074],[122,1067],[140,1060],[158,1053],[176,1046],[194,1039],[212,1032]]
-};
-
-const egLabels = ['0%','10%','20%','30%','40%','50%','60%'];
-const egColors = ['rgb(68,119,170)','rgb(34,136,51)','rgb(204,187,68)','rgb(238,102,119)','rgb(170,51,119)','rgb(102,204,238)','rgb(187,187,187)'];
-const egKeys   = ['vv0','vv10','vv20','vv30','vv40','vv50','vv60'];
-
-// ── Log-linear interpolation (dynamic viscosity) ──────────────────────────────
-function egViscInterp(tF, arr) {
-  if (tF <= arr[0][0]) return arr[0][1];
-  if (tF >= arr[arr.length-1][0]) return arr[arr.length-1][1];
-  for (let i = 0; i < arr.length-1; i++) {
-    if (tF >= arr[i][0] && tF <= arr[i+1][0]) {
-      const t = (tF - arr[i][0]) / (arr[i+1][0] - arr[i][0]);
-      return Math.exp(Math.log(arr[i][1]) + t * (Math.log(arr[i+1][1]) - Math.log(arr[i][1])));
+// ── Log-linear interpolation ──────────────────────────────────────────────────
+function waterInterp(tF, colIdx) {
+  const arr = waterViscFull;
+  if (tF <= arr[0][0]) return arr[0][colIdx];
+  if (tF >= arr[arr.length - 1][0]) return arr[arr.length - 1][colIdx];
+  for (let i = 0; i < arr.length - 1; i++) {
+    if (tF >= arr[i][0] && tF <= arr[i + 1][0]) {
+      const t = (tF - arr[i][0]) / (arr[i + 1][0] - arr[i][0]);
+      return Math.exp(Math.log(arr[i][colIdx]) + t * (Math.log(arr[i + 1][colIdx]) - Math.log(arr[i][colIdx])));
     }
   }
 }
 
-// ── Linear interpolation (density) ───────────────────────────────────────────
-function egDensInterp(tF, arr) {
-  if (tF <= arr[0][0]) return arr[0][1];
-  if (tF >= arr[arr.length-1][0]) return arr[arr.length-1][1];
-  for (let i = 0; i < arr.length-1; i++) {
-    if (tF >= arr[i][0] && tF <= arr[i+1][0]) {
-      const t = (tF - arr[i][0]) / (arr[i+1][0] - arr[i][0]);
-      return arr[i][1] + t * (arr[i+1][1] - arr[i][1]);
-    }
-  }
-}
-
-// ── Dense points for dynamic viscosity chart ──────────────────────────────────
-function viscByTempF(viscArr) {
+// ── Dense points for dynamic viscosity chart (col 3 = cP) ────────────────────
+function dynByTempF() {
   const pts = [];
-  const minF = viscArr[0][0], maxF = viscArr[viscArr.length-1][0];
-  for (let t = minF; t <= maxF; t += 2)
-    pts.push({ x: t, y: parseFloat(egViscInterp(t, viscArr).toFixed(4)) });
+  for (let t = 32; t <= 675; t += 2)
+    pts.push({ x: t, y: parseFloat(waterInterp(t, 3).toFixed(5)) });
   return pts;
 }
 
-// ── Dense points for kinematic viscosity chart ────────────────────────────────
-// ν [cSt] = μ [mPa·s] × 1000 / ρ [kg/m³]
-function kinByTempF(key) {
-  const vArr = egViscData[key], dArr = egDensData[key];
-  const minF = Math.max(vArr[0][0], dArr[0][0]);
-  const maxF = Math.min(vArr[vArr.length-1][0], dArr[dArr.length-1][0]);
+// ── Dense points for kinematic viscosity chart (col 4 = ft²/s ×10⁻⁵ → cSt) ──
+// 1 (ft²/s ×10⁻⁵) × 1e-5 ft²/s × 92903.04 cSt/(ft²/s) = value × 0.9290304 cSt
+function kinByTempF() {
+  const CONV = 0.9290304;
   const pts = [];
-  for (let t = minF; t <= maxF; t += 2) {
-    const nu = egViscInterp(t, vArr) * 1000 / egDensInterp(t, dArr);
-    pts.push({ x: t, y: parseFloat(nu.toFixed(4)) });
-  }
+  for (let t = 32; t <= 675; t += 2)
+    pts.push({ x: t, y: parseFloat((waterInterp(t, 4) * CONV).toFixed(5)) });
   return pts;
 }
 
 // ── Temperature converters ────────────────────────────────────────────────────
 function convertToFahrenheit() {
   const c = parseFloat(document.getElementById('celsius').value);
-  if (!isNaN(c)) document.getElementById('fahrenheit').value = (c * 9/5 + 32).toFixed(1);
-  egViscCalc();
+  if (!isNaN(c)) document.getElementById('fahrenheit').value = (c * 9 / 5 + 32).toFixed(1);
+  waterCalc();
 }
 function convertToCelsius() {
   const f = parseFloat(document.getElementById('fahrenheit').value);
-  if (!isNaN(f)) document.getElementById('celsius').value = ((f - 32) * 5/9).toFixed(1);
-  egViscCalc();
+  if (!isNaN(f)) document.getElementById('celsius').value = ((f - 32) * 5 / 9).toFixed(1);
+  waterCalc();
 }
 
 // ── Calculator ────────────────────────────────────────────────────────────────
-function egViscCalc() {
-  const op   = document.getElementById('concentration').value;
-  const fahr = parseFloat(document.getElementById('fahrenheit').value);
-  const key  = 'vv' + op;
-  const vArr = egViscData[key];
-  const dArr = egDensData[key];
-  const dynIds = ['result_visc1','result_visc2','result_visc3','result_visc4','result_visc5'];
+function waterCalc() {
+  const fahr  = parseFloat(document.getElementById('fahrenheit').value);
+  const minT  = waterViscFull[0][0];
+  const maxT  = waterViscFull[waterViscFull.length - 1][0];
+  const inRange = !isNaN(fahr) && fahr >= minT && fahr <= maxT;
+  const dynIds = ['result_visc1','result_visc2','result_visc3','result_visc4','result_visc5','result_visc6'];
   const kinIds = ['result_kin1','result_kin2','result_kin3','result_kin4','result_kin5','result_kin6'];
 
-  const dynOK = vArr && !isNaN(fahr) && fahr >= vArr[0][0] && fahr <= vArr[vArr.length-1][0];
-  const densOK = dArr && !isNaN(fahr) && fahr >= dArr[0][0] && fahr <= dArr[dArr.length-1][0];
-
-  if (dynOK) {
-    const mu = egViscInterp(fahr, vArr);
-    document.getElementById('result_visc1').textContent = mu.toFixed(3);
-    document.getElementById('result_visc2').textContent = (mu / 1000).toFixed(6);
+  if (inRange) {
+    const mu = waterInterp(fahr, 3); // cP = mPa·s
+    document.getElementById('result_visc1').textContent = mu.toFixed(4);
+    document.getElementById('result_visc2').textContent = mu.toFixed(4);
     document.getElementById('result_visc3').textContent = (mu / 100).toFixed(5);
-    document.getElementById('result_visc4').textContent = (mu * 0.000671969).toFixed(6);
-    document.getElementById('result_visc5').textContent = (mu * 3.6).toFixed(3);
-  } else {
-    dynIds.forEach(id => document.getElementById(id).textContent = 'Out of Range');
-  }
+    document.getElementById('result_visc4').textContent = (mu / 1000).toFixed(6);
+    document.getElementById('result_visc5').textContent = (mu * 6.71969e-4).toFixed(6);
+    document.getElementById('result_visc6').textContent = (mu * 3.6).toFixed(4);
 
-  if (dynOK && densOK) {
-    const mu  = egViscInterp(fahr, vArr);
-    const rho = egDensInterp(fahr, dArr);
-    const nu  = mu * 1000 / rho;   // cSt = mm²/s
+    const kinRaw = waterInterp(fahr, 4); // ft²/s ×10⁻⁵
+    const nu = kinRaw * 0.9290304; // cSt = mm²/s
     document.getElementById('result_kin1').textContent = nu.toFixed(4);
     document.getElementById('result_kin2').textContent = nu.toFixed(4);
     document.getElementById('result_kin3').textContent = (nu * 0.01).toFixed(6);
     document.getElementById('result_kin4').textContent = (nu * 1e-6).toExponential(3);
     document.getElementById('result_kin5').textContent = (nu * 0.0015500031).toFixed(6);
-    document.getElementById('result_kin6').textContent = (nu * 0.000010764).toFixed(7);
+    document.getElementById('result_kin6').textContent = (nu * 1.07639e-5).toExponential(4);
   } else {
+    dynIds.forEach(id => document.getElementById(id).textContent = 'Out of Range');
     kinIds.forEach(id => document.getElementById(id).textContent = 'Out of Range');
   }
 }
 
 // ── Charts ────────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('celsius').value = ((70 - 32) * 5/9).toFixed(1);
-  egViscCalc();
+  document.getElementById('celsius').value = ((70 - 32) * 5 / 9).toFixed(1);
+  waterCalc();
 
   const customBg = {
     id: 'customCanvasBackgroundColor',
@@ -711,15 +791,17 @@ window.addEventListener('DOMContentLoaded', function () {
   }
 
   // ── Dynamic (Absolute) Viscosity Chart ──────────────────────────────────────
-  const dynDatasets = egKeys.map((key, i) => ({
-    label: egLabels[i],
-    data: viscByTempF(egViscData[key]),
-    fill: false, borderColor: egColors[i], tension: 0.1
-  }));
-
   const viscChart = new Chart(document.getElementById('myChart').getContext('2d'), {
     type: 'line',
-    data: { datasets: dynDatasets },
+    data: {
+      datasets: [{
+        label: 'Water',
+        data: dynByTempF(),
+        fill: false,
+        borderColor: 'rgb(68,119,170)',
+        tension: 0.1
+      }]
+    },
     options: {
       maintainAspectRatio: false, responsive: true,
       layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
@@ -730,14 +812,14 @@ window.addEventListener('DOMContentLoaded', function () {
           enabled: true, mode: 'nearest', intersect: false, axis: 'x',
           callbacks: {
             title: items => items[0].parsed.x.toFixed(0) + ' °F',
-            label: item  => item.dataset.label + ': ' + item.parsed.y.toFixed(3) + ' mPa·s'
+            label: item  => 'Water: ' + item.parsed.y.toFixed(4) + ' mPa·s (cP)'
           }
         }
       },
       interaction: { mode: 'nearest', axis: 'x' },
       elements: { point: { radius: 0 } },
       scales: {
-        x: { type: 'linear', min: -40, max: 220,
+        x: { type: 'linear', min: 32, max: 675,
              ticks: { maxRotation: 0, font: { size: 16 } },
              title: { display: true, text: 'Temperature (°F)', font: { size: 20 } } },
         y: { type: 'logarithmic',
@@ -756,15 +838,17 @@ window.addEventListener('DOMContentLoaded', function () {
   });
 
   // ── Kinematic Viscosity Chart ─────────────────────────────────────────────
-  const kinDatasets = egKeys.map((key, i) => ({
-    label: egLabels[i],
-    data: kinByTempF(key),
-    fill: false, borderColor: egColors[i], tension: 0.1
-  }));
-
   const kinChart = new Chart(document.getElementById('kinChart').getContext('2d'), {
     type: 'line',
-    data: { datasets: kinDatasets },
+    data: {
+      datasets: [{
+        label: 'Water',
+        data: kinByTempF(),
+        fill: false,
+        borderColor: 'rgb(68,119,170)',
+        tension: 0.1
+      }]
+    },
     options: {
       maintainAspectRatio: false, responsive: true,
       layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
@@ -775,14 +859,14 @@ window.addEventListener('DOMContentLoaded', function () {
           enabled: true, mode: 'nearest', intersect: false, axis: 'x',
           callbacks: {
             title: items => items[0].parsed.x.toFixed(0) + ' °F',
-            label: item  => item.dataset.label + ': ' + item.parsed.y.toFixed(4) + ' cSt'
+            label: item  => 'Water: ' + item.parsed.y.toFixed(4) + ' cSt'
           }
         }
       },
       interaction: { mode: 'nearest', axis: 'x' },
       elements: { point: { radius: 0 } },
       scales: {
-        x: { type: 'linear', min: -40, max: 220,
+        x: { type: 'linear', min: 32, max: 675,
              ticks: { maxRotation: 0, font: { size: 16 } },
              title: { display: true, text: 'Temperature (°F)', font: { size: 20 } } },
         y: { type: 'logarithmic',
