@@ -89,7 +89,18 @@
     /* Hide spinner arrows on all read-only output fields */
     .prop-row input[type="number"][readonly]::-webkit-inner-spin-button,
     .prop-row input[type="number"][readonly]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
-    .prop-row input[type="number"][readonly]{-moz-appearance:textfield}
+      /* Target modern browsers (Chrome, Safari, Edge, and standard Firefox) */
+      .prop-row input[type="number"][readonly] {
+          appearance: textfield;
+          -moz-appearance: textfield; /* Keeps older Firefox versions happy */
+      }
+
+      /* Target Chrome, Safari, and Edge inner/outer spin buttons specifically */
+      .prop-row input[type="number"][readonly]::-webkit-outer-spin-button,
+      .prop-row input[type="number"][readonly]::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+      }
     .prop-row-unit{font-size:11px;color:#666;text-align:left;padding:1px 0 1px 2px;white-space:nowrap;min-width:0;overflow:hidden}
     .prop-output{display:inline-flex;align-items:center;justify-content:center;height:20px;min-width:90px;font-size:12px;padding:0 4px;border-radius:4px;border:1.5px solid #434343;background:#f5f5f5;white-space:nowrap;color:#444}
     .lt{width:100%;border-collapse:collapse;font-size:11.5px;min-width:560px}
@@ -101,6 +112,14 @@
     .lt-wrap{overflow-x:auto;max-height:600px;overflow-y:auto}
     .report-row{margin:0 0.5rem 0.5rem;display:flex;gap:8px;flex-wrap:wrap}
     .report-row .grp{flex:1 1 240px;margin:0}
+    /* ── Off-screen print-graph section ──────────────────────────────────── */
+    /* Fixed position keeps it out of page flow and scroll, but gives it real  */
+    /* pixel dimensions so Chart.js always renders properly to all 3 canvases. */
+    #thermoGraphsPrint{position:fixed;left:-9999px;top:0;width:750px;pointer-events:none;z-index:-1;background:#fff;}
+    .pg-item{margin-bottom:0;}
+    .pg-label{display:none;}  /* label shown only in print */
+    .pg-canvas-wrap{position:relative;height:260px;width:100%;}
+    /* ── ────────────────────────────────────────────────────────────────── */
     .calc-lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
     .calc-lightbox-overlay.active{display:flex}
     .calc-lightbox-img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:6px;box-shadow:0 8px 32px rgba(0,0,0,.6)}
@@ -897,6 +916,20 @@
                   </div>
 
                 </div><!-- /flex row -->
+
+              <!-- INCOMP duplicate warning — shown by setFluid() when a fluid
+                   exists under both a full HEOS equation of state AND an
+                   incompressible (INCOMP::) polynomial model. -->
+              <div id="calcIncompWarn"
+                   style="display:none;margin-top:6px;
+                          background:#fff8e6;border:1.5px solid #cc7700;
+                          border-radius:7px;padding:7px 11px;
+                          font-size:12px;color:#5a3a00;
+                          font-family:'Roboto',Arial,sans-serif;line-height:1.6;">
+                <strong>&#x26A0; Incompressible model selected:</strong>
+                <span id="calcIncompWarnMsg"></span>
+              </div>
+
               </div><!-- /.grp quick fluids -->
 
               <!-- ── GROUP: UNIT SYSTEM ───────────────────────────────── -->
@@ -1106,7 +1139,7 @@
               </div><!-- /.grp unit system -->
 
               <!-- ── GROUP: LOOKUP MODE ───────────────────────────────── -->
-              <div class="grp" id="thermoLookupModeGrp">
+              <!-- <div class="grp" id="thermoLookupModeGrp">
                 <div class="grp-title">Lookup Mode</div>
                 <div class="itype-grid" style="grid-template-columns:repeat(4,minmax(0,1fr));">
                   <label class="it sel">
@@ -1126,7 +1159,7 @@
                     Saturation Curve
                   </label>
                 </div>
-              </div><!-- /.grp lookup mode -->
+              </div> -->
 
               <!-- ── GROUP: INPUTS ────────────────────────────────────── -->
               <div class="grp">
@@ -1309,6 +1342,7 @@
                   <div style="display:flex;gap:5px;flex-wrap:wrap;">
                     <button class="tbtn accent" onclick="thermoGenerateReport()" aria-label="Generate thermodynamic property report as PDF"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="10" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 5h6M5 8h6M5 11h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg> Report</button>
                     <button class="tbtn accent" onclick="thermoGenerateReportWithTables()" aria-label="Generate thermodynamic property report with data tables as PDF"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="10" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 5h6M5 8h6M5 11h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg> Report With Tables</button>
+                    <button class="tbtn accent" onclick="thermoGenerateReportWithGraphs()" aria-label="Generate thermodynamic property report with graphs as PDF"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="10" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M5 5h6M5 8h6M5 11h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg> Report With Graphs</button>
                     <button class="tbtn accent" onclick="thermoExportCSV()" aria-label="Export thermodynamic properties as CSV spreadsheet"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Export CSV</button>
                   </div>
                 </div>
@@ -1360,6 +1394,33 @@
                   </div>
                 </div>
               </div><!-- /.graph-banner graphs -->
+
+              <!-- ── PRINT-ONLY: all three graphs always rendered ─────────
+                   These canvases live off-screen (position:fixed;left:-9999px)
+                   with a real pixel width so Chart.js always renders to them.
+                   In print-with-graphs mode the CSS swaps: tab banner hides,
+                   this section becomes position:static and fills the page.
+                   ─────────────────────────────────────────────────────── -->
+              <div id="thermoGraphsPrint" aria-hidden="true">
+                <div class="pg-item">
+                  <div class="pg-label">Property vs Temperature</div>
+                  <div class="pg-canvas-wrap">
+                    <canvas id="chartPropVsT_p"></canvas>
+                  </div>
+                </div>
+                <div class="pg-item">
+                  <div class="pg-label">Property vs Pressure</div>
+                  <div class="pg-canvas-wrap">
+                    <canvas id="chartPropVsP_p"></canvas>
+                  </div>
+                </div>
+                <div class="pg-item">
+                  <div class="pg-label">Phase Diagram &amp; Saturation Curve</div>
+                  <div class="pg-canvas-wrap">
+                    <canvas id="chartPhaseDiagram_p"></canvas>
+                  </div>
+                </div>
+              </div><!-- /#thermoGraphsPrint -->
 
               <!-- ── TABLES (3 tabs) ───────────────────────────────────── -->
               <div class="graph-banner" role="region" aria-label="Property tables">
@@ -2399,6 +2460,15 @@
     allTablePanels.forEach(function(p) { if (p.dataset._printHidden === '1') p.classList.remove('visible'); delete p.dataset._printHidden; });
   }
 
+  function thermoGenerateReportWithGraphs() {
+    /* The print canvases (#thermoGraphsPrint) are always rendered off-screen
+       with real pixel dimensions — no DOM juggling needed.
+       CSS swap: [aria-label="Property graphs"] hides, #thermoGraphsPrint shows. */
+    document.body.classList.add('print-report', 'print-with-graphs');
+    window.print();
+    document.body.classList.remove('print-report', 'print-with-graphs');
+  }
+
   function thermoExportCSV() {
     /* Read a field value (input or span) */
     function r(id) {
@@ -2473,6 +2543,18 @@
     a.click();
   }
 
+  /* ── INCOMP ↔ HEOS duplicate map ─────────────────────────────── */
+  // Fluids that exist under both a full CoolProp equation of state (HEOS) and
+  // an incompressible polynomial model (INCOMP::).  When a user picks an INCOMP
+  // variant the warning banner fires and offers a one-click switch to HEOS.
+  var _INCOMP_HEOS_PAIRS = {
+    'INCOMP::Air'     : { heos: 'Air',      label: 'Air'           },
+    'INCOMP::Water'   : { heos: 'Water',    label: 'Water / Steam' },
+    'INCOMP::Acetone' : { heos: 'Acetone',  label: 'Acetone'       },
+    'INCOMP::Ethanol' : { heos: 'Ethanol',  label: 'Ethanol'       },
+    'INCOMP::Hexane'  : { heos: 'n-Hexane', label: 'n-Hexane'      }
+  };
+
   /* ── Quick fluid button / dropdown helper ────────────────────── */
   function setFluid(fluidName) {
     var sel  = document.getElementById('calcFluidSelect');
@@ -2505,6 +2587,27 @@
         .then(function() { return ThermoCalc.getSaturationCurve(fluidName); })
         .catch(function(err) { console.warn('[setFluid] prefetch failed:', err); });
       ThermoCalc.triggerAutoCalc();
+    }
+
+    // ── INCOMP duplicate warning ─────────────────────────────────────
+    var warnBanner = document.getElementById('calcIncompWarn');
+    var warnMsg    = document.getElementById('calcIncompWarnMsg');
+    if (warnBanner && warnMsg) {
+      var pair = _INCOMP_HEOS_PAIRS[fluidName];
+      if (pair) {
+        warnMsg.innerHTML =
+          ' Density does not vary with pressure, c<sub>v</sub> is unavailable, '
+          + 'and saturation / phase data is absent. '
+          + 'For most engineering purposes use the full equation-of-state version instead: '
+          + '<a href="javascript:void(0)" '
+          +    'onclick="setFluid(\'' + pair.heos + '\')" '
+          +    'style="color:#5a3a00;font-weight:700;text-decoration:underline;">'
+          + 'Switch to ' + pair.label + ' (HEOS) →</a>';
+        warnBanner.style.display = 'block';
+      } else {
+        warnBanner.style.display = 'none';
+        warnMsg.innerHTML = '';
+      }
     }
   }
 
