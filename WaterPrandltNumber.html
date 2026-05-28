@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- META DATA FOR -->
-    <title>KasperCalc: Water Viscosity</title>
+    <title>KasperCalc: Water Prandtl Number</title>
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, bckasper3, Water Viscosity, Water Dynamic Viscosity, Water Kinematic Viscosity, Water Absolute Viscosity, Water Viscosity Calculator" />
-    <meta name="description" content="Calculate and reference the dynamic (absolute) and kinematic viscosity of water at temperatures from 32 to 675°F." />
+    <meta name="keywords" content="KasperCalc, bckasper3, Water Prandtl Number, Figures and tables with Prandtl Number, Liquid Water Prandlt Number, Gaseous Water Prandlt Number" />
+    <meta name="description" content="Calculate and reference the Prandtl Number of water for liquid and gaseous states from 32 to 1000°F." />
 
     <!-- DEFERRED JAVASCRIPT -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -251,21 +251,21 @@
         <div class="col-lg-12 col-12">
           <div class="banner section-title-wrap">
             <div class="h1 section-title bannertext">
-              Water Dynamic and Kinematic Viscosity
+              Water Prandtl Number
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <h1 class="visually-hidden">Water Dynamic (Absolute) and Kinematic Viscosity Calculator</h1>
+    <h1 class="visually-hidden">Water Prandtl Number Liquid and Gaseous States</h1>
 
     <!-- DYNAMIC VISCOSITY CHART -->
     <section>
       <div class="csscontainer">
         <div class="col-lg-12 col-12">
           <div class="section-title-wrap">
-            <div class="h1 section-title">Water Dynamic (Absolute) Viscosity Chart</div>
+            <div class="h1 section-title">Water Prandtl Number Chart</div>
           </div>
           <div class="canvasdiv">
             <button id="toggleTooltipButton">Hide Tooltips</button>
@@ -286,34 +286,6 @@
         </div>
       </div>
     </section>
-
-    <!-- KINEMATIC VISCOSITY CHART -->
-    <section>
-      <div class="csscontainer">
-        <div class="col-lg-12 col-12">
-          <div class="section-title-wrap">
-            <div class="h1 section-title">Water Kinematic Viscosity Chart</div>
-          </div>
-          <div class="canvasdiv">
-            <button id="toggleTooltipButtonKin">Hide Tooltips</button>
-            <a style="font-size: medium; text-decoration: none;" href="img/WaterKinematicViscosity(DegreesF).png" download="WaterKinematicViscosity(DegreesF).png">
-              <button>Download Chart</button>
-            </a>
-            <a style="font-size: medium; text-decoration: none;" href="img/WaterKinematicViscosity(DegreesF).png" target="_blank">
-              <button>Open In New Tab</button>
-            </a>
-            <div class="canvascontainer">
-              <canvas id="kinChart" aria-label="Water Kinematic Viscosity vs Temperature °F" width="400" height="600" role="img" class="chartcanvas">
-                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
-              </canvas>
-            </div>
-          </div>
-          <p class="text-center">Kinematic viscosity in cSt converted from tabulated ft²/s values. Y-axis is logarithmic.</p>
-        </div>
-      </div>
-    </section>
-
-
 
     <!-- CALCULATOR -->
     <section>
@@ -447,122 +419,12 @@
       </div>
     </section>
 
-    <!-- DYNAMIC VS KINEMATIC EXPLANATION -->
-    <section>
-      <div class="csscontainer">
-        <div class="mx-md-5 mx-3 section-content-wrap">
-          <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
-            <div class="custom-heading">Dynamic (Absolute) vs. Kinematic Viscosity</div>
-
-            <div style="text-align:left" class="mt-3">
-              <div class="custom-subheading">Dynamic (Absolute) Viscosity — μ</div>
-              <p class="mt-2">
-                Dynamic viscosity (also called absolute viscosity or static viscosity) measures a fluid's resistance
-                to shear — the internal force per unit area required to make one layer of fluid slide past another.
-                It is independent of density. The SI unit is the pascal-second (Pa·s); the common engineering unit
-                is the millipascal-second (mPa·s), numerically equal to centipoise (cP).
-              </p>
-              <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
-                τ = μ × (du / dy)
-              </p>
-              <p class="mt-1">
-                where τ is shear stress [Pa] and du/dy is the velocity gradient [s⁻¹].
-              </p>
-            </div>
-
-            <div style="text-align:left" class="mt-4">
-              <div class="custom-subheading">Kinematic Viscosity — ν</div>
-              <p class="mt-2">
-                Kinematic viscosity is the ratio of dynamic viscosity to fluid density. It describes how easily
-                a fluid flows under the influence of gravity or pressure, without needing to separately account for
-                the applied force. The SI unit is m²/s; the common unit is mm²/s, numerically equal to centistokes (cSt).
-              </p>
-              <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
-                ν = μ / ρ
-              </p>
-            </div>
-
-            <div style="text-align:left" class="mt-4">
-              <div class="custom-subheading">Relationship and Unit Conversion</div>
-              <p class="mt-2">
-                Kinematic viscosity is derived from dynamic viscosity and density:
-              </p>
-              <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
-                ν [cSt] = μ [mPa·s] × 1000 / ρ [kg/m³]
-              </p>
-              <p class="mt-1">
-                Because water has a density very close to 1000 kg/m³ near room temperature, its kinematic viscosity
-                in cSt is numerically very close to its dynamic viscosity in cP. At elevated temperatures, water
-                density decreases, so kinematic viscosity diverges slightly above the cP value.
-              </p>
-            </div>
-
-            <div style="text-align:left" class="mt-4">
-              <div class="custom-subheading">When to Use Each</div>
-              <p class="mt-2">
-                Use <strong>dynamic (absolute) viscosity</strong> for: pump power calculations, pipe pressure drop
-                (Darcy–Weisbach), Reynolds number (Re = ρvD/μ), and any situation where force or stress is the
-                driving input.
-              </p>
-              <p class="mt-2">
-                Use <strong>kinematic viscosity</strong> for: gravity-driven flow, lubrication ratings, most
-                viscometer measurements, and flow calculations where density is already embedded in the formula
-                (e.g., Stokes' law, ASTM oil viscosity grades).
-              </p>
-              <p class="mt-3 text-start">
-                <span style="font-weight:var(--font-weight-normal)">Note:</span> "Absolute viscosity" and
-                "static viscosity" are synonyms for dynamic viscosity — they all refer to the same physical property.
-                "Static" distinguishes it from apparent viscosity measured at elevated shear rates in non-Newtonian fluids.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- UNIT CONVERSION REFERENCE -->
-    <section>
-      <div class="csscontainer">
-        <div class="mx-md-5 mx-3 section-content-wrap">
-          <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
-            <div class="custom-heading">Viscosity Unit Conversion Reference</div>
-
-            <div style="text-align:left" class="mt-3">
-              <div class="custom-subheading">Dynamic (Absolute) Viscosity</div>
-              <p class="mt-2">Units: centipoise (cP), poise (P), pascal-second (Pa·s), pound/(foot second) (lb/(ft·s)), pound/(foot hour) (lb/(ft·h))</p>
-              <ul class="mt-2" style="font-size: 0.95rem;">
-                <li>1 cP = 0.001 Pa·s = 0.01 P = 6.72197×10⁻⁴ lb/(ft·s) = 2.4191 lb/(ft·h)</li>
-                <li>1 lb/(ft·h) = 2.7778×10⁻⁴ lb/(ft·s) = 4.1338×10⁻⁴ Pa·s = 0.41338 cP</li>
-                <li>1 lb/(ft·s) = 3600 lb/(ft·h) = 1.48816 Pa·s = 1488.16 cP</li>
-                <li>1 Pa·s = 1 kg/(m·s) = 1 (N·s)/m² = 10 P = 1000 cP = 0.672197 lb/(ft·s) = 2419.08 lb/(ft·h)</li>
-                <li>1 P = 1 g/(cm·s) = 0.1 Pa·s = 100 cP = 0.067197 lb/(ft·s) = 241.909 lb/(ft·h)</li>
-                <li>1 Pa·s = 0.00014504 reyn; 1 reyn = 6894.76 Pa·s</li>
-              </ul>
-            </div>
-
-            <div style="text-align:left" class="mt-4">
-              <div class="custom-subheading">Kinematic Viscosity</div>
-              <p class="mt-2">Units: centistoke (cSt), stoke (St), ft²/s, ft²/h, in²/s, m²/s</p>
-              <ul class="mt-2" style="font-size: 0.95rem;">
-                <li>1 cSt = 1 mm²/s = 10⁻⁶ m²/s = 1.07639×10⁻⁵ ft²/s = 0.03875 ft²/h = 1.55×10⁻³ in²/s</li>
-                <li>1 St = 1 cm²/s = 100 cSt = 10⁻⁴ m²/s = 1.076×10⁻³ ft²/s = 3.875 ft²/h</li>
-                <li>1 ft²/s = 92903 cSt = 929.03 St = 0.09290 m²/s = 3600 ft²/h = 144 in²/s</li>
-                <li>1 ft²/h = 2.7778×10⁻⁴ ft²/s = 25.806 cSt = 0.25806 St</li>
-                <li>1 in²/s = 6.944×10⁻³ ft²/s = 645.16 cSt = 6.4516 St</li>
-                <li>1 m²/s = 10⁶ cSt = 10⁴ St = 10.764 ft²/s = 1550 in²/s</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- DATA TABLE -->
     <section>
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap">
           <div class="mx-auto d-inline-block mt-4" style="max-width:960px; width:100%;">
-            <div class="custom-heading">Water — Viscosity vs. Temperature (°F)</div>
+            <div class="custom-heading">Water Prandtl Number Table</div>
 
             <div class="table-responsive mt-3 mb-3">
               <table class="table table-striped table-bordered table-hover table-sm">

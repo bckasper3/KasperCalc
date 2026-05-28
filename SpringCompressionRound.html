@@ -22,7 +22,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
     <script defer src="js/springCharts.js"></script>
     <script defer type="text/javascript" src="js/SpringCompressionRound.js"></script>
-    <script defer src="js/printHelpers.js"></script>
+    <script defer src="js/compressionspringprinthelper.js"></script>
 
     <!-- CSS FILES -->
     <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> --> 
@@ -193,6 +193,13 @@
 .lightbox-close{position:fixed;top:16px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;z-index:100000}
 .lightbox-close:hover{background:rgba(255,255,255,.3)}
 .lightbox-caption{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.8);font-size:13px;font-family:Roboto,Arial,sans-serif;text-align:center;max-width:80vw;pointer-events:none}
+/* ── Off-screen print-graph section ──────────────────────────────────────── */
+/* Fixed position keeps it out of page flow; real pixel width lets Chart.js  */
+/* always render to all 6 shadow canvases regardless of which tab is active. */
+#springGraphsPrint{position:fixed;left:-9999px;top:0;width:750px;pointer-events:none;z-index:-1;background:#fff;}
+.spg-item{margin-bottom:0;}
+.spg-label{display:none;}
+.spg-canvas-wrap{position:relative;height:260px;width:100%;}
 </style>
 
 
@@ -1026,6 +1033,38 @@
         <canvas id="chartStressVsLoad" height="350" style="width:100%;height:350px;"></canvas>
       </div>
   </div>
+
+  <!-- ── PRINT-ONLY: all 6 charts always rendered ────────────────────────
+       Canvases live at position:fixed;left:-9999px so they always have real
+       pixel dimensions. rebuildChart() syncs each _p canvas automatically.
+       In print-with-graphs mode: tabbed banner hides, this section shows.
+       ─────────────────────────────────────────────────────────────────── -->
+  <div id="springGraphsPrint" aria-hidden="true">
+    <div class="spg-item">
+      <div class="spg-label">Load vs. Deflection</div>
+      <div class="spg-canvas-wrap"><canvas id="chartLoadVsDeflection_p"></canvas></div>
+    </div>
+    <div class="spg-item">
+      <div class="spg-label">Load vs. Length</div>
+      <div class="spg-canvas-wrap"><canvas id="chartLoadVsLength_p"></canvas></div>
+    </div>
+    <div class="spg-item">
+      <div class="spg-label">% MTS vs. Deflection</div>
+      <div class="spg-canvas-wrap"><canvas id="chartPctMTSvsDeflection_p"></canvas></div>
+    </div>
+    <div class="spg-item">
+      <div class="spg-label">Stress vs. Length</div>
+      <div class="spg-canvas-wrap"><canvas id="chartStressVsLength_p"></canvas></div>
+    </div>
+    <div class="spg-item">
+      <div class="spg-label">Fatigue Strength Diagram</div>
+      <div class="spg-canvas-wrap"><canvas id="chartFatigueStrength_p"></canvas></div>
+    </div>
+    <div class="spg-item">
+      <div class="spg-label">Stress vs. Load</div>
+      <div class="spg-canvas-wrap"><canvas id="chartStressVsLoad_p"></canvas></div>
+    </div>
+  </div><!-- /#springGraphsPrint -->
 
   <div class="bottom-bar d-block" role="contentinfo">
     <p style="font-size:12px;color:#555">For critical applications, please verify with hand calculations or other spring solvers. This is a free calculator and is not liable for any design errors or calculation mistakes. This calculator uses a fuzzy solver and may make mistakes.</p>
