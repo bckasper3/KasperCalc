@@ -1,14 +1,14 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- META DATA FOR -->
-    <title>KasperCalc: Water Prandtl Number</title>
+    <title>KasperCalc: Ice and Water — Melting Points at High Pressure</title>
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, bckasper3, Water Prandtl Number, Figures and tables with Prandtl Number, Liquid Water Prandlt Number, Gaseous Water Prandlt Number" />
-    <meta name="description" content="Calculate and reference the Prandtl Number of water for liquid and gaseous states from 32 to 1000°F." />
+    <meta name="keywords" content="KasperCalc, bckasper3, water melting point, ice melting point, melting point vs pressure, high pressure ice, ice water phase diagram, freezing point depression, bara, psia" />
+    <meta name="description" content="Calculate and reference the melting point of ice to water at pressures ranging from 0 to 2000 bara (0 to 29000 psia). Temperature given as °C, °F, K and °R." />
 
     <!-- DEFERRED JAVASCRIPT -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -144,7 +144,6 @@
                   <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
                   <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
                   <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
-                  <a class="dropdown-item" href="WaterLiquidGasEquilibrium.html">Liquid Gas Equilibrium</a>
                   <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
                   <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
                   <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thremal Diffusivity</a>
@@ -251,38 +250,64 @@
         <div class="col-lg-12 col-12">
           <div class="banner section-title-wrap">
             <div class="h1 section-title bannertext">
-              Water Prandtl Number
+              Ice and Water &mdash; Melting Points at High Pressure
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <h1 class="visually-hidden">Water Prandtl Number Liquid and Gaseous States</h1>
+    <h1 class="visually-hidden">Ice and Water Melting Points at High Pressure</h1>
 
-    <!-- DYNAMIC VISCOSITY CHART -->
+    <!-- CHART 1: CELSIUS -->
     <section>
       <div class="csscontainer">
         <div class="col-lg-12 col-12">
           <div class="section-title-wrap">
-            <div class="h1 section-title">Water Prandtl Number Chart</div>
+            <div class="h1 section-title">Ice Melting Point vs. Pressure Chart (°C)</div>
           </div>
           <div class="canvasdiv">
-            <button id="toggleTooltipButton">Hide Tooltips</button>
-            <a style="font-size: medium; text-decoration: none;" href="img/WaterDynamicViscosity(DegreesF).png" download="WaterDynamicViscosity(DegreesF).png">
+            <button id="toggleTooltipC">Hide Tooltips</button>
+            <a style="font-size: medium; text-decoration: none;" href="img/water_MP_P_C.png" download="water_MP_P_C.png">
               <button>Download Chart</button>
             </a>
-            <a style="font-size: medium; text-decoration: none;" href="img/WaterDynamicViscosity(DegreesF).png" target="_blank">
+            <a style="font-size: medium; text-decoration: none;" href="img/water_MP_P_C.png" target="_blank">
               <button>Open In New Tab</button>
             </a>
             <div class="canvascontainer">
               <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-              <canvas id="myChart" aria-label="Water Dynamic (Absolute) Viscosity vs Temperature °F" width="400" height="600" role="img" class="chartcanvas">
+              <canvas id="mpChartC" aria-label="Ice Melting Point vs Pressure in Celsius" width="400" height="600" role="img" class="chartcanvas">
                 <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
               </canvas>
             </div>
           </div>
-          <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/water-dynamic-kinematic-viscosity-d_596.html" target="_blank">Engineering Toolbox — Water Viscosity</a>. Y-axis is logarithmic.</p>
+          <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/water-melting-temperature-point-pressure-d_2005.html" target="_blank">Engineering Toolbox &mdash; Ice Melting Points at High Pressure</a>. X-axis is logarithmic.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHART 2: FAHRENHEIT -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Ice Melting Point vs. Pressure Chart (°F)</div>
+          </div>
+          <div class="canvasdiv">
+            <button id="toggleTooltipF">Hide Tooltips</button>
+            <a style="font-size: medium; text-decoration: none;" href="img/water_MP_P_F.png" download="water_MP_P_F.png">
+              <button>Download Chart</button>
+            </a>
+            <a style="font-size: medium; text-decoration: none;" href="img/water_MP_P_F.png" target="_blank">
+              <button>Open In New Tab</button>
+            </a>
+            <div class="canvascontainer">
+              <canvas id="mpChartF" aria-label="Ice Melting Point vs Pressure in Fahrenheit" width="400" height="600" role="img" class="chartcanvas">
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+              </canvas>
+            </div>
+          </div>
+          <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/water-melting-temperature-point-pressure-d_2005.html" target="_blank">Engineering Toolbox &mdash; Ice Melting Points at High Pressure</a>. X-axis is logarithmic.</p>
         </div>
       </div>
     </section>
@@ -292,128 +317,113 @@
       <div class="csscontainer">
         <div class="col-lg-12 col-12 px-3">
           <div class="wrapper" style="max-width:33rem;">
-            <div class="header text-center">Water Viscosity Calculator</div>
+            <div class="header text-center">Ice Melting Point Calculator</div>
 
             <div class="group">
               <div class="outputrow">
-                <span class="label">Degrees (°F):</span>
+                <span class="label">Pressure:</span>
                 <span class="output inputbox">
-                  <input class="calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" value="70" aria-label="Input box for degrees Fahrenheit" />
+                  <input class="calcinput" type="number" id="mpPress" oninput="mpCalc()" value="1.01325" aria-label="Input pressure value" />
                 </span>
               </div>
               <div class="outputrow">
-                <span class="label">Degrees (°C):</span>
-                <span class="output inputbox">
-                  <input class="calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" aria-label="Input for degrees Celsius" />
+                <span class="label">Unit:</span>
+                <span class="output">
+                  <select id="mpUnit" onchange="mpCalc()" class="calcinput" aria-label="Select pressure unit">
+                    <option value="bara">bara</option>
+                    <option value="psia">psia</option>
+                    <option value="mmhg">mm Hg</option>
+                    <option value="inhg">in Hg</option>
+                  </select>
                 </span>
               </div>
             </div>
 
             <div class="group">
               <div class="outputrow">
-                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Dynamic (Absolute) Viscosity</span>
+                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Melting Point Temperature</span>
               </div>
               <div class="outputrow">
-                <span class="label">mPa·s (= cP):</span>
-                <span class="output" id="result_visc1">&nbsp;</span>
+                <span class="label">°C:</span>
+                <span class="output" id="mp_c">&nbsp;</span>
               </div>
               <div class="outputrow">
-                <span class="label">Centipoise (cP):</span>
-                <span class="output" id="result_visc2">&nbsp;</span>
+                <span class="label">°F:</span>
+                <span class="output" id="mp_f">&nbsp;</span>
               </div>
               <div class="outputrow">
-                <span class="label">Poise (g/(cm·s)):</span>
-                <span class="output" id="result_visc3">&nbsp;</span>
+                <span class="label">K:</span>
+                <span class="output" id="mp_k">&nbsp;</span>
               </div>
               <div class="outputrow">
-                <span class="label">Pa·s (Poiseuille):</span>
-                <span class="output" id="result_visc4">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">lbm/(ft·s):</span>
-                <span class="output" id="result_visc5">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">kg/(m·h):</span>
-                <span class="output" id="result_visc6">&nbsp;</span>
-              </div>
-            </div>
-
-            <div class="group">
-              <div class="outputrow">
-                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Kinematic Viscosity</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">mm²/s (= cSt):</span>
-                <span class="output" id="result_kin1">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Centistokes (cSt):</span>
-                <span class="output" id="result_kin2">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Stokes (cm²/s):</span>
-                <span class="output" id="result_kin3">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">m²/s:</span>
-                <span class="output" id="result_kin4">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">in²/s:</span>
-                <span class="output" id="result_kin5">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">ft²/s:</span>
-                <span class="output" id="result_kin6">&nbsp;</span>
+                <span class="label">°R:</span>
+                <span class="output" id="mp_r">&nbsp;</span>
               </div>
             </div>
 
           </div>
+          <p class="mt-2 small mx-auto px-3" style="max-width:33rem; text-align: center;">
+            Valid range: 0.006&ndash;2,000 bara &nbsp;|&nbsp; 0.089&ndash;29,008 psia &nbsp;|&nbsp; 4.6&ndash;1,500,123 mm Hg &nbsp;|&nbsp; 0.18&ndash;59,060 in Hg
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- VISCOSITY REFERENCE -->
+    <!-- EXPLANATION -->
     <section>
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap">
           <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
-            <div class="custom-heading">Dynamic (Absolute) Viscosity of Water</div>
+            <div class="custom-heading">Ice and Water &mdash; Melting Point vs. Pressure</div>
 
             <div style="text-align: left" class="mt-3">
-              <div class="custom-subheading">What Is Dynamic (Absolute) Viscosity?</div>
+              <div class="custom-subheading">What Is the Melting Point?</div>
               <p class="mt-2">
-                Dynamic (absolute) viscosity (<span style="font-weight:var(--font-weight-medium)">μ</span>) measures a fluid's resistance to shear flow.
-                It is measured in <span style="font-weight:var(--font-weight-medium)">mPa·s</span> (millipascal-seconds), equivalent to
-                <span style="font-weight:var(--font-weight-medium)">cP</span> (centipoise). Newton's law of viscosity is:
-              </p>
-              <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
-                τ = μ × (du / dy)
-              </p>
-              <p class="mt-1">
-                where <em>τ</em> is shear stress and <em>du/dy</em> is the velocity gradient perpendicular to flow.
+                The <span style="font-weight:var(--font-weight-medium)">melting point</span> is the temperature at which a solid transitions
+                to a liquid. For water, the melting point of ordinary ice (Ice I<sub>h</sub>) at standard atmospheric pressure
+                (1 atm = 1.01325 bara) is defined as <span style="font-weight:var(--font-weight-medium)">0&nbsp;°C (32&nbsp;°F)</span>.
+                The data on this page covers pressures from near the water triple point (0.00612 bara, 0.01&nbsp;°C) up to
+                2,000 bara (approximately 29,000 psia, &minus;20.8&nbsp;°C).
               </p>
             </div>
 
             <div style="text-align: left" class="mt-4">
-              <div class="custom-subheading">Why It Matters for Water Systems</div>
+              <div class="custom-subheading">Effect of Pressure on the Melting Point</div>
               <p class="mt-2">
-                Water viscosity decreases significantly with increasing temperature — by nearly a factor of 30 from
-                32°F to 675°F. This affects pressure drop, pump power requirements, and flow regime. The Reynolds number
-                determines whether flow is laminar or turbulent:
+                Water is one of the few substances where the solid phase is <em>less dense</em> than the liquid phase &mdash;
+                ice floats on water. As a consequence, increasing pressure <span style="font-weight:var(--font-weight-medium)">lowers</span>
+                the melting point, the opposite of most other materials. This behavior is governed by the
+                <span style="font-weight:var(--font-weight-medium)">Clausius&ndash;Clapeyron equation</span> for solid&ndash;liquid equilibrium:
               </p>
               <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
-                Re = ρ × v × D / μ
+                dT/dP = T&nbsp;&Delta;V / &Delta;H<sub>fus</sub>
               </p>
               <p class="mt-1">
-                At low temperatures, higher viscosity can push systems toward laminar flow (Re &lt; 2300) where heat
-                transfer efficiency drops sharply. At elevated temperatures and pressures (above 212°F), water remains
-                liquid only under pressure — the saturation pressure values in the data table reflect this condition.
+                For ice I<sub>h</sub>, the molar volume change &Delta;V is negative (ice is less dense than water at 0&nbsp;°C),
+                so dT/dP is negative &mdash; the melting temperature decreases as pressure increases. Near standard conditions,
+                the slope is approximately &minus;0.0075&nbsp;°C per atmosphere. By 2,000 bara the melting point has
+                dropped to about &minus;20.8&nbsp;°C (&minus;5.5&nbsp;°F).
               </p>
             </div>
 
-            <p class="mt-3 text-start"><span style="font-weight:var(--font-weight-normal)">Note:</span> Viscosity is highly temperature-dependent. Always check viscosity at the lowest expected operating temperature, not just at design conditions.</p>
+            <div style="text-align: left" class="mt-4">
+              <div class="custom-subheading">Engineering Significance</div>
+              <p class="mt-2">
+                The pressure dependence of the ice melting point is relevant in several engineering and scientific contexts.
+                Deep-ice drilling operations, glaciology models, and high-pressure food processing (high-pressure freezing)
+                all rely on the shift in melting point with pressure. In water pipeline systems, localized high-pressure zones
+                can theoretically suppress ice formation even at sub-zero temperatures. Ice skating also exploits this
+                phenomenon on a small scale, although the dominant mechanism there is frictional heating rather than
+                pressure melting.
+              </p>
+              <p class="mt-2">
+                Note that at pressures above approximately 2,100 bara (210 MPa), water transitions to different ice
+                polymorphs (Ice III, Ice V, Ice VI, and beyond), each exhibiting distinct melting behavior. The data
+                presented here applies only to ordinary Ice I<sub>h</sub>, which is the phase relevant to nearly all
+                engineering applications.
+              </p>
+            </div>
+
           </div>
         </div>
       </div>
@@ -423,65 +433,52 @@
     <section>
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap">
-          <div class="mx-auto d-inline-block mt-4" style="max-width:960px; width:100%;">
-            <div class="custom-heading">Water Prandtl Number Table</div>
+          <div class="mx-auto d-inline-block mt-4" style="max-width:1100px; width:100%;">
+            <div class="custom-heading">Ice Melting Points vs. Pressure Data Table</div>
 
             <div class="table-responsive mt-3 mb-3">
               <table class="table table-striped table-bordered table-hover table-sm">
                 <thead style="background-color: var(--section-title-color); color: #fff;">
                   <tr>
-                    <th rowspan="2" class="align-middle">Temp<br>(°F)</th>
-                    <th rowspan="2" class="align-middle">Pressure<br>(psia)</th>
-                    <th colspan="3" class="text-center">Dynamic Viscosity</th>
-                    <th colspan="1" class="text-center">Kinematic Viscosity</th>
+                    <th colspan="5" class="text-center">Pressure</th>
+                    <th colspan="2" class="text-center">Temperature</th>
                   </tr>
                   <tr>
-                    <th>lbf·s/ft²<br>(×10⁻⁵)</th>
-                    <th>lbm/(ft·h)</th>
-                    <th>cP (mPa·s)</th>
-                    <th>ft²/s<br>(×10⁻⁵)</th>
+                    <th>(MPa)</th>
+                    <th>(bara)</th>
+                    <th>(psia)</th>
+                    <th>(mm Hg)</th>
+                    <th>(in Hg)</th>
+                    <th>(°C)</th>
+                    <th>(°F)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td>32.02</td><td>0.9506</td><td>3.7414</td><td>4.3336</td><td>1.7914</td><td>1.9287</td></tr>
-                  <tr><td>34</td><td>0.0962</td><td>3.6047</td><td>4.1752</td><td>1.7259</td><td>1.8579</td></tr>
-                  <tr><td>39.2</td><td>0.1180</td><td>3.2801</td><td>3.7992</td><td>1.5705</td><td>1.6906</td></tr>
-                  <tr><td>40</td><td>0.1217</td><td>3.2340</td><td>3.7458</td><td>1.5484</td><td>1.6668</td></tr>
-                  <tr><td>50</td><td>0.1781</td><td>2.7276</td><td>3.1593</td><td>1.3060</td><td>1.4063</td></tr>
-                  <tr><td>60</td><td>0.2563</td><td>2.3405</td><td>2.7109</td><td>1.1206</td><td>1.2075</td></tr>
-                  <tr><td>70</td><td>0.3634</td><td>2.0337</td><td>2.3556</td><td>0.9737</td><td>1.0503</td></tr>
-                  <tr><td>80</td><td>0.5076</td><td>1.7888</td><td>2.0719</td><td>0.8565</td><td>0.9250</td></tr>
-                  <tr><td>90</td><td>0.6992</td><td>1.5896</td><td>1.8411</td><td>0.7611</td><td>0.8234</td></tr>
-                  <tr><td>100</td><td>0.9506</td><td>1.4243</td><td>1.6497</td><td>0.6820</td><td>0.7392</td></tr>
-                  <tr><td>110</td><td>1.277</td><td>1.2847</td><td>1.4880</td><td>0.6151</td><td>0.6682</td></tr>
-                  <tr><td>120</td><td>1.695</td><td>1.1652</td><td>1.3496</td><td>0.5579</td><td>0.6075</td></tr>
-                  <tr><td>130</td><td>2.226</td><td>1.0620</td><td>1.2300</td><td>0.5085</td><td>0.5551</td></tr>
-                  <tr><td>140</td><td>2.893</td><td>0.9733</td><td>1.1273</td><td>0.4660</td><td>0.5102</td></tr>
-                  <tr><td>150</td><td>3.723</td><td>0.8950</td><td>1.0366</td><td>0.4285</td><td>0.4706</td></tr>
-                  <tr><td>160</td><td>4.747</td><td>0.8279</td><td>0.9589</td><td>0.3964</td><td>0.4367</td></tr>
-                  <tr><td>170</td><td>6.000</td><td>0.7698</td><td>0.8916</td><td>0.3686</td><td>0.4074</td></tr>
-                  <tr><td>180</td><td>7.520</td><td>0.7192</td><td>0.8330</td><td>0.3444</td><td>0.3820</td></tr>
-                  <tr><td>190</td><td>9.349</td><td>0.6745</td><td>0.7813</td><td>0.3230</td><td>0.3596</td></tr>
-                  <tr><td>200</td><td>11.537</td><td>0.6300</td><td>0.7297</td><td>0.3016</td><td>0.3371</td></tr>
-                  <tr><td>212</td><td>14.710</td><td>0.5881</td><td>0.6812</td><td>0.2816</td><td>0.3163</td></tr>
-                  <tr><td>220</td><td>17.203</td><td>0.5619</td><td>0.6508</td><td>0.2690</td><td>0.3032</td></tr>
-                  <tr><td>240</td><td>25.001</td><td>0.5050</td><td>0.5850</td><td>0.2418</td><td>0.2750</td></tr>
-                  <tr><td>260</td><td>35.263</td><td>0.4575</td><td>0.5299</td><td>0.2191</td><td>0.2515</td></tr>
-                  <tr><td>280</td><td>49.286</td><td>0.4176</td><td>0.4837</td><td>0.2000</td><td>0.2320</td></tr>
-                  <tr><td>300</td><td>67.264</td><td>0.3840</td><td>0.4448</td><td>0.1839</td><td>0.2157</td></tr>
-                  <tr><td>350</td><td>134.73</td><td>0.3202</td><td>0.3708</td><td>0.1533</td><td>0.1853</td></tr>
-                  <tr><td>400</td><td>247.01</td><td>0.2750</td><td>0.3185</td><td>0.1317</td><td>0.1648</td></tr>
-                  <tr><td>450</td><td>422.32</td><td>0.2404</td><td>0.2785</td><td>0.1151</td><td>0.1504</td></tr>
-                  <tr><td>500</td><td>680.56</td><td>0.2126</td><td>0.2463</td><td>0.1018</td><td>0.1398</td></tr>
-                  <tr><td>550</td><td>1045.0</td><td>0.1888</td><td>0.2187</td><td>0.0904</td><td>0.1322</td></tr>
-                  <tr><td>600</td><td>1542.1</td><td>0.1673</td><td>0.1937</td><td>0.0801</td><td>0.1270</td></tr>
-                  <tr><td>625</td><td>1851.2</td><td>0.1562</td><td>0.1809</td><td>0.0748</td><td>0.1252</td></tr>
-                  <tr><td>650</td><td>2207.8</td><td>0.1438</td><td>0.1666</td><td>0.0689</td><td>0.1239</td></tr>
-                  <tr><td>675</td><td>2618.7</td><td>0.1292</td><td>0.1496</td><td>0.0619</td><td>0.1230</td></tr>
+                  <tr><td>0.000612</td><td>0.00612</td><td>0.089</td><td>4.59</td><td>0.18</td><td>0.01</td><td>32.02</td></tr>
+                  <tr><td>0.1</td><td>1.01325</td><td>14.7</td><td>750</td><td>29.5</td><td>0.0026</td><td>32.00</td></tr>
+                  <tr><td>1</td><td>10</td><td>145</td><td>7,501</td><td>295</td><td>&minus;0.064</td><td>31.88</td></tr>
+                  <tr><td>2</td><td>20</td><td>290</td><td>15,001</td><td>591</td><td>&minus;0.14</td><td>31.75</td></tr>
+                  <tr><td>5</td><td>50</td><td>725</td><td>37,503</td><td>1,476</td><td>&minus;0.37</td><td>31.33</td></tr>
+                  <tr><td>10</td><td>100</td><td>1,450</td><td>75,006</td><td>2,953</td><td>&minus;0.75</td><td>30.65</td></tr>
+                  <tr><td>15</td><td>150</td><td>2,176</td><td>112,509</td><td>4,429</td><td>&minus;1.14</td><td>29.95</td></tr>
+                  <tr><td>20</td><td>200</td><td>2,901</td><td>150,012</td><td>5,906</td><td>&minus;1.54</td><td>29.23</td></tr>
+                  <tr><td>30</td><td>300</td><td>4,351</td><td>225,019</td><td>8,859</td><td>&minus;2.36</td><td>27.75</td></tr>
+                  <tr><td>40</td><td>400</td><td>5,802</td><td>300,025</td><td>11,812</td><td>&minus;3.21</td><td>26.22</td></tr>
+                  <tr><td>50</td><td>500</td><td>7,252</td><td>375,031</td><td>14,765</td><td>&minus;4.09</td><td>24.64</td></tr>
+                  <tr><td>60</td><td>600</td><td>8,702</td><td>450,037</td><td>17,718</td><td>&minus;5.00</td><td>23.00</td></tr>
+                  <tr><td>70</td><td>700</td><td>10,153</td><td>525,043</td><td>20,671</td><td>&minus;5.94</td><td>21.31</td></tr>
+                  <tr><td>80</td><td>800</td><td>11,603</td><td>600,049</td><td>23,624</td><td>&minus;6.91</td><td>19.56</td></tr>
+                  <tr><td>90</td><td>900</td><td>13,053</td><td>675,056</td><td>26,577</td><td>&minus;7.91</td><td>17.76</td></tr>
+                  <tr><td>100</td><td>1,000</td><td>14,504</td><td>750,062</td><td>29,530</td><td>&minus;8.94</td><td>15.91</td></tr>
+                  <tr><td>120</td><td>1,200</td><td>17,405</td><td>900,074</td><td>35,436</td><td>&minus;11.09</td><td>12.04</td></tr>
+                  <tr><td>140</td><td>1,400</td><td>20,305</td><td>1,050,086</td><td>41,342</td><td>&minus;13.35</td><td>7.97</td></tr>
+                  <tr><td>160</td><td>1,600</td><td>23,206</td><td>1,200,099</td><td>47,248</td><td>&minus;15.73</td><td>3.69</td></tr>
+                  <tr><td>180</td><td>1,800</td><td>26,107</td><td>1,350,111</td><td>53,154</td><td>&minus;18.22</td><td>&minus;0.80</td></tr>
+                  <tr><td>200</td><td>2,000</td><td>29,008</td><td>1,500,123</td><td>59,060</td><td>&minus;20.83</td><td>&minus;5.49</td></tr>
                 </tbody>
               </table>
             </div>
-            <p class="text-start small">Data at saturation pressure. Below 212&nbsp;°F this is effectively atmospheric pressure.</p>
+            <p class="text-start small">Data for Ice I<sub>h</sub> (ordinary hexagonal ice) at the ice&ndash;water equilibrium boundary.</p>
           </div>
         </div>
       </div>
@@ -509,126 +506,116 @@
   <!-- END FOOTER -->
 
 <script>
-// ── Water Dynamic and Kinematic Viscosity Data ────────────────────────────────
-// Source: Engineering Toolbox — Water Viscosity
-// Format: [temp_F, dyn_lbf_s_ft2_e5, lbm_ft_h, cP_mPas, kin_ft2_s_e5]
-const waterViscFull = [
-  [32.02, 3.7414, 4.3336, 1.7914, 1.9287],
-  [34,    3.6047, 4.1752, 1.7259, 1.8579],
-  [39.2,  3.2801, 3.7992, 1.5705, 1.6906],
-  [40,    3.2340, 3.7458, 1.5484, 1.6668],
-  [50,    2.7276, 3.1593, 1.3060, 1.4063],
-  [60,    2.3405, 2.7109, 1.1206, 1.2075],
-  [70,    2.0337, 2.3556, 0.9737, 1.0503],
-  [80,    1.7888, 2.0719, 0.8565, 0.9250],
-  [90,    1.5896, 1.8411, 0.7611, 0.8234],
-  [100,   1.4243, 1.6497, 0.6820, 0.7392],
-  [110,   1.2847, 1.4880, 0.6151, 0.6682],
-  [120,   1.1652, 1.3496, 0.5579, 0.6075],
-  [130,   1.0620, 1.2300, 0.5085, 0.5551],
-  [140,   0.9733, 1.1273, 0.4660, 0.5102],
-  [150,   0.8950, 1.0366, 0.4285, 0.4706],
-  [160,   0.8279, 0.9589, 0.3964, 0.4367],
-  [170,   0.7698, 0.8916, 0.3686, 0.4074],
-  [180,   0.7192, 0.8330, 0.3444, 0.3820],
-  [190,   0.6745, 0.7813, 0.3230, 0.3596],
-  [200,   0.6300, 0.7297, 0.3016, 0.3371],
-  [212,   0.5881, 0.6812, 0.2816, 0.3163],
-  [220,   0.5619, 0.6508, 0.2690, 0.3032],
-  [240,   0.5050, 0.5850, 0.2418, 0.2750],
-  [260,   0.4575, 0.5299, 0.2191, 0.2515],
-  [280,   0.4176, 0.4837, 0.2000, 0.2320],
-  [300,   0.3840, 0.4448, 0.1839, 0.2157],
-  [350,   0.3202, 0.3708, 0.1533, 0.1853],
-  [400,   0.2750, 0.3185, 0.1317, 0.1648],
-  [450,   0.2404, 0.2785, 0.1151, 0.1504],
-  [500,   0.2126, 0.2463, 0.1018, 0.1398],
-  [550,   0.1888, 0.2187, 0.0904, 0.1322],
-  [600,   0.1673, 0.1937, 0.0801, 0.1270],
-  [625,   0.1562, 0.1809, 0.0748, 0.1252],
-  [650,   0.1438, 0.1666, 0.0689, 0.1239],
-  [675,   0.1292, 0.1496, 0.0619, 0.1230]
+// ── Ice Melting Point vs. Pressure Data ──────────────────────────────────────
+// Source: Engineering Toolbox — Ice and Water, Melting Points vs. Pressure
+// Format: [MPa, bara, psia, mm_Hg, in_Hg, temp_C, temp_F]
+const mpData = [
+  [0.000612, 0.00612,   0.089,      4.59,     0.18,   0.0100,  32.02],
+  [0.1,      1.01325,   14.7,       750,      29.5,   0.0026,  32.00],
+  [1,        10,        145,        7501,     295,   -0.064,   31.88],
+  [2,        20,        290,        15001,    591,   -0.14,    31.75],
+  [5,        50,        725,        37503,    1476,  -0.37,    31.33],
+  [10,       100,       1450,       75006,    2953,  -0.75,    30.65],
+  [15,       150,       2176,       112509,   4429,  -1.14,    29.95],
+  [20,       200,       2901,       150012,   5906,  -1.54,    29.23],
+  [30,       300,       4351,       225019,   8859,  -2.36,    27.75],
+  [40,       400,       5802,       300025,   11812, -3.21,    26.22],
+  [50,       500,       7252,       375031,   14765, -4.09,    24.64],
+  [60,       600,       8702,       450037,   17718, -5.00,    23.00],
+  [70,       700,       10153,      525043,   20671, -5.94,    21.31],
+  [80,       800,       11603,      600049,   23624, -6.91,    19.56],
+  [90,       900,       13053,      675056,   26577, -7.91,    17.76],
+  [100,      1000,      14504,      750062,   29530, -8.94,    15.91],
+  [120,      1200,      17405,      900074,   35436, -11.09,   12.04],
+  [140,      1400,      20305,      1050086,  41342, -13.35,    7.97],
+  [160,      1600,      23206,      1200099,  47248, -15.73,    3.69],
+  [180,      1800,      26107,      1350111,  53154, -18.22,   -0.80],
+  [200,      2000,      29008,      1500123,  59060, -20.83,   -5.49]
 ];
 
-// ── Log-linear interpolation ──────────────────────────────────────────────────
-function waterInterp(tF, colIdx) {
-  const arr = waterViscFull;
-  if (tF <= arr[0][0]) return arr[0][colIdx];
-  if (tF >= arr[arr.length - 1][0]) return arr[arr.length - 1][colIdx];
+// ── Interpolation: log-linear in pressure (bara), linear in temperature ───────
+function mpInterpC(bara) {
+  const arr = mpData;
+  if (bara <= arr[0][1]) return arr[0][5];
+  if (bara >= arr[arr.length - 1][1]) return arr[arr.length - 1][5];
   for (let i = 0; i < arr.length - 1; i++) {
-    if (tF >= arr[i][0] && tF <= arr[i + 1][0]) {
-      const t = (tF - arr[i][0]) / (arr[i + 1][0] - arr[i][0]);
-      return Math.exp(Math.log(arr[i][colIdx]) + t * (Math.log(arr[i + 1][colIdx]) - Math.log(arr[i][colIdx])));
+    if (bara >= arr[i][1] && bara <= arr[i + 1][1]) {
+      const t = (Math.log(bara) - Math.log(arr[i][1])) /
+                (Math.log(arr[i + 1][1]) - Math.log(arr[i][1]));
+      return arr[i][5] + t * (arr[i + 1][5] - arr[i][5]);
     }
   }
 }
 
-// ── Dense points for dynamic viscosity chart (col 3 = cP) ────────────────────
-function dynByTempF() {
+// ── Dense chart data: SI (bara vs °C) ────────────────────────────────────────
+function denseC() {
   const pts = [];
-  for (let t = 32; t <= 675; t += 2)
-    pts.push({ x: t, y: parseFloat(waterInterp(t, 3).toFixed(5)) });
+  const logMin = Math.log(mpData[0][1]);
+  const logMax = Math.log(mpData[mpData.length - 1][1]);
+  for (let i = 0; i <= 300; i++) {
+    const logP = logMin + i * (logMax - logMin) / 300;
+    const bara = Math.exp(logP);
+    pts.push({ x: parseFloat(bara.toFixed(6)), y: parseFloat(mpInterpC(bara).toFixed(4)) });
+  }
   return pts;
 }
 
-// ── Dense points for kinematic viscosity chart (col 4 = ft²/s ×10⁻⁵ → cSt) ──
-// 1 (ft²/s ×10⁻⁵) × 1e-5 ft²/s × 92903.04 cSt/(ft²/s) = value × 0.9290304 cSt
-function kinByTempF() {
-  const CONV = 0.9290304;
+// ── Dense chart data: Imperial (psia vs °F) ───────────────────────────────────
+function denseF() {
   const pts = [];
-  for (let t = 32; t <= 675; t += 2)
-    pts.push({ x: t, y: parseFloat((waterInterp(t, 4) * CONV).toFixed(5)) });
+  const logMin = Math.log(mpData[0][1]);
+  const logMax = Math.log(mpData[mpData.length - 1][1]);
+  for (let i = 0; i <= 300; i++) {
+    const logP = logMin + i * (logMax - logMin) / 300;
+    const bara = Math.exp(logP);
+    const psia = bara * 14.5038;
+    const tF   = mpInterpC(bara) * 9 / 5 + 32;
+    pts.push({ x: parseFloat(psia.toFixed(4)), y: parseFloat(tF.toFixed(4)) });
+  }
   return pts;
 }
 
-// ── Temperature converters ────────────────────────────────────────────────────
-function convertToFahrenheit() {
-  const c = parseFloat(document.getElementById('celsius').value);
-  if (!isNaN(c)) document.getElementById('fahrenheit').value = (c * 9 / 5 + 32).toFixed(1);
-  waterCalc();
-}
-function convertToCelsius() {
-  const f = parseFloat(document.getElementById('fahrenheit').value);
-  if (!isNaN(f)) document.getElementById('celsius').value = ((f - 32) * 5 / 9).toFixed(1);
-  waterCalc();
+// ── Pressure unit converter to bara ──────────────────────────────────────────
+function toBar(val, unit) {
+  switch (unit) {
+    case 'bara': return val;
+    case 'psia': return val / 14.5038;
+    case 'mmhg': return val * 0.00133322;
+    case 'inhg': return val * 0.033864;
+    default:     return val;
+  }
 }
 
 // ── Calculator ────────────────────────────────────────────────────────────────
-function waterCalc() {
-  const fahr  = parseFloat(document.getElementById('fahrenheit').value);
-  const minT  = waterViscFull[0][0];
-  const maxT  = waterViscFull[waterViscFull.length - 1][0];
-  const inRange = !isNaN(fahr) && fahr >= minT && fahr <= maxT;
-  const dynIds = ['result_visc1','result_visc2','result_visc3','result_visc4','result_visc5','result_visc6'];
-  const kinIds = ['result_kin1','result_kin2','result_kin3','result_kin4','result_kin5','result_kin6'];
+function mpCalc() {
+  const val    = parseFloat(document.getElementById('mpPress').value);
+  const unit   = document.getElementById('mpUnit').value;
+  const outIds = ['mp_c', 'mp_f', 'mp_k', 'mp_r'];
 
-  if (inRange) {
-    const mu = waterInterp(fahr, 3); // cP = mPa·s
-    document.getElementById('result_visc1').textContent = mu.toFixed(4);
-    document.getElementById('result_visc2').textContent = mu.toFixed(4);
-    document.getElementById('result_visc3').textContent = (mu / 100).toFixed(5);
-    document.getElementById('result_visc4').textContent = (mu / 1000).toFixed(6);
-    document.getElementById('result_visc5').textContent = (mu * 6.71969e-4).toFixed(6);
-    document.getElementById('result_visc6').textContent = (mu * 3.6).toFixed(4);
-
-    const kinRaw = waterInterp(fahr, 4); // ft²/s ×10⁻⁵
-    const nu = kinRaw * 0.9290304; // cSt = mm²/s
-    document.getElementById('result_kin1').textContent = nu.toFixed(4);
-    document.getElementById('result_kin2').textContent = nu.toFixed(4);
-    document.getElementById('result_kin3').textContent = (nu * 0.01).toFixed(6);
-    document.getElementById('result_kin4').textContent = (nu * 1e-6).toExponential(3);
-    document.getElementById('result_kin5').textContent = (nu * 0.0015500031).toFixed(6);
-    document.getElementById('result_kin6').textContent = (nu * 1.07639e-5).toExponential(4);
-  } else {
-    dynIds.forEach(id => document.getElementById(id).textContent = 'Out of Range');
-    kinIds.forEach(id => document.getElementById(id).textContent = 'Out of Range');
+  if (isNaN(val)) {
+    outIds.forEach(id => { document.getElementById(id).textContent = '—'; });
+    return;
   }
+
+  const bara = toBar(val, unit);
+  const minP = mpData[0][1];
+  const maxP = mpData[mpData.length - 1][1];
+
+  if (bara < minP || bara > maxP) {
+    outIds.forEach(id => { document.getElementById(id).textContent = 'Out of Range'; });
+    return;
+  }
+
+  const tC = mpInterpC(bara);
+  document.getElementById('mp_c').textContent = tC.toFixed(4);
+  document.getElementById('mp_f').textContent = (tC * 9 / 5 + 32).toFixed(4);
+  document.getElementById('mp_k').textContent = (tC + 273.15).toFixed(3);
+  document.getElementById('mp_r').textContent = ((tC + 273.15) * 9 / 5).toFixed(3);
 }
 
 // ── Charts ────────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('celsius').value = ((70 - 32) * 5 / 9).toFixed(1);
-  waterCalc();
+  mpCalc();
 
   const customBg = {
     id: 'customCanvasBackgroundColor',
@@ -647,7 +634,7 @@ window.addEventListener('DOMContentLoaded', function () {
       position: 'top',
       labels: { align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 } },
       onClick: function (e, legendItem, legend) {
-        const ci = legend.chart;
+        const ci   = legend.chart;
         const meta = ci.getDatasetMeta(legendItem.datasetIndex);
         meta.hidden = meta.hidden === null ? !ci.data.datasets[legendItem.datasetIndex].hidden : null;
         ci.update();
@@ -655,13 +642,22 @@ window.addEventListener('DOMContentLoaded', function () {
     };
   }
 
-  // ── Dynamic (Absolute) Viscosity Chart ──────────────────────────────────────
-  const viscChart = new Chart(document.getElementById('myChart').getContext('2d'), {
+  function addToggle(btnId, chart) {
+    document.getElementById(btnId).addEventListener('click', function () {
+      const cur = chart.options.plugins.tooltip.enabled;
+      chart.options.plugins.tooltip.enabled = !cur;
+      chart.update();
+      this.textContent = cur ? 'Show Tooltips' : 'Hide Tooltips';
+    });
+  }
+
+  // ── SI Chart: bara (log x) vs °C (linear y) ───────────────────────────────
+  const cChart = new Chart(document.getElementById('mpChartC').getContext('2d'), {
     type: 'line',
     data: {
       datasets: [{
-        label: 'Water',
-        data: dynByTempF(),
+        label: 'Ice (H₂O)',
+        data: denseC(),
         fill: false,
         borderColor: 'rgb(68,119,170)',
         tension: 0.1
@@ -676,39 +672,47 @@ window.addEventListener('DOMContentLoaded', function () {
         tooltip: {
           enabled: true, mode: 'nearest', intersect: false, axis: 'x',
           callbacks: {
-            title: items => items[0].parsed.x.toFixed(0) + ' °F',
-            label: item  => 'Water: ' + item.parsed.y.toFixed(4) + ' mPa·s (cP)'
+            title: function (items) {
+              const v = items[0].parsed.x;
+              if (v < 0.01)  return v.toFixed(5) + ' bara';
+              if (v < 0.1)   return v.toFixed(4) + ' bara';
+              if (v < 1)     return v.toFixed(3) + ' bara';
+              if (v < 10)    return v.toFixed(2) + ' bara';
+              if (v < 100)   return v.toFixed(1) + ' bara';
+              return v.toFixed(0) + ' bara';
+            },
+            label: item => 'Melting Point: ' + item.parsed.y.toFixed(4) + ' °C'
           }
         }
       },
       interaction: { mode: 'nearest', axis: 'x' },
       elements: { point: { radius: 0 } },
       scales: {
-        x: { type: 'linear', min: 32, max: 675,
-             ticks: { maxRotation: 0, font: { size: 16 } },
-             title: { display: true, text: 'Temperature (°F)', font: { size: 20 } } },
-        y: { type: 'logarithmic',
-             ticks: { font: { size: 16 } },
-             title: { display: true, text: 'Dynamic (Absolute) Viscosity (mPa·s)', padding: 10, font: { size: 20 } } }
+        x: {
+          type: 'logarithmic',
+          min: 0.005,
+          max: 2500,
+          ticks: { maxRotation: 0, font: { size: 16 } },
+          title: { display: true, text: 'Pressure (bara)', font: { size: 20 } }
+        },
+        y: {
+          type: 'linear',
+          ticks: { font: { size: 16 } },
+          title: { display: true, text: 'Melting Point (°C)', padding: 10, font: { size: 20 } }
+        }
       }
     },
     plugins: [customBg]
   });
+  addToggle('toggleTooltipC', cChart);
 
-  document.getElementById('toggleTooltipButton').addEventListener('click', function () {
-    const cur = viscChart.options.plugins.tooltip.enabled;
-    viscChart.options.plugins.tooltip.enabled = !cur;
-    viscChart.update();
-    this.textContent = cur ? 'Show Tooltips' : 'Hide Tooltips';
-  });
-
-  // ── Kinematic Viscosity Chart ─────────────────────────────────────────────
-  const kinChart = new Chart(document.getElementById('kinChart').getContext('2d'), {
+  // ── Imperial Chart: psia (log x) vs °F (linear y) ─────────────────────────
+  const fChart = new Chart(document.getElementById('mpChartF').getContext('2d'), {
     type: 'line',
     data: {
       datasets: [{
-        label: 'Water',
-        data: kinByTempF(),
+        label: 'Ice (H₂O)',
+        data: denseF(),
         fill: false,
         borderColor: 'rgb(68,119,170)',
         tension: 0.1
@@ -723,31 +727,38 @@ window.addEventListener('DOMContentLoaded', function () {
         tooltip: {
           enabled: true, mode: 'nearest', intersect: false, axis: 'x',
           callbacks: {
-            title: items => items[0].parsed.x.toFixed(0) + ' °F',
-            label: item  => 'Water: ' + item.parsed.y.toFixed(4) + ' cSt'
+            title: function (items) {
+              const v = items[0].parsed.x;
+              if (v < 0.1)  return v.toFixed(4) + ' psia';
+              if (v < 1)    return v.toFixed(3) + ' psia';
+              if (v < 10)   return v.toFixed(2) + ' psia';
+              if (v < 100)  return v.toFixed(1) + ' psia';
+              return v.toFixed(0) + ' psia';
+            },
+            label: item => 'Melting Point: ' + item.parsed.y.toFixed(4) + ' °F'
           }
         }
       },
       interaction: { mode: 'nearest', axis: 'x' },
       elements: { point: { radius: 0 } },
       scales: {
-        x: { type: 'linear', min: 32, max: 675,
-             ticks: { maxRotation: 0, font: { size: 16 } },
-             title: { display: true, text: 'Temperature (°F)', font: { size: 20 } } },
-        y: { type: 'logarithmic',
-             ticks: { font: { size: 16 } },
-             title: { display: true, text: 'Kinematic Viscosity (cSt = mm²/s)', padding: 10, font: { size: 20 } } }
+        x: {
+          type: 'logarithmic',
+          min: 0.07,
+          max: 35000,
+          ticks: { maxRotation: 0, font: { size: 16 } },
+          title: { display: true, text: 'Pressure (psia)', font: { size: 20 } }
+        },
+        y: {
+          type: 'linear',
+          ticks: { font: { size: 16 } },
+          title: { display: true, text: 'Melting Point (°F)', padding: 10, font: { size: 20 } }
+        }
       }
     },
     plugins: [customBg]
   });
-
-  document.getElementById('toggleTooltipButtonKin').addEventListener('click', function () {
-    const cur = kinChart.options.plugins.tooltip.enabled;
-    kinChart.options.plugins.tooltip.enabled = !cur;
-    kinChart.update();
-    this.textContent = cur ? 'Show Tooltips' : 'Hide Tooltips';
-  });
+  addToggle('toggleTooltipF', fChart);
 });
 </script>
 
