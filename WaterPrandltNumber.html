@@ -1,14 +1,13 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- META DATA FOR -->
     <title>KasperCalc: Water Prandtl Number</title>
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, bckasper3, Water Prandtl Number, Figures and tables with Prandtl Number, Liquid Water Prandlt Number, Gaseous Water Prandlt Number" />
-    <meta name="description" content="Calculate and reference the Prandtl Number of water for liquid and gaseous states from 32 to 1000°F." />
+    <meta name="keywords" content="KasperCalc, bckasper3, Water Prandtl Number, Prandtl Number Liquid Water, Prandtl Number Steam, Water Heat Transfer" />
+    <meta name="description" content="Prandtl number of water and steam at varying temperature and pressure (1, 10, 100 bara), SI and Imperial units." />
 
     <!-- DEFERRED JAVASCRIPT -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -16,7 +15,6 @@
     <script defer src="js/footer.js"></script>
     <script defer src="js/header-active-class.js"></script>
     <script defer src="js/navsearch.js"></script>
-    <!-- chart and calculator JS embedded below -->
 
     <!-- CSS FILES -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -24,15 +22,6 @@
     <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
     <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
-
-<!-- Google tag (gtag.js) -->
-<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-5XLCN0GJQ0');
-</script> -->
 
     <!-- FAVICON -->
     <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
@@ -43,7 +32,6 @@
     <link rel="manifest" href="/favicon/site.webmanifest" />
   </head>
 
-  <!-- BODY -->
   <body>
 
   <!-- NAVIGATION -->
@@ -144,7 +132,6 @@
                   <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
                   <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
                   <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
-                  <a class="dropdown-item" href="WaterLiquidGasEquilibrium.html">Liquid Gas Equilibrium</a>
                   <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
                   <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
                   <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thremal Diffusivity</a>
@@ -258,230 +245,330 @@
       </div>
     </section>
 
-    <h1 class="visually-hidden">Water Prandtl Number Liquid and Gaseous States</h1>
+    <h1 class="visually-hidden">Water and Steam Prandtl Number vs Temperature and Pressure</h1>
 
-    <!-- DYNAMIC VISCOSITY CHART -->
-    <section>
-      <div class="csscontainer">
-        <div class="col-lg-12 col-12">
-          <div class="section-title-wrap">
-            <div class="h1 section-title">Water Prandtl Number Chart</div>
-          </div>
-          <div class="canvasdiv">
-            <button id="toggleTooltipButton">Hide Tooltips</button>
-            <a style="font-size: medium; text-decoration: none;" href="img/WaterDynamicViscosity(DegreesF).png" download="WaterDynamicViscosity(DegreesF).png">
-              <button>Download Chart</button>
-            </a>
-            <a style="font-size: medium; text-decoration: none;" href="img/WaterDynamicViscosity(DegreesF).png" target="_blank">
-              <button>Open In New Tab</button>
-            </a>
-            <div class="canvascontainer">
-              <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-              <canvas id="myChart" aria-label="Water Dynamic (Absolute) Viscosity vs Temperature °F" width="400" height="600" role="img" class="chartcanvas">
-                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
-              </canvas>
-            </div>
-          </div>
-          <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/water-dynamic-kinematic-viscosity-d_596.html" target="_blank">Engineering Toolbox — Water Viscosity</a>. Y-axis is logarithmic.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- CALCULATOR -->
-    <section>
-      <div class="csscontainer">
-        <div class="col-lg-12 col-12 px-3">
-          <div class="wrapper" style="max-width:33rem;">
-            <div class="header text-center">Water Viscosity Calculator</div>
-
-            <div class="group">
-              <div class="outputrow">
-                <span class="label">Degrees (°F):</span>
-                <span class="output inputbox">
-                  <input class="calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" value="70" aria-label="Input box for degrees Fahrenheit" />
-                </span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Degrees (°C):</span>
-                <span class="output inputbox">
-                  <input class="calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" aria-label="Input for degrees Celsius" />
-                </span>
-              </div>
-            </div>
-
-            <div class="group">
-              <div class="outputrow">
-                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Dynamic (Absolute) Viscosity</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">mPa·s (= cP):</span>
-                <span class="output" id="result_visc1">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Centipoise (cP):</span>
-                <span class="output" id="result_visc2">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Poise (g/(cm·s)):</span>
-                <span class="output" id="result_visc3">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Pa·s (Poiseuille):</span>
-                <span class="output" id="result_visc4">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">lbm/(ft·s):</span>
-                <span class="output" id="result_visc5">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">kg/(m·h):</span>
-                <span class="output" id="result_visc6">&nbsp;</span>
-              </div>
-            </div>
-
-            <div class="group">
-              <div class="outputrow">
-                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Kinematic Viscosity</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">mm²/s (= cSt):</span>
-                <span class="output" id="result_kin1">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Centistokes (cSt):</span>
-                <span class="output" id="result_kin2">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Stokes (cm²/s):</span>
-                <span class="output" id="result_kin3">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">m²/s:</span>
-                <span class="output" id="result_kin4">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">in²/s:</span>
-                <span class="output" id="result_kin5">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">ft²/s:</span>
-                <span class="output" id="result_kin6">&nbsp;</span>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- VISCOSITY REFERENCE -->
+    <!-- INTRO -->
     <section>
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap">
           <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
-            <div class="custom-heading">Dynamic (Absolute) Viscosity of Water</div>
-
-            <div style="text-align: left" class="mt-3">
-              <div class="custom-subheading">What Is Dynamic (Absolute) Viscosity?</div>
-              <p class="mt-2">
-                Dynamic (absolute) viscosity (<span style="font-weight:var(--font-weight-medium)">μ</span>) measures a fluid's resistance to shear flow.
-                It is measured in <span style="font-weight:var(--font-weight-medium)">mPa·s</span> (millipascal-seconds), equivalent to
-                <span style="font-weight:var(--font-weight-medium)">cP</span> (centipoise). Newton's law of viscosity is:
-              </p>
-              <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
-                τ = μ × (du / dy)
-              </p>
-              <p class="mt-1">
-                where <em>τ</em> is shear stress and <em>du/dy</em> is the velocity gradient perpendicular to flow.
-              </p>
-            </div>
-
-            <div style="text-align: left" class="mt-4">
-              <div class="custom-subheading">Why It Matters for Water Systems</div>
-              <p class="mt-2">
-                Water viscosity decreases significantly with increasing temperature — by nearly a factor of 30 from
-                32°F to 675°F. This affects pressure drop, pump power requirements, and flow regime. The Reynolds number
-                determines whether flow is laminar or turbulent:
-              </p>
-              <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
-                Re = ρ × v × D / μ
-              </p>
-              <p class="mt-1">
-                At low temperatures, higher viscosity can push systems toward laminar flow (Re &lt; 2300) where heat
-                transfer efficiency drops sharply. At elevated temperatures and pressures (above 212°F), water remains
-                liquid only under pressure — the saturation pressure values in the data table reflect this condition.
-              </p>
-            </div>
-
-            <p class="mt-3 text-start"><span style="font-weight:var(--font-weight-normal)">Note:</span> Viscosity is highly temperature-dependent. Always check viscosity at the lowest expected operating temperature, not just at design conditions.</p>
+            <p style="text-align:start;">The <span style="font-weight:var(--font-weight-medium)">Prandtl Number</span> — Pr — is a dimensionless number approximating the ratio of momentum diffusivity (kinematic viscosity) to thermal diffusivity, and is often used in heat transfer and free and forced convection calculations.</p>
+            <p class="mt-2">The Prandtl number can be expressed as:</p>
+            <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">Pr = &mu; c<sub>p</sub> / k &nbsp;&nbsp;&nbsp;(1)</p>
+            <p class="mt-2">where:</p>
+            <ul class="mt-1 ms-5 small" style="line-height: 1.9; text-align:start;">
+              <li>&mu; = absolute or dynamic viscosity (kg/(m&middot;s)), (lb<sub>m</sub>/(ft&middot;h))</li>
+              <li>c<sub>p</sub> = specific heat (J/(kg&middot;K)), (Btu/lb<sub>m</sub>&middot;&deg;F)</li>
+              <li>k = thermal conductivity (W/(m&middot;K)), (Btu/(h&middot;ft&sup2;&middot;&deg;F/ft))</li>
+            </ul>
+            <p class="mt-3" style="text-align:start;">Below, Prandtl numbers of water at varying temperatures and 1, 10 and 100 bara (14.5, 145 and 1450 psia) are given in figures and tables.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- DATA TABLE -->
+    <!-- CHART 1: 1 bara, °C -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Prandtl Number at 1 bara — °C</div>
+          </div>
+          <div class="canvasdiv">
+            <button id="toggleTooltip1baraC">Hide Tooltips</button>
+            <a style="font-size: medium; text-decoration: none;" href="img/WaterPrandtl(1bara)(1C).png" download="WaterPrandtl(1bara)(1C).png">
+              <button>Download Chart</button>
+            </a>
+            <a style="font-size: medium; text-decoration: none;" href="img/WaterPrandtl(1bara)(1C).png" target="_blank">
+              <button>Open In New Tab</button>
+            </a>
+            <div class="canvascontainer">
+              <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+              <canvas id="chart1baraC" aria-label="Water Prandtl Number vs Temperature °C at 1 bara" width="400" height="600" role="img" class="chartcanvas">
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+              </canvas>
+            </div>
+          </div>
+          <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/water-steam-Prandtl-number-d_2059.html" target="_blank">Engineering Toolbox — Water Prandtl Number</a>. Liquid and gas phases at atmospheric pressure.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHART 2: 1 bara, °F -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Prandtl Number at 1 bara — °F</div>
+          </div>
+          <div class="canvasdiv">
+            <button id="toggleTooltip1baraF">Hide Tooltips</button>
+            <a style="font-size: medium; text-decoration: none;" href="img/WaterPrandtl(1bara)(1F).png" download="WaterPrandtl(1bara)(1F).png">
+              <button>Download Chart</button>
+            </a>
+            <a style="font-size: medium; text-decoration: none;" href="img/WaterPrandtl(1bara)(1F).png" target="_blank">
+              <button>Open In New Tab</button>
+            </a>
+            <div class="canvascontainer">
+              <canvas id="chart1baraF" aria-label="Water Prandtl Number vs Temperature °F at 1 bara" width="400" height="600" role="img" class="chartcanvas">
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+              </canvas>
+            </div>
+          </div>
+          <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/water-steam-Prandtl-number-d_2059.html" target="_blank">Engineering Toolbox — Water Prandtl Number</a>. Liquid and gas phases at atmospheric pressure.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHART 3: Multi-pressure, °C -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Prandtl Number at 1, 10 and 100 bara (°C)</div>
+          </div>
+          <div class="canvasdiv">
+            <button id="toggleTooltipPressureC">Hide Tooltips</button>
+            <a style="font-size: medium; text-decoration: none;" href="img/WaterPrandtl(1,10,100bara)(1c).png" download="WaterPrandtl(1,10,100bara)(1c).png">
+              <button>Download Chart</button>
+            </a>
+            <a style="font-size: medium; text-decoration: none;" href="img/WaterPrandtl(1,10,100bara)(1c).png" target="_blank">
+              <button>Open In New Tab</button>
+            </a>
+            <div class="canvascontainer">
+              <canvas id="chartPressureC" aria-label="Water Prandtl Number vs Temperature °C at 1 10 100 bara" width="400" height="600" role="img" class="chartcanvas">
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+              </canvas>
+            </div>
+          </div>
+          <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/water-steam-Prandtl-number-d_2059.html" target="_blank">Engineering Toolbox — Water Prandtl Number</a>. Solid lines = liquid; dashed lines = gas.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHART 4: Multi-pressure, °F -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Prandtl Number at 1, 10 and 100 bara (°F)</div>
+          </div>
+          <div class="canvasdiv">
+            <button id="toggleTooltipPressureF">Hide Tooltips</button>
+            <a style="font-size: medium; text-decoration: none;" href="img/WaterPrandtl(1,10,1000bara)(1F).png" download="WaterPrandtl(1,10,1000bara)(1F).png">
+              <button>Download Chart</button>
+            </a>
+            <a style="font-size: medium; text-decoration: none;" href="img/WaterPrandtl(1,10,1000bara)(1F).png" target="_blank">
+              <button>Open In New Tab</button>
+            </a>
+            <div class="canvascontainer">
+              <canvas id="chartPressureF" aria-label="Water Prandtl Number vs Temperature °F at 1 10 100 bara" width="400" height="600" role="img" class="chartcanvas">
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+              </canvas>
+            </div>
+          </div>
+          <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/water-steam-Prandtl-number-d_2059.html" target="_blank">Engineering Toolbox — Water Prandtl Number</a>. Solid lines = liquid; dashed lines = gas.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRANDTL NUMBER EXPLANATION -->
     <section>
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap">
-          <div class="mx-auto d-inline-block mt-4" style="max-width:960px; width:100%;">
-            <div class="custom-heading">Water Prandtl Number Table</div>
+          <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
+            <div class="custom-heading">Prandtl Number of Water</div>
 
+            <div style="text-align: left" class="mt-3">
+              <div class="custom-subheading">What Is the Prandtl Number?</div>
+              <p class="mt-2">
+                The <span style="font-weight:var(--font-weight-medium)">Prandtl number</span> (Pr) is a dimensionless ratio of momentum diffusivity to thermal diffusivity. A value greater than 1 means the velocity boundary layer is thicker than the thermal boundary layer — the fluid resists shear flow more than it resists heat conduction. Liquid water at 20&nbsp;&deg;C has Pr &asymp; 7, meaning heat diffuses roughly seven times more slowly than momentum through the fluid.
+              </p>
+            </div>
+
+            <div style="text-align: left" class="mt-4">
+              <div class="custom-subheading">Effect of Temperature</div>
+              <p class="mt-2">
+                For <span style="font-weight:var(--font-weight-medium)">liquid water</span>, Pr falls steeply with rising temperature — from about 13.6 at 0&nbsp;&deg;C (32&nbsp;&deg;F) to 1.76 at 100&nbsp;&deg;C (212&nbsp;&deg;F) — because dynamic viscosity decreases faster than thermal conductivity. This strong temperature dependence means Prandtl number must be evaluated at actual operating temperature, not at a nominal design point.
+              </p>
+              <p class="mt-2">
+                For <span style="font-weight:var(--font-weight-medium)">steam (gas phase)</span>, Pr is near 0.9–1.0 and only weakly dependent on temperature over a wide range, reflecting that momentum and thermal diffusivity are similar in magnitude for gases.
+              </p>
+            </div>
+
+            <div style="text-align: left" class="mt-4">
+              <div class="custom-subheading">Effect of Pressure and the Critical Point</div>
+              <p class="mt-2">
+                At elevated pressures the boiling point rises, so liquid water can exist above 100&nbsp;&deg;C and continues to have elevated Prandtl numbers. Near the critical point of water (373.946&nbsp;&deg;C / 705&nbsp;&deg;F, 220.6&nbsp;bar) specific heat diverges, causing an anomalous spike in Pr visible in the 100&nbsp;bara data. This critical-point behavior has practical implications for supercritical water reactors and supercritical boilers.
+              </p>
+            </div>
+
+            <div style="text-align: left" class="mt-4">
+              <div class="custom-subheading">Use in Heat Transfer Correlations</div>
+              <p class="mt-2">
+                The Prandtl number appears in Nusselt number correlations for forced convection. The Dittus-Boelter equation for turbulent pipe flow is:
+              </p>
+              <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
+                Nu = 0.023 &times; Re<sup>0.8</sup> &times; Pr<sup>n</sup>
+              </p>
+              <p class="mt-1">
+                where n = 0.4 for heating and n = 0.3 for cooling. For liquid water systems, the large variation of Pr with temperature means heat transfer coefficients are significantly higher at elevated temperatures, which is an important consideration in boiler and heat exchanger design.
+              </p>
+            </div>
+
+            <p class="mt-3 text-start"><span style="font-weight:var(--font-weight-normal)">Note:</span> At the liquid-gas phase boundary, Pr is discontinuous — the liquid and gas values at the same saturation temperature differ substantially (e.g., 1.76 vs 1.035 at 100&nbsp;&deg;C, 1 bara). The tables and charts show both values at each phase boundary.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABLE 1: Atmospheric pressure (1 bara) -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-4" style="max-width:1000px; width:100%;">
+            <div class="custom-heading">Water Prandtl Number Table: Atmospheric Pressure (1 bara)</div>
+            <p class="mt-2 text-start">Prandtl number of water at atmospheric pressure, temperature given as K, &deg;C or &deg;F:</p>
             <div class="table-responsive mt-3 mb-3">
               <table class="table table-striped table-bordered table-hover table-sm">
                 <thead style="background-color: var(--section-title-color); color: #fff;">
                   <tr>
-                    <th rowspan="2" class="align-middle">Temp<br>(°F)</th>
-                    <th rowspan="2" class="align-middle">Pressure<br>(psia)</th>
-                    <th colspan="3" class="text-center">Dynamic Viscosity</th>
-                    <th colspan="1" class="text-center">Kinematic Viscosity</th>
+                    <th rowspan="2" class="align-middle">State</th>
+                    <th colspan="3" class="text-center">SI (°C)</th>
+                    <th colspan="3" class="text-center">Imperial (°F)</th>
                   </tr>
                   <tr>
-                    <th>lbf·s/ft²<br>(×10⁻⁵)</th>
-                    <th>lbm/(ft·h)</th>
-                    <th>cP (mPa·s)</th>
-                    <th>ft²/s<br>(×10⁻⁵)</th>
+                    <th>T (K)</th>
+                    <th>T (°C)</th>
+                    <th>Pr (−)</th>
+                    <th>T (K)</th>
+                    <th>T (°F)</th>
+                    <th>Pr (−)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td>32.02</td><td>0.9506</td><td>3.7414</td><td>4.3336</td><td>1.7914</td><td>1.9287</td></tr>
-                  <tr><td>34</td><td>0.0962</td><td>3.6047</td><td>4.1752</td><td>1.7259</td><td>1.8579</td></tr>
-                  <tr><td>39.2</td><td>0.1180</td><td>3.2801</td><td>3.7992</td><td>1.5705</td><td>1.6906</td></tr>
-                  <tr><td>40</td><td>0.1217</td><td>3.2340</td><td>3.7458</td><td>1.5484</td><td>1.6668</td></tr>
-                  <tr><td>50</td><td>0.1781</td><td>2.7276</td><td>3.1593</td><td>1.3060</td><td>1.4063</td></tr>
-                  <tr><td>60</td><td>0.2563</td><td>2.3405</td><td>2.7109</td><td>1.1206</td><td>1.2075</td></tr>
-                  <tr><td>70</td><td>0.3634</td><td>2.0337</td><td>2.3556</td><td>0.9737</td><td>1.0503</td></tr>
-                  <tr><td>80</td><td>0.5076</td><td>1.7888</td><td>2.0719</td><td>0.8565</td><td>0.9250</td></tr>
-                  <tr><td>90</td><td>0.6992</td><td>1.5896</td><td>1.8411</td><td>0.7611</td><td>0.8234</td></tr>
-                  <tr><td>100</td><td>0.9506</td><td>1.4243</td><td>1.6497</td><td>0.6820</td><td>0.7392</td></tr>
-                  <tr><td>110</td><td>1.277</td><td>1.2847</td><td>1.4880</td><td>0.6151</td><td>0.6682</td></tr>
-                  <tr><td>120</td><td>1.695</td><td>1.1652</td><td>1.3496</td><td>0.5579</td><td>0.6075</td></tr>
-                  <tr><td>130</td><td>2.226</td><td>1.0620</td><td>1.2300</td><td>0.5085</td><td>0.5551</td></tr>
-                  <tr><td>140</td><td>2.893</td><td>0.9733</td><td>1.1273</td><td>0.4660</td><td>0.5102</td></tr>
-                  <tr><td>150</td><td>3.723</td><td>0.8950</td><td>1.0366</td><td>0.4285</td><td>0.4706</td></tr>
-                  <tr><td>160</td><td>4.747</td><td>0.8279</td><td>0.9589</td><td>0.3964</td><td>0.4367</td></tr>
-                  <tr><td>170</td><td>6.000</td><td>0.7698</td><td>0.8916</td><td>0.3686</td><td>0.4074</td></tr>
-                  <tr><td>180</td><td>7.520</td><td>0.7192</td><td>0.8330</td><td>0.3444</td><td>0.3820</td></tr>
-                  <tr><td>190</td><td>9.349</td><td>0.6745</td><td>0.7813</td><td>0.3230</td><td>0.3596</td></tr>
-                  <tr><td>200</td><td>11.537</td><td>0.6300</td><td>0.7297</td><td>0.3016</td><td>0.3371</td></tr>
-                  <tr><td>212</td><td>14.710</td><td>0.5881</td><td>0.6812</td><td>0.2816</td><td>0.3163</td></tr>
-                  <tr><td>220</td><td>17.203</td><td>0.5619</td><td>0.6508</td><td>0.2690</td><td>0.3032</td></tr>
-                  <tr><td>240</td><td>25.001</td><td>0.5050</td><td>0.5850</td><td>0.2418</td><td>0.2750</td></tr>
-                  <tr><td>260</td><td>35.263</td><td>0.4575</td><td>0.5299</td><td>0.2191</td><td>0.2515</td></tr>
-                  <tr><td>280</td><td>49.286</td><td>0.4176</td><td>0.4837</td><td>0.2000</td><td>0.2320</td></tr>
-                  <tr><td>300</td><td>67.264</td><td>0.3840</td><td>0.4448</td><td>0.1839</td><td>0.2157</td></tr>
-                  <tr><td>350</td><td>134.73</td><td>0.3202</td><td>0.3708</td><td>0.1533</td><td>0.1853</td></tr>
-                  <tr><td>400</td><td>247.01</td><td>0.2750</td><td>0.3185</td><td>0.1317</td><td>0.1648</td></tr>
-                  <tr><td>450</td><td>422.32</td><td>0.2404</td><td>0.2785</td><td>0.1151</td><td>0.1504</td></tr>
-                  <tr><td>500</td><td>680.56</td><td>0.2126</td><td>0.2463</td><td>0.1018</td><td>0.1398</td></tr>
-                  <tr><td>550</td><td>1045.0</td><td>0.1888</td><td>0.2187</td><td>0.0904</td><td>0.1322</td></tr>
-                  <tr><td>600</td><td>1542.1</td><td>0.1673</td><td>0.1937</td><td>0.0801</td><td>0.1270</td></tr>
-                  <tr><td>625</td><td>1851.2</td><td>0.1562</td><td>0.1809</td><td>0.0748</td><td>0.1252</td></tr>
-                  <tr><td>650</td><td>2207.8</td><td>0.1438</td><td>0.1666</td><td>0.0689</td><td>0.1239</td></tr>
-                  <tr><td>675</td><td>2618.7</td><td>0.1292</td><td>0.1496</td><td>0.0619</td><td>0.1230</td></tr>
+                  <tr><td rowspan="9">Liquid</td><td>273</td><td>0</td><td>13.6</td><td>273</td><td>32</td><td>13.6</td></tr>
+                  <tr><td>278</td><td>5</td><td>11.2</td><td>278</td><td>40</td><td>11.5</td></tr>
+                  <tr><td>283</td><td>10</td><td>9.46</td><td>283</td><td>50</td><td>9.46</td></tr>
+                  <tr><td>293</td><td>20</td><td>6.99</td><td>297</td><td>75</td><td>6.31</td></tr>
+                  <tr><td>298</td><td>25</td><td>6.13</td><td>311</td><td>100</td><td>4.56</td></tr>
+                  <tr><td>303</td><td>30</td><td>5.43</td><td>325</td><td>125</td><td>3.45</td></tr>
+                  <tr><td>323</td><td>50</td><td>3.56</td><td>339</td><td>150</td><td>2.74</td></tr>
+                  <tr><td>348</td><td>75</td><td>2.39</td><td>353</td><td>175</td><td>2.25</td></tr>
+                  <tr><td>373</td><td>100</td><td>1.76</td><td>366</td><td>200</td><td>1.88</td></tr>
+                  <tr><td rowspan="10">Gas</td><td>373</td><td>100</td><td>1.03</td><td>394</td><td>250</td><td>0.999</td></tr>
+                  <tr><td>398</td><td>125</td><td>0.996</td><td>422</td><td>300</td><td>0.978</td></tr>
+                  <tr><td>423</td><td>150</td><td>0.978</td><td>450</td><td>350</td><td>0.964</td></tr>
+                  <tr><td>448</td><td>175</td><td>0.965</td><td>478</td><td>400</td><td>0.970</td></tr>
+                  <tr><td>473</td><td>200</td><td>0.958</td><td>533</td><td>500</td><td>0.945</td></tr>
+                  <tr><td>523</td><td>250</td><td>0.947</td><td>589</td><td>600</td><td>0.937</td></tr>
+                  <tr><td>573</td><td>300</td><td>0.939</td><td>644</td><td>700</td><td>0.930</td></tr>
+                  <tr><td>623</td><td>350</td><td>0.932</td><td>700</td><td>800</td><td>0.923</td></tr>
+                  <tr><td>673</td><td>400</td><td>0.926</td><td>755</td><td>900</td><td>0.917</td></tr>
+                  <tr><td>773</td><td>500</td><td>0.916</td><td>811</td><td>1000</td><td>0.912</td></tr>
                 </tbody>
               </table>
             </div>
-            <p class="text-start small">Data at saturation pressure. Below 212&nbsp;°F this is effectively atmospheric pressure.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABLE 2: Multi-pressure -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-4" style="max-width:1000px; width:100%;">
+            <div class="custom-heading">Water Prandtl Number Table: 1, 10 and 100 bara</div>
+            <p class="mt-2 text-start">Prandtl number of water at given temperatures and 1, 10 and 100 bara (14.5, 145 and 1450 psia):</p>
+            <div class="table-responsive mt-3 mb-3">
+              <table class="table table-striped table-bordered table-hover table-sm">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th>State</th>
+                    <th>T (K)</th>
+                    <th>T (°C)</th>
+                    <th>T (°F)</th>
+                    <th>Pressure (bara)</th>
+                    <th>Pressure (psia)</th>
+                    <th>Pr (−)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="background-color: var(--section-title-color); color: #fff;"><td colspan="7"><strong>1 bara (14.5 psia)</strong></td></tr>
+                  <tr><td rowspan="7">Liquid</td><td>273.16</td><td>0.01</td><td>32.02</td><td>1</td><td>14.5</td><td>13.60</td></tr>
+                  <tr><td>280</td><td>6.9</td><td>44.3</td><td>1</td><td>14.5</td><td>10.53</td></tr>
+                  <tr><td>300</td><td>26.9</td><td>80.3</td><td>1</td><td>14.5</td><td>5.856</td></tr>
+                  <tr><td>320</td><td>46.9</td><td>116</td><td>1</td><td>14.5</td><td>3.785</td></tr>
+                  <tr><td>340</td><td>66.9</td><td>152</td><td>1</td><td>14.5</td><td>2.687</td></tr>
+                  <tr><td>360</td><td>86.9</td><td>188</td><td>1</td><td>14.5</td><td>2.040</td></tr>
+                  <tr><td>372.756</td><td>99.61</td><td>211.3</td><td>1</td><td>14.5</td><td>1.760</td></tr>
+                  <tr><td rowspan="15">Gas</td><td>372.756</td><td>99.61</td><td>211.3</td><td>1</td><td>14.5</td><td>1.035</td></tr>
+                  <tr><td>380</td><td>107</td><td>224</td><td>1</td><td>14.5</td><td>1.020</td></tr>
+                  <tr><td>400</td><td>127</td><td>260</td><td>1</td><td>14.5</td><td>0.9938</td></tr>
+                  <tr><td>450</td><td>177</td><td>350</td><td>1</td><td>14.5</td><td>0.9644</td></tr>
+                  <tr><td>500</td><td>227</td><td>440</td><td>1</td><td>14.5</td><td>0.9512</td></tr>
+                  <tr><td>550</td><td>277</td><td>530</td><td>1</td><td>14.5</td><td>0.9425</td></tr>
+                  <tr><td>600</td><td>327</td><td>620</td><td>1</td><td>14.5</td><td>0.9354</td></tr>
+                  <tr><td>650</td><td>377</td><td>710</td><td>1</td><td>14.5</td><td>0.9289</td></tr>
+                  <tr><td>700</td><td>427</td><td>800</td><td>1</td><td>14.5</td><td>0.9231</td></tr>
+                  <tr><td>750</td><td>477</td><td>890</td><td>1</td><td>14.5</td><td>0.9179</td></tr>
+                  <tr><td>800</td><td>527</td><td>980</td><td>1</td><td>14.5</td><td>0.9132</td></tr>
+                  <tr><td>900</td><td>627</td><td>1160</td><td>1</td><td>14.5</td><td>0.9053</td></tr>
+                  <tr><td>1000</td><td>727</td><td>1340</td><td>1</td><td>14.5</td><td>0.8992</td></tr>
+                  <tr><td>1100</td><td>827</td><td>1520</td><td>1</td><td>14.5</td><td>0.8942</td></tr>
+                  <tr><td>1200</td><td>927</td><td>1700</td><td>1</td><td>14.5</td><td>0.8897</td></tr>
+
+                  <tr style="background-color: var(--section-title-color); color: #fff;"><td colspan="7"><strong>10 bara (145 psia)</strong></td></tr>
+                  <tr><td rowspan="10">Liquid</td><td>273.16</td><td>0.01</td><td>32.02</td><td>10</td><td>145</td><td>13.55</td></tr>
+                  <tr><td>280</td><td>6.9</td><td>44.3</td><td>10</td><td>145</td><td>10.50</td></tr>
+                  <tr><td>300</td><td>26.9</td><td>80.3</td><td>10</td><td>145</td><td>5.847</td></tr>
+                  <tr><td>320</td><td>46.9</td><td>116</td><td>10</td><td>145</td><td>3.781</td></tr>
+                  <tr><td>340</td><td>66.9</td><td>152</td><td>10</td><td>145</td><td>2.685</td></tr>
+                  <tr><td>360</td><td>86.9</td><td>188</td><td>10</td><td>145</td><td>2.040</td></tr>
+                  <tr><td>380</td><td>107</td><td>224</td><td>10</td><td>145</td><td>1.632</td></tr>
+                  <tr><td>400</td><td>127</td><td>260</td><td>10</td><td>145</td><td>1.362</td></tr>
+                  <tr><td>450</td><td>177</td><td>350</td><td>10</td><td>145</td><td>1.000</td></tr>
+                  <tr><td>453.028</td><td>179.9</td><td>355.8</td><td>10</td><td>145</td><td>0.9873</td></tr>
+                  <tr><td rowspan="12">Gas</td><td>453.028</td><td>179.9</td><td>355.8</td><td>10</td><td>145</td><td>1.167</td></tr>
+                  <tr><td>500</td><td>227</td><td>440</td><td>10</td><td>145</td><td>1.010</td></tr>
+                  <tr><td>550</td><td>277</td><td>530</td><td>10</td><td>145</td><td>0.9694</td></tr>
+                  <tr><td>600</td><td>327</td><td>620</td><td>10</td><td>145</td><td>0.9509</td></tr>
+                  <tr><td>650</td><td>377</td><td>710</td><td>10</td><td>145</td><td>0.9395</td></tr>
+                  <tr><td>700</td><td>427</td><td>800</td><td>10</td><td>145</td><td>0.9308</td></tr>
+                  <tr><td>750</td><td>477</td><td>890</td><td>10</td><td>145</td><td>0.9235</td></tr>
+                  <tr><td>800</td><td>527</td><td>980</td><td>10</td><td>145</td><td>0.9173</td></tr>
+                  <tr><td>900</td><td>627</td><td>1160</td><td>10</td><td>145</td><td>0.9069</td></tr>
+                  <tr><td>1000</td><td>727</td><td>1340</td><td>10</td><td>145</td><td>0.8990</td></tr>
+                  <tr><td>1100</td><td>827</td><td>1520</td><td>10</td><td>145</td><td>0.8928</td></tr>
+                  <tr><td>1200</td><td>927</td><td>1700</td><td>10</td><td>145</td><td>0.8875</td></tr>
+
+                  <tr style="background-color: var(--section-title-color); color: #fff;"><td colspan="7"><strong>100 bara (1450 psia)</strong></td></tr>
+                  <tr><td rowspan="12">Liquid</td><td>273.16</td><td>0.01</td><td>32.018</td><td>100</td><td>1450</td><td>13.12</td></tr>
+                  <tr><td>280</td><td>6.9</td><td>44.3</td><td>100</td><td>1450</td><td>10.23</td></tr>
+                  <tr><td>300</td><td>26.9</td><td>80.3</td><td>100</td><td>1450</td><td>5.761</td></tr>
+                  <tr><td>320</td><td>46.9</td><td>116</td><td>100</td><td>1450</td><td>3.746</td></tr>
+                  <tr><td>340</td><td>66.9</td><td>152</td><td>100</td><td>1450</td><td>2.669</td></tr>
+                  <tr><td>360</td><td>86.9</td><td>188</td><td>100</td><td>1450</td><td>2.030</td></tr>
+                  <tr><td>380</td><td>107</td><td>224</td><td>100</td><td>1450</td><td>1.626</td></tr>
+                  <tr><td>400</td><td>127</td><td>260</td><td>100</td><td>1450</td><td>1.358</td></tr>
+                  <tr><td>450</td><td>177</td><td>350</td><td>100</td><td>1450</td><td>0.9967</td></tr>
+                  <tr><td>500</td><td>227</td><td>440</td><td>100</td><td>1450</td><td>0.8531</td></tr>
+                  <tr><td>550</td><td>277</td><td>530</td><td>100</td><td>1450</td><td>0.8366</td></tr>
+                  <tr><td>584.147</td><td>311.00</td><td>591.79</td><td>100</td><td>1450</td><td>0.9349</td></tr>
+                  <tr><td rowspan="10">Gas</td><td>584.147</td><td>311.00</td><td>591.79</td><td>100</td><td>1450</td><td>1.841</td></tr>
+                  <tr><td>600</td><td>327</td><td>620</td><td>100</td><td>1450</td><td>1.494</td></tr>
+                  <tr><td>650</td><td>377</td><td>710</td><td>100</td><td>1450</td><td>1.168</td></tr>
+                  <tr><td>700</td><td>427</td><td>800</td><td>100</td><td>1450</td><td>1.058</td></tr>
+                  <tr><td>750</td><td>477</td><td>890</td><td>100</td><td>1450</td><td>1.003</td></tr>
+                  <tr><td>800</td><td>527</td><td>980</td><td>100</td><td>1450</td><td>0.9686</td></tr>
+                  <tr><td>900</td><td>627</td><td>1160</td><td>100</td><td>1450</td><td>0.9251</td></tr>
+                  <tr><td>1000</td><td>727</td><td>1340</td><td>100</td><td>1450</td><td>0.8977</td></tr>
+                  <tr><td>1100</td><td>827</td><td>1520</td><td>100</td><td>1450</td><td>0.8789</td></tr>
+                  <tr><td>1200</td><td>927</td><td>1700</td><td>100</td><td>1450</td><td>0.8655</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -509,126 +596,52 @@
   <!-- END FOOTER -->
 
 <script>
-// ── Water Dynamic and Kinematic Viscosity Data ────────────────────────────────
-// Source: Engineering Toolbox — Water Viscosity
-// Format: [temp_F, dyn_lbf_s_ft2_e5, lbm_ft_h, cP_mPas, kin_ft2_s_e5]
-const waterViscFull = [
-  [32.02, 3.7414, 4.3336, 1.7914, 1.9287],
-  [34,    3.6047, 4.1752, 1.7259, 1.8579],
-  [39.2,  3.2801, 3.7992, 1.5705, 1.6906],
-  [40,    3.2340, 3.7458, 1.5484, 1.6668],
-  [50,    2.7276, 3.1593, 1.3060, 1.4063],
-  [60,    2.3405, 2.7109, 1.1206, 1.2075],
-  [70,    2.0337, 2.3556, 0.9737, 1.0503],
-  [80,    1.7888, 2.0719, 0.8565, 0.9250],
-  [90,    1.5896, 1.8411, 0.7611, 0.8234],
-  [100,   1.4243, 1.6497, 0.6820, 0.7392],
-  [110,   1.2847, 1.4880, 0.6151, 0.6682],
-  [120,   1.1652, 1.3496, 0.5579, 0.6075],
-  [130,   1.0620, 1.2300, 0.5085, 0.5551],
-  [140,   0.9733, 1.1273, 0.4660, 0.5102],
-  [150,   0.8950, 1.0366, 0.4285, 0.4706],
-  [160,   0.8279, 0.9589, 0.3964, 0.4367],
-  [170,   0.7698, 0.8916, 0.3686, 0.4074],
-  [180,   0.7192, 0.8330, 0.3444, 0.3820],
-  [190,   0.6745, 0.7813, 0.3230, 0.3596],
-  [200,   0.6300, 0.7297, 0.3016, 0.3371],
-  [212,   0.5881, 0.6812, 0.2816, 0.3163],
-  [220,   0.5619, 0.6508, 0.2690, 0.3032],
-  [240,   0.5050, 0.5850, 0.2418, 0.2750],
-  [260,   0.4575, 0.5299, 0.2191, 0.2515],
-  [280,   0.4176, 0.4837, 0.2000, 0.2320],
-  [300,   0.3840, 0.4448, 0.1839, 0.2157],
-  [350,   0.3202, 0.3708, 0.1533, 0.1853],
-  [400,   0.2750, 0.3185, 0.1317, 0.1648],
-  [450,   0.2404, 0.2785, 0.1151, 0.1504],
-  [500,   0.2126, 0.2463, 0.1018, 0.1398],
-  [550,   0.1888, 0.2187, 0.0904, 0.1322],
-  [600,   0.1673, 0.1937, 0.0801, 0.1270],
-  [625,   0.1562, 0.1809, 0.0748, 0.1252],
-  [650,   0.1438, 0.1666, 0.0689, 0.1239],
-  [675,   0.1292, 0.1496, 0.0619, 0.1230]
+// ── 1 bara atmospheric data (°C x-axis) ──────────────────────────────────────
+const pr1barC_liq = [
+  {x:0,   y:13.6}, {x:5,   y:11.2}, {x:10,  y:9.46}, {x:20,  y:6.99},
+  {x:25,  y:6.13}, {x:30,  y:5.43}, {x:50,  y:3.56}, {x:75,  y:2.39},
+  {x:100, y:1.76}
+];
+const pr1barC_gas = [
+  {x:100, y:1.03},  {x:125, y:0.996}, {x:150, y:0.978}, {x:175, y:0.965},
+  {x:200, y:0.958}, {x:250, y:0.947}, {x:300, y:0.939}, {x:350, y:0.932},
+  {x:400, y:0.926}, {x:500, y:0.916}
 ];
 
-// ── Log-linear interpolation ──────────────────────────────────────────────────
-function waterInterp(tF, colIdx) {
-  const arr = waterViscFull;
-  if (tF <= arr[0][0]) return arr[0][colIdx];
-  if (tF >= arr[arr.length - 1][0]) return arr[arr.length - 1][colIdx];
-  for (let i = 0; i < arr.length - 1; i++) {
-    if (tF >= arr[i][0] && tF <= arr[i + 1][0]) {
-      const t = (tF - arr[i][0]) / (arr[i + 1][0] - arr[i][0]);
-      return Math.exp(Math.log(arr[i][colIdx]) + t * (Math.log(arr[i + 1][colIdx]) - Math.log(arr[i][colIdx])));
-    }
-  }
-}
+// ── 1 bara atmospheric data (°F x-axis) ──────────────────────────────────────
+const pr1barF_liq = [
+  {x:32,  y:13.6}, {x:40,  y:11.5}, {x:50,  y:9.46}, {x:75,  y:6.31},
+  {x:100, y:4.56}, {x:125, y:3.45}, {x:150, y:2.74}, {x:175, y:2.25},
+  {x:200, y:1.88}
+];
+const pr1barF_gas = [
+  {x:250,  y:0.999}, {x:300,  y:0.978}, {x:350,  y:0.964}, {x:400,  y:0.970},
+  {x:500,  y:0.945}, {x:600,  y:0.937}, {x:700,  y:0.930}, {x:800,  y:0.923},
+  {x:900,  y:0.917}, {x:1000, y:0.912}
+];
 
-// ── Dense points for dynamic viscosity chart (col 3 = cP) ────────────────────
-function dynByTempF() {
-  const pts = [];
-  for (let t = 32; t <= 675; t += 2)
-    pts.push({ x: t, y: parseFloat(waterInterp(t, 3).toFixed(5)) });
-  return pts;
-}
+// ── Multi-pressure data (°C x-axis) ──────────────────────────────────────────
+const prPC_liq1  = [{x:0.01,y:13.60},{x:6.9,y:10.53},{x:26.9,y:5.856},{x:46.9,y:3.785},{x:66.9,y:2.687},{x:86.9,y:2.040},{x:99.61,y:1.760}];
+const prPC_gas1  = [{x:99.61,y:1.035},{x:107,y:1.020},{x:127,y:0.9938},{x:177,y:0.9644},{x:227,y:0.9512},{x:277,y:0.9425},{x:327,y:0.9354},{x:377,y:0.9289},{x:427,y:0.9231},{x:477,y:0.9179},{x:527,y:0.9132},{x:627,y:0.9053},{x:727,y:0.8992},{x:827,y:0.8942},{x:927,y:0.8897}];
+const prPC_liq10 = [{x:0.01,y:13.55},{x:6.9,y:10.50},{x:26.9,y:5.847},{x:46.9,y:3.781},{x:66.9,y:2.685},{x:86.9,y:2.040},{x:107,y:1.632},{x:127,y:1.362},{x:177,y:1.000},{x:179.9,y:0.9873}];
+const prPC_gas10 = [{x:179.9,y:1.167},{x:227,y:1.010},{x:277,y:0.9694},{x:327,y:0.9509},{x:377,y:0.9395},{x:427,y:0.9308},{x:477,y:0.9235},{x:527,y:0.9173},{x:627,y:0.9069},{x:727,y:0.8990},{x:827,y:0.8928},{x:927,y:0.8875}];
+const prPC_liq100= [{x:0.01,y:13.12},{x:6.9,y:10.23},{x:26.9,y:5.761},{x:46.9,y:3.746},{x:66.9,y:2.669},{x:86.9,y:2.030},{x:107,y:1.626},{x:127,y:1.358},{x:177,y:0.9967},{x:227,y:0.8531},{x:277,y:0.8366},{x:311.00,y:0.9349}];
+const prPC_gas100= [{x:311.00,y:1.841},{x:327,y:1.494},{x:377,y:1.168},{x:427,y:1.058},{x:477,y:1.003},{x:527,y:0.9686},{x:627,y:0.9251},{x:727,y:0.8977},{x:827,y:0.8789},{x:927,y:0.8655}];
 
-// ── Dense points for kinematic viscosity chart (col 4 = ft²/s ×10⁻⁵ → cSt) ──
-// 1 (ft²/s ×10⁻⁵) × 1e-5 ft²/s × 92903.04 cSt/(ft²/s) = value × 0.9290304 cSt
-function kinByTempF() {
-  const CONV = 0.9290304;
-  const pts = [];
-  for (let t = 32; t <= 675; t += 2)
-    pts.push({ x: t, y: parseFloat((waterInterp(t, 4) * CONV).toFixed(5)) });
-  return pts;
-}
+// ── Multi-pressure data (°F x-axis) ──────────────────────────────────────────
+const prPF_liq1  = [{x:32.02,y:13.60},{x:44.3,y:10.53},{x:80.3,y:5.856},{x:116,y:3.785},{x:152,y:2.687},{x:188,y:2.040},{x:211.3,y:1.760}];
+const prPF_gas1  = [{x:211.3,y:1.035},{x:224,y:1.020},{x:260,y:0.9938},{x:350,y:0.9644},{x:440,y:0.9512},{x:530,y:0.9425},{x:620,y:0.9354},{x:710,y:0.9289},{x:800,y:0.9231},{x:890,y:0.9179},{x:980,y:0.9132},{x:1160,y:0.9053},{x:1340,y:0.8992},{x:1520,y:0.8942},{x:1700,y:0.8897}];
+const prPF_liq10 = [{x:32.02,y:13.55},{x:44.3,y:10.50},{x:80.3,y:5.847},{x:116,y:3.781},{x:152,y:2.685},{x:188,y:2.040},{x:224,y:1.632},{x:260,y:1.362},{x:350,y:1.000},{x:355.8,y:0.9873}];
+const prPF_gas10 = [{x:355.8,y:1.167},{x:440,y:1.010},{x:530,y:0.9694},{x:620,y:0.9509},{x:710,y:0.9395},{x:800,y:0.9308},{x:890,y:0.9235},{x:980,y:0.9173},{x:1160,y:0.9069},{x:1340,y:0.8990},{x:1520,y:0.8928},{x:1700,y:0.8875}];
+const prPF_liq100= [{x:32.018,y:13.12},{x:44.3,y:10.23},{x:80.3,y:5.761},{x:116,y:3.746},{x:152,y:2.669},{x:188,y:2.030},{x:224,y:1.626},{x:260,y:1.358},{x:350,y:0.9967},{x:440,y:0.8531},{x:530,y:0.8366},{x:591.79,y:0.9349}];
+const prPF_gas100= [{x:591.79,y:1.841},{x:620,y:1.494},{x:710,y:1.168},{x:800,y:1.058},{x:890,y:1.003},{x:980,y:0.9686},{x:1160,y:0.9251},{x:1340,y:0.8977},{x:1520,y:0.8789},{x:1700,y:0.8655}];
 
-// ── Temperature converters ────────────────────────────────────────────────────
-function convertToFahrenheit() {
-  const c = parseFloat(document.getElementById('celsius').value);
-  if (!isNaN(c)) document.getElementById('fahrenheit').value = (c * 9 / 5 + 32).toFixed(1);
-  waterCalc();
-}
-function convertToCelsius() {
-  const f = parseFloat(document.getElementById('fahrenheit').value);
-  if (!isNaN(f)) document.getElementById('celsius').value = ((f - 32) * 5 / 9).toFixed(1);
-  waterCalc();
-}
+// ── Colours ───────────────────────────────────────────────────────────────────
+const C_BLUE   = 'rgb(68,119,170)';
+const C_RED    = 'rgb(238,102,119)';
+const C_GREEN  = 'rgb(34,136,51)';
 
-// ── Calculator ────────────────────────────────────────────────────────────────
-function waterCalc() {
-  const fahr  = parseFloat(document.getElementById('fahrenheit').value);
-  const minT  = waterViscFull[0][0];
-  const maxT  = waterViscFull[waterViscFull.length - 1][0];
-  const inRange = !isNaN(fahr) && fahr >= minT && fahr <= maxT;
-  const dynIds = ['result_visc1','result_visc2','result_visc3','result_visc4','result_visc5','result_visc6'];
-  const kinIds = ['result_kin1','result_kin2','result_kin3','result_kin4','result_kin5','result_kin6'];
-
-  if (inRange) {
-    const mu = waterInterp(fahr, 3); // cP = mPa·s
-    document.getElementById('result_visc1').textContent = mu.toFixed(4);
-    document.getElementById('result_visc2').textContent = mu.toFixed(4);
-    document.getElementById('result_visc3').textContent = (mu / 100).toFixed(5);
-    document.getElementById('result_visc4').textContent = (mu / 1000).toFixed(6);
-    document.getElementById('result_visc5').textContent = (mu * 6.71969e-4).toFixed(6);
-    document.getElementById('result_visc6').textContent = (mu * 3.6).toFixed(4);
-
-    const kinRaw = waterInterp(fahr, 4); // ft²/s ×10⁻⁵
-    const nu = kinRaw * 0.9290304; // cSt = mm²/s
-    document.getElementById('result_kin1').textContent = nu.toFixed(4);
-    document.getElementById('result_kin2').textContent = nu.toFixed(4);
-    document.getElementById('result_kin3').textContent = (nu * 0.01).toFixed(6);
-    document.getElementById('result_kin4').textContent = (nu * 1e-6).toExponential(3);
-    document.getElementById('result_kin5').textContent = (nu * 0.0015500031).toFixed(6);
-    document.getElementById('result_kin6').textContent = (nu * 1.07639e-5).toExponential(4);
-  } else {
-    dynIds.forEach(id => document.getElementById(id).textContent = 'Out of Range');
-    kinIds.forEach(id => document.getElementById(id).textContent = 'Out of Range');
-  }
-}
-
-// ── Charts ────────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('celsius').value = ((70 - 32) * 5 / 9).toFixed(1);
-  waterCalc();
 
   const customBg = {
     id: 'customCanvasBackgroundColor',
@@ -655,99 +668,120 @@ window.addEventListener('DOMContentLoaded', function () {
     };
   }
 
-  // ── Dynamic (Absolute) Viscosity Chart ──────────────────────────────────────
-  const viscChart = new Chart(document.getElementById('myChart').getContext('2d'), {
+  function makeTooltip(unit) {
+    return {
+      enabled: true, mode: 'nearest', intersect: false, axis: 'x',
+      callbacks: {
+        title: items => items[0].parsed.x.toFixed(1) + ' ' + unit,
+        label: item  => item.dataset.label + ': ' + item.parsed.y.toFixed(4)
+      }
+    };
+  }
+
+  function makeScales(xLabel, xMin, xMax) {
+    return {
+      x: { type: 'linear', min: xMin, max: xMax,
+           ticks: { maxRotation: 0, font: { size: 16 } },
+           title: { display: true, text: xLabel, font: { size: 20 } } },
+      y: { type: 'logarithmic',
+           ticks: { font: { size: 16 } },
+           title: { display: true, text: 'Prandtl Number (−)', padding: 10, font: { size: 20 } } }
+    };
+  }
+
+  function addToggle(btnId, chart) {
+    document.getElementById(btnId).addEventListener('click', function () {
+      const cur = chart.options.plugins.tooltip.enabled;
+      chart.options.plugins.tooltip.enabled = !cur;
+      chart.update();
+      this.textContent = cur ? 'Show Tooltips' : 'Hide Tooltips';
+    });
+  }
+
+  // ── Chart 1: 1 bara °C ────────────────────────────────────────────────────
+  const chart1C = new Chart(document.getElementById('chart1baraC').getContext('2d'), {
     type: 'line',
-    data: {
-      datasets: [{
-        label: 'Water',
-        data: dynByTempF(),
-        fill: false,
-        borderColor: 'rgb(68,119,170)',
-        tension: 0.1
-      }]
-    },
+    data: { datasets: [
+      { label: 'Liquid (1 bara)', data: pr1barC_liq, fill: false, borderColor: C_BLUE,  tension: 0.1 },
+      { label: 'Gas (1 bara)',    data: pr1barC_gas, fill: false, borderColor: C_BLUE,  tension: 0.1, borderDash: [6,4] }
+    ]},
     options: {
       maintainAspectRatio: false, responsive: true,
       layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
-      plugins: {
-        customCanvasBackgroundColor: { color: 'white' },
-        legend: makeLegend(),
-        tooltip: {
-          enabled: true, mode: 'nearest', intersect: false, axis: 'x',
-          callbacks: {
-            title: items => items[0].parsed.x.toFixed(0) + ' °F',
-            label: item  => 'Water: ' + item.parsed.y.toFixed(4) + ' mPa·s (cP)'
-          }
-        }
-      },
+      plugins: { customCanvasBackgroundColor: { color: 'white' }, legend: makeLegend(), tooltip: makeTooltip('°C') },
       interaction: { mode: 'nearest', axis: 'x' },
       elements: { point: { radius: 0 } },
-      scales: {
-        x: { type: 'linear', min: 32, max: 675,
-             ticks: { maxRotation: 0, font: { size: 16 } },
-             title: { display: true, text: 'Temperature (°F)', font: { size: 20 } } },
-        y: { type: 'logarithmic',
-             ticks: { font: { size: 16 } },
-             title: { display: true, text: 'Dynamic (Absolute) Viscosity (mPa·s)', padding: 10, font: { size: 20 } } }
-      }
+      scales: makeScales('Temperature (°C)', 0, 500)
     },
     plugins: [customBg]
   });
+  addToggle('toggleTooltip1baraC', chart1C);
 
-  document.getElementById('toggleTooltipButton').addEventListener('click', function () {
-    const cur = viscChart.options.plugins.tooltip.enabled;
-    viscChart.options.plugins.tooltip.enabled = !cur;
-    viscChart.update();
-    this.textContent = cur ? 'Show Tooltips' : 'Hide Tooltips';
-  });
-
-  // ── Kinematic Viscosity Chart ─────────────────────────────────────────────
-  const kinChart = new Chart(document.getElementById('kinChart').getContext('2d'), {
+  // ── Chart 2: 1 bara °F ────────────────────────────────────────────────────
+  const chart1F = new Chart(document.getElementById('chart1baraF').getContext('2d'), {
     type: 'line',
-    data: {
-      datasets: [{
-        label: 'Water',
-        data: kinByTempF(),
-        fill: false,
-        borderColor: 'rgb(68,119,170)',
-        tension: 0.1
-      }]
-    },
+    data: { datasets: [
+      { label: 'Liquid (1 bara)', data: pr1barF_liq, fill: false, borderColor: C_BLUE, tension: 0.1 },
+      { label: 'Gas (1 bara)',    data: pr1barF_gas, fill: false, borderColor: C_BLUE, tension: 0.1, borderDash: [6,4] }
+    ]},
     options: {
       maintainAspectRatio: false, responsive: true,
       layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
-      plugins: {
-        customCanvasBackgroundColor: { color: 'white' },
-        legend: makeLegend(),
-        tooltip: {
-          enabled: true, mode: 'nearest', intersect: false, axis: 'x',
-          callbacks: {
-            title: items => items[0].parsed.x.toFixed(0) + ' °F',
-            label: item  => 'Water: ' + item.parsed.y.toFixed(4) + ' cSt'
-          }
-        }
-      },
+      plugins: { customCanvasBackgroundColor: { color: 'white' }, legend: makeLegend(), tooltip: makeTooltip('°F') },
       interaction: { mode: 'nearest', axis: 'x' },
       elements: { point: { radius: 0 } },
-      scales: {
-        x: { type: 'linear', min: 32, max: 675,
-             ticks: { maxRotation: 0, font: { size: 16 } },
-             title: { display: true, text: 'Temperature (°F)', font: { size: 20 } } },
-        y: { type: 'logarithmic',
-             ticks: { font: { size: 16 } },
-             title: { display: true, text: 'Kinematic Viscosity (cSt = mm²/s)', padding: 10, font: { size: 20 } } }
-      }
+      scales: makeScales('Temperature (°F)', 32, 1000)
     },
     plugins: [customBg]
   });
+  addToggle('toggleTooltip1baraF', chart1F);
 
-  document.getElementById('toggleTooltipButtonKin').addEventListener('click', function () {
-    const cur = kinChart.options.plugins.tooltip.enabled;
-    kinChart.options.plugins.tooltip.enabled = !cur;
-    kinChart.update();
-    this.textContent = cur ? 'Show Tooltips' : 'Hide Tooltips';
+  // ── Chart 3: Multi-pressure °C ────────────────────────────────────────────
+  const chartPC = new Chart(document.getElementById('chartPressureC').getContext('2d'), {
+    type: 'line',
+    data: { datasets: [
+      { label: 'Liquid 1 bara',   data: prPC_liq1,   fill: false, borderColor: C_BLUE,  tension: 0.1 },
+      { label: 'Gas 1 bara',      data: prPC_gas1,   fill: false, borderColor: C_BLUE,  tension: 0.1, borderDash: [6,4] },
+      { label: 'Liquid 10 bara',  data: prPC_liq10,  fill: false, borderColor: C_RED,   tension: 0.1 },
+      { label: 'Gas 10 bara',     data: prPC_gas10,  fill: false, borderColor: C_RED,   tension: 0.1, borderDash: [6,4] },
+      { label: 'Liquid 100 bara', data: prPC_liq100, fill: false, borderColor: C_GREEN, tension: 0.1 },
+      { label: 'Gas 100 bara',    data: prPC_gas100, fill: false, borderColor: C_GREEN, tension: 0.1, borderDash: [6,4] }
+    ]},
+    options: {
+      maintainAspectRatio: false, responsive: true,
+      layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
+      plugins: { customCanvasBackgroundColor: { color: 'white' }, legend: makeLegend(), tooltip: makeTooltip('°C') },
+      interaction: { mode: 'nearest', axis: 'x' },
+      elements: { point: { radius: 0 } },
+      scales: makeScales('Temperature (°C)', 0, 927)
+    },
+    plugins: [customBg]
   });
+  addToggle('toggleTooltipPressureC', chartPC);
+
+  // ── Chart 4: Multi-pressure °F ────────────────────────────────────────────
+  const chartPF = new Chart(document.getElementById('chartPressureF').getContext('2d'), {
+    type: 'line',
+    data: { datasets: [
+      { label: 'Liquid 1 bara',   data: prPF_liq1,   fill: false, borderColor: C_BLUE,  tension: 0.1 },
+      { label: 'Gas 1 bara',      data: prPF_gas1,   fill: false, borderColor: C_BLUE,  tension: 0.1, borderDash: [6,4] },
+      { label: 'Liquid 10 bara',  data: prPF_liq10,  fill: false, borderColor: C_RED,   tension: 0.1 },
+      { label: 'Gas 10 bara',     data: prPF_gas10,  fill: false, borderColor: C_RED,   tension: 0.1, borderDash: [6,4] },
+      { label: 'Liquid 100 bara', data: prPF_liq100, fill: false, borderColor: C_GREEN, tension: 0.1 },
+      { label: 'Gas 100 bara',    data: prPF_gas100, fill: false, borderColor: C_GREEN, tension: 0.1, borderDash: [6,4] }
+    ]},
+    options: {
+      maintainAspectRatio: false, responsive: true,
+      layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
+      plugins: { customCanvasBackgroundColor: { color: 'white' }, legend: makeLegend(), tooltip: makeTooltip('°F') },
+      interaction: { mode: 'nearest', axis: 'x' },
+      elements: { point: { radius: 0 } },
+      scales: makeScales('Temperature (°F)', 32, 1700)
+    },
+    plugins: [customBg]
+  });
+  addToggle('toggleTooltipPressureF', chartPF);
+
 });
 </script>
 

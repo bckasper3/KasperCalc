@@ -1,14 +1,13 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- META DATA FOR -->
-    <title>KasperCalc: Water Prandtl Number</title>
+    <title>KasperCalc: Water Ionization Constant, pKw</title>
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, bckasper3, Water Prandtl Number, Figures and tables with Prandtl Number, Liquid Water Prandlt Number, Gaseous Water Prandlt Number" />
-    <meta name="description" content="Calculate and reference the Prandtl Number of water for liquid and gaseous states from 32 to 1000°F." />
+    <meta name="keywords" content="KasperCalc, bckasper3, Water Ionization Constant, pKw, Water Dissociation Constant, Heavy Water D2O, Autoprotolysis Constant" />
+    <meta name="description" content="Ionization constant (pKw) of normal and heavy water as a function of temperature from 0 to 350 °C (32 to 650 °F)." />
 
     <!-- DEFERRED JAVASCRIPT -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -16,7 +15,6 @@
     <script defer src="js/footer.js"></script>
     <script defer src="js/header-active-class.js"></script>
     <script defer src="js/navsearch.js"></script>
-    <!-- chart and calculator JS embedded below -->
 
     <!-- CSS FILES -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -24,15 +22,6 @@
     <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
     <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
-
-<!-- Google tag (gtag.js) -->
-<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-5XLCN0GJQ0');
-</script> -->
 
     <!-- FAVICON -->
     <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
@@ -43,7 +32,6 @@
     <link rel="manifest" href="/favicon/site.webmanifest" />
   </head>
 
-  <!-- BODY -->
   <body>
 
   <!-- NAVIGATION -->
@@ -144,7 +132,6 @@
                   <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
                   <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
                   <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
-                  <a class="dropdown-item" href="WaterLiquidGasEquilibrium.html">Liquid Gas Equilibrium</a>
                   <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
                   <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
                   <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thremal Diffusivity</a>
@@ -251,237 +238,222 @@
         <div class="col-lg-12 col-12">
           <div class="banner section-title-wrap">
             <div class="h1 section-title bannertext">
-              Water Prandtl Number
+              Water Ionization Constant, pK<sub>w</sub>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <h1 class="visually-hidden">Water Prandtl Number Liquid and Gaseous States</h1>
+    <h1 class="visually-hidden">Water Ionization Constant pKw Normal and Heavy Water vs Temperature</h1>
 
-    <!-- DYNAMIC VISCOSITY CHART -->
+    <!-- CHART °C -->
     <section>
       <div class="csscontainer">
         <div class="col-lg-12 col-12">
           <div class="section-title-wrap">
-            <div class="h1 section-title">Water Prandtl Number Chart</div>
+            <div class="h1 section-title">Water Ionization Constant (pK<sub>w</sub>) Chart — Temperature (°C)</div>
           </div>
           <div class="canvasdiv">
-            <button id="toggleTooltipButton">Hide Tooltips</button>
-            <a style="font-size: medium; text-decoration: none;" href="img/WaterDynamicViscosity(DegreesF).png" download="WaterDynamicViscosity(DegreesF).png">
-              <button>Download Chart</button>
-            </a>
-            <a style="font-size: medium; text-decoration: none;" href="img/WaterDynamicViscosity(DegreesF).png" target="_blank">
-              <button>Open In New Tab</button>
-            </a>
+            <button id="toggleTooltipC">Hide Tooltips</button>
             <div class="canvascontainer">
               <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-              <canvas id="myChart" aria-label="Water Dynamic (Absolute) Viscosity vs Temperature °F" width="400" height="600" role="img" class="chartcanvas">
+              <canvas id="pkwChartC" aria-label="Water Ionization Constant pKw vs Temperature °C" width="400" height="600" role="img" class="chartcanvas">
                 <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
               </canvas>
             </div>
           </div>
-          <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/water-dynamic-kinematic-viscosity-d_596.html" target="_blank">Engineering Toolbox — Water Viscosity</a>. Y-axis is logarithmic.</p>
+          <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/ionization-dissociation-autoprotolysis-constant-pKw-water-heavy-deuterium-oxide-d_2004.html" target="_blank">Engineering Toolbox — Water Ionization Constant</a>. D<sub>2</sub>O data available to 100 °C only.</p>
         </div>
       </div>
     </section>
 
-    <!-- CALCULATOR -->
+    <!-- CHART °F -->
     <section>
       <div class="csscontainer">
-        <div class="col-lg-12 col-12 px-3">
-          <div class="wrapper" style="max-width:33rem;">
-            <div class="header text-center">Water Viscosity Calculator</div>
-
-            <div class="group">
-              <div class="outputrow">
-                <span class="label">Degrees (°F):</span>
-                <span class="output inputbox">
-                  <input class="calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" value="70" aria-label="Input box for degrees Fahrenheit" />
-                </span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Degrees (°C):</span>
-                <span class="output inputbox">
-                  <input class="calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" aria-label="Input for degrees Celsius" />
-                </span>
-              </div>
-            </div>
-
-            <div class="group">
-              <div class="outputrow">
-                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Dynamic (Absolute) Viscosity</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">mPa·s (= cP):</span>
-                <span class="output" id="result_visc1">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Centipoise (cP):</span>
-                <span class="output" id="result_visc2">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Poise (g/(cm·s)):</span>
-                <span class="output" id="result_visc3">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Pa·s (Poiseuille):</span>
-                <span class="output" id="result_visc4">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">lbm/(ft·s):</span>
-                <span class="output" id="result_visc5">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">kg/(m·h):</span>
-                <span class="output" id="result_visc6">&nbsp;</span>
-              </div>
-            </div>
-
-            <div class="group">
-              <div class="outputrow">
-                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Kinematic Viscosity</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">mm²/s (= cSt):</span>
-                <span class="output" id="result_kin1">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Centistokes (cSt):</span>
-                <span class="output" id="result_kin2">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">Stokes (cm²/s):</span>
-                <span class="output" id="result_kin3">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">m²/s:</span>
-                <span class="output" id="result_kin4">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">in²/s:</span>
-                <span class="output" id="result_kin5">&nbsp;</span>
-              </div>
-              <div class="outputrow">
-                <span class="label">ft²/s:</span>
-                <span class="output" id="result_kin6">&nbsp;</span>
-              </div>
-            </div>
-
+        <div class="col-lg-12 col-12">
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Water Ionization Constant (pK<sub>w</sub>) Chart — Temperature (°F)</div>
           </div>
+          <div class="canvasdiv">
+            <button id="toggleTooltipF">Hide Tooltips</button>
+            <div class="canvascontainer">
+              <canvas id="pkwChartF" aria-label="Water Ionization Constant pKw vs Temperature °F" width="400" height="600" role="img" class="chartcanvas">
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+              </canvas>
+            </div>
+          </div>
+          <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/ionization-dissociation-autoprotolysis-constant-pKw-water-heavy-deuterium-oxide-d_2004.html" target="_blank">Engineering Toolbox — Water Ionization Constant</a>. D<sub>2</sub>O data available to 212 °F only.</p>
         </div>
       </div>
     </section>
 
-    <!-- VISCOSITY REFERENCE -->
+    <!-- EXPLANATION -->
     <section>
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap">
           <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
-            <div class="custom-heading">Dynamic (Absolute) Viscosity of Water</div>
+            <div class="custom-heading">Ionization Constant, pK<sub>w</sub>, of Water and Heavy Water</div>
 
             <div style="text-align: left" class="mt-3">
-              <div class="custom-subheading">What Is Dynamic (Absolute) Viscosity?</div>
+              <div class="custom-subheading">Autoprotolysis and Water Self-Ionization</div>
               <p class="mt-2">
-                Dynamic (absolute) viscosity (<span style="font-weight:var(--font-weight-medium)">μ</span>) measures a fluid's resistance to shear flow.
-                It is measured in <span style="font-weight:var(--font-weight-medium)">mPa·s</span> (millipascal-seconds), equivalent to
-                <span style="font-weight:var(--font-weight-medium)">cP</span> (centipoise). Newton's law of viscosity is:
+                <span style="font-weight:var(--font-weight-medium)">Autoprotolysis</span> describes the reaction of water with itself — two water molecules exchange a proton:
               </p>
               <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
-                τ = μ × (du / dy)
+                2 H<sub>2</sub>O &harr; H<sub>3</sub>O<sup>+</sup> + OH<sup>&minus;</sup>
               </p>
-              <p class="mt-1">
-                where <em>τ</em> is shear stress and <em>du/dy</em> is the velocity gradient perpendicular to flow.
+              <p class="mt-2">
+                An equilibrium constant can be defined for this reaction:
+              </p>
+              <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
+                K<sub>eq</sub> = a(H<sub>3</sub>O<sup>+</sup>) &times; a(OH<sup>&minus;</sup>) / a(H<sub>2</sub>O)<sup>2</sup>
+              </p>
+              <p class="mt-2">
+                where <em>a</em> is the chemical activity of each species. Because most acid–base solutions are very dilute, the activity of water is approximated as unity, and the activities of the solute ions are approximately equal to their molar concentrations.
               </p>
             </div>
 
             <div style="text-align: left" class="mt-4">
-              <div class="custom-subheading">Why It Matters for Water Systems</div>
+              <div class="custom-subheading">The Ionization Constant K<sub>w</sub> and pK<sub>w</sub></div>
               <p class="mt-2">
-                Water viscosity decreases significantly with increasing temperature — by nearly a factor of 30 from
-                32°F to 675°F. This affects pressure drop, pump power requirements, and flow regime. The Reynolds number
-                determines whether flow is laminar or turbulent:
+                Under the dilute-solution approximation, the <span style="font-weight:var(--font-weight-medium)">water ionization constant</span> (also called the dissociation constant, ion product, or autoprotolysis constant) simplifies to:
               </p>
               <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
-                Re = ρ × v × D / μ
+                K<sub>w</sub> = [H<sub>3</sub>O<sup>+</sup>] [OH<sup>&minus;</sup>]
               </p>
-              <p class="mt-1">
-                At low temperatures, higher viscosity can push systems toward laminar flow (Re &lt; 2300) where heat
-                transfer efficiency drops sharply. At elevated temperatures and pressures (above 212°F), water remains
-                liquid only under pressure — the saturation pressure values in the data table reflect this condition.
+              <p class="mt-2">
+                A commonly cited value is K<sub>w</sub> = 1.00&times;10<sup>&minus;14</sup> at 25&nbsp;°C (77&nbsp;°F). It is expressed as a negative base-10 logarithm:
+              </p>
+              <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
+                pK<sub>w</sub> = &minus;log<sub>10</sub>(K<sub>w</sub>)
+              </p>
+              <p class="mt-2">
+                Because H<sub>3</sub>O<sup>+</sup> and OH<sup>&minus;</sup> are produced in a 1:1 molar ratio, [H<sub>3</sub>O<sup>+</sup>] = [OH<sup>&minus;</sup>] = &radic;K<sub>w</sub>. This is the basis for defining neutral pH as pK<sub>w</sub>/2 — at 25&nbsp;°C this gives pH&nbsp;7.
               </p>
             </div>
 
-            <p class="mt-3 text-start"><span style="font-weight:var(--font-weight-normal)">Note:</span> Viscosity is highly temperature-dependent. Always check viscosity at the lowest expected operating temperature, not just at design conditions.</p>
+            <div style="text-align: left" class="mt-4">
+              <div class="custom-subheading">Temperature Dependence</div>
+              <p class="mt-2">
+                pK<sub>w</sub> is not constant — it <span style="font-weight:var(--font-weight-medium)">decreases as temperature rises</span>, meaning water ionizes more at higher temperatures. At 0&nbsp;°C, pK<sub>w</sub>&nbsp;&approx;&nbsp;14.95, giving a neutral pH of about 7.47. At 100&nbsp;°C, pK<sub>w</sub>&nbsp;&approx;&nbsp;12.25, giving a neutral pH of about 6.13. Above 250&nbsp;°C, ionization decreases slightly and pK<sub>w</sub> rises again as the dielectric constant of water drops near its critical point, reducing the ability to stabilize separated ions.
+              </p>
+            </div>
+
+            <div style="text-align: left" class="mt-4">
+              <div class="custom-subheading">Heavy Water (D<sub>2</sub>O)</div>
+              <p class="mt-2">
+                Heavy water self-ionizes less than normal water because the O–D bond is stronger than O–H — deuterium is heavier than protium, so the zero-point vibrational energy is lower and the bond requires more energy to break. This produces pK<sub>w</sub> values roughly 0.9–1.0 units higher for D<sub>2</sub>O compared to H<sub>2</sub>O across 0–100&nbsp;°C. Published D<sub>2</sub>O data is available only to 100&nbsp;°C&nbsp;/&nbsp;212&nbsp;°F.
+              </p>
+            </div>
+
+            <p class="mt-3 text-start"><span style="font-weight:var(--font-weight-normal)">Note:</span> See <a href="WaterPropertiesGeneral.html">Water General Properties</a> for thermodynamic properties at standard conditions.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- DATA TABLE -->
+    <!-- SI DATA TABLE -->
     <section>
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap">
-          <div class="mx-auto d-inline-block mt-4" style="max-width:960px; width:100%;">
-            <div class="custom-heading">Water Prandtl Number Table</div>
-
+          <div class="mx-auto d-inline-block mt-4" style="max-width:700px; width:100%;">
+            <div class="custom-heading">Water Ionization Constant (pK<sub>w</sub>) Table — SI Units</div>
+            <p class="mt-2 text-start">Ionization constant of normal (H<sub>2</sub>O) and heavy water (D<sub>2</sub>O) from 0 to 350 °C:</p>
             <div class="table-responsive mt-3 mb-3">
               <table class="table table-striped table-bordered table-hover table-sm">
                 <thead style="background-color: var(--section-title-color); color: #fff;">
                   <tr>
-                    <th rowspan="2" class="align-middle">Temp<br>(°F)</th>
-                    <th rowspan="2" class="align-middle">Pressure<br>(psia)</th>
-                    <th colspan="3" class="text-center">Dynamic Viscosity</th>
-                    <th colspan="1" class="text-center">Kinematic Viscosity</th>
-                  </tr>
-                  <tr>
-                    <th>lbf·s/ft²<br>(×10⁻⁵)</th>
-                    <th>lbm/(ft·h)</th>
-                    <th>cP (mPa·s)</th>
-                    <th>ft²/s<br>(×10⁻⁵)</th>
+                    <th>Temperature (°C)</th>
+                    <th>Temperature (°F)</th>
+                    <th>pK<sub>w</sub> — H<sub>2</sub>O</th>
+                    <th>pK<sub>w</sub> — D<sub>2</sub>O</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td>32.02</td><td>0.9506</td><td>3.7414</td><td>4.3336</td><td>1.7914</td><td>1.9287</td></tr>
-                  <tr><td>34</td><td>0.0962</td><td>3.6047</td><td>4.1752</td><td>1.7259</td><td>1.8579</td></tr>
-                  <tr><td>39.2</td><td>0.1180</td><td>3.2801</td><td>3.7992</td><td>1.5705</td><td>1.6906</td></tr>
-                  <tr><td>40</td><td>0.1217</td><td>3.2340</td><td>3.7458</td><td>1.5484</td><td>1.6668</td></tr>
-                  <tr><td>50</td><td>0.1781</td><td>2.7276</td><td>3.1593</td><td>1.3060</td><td>1.4063</td></tr>
-                  <tr><td>60</td><td>0.2563</td><td>2.3405</td><td>2.7109</td><td>1.1206</td><td>1.2075</td></tr>
-                  <tr><td>70</td><td>0.3634</td><td>2.0337</td><td>2.3556</td><td>0.9737</td><td>1.0503</td></tr>
-                  <tr><td>80</td><td>0.5076</td><td>1.7888</td><td>2.0719</td><td>0.8565</td><td>0.9250</td></tr>
-                  <tr><td>90</td><td>0.6992</td><td>1.5896</td><td>1.8411</td><td>0.7611</td><td>0.8234</td></tr>
-                  <tr><td>100</td><td>0.9506</td><td>1.4243</td><td>1.6497</td><td>0.6820</td><td>0.7392</td></tr>
-                  <tr><td>110</td><td>1.277</td><td>1.2847</td><td>1.4880</td><td>0.6151</td><td>0.6682</td></tr>
-                  <tr><td>120</td><td>1.695</td><td>1.1652</td><td>1.3496</td><td>0.5579</td><td>0.6075</td></tr>
-                  <tr><td>130</td><td>2.226</td><td>1.0620</td><td>1.2300</td><td>0.5085</td><td>0.5551</td></tr>
-                  <tr><td>140</td><td>2.893</td><td>0.9733</td><td>1.1273</td><td>0.4660</td><td>0.5102</td></tr>
-                  <tr><td>150</td><td>3.723</td><td>0.8950</td><td>1.0366</td><td>0.4285</td><td>0.4706</td></tr>
-                  <tr><td>160</td><td>4.747</td><td>0.8279</td><td>0.9589</td><td>0.3964</td><td>0.4367</td></tr>
-                  <tr><td>170</td><td>6.000</td><td>0.7698</td><td>0.8916</td><td>0.3686</td><td>0.4074</td></tr>
-                  <tr><td>180</td><td>7.520</td><td>0.7192</td><td>0.8330</td><td>0.3444</td><td>0.3820</td></tr>
-                  <tr><td>190</td><td>9.349</td><td>0.6745</td><td>0.7813</td><td>0.3230</td><td>0.3596</td></tr>
-                  <tr><td>200</td><td>11.537</td><td>0.6300</td><td>0.7297</td><td>0.3016</td><td>0.3371</td></tr>
-                  <tr><td>212</td><td>14.710</td><td>0.5881</td><td>0.6812</td><td>0.2816</td><td>0.3163</td></tr>
-                  <tr><td>220</td><td>17.203</td><td>0.5619</td><td>0.6508</td><td>0.2690</td><td>0.3032</td></tr>
-                  <tr><td>240</td><td>25.001</td><td>0.5050</td><td>0.5850</td><td>0.2418</td><td>0.2750</td></tr>
-                  <tr><td>260</td><td>35.263</td><td>0.4575</td><td>0.5299</td><td>0.2191</td><td>0.2515</td></tr>
-                  <tr><td>280</td><td>49.286</td><td>0.4176</td><td>0.4837</td><td>0.2000</td><td>0.2320</td></tr>
-                  <tr><td>300</td><td>67.264</td><td>0.3840</td><td>0.4448</td><td>0.1839</td><td>0.2157</td></tr>
-                  <tr><td>350</td><td>134.73</td><td>0.3202</td><td>0.3708</td><td>0.1533</td><td>0.1853</td></tr>
-                  <tr><td>400</td><td>247.01</td><td>0.2750</td><td>0.3185</td><td>0.1317</td><td>0.1648</td></tr>
-                  <tr><td>450</td><td>422.32</td><td>0.2404</td><td>0.2785</td><td>0.1151</td><td>0.1504</td></tr>
-                  <tr><td>500</td><td>680.56</td><td>0.2126</td><td>0.2463</td><td>0.1018</td><td>0.1398</td></tr>
-                  <tr><td>550</td><td>1045.0</td><td>0.1888</td><td>0.2187</td><td>0.0904</td><td>0.1322</td></tr>
-                  <tr><td>600</td><td>1542.1</td><td>0.1673</td><td>0.1937</td><td>0.0801</td><td>0.1270</td></tr>
-                  <tr><td>625</td><td>1851.2</td><td>0.1562</td><td>0.1809</td><td>0.0748</td><td>0.1252</td></tr>
-                  <tr><td>650</td><td>2207.8</td><td>0.1438</td><td>0.1666</td><td>0.0689</td><td>0.1239</td></tr>
-                  <tr><td>675</td><td>2618.7</td><td>0.1292</td><td>0.1496</td><td>0.0619</td><td>0.1230</td></tr>
+                  <tr><td>0</td><td>32</td><td>14.947</td><td>15.972</td></tr>
+                  <tr><td>5</td><td>41</td><td>14.734</td><td>15.743</td></tr>
+                  <tr><td>10</td><td>50</td><td>14.534</td><td>15.527</td></tr>
+                  <tr><td>15</td><td>59</td><td>14.344</td><td>15.324</td></tr>
+                  <tr><td>20</td><td>68</td><td>14.165</td><td>15.132</td></tr>
+                  <tr><td>25</td><td>77</td><td>13.995</td><td>14.951</td></tr>
+                  <tr><td>30</td><td>86</td><td>13.833</td><td>14.779</td></tr>
+                  <tr><td>35</td><td>95</td><td>13.680</td><td>14.616</td></tr>
+                  <tr><td>40</td><td>104</td><td>13.535</td><td>14.462</td></tr>
+                  <tr><td>45</td><td>113</td><td>13.396</td><td>14.316</td></tr>
+                  <tr><td>50</td><td>122</td><td>13.265</td><td>14.176</td></tr>
+                  <tr><td>55</td><td>131</td><td>13.140</td><td>14.044</td></tr>
+                  <tr><td>60</td><td>140</td><td>13.020</td><td>13.918</td></tr>
+                  <tr><td>65</td><td>149</td><td>12.907</td><td>13.798</td></tr>
+                  <tr><td>70</td><td>158</td><td>12.799</td><td>13.683</td></tr>
+                  <tr><td>75</td><td>167</td><td>12.696</td><td>13.574</td></tr>
+                  <tr><td>80</td><td>176</td><td>12.598</td><td>13.470</td></tr>
+                  <tr><td>85</td><td>185</td><td>12.505</td><td>13.371</td></tr>
+                  <tr><td>90</td><td>194</td><td>12.417</td><td>13.276</td></tr>
+                  <tr><td>95</td><td>203</td><td>12.332</td><td>13.186</td></tr>
+                  <tr><td>100</td><td>212</td><td>12.252</td><td>13.120</td></tr>
+                  <tr><td>150</td><td>302</td><td>11.64</td><td>—</td></tr>
+                  <tr><td>200</td><td>393</td><td>11.31</td><td>—</td></tr>
+                  <tr><td>250</td><td>482</td><td>11.20</td><td>—</td></tr>
+                  <tr><td>300</td><td>572</td><td>11.34</td><td>—</td></tr>
+                  <tr><td>350</td><td>662</td><td>11.92</td><td>—</td></tr>
                 </tbody>
               </table>
             </div>
-            <p class="text-start small">Data at saturation pressure. Below 212&nbsp;°F this is effectively atmospheric pressure.</p>
+            <p class="text-start small">D<sub>2</sub>O data available to 100 °C only. Above 100 °C water is at saturation pressure.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMPERIAL DATA TABLE -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-4" style="max-width:700px; width:100%;">
+            <div class="custom-heading">Water Ionization Constant (pK<sub>w</sub>) Table — Imperial Units</div>
+            <p class="mt-2 text-start">Ionization constant of normal (H<sub>2</sub>O) and heavy water (D<sub>2</sub>O) from 32 to 650 °F:</p>
+            <div class="table-responsive mt-3 mb-3">
+              <table class="table table-striped table-bordered table-hover table-sm">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th>Temperature (°F)</th>
+                    <th>Temperature (°C)</th>
+                    <th>pK<sub>w</sub> — H<sub>2</sub>O</th>
+                    <th>pK<sub>w</sub> — D<sub>2</sub>O</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>32</td><td>0.0</td><td>14.947</td><td>15.972</td></tr>
+                  <tr><td>40</td><td>4.4</td><td>14.758</td><td>15.768</td></tr>
+                  <tr><td>50</td><td>10.0</td><td>14.534</td><td>15.528</td></tr>
+                  <tr><td>60</td><td>15.6</td><td>14.324</td><td>15.302</td></tr>
+                  <tr><td>70</td><td>21.1</td><td>14.126</td><td>15.090</td></tr>
+                  <tr><td>80</td><td>26.7</td><td>13.940</td><td>14.891</td></tr>
+                  <tr><td>90</td><td>32.2</td><td>13.764</td><td>14.705</td></tr>
+                  <tr><td>100</td><td>37.8</td><td>13.598</td><td>14.529</td></tr>
+                  <tr><td>110</td><td>43.3</td><td>13.442</td><td>14.364</td></tr>
+                  <tr><td>120</td><td>48.9</td><td>13.293</td><td>14.208</td></tr>
+                  <tr><td>130</td><td>54.4</td><td>13.153</td><td>14.060</td></tr>
+                  <tr><td>140</td><td>60.0</td><td>13.020</td><td>13.918</td></tr>
+                  <tr><td>150</td><td>65.6</td><td>12.895</td><td>13.785</td></tr>
+                  <tr><td>160</td><td>71.1</td><td>12.776</td><td>13.658</td></tr>
+                  <tr><td>170</td><td>76.7</td><td>12.663</td><td>13.537</td></tr>
+                  <tr><td>180</td><td>82.2</td><td>12.556</td><td>13.423</td></tr>
+                  <tr><td>190</td><td>87.8</td><td>12.455</td><td>13.317</td></tr>
+                  <tr><td>200</td><td>93.3</td><td>12.360</td><td>13.219</td></tr>
+                  <tr><td>210</td><td>98.9</td><td>12.270</td><td>13.13</td></tr>
+                  <tr><td>212</td><td>100.0</td><td>12.252</td><td>13.12</td></tr>
+                  <tr><td>250</td><td>121.1</td><td>11.97</td><td>—</td></tr>
+                  <tr><td>300</td><td>148.9</td><td>11.65</td><td>—</td></tr>
+                  <tr><td>400</td><td>204.4</td><td>11.29</td><td>—</td></tr>
+                  <tr><td>500</td><td>260.0</td><td>11.20</td><td>—</td></tr>
+                  <tr><td>600</td><td>315.6</td><td>11.49</td><td>—</td></tr>
+                  <tr><td>650</td><td>343.3</td><td>11.84</td><td>—</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-start small">D<sub>2</sub>O data available to 212 °F only. Above 212 °F water is at saturation pressure.</p>
           </div>
         </div>
       </div>
@@ -509,126 +481,67 @@
   <!-- END FOOTER -->
 
 <script>
-// ── Water Dynamic and Kinematic Viscosity Data ────────────────────────────────
-// Source: Engineering Toolbox — Water Viscosity
-// Format: [temp_F, dyn_lbf_s_ft2_e5, lbm_ft_h, cP_mPas, kin_ft2_s_e5]
-const waterViscFull = [
-  [32.02, 3.7414, 4.3336, 1.7914, 1.9287],
-  [34,    3.6047, 4.1752, 1.7259, 1.8579],
-  [39.2,  3.2801, 3.7992, 1.5705, 1.6906],
-  [40,    3.2340, 3.7458, 1.5484, 1.6668],
-  [50,    2.7276, 3.1593, 1.3060, 1.4063],
-  [60,    2.3405, 2.7109, 1.1206, 1.2075],
-  [70,    2.0337, 2.3556, 0.9737, 1.0503],
-  [80,    1.7888, 2.0719, 0.8565, 0.9250],
-  [90,    1.5896, 1.8411, 0.7611, 0.8234],
-  [100,   1.4243, 1.6497, 0.6820, 0.7392],
-  [110,   1.2847, 1.4880, 0.6151, 0.6682],
-  [120,   1.1652, 1.3496, 0.5579, 0.6075],
-  [130,   1.0620, 1.2300, 0.5085, 0.5551],
-  [140,   0.9733, 1.1273, 0.4660, 0.5102],
-  [150,   0.8950, 1.0366, 0.4285, 0.4706],
-  [160,   0.8279, 0.9589, 0.3964, 0.4367],
-  [170,   0.7698, 0.8916, 0.3686, 0.4074],
-  [180,   0.7192, 0.8330, 0.3444, 0.3820],
-  [190,   0.6745, 0.7813, 0.3230, 0.3596],
-  [200,   0.6300, 0.7297, 0.3016, 0.3371],
-  [212,   0.5881, 0.6812, 0.2816, 0.3163],
-  [220,   0.5619, 0.6508, 0.2690, 0.3032],
-  [240,   0.5050, 0.5850, 0.2418, 0.2750],
-  [260,   0.4575, 0.5299, 0.2191, 0.2515],
-  [280,   0.4176, 0.4837, 0.2000, 0.2320],
-  [300,   0.3840, 0.4448, 0.1839, 0.2157],
-  [350,   0.3202, 0.3708, 0.1533, 0.1853],
-  [400,   0.2750, 0.3185, 0.1317, 0.1648],
-  [450,   0.2404, 0.2785, 0.1151, 0.1504],
-  [500,   0.2126, 0.2463, 0.1018, 0.1398],
-  [550,   0.1888, 0.2187, 0.0904, 0.1322],
-  [600,   0.1673, 0.1937, 0.0801, 0.1270],
-  [625,   0.1562, 0.1809, 0.0748, 0.1252],
-  [650,   0.1438, 0.1666, 0.0689, 0.1239],
-  [675,   0.1292, 0.1496, 0.0619, 0.1230]
+// [temp_C, temp_F, pKw_H2O, pKw_D2O]  — D2O null above 100 °C
+const pkwSI = [
+  [0,   32,  14.947, 15.972],
+  [5,   41,  14.734, 15.743],
+  [10,  50,  14.534, 15.527],
+  [15,  59,  14.344, 15.324],
+  [20,  68,  14.165, 15.132],
+  [25,  77,  13.995, 14.951],
+  [30,  86,  13.833, 14.779],
+  [35,  95,  13.680, 14.616],
+  [40,  104, 13.535, 14.462],
+  [45,  113, 13.396, 14.316],
+  [50,  122, 13.265, 14.176],
+  [55,  131, 13.140, 14.044],
+  [60,  140, 13.020, 13.918],
+  [65,  149, 12.907, 13.798],
+  [70,  158, 12.799, 13.683],
+  [75,  167, 12.696, 13.574],
+  [80,  176, 12.598, 13.470],
+  [85,  185, 12.505, 13.371],
+  [90,  194, 12.417, 13.276],
+  [95,  203, 12.332, 13.186],
+  [100, 212, 12.252, 13.120],
+  [150, 302, 11.64,  null],
+  [200, 393, 11.31,  null],
+  [250, 482, 11.20,  null],
+  [300, 572, 11.34,  null],
+  [350, 662, 11.92,  null]
 ];
 
-// ── Log-linear interpolation ──────────────────────────────────────────────────
-function waterInterp(tF, colIdx) {
-  const arr = waterViscFull;
-  if (tF <= arr[0][0]) return arr[0][colIdx];
-  if (tF >= arr[arr.length - 1][0]) return arr[arr.length - 1][colIdx];
-  for (let i = 0; i < arr.length - 1; i++) {
-    if (tF >= arr[i][0] && tF <= arr[i + 1][0]) {
-      const t = (tF - arr[i][0]) / (arr[i + 1][0] - arr[i][0]);
-      return Math.exp(Math.log(arr[i][colIdx]) + t * (Math.log(arr[i + 1][colIdx]) - Math.log(arr[i][colIdx])));
-    }
-  }
-}
+// [temp_F, temp_C, pKw_H2O, pKw_D2O]  — D2O null above 212 °F
+const pkwImp = [
+  [32,  0.0,   14.947, 15.972],
+  [40,  4.4,   14.758, 15.768],
+  [50,  10.0,  14.534, 15.528],
+  [60,  15.6,  14.324, 15.302],
+  [70,  21.1,  14.126, 15.090],
+  [80,  26.7,  13.940, 14.891],
+  [90,  32.2,  13.764, 14.705],
+  [100, 37.8,  13.598, 14.529],
+  [110, 43.3,  13.442, 14.364],
+  [120, 48.9,  13.293, 14.208],
+  [130, 54.4,  13.153, 14.060],
+  [140, 60.0,  13.020, 13.918],
+  [150, 65.6,  12.895, 13.785],
+  [160, 71.1,  12.776, 13.658],
+  [170, 76.7,  12.663, 13.537],
+  [180, 82.2,  12.556, 13.423],
+  [190, 87.8,  12.455, 13.317],
+  [200, 93.3,  12.360, 13.219],
+  [210, 98.9,  12.270, 13.13],
+  [212, 100.0, 12.252, 13.12],
+  [250, 121.1, 11.97,  null],
+  [300, 148.9, 11.65,  null],
+  [400, 204.4, 11.29,  null],
+  [500, 260.0, 11.20,  null],
+  [600, 315.6, 11.49,  null],
+  [650, 343.3, 11.84,  null]
+];
 
-// ── Dense points for dynamic viscosity chart (col 3 = cP) ────────────────────
-function dynByTempF() {
-  const pts = [];
-  for (let t = 32; t <= 675; t += 2)
-    pts.push({ x: t, y: parseFloat(waterInterp(t, 3).toFixed(5)) });
-  return pts;
-}
-
-// ── Dense points for kinematic viscosity chart (col 4 = ft²/s ×10⁻⁵ → cSt) ──
-// 1 (ft²/s ×10⁻⁵) × 1e-5 ft²/s × 92903.04 cSt/(ft²/s) = value × 0.9290304 cSt
-function kinByTempF() {
-  const CONV = 0.9290304;
-  const pts = [];
-  for (let t = 32; t <= 675; t += 2)
-    pts.push({ x: t, y: parseFloat((waterInterp(t, 4) * CONV).toFixed(5)) });
-  return pts;
-}
-
-// ── Temperature converters ────────────────────────────────────────────────────
-function convertToFahrenheit() {
-  const c = parseFloat(document.getElementById('celsius').value);
-  if (!isNaN(c)) document.getElementById('fahrenheit').value = (c * 9 / 5 + 32).toFixed(1);
-  waterCalc();
-}
-function convertToCelsius() {
-  const f = parseFloat(document.getElementById('fahrenheit').value);
-  if (!isNaN(f)) document.getElementById('celsius').value = ((f - 32) * 5 / 9).toFixed(1);
-  waterCalc();
-}
-
-// ── Calculator ────────────────────────────────────────────────────────────────
-function waterCalc() {
-  const fahr  = parseFloat(document.getElementById('fahrenheit').value);
-  const minT  = waterViscFull[0][0];
-  const maxT  = waterViscFull[waterViscFull.length - 1][0];
-  const inRange = !isNaN(fahr) && fahr >= minT && fahr <= maxT;
-  const dynIds = ['result_visc1','result_visc2','result_visc3','result_visc4','result_visc5','result_visc6'];
-  const kinIds = ['result_kin1','result_kin2','result_kin3','result_kin4','result_kin5','result_kin6'];
-
-  if (inRange) {
-    const mu = waterInterp(fahr, 3); // cP = mPa·s
-    document.getElementById('result_visc1').textContent = mu.toFixed(4);
-    document.getElementById('result_visc2').textContent = mu.toFixed(4);
-    document.getElementById('result_visc3').textContent = (mu / 100).toFixed(5);
-    document.getElementById('result_visc4').textContent = (mu / 1000).toFixed(6);
-    document.getElementById('result_visc5').textContent = (mu * 6.71969e-4).toFixed(6);
-    document.getElementById('result_visc6').textContent = (mu * 3.6).toFixed(4);
-
-    const kinRaw = waterInterp(fahr, 4); // ft²/s ×10⁻⁵
-    const nu = kinRaw * 0.9290304; // cSt = mm²/s
-    document.getElementById('result_kin1').textContent = nu.toFixed(4);
-    document.getElementById('result_kin2').textContent = nu.toFixed(4);
-    document.getElementById('result_kin3').textContent = (nu * 0.01).toFixed(6);
-    document.getElementById('result_kin4').textContent = (nu * 1e-6).toExponential(3);
-    document.getElementById('result_kin5').textContent = (nu * 0.0015500031).toFixed(6);
-    document.getElementById('result_kin6').textContent = (nu * 1.07639e-5).toExponential(4);
-  } else {
-    dynIds.forEach(id => document.getElementById(id).textContent = 'Out of Range');
-    kinIds.forEach(id => document.getElementById(id).textContent = 'Out of Range');
-  }
-}
-
-// ── Charts ────────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('celsius').value = ((70 - 32) * 5 / 9).toFixed(1);
-  waterCalc();
 
   const customBg = {
     id: 'customCanvasBackgroundColor',
@@ -655,17 +568,59 @@ window.addEventListener('DOMContentLoaded', function () {
     };
   }
 
-  // ── Dynamic (Absolute) Viscosity Chart ──────────────────────────────────────
-  const viscChart = new Chart(document.getElementById('myChart').getContext('2d'), {
+  function makeTooltip(unit) {
+    return {
+      enabled: true, mode: 'nearest', intersect: false, axis: 'x',
+      callbacks: {
+        title: items => items[0].parsed.x.toFixed(unit === 'C' ? 0 : 0) + ' °' + unit,
+        label: item  => item.dataset.label + ': ' + item.parsed.y.toFixed(3)
+      }
+    };
+  }
+
+  function makeScales(xLabel, xMin, xMax) {
+    return {
+      x: {
+        type: 'linear', min: xMin, max: xMax,
+        ticks: { maxRotation: 0, font: { size: 16 } },
+        title: { display: true, text: xLabel, font: { size: 20 } }
+      },
+      y: {
+        type: 'linear',
+        ticks: { font: { size: 16 } },
+        title: { display: true, text: 'pKw', padding: 10, font: { size: 20 } }
+      }
+    };
+  }
+
+  function addToggle(btnId, chart) {
+    document.getElementById(btnId).addEventListener('click', function () {
+      const cur = chart.options.plugins.tooltip.enabled;
+      chart.options.plugins.tooltip.enabled = !cur;
+      chart.update();
+      this.textContent = cur ? 'Show Tooltips' : 'Hide Tooltips';
+    });
+  }
+
+  const C_BLUE = 'rgb(68,119,170)';
+  const C_RED  = 'rgb(238,102,119)';
+
+  // ── Chart °C ──────────────────────────────────────────────────────────────────
+  const chartC = new Chart(document.getElementById('pkwChartC').getContext('2d'), {
     type: 'line',
     data: {
-      datasets: [{
-        label: 'Water',
-        data: dynByTempF(),
-        fill: false,
-        borderColor: 'rgb(68,119,170)',
-        tension: 0.1
-      }]
+      datasets: [
+        {
+          label: 'H₂O',
+          data: pkwSI.map(r => ({ x: r[0], y: r[2] })),
+          fill: false, borderColor: C_BLUE, tension: 0.1
+        },
+        {
+          label: 'D₂O',
+          data: pkwSI.filter(r => r[3] !== null).map(r => ({ x: r[0], y: r[3] })),
+          fill: false, borderColor: C_RED, tension: 0.1
+        }
+      ]
     },
     options: {
       maintainAspectRatio: false, responsive: true,
@@ -673,46 +628,32 @@ window.addEventListener('DOMContentLoaded', function () {
       plugins: {
         customCanvasBackgroundColor: { color: 'white' },
         legend: makeLegend(),
-        tooltip: {
-          enabled: true, mode: 'nearest', intersect: false, axis: 'x',
-          callbacks: {
-            title: items => items[0].parsed.x.toFixed(0) + ' °F',
-            label: item  => 'Water: ' + item.parsed.y.toFixed(4) + ' mPa·s (cP)'
-          }
-        }
+        tooltip: makeTooltip('C')
       },
       interaction: { mode: 'nearest', axis: 'x' },
       elements: { point: { radius: 0 } },
-      scales: {
-        x: { type: 'linear', min: 32, max: 675,
-             ticks: { maxRotation: 0, font: { size: 16 } },
-             title: { display: true, text: 'Temperature (°F)', font: { size: 20 } } },
-        y: { type: 'logarithmic',
-             ticks: { font: { size: 16 } },
-             title: { display: true, text: 'Dynamic (Absolute) Viscosity (mPa·s)', padding: 10, font: { size: 20 } } }
-      }
+      scales: makeScales('Temperature (°C)', 0, 350)
     },
     plugins: [customBg]
   });
+  addToggle('toggleTooltipC', chartC);
 
-  document.getElementById('toggleTooltipButton').addEventListener('click', function () {
-    const cur = viscChart.options.plugins.tooltip.enabled;
-    viscChart.options.plugins.tooltip.enabled = !cur;
-    viscChart.update();
-    this.textContent = cur ? 'Show Tooltips' : 'Hide Tooltips';
-  });
-
-  // ── Kinematic Viscosity Chart ─────────────────────────────────────────────
-  const kinChart = new Chart(document.getElementById('kinChart').getContext('2d'), {
+  // ── Chart °F ──────────────────────────────────────────────────────────────────
+  const chartF = new Chart(document.getElementById('pkwChartF').getContext('2d'), {
     type: 'line',
     data: {
-      datasets: [{
-        label: 'Water',
-        data: kinByTempF(),
-        fill: false,
-        borderColor: 'rgb(68,119,170)',
-        tension: 0.1
-      }]
+      datasets: [
+        {
+          label: 'H₂O',
+          data: pkwImp.map(r => ({ x: r[0], y: r[2] })),
+          fill: false, borderColor: C_BLUE, tension: 0.1
+        },
+        {
+          label: 'D₂O',
+          data: pkwImp.filter(r => r[3] !== null).map(r => ({ x: r[0], y: r[3] })),
+          fill: false, borderColor: C_RED, tension: 0.1
+        }
+      ]
     },
     options: {
       maintainAspectRatio: false, responsive: true,
@@ -720,34 +661,16 @@ window.addEventListener('DOMContentLoaded', function () {
       plugins: {
         customCanvasBackgroundColor: { color: 'white' },
         legend: makeLegend(),
-        tooltip: {
-          enabled: true, mode: 'nearest', intersect: false, axis: 'x',
-          callbacks: {
-            title: items => items[0].parsed.x.toFixed(0) + ' °F',
-            label: item  => 'Water: ' + item.parsed.y.toFixed(4) + ' cSt'
-          }
-        }
+        tooltip: makeTooltip('F')
       },
       interaction: { mode: 'nearest', axis: 'x' },
       elements: { point: { radius: 0 } },
-      scales: {
-        x: { type: 'linear', min: 32, max: 675,
-             ticks: { maxRotation: 0, font: { size: 16 } },
-             title: { display: true, text: 'Temperature (°F)', font: { size: 20 } } },
-        y: { type: 'logarithmic',
-             ticks: { font: { size: 16 } },
-             title: { display: true, text: 'Kinematic Viscosity (cSt = mm²/s)', padding: 10, font: { size: 20 } } }
-      }
+      scales: makeScales('Temperature (°F)', 32, 650)
     },
     plugins: [customBg]
   });
+  addToggle('toggleTooltipF', chartF);
 
-  document.getElementById('toggleTooltipButtonKin').addEventListener('click', function () {
-    const cur = kinChart.options.plugins.tooltip.enabled;
-    kinChart.options.plugins.tooltip.enabled = !cur;
-    kinChart.update();
-    this.textContent = cur ? 'Show Tooltips' : 'Hide Tooltips';
-  });
 });
 </script>
 
