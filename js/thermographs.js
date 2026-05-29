@@ -78,6 +78,12 @@ window.ThermoGraphs = (function () {
   var _chartT         = null;
   var _chartP         = null;
   var _chartPhase     = null;   // Phase diagram: sat. envelope in T–P space
+
+  // Print-shadow charts — live in #thermoGraphsPrint (position:fixed;left:-9999px)
+  // so they always have real pixel dimensions regardless of which tab is active.
+  var _chartT_p       = null;
+  var _chartP_p       = null;
+  var _chartPhase_p   = null;
   var _propKeyT       = DEFAULT_PROP;
   var _propKeyP       = DEFAULT_PROP;
   var _sweepTData     = null;   // Array<{ T_K,  props }> — N_SWEEP results
@@ -387,51 +393,59 @@ window.ThermoGraphs = (function () {
     if (curData.length) allPs.push(curData[0].y);
     var useLogY = allPs.every(function(v) { return v > 0; });
 
-    _chartPhase.data = {
-      datasets: [
-        {
-          label           : 'Saturation curve',
-          data            : satData,
-          showLine        : true,
-          borderColor     : '#2166ac',
-          backgroundColor : 'rgba(33,102,172,0.10)',
-          borderWidth     : 2,
-          pointRadius     : 0,
-          pointHoverRadius: 5,
-          tension         : 0.2,
-          spanGaps        : false,
-          fill            : false,
-          order           : 2
-        },
-        {
-          label           : 'Critical point',
-          data            : cpData,
-          showLine        : false,
-          borderColor     : '#d73027',
-          backgroundColor : '#d73027',
-          pointRadius     : 10,
-          pointHoverRadius: 13,
-          pointStyle      : 'star',
-          order           : 0
-        },
-        {
-          label           : 'Current state',
-          data            : curData,
-          showLine        : false,
-          borderColor     : _STYLE.markerColor,
-          backgroundColor : _STYLE.markerFill,
-          pointRadius     : 8,
-          pointHoverRadius: 11,
-          pointStyle      : 'circle',
-          order           : 1
-        }
-      ]
-    };
+    var phaseDatasets = [
+      {
+        label           : 'Saturation curve',
+        data            : satData,
+        showLine        : true,
+        borderColor     : '#2166ac',
+        backgroundColor : 'rgba(33,102,172,0.10)',
+        borderWidth     : 2,
+        pointRadius     : 0,
+        pointHoverRadius: 5,
+        tension         : 0.2,
+        spanGaps        : false,
+        fill            : false,
+        order           : 2
+      },
+      {
+        label           : 'Critical point',
+        data            : cpData,
+        showLine        : false,
+        borderColor     : '#d73027',
+        backgroundColor : '#d73027',
+        pointRadius     : 10,
+        pointHoverRadius: 13,
+        pointStyle      : 'star',
+        order           : 0
+      },
+      {
+        label           : 'Current state',
+        data            : curData,
+        showLine        : false,
+        borderColor     : _STYLE.markerColor,
+        backgroundColor : _STYLE.markerFill,
+        pointRadius     : 8,
+        pointHoverRadius: 11,
+        pointStyle      : 'circle',
+        order           : 1
+      }
+    ];
 
+    _chartPhase.data                        = { datasets: phaseDatasets };
     _chartPhase.options.scales.x.title.text = 'T [' + tUnit + ']';
     _chartPhase.options.scales.y.type       = useLogY ? 'logarithmic' : 'linear';
     _chartPhase.options.scales.y.title.text = 'P [' + pUnit + ']';
     _chartPhase.update('none');
+
+    // ── keep print-shadow in sync ────────────────────────────────────────────
+    if (_chartPhase_p) {
+      _chartPhase_p.data                        = { datasets: phaseDatasets };
+      _chartPhase_p.options.scales.x.title.text = 'T [' + tUnit + ']';
+      _chartPhase_p.options.scales.y.type       = useLogY ? 'logarithmic' : 'linear';
+      _chartPhase_p.options.scales.y.title.text = 'P [' + pUnit + ']';
+      _chartPhase_p.update('none');
+    }
   }
 
   // ── Toolbar injection (property selector above each chart) ───────────────────
@@ -478,12 +492,21 @@ window.ThermoGraphs = (function () {
     var curX   = (_lastT_K !== null) ? _toDispT(_lastT_K) : null;
     var curY   = _currentProps ? _extract(_currentProps, _propKeyT) : NaN;
     var yLabel = info.label + (info.unitSI !== '—' ? ' [' + info.unitSI + ']' : '');
+    var tLabel = 'T [' + _tUnit() + ']';
 
     // dense=true: suppress point dots — hundreds of grid rows would render as a blob
     _chartT.data                        = { datasets: _makeDatasets(xArr, yArr, curX, curY, true) };
-    _chartT.options.scales.x.title.text = 'T [' + _tUnit() + ']';
+    _chartT.options.scales.x.title.text = tLabel;
     _chartT.options.scales.y.title.text = yLabel;
     _chartT.update('none');
+
+    // ── keep print-shadow in sync ────────────────────────────────────────────
+    if (_chartT_p) {
+      _chartT_p.data                        = { datasets: _makeDatasets(xArr, yArr, curX, curY, true) };
+      _chartT_p.options.scales.x.title.text = tLabel;
+      _chartT_p.options.scales.y.title.text = yLabel;
+      _chartT_p.update('none');
+    }
   }
 
   function _redrawP() {
@@ -495,12 +518,22 @@ window.ThermoGraphs = (function () {
     var curY   = _currentProps ? _extract(_currentProps, _propKeyP) : NaN;
     var yLabel = info.label + (info.unitSI !== '—' ? ' [' + info.unitSI + ']' : '');
     var useLog = dispPs.every(function(v) { return v > 0; });
+    var pLabel = 'P [' + _pUnit() + ']';
 
     _chartP.data                        = { datasets: _makeDatasets(dispPs, yArr, curX, curY) };
     _chartP.options.scales.x.type       = useLog ? 'logarithmic' : 'linear';
-    _chartP.options.scales.x.title.text = 'P [' + _pUnit() + ']';
+    _chartP.options.scales.x.title.text = pLabel;
     _chartP.options.scales.y.title.text = yLabel;
     _chartP.update('none');
+
+    // ── keep print-shadow in sync ────────────────────────────────────────────
+    if (_chartP_p) {
+      _chartP_p.data                        = { datasets: _makeDatasets(dispPs, yArr, curX, curY) };
+      _chartP_p.options.scales.x.type       = useLog ? 'logarithmic' : 'linear';
+      _chartP_p.options.scales.x.title.text = pLabel;
+      _chartP_p.options.scales.y.title.text = yLabel;
+      _chartP_p.update('none');
+    }
   }
 
   // ── Table helpers ────────────────────────────────────────────────────────────
@@ -780,9 +813,12 @@ window.ThermoGraphs = (function () {
     _satRows      = null;
     _meta         = null;
 
-    if (_chartT)     { _chartT.data     = { datasets: [] }; _chartT.update('none');     }
-    if (_chartP)     { _chartP.data     = { datasets: [] }; _chartP.update('none');     }
-    if (_chartPhase) { _chartPhase.data = { datasets: [] }; _chartPhase.update('none'); }
+    if (_chartT)       { _chartT.data       = { datasets: [] }; _chartT.update('none');       }
+    if (_chartP)       { _chartP.data       = { datasets: [] }; _chartP.update('none');       }
+    if (_chartPhase)   { _chartPhase.data   = { datasets: [] }; _chartPhase.update('none');   }
+    if (_chartT_p)     { _chartT_p.data     = { datasets: [] }; _chartT_p.update('none');     }
+    if (_chartP_p)     { _chartP_p.data     = { datasets: [] }; _chartP_p.update('none');     }
+    if (_chartPhase_p) { _chartPhase_p.data = { datasets: [] }; _chartPhase_p.update('none'); }
 
     _resetTableBody('tblSatByTBody', 12,
       'Select a fluid and press Calculate to populate the saturation table');
@@ -801,6 +837,11 @@ window.ThermoGraphs = (function () {
     _chartT     = _createChart('chartPropVsT',      'T [K]',  'Sp. Enthalpy h [J/kg]', false);
     _chartP     = _createChart('chartPropVsP',      'P [Pa]', 'Sp. Enthalpy h [J/kg]', true);
     _chartPhase = _createPhaseChart('chartPhaseDiagram');
+
+    // Print-shadow charts: same configuration but on the always-rendered off-screen canvases
+    _chartT_p     = _createChart('chartPropVsT_p',      'T [K]',  'Sp. Enthalpy h [J/kg]', false);
+    _chartP_p     = _createChart('chartPropVsP_p',      'P [Pa]', 'Sp. Enthalpy h [J/kg]', true);
+    _chartPhase_p = _createPhaseChart('chartPhaseDiagram_p');
 
     var selT = document.getElementById('chartTPropSelect');
     if (selT) selT.addEventListener('change', function() { _propKeyT = selT.value; _redrawT(); });

@@ -17,6 +17,17 @@ const _charts = {
   stressVsLoad:       null,
 };
 
+// Print-shadow registry — canvases live in #springGraphsPrint (position:fixed;left:-9999px)
+// so they always have real pixel dimensions regardless of which tab is active.
+const _printCharts = {
+  loadVsDeflection:   null,
+  loadVsLength:       null,
+  pctMTSvsDeflection: null,
+  stressVsLength:     null,
+  fatigueStrength:    null,
+  stressVsLoad:       null,
+};
+
 const KC = {
   blue:      '#3a7ab0',
   blueFaint: 'rgba(58,122,176,0.35)',
@@ -152,72 +163,49 @@ function makeOpts(xLabel, yLabel, xR, yR, extras = {}) {
 
 // ── Rebuild chart ─────────────────────────────────────────────
 function rebuildChart(key, canvasId, config) {
-  // console.log(`[KC-CHART] rebuildChart("${key}", "${canvasId}") called`);
 
-  // 1. Destroy old instance
+  // ── Main canvas ──────────────────────────────────────────────────────────────
+  // Only renders when the canvas has real layout dimensions (its tab is active).
+  // switchGraphTab() calls the chart function again when a hidden tab is opened.
+
   if (_charts[key]) {
-    // console.log(`[KC-CHART]   destroying existing chart for key="${key}"`);
-    try { _charts[key].destroy(); } catch(e) { console.warn(`[KC-CHART]   destroy failed:`, e); }
+    try { _charts[key].destroy(); } catch(e) { console.warn('[KC-CHART] destroy failed:', e); }
     _charts[key] = null;
   }
 
-  // 2. Find canvas
   const canvas = document.getElementById(canvasId);
   if (!canvas) {
-    console.error(`[KC-CHART]   FAIL: canvas #${canvasId} not found in DOM`);
-    return;
-  }
-  // console.log(`[KC-CHART]   canvas found: offsetWidth=${canvas.offsetWidth}, offsetHeight=${canvas.offsetHeight}, width attr=${canvas.width}, height attr=${canvas.height}, style.height="${canvas.style.height}"`);
-
-  // 3. Check parent visibility
-  const parent = canvas.parentElement;
-  const parentDisplay = parent ? getComputedStyle(parent).display : 'unknown';
-  const parentVis     = parent ? getComputedStyle(parent).visibility : 'unknown';
-  // console.log(`[KC-CHART]   parent .${parent?.className}: display=${parentDisplay}, visibility=${parentVis}`);
-
-  // If canvas has no layout dimensions, Chart.js will miscalculate
-  // its internal buffer size and can exceed the browser's max canvas limit.
-  // Skip silently — switchGraphTab() will render it when the tab is opened.
-  if (canvas.offsetWidth === 0 || canvas.offsetHeight === 0) {
-    // console.log(`[KC-CHART]   SKIP — canvas has zero dimensions (parent hidden), will render on tab switch`);
-    return;
+    console.error('[KC-CHART] FAIL: canvas #' + canvasId + ' not found in DOM');
+  } else if (canvas.offsetWidth === 0 || canvas.offsetHeight === 0) {
+    // Zero dimensions — parent tab is hidden.  Will render on tab switch.
+  } else {
+    if (!canvas.height || canvas.height === 0) canvas.height = 350;
+    if (typeof Chart === 'undefined') {
+      console.error('[KC-CHART] FAIL: Chart.js not loaded');
+    } else {
+      try {
+        _charts[key] = new Chart(canvas.getContext('2d'), config);
+      } catch(e) {
+        console.error('[KC-CHART] new Chart() THREW:', e);
+      }
+    }
   }
 
-  // 4. Fix zero height
-  if (!canvas.height || canvas.height === 0) {
-    // console.warn(`[KC-CHART]   canvas.height was 0, forcing to 350`);
-    canvas.height = 350;
+  // ── Print-shadow canvas ──────────────────────────────────────────────────────
+  // Lives in #springGraphsPrint (position:fixed;left:-9999px;width:750px) so it
+  // always has real pixel dimensions — renders every time, no tab restriction.
+
+  if (_printCharts[key]) {
+    try { _printCharts[key].destroy(); } catch(e) {}
+    _printCharts[key] = null;
   }
-
-  // 5. Check Chart.js
-  if (typeof Chart === 'undefined') {
-    console.error(`[KC-CHART]   FAIL: Chart.js (window.Chart) is not defined — library not loaded`);
-    return;
-  }
-  // console.log(`[KC-CHART]   Chart.js version: ${Chart.version}`);
-
-  // 6. Inspect config
-  // console.log(`[KC-CHART]   config.type="${config.type}", datasets count=${config.data?.datasets?.length}`);
-  config.data?.datasets?.forEach((ds, i) => {
-    // console.log(`[KC-CHART]     dataset[${i}] label="${ds.label}" points=${ds.data?.length}`);
-  });
-
-  // 7. Log axis ranges
-  const sc = config.options?.scales;
-  if (sc) {
-    // console.log(`[KC-CHART]   x-axis: min=${sc.x?.min}, max=${sc.x?.max}`);
-    // console.log(`[KC-CHART]   y-axis: min=${sc.y?.min}, max=${sc.y?.max}`);
-  }
-
-  // console.log(`[KC-CHART] axis ranges before new Chart(): x=${JSON.stringify(config.options?.scales?.x && {min: config.options.scales.x.min, max: config.options.scales.x.max})}, y=${JSON.stringify(config.options?.scales?.y && {min: config.options.scales.y.min, max: config.options.scales.y.max})}`);
-
-  // 8. Create chart
-  // console.log(`[KC-CHART]   calling new Chart()...`);
-  try {
-    _charts[key] = new Chart(canvas.getContext('2d'), config);
-    // console.log(`[KC-CHART]   new Chart() succeeded for key="${key}"`);
-  } catch(e) {
-    console.error(`[KC-CHART]   new Chart() THREW:`, e);
+  const printCanvas = document.getElementById(canvasId + '_p');
+  if (printCanvas && typeof Chart !== 'undefined') {
+    try {
+      _printCharts[key] = new Chart(printCanvas.getContext('2d'), config);
+    } catch(e) {
+      console.warn('[KC-CHART] print shadow render error:', key, e);
+    }
   }
 }
 

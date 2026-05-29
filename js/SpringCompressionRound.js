@@ -123,6 +123,136 @@ function buildVariableVector() {
   });
 }
 
+/**
+ * Better starting point for the LM solver and rank-analysis Jacobian.
+ *
+ * The plain `buildVariableVector()` uses LM_DEFAULTS for every un-pinned
+ * variable, which puts un-pinned geometry variables (D, OD, Na, k, …)
+ * far from the true values implied by the user's inputs.  Evaluating the
+ * numerical Jacobian at that inconsistent point makes the `k` column norm
+ * ~1 000× weaker than all other columns (because D=0.800 default instead
+ * of the correct D=ID+d≈0.381), which fools the rank analyser into thinking
+ * the spring-rate equation contributes no independent information.
+ *
+ * This function forward-propagates the algebraic consequences of user inputs
+ * before handing off to the solver/Jacobian, so x0 is physically coherent.
+ * User-pinned values are always kept as-is; derived values are only written
+ * to un-pinned slots.
+ */
+function buildSeededVariableVector() {
+  // ── Seed with user values + defaults ──────────────────────
+  const v = {};
+  LM_VARIABLES.forEach(id => {
+    if (userEnteredFieldIds.has(id)) {
+      const val = readFieldValue(id);
+      v[id] = (val !== null && val > 0) ? val : (LM_DEFAULTS[id] || 1.0);
+    } else {
+      v[id] = LM_DEFAULTS[id] || 1.0;
+    }
+  });
+
+  const G      = readFieldValue('G') || 11500000;
+  const Nd     = getDeadCoilCountFromEndType();
+  const closed = document.getElementById('endClosed')?.checked ?? false;
+  const ground = document.getElementById('endGround')?.checked ?? false;
+
+  // Only overwrite un-pinned slots with valid, finite, positive values
+  const set = (id, val) => {
+    if (!userEnteredFieldIds.has(id) && val > 0 && isFinite(val)) v[id] = val;
+  };
+
+  // ── Pass 1: Diameter chain ────────────────────────────────
+  // Whichever two of {d, D, OD, ID, C} the user entered, derive the rest.
+  if (userEnteredFieldIds.has('d') && userEnteredFieldIds.has('ID')) {
+    set('D',  v.ID + v.d);
+    set('OD', v.ID + 2 * v.d);
+    set('C',  (v.ID + v.d) / v.d);
+  } else if (userEnteredFieldIds.has('d') && userEnteredFieldIds.has('OD')) {
+    set('D',  v.OD - v.d);
+    set('ID', v.OD - 2 * v.d);
+    set('C',  (v.OD - v.d) / v.d);
+  } else if (userEnteredFieldIds.has('d') && userEnteredFieldIds.has('D')) {
+    set('OD', v.D + v.d);
+    set('ID', v.D - v.d);
+    set('C',  v.D / v.d);
+  } else if (userEnteredFieldIds.has('d') && userEnteredFieldIds.has('C')) {
+    set('D',  v.C * v.d);
+    set('OD', (v.C + 1) * v.d);
+    set('ID', (v.C - 1) * v.d);
+  }
+
+  // ── Pass 2: Spring rate k from load / length inputs ───────
+  const hasF1 = userEnteredFieldIds.has('F1');
+  const hasL1 = userEnteredFieldIds.has('L1');
+  const hasF2 = userEnteredFieldIds.has('F2');
+  const hasL2 = userEnteredFieldIds.has('L2');
+  const hasLf = userEnteredFieldIds.has('Lf');
+
+  if (!userEnteredFieldIds.has('k')) {
+    // Two complete load points → unambiguous k
+    if (hasF1 && hasL1 && hasF2 && hasL2) {
+      const dL = v.L1 - v.L2;
+      if (Math.abs(dL) > 1e-6) {
+        const k_impl = (v.F2 - v.F1) / dL;
+        if (k_impl > 0) set('k', k_impl);
+      }
+    // One load point + free length → k
+    } else if (hasF1 && hasL1 && hasLf) {
+      const dLf = v.Lf - v.L1;
+      if (dLf > 1e-6) set('k', v.F1 / dLf);
+    } else if (hasF2 && hasL2 && hasLf) {
+      const dLf = v.Lf - v.L2;
+      if (dLf > 1e-6) set('k', v.F2 / dLf);
+    }
+  }
+
+  // ── Pass 3: Free length Lf from load point ────────────────
+  if (!hasLf && v.k > 0) {
+    if (hasF1 && hasL1) {
+      set('Lf', v.F1 / v.k + v.L1);
+    } else if (hasF2 && hasL2) {
+      set('Lf', v.F2 / v.k + v.L2);
+    }
+  }
+
+  // ── Pass 4: Active coils Na via Wahl equation ─────────────
+  // k = G·d⁴ / (8·D³·Na)  →  Na = G·d⁴ / (8·D³·k)
+  if (!userEnteredFieldIds.has('Na') && v.k > 0 && v.d > 0 && v.D > 0) {
+    const Na_calc = (G * Math.pow(v.d, 4)) / (8.0 * Math.pow(v.D, 3) * v.k);
+    if (Na_calc >= 1 && isFinite(Na_calc)) set('Na', Na_calc);
+  }
+
+  // ── Pass 5: Total coils Nt ────────────────────────────────
+  if (!userEnteredFieldIds.has('Na') && userEnteredFieldIds.has('Nt')) {
+    set('Na', Math.max(v.Nt - Nd, 1));
+  }
+  if (!userEnteredFieldIds.has('Nt')) {
+    set('Nt', v.Na + Nd);
+  }
+
+  // ── Pass 6: Solid length Ls ───────────────────────────────
+  if (!userEnteredFieldIds.has('Ls')) {
+    set('Ls', ground ? v.Nt * v.d : (v.Nt + 1) * v.d);
+  }
+
+  // ── Pass 7: Pitch from Lf and Na ─────────────────────────
+  if (!userEnteredFieldIds.has('pitch') && v.Na > 0 && v.Lf > 0) {
+    let endOffset = 0;
+    if      ( closed &&  ground) endOffset = 2 * v.d;
+    else if ( closed && !ground) endOffset = 3 * v.d;
+    else if (!closed &&  ground) endOffset = v.d;
+    const pitch_calc = (v.Lf - endOffset) / v.Na;
+    if (pitch_calc > v.d) set('pitch', pitch_calc);
+  }
+
+  // ── Safety clamp: all values must be strictly positive ────
+  LM_VARIABLES.forEach(id => {
+    if (!(v[id] > 0)) v[id] = LM_DEFAULTS[id] || 1e-3;
+  });
+
+  return LM_VARIABLES.map(id => v[id]);
+}
+
 function applyVariableVector(x) {
   const hasL1 = userEnteredFieldIds.has('F1') || userEnteredFieldIds.has('L1');
   const hasL2 = userEnteredFieldIds.has('F2') || userEnteredFieldIds.has('L2');
@@ -329,7 +459,7 @@ const W_HARD = 1e3;
 const W_PHYS = 1.0;
 const W_SOFT = 0.05;
 
-function buildResiduals(x) {
+function buildResiduals(x, structural = false) {
   const v = {};
   LM_VARIABLES.forEach((id, i) => { v[id] = x[i]; });
 
@@ -481,26 +611,36 @@ function buildResiduals(x) {
 
   // ── TIER C2: Lf must exceed Ls — one-sided hard penalty ──
   // Uses same ground-aware Ls formula as Tier B to stay consistent.
+  //
+  // IMPORTANT: this row is always pushed (zero when slack > 0) so that
+  // buildResiduals() returns the same number of residuals regardless of
+  // whether the Lf/Ls boundary is crossed.  The numerical Jacobian in
+  // numericalJacobianOf() assumes a fixed residual count across all
+  // column perturbations; a conditional push would change the row count
+  // mid-Jacobian and produce NaN entries for any perturbed point that
+  // crosses slack = 0.
   {
     const Ls_check = ground ? v.Nt * v.d : (v.Nt + 1) * v.d;
     const slack    = v.Lf - Ls_check;
-    if (slack <= 0) {
-      r.push(W_HARD * (-slack + 1e-3) / Math.max(v.Lf, 0.1));
-    }
+    r.push(slack <= 0 ? W_HARD * (-slack + 1e-3) / Math.max(v.Lf, 0.1) : 0);
   }
 
-  // ── TIER D: Soft preferred-range nudges ──────────────────
-  r.push(W_SOFT * Math.max(0, 4.0  - v.C));
-  r.push(W_SOFT * Math.max(0, v.C  - 16.0));
-  r.push(W_SOFT * Math.max(0, 2.0  - v.Na));
-  r.push(W_SOFT * Math.max(0, v.L2 - v.L1));
+  if (!structural) {
+    // ── TIER D: Soft preferred-range nudges ────────────────
+    // Excluded from structural residuals so they cannot inflate
+    // the Jacobian rank and hide an underdetermined system.
+    r.push(W_SOFT * Math.max(0, 4.0  - v.C));
+    r.push(W_SOFT * Math.max(0, v.C  - 16.0));
+    r.push(W_SOFT * Math.max(0, 2.0  - v.Na));
+    r.push(W_SOFT * Math.max(0, v.L2 - v.L1));
 
-  // Regularisation
-  LM_VARIABLES.forEach(id => {
-    if (!userEnteredFieldIds.has(id)) {
-      r.push(0.001 * (v[id] - (LM_DEFAULTS[id] || 1.0)) / (LM_SCALES[id] || 1.0));
-    }
-  });
+    // Regularisation — same reason: excluded from rank analysis
+    LM_VARIABLES.forEach(id => {
+      if (!userEnteredFieldIds.has(id)) {
+        r.push(0.001 * (v[id] - (LM_DEFAULTS[id] || 1.0)) / (LM_SCALES[id] || 1.0));
+      }
+    });
+  }
 
   return r;
 }
@@ -581,6 +721,199 @@ function numericalJacobian(x, r0) {
     for (let i = 0; i < m; i++) J[i][j] = (r1[i] - r0[i]) / eps;
   }
   return J;
+}
+
+/**
+ * Parameterised variant — evaluates the Jacobian of any
+ * residual function, not just buildResiduals().
+ * Used by analyzeSystemRank() to Jacobian of structural-only residuals.
+ */
+function numericalJacobianOf(residualFn, x, r0) {
+  const m = r0.length, n = x.length;
+  const J = Array.from({ length: m }, () => new Array(n).fill(0));
+  for (let j = 0; j < n; j++) {
+    const eps = 1e-6 * Math.max(Math.abs(x[j]), 1e-3);
+    const xp  = [...x];
+    xp[j] += eps;
+    const r1 = residualFn(xp);
+    for (let i = 0; i < m; i++) J[i][j] = (r1[i] - r0[i]) / eps;
+  }
+  return J;
+}
+
+
+// ============================================================
+// JACOBIAN RANK ANALYSIS
+// ============================================================
+//
+// Standard approach used by CAD constraint solvers (SolidWorks,
+// CATIA, etc.) to detect underdetermined systems without
+// enumerating valid input combinations.
+//
+// Algorithm:
+//   1. Evaluate the Jacobian of structural constraints only
+//      (Tier A user pins + Tier B geometry + Tier C physics;
+//       Tier D soft nudges and regularisation excluded because
+//       they artificially inflate rank at every point).
+//   2. Normalise columns so scale differences don't mislead the
+//      pivot test.
+//   3. Count pivots ≥ relTol via column-pivoted Gaussian
+//      elimination — this is the effective rank.
+//   4. If rank < n_variables, the system has
+//      (n_variables - rank) free degrees of freedom and the
+//      solver should not run.
+//
+// Why not just count user inputs?
+//   Entering d, D, OD, ID, C looks like 5 constraints but they
+//   satisfy OD=D+d, ID=D-d, C=D/d so only 2 are independent.
+//   The Jacobian captures this algebraic redundancy automatically.
+// ============================================================
+
+/**
+ * Estimate the effective rank of matrix A (m × n) using
+ * column-normalised Gaussian elimination with COMPLETE pivoting
+ * (full row + column pivoting).
+ *
+ * Why complete pivoting instead of partial (row-only) pivoting?
+ *   With row-only pivoting the algorithm processes columns left-to-right
+ *   and may greedily consume the *only* row that contains a later variable.
+ *   Example: the free-length equation  Lf = Na·pitch  has entries in both
+ *   Na (col 5) and pitch (col 10).  If the Na column is processed first,
+ *   partial pivoting picks this row as the Na pivot (it has the larger Na
+ *   entry), destroying the sole pitch equation.  When col 10 arrives there
+ *   is no row left → max entry = 0 → column skipped → rank falsely low.
+ *   Complete pivoting avoids this by always choosing the globally largest
+ *   remaining entry, which naturally defers consuming multi-variable rows
+ *   until single-variable rows are exhausted.
+ *
+ * @param {number[][]} A
+ * @param {number}     relTol  Threshold for treating a pivot as zero (default 1e-4)
+ * @returns {number}
+ */
+function computeMatrixRank(A, relTol = 1e-4) {
+  if (!A.length || !A[0].length) return 0;
+  const m = A.length, n = A[0].length;
+
+  // Column-normalise: dividing each column by its Euclidean norm
+  // makes the elimination threshold independent of physical units.
+  const scale = new Array(n).fill(0);
+  for (let j = 0; j < n; j++) {
+    for (let i = 0; i < m; i++) scale[j] += A[i][j] * A[i][j];
+    scale[j] = Math.sqrt(scale[j]) || 1;
+  }
+  // Work on a mutable copy with column-scaled values
+  const M = A.map(row => row.map((v, j) => v / scale[j]));
+
+  let rank = 0;
+  for (let step = 0; step < Math.min(m, n); step++) {
+    // Complete pivoting: scan the entire remaining sub-matrix for
+    // the element with the largest absolute value.
+    let maxVal = 0, maxRow = step, maxCol = step;
+    for (let r = step; r < m; r++) {
+      for (let c = step; c < n; c++) {
+        const v = Math.abs(M[r][c]);
+        if (v > maxVal) { maxVal = v; maxRow = r; maxCol = c; }
+      }
+    }
+    if (maxVal < relTol) break;   // remaining sub-matrix is numerically zero
+
+    // Swap the chosen row to position `step`
+    if (maxRow !== step) [M[step], M[maxRow]] = [M[maxRow], M[step]];
+
+    // Swap the chosen column to position `step`
+    if (maxCol !== step) {
+      for (let r = 0; r < m; r++) {
+        const tmp = M[r][step]; M[r][step] = M[r][maxCol]; M[r][maxCol] = tmp;
+      }
+    }
+
+    // Eliminate all rows below the pivot
+    const pivot = M[step][step];
+    for (let r = step + 1; r < m; r++) {
+      const f = M[r][step] / pivot;
+      if (f === 0) continue;
+      for (let c = step; c < n; c++) M[r][c] -= f * M[step][c];
+    }
+
+    rank++;
+  }
+  return rank;
+}
+
+/**
+ * Analyse whether the current set of user-pinned constraints,
+ * together with the always-active structural constraints, is
+ * sufficient to fully determine the 15-variable system.
+ *
+ * Returns { rank, nVars, freeDOF, determined }.
+ * freeDOF > 0 means the solver should not run.
+ *
+ * Always logs a compact diagnostic to the browser console so you
+ * can open DevTools → Console and see exactly what the rank
+ * analyser sees without touching the UI:
+ *
+ *   [KasperCalc rank] 16r × 15v | rank=15 | freeDOF=0 ✓
+ *   Pinned : d=0.031  ID=0.350  F1=2.000  L1=0.650  F2=2.200  L2=0.500  Nt=10
+ *   Col norms (post-norm, pre-elim):
+ *     d     1.000e+0   ID    1.000e+0   D     9.164e-1  ...
+ *   Near-zero cols (norm < 1e-3): [none]
+ */
+function analyzeSystemRank() {
+  // Use the seeded vector (geometry + rate propagated from user inputs) so
+  // the Jacobian is evaluated near the solution manifold.  The plain
+  // buildVariableVector() leaves D, Na, k at far-off defaults, which
+  // collapses the k column norm ~1 000× and fools the rank test.
+  const x0    = buildSeededVariableVector();
+  const fn    = x => buildResiduals(x, true);   // structural residuals only
+  const r0    = fn(x0);
+  const J     = numericalJacobianOf(fn, x0, r0);
+  const rank  = computeMatrixRank(J);
+  const nVars = LM_VARIABLES.length;
+  const freeDOF = Math.max(0, nVars - rank);
+
+  // ── Console diagnostic (always on — open DevTools to read) ──
+  try {
+    const m = J.length, n = J[0]?.length ?? 0;
+
+    // Column norms of the RAW (un-normalised) Jacobian
+    const colNorms = LM_VARIABLES.map((id, j) =>
+      Math.sqrt(J.reduce((s, row) => s + row[j] ** 2, 0))
+    );
+
+    // Pinned fields and their values
+    const pinnedStr = [...userEnteredFieldIds]
+      .map(id => {
+        const v = readFieldValue(id);
+        return v !== null ? `${id}=${v}` : `${id}=?`;
+      })
+      .join('  ');
+
+    const header = `[KasperCalc rank] ${m}r × ${n}v | rank=${rank} | freeDOF=${freeDOF} ${freeDOF === 0 ? '✓' : '✗'}`;
+    console.group(header);
+    console.log('Pinned :', pinnedStr || '(none)');
+    console.log('x0     :', LM_VARIABLES.map((id, i) => `${id}=${x0[i].toPrecision(4)}`).join('  '));
+
+    // Column norm table — highlight near-zero columns
+    const normLines = LM_VARIABLES.map((id, j) => {
+      const n = colNorms[j];
+      const flag = n < 1e-3 ? ' ⚠ NEAR-ZERO' : '';
+      return `  ${id.padEnd(6)} ${n.toExponential(3)}${flag}`;
+    });
+    console.log('Col norms (raw J):\n' + normLines.join('\n'));
+
+    const nearZero = LM_VARIABLES.filter((_, j) => colNorms[j] < 1e-3);
+    if (nearZero.length) {
+      console.warn('Near-zero columns (likely un-constrained variables):', nearZero.join(', '));
+    } else {
+      console.log('Near-zero cols: [none — all variables constrained]');
+    }
+
+    console.groupEnd();
+  } catch (e) {
+    console.warn('[KasperCalc rank] diagnostic error:', e);
+  }
+
+  return { rank, nVars, freeDOF, determined: freeDOF === 0 };
 }
 
 
@@ -1223,38 +1556,76 @@ function runCalc() {
 
   runPreSolveOutputs();
 
-  // ── Gate 1: Minimum constraint count ─────────────────────
-  const constraintCount = countEffectiveConstraints();
-  if (constraintCount < MIN_USER_INPUTS_TO_SOLVE) {
-    updateStatusUnderdefined(constraintCount, MIN_USER_INPUTS_TO_SOLVE);
+  // ── Gate 1: Rank analysis — detects underdetermined systems ─
+  // Uses Jacobian rank of structural constraints only (Tier A+B+C).
+  // This naturally handles algebraically redundant inputs
+  // (e.g. entering d, D, OD, ID, C looks like 5 inputs but the
+  // Jacobian reveals only 2 are independent because OD=D+d,
+  // ID=D-d, C=D/d).  No hardcoded input-combination rules needed.
+  if (userEnteredFieldIds.size === 0) {
+    updateStatusUnderdefined(0, LM_VARIABLES.length);
     return;
   }
-
-  // ── Gate 2: Physical determinacy check ───────────────────
-  // Geometry-only inputs (diameters, lengths) give the solver
-  // no information about spring stiffness.  At least one
-  // stiffness-related field must be pinned or the solver will
-  // produce a physically meaningless result.
-  const physCheck = isSystemPhysicallyDetermined();
-  if (!physCheck.ok) {
-    const dot  = document.getElementById('bottomStatusDot');
-    const text = document.getElementById('bottomStatusSummary');
-    if (dot)  dot.className    = 'status-dot warn';
-    if (text) text.textContent = physCheck.reason === 'stiffness'
-      ? 'Underdefined — no stiffness constraint.\n' +
-        'Add one of: Spring Rate (k), Active Coils (Na), Total Coils (Nt), ' +
-        'a Load (F1 or F2), Pitch, or Solid Length (Ls).'
-      : 'Underdefined — no geometry constraint.\n' +
-        'Add Wire Diameter, a Coil Diameter, or a Length.';
-    if (!_lastSolvedState) {
+  {
+    const rankInfo = analyzeSystemRank();
+    if (!rankInfo.determined) {
+      const dot  = document.getElementById('bottomStatusDot');
+      const text = document.getElementById('bottomStatusSummary');
+      if (dot)  dot.className    = 'status-dot';
+      const plural = rankInfo.freeDOF !== 1;
+      if (text) text.textContent =
+        `Underdefined — ${rankInfo.freeDOF} free degree${plural ? 's' : ''} of freedom remaining.\n` +
+        `Add ${rankInfo.freeDOF} more independent constraint${plural ? 's' : ''}. ` +
+        `Suggested: ${getSuggestedNextInputs().join(', ')}`;
+      _lastSolvedState = null;
       blankAllComputedOutputs();
       updateAllCharts(null);
+      return;
     }
-    return;
+  }
+
+  // ── Pre-solve: detect contradictory load positions ────────
+  // If both load columns are fully user-pinned, the two (F, L)
+  // pairs imply a spring rate k = ΔF / ΔL.  A negative result
+  // means the spring would need to push harder when it is LONGER —
+  // physically impossible for a helical compression spring.
+  // Give a plain-English error instead of running the solver and
+  // silently blanking everything.
+  if (userEnteredFieldIds.has('F1') && userEnteredFieldIds.has('L1') &&
+      userEnteredFieldIds.has('F2') && userEnteredFieldIds.has('L2')) {
+    const F1v = readFieldValue('F1'), L1v = readFieldValue('L1');
+    const F2v = readFieldValue('F2'), L2v = readFieldValue('L2');
+    if (F1v !== null && L1v !== null && F2v !== null && L2v !== null) {
+      const dL = L1v - L2v;
+      if (Math.abs(dL) > 1e-6) {
+        const k_implied = (F2v - F1v) / dL;
+        if (k_implied <= 0) {
+          const dot  = document.getElementById('bottomStatusDot');
+          const text = document.getElementById('bottomStatusSummary');
+          if (dot) dot.className = 'status-dot err';
+          // Identify which of the two entered positions is shorter
+          const shortL = Math.min(L1v, L2v).toFixed(3);
+          const longL  = Math.max(L1v, L2v).toFixed(3);
+          const shortF = (L1v < L2v ? F1v : F2v).toFixed(3);
+          const longF  = (L1v < L2v ? F2v : F1v).toFixed(3);
+          const shortLabel = L1v < L2v ? 'L1' : 'L2';
+          if (text) text.textContent =
+            `Contradictory load positions — ${shortLabel} (${shortL}") is more compressed than the other position (${longL}"), ` +
+            `so it must carry more load. Swap the values, or increase the load at ${shortLabel} above ${longF} lb. ` +
+            `Current: ${shortL}" → ${shortF} lb, ${longL}" → ${longF} lb.`;
+          _lastSolvedState = null;
+          blankAllComputedOutputs();
+          updateAllCharts(null);
+          return;
+        }
+      }
+    }
   }
 
   // ── Solve ─────────────────────────────────────────────────
-  const x0 = buildVariableVector();
+  // Use the seeded vector so the solver starts near the solution
+  // manifold instead of at far-off defaults.
+  const x0 = buildSeededVariableVector();
 
   const MAX_ATTEMPTS = 5;
   const PERTURBATION = 0.15;
@@ -1302,10 +1673,9 @@ function runCalc() {
     if (text) text.textContent = validity.reasons.length === 1
       ? validity.reasons[0]
       : validity.reasons.map((r, i) => `${i + 1}. ${r}`).join('\n');
-    if (!_lastSolvedState) {
-      blankAllComputedOutputs();
-      updateAllCharts(null);
-    }
+    _lastSolvedState = null;
+    blankAllComputedOutputs();
+    updateAllCharts(null);
     return;
   }
 
@@ -1320,8 +1690,8 @@ function runCalc() {
 // ============================================================
 
 const ALL_COMPUTED_OUTPUT_IDS = [
-  // Geometry
-  'OD', 'ID', 'C', 'Nt', 'Nd', 'Ls', 'pitch', 'pitchAng',
+  // Geometry — includes all LM solver outputs that are never user-pinned
+  'D', 'OD', 'ID', 'C', 'Na', 'Nt', 'Nd', 'Lf', 'Ls', 'pitch', 'pitchAng',
   'arbor', 'wl', 'sw', 'fn',
   'minID', 'shaft', 'hole',
   // Spring rate / stiffness
@@ -1406,14 +1776,12 @@ function updateStatusUnderdefined(have, need) {
     `Underdefined — enter ${need - have} more independent value(s) to solve.\n` +
     `Suggested: ${getSuggestedNextInputs().join(', ')}`;
 
-  // Blank every computed field and blank the charts, but only
-  // when there is no previous valid solution to fall back on.
-  // If a prior solve succeeded, leave those values visible so
-  // the user can see context while they correct the inputs.
-  if (!_lastSolvedState) {
-    blankAllComputedOutputs();
-    updateAllCharts(null);
-  }
+  // Always clear computed outputs when the system is underdefined.
+  // Leaving stale values from a prior solve is confusing — the user
+  // expects the outputs to go blank when they remove an input.
+  _lastSolvedState = null;
+  blankAllComputedOutputs();
+  updateAllCharts(null);
 }
 
 function getSuggestedNextInputs() {
