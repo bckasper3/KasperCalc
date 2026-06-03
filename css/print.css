@@ -266,4 +266,233 @@
   body.print-report.print-with-graphs .graph-content canvas {
     display: none !important;
   }
+
+  /* ================================================================
+     SPRING COMPRESSION PAGE — Report with Graphs
+     Same strategy as the thermo page: hide the tabbed graph-banner,
+     show #springGraphsPrint (always-rendered shadow canvases) instead.
+     ================================================================ */
+
+  /* Override: hide the tabbed graph-banner, use #springGraphsPrint instead */
+  body.print-report.print-with-graphs [aria-labelledby="graphsTitle"] {
+    display: none !important;
+  }
+
+  /* Bring #springGraphsPrint into page flow */
+  body.print-report.print-with-graphs #springGraphsPrint {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    z-index: auto !important;
+    pointer-events: auto !important;
+    display: block !important;
+    visibility: visible !important;
+    background: #fff !important;
+    margin: 0 0 8px 0 !important;
+    border: 1px solid #ccc !important;
+    padding: 6px 8px !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  body.print-report.print-with-graphs #springGraphsPrint * {
+    visibility: visible !important;
+  }
+
+  /* Each chart item */
+  body.print-report.print-with-graphs .spg-item {
+    width: 100% !important;
+    margin-bottom: 10px !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    border-bottom: 1px solid #eee !important;
+    padding-bottom: 6px !important;
+  }
+
+  body.print-report.print-with-graphs .spg-item:last-child {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Chart label header */
+  body.print-report.print-with-graphs .spg-label {
+    display: block !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #333 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    padding-bottom: 3px !important;
+    border-bottom: 1px solid #ccc !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* Canvas wrapper: fixed print height */
+  body.print-report.print-with-graphs .spg-canvas-wrap {
+    position: relative !important;
+    width: 100% !important;
+    height: 220px !important;
+  }
+
+  body.print-report.print-with-graphs .spg-canvas-wrap canvas {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* ================================================================
+     THERMODYNAMICS PAGE — print-report overrides
+     ================================================================ */
+
+  /* Hide thermo reference guide section */
+  body.print-report section[aria-label="Thermodynamics reference guide"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Hide controls not needed in a printed report */
+  body.print-report #thermoQuickFluidGrp,
+  body.print-report #thermoUnitSystemGrp,
+  body.print-report #thermoLookupModeGrp,
+  body.print-report #thermoReportBtnsGrp {
+    display: none !important;
+  }
+
+  /* ── Property Tables banner ────────────────────────────────── */
+
+  /* Hidden by default (same as graph-banner) */
+  body.print-report:not(.print-with-tables) [aria-label="Property tables"] {
+    display: none !important;
+  }
+
+  /* Shown when printing with tables */
+  body.print-report.print-with-tables [aria-label="Property tables"] {
+    display: block !important;
+    visibility: visible !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  body.print-report.print-with-tables [aria-label="Property tables"] * {
+    visibility: visible !important;
+  }
+
+  /* Hide the tab buttons row — all panels are shown stacked */
+  body.print-report.print-with-tables [aria-label="Property tables"] .graph-tab-row {
+    display: none !important;
+  }
+
+  /* Show all three table content panels stacked */
+  body.print-report.print-with-tables [aria-label="Property tables"] .graph-content {
+    display: block !important;
+    visibility: visible !important;
+    padding: 4px 8px !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-bottom: 6px !important;
+    border-bottom: 1px solid #eee !important;
+  }
+
+  body.print-report.print-with-tables [aria-label="Property tables"] .graph-content:last-child {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Remove scroll limit on table wrappers so all rows print */
+  body.print-report.print-with-tables .lt-wrap {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Alternate row shading for readability */
+  body.print-report.print-with-tables .lt tr:nth-child(even) td {
+    background: #f8f8f8 !important;
+  }
+
+  body.print-report.print-with-tables .lt th {
+    background: #f0f0f0 !important;
+    color: #000 !important;
+    border-bottom: 1.5px solid #000 !important;
+  }
+
+  /* ================================================================
+     THERMODYNAMICS PAGE — Report with Graphs
+     The generic .graph-banner rule above would reveal the tabbed banner,
+     but for the thermo page we want the always-rendered #thermoGraphsPrint
+     section instead. These rules come last so they win on equal specificity.
+     ================================================================ */
+
+  /* Override: suppress the tabbed graph banner — use #thermoGraphsPrint instead */
+  body.print-report.print-with-graphs [aria-label="Property graphs"] {
+    display: none !important;
+  }
+
+  /* Also suppress the property tables banner in this mode (not requested) */
+  body.print-report.print-with-graphs [aria-label="Property tables"] {
+    display: none !important;
+  }
+
+  /* Bring #thermoGraphsPrint into page flow and make it fully visible */
+  body.print-report.print-with-graphs #thermoGraphsPrint {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    z-index: auto !important;
+    pointer-events: auto !important;
+    display: block !important;
+    visibility: visible !important;
+    background: #fff !important;
+    margin: 0 0 8px 0 !important;
+    border: 1px solid #ccc !important;
+    padding: 6px 8px !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  body.print-report.print-with-graphs #thermoGraphsPrint * {
+    visibility: visible !important;
+  }
+
+  /* Each graph item */
+  body.print-report.print-with-graphs .pg-item {
+    width: 100% !important;
+    margin-bottom: 10px !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    border-bottom: 1px solid #eee !important;
+    padding-bottom: 6px !important;
+  }
+
+  body.print-report.print-with-graphs .pg-item:last-child {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Graph label header */
+  body.print-report.print-with-graphs .pg-label {
+    display: block !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #333 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    padding-bottom: 3px !important;
+    border-bottom: 1px solid #ccc !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* Canvas wrapper: give each chart a fixed print height */
+  body.print-report.print-with-graphs .pg-canvas-wrap {
+    position: relative !important;
+    width: 100% !important;
+    height: 240px !important;
+  }
+
+  body.print-report.print-with-graphs .pg-canvas-wrap canvas {
+    display: block !important;
+    visibility: visible !important;
+  }
 }
