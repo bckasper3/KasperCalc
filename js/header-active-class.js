@@ -39,4 +39,32 @@
 
   applyActiveClasses();
   window.addEventListener('hashchange', applyActiveClasses);
+
+  // Inject desktop logoblock and hide mobile brand elements on large screens
+  const brandImg = document.querySelector('nav a.navbar-brand img');
+  const brandImgLink = brandImg ? brandImg.closest('a.navbar-brand') : null;
+  const brandTextLink = brandImgLink ? brandImgLink.nextElementSibling : null;
+
+  if (brandImgLink) {
+    // Hide existing brand elements on md+ screens
+    brandImgLink.classList.add('d-md-none');
+    if (brandTextLink && brandTextLink.classList.contains('navbar-brand')) {
+      brandTextLink.classList.add('d-md-none');
+    }
+
+    // Determine href for the logo link
+    const logoHref = brandImgLink.getAttribute('href') || 'index.html';
+
+    // Inject desktop logoblock before the existing brand elements
+    const desktopLogo = document.createElement('a');
+    desktopLogo.href = logoHref;
+    desktopLogo.className = 'navbar-brand d-none d-md-inline-block';
+    desktopLogo.style.textDecoration = 'none';
+    desktopLogo.innerHTML =
+      '<div class="logoblock">' +
+        '<img class="logo logo-nav" src="img/blueK.webp" alt="KasperCalcLogo" />' +
+        '<h4 class="footerlogo">KasperCalc</h4>' +
+      '</div>';
+    brandImgLink.parentNode.insertBefore(desktopLogo, brandImgLink);
+  }
 })();
