@@ -49,7 +49,7 @@
   --p-font-size: 20px;
   --menu-font-size: 1.5rem;
   --copyright-font-size: 12px;
-  --banner-font-size: 52px;
+  --banner-font-size: 42px;
   --footer-link-font-size: 16px;
   --calc-title-font-size: 38px;
 
@@ -286,13 +286,13 @@ strong {
 
 .bannertext {
   font-size: var(--banner-font-size);
-  font-weight: var(--font-weight-thin);
+  font-weight: var(--font-weight-normal);
 }
 
 .cssbannercontainer {
   width: 100%;
   line-height: 1.25;
-  padding-top: 1rem;
+  padding-top: 0rem;
   padding-bottom: 0.3rem;
   margin-right: auto;
   margin-left: auto;
@@ -443,7 +443,7 @@ strong {
     --p-font-size: 16px;
     --menu-font-size: 16rem;
     --copyright-font-size: 10px;
-    --banner-font-size: 42px;
+    --banner-font-size: 32px;
     --footer-link-font-size: 12px; 
     --calc-title-font-size: 24px;
 
@@ -574,17 +574,30 @@ nav>.navbar-toggler{
   LOGO             
 -----------------------------------------*/
 .logo {
-  margin-top: 0rem;
-  margin-bottom: 0rem;
+  display: block;
+  width: clamp(70px, 10vw, 120px);
+  height: auto;
+  margin: 0 auto;
+}
+
+.logo-nav {
+  width: clamp(50px, 6vw, 80px);
 }
 
 .logoblock {
   display: inline-block;
   padding: 5px;
-  border-style: solid;
-  border-width: 2px;
-  border-color: black;
+  border: 2px solid black;
   border-radius: 10px;
+  text-align: center;
+}
+
+.footerlogo {
+  font-size: clamp(0.75rem, 1.1vw, 1.1rem);
+  color: #000 !important;
+  margin: 2px 0 0 0;
+  font-weight: 700;
+  line-height: 1;
 }
 
 /*---------------------------------------
@@ -1076,6 +1089,8 @@ nav>.navbar-toggler{
 
 .canvascontainer{
   /*max-width: 100rem;*/
+  position: relative;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
