@@ -115,11 +115,13 @@ function parseCSV(csvData) {
 }
 
 // Example usage of the processCSVFiles function
+let ndExpChart = null;
+
 processCSVFiles(csvFiles)
   .then(allData => {
-    // allData is now an array of arrays, where each inner array represents the data of one CSV file
     fallData = allData;
     createGraph();
+    createExpansionChart();
     convertToCelsius();
   })
   .catch(error => {
@@ -280,6 +282,159 @@ function createGraph() {
 };
 
 
+
+function createExpansionChart() {
+  const rho0 = linearInterpolationWater(68, densityWater); // water density at 68°F (not used)
+  // Reference density for each fuel type at 68°F
+  const td = transformedData();
+
+  const datasets = td.map((ds, index) => {
+    const rho0F = (function() {
+      // interpolate fuel density at 68°F
+      const d = ds;
+      // simple inline interp
+      for (let i = 0; i < d.length - 1; i++) {
+        if (d[i][0] <= 68 && d[i+1][0] >= 68) {
+          const x0 = d[i][0], y0 = d[i][1], x1 = d[i+1][0], y1 = d[i+1][1];
+          return y0 + (68 - x0) * (y1 - y0) / (x1 - x0);
+        }
+      }
+      return null;
+    })();
+
+    if (rho0F === null) return null;
+
+    const pts = ds
+      .filter(p => p[0] >= -40 && p[0] <= 194)
+      .map(p => ({ x: p[0], y: (rho0F - p[1]) / p[1] * 100 }));
+
+    return {
+      label: fixedLabels[index % fixedLabels.length],
+      data: pts,
+      fill: false,
+      borderColor: fixedColors[index % fixedColors.length],
+      tension: 0.1,
+    };
+  }).filter(d => d !== null);
+
+  const whiteBg = {
+    id: 'customCanvasBackgroundColor',
+    beforeDraw(chart) {
+      const ctx2 = chart.canvas.getContext('2d');
+      ctx2.save();
+      ctx2.globalCompositeOperation = 'destination-over';
+      ctx2.fillStyle = 'white';
+      ctx2.fillRect(0, 0, chart.width, chart.height);
+      ctx2.restore();
+    }
+  };
+
+  const ctx = document.getElementById('ndExpChart').getContext('2d');
+  ndExpChart = new Chart(ctx, {
+    type: 'line',
+    data: { datasets },
+    options: {
+      maintainAspectRatio: false,
+      responsive: true,
+      layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
+      interaction: { mode: 'nearest', axis: 'x' },
+      elements: { point: { radius: 0 } },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 } },
+          onClick: function(e, legendItem, legend) {
+            const idx = legendItem.datasetIndex;
+            const ci = legend.chart;
+            const meta = ci.getDatasetMeta(idx);
+            meta.hidden = meta.hidden === null ? !ci.data.datasets[idx].hidden : null;
+            ci.update();
+          },
+        },
+        tooltip: { enabled: true, mode: 'nearest', intersect: false, axis: 'x' },
+        customCanvasBackgroundColor: { color: 'white' },
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          min: -40,
+          max: 194,
+          ticks: { maxRotation: 0, font: { size: 16 } },
+          title: { display: true, text: 'Temperature °F', font: { size: 20 } },
+        },
+        y: {
+          type: 'linear',
+          ticks: { font: { size: 16 } },
+          title: { display: true, text: 'ΔV/V₀ (%)', font: { size: 20 } },
+        },
+      },
+    },
+    plugins: [whiteBg],
+  });
+
+  document.getElementById('toggleNdExpTip').addEventListener('click', function() {
+    const cur = ndExpChart.options.plugins.tooltip.enabled;
+    ndExpChart.options.plugins.tooltip.enabled = !cur;
+    ndExpChart.update();
+    this.textContent = ndExpChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+  });
+}
+
+function ndExpCalc() {
+  const operation = document.getElementById('operation').value;
+  let idx = 0;
+  switch (operation) {
+    case 'Av. Gas':           idx = 0; break;
+    case 'JP-4, Jet B':       idx = 1; break;
+    case 'JP-7, TS':          idx = 2; break;
+    case 'JP-8, Jet A, Jet A-1': idx = 3; break;
+    case 'JP-5':              idx = 4; break;
+    case 'RJ-4':              idx = 5; break;
+    case 'JP-10':             idx = 6; break;
+    case 'JP-9':              idx = 7; break;
+    case 'RJ-6':              idx = 8; break;
+    case 'RJ-5':              idx = 9; break;
+  }
+
+  const tF = parseFloat(document.getElementById('fahrenheit').value);
+  if (isNaN(tF) || !fallData) {
+    document.getElementById('ndExp_volpct').innerText = '—';
+    document.getElementById('ndExp_rhopct').innerText = '—';
+    return;
+  }
+
+  const td = transformedData();
+  const ds = td[idx];
+
+  // interpolate at 68°F (reference)
+  let rho0 = null;
+  for (let i = 0; i < ds.length - 1; i++) {
+    if (ds[i][0] <= 68 && ds[i+1][0] >= 68) {
+      rho0 = ds[i][1] + (68 - ds[i][0]) * (ds[i+1][1] - ds[i][1]) / (ds[i+1][0] - ds[i][0]);
+      break;
+    }
+  }
+
+  // interpolate at tF
+  let rhoT = null;
+  for (let i = 0; i < ds.length - 1; i++) {
+    if (ds[i][0] <= tF && ds[i+1][0] >= tF) {
+      rhoT = ds[i][1] + (tF - ds[i][0]) * (ds[i+1][1] - ds[i][1]) / (ds[i+1][0] - ds[i][0]);
+      break;
+    }
+  }
+
+  if (rho0 === null || rhoT === null || flag) {
+    document.getElementById('ndExp_volpct').innerText = 'Out of Range';
+    document.getElementById('ndExp_rhopct').innerText = 'Out of Range';
+    return;
+  }
+
+  const dvv = (rho0 - rhoT) / rhoT;
+  const drho = (rhoT - rho0) / rho0;
+  document.getElementById('ndExp_volpct').innerText = (dvv >= 0 ? '+' : '') + (dvv * 100).toFixed(4) + ' %';
+  document.getElementById('ndExp_rhopct').innerText = (drho >= 0 ? '+' : '') + (drho * 100).toFixed(4) + ' %';
+}
 
 //Listening for the Tooptips Toggle Button
 document.getElementById('toggleTooltipButton').addEventListener('click', function() {
@@ -468,4 +623,5 @@ function updateCalculator() {
       document.getElementById("result_density7").innerText = (((141.5/(interpolatedValue/998))-131.5).toFixed(5));
       document.getElementById("result_density8").innerText = ((interpolatedValue*0.0083454063545262*7.48052).toFixed(4));
   }
+  ndExpCalc();
 }

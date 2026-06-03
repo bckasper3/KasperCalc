@@ -9,7 +9,7 @@
         <div class="footerRow">
           <a href="index.html">
             <div class="logoblock">
-              <img class="logo" src="img/blueK.webp" height="72px;" width="119.44px;" alt="KasperCalcLogo" />
+              <img class="logo" src="img/blueK.webp" alt="KasperCalcLogo" />
               <h4 class="footerlogo">KasperCalc</h4>
             </div>
           </a>
@@ -72,11 +72,9 @@
           <div class="footerlink"><a href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a></div>
           <div class="footerlink"><a href="MIL-PRF-23699Density.html">Density</a></div>
           <div class="footerlink"><a href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a></div>
-          <div class="footerlink"><a href="MIL-PRF-23699BoilingHighPressure.html">Boiling Points at Pressures</a></div>
           <div class="footerlink"><a href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a></div>
-          <div class="footerlink"><a href="MIL-PRF-23699viscosity.html">Dynamic and Kinematic Viscosity</a></div>
+          <div class="footerlink"><a href="MIL-PRF-23699viscosity.html">Viscosity</a></div>
           <div class="footerlink"><a href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a></div>
-          <div class="footerlink"><a href="MIL-PRF-23699EnthalpyEntropy.html">Enthalpy and Entropy</a></div>
           <div class="footerlink"><a href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a></div>
           <div class="footerlink"><a href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a></div>
         </div>
@@ -132,6 +130,13 @@
           <h4 class="FooterRowTitle"><span class="footerflexbox">MIL-HDBK-5</span></h4>
           <div class="footerlink"><a href="Chapter1(general).html">Chapter 1 (General)</a></div>
           <div class="footerlink"><a href="Chapter2(steel).html">Chapter 2 (Steel)</a></div>
+          <div class="footerlink"><a href="Chapter2.1(steel).html" class="ms-4">2.1 (General)</a></div>
+          <div class="footerlink"><a href="Chapter2.2(steel).html" class="ms-4">2.2 (Carbon Steels)</a></div>
+          <div class="footerlink"><a href="Chapter2.3(steel).html" class="ms-4">2.3 (Low Alloy Steels)</a></div>
+          <div class="footerlink"><a href="Chapter2.4(steel).html" class="ms-4">2.4 (Intermediate Alloy Steels) (Steel)</a></div>
+          <div class="footerlink"><a href="Chapter2.5(steel).html" class="ms-4">2.5 (High Alloy Steels)</a></div>
+          <div class="footerlink"><a href="Chapter2.6(steel).html" class="ms-4">2.6 (Precipitation Hardening Stainless Steel)</a></div>
+          <div class="footerlink"><a href="Chapter2.7(steel).html" class="ms-4">2.7 (Austenitic Stainless Steels)</a></div>
           <div class="footerlink"><a href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a></div>
         </div>
 
@@ -143,7 +148,7 @@
         <div class="footerRow">
           <a href="index.html">
             <div class="logoblock">
-              <img class="logo" src="img/blueK.webp" height="72px;" width="119.44px;" alt="KasperCalcLogo" />
+              <img class="logo" src="img/blueK.webp" alt="KasperCalcLogo" />
               <h4 class="footerlogo">KasperCalc</h4>
             </div>
           </a>
