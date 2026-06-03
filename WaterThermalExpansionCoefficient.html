@@ -121,13 +121,11 @@
                   <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
                   <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
                   <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
-                  <a class="dropdown-item" href="MIL-PRF-23699BoilingHighPressure.html">Boiling Points at Pressures</a>
                   <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
-                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Dynamic and Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
                   <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
-                  <a class="dropdown-item" href="MIL-PRF-23699EnthalpyEntropy.html">Enthalpy and Entropy</a>
                   <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
-                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thremal Diffusivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -146,7 +144,7 @@
                   <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
                   <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
                   <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
-                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thremal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
                   <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
                 </div>
               </li>
@@ -194,6 +192,13 @@
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
                   <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">&nbsp&nbsp&nbsp 2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">&nbsp&nbsp&nbsp 2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">&nbsp&nbsp&nbsp 2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">&nbsp&nbsp&nbsp 2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">&nbsp&nbsp&nbsp 2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">&nbsp&nbsp&nbsp 2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">&nbsp&nbsp&nbsp 2.7 (Austenitic Stainless Steels)</a>
                   <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
                 </div>
               </li>
@@ -308,6 +313,33 @@
             </div>
           </div>
           <p class="text-center">Derived from density data. Data from <a href="https://www.engineeringtoolbox.com/water-density-specific-weight-d_595.html" target="_blank">Engineering Toolbox &mdash; Water Density</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHART 3: % Volume Change vs °F -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Water Percent Volume Change Chart (°F)</div>
+          </div>
+          <div class="canvasdiv">
+            <button id="toggleTooltipVol">Hide Tooltips</button>
+            <a style="font-size: medium; text-decoration: none;" href="img/WaterPercentVolumeChange(DegreeF).png" download="WaterPercentVolumeChange(DegreeF).png">
+              <button>Download Chart</button>
+            </a>
+            <a style="font-size: medium; text-decoration: none;" href="img/WaterPercentVolumeChange(DegreeF).png" target="_blank">
+              <button>Open In New Tab</button>
+            </a>
+            <div class="canvascontainer">
+              <canvas id="tecChartVol" aria-label="Water Percent Volume Change vs Temperature in Fahrenheit relative to 68°F" width="400" height="600" role="img" class="chartcanvas">
+                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+              </canvas>
+            </div>
+          </div>
+          <p class="text-center">ΔV/V₀ = (ρ₀ &minus; ρ(T)) / ρ(T) &times; 100%, referenced to 68&nbsp;°F (20&nbsp;°C). Negative values mean the water is denser (contracted) relative to room temperature.</p>
+          <p class="text-center">Data from <a href="https://www.engineeringtoolbox.com/water-density-specific-weight-d_595.html" target="_blank">Engineering Toolbox &mdash; Water Density</a>.</p>
         </div>
       </div>
     </section>
@@ -937,6 +969,58 @@ window.addEventListener('DOMContentLoaded', function () {
     plugins: [customBg]
   });
   addToggle('toggleTooltipF', fChart);
+
+  // ── Chart 3: % Vol Change vs °F ───────────────────────────────────────────
+  const rho0Vol = densityInterpF(68); // reference density at 68°F
+  const volPts = [];
+  for (let tF = 32; tF <= 675; tF++) {
+    const rho = densityInterpF(tF);
+    volPts.push({ x: tF, y: parseFloat(((rho0Vol - rho) / rho * 100).toFixed(4)) });
+  }
+
+  const volChart = new Chart(document.getElementById('tecChartVol').getContext('2d'), {
+    type: 'line',
+    data: {
+      datasets: [{
+        label: 'Water ΔV/V₀',
+        data: volPts,
+        fill: false,
+        borderColor: 'rgb(68,119,170)',
+        tension: 0.2
+      }]
+    },
+    options: {
+      maintainAspectRatio: false, responsive: true,
+      layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
+      plugins: {
+        customCanvasBackgroundColor: { color: 'white' },
+        legend: makeLegend(),
+        tooltip: {
+          enabled: true, mode: 'nearest', intersect: false, axis: 'x',
+          callbacks: {
+            title: items => items[0].parsed.x.toFixed(0) + ' °F',
+            label: item  => 'ΔV/V₀ = ' + (item.parsed.y >= 0 ? '+' : '') + item.parsed.y.toFixed(4) + ' %'
+          }
+        }
+      },
+      interaction: { mode: 'nearest', axis: 'x' },
+      elements: { point: { radius: 0 } },
+      scales: {
+        x: {
+          type: 'linear', min: 32, max: 675,
+          ticks: { maxRotation: 0, font: { size: 16 } },
+          title: { display: true, text: 'Temperature (°F)', font: { size: 20 } }
+        },
+        y: {
+          type: 'linear',
+          ticks: { font: { size: 16 } },
+          title: { display: true, text: 'ΔV/V₀ (%)', padding: 10, font: { size: 20 } }
+        }
+      }
+    },
+    plugins: [customBg]
+  });
+  addToggle('toggleTooltipVol', volChart);
 });
 </script>
 

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: MIL-PRF-23699 Density</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, MIL-PRF-23699, turbine engine oil, density, polyol ester, lubricant density calculator" />
+    <meta name="description" content="Density of MIL-PRF-23699 turbine engine oil at ambient pressure from 41°F to 158°F (5°C to 70°C). Data from NIST IR 8263." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <!-- chart and calculator JS embedded below -->
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XLCN0GJQ0');
+    </script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="Waterviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">&nbsp&nbsp&nbsp 2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">&nbsp&nbsp&nbsp 2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">&nbsp&nbsp&nbsp 2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">&nbsp&nbsp&nbsp 2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">&nbsp&nbsp&nbsp 2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">&nbsp&nbsp&nbsp 2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">&nbsp&nbsp&nbsp 2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item" style="padding-right: 0px;">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                Density of MIL-PRF-23699
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHART -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">MIL-PRF-23699 Density Chart</div>
+            </div>
+            <div class="canvasdiv">
+              <button id="toggleTooltipButton">Hide Tooltips</button>
+              <a style="font-size: medium; text-decoration: none;" href="img/MIL-PRF-23699Density(DegreesF).png" download="MIL-PRF-23699Density(DegreesF).png">
+                <button>Download Chart</button>
+              </a>
+              <a style="font-size: medium; text-decoration: none;" href="img/MIL-PRF-23699Density(DegreesF).png" target="_blank">
+                <button>Open In New Tab</button>
+              </a>
+              <div class="canvascontainer">
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+                <canvas id="myChart" aria-label="MIL-PRF-23699 Density vs Temperature °F" width="400" height="600" role="img" class="chartcanvas">
+                  <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+                </canvas>
+              </div>
+            </div>
+            <p class="text-center">Measured values at ambient pressure (~83 kPa): 41&nbsp;°F to 158&nbsp;°F (5&nbsp;°C to 70&nbsp;°C). <br>Extended range −40&nbsp;°F to 527&nbsp;°F (−40&nbsp;°C to 275&nbsp;°C) uses a linear extrapolation with slope matched to NIST data.</p>
+            <p class="text-center">Data from: <a href="https://doi.org/10.6028/NIST.IR.8263" target="_blank">NIST IR 8263 — Thermophysical Properties of Polyol Ester Lubricants</a>, Table 23 (measured); extended range extrapolated.</p>
+            <p class="text-center">Toggle data sets by clicking the legend.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CALCULATOR -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+            <div class="wrapper" style="max-width:33rem;">
+              <div class="header text-center">MIL-PRF-23699 Density Calculator</div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Degrees (°F):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="milDensFahrenheit" oninput="milDensConvertToCelsius()" value="70" aria-label="Input box for degrees Fahrenheit" />
+                  </span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Degrees (°C):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="milDensCelsius" oninput="milDensConvertToFahrenheit()" aria-label="Input for degrees Celsius" />
+                  </span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Density (kg/m³):</span>
+                  <span class="output" id="milDens_kgm3">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (lb/in³):</span>
+                  <span class="output" id="milDens_lbin3">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (lb/gal):</span>
+                  <span class="output" id="milDens_lbgal">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (lb/ft³):</span>
+                  <span class="output" id="milDens_lbft3">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Gravity*:</span>
+                  <span class="output" id="milDens_sg1">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Gravity**:</span>
+                  <span class="output" id="milDens_sg2">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Gravity***:</span>
+                  <span class="output" id="milDens_sg3">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">°API****:</span>
+                  <span class="output" id="milDens_api">&nbsp;</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-center"><a href="SpecificGravityExplanation.html" target="_blank">Specific Gravity is a Contentious Unit</a></p>
+        <p class="text-center">* SG based on static density of water of 1000 (kg/m³) *</p>
+        <p class="text-center">** SG based on static density of water of 998 (kg/m³) **</p>
+        <p class="text-center">*** SG based on temperature dependent density of water ***</p>
+        <p class="text-center">**** °API gravity at current temperature, referenced to water at 60°F (999.01 kg/m³): °API = (141.5 / SG<sub>60°F</sub>) − 131.5 ****</p>
+
+      </section>
+
+      <!-- DESCRIPTION -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
+              <div class="custom-heading">Density of MIL-PRF-23699 Turbine Engine Oil</div>
+              <div style="text-align: left" class="mt-3">
+                <div class="custom-subheading">About This Data</div>
+                <p class="mt-2">
+                  The density data from 5&nbsp;°C to 70&nbsp;°C (41&nbsp;°F to 158&nbsp;°F) was measured by NIST using a
+                  vibrating-tube densimeter (Anton-Paar DMA 5000) at ambient pressure (~83 kPa).
+                  Each tabulated value is the average of three to six replicate measurement scans.
+                  The absolute expanded uncertainty is 1.65–1.66 kg·m⁻³ (relative: 0.12–0.18&nbsp;%).
+                </p>
+                <p class="mt-2">
+                  The range is extended to −40&nbsp;°C (−40&nbsp;°F) and 275&nbsp;°C (527&nbsp;°F) using a linear extrapolation
+                  with slope (−3.77 kg·m⁻³·°C⁻¹) matched to the NIST measurements. Maximum deviation from the NIST
+                  measured points within the 5–70&nbsp;°C range is 0.09 kg·m⁻³, well within the measurement uncertainty.
+                  Values outside 5–70&nbsp;°C should be treated as estimates only.
+                </p>
+                <p class="mt-2">
+                  MIL-PRF-23699 is a fully qualified synthetic turbine engine oil based on polyol esters (POE).
+                  Its density falls between that of pure POE5 and POE7, and is very similar to pure POE7.
+                  Density decreases approximately linearly with temperature across the full range.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DATA TABLE -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-4" style="max-width:960px; width:100%;">
+              <div class="custom-heading">MIL-PRF-23699 — Density vs. Temperature</div>
+
+              <div class="table-responsive mt-3 mb-3">
+                <table class="table table-striped table-bordered table-hover table-sm">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th>Temp (°C)</th>
+                      <th>Temp (°F)</th>
+                      <th>Density (kg/m³)</th>
+                      <th>Density (g/cm³)</th>
+                      <th>Density (lb/gal)</th>
+                      <th>Density (lb/ft³)</th>
+                      <th>Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>−40</td><td>−40.0</td><td>1037.36</td><td>1.03736</td><td>8.655</td><td>64.76</td><td>Extrapolated</td></tr>
+                    <tr><td>−35</td><td>−31.0</td><td>1033.59</td><td>1.03359</td><td>8.623</td><td>64.52</td><td>Extrapolated</td></tr>
+                    <tr><td>−30</td><td>−22.0</td><td>1029.82</td><td>1.02982</td><td>8.592</td><td>64.29</td><td>Extrapolated</td></tr>
+                    <tr><td>−25</td><td>−13.0</td><td>1026.05</td><td>1.02605</td><td>8.560</td><td>64.05</td><td>Extrapolated</td></tr>
+                    <tr><td>−20</td><td>−4.0</td><td>1022.29</td><td>1.02229</td><td>8.529</td><td>63.82</td><td>Extrapolated</td></tr>
+                    <tr><td>−15</td><td>5.0</td><td>1018.52</td><td>1.01852</td><td>8.497</td><td>63.58</td><td>Extrapolated</td></tr>
+                    <tr><td>−10</td><td>14.0</td><td>1014.75</td><td>1.01475</td><td>8.466</td><td>63.35</td><td>Extrapolated</td></tr>
+                    <tr><td>−5</td><td>23.0</td><td>1010.98</td><td>1.01098</td><td>8.434</td><td>63.11</td><td>Extrapolated</td></tr>
+                    <tr><td>0</td><td>32.0</td><td>1007.21</td><td>1.00721</td><td>8.403</td><td>62.88</td><td>Extrapolated</td></tr>
+                    <tr><td>5</td><td>41.0</td><td>1003.44</td><td>1.00344</td><td>8.371</td><td>62.64</td><td>NIST measured</td></tr>
+                    <tr><td>10</td><td>50.0</td><td>999.67</td><td>0.99967</td><td>8.340</td><td>62.41</td><td>NIST measured</td></tr>
+                    <tr><td>15</td><td>59.0</td><td>995.89</td><td>0.99589</td><td>8.309</td><td>62.17</td><td>NIST measured</td></tr>
+                    <tr><td>20</td><td>68.0</td><td>992.12</td><td>0.99212</td><td>8.277</td><td>61.94</td><td>NIST measured</td></tr>
+                    <tr><td>25</td><td>77.0</td><td>988.35</td><td>0.98835</td><td>8.246</td><td>61.71</td><td>NIST measured</td></tr>
+                    <tr><td>30</td><td>86.0</td><td>984.58</td><td>0.98458</td><td>8.214</td><td>61.47</td><td>NIST measured</td></tr>
+                    <tr><td>35</td><td>95.0</td><td>980.81</td><td>0.98081</td><td>8.183</td><td>61.24</td><td>NIST measured</td></tr>
+                    <tr><td>40</td><td>104.0</td><td>977.04</td><td>0.97704</td><td>8.151</td><td>61.00</td><td>NIST measured</td></tr>
+                    <tr><td>45</td><td>113.0</td><td>973.27</td><td>0.97327</td><td>8.120</td><td>60.77</td><td>NIST measured</td></tr>
+                    <tr><td>50</td><td>122.0</td><td>969.50</td><td>0.96950</td><td>8.088</td><td>60.53</td><td>NIST measured</td></tr>
+                    <tr><td>55</td><td>131.0</td><td>965.73</td><td>0.96573</td><td>8.057</td><td>60.30</td><td>NIST measured</td></tr>
+                    <tr><td>60</td><td>140.0</td><td>961.96</td><td>0.96196</td><td>8.025</td><td>60.06</td><td>NIST measured</td></tr>
+                    <tr><td>65</td><td>149.0</td><td>958.19</td><td>0.95819</td><td>7.994</td><td>59.83</td><td>NIST measured</td></tr>
+                    <tr><td>70</td><td>158.0</td><td>954.42</td><td>0.95442</td><td>7.962</td><td>59.59</td><td>NIST measured</td></tr>
+                    <tr><td>75</td><td>167.0</td><td>950.65</td><td>0.95065</td><td>7.931</td><td>59.36</td><td>Extrapolated</td></tr>
+                    <tr><td>80</td><td>176.0</td><td>946.88</td><td>0.94688</td><td>7.900</td><td>59.12</td><td>Extrapolated</td></tr>
+                    <tr><td>90</td><td>194.0</td><td>939.34</td><td>0.93934</td><td>7.837</td><td>58.65</td><td>Extrapolated</td></tr>
+                    <tr><td>100</td><td>212.0</td><td>931.80</td><td>0.93180</td><td>7.774</td><td>58.18</td><td>Extrapolated</td></tr>
+                    <tr><td>110</td><td>230.0</td><td>924.26</td><td>0.92426</td><td>7.711</td><td>57.71</td><td>Extrapolated</td></tr>
+                    <tr><td>120</td><td>248.0</td><td>916.72</td><td>0.91672</td><td>7.648</td><td>57.24</td><td>Extrapolated</td></tr>
+                    <tr><td>130</td><td>266.0</td><td>909.18</td><td>0.90918</td><td>7.585</td><td>56.77</td><td>Extrapolated</td></tr>
+                    <tr><td>150</td><td>302.0</td><td>894.10</td><td>0.89410</td><td>7.459</td><td>55.83</td><td>Extrapolated</td></tr>
+                    <tr><td>175</td><td>347.0</td><td>875.25</td><td>0.87525</td><td>7.302</td><td>54.66</td><td>Extrapolated</td></tr>
+                    <tr><td>200</td><td>392.0</td><td>856.40</td><td>0.85640</td><td>7.145</td><td>53.48</td><td>Extrapolated</td></tr>
+                    <tr><td>225</td><td>437.0</td><td>837.55</td><td>0.83755</td><td>6.988</td><td>52.30</td><td>Extrapolated</td></tr>
+                    <tr><td>250</td><td>482.0</td><td>818.71</td><td>0.81871</td><td>6.831</td><td>51.13</td><td>Extrapolated</td></tr>
+                    <tr><td>275</td><td>527.0</td><td>799.85</td><td>0.79985</td><td>6.674</td><td>49.96</td><td>Extrapolated</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="text-start small">NIST measured values: 5–70&nbsp;°C, ambient pressure (~83 kPa), NIST IR 8263 Table 23, expanded uncertainty ±1.65–1.66 kg·m⁻³. Extended range values were obtained through linear extrapolation. These values should be treated as estimates only.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary p-4 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+            <div id="citationText" class="font-monospace text-dark-emphasis small pt-2"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->
+
+<script>
+// MIL-PRF-23699 Density Data
+// Measured 5–70°C: NIST IR 8263, Table 23 (ambient pressure ~83 kPa).
+// Extended range −40 to 275°C: linear extrapolation matched to NIST slope.
+// Format: [T_C, density_kg_m3]
+const milDensData = [
+  [-40, 1037.36],
+  [-35, 1033.59],
+  [-30, 1029.82],
+  [-25, 1026.05],
+  [-20, 1022.29],
+  [-15, 1018.52],
+  [-10, 1014.75],
+  [ -5, 1010.98],
+  [  0, 1007.21],
+  [  5, 1003.44],
+  [ 10,  999.67],
+  [ 15,  995.89],
+  [ 20,  992.12],
+  [ 25,  988.35],
+  [ 30,  984.58],
+  [ 35,  980.81],
+  [ 40,  977.04],
+  [ 45,  973.27],
+  [ 50,  969.50],
+  [ 55,  965.73],
+  [ 60,  961.96],
+  [ 65,  958.19],
+  [ 70,  954.42],
+  [ 75,  950.65],
+  [ 80,  946.88],
+  [ 85,  943.11],
+  [ 90,  939.34],
+  [ 95,  935.57],
+  [100,  931.80],
+  [105,  928.03],
+  [110,  924.26],
+  [115,  920.49],
+  [120,  916.72],
+  [125,  912.95],
+  [130,  909.18],
+  [135,  905.41],
+  [140,  901.64],
+  [145,  897.87],
+  [150,  894.10],
+  [155,  890.33],
+  [160,  886.56],
+  [165,  882.79],
+  [170,  879.02],
+  [175,  875.25],
+  [180,  871.48],
+  [185,  867.71],
+  [190,  863.94],
+  [195,  860.17],
+  [200,  856.40],
+  [205,  852.63],
+  [210,  848.86],
+  [215,  845.09],
+  [220,  841.32],
+  [225,  837.55],
+  [230,  833.79],
+  [235,  830.02],
+  [240,  826.25],
+  [245,  822.48],
+  [250,  818.71],
+  [255,  814.94],
+  [260,  811.17],
+  [265,  807.40],
+  [270,  803.63],
+  [275,  799.85],
+];
+
+function milDensCtoF(c) { return c * 9 / 5 + 32; }
+function milDensFtoC(f) { return (f - 32) * 5 / 9; }
+
+function milDensLinInterp(tC, data) {
+  for (let i = 0; i < data.length - 1; i++) {
+    if (tC >= data[i][0] && tC <= data[i + 1][0]) {
+      const t = (tC - data[i][0]) / (data[i + 1][0] - data[i][0]);
+      return data[i][1] + t * (data[i + 1][1] - data[i][1]);
+    }
+  }
+  return NaN;
+}
+
+// Pre-interpolate to 1°F steps for smooth chart tooltips
+function milDensBuildFahrenheitPoints(data) {
+  const pts = data.map(d => ({ x: milDensCtoF(d[0]), y: d[1] }));
+  pts.sort((a, b) => a.x - b.x);
+  const result = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const x0 = pts[i].x, y0 = pts[i].y, x1 = pts[i + 1].x, y1 = pts[i + 1].y;
+    result.push({ x: parseFloat(x0.toFixed(2)), y: parseFloat(y0.toFixed(4)) });
+    const first = Math.ceil(x0 + 0.01), last = Math.floor(x1 - 0.01);
+    for (let f = first; f <= last; f++) {
+      const t = (f - x0) / (x1 - x0);
+      result.push({ x: f, y: parseFloat((y0 + t * (y1 - y0)).toFixed(4)) });
+    }
+  }
+  const last = pts[pts.length - 1];
+  result.push({ x: parseFloat(last.x.toFixed(2)), y: parseFloat(last.y.toFixed(4)) });
+  return result;
+}
+
+const milDensFPoints = milDensBuildFahrenheitPoints(milDensData);
+
+// Build chart
+const customBg = {
+  id: 'customCanvasBackgroundColor',
+  beforeDraw(chart) {
+    const { ctx } = chart;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, chart.width, chart.height);
+    ctx.restore();
+  }
+};
+
+const ctx = document.getElementById('myChart').getContext('2d');
+const milDensChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    datasets: [{
+      label: 'MIL-PRF-23699',
+      data: milDensFPoints,
+      fill: false,
+      borderColor: 'rgb(68,119,170)',
+      tension: 0.1,
+    }]
+  },
+  plugins: [customBg],
+  options: {
+    maintainAspectRatio: false,
+    layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
+    interaction: { mode: 'nearest', axis: 'x' },
+    elements: { point: { radius: 0 } },
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: { align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 } },
+      },
+      tooltip: { enabled: true, mode: 'nearest', intersect: false, axis: 'x' },
+      customCanvasBackgroundColor: { color: 'white' }
+    },
+    scales: {
+      x: {
+        type: 'linear',
+        min: -40,
+        max: 530,
+        ticks: { maxRotation: 0, font: { size: 16 } },
+        title: { display: true, text: 'Temperature °F', font: { size: 20 } }
+      },
+      y: {
+        ticks: { font: { size: 16 } },
+        title: { display: true, text: 'Density (kg/m³)', padding: 10, font: { size: 20 } }
+      }
+    }
+  }
+});
+
+document.getElementById('toggleTooltipButton').addEventListener('click', function () {
+  milDensChart.options.plugins.tooltip.enabled = !milDensChart.options.plugins.tooltip.enabled;
+  milDensChart.update();
+  this.textContent = milDensChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+});
+
+function milDensConvertToFahrenheit() {
+  const c = parseFloat(document.getElementById('milDensCelsius').value);
+  document.getElementById('milDensFahrenheit').value = milDensCtoF(c).toFixed(2);
+  milDensCalculate();
+}
+
+function milDensConvertToCelsius() {
+  const f = parseFloat(document.getElementById('milDensFahrenheit').value);
+  document.getElementById('milDensCelsius').value = milDensFtoC(f).toFixed(2);
+  milDensCalculate();
+}
+
+// Water density [T_°F, kg/m³] — same table used across site
+const milDensWaterData = [
+  [-40,999.8],[32,999.8],[39,1000],[50,999.7],[60,999.0],[70,998.0],
+  [80,996.6],[100,993.1],[120,988.6],[140,983.2],[160,977.1],
+  [180,970.4],[200,963.0],[212,958.4]
+];
+
+function milDensWaterInterp(fahr) {
+  const d = milDensWaterData;
+  if (fahr <= d[0][0]) return d[0][1];
+  if (fahr >= d[d.length-1][0]) return null; // above boiling — not meaningful
+  for (let i = 0; i < d.length - 1; i++) {
+    if (fahr >= d[i][0] && fahr <= d[i+1][0]) {
+      const t = (fahr - d[i][0]) / (d[i+1][0] - d[i][0]);
+      return d[i][1] + t * (d[i+1][1] - d[i][1]);
+    }
+  }
+  return null;
+}
+
+function milDensCalculate() {
+  const f = parseFloat(document.getElementById('milDensFahrenheit').value);
+  const tC = milDensFtoC(f);
+  const ids = ['milDens_kgm3','milDens_lbin3','milDens_lbgal','milDens_lbft3','milDens_sg1','milDens_sg2','milDens_sg3','milDens_api'];
+
+  const minC = milDensData[0][0], maxC = milDensData[milDensData.length - 1][0];
+  if (isNaN(f) || tC < minC || tC > maxC) {
+    ids.forEach(id => { document.getElementById(id).textContent = 'Out of Range'; });
+    return;
+  }
+
+  const rho = milDensLinInterp(tC, milDensData);
+  document.getElementById('milDens_kgm3').textContent  = rho.toFixed(2);
+  document.getElementById('milDens_lbin3').textContent = (rho * 0.000036127298147753).toFixed(5);
+  document.getElementById('milDens_lbgal').textContent = (rho * 0.0083454063545262).toFixed(4);
+  document.getElementById('milDens_lbft3').textContent = (rho * 0.0083454063545262 * 7.48052).toFixed(4);
+  document.getElementById('milDens_sg1').textContent   = (rho / 1000).toFixed(5);
+  document.getElementById('milDens_sg2').textContent   = (rho / 998).toFixed(5);
+
+  const rhoW = milDensWaterInterp(f);
+  document.getElementById('milDens_sg3').textContent   = rhoW !== null ? (rho / rhoW).toFixed(5) : '— (above 212°F)';
+
+  document.getElementById('milDens_api').textContent   = ((141.5 / (rho / 999.01)) - 131.5).toFixed(5);
+}
+
+milDensConvertToCelsius();
+</script>
+
+  </body>
+</html>
