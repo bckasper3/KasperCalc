@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>KasperCalc: 404 Page Not Found</title>
+    <link rel="canonical" href="https://kaspercalc.com/404.html" />
+    <meta name="author" content="bckasper3" />
+    <meta name="robots" content="noindex" />
+    <meta name="description" content="Page not found. Browse all KasperCalc calculators from the links below." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      .error-block {
+        text-align: center;
+        padding: 3rem 1rem 2rem;
+      }
+      .error-block .error-code {
+        font-size: 6rem;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--section-title-color, #0d6efd);
+        opacity: 0.15;
+        user-select: none;
+      }
+      .error-block .error-heading {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-top: -1.5rem;
+      }
+      .error-block .error-sub {
+        color: #6c757d;
+        margin-bottom: 1.5rem;
+      }
+      .error-block .btn-home {
+        font-size: 1rem;
+      }
+      #index-content-placeholder .h1.section-title ~ * {
+        /* suppress the index banner inside injected content */
+      }
+      /* hide the injected banner section — this page has its own heading */
+      #index-content-placeholder .banner {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+
+  <!-- NAVIGATION — shared with index.html; update both together -->
+  <div id="site-nav"></div>
+
+  <main>
+    <!-- 404 MESSAGE -->
+    <div class="error-block">
+      <div class="error-code" aria-hidden="true">404</div>
+      <div class="error-heading">Page Not Found</div>
+      <p class="error-sub">That URL doesn't exist. Here's everything that does:</p>
+      <a href="index.html" class="btn btn-outline-secondary btn-home">Go to Home Page</a>
+    </div>
+
+    <!-- INDEX CONTENT — fetched live from index.html so this page needs no maintenance -->
+    <div id="index-content-placeholder">
+      <noscript>
+        <p class="text-center text-muted py-4">Enable JavaScript to see the full calculator list, or <a href="index.html">visit the home page</a>.</p>
+      </noscript>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+  <script src="js/footer.js"></script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5XLCN0GJQ0');
+  </script>
+
+  <script>
+    // Inject the nav from index.html so we never have to maintain it here.
+    // Falls back gracefully if fetch fails (offline, file:// protocol, etc.).
+    (async function () {
+      try {
+        const res = await fetch('/index.html');
+        if (!res.ok) throw new Error('fetch failed');
+        const text = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'text/html');
+
+        // Inject nav
+        const nav = doc.querySelector('.navbarwrapper');
+        if (nav) {
+          document.getElementById('site-nav').replaceWith(nav);
+        }
+
+        // Inject main content (everything inside <main>)
+        const main = doc.querySelector('main');
+        if (main) {
+          document.getElementById('index-content-placeholder').innerHTML = main.innerHTML;
+        }
+      } catch (e) {
+        // Silent fail — the home-page link in the error block is still useful
+      }
+    })();
+  </script>
+
+  </body>
+</html>

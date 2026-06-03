@@ -129,13 +129,11 @@
                   <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
                   <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
                   <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
-                  <a class="dropdown-item" href="MIL-PRF-23699BoilingHighPressure.html">Boiling Points at Pressures</a>
                   <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
-                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Dynamic and Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
                   <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
-                  <a class="dropdown-item" href="MIL-PRF-23699EnthalpyEntropy.html">Enthalpy and Entropy</a>
                   <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
-                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thremal Diffusivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -152,10 +150,9 @@
                   <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
                   <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
                   <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
-                  <a class="dropdown-item" href="WaterLiquidGasEquilibrium.html">Liquid Gas Equilibrium</a>
                   <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
                   <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
-                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thremal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
                   <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
                 </div>
               </li>
@@ -170,7 +167,7 @@
           </div>
           <div class="d-md-flex d-block justify-content-end">
             <ul class="navbar-nav justify-content-end">
-              <li class="nav-item" style="padding-right: 0px;">
+              <li class="nav-item">
                 <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
               </li>
               <li class="nav-item dropdown">
@@ -203,6 +200,13 @@
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
                   <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">&nbsp&nbsp&nbsp 2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">&nbsp&nbsp&nbsp 2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">&nbsp&nbsp&nbsp 2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">&nbsp&nbsp&nbsp 2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">&nbsp&nbsp&nbsp 2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">&nbsp&nbsp&nbsp 2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">&nbsp&nbsp&nbsp 2.7 (Austenitic Stainless Steels)</a>
                   <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
                 </div>
               </li>
@@ -306,12 +310,41 @@
       </section>
 
 
+      <!-- PERCENT VOLUME CHANGE CHART -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Jet Fuel Percent Volume Change Chart</div>
+            </div>
+            <div class="canvasdiv">
+              <button id="toggleNdExpTip">Hide Tooltips</button>
+              <a style="font-size: medium; text-decoration: none;" href="img/JetFuelVolumePercentChange(DegreesF).png" download="JetFuelVolumePercentChange(DegreesF).png">
+                <button>Download Chart</button>
+              </a>
+              <a style="font-size: medium; text-decoration: none;" href="img/JetFuelVolumePercentChange(DegreesF).png" target="_blank">
+                <button>Open In New Tab</button>
+              </a>  
+              <div class="canvascontainer">
+                <canvas id="ndExpChart"
+                  aria-label="Jet Fuel Percent Volume Change vs Temperature °F relative to 68°F"
+                  width="400" height="600" role="img" class="chartcanvas">
+                  <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+                </canvas>
+              </div>
+            </div>
+            <p class="text-center">ΔV/V₀ = (ρ₀ &minus; ρ(T)) / ρ(T) &times; 100%, referenced to 68&nbsp;°F (20&nbsp;°C). Negative values mean the fuel is denser (contracted) relative to room temperature.</p>
+            <p class="text-center">Toggle data sets by clicking the legend.</p>
+          </div>
+        </div>
+      </section>
+
       <!-- CALCULATOR -->
       <section>
         <div class="csscontainer">
           <div class="col-lg-12 col-12 px-3">
 
-            <div class="wrapper">
+            <div class="wrapper" style="max-width: 35rem;">
               <div class="header text-center">Nominal Density Calculator
               </div>
 
@@ -405,6 +438,16 @@
                 <div class="outputrow">
                   <span class="label">°API****:</span>
                   <span class="output" id="result_density7">&nbsp</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">% Vol. Change from 68°F:</span>
+                  <span class="output" id="ndExp_volpct">&nbsp;</span>
+                </div>
+
+                <div class="outputrow">
+                  <span class="label">% Density Change from 68°F:</span>
+                  <span class="output" id="ndExp_rhopct">&nbsp;</span>
                 </div>
               </div>
 

@@ -1,0 +1,942 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA FOR -->
+    <title>KasperCalc: MIL-PRF-23699 Dynamic and Kinematic Viscosity</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, MIL-PRF-23699, turbine oil viscosity, kinematic viscosity, dynamic viscosity, AeroShell, synthetic ester, turbine engine oil viscosity calculator" />
+    <meta name="description" content="MIL-PRF-23699 turbine engine oil kinematic and dynamic viscosity charts and calculator across temperature ranges." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    
+    <!-- <script defer type="text/javascript" src="js/bootstrap.min.js"></script> -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> --> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+<!-- Google tag (gtag.js) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5XLCN0GJQ0');
+</script> -->
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+
+   </head>
+
+  <!-- BODY -->
+  <body>
+
+
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="Waterviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">&nbsp&nbsp&nbsp 2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">&nbsp&nbsp&nbsp 2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">&nbsp&nbsp&nbsp 2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">&nbsp&nbsp&nbsp 2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">&nbsp&nbsp&nbsp 2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">&nbsp&nbsp&nbsp 2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">&nbsp&nbsp&nbsp 2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item" style="padding-right: 0px;">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                MIL-PRF-23699 Dynamic and Kinematic Viscosity
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <h1 class="visually-hidden">MIL-PRF-23699 Turbine Oil Viscosity Calculator</h1>
+
+      <!-- Chart.js -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+      <!-- KINEMATIC VISCOSITY CHART -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">MIL-PRF-23699 Kinematic Viscosity Chart</div>
+            </div>
+
+            <div class="canvasdiv">
+              <button id="milToggleTipKin">Hide Tooltips</button>
+              <a style="font-size: medium; text-decoration: none;" href="img/MIL-PRF-23699KinematicViscosity.png" download="MIL-PRF-23699KinematicViscosity.png">
+                <button>Download Chart</button>
+              </a>
+              <a style="font-size: medium; text-decoration: none;" href="img/MIL-PRF-23699KinematicViscosity.png" target="_blank">
+                <button>Open In New Tab</button>
+              </a>
+              <div class="canvascontainer">
+                <canvas id="milKinChart"
+                  aria-label="MIL-PRF-23699 Kinematic Viscosity vs Temperature °F"
+                  width="400" height="600" role="img" class="chartcanvas">
+                  <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+                </canvas>
+              </div>
+            </div>
+            <p class="text-center">Toggle data sets by clicking the legend. Y-axis is logarithmic.</p>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- DYNAMIC VISCOSITY CHART -->
+      <section id="milDynSection">
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">MIL-PRF-23699 Dynamic (Absolute) Viscosity Chart</div>
+            </div>
+
+            <div class="canvasdiv">
+              <button id="milToggleTipDyn">Hide Tooltips</button>
+              <a style="font-size: medium; text-decoration: none;" href="img/MIL-PRF-23699DynamicViscosity.png" download="MIL-PRF-23699DynamicViscosity.png">
+                <button>Download Chart</button>
+              </a>
+              <a style="font-size: medium; text-decoration: none;" href="img/MIL-PRF-23699DynamicViscosity.png" target="_blank">
+                <button>Open In New Tab</button>
+              </a>
+              <div class="canvascontainer">
+                <canvas id="milDynChart"
+                  aria-label="MIL-PRF-23699 Dynamic Viscosity vs Temperature °F"
+                  width="400" height="600" role="img" class="chartcanvas">
+                  <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+                </canvas>
+              </div>
+            </div>
+            <p class="text-center">Computed from kinematic viscosity &times; density (&mu;&nbsp;=&nbsp;&nu;&thinsp;&times;&thinsp;&rho;). Toggle data sets by clicking the legend. Y-axis is logarithmic.</p>
+            <p class="text-center">Density source: NIST IR 8263 (Fortin et al.), Table&nbsp;23 &mdash; MIL-PRF-23699 at ambient pressure, 5&thinsp;&deg;C &ndash; 70&thinsp;&deg;C. Dynamic viscosity is only computed within that temperature range.</p>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- NO-DENSITY-DATA NOTICE (shown by JS when density arrays are empty) -->
+      <section id="milDynNoData" style="display:none;">
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">MIL-PRF-23699 Dynamic (Absolute) Viscosity Chart</div>
+            </div>
+            <p class="text-center mt-3">
+              Dynamic viscosity is computed from kinematic viscosity &times; density (&mu;&nbsp;=&nbsp;&nu;&times;&rho;).
+              Populate the <code>milDensDataC</code> arrays in <code>js/milPRF23699viscosity.js</code> with density
+              data (°C, kg/m³) to enable this chart.
+            </p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- CALCULATOR -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+
+            <div class="wrapper" style="max-width:45rem;">
+              <div class="header text-center">MIL-PRF-23699 Viscosity Calculator</div>
+
+              <div class="group1 d-flex flex-wrap">
+                <label class="dropdownlabel" for="milFluidSelect">Select Fluid:</label>
+                <span class="output">
+                  <select class="dropdowncalc dropdown-menu-end fs-5" id="milFluidSelect"
+                    onchange="milCalculate()"
+                    aria-label="Select MIL-PRF-23699 fluid option">
+                    <option value="0">AeroShell 750 — MIL-PRF-6081 Gr. 1010</option>
+                    <option value="1">AeroShell Ascender — MIL-PRF-23699 HTS</option>
+                    <option value="2">AeroShell 500 / 555 / 560 — MIL-PRF-23699 STD / HTS</option>
+                    <option value="3">AeroShell 3 — DEF STAN 91-99</option>
+                    <option value="4">AeroShell 308 — MIL-PRF-5606</option>
+                    <option value="5">AeroShell 390 — DEF STAN 91-94</option>
+                  </select>
+                </span>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Degrees (°F):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="milFahrenheit"
+                      oninput="milConvertToCelsius()" value="70"
+                      aria-label="Input box for degrees Fahrenheit" />
+                  </span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Degrees (°C):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="milCelsius"
+                      oninput="milConvertToFahrenheit()"
+                      aria-label="Input for degrees Celsius" />
+                  </span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Kinematic Viscosity</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">mm²/s (= cSt):</span>
+                  <span class="output" id="mil_kin1">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Centistokes (cSt):</span>
+                  <span class="output" id="mil_kin2">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Stokes (cm²/s):</span>
+                  <span class="output" id="mil_kin3">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">m²/s:</span>
+                  <span class="output" id="mil_kin4">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">in²/s:</span>
+                  <span class="output" id="mil_kin5">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">ft²/s:</span>
+                  <span class="output" id="mil_kin6">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Dynamic (Absolute) Viscosity</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">mPa·s (= cP):</span>
+                  <span class="output" id="mil_dyn1">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Centipoise (cP):</span>
+                  <span class="output" id="mil_dyn2">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Poise (g/(cm·s)):</span>
+                  <span class="output" id="mil_dyn3">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Pa·s (Poiseuille):</span>
+                  <span class="output" id="mil_dyn4">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">lbm/(ft·s):</span>
+                  <span class="output" id="mil_dyn5">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">kg/(m·h):</span>
+                  <span class="output" id="mil_dyn6">&nbsp;</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- VISCOSITY REFERENCE -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
+
+              <div class="custom-heading">Viscosity of MIL-PRF-23699 Turbine Oil</div>
+
+              <div style="text-align:left" class="mt-3">
+                <div class="custom-subheading">Kinematic Viscosity</div>
+                <p class="mt-2">
+                  MIL-PRF-23699 is defined as a 5&thinsp;mm²/s class oil. The specification sets a narrow
+                  kinematic viscosity band at 100&thinsp;&deg;C (4.90&ndash;5.40&thinsp;mm²/s) to ensure
+                  consistent lubrication film thickness across qualified products. At cold temperatures the
+                  viscosity rises steeply &mdash; the spec allows up to 13&thinsp;000&thinsp;mm²/s at
+                  &minus;40&thinsp;&deg;C &mdash; which governs engine cold-start and ground-start limits.
+                </p>
+              </div>
+
+              <div style="text-align:left" class="mt-4">
+                <div class="custom-subheading">Why Viscosity Matters in Turbine Lubrication</div>
+                <p class="mt-2">
+                  Turbine bearing systems operate over an extreme temperature range, from arctic ground starts
+                  (&minus;54&thinsp;&deg;C) to bearing compartment temperatures that can exceed 200&thinsp;&deg;C.
+                  Too high a viscosity at cold temperatures means the oil cannot be pumped to bearings during
+                  start-up; too low a viscosity at high temperatures means inadequate hydrodynamic film
+                  thickness and accelerated wear. The narrow 100&thinsp;&deg;C band ensures all qualified
+                  oils deliver predictable film thickness in the normal operating regime.
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- DYNAMIC VS KINEMATIC EXPLANATION -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
+
+              <div class="custom-heading">Dynamic (Absolute) vs. Kinematic Viscosity</div>
+
+              <div style="text-align:left" class="mt-3">
+                <div class="custom-subheading">Dynamic (Absolute) Viscosity &mdash; &mu;</div>
+                <p class="mt-2">
+                  Dynamic viscosity measures a fluid's resistance to shear &mdash; the internal force per unit
+                  area required to make one layer slide past another. It is independent of density. The SI unit
+                  is the pascal-second (Pa&middot;s); the common engineering unit is the millipascal-second
+                  (mPa&middot;s), numerically equal to centipoise (cP).
+                </p>
+                <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
+                  &tau; = &mu; &times; (du / dy)
+                </p>
+              </div>
+
+              <div style="text-align:left" class="mt-4">
+                <div class="custom-subheading">Kinematic Viscosity &mdash; &nu;</div>
+                <p class="mt-2">
+                  Kinematic viscosity is the ratio of dynamic viscosity to fluid density. The SI unit is m²/s;
+                  the common unit is mm²/s, numerically equal to centistokes (cSt). Most turbine oil
+                  specifications grade viscosity kinematically because viscometers measure time-of-flow
+                  under gravity, which naturally yields kinematic viscosity.
+                </p>
+                <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
+                  &nu; = &mu; / &rho; &nbsp;&nbsp;&nbsp; &rArr; &nbsp;&nbsp;&nbsp; &mu; [mPa&middot;s] = &nu; [mm²/s] &times; &rho; [kg/m³] / 1000
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary p-4 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+            <div id="citationText" class="font-monospace text-dark-emphasis small pt-2">
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    </main>   
+    
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->    
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5XLCN0GJQ0');
+</script>
+
+  <script>
+// ---------------------------------------------------------------------------
+// MIL-PRF-23699 Viscosity — kinematic viscosity data [xC=°C, y=mm²/s]
+// Negative y values from the source digitisation are excluded.
+// ---------------------------------------------------------------------------
+const milViscDataC = [
+  // Aeroshell 750
+  [{xC:-33.672231335842255,y:9986.172890733058},{xC:-15.408536781498285,y:9004.448132780084},{xC:14.767023706133998,y:7372.849239280776},{xC:35.41374762777831,y:6252.853388658369},{xC:56.85991829907684,y:5022.240663900416},{xC:80.28502042523078,y:3763.9737206085765},{xC:99.34597446042008,y:2699.286307053943},{xC:130.31879442889766,y:984.7247579529749}],
+  // Aeroshell Ascender
+  [{xC:-37.23037087072598,y:9986.172890733058},{xC:-2.6753514104667317,y:7967.414937759337},{xC:20.36315095371353,y:6598.531120331951},{xC:46.58084853163497,y:5022.240663900416},{xC:85.11341632088521,y:2699.286307053943},{xC:106.1620508861655,y:1496.3278008298767},{xC:130.78960404001413,y:30.654218533887843}],
+  // Aeroshell 500, 555, 560
+  [{xC:-39.20602142236804,y:9972.345781466114},{xC:-17.760944385473962,y:8755.560165975105},{xC:2.0972691305606475,y:7607.91009681881},{xC:41.016436681784555,y:5395.572614107884},{xC:80.33751487664446,y:3100.2724757952983},{xC:106.15111454212101,y:1634.5988934993097},{xC:130.77538679275628,y:210.40663900415052}],
+  // Aeroshell 3  (last raw point was negative — excluded)
+  [{xC:-39.60355752838625,y:10000},{xC:5.325677892502171,y:6778.283540802213},{xC:56.62205281610858,y:3031.136929460582}],
+  // Aeroshell 308  (last raw point was negative — excluded)
+  [{xC:-39.12727974524751,y:8976.793914246196},{xC:29.598346682106197,y:4801.006915629323},{xC:78.86110843063463,y:1772.8699861687428}],
+  // Aeroshell 390  (last raw point was negative — excluded)
+  [{xC:-39.11087522918074,y:8769.387275242047},{xC:-13.296181929299756,y:7289.886583679116},{xC:15.694425681109074,y:5644.460580912863},{xC:60.168162372543335,y:3183.235131396958},{xC:93.52838624593906,y:1275.094052558784}],
+];
+
+// Density data [xC=°C, y=kg/m³] at ambient pressure (~83 kPa)
+// Source: NIST IR 8263 (Fortin et al.), Table 23 — MIL-PRF-23699 ambient-pressure density.
+// All six oil grades share this density dataset (all qualify to MIL-PRF-23699).
+// Measurement range 278.15 K – 343.15 K (5 °C – 70 °C); outside this range the
+// dynamic-viscosity outputs will show "Out of Range".
+const _milDensPoints = [
+  {xC:-40, y:1037.36},
+  {xC:-35, y:1033.59},
+  {xC:-30, y:1029.82},
+  {xC:-25, y:1026.05},
+  {xC:-20, y:1022.29},
+  {xC:-15, y:1018.52},
+  {xC:-10, y:1014.75},
+  {xC: -5, y:1010.98},
+  {xC:  0, y:1007.21},
+  {xC:  5, y:1003.44},
+  {xC: 10, y: 999.67},
+  {xC: 15, y: 995.89},
+  {xC: 20, y: 992.12},
+  {xC: 25, y: 988.35},
+  {xC: 30, y: 984.58},
+  {xC: 35, y: 980.81},
+  {xC: 40, y: 977.04},
+  {xC: 45, y: 973.27},
+  {xC: 50, y: 969.50},
+  {xC: 55, y: 965.73},
+  {xC: 60, y: 961.96},
+  {xC: 65, y: 958.19},
+  {xC: 70, y: 954.42},
+  {xC: 75, y: 950.65},
+  {xC: 80, y: 946.88},
+  {xC: 85, y: 943.11},
+  {xC: 90, y: 939.34},
+  {xC: 95, y: 935.57},
+  {xC:100, y: 931.80},
+  {xC:105, y: 928.03},
+  {xC:110, y: 924.26},
+  {xC:115, y: 920.49},
+  {xC:120, y: 916.72},
+  {xC:125, y: 912.95},
+  {xC:130, y: 909.18},
+  {xC:135, y: 905.41},
+  {xC:140, y: 901.64},
+  {xC:145, y: 897.87},
+  {xC:150, y: 894.10},
+  {xC:155, y: 890.33},
+  {xC:160, y: 886.56},
+  {xC:165, y: 882.79},
+  {xC:170, y: 879.02},
+  {xC:175, y: 875.25},
+  {xC:180, y: 871.48},
+  {xC:185, y: 867.71},
+  {xC:190, y: 863.94},
+  {xC:195, y: 860.17},
+  {xC:200, y: 856.40},
+  {xC:205, y: 852.63},
+  {xC:210, y: 848.86},
+  {xC:215, y: 845.09},
+  {xC:220, y: 841.32},
+  {xC:225, y: 837.55},
+  {xC:230, y: 833.79},
+  {xC:235, y: 830.02},
+  {xC:240, y: 826.25},
+  {xC:245, y: 822.48},
+  {xC:250, y: 818.71},
+  {xC:255, y: 814.94},
+  {xC:260, y: 811.17},
+  {xC:265, y: 807.40},
+  {xC:270, y: 803.63},
+  {xC:275, y: 799.85}
+];
+const milDensDataC = [
+  _milDensPoints,  // Aeroshell 750
+  _milDensPoints,  // Aeroshell Ascender
+  _milDensPoints,  // Aeroshell 500, 555, 560
+  _milDensPoints,  // Aeroshell 3
+  _milDensPoints,  // Aeroshell 308
+  _milDensPoints,  // Aeroshell 390
+];
+
+const milViscLabels = [
+  'AeroShell 750 (MIL-PRF-6081 Gr. 1010)',
+  'AeroShell Ascender (MIL-PRF-23699 HTS)',
+  'AeroShell 500 / 555 / 560 (MIL-PRF-23699 STD / HTS)',
+  'AeroShell 3 (DEF STAN 91-99)',
+  'AeroShell 308 (MIL-PRF-5606)',
+  'AeroShell 390 (DEF STAN 91-94)',
+];
+
+const milColors = [
+  'rgb(68,119,170)',
+  'rgb(34,136,51)',
+  'rgb(204,187,68)',
+  'rgb(238,102,119)',
+  'rgb(170,51,119)',
+  'rgb(102,204,238)',
+];
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+function milCtoF(c) { return c * 9 / 5 + 32; }
+function milFtoC(f) { return (f - 32) * 5 / 9; }
+
+// Linear interpolation on sorted {x, y} array
+function milLinInterp(xTarget, data) {
+  if (!data || data.length === 0) return NaN;
+  for (let i = 0; i < data.length - 1; i++) {
+    if (xTarget >= data[i].x && xTarget <= data[i + 1].x) {
+      const t = (xTarget - data[i].x) / (data[i + 1].x - data[i].x);
+      return data[i].y + t * (data[i + 1].y - data[i].y);
+    }
+  }
+  return NaN;
+}
+
+// Convert raw °C array → dense {x=°F, y} array with a point every 1 °F.
+// Negative y values are filtered before interpolation.
+function milDenseF(rawC) {
+  const pts = rawC
+    .map(p => ({ xF: milCtoF(p.xC), y: p.y }))
+    .filter(p => p.y > 0)
+    .sort((a, b) => a.xF - b.xF);
+  if (pts.length < 2) return pts.map(p => ({ x: parseFloat(p.xF.toFixed(2)), y: p.y }));
+
+  const result = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const x0 = pts[i].xF, y0 = pts[i].y;
+    const x1 = pts[i + 1].xF, y1 = pts[i + 1].y;
+    // Actual data point
+    result.push({ x: parseFloat(x0.toFixed(2)), y: parseFloat(y0.toFixed(4)) });
+    // Integer-°F steps between the two data points
+    const firstStep = Math.ceil(x0 + 0.01);
+    const lastStep  = Math.floor(x1 - 0.01);
+    for (let f = firstStep; f <= lastStep; f++) {
+      const t = (f - x0) / (x1 - x0);
+      result.push({ x: f, y: parseFloat((y0 + t * (y1 - y0)).toFixed(4)) });
+    }
+  }
+  // Last actual point
+  const last = pts[pts.length - 1];
+  result.push({ x: parseFloat(last.xF.toFixed(2)), y: parseFloat(last.y.toFixed(4)) });
+  return result;
+}
+
+// Pre-compute dense °F arrays once — used by both chart and calculator
+const milKinDenseF = milViscDataC.map(milDenseF);
+const milDensDenseF = milDensDataC.map(milDenseF);
+
+// ---------------------------------------------------------------------------
+// Dynamic viscosity datasets: μ [mPa·s] = ν [mm²/s] × ρ [kg/m³] / 1000
+// ---------------------------------------------------------------------------
+function milBuildDynDatasets() {
+  return milKinDenseF.map((kinPts, i) => {
+    const denPts = milDensDenseF[i];
+    if (!kinPts.length || !denPts.length)
+      return { label: milViscLabels[i], data: [], fill: false, borderColor: milColors[i], tension: 0 };
+    const pts = kinPts
+      .map(p => {
+        const rho = milLinInterp(p.x, denPts);
+        return (!isNaN(rho) && rho > 0) ? { x: p.x, y: parseFloat((p.y * rho / 1000).toFixed(4)) } : null;
+      })
+      .filter(Boolean);
+    return { label: milViscLabels[i], data: pts, fill: false, borderColor: milColors[i], tension: 0 };
+  });
+}
+
+// ---------------------------------------------------------------------------
+// White-background plugin
+// ---------------------------------------------------------------------------
+const milCustomBg = {
+  id: 'milCustomBg',
+  beforeDraw(chart) {
+    const { ctx } = chart;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, chart.width, chart.height);
+    ctx.restore();
+  }
+};
+
+// ---------------------------------------------------------------------------
+// Chart factory
+// ---------------------------------------------------------------------------
+function milMakeChart(canvasId, datasets, yLabel) {
+  const el = document.getElementById(canvasId);
+  if (!el) return null;
+  return new Chart(el.getContext('2d'), {
+    type: 'line',
+    data: { datasets },
+    plugins: [milCustomBg],
+    options: {
+      maintainAspectRatio: false,
+      layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
+      interaction: { mode: 'nearest', axis: 'x', intersect: false },
+      elements: { point: { radius: 0, hoverRadius: 4 } },
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: { align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 } },
+          onClick(e, legendItem, legend) {
+            const ci   = legend.chart;
+            const meta = ci.getDatasetMeta(legendItem.datasetIndex);
+            meta.hidden = meta.hidden === null ? !ci.data.datasets[legendItem.datasetIndex].hidden : null;
+            ci.update();
+          }
+        },
+        tooltip: { enabled: true, mode: 'nearest', intersect: false, axis: 'x' }
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          min: -50,
+          max: 275,
+          ticks: { maxRotation: 0, font: { size: 16 } },
+          title: { display: true, text: 'Temperature (°F)', font: { size: 20 } }
+        },
+        y: {
+          type: 'logarithmic',
+          ticks: { font: { size: 16 } },
+          title: { display: true, text: yLabel, padding: 10, font: { size: 20 } }
+        }
+      }
+    }
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Init
+// ---------------------------------------------------------------------------
+let milKinChart = null;
+let milDynChart = null;
+
+function milInit() {
+  const kinDatasets = milKinDenseF.map((data, i) => ({
+    label: milViscLabels[i],
+    data,
+    fill: false,
+    borderColor: milColors[i],
+    tension: 0,
+  }));
+
+  milKinChart = milMakeChart('milKinChart', kinDatasets, 'Kinematic Viscosity (cST = mm²/s)');
+
+  const dynDatasets = milBuildDynDatasets();
+  const hasDynData  = dynDatasets.some(ds => ds.data.length > 0);
+  const dynSection  = document.getElementById('milDynSection');
+  const dynNoData   = document.getElementById('milDynNoData');
+  if (hasDynData) {
+    milDynChart = milMakeChart('milDynChart', dynDatasets, 'Dynamic (Absolute) Viscosity (mPa·s)');
+    if (dynNoData) dynNoData.style.display = 'none';
+  } else {
+    if (dynSection) dynSection.style.display = 'none';
+    if (dynNoData)  dynNoData.style.display  = 'block';
+  }
+
+  const btnKin = document.getElementById('milToggleTipKin');
+  if (btnKin && milKinChart) {
+    btnKin.addEventListener('click', function () {
+      milKinChart.options.plugins.tooltip.enabled = !milKinChart.options.plugins.tooltip.enabled;
+      milKinChart.update();
+      this.textContent = milKinChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+    });
+  }
+
+  const btnDyn = document.getElementById('milToggleTipDyn');
+  if (btnDyn && milDynChart) {
+    btnDyn.addEventListener('click', function () {
+      milDynChart.options.plugins.tooltip.enabled = !milDynChart.options.plugins.tooltip.enabled;
+      milDynChart.update();
+      this.textContent = milDynChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+    });
+  }
+
+  milConvertToCelsius();
+  milCalculate();
+}
+
+milInit();
+
+// ---------------------------------------------------------------------------
+// Calculator
+// ---------------------------------------------------------------------------
+function milFluidIndex() {
+  return parseInt(document.getElementById('milFluidSelect').value, 10);
+}
+
+function milConvertToFahrenheit() {
+  const c = parseFloat(document.getElementById('milCelsius').value);
+  document.getElementById('milFahrenheit').value = (c * 9 / 5 + 32).toFixed(2);
+  milCalculate();
+}
+
+function milConvertToCelsius() {
+  const f = parseFloat(document.getElementById('milFahrenheit').value);
+  document.getElementById('milCelsius').value = ((f - 32) * 5 / 9).toFixed(2);
+  milCalculate();
+}
+
+function milSetOut(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+function milCalculate() {
+  const fi   = milFluidIndex();
+  const fahr = parseFloat(document.getElementById('milFahrenheit').value);
+  const kinPts = milKinDenseF[fi];
+  const denPts = milDensDenseF[fi];
+
+  const kinIds = ['mil_kin1','mil_kin2','mil_kin3','mil_kin4','mil_kin5','mil_kin6'];
+  const dynIds = ['mil_dyn1','mil_dyn2','mil_dyn3','mil_dyn4','mil_dyn5','mil_dyn6'];
+
+  const inKinRange = kinPts.length > 0 && !isNaN(fahr) && fahr >= kinPts[0].x && fahr <= kinPts[kinPts.length - 1].x;
+  const inDenRange = denPts.length > 0 && !isNaN(fahr) && fahr >= denPts[0].x && fahr <= denPts[denPts.length - 1].x;
+
+  if (inKinRange) {
+    const nu = milLinInterp(fahr, kinPts);
+    milSetOut('mil_kin1', nu.toFixed(4));
+    milSetOut('mil_kin2', nu.toFixed(4));
+    milSetOut('mil_kin3', (nu * 0.01).toFixed(6));
+    milSetOut('mil_kin4', (nu * 1e-6).toExponential(3));
+    milSetOut('mil_kin5', (nu * 0.0015500031).toFixed(6));
+    milSetOut('mil_kin6', (nu * 0.000010764).toFixed(8));
+  } else {
+    kinIds.forEach(id => milSetOut(id, 'Out of Range'));
+  }
+
+  if (inKinRange && inDenRange) {
+    const nu  = milLinInterp(fahr, kinPts);
+    const rho = milLinInterp(fahr, denPts);
+    const mu  = nu * rho / 1000;
+    milSetOut('mil_dyn1', mu.toFixed(4));
+    milSetOut('mil_dyn2', mu.toFixed(4));
+    milSetOut('mil_dyn3', (mu * 0.01).toFixed(6));
+    milSetOut('mil_dyn4', (mu * 0.001).toFixed(7));
+    milSetOut('mil_dyn5', (mu * 0.000671969).toFixed(6));
+    milSetOut('mil_dyn6', (mu * 3.6).toFixed(4));
+  } else {
+    dynIds.forEach(id => milSetOut(id, inDenRange ? 'Out of Range' : 'No density data'));
+  }
+}
+  </script>
+
+  </body>
+</html>

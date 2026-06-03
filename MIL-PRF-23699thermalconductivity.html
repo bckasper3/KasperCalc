@@ -1,0 +1,571 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: MIL-PRF-23699 Thermal Conductivity</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, MIL-PRF-23699, turbine engine oil, thermal conductivity, polyol ester, lubricant" />
+    <meta name="description" content="Thermal conductivity of MIL-PRF-23699 turbine engine oil from 83°F to 439°F (28°C to 226°C). Data from NIST IR 8263." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <!-- chart and calculator JS embedded below -->
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XLCN0GJQ0');
+    </script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="Waterviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">&nbsp&nbsp&nbsp 2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">&nbsp&nbsp&nbsp 2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">&nbsp&nbsp&nbsp 2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">&nbsp&nbsp&nbsp 2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">&nbsp&nbsp&nbsp 2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">&nbsp&nbsp&nbsp 2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">&nbsp&nbsp&nbsp 2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item" style="padding-right: 0px;">
+                <a class="nav-link" href="about.html">About</a>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                Thermal Conductivity of MIL-PRF-23699
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHART -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">MIL-PRF-23699 Thermal Conductivity Chart</div>
+            </div>
+            <div class="canvasdiv">
+              <button id="toggleTooltipButton">Hide Tooltips</button>
+              <a style="font-size: medium; text-decoration: none;" href="img/MIL-PRF-23699ThermalConductivity(DegreesF).png" download="img/MIL-PRF-23699ThermalConductivity(DegreesF).png">
+                <button>Download Chart</button>
+              </a>
+              <a style="font-size: medium; text-decoration: none;" href="img/MIL-PRF-23699ThermalConductivity(DegreesF).png" target="_blank">
+                <button>Open In New Tab</button>
+              </a>
+              <div class="canvascontainer">
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+                <canvas id="myChart" aria-label="MIL-PRF-23699 Thermal Conductivity vs Temperature °F" width="400" height="600" role="img" class="chartcanvas">
+                  <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+                </canvas>
+              </div>
+            </div>
+            <p class="text-center">Values measured at near-ambient pressure (0.35–1.0 MPa). Data range: 83&nbsp;°F to 439&nbsp;°F (28&nbsp;°C to 226&nbsp;°C).</p>
+            <p class="text-center">Data from: <a href="https://doi.org/10.6028/NIST.IR.8263" target="_blank">NIST IR 8263 — Thermophysical Properties of Polyol Ester Lubricants</a>, Table A4.</p>
+            <p class="text-center">Toggle data sets by clicking the legend.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CALCULATOR -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+            <div class="wrapper" style="max-width:33rem;">
+              <div class="header text-center">MIL-PRF-23699 Thermal Conductivity Calculator</div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Degrees (°F):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="milLambdaFahrenheit" oninput="milLambdaConvertToCelsius()" value="200" aria-label="Input box for degrees Fahrenheit" />
+                  </span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Degrees (°C):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="milLambdaCelsius" oninput="milLambdaConvertToFahrenheit()" aria-label="Input for degrees Celsius" />
+                  </span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">W / (m·K):</span>
+                  <span class="output" id="milLambda_WmK">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">mW / (m·K):</span>
+                  <span class="output" id="milLambda_mWmK">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">BTU / (h·ft·°F):</span>
+                  <span class="output" id="milLambda_BTUhftF">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">BTU·in / (h·ft²·°F):</span>
+                  <span class="output" id="milLambda_BTUinhft2F">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">W / (cm·K):</span>
+                  <span class="output" id="milLambda_WcmK">&nbsp;</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DESCRIPTION -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
+              <div class="custom-heading">Thermal Conductivity of MIL-PRF-23699 Turbine Engine Oil</div>
+              <div style="text-align: left" class="mt-3">
+                <div class="custom-subheading">About This Data</div>
+                <p class="mt-2">
+                  The thermal conductivity data shown here was measured by NIST using a transient hot-wire instrument
+                  at pressures ranging from 0.4 to 69 MPa across isotherms from 300 K to 500 K (27&nbsp;°C to 227&nbsp;°C).
+                  The values tabulated here correspond to the lowest-pressure measurements at each isotherm,
+                  which are representative of near-ambient conditions.
+                </p>
+                <p class="mt-2">
+                  Thermal conductivity decreases approximately linearly with increasing temperature over this range,
+                  falling from about 0.145 W/(m·K) at 83&nbsp;°F (28&nbsp;°C) to about 0.114 W/(m·K) at 439&nbsp;°F (226&nbsp;°C).
+                  The combined expanded uncertainty in the thermal conductivity measurements is approximately ±1&nbsp;%.
+                </p>
+                <p class="mt-2">
+                  MIL-PRF-23699 is a fully qualified synthetic turbine engine oil based on polyol esters (POE),
+                  widely used in aircraft gas turbine engines. Its thermal conductivity is significantly lower than
+                  water and is relatively insensitive to pressure at modest pressures.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DATA TABLE -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-4" style="max-width:960px; width:100%;">
+              <div class="custom-heading">MIL-PRF-23699 — Thermal Conductivity vs. Temperature</div>
+
+              <div class="table-responsive mt-3 mb-3">
+                <table class="table table-striped table-bordered table-hover table-sm">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th>Temp (°C)</th>
+                      <th>Temp (°F)</th>
+                      <th>Pressure (MPa)</th>
+                      <th>λ (W/m·K)</th>
+                      <th>λ (mW/m·K)</th>
+                      <th>λ (BTU/h·ft·°F)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>28.4</td><td>83.1</td><td>0.40</td><td>0.1451</td><td>145.1</td><td>0.0839</td></tr>
+                    <tr><td>93.6</td><td>200.5</td><td>0.72</td><td>0.1358</td><td>135.8</td><td>0.0785</td></tr>
+                    <tr><td>126.8</td><td>260.2</td><td>0.95</td><td>0.1307</td><td>130.7</td><td>0.0755</td></tr>
+                    <tr><td>159.9</td><td>319.8</td><td>0.73</td><td>0.1250</td><td>125.0</td><td>0.0722</td></tr>
+                    <tr><td>192.7</td><td>378.9</td><td>0.54</td><td>0.1193</td><td>119.3</td><td>0.0689</td></tr>
+                    <tr><td>226.3</td><td>439.3</td><td>0.62</td><td>0.1139</td><td>113.9</td><td>0.0658</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="text-start small">Near-ambient pressure measurements extracted from NIST IR 8263, Table A4. Expanded uncertainty: ±1&nbsp;%.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary p-4 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+            <div id="citationText" class="font-monospace text-dark-emphasis small pt-2"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->
+
+<script>
+// MIL-PRF-23699 Thermal Conductivity Data — NIST IR 8263, Table A4
+// Near-ambient pressure measurements. Format: [T_C, lambda_W_per_mK]
+const milLambdaData = [
+  [28.4,  0.1451],
+  [93.6,  0.1358],
+  [126.8, 0.1307],
+  [159.9, 0.1250],
+  [192.7, 0.1193],
+  [226.3, 0.1139],
+];
+
+function milLambdaCtoF(c) { return c * 9 / 5 + 32; }
+function milLambdaFtoC(f) { return (f - 32) * 5 / 9; }
+
+function milLambdaLinInterp(tC, data) {
+  for (let i = 0; i < data.length - 1; i++) {
+    if (tC >= data[i][0] && tC <= data[i + 1][0]) {
+      const t = (tC - data[i][0]) / (data[i + 1][0] - data[i][0]);
+      return data[i][1] + t * (data[i + 1][1] - data[i][1]);
+    }
+  }
+  return NaN;
+}
+
+// Pre-interpolate to 1°F steps for smooth chart tooltips
+function milLambdaBuildFahrenheitPoints(data) {
+  const pts = data.map(d => ({ x: milLambdaCtoF(d[0]), y: d[1] }));
+  pts.sort((a, b) => a.x - b.x);
+  const result = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const x0 = pts[i].x, y0 = pts[i].y, x1 = pts[i + 1].x, y1 = pts[i + 1].y;
+    result.push({ x: parseFloat(x0.toFixed(2)), y: parseFloat(y0.toFixed(5)) });
+    const first = Math.ceil(x0 + 0.01), last = Math.floor(x1 - 0.01);
+    for (let f = first; f <= last; f++) {
+      const t = (f - x0) / (x1 - x0);
+      result.push({ x: f, y: parseFloat((y0 + t * (y1 - y0)).toFixed(5)) });
+    }
+  }
+  const last = pts[pts.length - 1];
+  result.push({ x: parseFloat(last.x.toFixed(2)), y: parseFloat(last.y.toFixed(5)) });
+  return result;
+}
+
+const milLambdaFPoints = milLambdaBuildFahrenheitPoints(milLambdaData);
+
+// Build chart
+const customBg = {
+  id: 'customCanvasBackgroundColor',
+  beforeDraw(chart) {
+    const { ctx } = chart;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, chart.width, chart.height);
+    ctx.restore();
+  }
+};
+
+const ctx = document.getElementById('myChart').getContext('2d');
+const milLambdaChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    datasets: [{
+      label: 'MIL-PRF-23699',
+      data: milLambdaFPoints,
+      fill: false,
+      borderColor: 'rgb(68,119,170)',
+      tension: 0.1,
+    }]
+  },
+  plugins: [customBg],
+  options: {
+    maintainAspectRatio: false,
+    layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
+    interaction: { mode: 'nearest', axis: 'x' },
+    elements: { point: { radius: 0 } },
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: { align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 } },
+      },
+      tooltip: { enabled: true, mode: 'nearest', intersect: false, axis: 'x' },
+      customCanvasBackgroundColor: { color: 'white' }
+    },
+    scales: {
+      x: {
+        type: 'linear',
+        min: 80,
+        max: 445,
+        ticks: { maxRotation: 0, font: { size: 16 } },
+        title: { display: true, text: 'Temperature °F', font: { size: 20 } }
+      },
+      y: {
+        ticks: { font: { size: 16 } },
+        title: { display: true, text: 'Thermal Conductivity (W/m·K)', padding: 10, font: { size: 20 } }
+      }
+    }
+  }
+});
+
+document.getElementById('toggleTooltipButton').addEventListener('click', function () {
+  milLambdaChart.options.plugins.tooltip.enabled = !milLambdaChart.options.plugins.tooltip.enabled;
+  milLambdaChart.update();
+  this.textContent = milLambdaChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+});
+
+function milLambdaConvertToFahrenheit() {
+  const c = parseFloat(document.getElementById('milLambdaCelsius').value);
+  document.getElementById('milLambdaFahrenheit').value = milLambdaCtoF(c).toFixed(2);
+  milLambdaCalculate();
+}
+
+function milLambdaConvertToCelsius() {
+  const f = parseFloat(document.getElementById('milLambdaFahrenheit').value);
+  document.getElementById('milLambdaCelsius').value = milLambdaFtoC(f).toFixed(2);
+  milLambdaCalculate();
+}
+
+function milLambdaCalculate() {
+  const f = parseFloat(document.getElementById('milLambdaFahrenheit').value);
+  const tC = milLambdaFtoC(f);
+  const ids = ['milLambda_WmK','milLambda_mWmK','milLambda_BTUhftF','milLambda_BTUinhft2F','milLambda_WcmK'];
+
+  const minC = milLambdaData[0][0], maxC = milLambdaData[milLambdaData.length - 1][0];
+  if (isNaN(f) || tC < minC || tC > maxC) {
+    ids.forEach(id => { document.getElementById(id).textContent = 'Out of Range'; });
+    return;
+  }
+
+  const lambda = milLambdaLinInterp(tC, milLambdaData);
+  document.getElementById('milLambda_WmK').textContent        = lambda.toFixed(4);
+  document.getElementById('milLambda_mWmK').textContent       = (lambda * 1000).toFixed(2);
+  document.getElementById('milLambda_BTUhftF').textContent    = (lambda * 0.57782).toFixed(5);
+  document.getElementById('milLambda_BTUinhft2F').textContent = (lambda * 6.9335).toFixed(4);
+  document.getElementById('milLambda_WcmK').textContent       = (lambda / 100).toFixed(6);
+}
+
+milLambdaConvertToCelsius();
+</script>
+
+  </body>
+</html>

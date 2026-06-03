@@ -121,13 +121,11 @@
                   <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
                   <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
                   <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
-                  <a class="dropdown-item" href="MIL-PRF-23699BoilingHighPressure.html">Boiling Points at Pressures</a>
                   <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
-                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Dynamic and Kinematic Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
                   <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
-                  <a class="dropdown-item" href="MIL-PRF-23699EnthalpyEntropy.html">Enthalpy and Entropy</a>
                   <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
-                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thremal Diffusivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -146,7 +144,7 @@
                   <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
                   <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
                   <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
-                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thremal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
                   <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
                 </div>
               </li>
@@ -194,6 +192,13 @@
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
                   <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">&nbsp&nbsp&nbsp 2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">&nbsp&nbsp&nbsp 2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">&nbsp&nbsp&nbsp 2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">&nbsp&nbsp&nbsp 2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">&nbsp&nbsp&nbsp 2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">&nbsp&nbsp&nbsp 2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">&nbsp&nbsp&nbsp 2.7 (Austenitic Stainless Steels)</a>
                   <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
                 </div>
               </li>
@@ -291,13 +296,18 @@
     <section>
       <div class="csscontainer">
         <div class="col-lg-12 col-12 px-3">
-          <div class="wrapper" style="max-width:33rem;">
-            <div class="header text-center">Propylene Glycol Thermal Expansion Coefficient Calculator</div>
+
+          <!-- CALCULATOR 1: Thermal Expansion % -->
+          <div class="wrapper" style="max-width: 35rem;">
+            <div class="header text-center">Propylene Glycol Thermal Expansion Calculator</div>
+            <div class="group">
+              <p class="text-center small mb-0" style="color:#666;">Enter two temperatures to get % volume and density change.</p>
+            </div>
 
             <div class="group1 d-flex flex-wrap">
-              <label class="dropdownlabel" for="concentration">Select Mixture %:</label>
+              <label class="dropdownlabel" for="pg1_conc">Select Mixture %:</label>
               <span class="output">
-                <select class="dropdowncalc dropdown-menu-end" id="concentration" onchange="pgTeCalc()" aria-label="Select % V/V propylene glycol concentration">
+                <select class="dropdowncalc dropdown-menu-end" id="pg1_conc" onchange="pgCalc1()" aria-label="Select % V/V propylene glycol concentration">
                   <option value="25">25%</option>
                   <option value="30">30%</option>
                   <option value="35">35%</option>
@@ -310,26 +320,185 @@
 
             <div class="group">
               <div class="outputrow">
-                <span class="label">Degrees (°F):</span>
+                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Initial Temperature (T1)</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">Value:</span>
                 <span class="output inputbox">
-                  <input class="calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" value="70" aria-label="Input temperature in Fahrenheit" />
+                  <input class="calcinput" type="number" id="pg1_t1val" oninput="pgCalc1()" value="60" aria-label="T1 temperature value" />
                 </span>
               </div>
               <div class="outputrow">
-                <span class="label">Degrees (°C):</span>
-                <span class="output inputbox">
-                  <input class="calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" aria-label="Input temperature in Celsius" />
+                <span class="label">Unit:</span>
+                <span class="output">
+                  <select id="pg1_t1unit" class="calcinput" onchange="pgCalc1()" aria-label="T1 temperature unit">
+                    <option value="f">°F</option>
+                    <option value="c">°C</option>
+                    <option value="k">K</option>
+                    <option value="r">°R</option>
+                  </select>
                 </span>
               </div>
             </div>
 
             <div class="group">
               <div class="outputrow">
-                <span class="label">β × 10⁻⁵ (1/K):</span>
-                <span class="output" id="result_te">&nbsp;</span>
+                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Final Temperature (T2)</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">Value:</span>
+                <span class="output inputbox">
+                  <input class="calcinput" type="number" id="pg1_t2val" oninput="pgCalc1()" value="200" aria-label="T2 temperature value" />
+                </span>
+              </div>
+              <div class="outputrow">
+                <span class="label">Unit:</span>
+                <span class="output">
+                  <select id="pg1_t2unit" class="calcinput" onchange="pgCalc1()" aria-label="T2 temperature unit">
+                    <option value="f">°F</option>
+                    <option value="c">°C</option>
+                    <option value="k">K</option>
+                    <option value="r">°R</option>
+                  </select>
+                </span>
+              </div>
+            </div>
+
+            <div class="group">
+              <div class="outputrow">
+                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Results</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">β at T1 (×10⁻⁵ 1/K):</span>
+                <span class="output" id="pg1_beta1">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">β at T2 (×10⁻⁵ 1/K):</span>
+                <span class="output" id="pg1_beta2">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">% Volume Change:</span>
+                <span class="output" id="pg1_dvv">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">% Density Change:</span>
+                <span class="output" id="pg1_drho">&nbsp;</span>
               </div>
             </div>
           </div>
+
+          <!-- CALCULATOR 2: Volume at T1 → Volume at T2 -->
+          <div class="wrapper mt-5" style="max-width: 35rem;">
+            <div class="header text-center">Volume Change Calculator</div>
+            <div class="group">
+              <p class="text-center small mb-0" style="color:#666;">Enter volume and two temperatures to get new volume.</p>
+            </div>
+
+            <div class="group1 d-flex flex-wrap">
+              <label class="dropdownlabel" for="pg2_conc">Select Mixture %:</label>
+              <span class="output">
+                <select class="dropdowncalc dropdown-menu-end" id="pg2_conc" onchange="pgCalc2()" aria-label="Select % V/V propylene glycol concentration for volume calc">
+                  <option value="25">25%</option>
+                  <option value="30">30%</option>
+                  <option value="35">35%</option>
+                  <option value="40">40%</option>
+                  <option value="45">45%</option>
+                  <option value="50">50%</option>
+                </select>
+              </span>
+            </div>
+
+            <div class="group">
+              <div class="outputrow">
+                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Known Volume at T1</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">Volume:</span>
+                <span class="output inputbox">
+                  <input class="calcinput" type="number" id="pg2_v1val" oninput="pgCalc2()" value="100" aria-label="Volume at T1" />
+                </span>
+              </div>
+              <div class="outputrow">
+                <span class="label">Unit:</span>
+                <span class="output">
+                  <select id="pg2_v1unit" class="calcinput" onchange="pgCalc2()" aria-label="Volume unit">
+                    <option value="gal">US gal</option>
+                    <option value="L">liters</option>
+                    <option value="ft3">ft³</option>
+                    <option value="m3">m³</option>
+                    <option value="in3">in³</option>
+                  </select>
+                </span>
+              </div>
+              <div class="outputrow">
+                <span class="label">T1 Value:</span>
+                <span class="output inputbox">
+                  <input class="calcinput" type="number" id="pg2_t1val" oninput="pgCalc2()" value="60" aria-label="T1 value for volume calc" />
+                </span>
+              </div>
+              <div class="outputrow">
+                <span class="label">T1 Unit:</span>
+                <span class="output">
+                  <select id="pg2_t1unit" class="calcinput" onchange="pgCalc2()" aria-label="T1 unit for volume calc">
+                    <option value="f">°F</option>
+                    <option value="c">°C</option>
+                    <option value="k">K</option>
+                    <option value="r">°R</option>
+                  </select>
+                </span>
+              </div>
+            </div>
+
+            <div class="group">
+              <div class="outputrow">
+                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Target Temperature (T2)</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">T2 Value:</span>
+                <span class="output inputbox">
+                  <input class="calcinput" type="number" id="pg2_t2val" oninput="pgCalc2()" value="200" aria-label="T2 value for volume calc" />
+                </span>
+              </div>
+              <div class="outputrow">
+                <span class="label">T2 Unit:</span>
+                <span class="output">
+                  <select id="pg2_t2unit" class="calcinput" onchange="pgCalc2()" aria-label="T2 unit for volume calc">
+                    <option value="f">°F</option>
+                    <option value="c">°C</option>
+                    <option value="k">K</option>
+                    <option value="r">°R</option>
+                  </select>
+                </span>
+              </div>
+            </div>
+
+            <div class="group">
+              <div class="outputrow">
+                <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Volume at T2</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">US Gallons:</span>
+                <span class="output" id="pg2_v2gal">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">Liters:</span>
+                <span class="output" id="pg2_v2L">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">ft³:</span>
+                <span class="output" id="pg2_v2ft3">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">m³:</span>
+                <span class="output" id="pg2_v2m3">&nbsp;</span>
+              </div>
+              <div class="outputrow">
+                <span class="label">in³:</span>
+                <span class="output" id="pg2_v2in3">&nbsp;</span>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
@@ -432,36 +601,96 @@ function denseByTempF(tempsC, values) {
   return pts;
 }
 
-// ── Calculator ────────────────────────────────────────────────────────────────
-function convertToFahrenheit() {
-  const c = parseFloat(document.getElementById('celsius').value);
-  if (!isNaN(c)) document.getElementById('fahrenheit').value = cToF(c).toFixed(1);
-  pgTeCalc();
-}
-function convertToCelsius() {
-  const f = parseFloat(document.getElementById('fahrenheit').value);
-  if (!isNaN(f)) document.getElementById('celsius').value = fToC(f).toFixed(1);
-  pgTeCalc();
-}
-function pgTeCalc() {
-  const conc = document.getElementById('concentration').value;
-  const fahr = parseFloat(document.getElementById('fahrenheit').value);
-  const out  = document.getElementById('result_te');
-  if (isNaN(fahr)) { out.textContent = '—'; return; }
-  const map = { '25': pgThermalExpData.p25, '30': pgThermalExpData.p30, '35': pgThermalExpData.p35,
-                '40': pgThermalExpData.p40, '45': pgThermalExpData.p45, '50': pgThermalExpData.p50 };
-  const ds  = map[conc] || pgThermalExpData.p25;
-  const celsius = fToC(fahr);
-  if (celsius < ds.tempsC[0] || celsius > ds.tempsC[ds.tempsC.length - 1]) {
-    out.textContent = 'Out of range'; return;
+// ── Calculator helpers ────────────────────────────────────────────────────────
+function pgToFahrenheit(val, unit) {
+  switch (unit) {
+    case 'f': return val;
+    case 'c': return val * 9 / 5 + 32;
+    case 'k': return (val - 273.15) * 9 / 5 + 32;
+    case 'r': return val - 459.67;
+    default:  return val;
   }
-  out.textContent = pgInterp(celsius, ds.tempsC, ds.values).toFixed(1);
+}
+function pgToLiters(val, unit) {
+  switch (unit) {
+    case 'gal': return val * 3.78541;
+    case 'L':   return val;
+    case 'ft3': return val * 28.3168;
+    case 'm3':  return val * 1000.0;
+    case 'in3': return val * 0.0163871;
+    default:    return val;
+  }
+}
+const pgMap = { '25': pgThermalExpData.p25, '30': pgThermalExpData.p30, '35': pgThermalExpData.p35,
+                '40': pgThermalExpData.p40, '45': pgThermalExpData.p45, '50': pgThermalExpData.p50 };
+
+// Numerically integrate β (×10⁻⁵ 1/K) over 1°F steps from t1F to t2F.
+// Returns fractional volume change ΔV/V (positive = expansion T2 > T1).
+function pgIntVolChange(ds, t1F, t2F) {
+  const steps = Math.round(Math.abs(t2F - t1F));
+  if (steps === 0) return 0;
+  const dir = t2F > t1F ? 1 : -1;
+  let sum = 0;
+  for (let i = 0; i < steps; i++) {
+    const tC = fToC(t1F + dir * (i + 0.5));
+    if (tC < ds.tempsC[0] || tC > ds.tempsC[ds.tempsC.length - 1]) return NaN;
+    sum += pgInterp(tC, ds.tempsC, ds.values) * 1e-5 * (5 / 9);
+  }
+  return sum * dir;
+}
+
+// ── Calculator 1: T1 / T2 → % change ─────────────────────────────────────────
+function pgCalc1() {
+  const t1F  = pgToFahrenheit(parseFloat(document.getElementById('pg1_t1val').value), document.getElementById('pg1_t1unit').value);
+  const t2F  = pgToFahrenheit(parseFloat(document.getElementById('pg1_t2val').value), document.getElementById('pg1_t2unit').value);
+  const ds   = pgMap[document.getElementById('pg1_conc').value] || pgThermalExpData.p25;
+  const ids  = ['pg1_beta1','pg1_beta2','pg1_dvv','pg1_drho'];
+
+  if (isNaN(t1F) || isNaN(t2F)) { ids.forEach(id => { document.getElementById(id).textContent = '—'; }); return; }
+
+  const c1 = fToC(t1F), c2 = fToC(t2F);
+  const inRange = tC => tC >= ds.tempsC[0] && tC <= ds.tempsC[ds.tempsC.length - 1];
+  if (!inRange(c1) || !inRange(c2)) { ids.forEach(id => { document.getElementById(id).textContent = 'Out of range'; }); return; }
+
+  const beta1 = pgInterp(c1, ds.tempsC, ds.values);
+  const beta2 = pgInterp(c2, ds.tempsC, ds.values);
+  const dvv   = pgIntVolChange(ds, t1F, t2F);
+  const drho  = isNaN(dvv) ? NaN : -dvv / (1 + dvv);
+
+  document.getElementById('pg1_beta1').textContent = beta1.toFixed(2);
+  document.getElementById('pg1_beta2').textContent = beta2.toFixed(2);
+  document.getElementById('pg1_dvv').textContent   = isNaN(dvv)  ? 'Out of range' : (dvv  >= 0 ? '+' : '') + (dvv  * 100).toFixed(4) + ' %';
+  document.getElementById('pg1_drho').textContent  = isNaN(drho) ? 'Out of range' : (drho >= 0 ? '+' : '') + (drho * 100).toFixed(4) + ' %';
+}
+
+// ── Calculator 2: V1 at T1 → V2 at T2 ────────────────────────────────────────
+function pgCalc2() {
+  const v1L  = pgToLiters(parseFloat(document.getElementById('pg2_v1val').value), document.getElementById('pg2_v1unit').value);
+  const t1F  = pgToFahrenheit(parseFloat(document.getElementById('pg2_t1val').value), document.getElementById('pg2_t1unit').value);
+  const t2F  = pgToFahrenheit(parseFloat(document.getElementById('pg2_t2val').value), document.getElementById('pg2_t2unit').value);
+  const ds   = pgMap[document.getElementById('pg2_conc').value] || pgThermalExpData.p25;
+  const ids  = ['pg2_v2gal','pg2_v2L','pg2_v2ft3','pg2_v2m3','pg2_v2in3'];
+
+  if (isNaN(v1L) || v1L <= 0 || isNaN(t1F) || isNaN(t2F)) { ids.forEach(id => { document.getElementById(id).textContent = '—'; }); return; }
+
+  const inRange = tC => tC >= ds.tempsC[0] && tC <= ds.tempsC[ds.tempsC.length - 1];
+  if (!inRange(fToC(t1F)) || !inRange(fToC(t2F))) { ids.forEach(id => { document.getElementById(id).textContent = 'Out of range'; }); return; }
+
+  const dvv = pgIntVolChange(ds, t1F, t2F);
+  if (isNaN(dvv)) { ids.forEach(id => { document.getElementById(id).textContent = 'Out of range'; }); return; }
+  const v2L = v1L * (1 + dvv);
+
+  document.getElementById('pg2_v2gal').textContent = (v2L / 3.78541).toFixed(4);
+  document.getElementById('pg2_v2L').textContent   = v2L.toFixed(4);
+  document.getElementById('pg2_v2ft3').textContent = (v2L / 28.3168).toFixed(5);
+  document.getElementById('pg2_v2m3').textContent  = (v2L / 1000).toFixed(6);
+  document.getElementById('pg2_v2in3').textContent = (v2L / 0.0163871).toFixed(2);
 }
 
 // ── Chart ─────────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('celsius').value = fToC(70).toFixed(1);
-  pgTeCalc();
+  pgCalc1();
+  pgCalc2();
 
   const colors = [
     'rgb(68,119,170)',  // Blue   25%
