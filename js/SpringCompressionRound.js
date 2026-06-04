@@ -869,16 +869,33 @@ function analyzeSystemRank() {
   const J     = numericalJacobianOf(fn, x0, r0);
   const rank  = computeMatrixRank(J);
   const nVars = LM_VARIABLES.length;
-  const freeDOF = Math.max(0, nVars - rank);
+
+  // ── Column norms of the RAW (un-normalised) Jacobian ────────
+  // Variables that appear in NO active structural residual produce
+  // a near-zero column (norm ≈ 0).  These are truly inactive — not
+  // underdetermined — and must be excluded from the freeDOF count.
+  //
+  // Currently the only conditional structural equations are the
+  // load-deflection constraints F1=k(Lf-L1) and F2=k(Lf-L2),
+  // which are omitted when their load column carries no user input.
+  // This means F1 & L1 (when !hasL1) or F2 & L2 (when !hasL2)
+  // will have zero Jacobian columns even in a fully determined system.
+  //
+  // Using column norms rather than hardcoding variable names makes
+  // this logic self-adapting: any future conditionally-constrained
+  // variable will be handled automatically.
+  const INACTIVE_NORM_THRESHOLD = 1e-3;
+  const colNorms = LM_VARIABLES.map((id, j) =>
+    Math.sqrt(J.reduce((s, row) => s + row[j] ** 2, 0))
+  );
+  const inactiveCount = colNorms.filter(n => n < INACTIVE_NORM_THRESHOLD).length;
+
+  // freeDOF = variables that are neither inactive nor rank-constrained
+  const freeDOF = Math.max(0, nVars - inactiveCount - rank);
 
   // ── Console diagnostic (always on — open DevTools to read) ──
   try {
     const m = J.length, n = J[0]?.length ?? 0;
-
-    // Column norms of the RAW (un-normalised) Jacobian
-    const colNorms = LM_VARIABLES.map((id, j) =>
-      Math.sqrt(J.reduce((s, row) => s + row[j] ** 2, 0))
-    );
 
     // Pinned fields and their values
     const pinnedStr = [...userEnteredFieldIds]
@@ -888,24 +905,24 @@ function analyzeSystemRank() {
       })
       .join('  ');
 
-    const header = `[KasperCalc rank] ${m}r × ${n}v | rank=${rank} | freeDOF=${freeDOF} ${freeDOF === 0 ? '✓' : '✗'}`;
+    const header = `[KasperCalc rank] ${m}r × ${n}v | rank=${rank} | inactive=${inactiveCount} | freeDOF=${freeDOF} ${freeDOF === 0 ? '✓' : '✗'}`;
     console.group(header);
     console.log('Pinned :', pinnedStr || '(none)');
     console.log('x0     :', LM_VARIABLES.map((id, i) => `${id}=${x0[i].toPrecision(4)}`).join('  '));
 
-    // Column norm table — highlight near-zero columns
+    // Column norm table — highlight near-zero and inactive columns
     const normLines = LM_VARIABLES.map((id, j) => {
       const n = colNorms[j];
-      const flag = n < 1e-3 ? ' ⚠ NEAR-ZERO' : '';
+      const flag = n < INACTIVE_NORM_THRESHOLD ? ' ⚠ INACTIVE (excluded from DOF count)' : '';
       return `  ${id.padEnd(6)} ${n.toExponential(3)}${flag}`;
     });
     console.log('Col norms (raw J):\n' + normLines.join('\n'));
 
-    const nearZero = LM_VARIABLES.filter((_, j) => colNorms[j] < 1e-3);
-    if (nearZero.length) {
-      console.warn('Near-zero columns (likely un-constrained variables):', nearZero.join(', '));
+    const inactiveVars = LM_VARIABLES.filter((_, j) => colNorms[j] < INACTIVE_NORM_THRESHOLD);
+    if (inactiveVars.length) {
+      console.log('Inactive vars (no active structural equation, excluded from DOF count):', inactiveVars.join(', '));
     } else {
-      console.log('Near-zero cols: [none — all variables constrained]');
+      console.log('Inactive vars: [none — all variables appear in structural equations]');
     }
 
     console.groupEnd();
@@ -913,7 +930,7 @@ function analyzeSystemRank() {
     console.warn('[KasperCalc rank] diagnostic error:', e);
   }
 
-  return { rank, nVars, freeDOF, determined: freeDOF === 0 };
+  return { rank, nVars, inactiveCount, freeDOF, determined: freeDOF === 0 };
 }
 
 
@@ -1701,7 +1718,7 @@ const ALL_COMPUTED_OUTPUT_IDS = [
   // Load 2 column
   'F2', 'L2', 'def2', 'pct2', 'sc2', 'su2', 'pMTS2', 'pUS2', 'OD2', 'F2tol',
   // At solid
-  'Fs', 'defS', 'scS', 'suS', 'pMTSs', 'pUSs',
+  'Fs', 'defS', 'scS', 'suS', 'pMTSs', 'pUSs', 'ODsolid',
   // Buckling
   'Lbuckle', 'Fbuckle', 'defBuckle', 'pctBuckle',
   'scBuckle', 'suBuckle', 'pMTSbuckle', 'pUSbuckle', 'ODbuckle',
@@ -2036,12 +2053,24 @@ function runDeterministicPostPass(sv, result) {
   if (defS && def1 !== null && hasL1) {
     const pct1 = def1 / defS * 100;
     writeFieldValue('pct1', pct1, true, 3);
-    applyFieldHighlightClass('pct1', pct1 > 100 ? 'err' : pct1 > 80 ? 'warn' : 'ok');
+    applyFieldHighlightClass('pct1', pct1 > 100 ? 'err' : pct1 > 85 ? 'warn' : 'ok');
+    if (pct1 > 85 && pct1 <= 100) {
+      warnings.push(
+        `Load 1 deflection (${def1.toFixed(3)}") is ${pct1.toFixed(1)}% of total spring travel — ` +
+        `exceeds 85% threshold. Risk of coil clash or set.`
+      );
+    }
   }
   if (defS && def2 !== null && hasL2) {
     const pct2 = def2 / defS * 100;
     writeFieldValue('pct2', pct2, true, 3);
-    applyFieldHighlightClass('pct2', pct2 > 100 ? 'err' : pct2 > 80 ? 'warn' : 'ok');
+    applyFieldHighlightClass('pct2', pct2 > 100 ? 'err' : pct2 > 85 ? 'warn' : 'ok');
+    if (pct2 > 85 && pct2 <= 100) {
+      warnings.push(
+        `Load 2 deflection (${def2.toFixed(3)}") is ${pct2.toFixed(1)}% of total spring travel — ` +
+        `exceeds 85% threshold. Risk of coil clash or set.`
+      );
+    }
   }
 
   // ── 6. Load at solid ──────────────────────────────────────
@@ -2176,6 +2205,10 @@ function runDeterministicPostPass(sv, result) {
 
       if (hasL2 && L2 && L2 > 0)
         writeFieldValue('OD2', expandedOD(L2), true, 3);
+
+      // At solid — use finalised Ls from step 4
+      if (Ls_final && Ls_final > 0)
+        writeFieldValue('ODsolid', expandedOD(Ls_final), true, 3);
 
       // At buckle — read the value just written by step 6b
       const L_bk = readFieldValue('Lbuckle');
