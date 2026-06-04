@@ -82,10 +82,48 @@ let densData = null;
 let myChart  = null;
 let dynChart  = null;
 
+const EXTRAP_MAX_F = 356; // Target maximum temperature for extrapolation (°F)
+
+/**
+ * Linearly extrapolates a dataset beyond its last data point up to maxX,
+ * using the slope of the final two measured points.
+ *
+ * Viscosity and density are both approximately linear over short temperature
+ * ranges, making linear extrapolation a reasonable first-order extension.
+ * Extrapolated values are clamped to a small positive minimum so they remain
+ * valid on the logarithmic viscosity axis.
+ *
+ * @param {Array<{x:number,y:number}>} data  - Sorted ascending by x
+ * @param {number} maxX                       - Target upper bound (°F)
+ * @returns {Array<{x:number,y:number}>}
+ */
+function extrapolateToMax(data, maxX) {
+  if (!data || data.length < 2) return data;
+  const n  = data.length;
+  const x1 = data[n - 1].x;
+  const y1 = data[n - 1].y;
+  if (x1 >= maxX) return data; // already covers the range — nothing to do
+
+  const x0    = data[n - 2].x;
+  const y0    = data[n - 2].y;
+  const slope = (y1 - y0) / (x1 - x0); // °F slope from last two measured points
+
+  const extended = [...data];
+  // Add one point per °F from the end of measured data to maxX
+  for (let t = Math.round(x1) + 1; t <= maxX; t++) {
+    const y = y1 + slope * (t - x1);
+    extended.push({ x: t, y: Math.max(y, 0.001) }); // clamp for log scale
+  }
+  return extended;
+}
+
 Promise.all([processCSVFiles(csvFiles), processCSVFiles(densFilesForKin)])
   .then(([kinData, dData]) => {
+    // Kinematic viscosity data is used as-is — no extrapolation.
+    // Density data is extrapolated to EXTRAP_MAX_F so the dynamic viscosity
+    // chart can extend as far as the kinematic data allows.
     fallData = kinData;
-    densData = dData;
+    densData = dData.map(ds => extrapolateToMax(ds, EXTRAP_MAX_F));
     createGraph();
     convertToCelsius();
     calculate();
