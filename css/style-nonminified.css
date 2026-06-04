@@ -5,7 +5,7 @@
   --white-color: #fff;
   --primary-color: #444444;
   --secondary-color: #000000;
-  --section-bg-color: #efefef; /*#CCD0D8*/
+  --section-bg-color: #fbfbfb; /*#CCD0D8*/
   --custom-btn-bg-color: #699dad; /*#225b9c*/ /*A3C3CD*/ /*A9CCCF*/
   --dark-color: #333333;
   --p-color: #000;
@@ -1098,6 +1098,18 @@ nav>.navbar-toggler{
 
 .chartcanvas{
   background-color: #fff;
+}
+
+.citation-block {
+  background-color: #ffffff !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10) !important;
+}
+
+/* 2px black border on every Chart.js canvas site-wide.
+   Excludes the bitmap-viewer canvases (#main-canvas, #sim-canvas)
+   which are custom renderers, not Chart.js charts. */
+canvas:not(#main-canvas):not(#sim-canvas) {
+  border: 2px solid #000;
 }
 
 .canvasdiv{
