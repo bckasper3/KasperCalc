@@ -37,8 +37,10 @@
 .section p { margin: 0 0 0.75rem; font-size: 0.97rem; }
 .section ul, .section ol { margin: 0.5rem 0 0.75rem 1.5rem; font-size: 0.97rem; }
 .section li { margin-bottom: 0.25rem; }
-.canvascontainer { position: relative; width: 100%; }
-.chartcanvas { display: block; width: 100%; height: 100%; margin-left: auto; margin-right: auto; }
+/* Chart canvas dimensions — edit these two values to resize all mil-hdbk-5 charts */
+:root { --hdbk-chart-width: 1000px; --hdbk-chart-height: 600px; }
+.canvascontainer { position: relative; width: var(--hdbk-chart-width); height: var(--hdbk-chart-height) !important; max-width: 100%; margin-left: auto; margin-right: auto; }
+.chartcanvas { display: block; width: 100%; height: 100%; }
 
 /* Table placeholder */
 .table-placeholder { display: block; border: 1.5px dashed #888; border-radius: 4px; background: #f7f7f2; color: #555; font-size: 0.88rem; padding: 8px 16px; margin: 0.75rem 0; }
@@ -50,6 +52,7 @@
 
 /* Chart figures */
 .hdbk-figure { margin: 1.25rem 0; }
+.chart-note { font-size: 0.85rem; color: #444; margin: 0.25rem 0 0.75rem; font-style: italic; text-align: center; }
 .hdbk-chart-wrap { position: relative; width: 100%; border: 2px solid #3a6270; border-radius: 6px; background: #fff; padding: 0.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
 .hdbk-figure .fig-caption { font-size: 0.85rem; color: #444; margin: 0.4rem 0 0; line-height: 1.4; }
 .fig-caption {text-align: center; padding-top: 10px;}
@@ -86,7 +89,7 @@
 
 
 /* Correlative information table (borderless, white background) */
-.corr-info-table { width: 100%; border-collapse: collapse; background: #fff; margin: 0.75rem 0 1.25rem; font-size: 0.92rem; }
+.corr-info-table { width: 100%; border-collapse: collapse; background: #fff; margin: 0.75rem 0 1.25rem; font-size: 0.92rem; border: 2px solid #000;}
 .corr-info-table td { border: none !important; background: #fff !important; padding: 2px 12px 2px 4px; vertical-align: top; line-height: 1.5; }
 .corr-info-table .corr-title { font-size: 1rem; font-weight: 600; text-align: center; text-decoration: underline; padding-bottom: 6px; }
 .corr-info-table .corr-label { font-weight: 600; text-decoration: underline; }
