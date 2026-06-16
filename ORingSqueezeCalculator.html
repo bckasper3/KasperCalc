@@ -1,0 +1,2352 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: O-Ring Squeeze Calculator (SAE AS4716 Appendix A)</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, O-ring squeeze, AS4716, AS568, piston gland, rod gland, face seal, tolerance stack, eccentric shift, runout, gland fill, thermal, CTE" />
+    <meta name="description" content="Worst-case O-ring squeeze calculator per SAE AS4716 Appendix A: stretch reduction, full tolerance stacking, eccentric shift, runout, thermal contraction, and gland fill for piston, rod, and face glands." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- MathJax — configure before loading -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath:  [['\\(', '\\)']],
+          displayMath: [['\\[', '\\]']],
+          tags: 'none'
+        },
+        options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+        startup: { typeset: true }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XLCN0GJQ0');
+    </script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      /* ── Reference section ──────────────────────────────────── */
+      .ref-wrapper { margin: 0 auto; max-width: 1500px; padding: 0 20px; font-family: "Roboto", Arial, sans-serif; }
+      .ref-card { background: #eee; border: 2px solid rgb(67,67,67); border-radius: 10px; box-shadow: 0 3px 5px rgba(0,0,0,.4); margin: 0 0 1rem; overflow: hidden; }
+      .ref-card-header { background: #6a746a; padding: 8px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+      .ref-card-header h2 { font-size: 13px; font-weight: 700; color: #eee; text-transform: uppercase; letter-spacing: 0.07em; margin: 0; flex: 1; }
+      .ref-card-header .ref-num { font-size: 12px; color: #A3C3CD; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
+      .ref-chevron { width: 14px; height: 14px; flex-shrink: 0; transition: transform 0.2s ease; color: #A3C3CD; }
+      .ref-card.collapsed .ref-chevron { transform: rotate(-90deg); }
+      .ref-card.collapsed .ref-body    { display: none; }
+      .ref-body { padding: 14px 16px; display: grid; grid-template-columns: 1fr; gap: 14px; }
+      .ref-body.two-col { grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 14px 24px; } /*grid-template-columns: 1fr 1fr;/*/
+      #doubleEquationRefBody{grid-template-columns: repeat(auto-fit, minmax(650px, 1fr));}
+      @media (max-width: 640px) { .ref-body.two-col { grid-template-columns: 1fr; } }
+      .ref-sub { font-size: 12px; font-weight: 700; color: #61828A; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #c0c0c0; padding-bottom: 3px; margin-bottom: 6px; }
+      .ref-body p { font-size: 13px; color: #333; line-height: 1.65; margin: 0 0 8px; }
+      .ref-body p:last-child { margin-bottom: 0; }
+      .ref-body ul, .ref-body ol { font-size: 13px; color: #333; line-height: 1.7; padding-left: 18px; margin: 0 0 8px; }
+      .ref-eq-block { background: #d9d9d9; border: 1.5px solid rgb(67,67,67); border-radius: 6px; padding: 10px 16px 8px; margin: 6px 0 10px; overflow-x: auto; }
+      .ref-eq-tag { font-size: 12px; color: #61828A; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; font-family: "Roboto", Arial, sans-serif; display: block; margin-bottom: 4px; }
+      mjx-container { color: #1a3a40 !important; margin: 0; }
+      mjx-container[jax="SVG"][display="true"] { margin: 0.7em 0 !important; }
+      mjx-container[jax="SVG"] { margin: 0 !important; }
+      .ref-callout { background: #e8f0f3; border-left: 3px solid #61828A; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 12px; color: #1a3a40; line-height: 1.55; }
+      .ref-callout strong { color: #3a6270; }
+      .ref-warn { background: #fff8e6; border-left: 3px solid #cc7700; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 12px; color: #5a3a00; line-height: 1.55; }
+      .ref-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin: 6px 0; }
+      .ref-table th { background: #d9d9d9; border: 1px solid #bbb; padding: 4px 8px; font-weight: 600; color: #444; text-align: left; }
+      .ref-table td { border: 1px solid #ccc; padding: 3px 8px; color: #333; vertical-align: top; }
+      .ref-table tr:nth-child(even) td { background: #f5f5f5; }
+      .ref-section-wrap { padding: 1rem 0.5rem 0.5rem; }
+      .ref-section-title { font-size: 16px; font-weight: 700; color: #6a746a; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; padding-left: 2px; }
+      .full-col { grid-column: 1 / -1; }
+      /* ── Kept from old calculator ───────────────────────────── */
+      .factor-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0; }
+      .factor-chip { background: #d9d9d9; border: 1px solid #bbb; border-radius: 5px; padding: 3px 8px; font-size: 0.78rem; font-family: monospace; white-space: nowrap; }
+      .factor-chip span { font-weight: 700; }
+      /* ── Drawing-vellum token system ────────────────────────── */
+      :root {
+        --sq-ink:      #1C2227;
+        --sq-ink-soft: #5A6168;
+        --sq-line:     #b9bcb9;
+        --sq-line-s:   #d2d4d2;
+        --sq-panel:    #eeeeee;          /* KasperAero calc background */
+        --sq-wrap:     #6a746a;          /* KasperAero green wrapper   */
+        --sq-outline:  rgb(67,67,67);    /* KasperAero calc outline    */
+        --sq-blue:     #61828A;          /* KasperAero section title    */
+        --sq-seal:     #2E7D4F;
+        --sq-warn-c:   #B7791F;
+        --sq-crit-c:   #B3362B;
+        --sq-ui:       "Roboto", Arial, sans-serif;
+        --sq-mono:     ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+      }
+      /* ── Outer container ────────────────────────────────────── */
+      .sq-main { max-width: 1500px; margin: 0 auto; padding: 0 20px 60px; }
+      /* ── Subtitle under banner ──────────────────────────────── */
+      .sq-subtitle { font-family: var(--sq-ui); color: var(--sq-ink-soft); font-size: 15px; line-height: 1.5; max-width: 70ch; margin: 18px auto 22px; text-align: center; }
+      /* ── Two-column calc grid (green wrapper) ───────────────── */
+      .sq-calc-grid { font-family: var(--sq-ui); display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 20px; align-items: start; background: var(--sq-wrap); border: 3px solid var(--sq-outline); border-radius: 18px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); padding: 20px; }
+      @media (max-width:960px) { .sq-calc-grid { grid-template-columns: 1fr; } }
+      /* ── Panels ─────────────────────────────────────────────── */
+      .sq-panel { font-family: var(--sq-ui); background: var(--sq-panel); border: 2px solid var(--sq-outline); border-radius: 10px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); overflow: hidden; }
+      .sq-panel-h { padding: 11px 16px; background: #fff; border-bottom: 2px solid var(--sq-outline); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--sq-ink); font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+      .sq-panel-b { padding: 16px; }
+      .sq-sticky { position: sticky; top: 14px; }
+      @media (max-width:960px) { .sq-sticky { position: static; } }
+      /* ── Segmented buttons ──────────────────────────────────── */
+      .sq-seg { display: flex; border: 1px solid var(--sq-line); border-radius: 4px; overflow: hidden; width: fit-content; }
+      .sq-seg button { appearance: none; border: 0; background: transparent; color: var(--sq-ink-soft); font: 600 13px/1 var(--sq-ui); padding: 8px 15px; cursor: pointer; border-right: 1px solid var(--sq-line); }
+      .sq-seg button:last-child { border-right: none; }
+      .sq-seg button.sq-active { background: var(--sq-blue); color: #fff; }
+      /* ── Dimensions table ───────────────────────────────────── */
+      table.sq-dims { width: 100%; border-collapse: collapse; font-size: 14px; margin: 10px 0 0; }
+      table.sq-dims th { text-align: left; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--sq-ink-soft); font-weight: 600; padding: 4px 6px; border-bottom: 1px solid var(--sq-line); }
+      table.sq-dims td { padding: 4px 6px; border-bottom: 1px solid var(--sq-line-s); vertical-align: middle; }
+      table.sq-dims td.lbl { font-size: 13px; color: var(--sq-ink); }
+      table.sq-dims td.lbl .sym { font-family: var(--sq-mono); color: var(--sq-blue); font-size: 11px; display: block; }
+      table.sq-dims input { width: 100%; max-width: 96px; font: 13px var(--sq-mono); color: var(--sq-ink); border: 1px solid var(--sq-line); border-radius: 3px; padding: 5px 6px; background: #fff; }
+      table.sq-dims td.mm { font-family: var(--sq-mono); font-size: 12px; color: var(--sq-ink-soft); white-space: nowrap; }
+      table.sq-dims tr.sq-hidden { display: none; }
+      /* ── Field rows ─────────────────────────────────────────── */
+      .sq-fieldrow { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
+      .sq-fieldrow label { font-size: 12px; color: var(--sq-ink-soft); display: block; margin-bottom: 2px; }
+      .sq-fieldrow input { font: 13px var(--sq-mono); border: 1px solid var(--sq-line); border-radius: 3px; padding: 5px 7px; width: 100px; color: var(--sq-ink); }
+      /* ── Optional details sections ──────────────────────────── */
+      details.sq-adv { margin-top: 14px; border-top: 1px dashed var(--sq-line); padding-top: 10px; }
+      details.sq-adv summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--sq-blue); user-select: none; }
+      .sq-note { font-size: 12px; color: var(--sq-ink-soft); margin: 6px 0 0; line-height: 1.5; }
+      /* ── CTE rows ───────────────────────────────────────────── */
+      .sq-cte-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; align-items: start; margin-top: 8px; }
+      @media (max-width:580px) { .sq-cte-row { grid-template-columns: 1fr; } }
+      .sq-cte-row label { font-size: 12px; color: var(--sq-ink-soft); display: block; }
+      .sq-cte-row .sq-cte-sub { font-size: 11px; color: var(--sq-ink-soft); display: block; margin-top: 1px; }
+      .sq-cte-ctrl { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+      select.sq-cte-sel { flex: 1 1 160px; font: 13px var(--sq-mono); color: var(--sq-ink); border: 1px solid var(--sq-line); border-radius: 3px; padding: 5px 7px; background: #fff; min-width: 0; }
+      input.sq-cte-inp { width: 100px; flex-shrink: 0; font: 13px var(--sq-mono); color: var(--sq-ink); border: 1px solid var(--sq-line); border-radius: 3px; padding: 5px 7px; background: #fff; }
+      /* ── AS568 size select ──────────────────────────────────── */
+      select.sq-size-sel { width: 100%; max-width: 360px; font: 13px var(--sq-mono); padding: 6px 7px; border: 1px solid var(--sq-line); border-radius: 3px; background: #fff; color: var(--sq-ink); }
+      /* ── Type note ──────────────────────────────────────────── */
+      .sq-type-note { font-size: 12px; color: var(--sq-ink-soft); font-style: italic; margin: 4px 0 0 2px; }
+      .sq-lbl-sm { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--sq-ink-soft); font-weight: 600; margin-bottom: 4px; }
+      /* ── Status chips ───────────────────────────────────────── */
+      .sq-verdict { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+      .sq-chip { font: 600 12px/1 var(--sq-ui); padding: 6px 10px; border-radius: 3px; border: 1px solid; display: inline-flex; align-items: center; gap: 5px; }
+      .sq-chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+      .sq-chip.sq-ok   { color: var(--sq-seal);   border-color: var(--sq-seal);   background: rgba(46,125,79,.08); }
+      .sq-chip.sq-warn { color: var(--sq-warn-c); border-color: var(--sq-warn-c); background: rgba(183,121,31,.09); }
+      .sq-chip.sq-crit { color: var(--sq-crit-c); border-color: var(--sq-crit-c); background: rgba(179,54,43,.07); }
+      /* ── Results tables ─────────────────────────────────────── */
+      table.sq-res { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 4px; }
+      table.sq-res caption { text-align: left; font-size: 10px; letter-spacing: .13em; text-transform: uppercase; color: var(--sq-ink-soft); font-weight: 600; padding: 10px 0 4px; }
+      table.sq-res th { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--sq-ink-soft); font-weight: 600; text-align: right; padding: 4px 8px; border-bottom: 1px solid var(--sq-line); }
+      table.sq-res th:first-child { text-align: left; }
+      table.sq-res td { font-family: var(--sq-mono); font-size: 13px; text-align: right; padding: 4px 8px; border-bottom: 1px solid var(--sq-line-s); white-space: nowrap; }
+      table.sq-res td:first-child { font-family: var(--sq-ui); text-align: left; color: var(--sq-ink); }
+      table.sq-res td.sq-neg { color: var(--sq-crit-c); font-weight: 600; }
+      table.sq-res td.sq-dim { color: var(--sq-ink-soft); }
+      /* ── Error / warning boxes ──────────────────────────────── */
+      .sq-errbox  { font-size: 13px; color: var(--sq-crit-c); border: 1px solid var(--sq-crit-c); border-radius: 3px; padding: 10px 12px; background: rgba(179,54,43,.05); margin-bottom: 10px; }
+      .sq-warnbox { font-size: 13px; color: var(--sq-warn-c); border: 1px solid var(--sq-warn-c); border-radius: 3px; padding: 10px 12px; background: rgba(183,121,31,.05); margin-bottom: 10px; }
+      /* ── Gland schematic diagram ────────────────────────────── */
+      .sq-diagram-wrap { margin-bottom: 14px; }
+      .sq-diagram { display: block; width: 100%; height: auto; background: #fff; border: 2px solid var(--sq-outline); border-radius: 6px; }
+      .sq-diagram text { font-family: var(--sq-mono); fill: var(--sq-ink); }
+      .sq-dg-dim  { font-size: 9px; }
+      .sq-dg-sym  { font-size: 10px; font-weight: 700; fill: var(--sq-blue); }
+      .sq-dg-cap  { font-size: 9px; fill: var(--sq-ink-soft); font-family: var(--sq-ui); }
+      .sq-dg-line { stroke: var(--sq-ink-soft); stroke-width: 0.7; fill: none; }
+      .sq-dg-ext  { stroke: var(--sq-ink-soft); stroke-width: 0.5; stroke-dasharray: 2 2; fill: none; }
+      .sq-dg-part { fill: #dfe2e4; stroke: var(--sq-ink); stroke-width: 1.1; }
+      .sq-dg-surface { stroke: var(--sq-ink); stroke-width: 1.6; fill: none; }
+      .sq-dg-oring { fill: rgba(97,130,138,.30); stroke: var(--sq-blue); stroke-width: 1.2; }
+      .sq-dg-cl   { stroke: var(--sq-ink-soft); stroke-width: 0.6; stroke-dasharray: 7 2 1.5 2; fill: none; }
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal & Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Spring Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-1.html">Parker Gland Dimensions (Design Table 4-1)</a>
+                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-2.html">Parker Gland Dimensions (Design Table 4-2)</a>
+                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-3.html">Parker Face Seal Glands (Design Chart 4-3)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- BANNER -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              O-Ring Squeeze Calculator
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALCULATOR -->
+    <div class="sq-main">
+      <p class="sq-subtitle">Worst-case radial squeeze for piston, rod, and face glands &mdash; SAE AS4716 Appendix A stretch reduction, full tolerance stacking, eccentric shift, runout, and thermal contraction.</p>
+      <div class="sq-calc-grid" id="sq-calc-form">
+
+        <!-- LEFT PANEL: Inputs -->
+        <div class="sq-panel">
+          <div class="sq-panel-h">
+            <span>Inputs</span>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+              <div class="sq-seg" role="group" aria-label="Unit system">
+                <button type="button" id="sq-unit-in" class="sq-active" aria-pressed="true">in / &deg;F</button>
+                <button type="button" id="sq-unit-mm" aria-pressed="false">mm / &deg;F</button>
+              </div>
+              <div class="sq-seg" role="group" aria-label="Gland type" id="sq-type-seg">
+                <button type="button" data-sqtype="piston" class="sq-active" aria-pressed="true">Piston</button>
+                <button type="button" data-sqtype="rod"    aria-pressed="false">Rod</button>
+                <button type="button" data-sqtype="face"   aria-pressed="false">Face</button>
+              </div>
+            </div>
+          </div>
+          <div class="sq-panel-b">
+
+            <p class="sq-type-note" id="sq-type-note">O-ring seated in a piston groove, sealing against the cylinder bore.</p>
+
+            <!-- AS568 SIZE SELECTOR -->
+            <div class="sq-lbl-sm" style="margin-top:14px;">AS568 Size &mdash; Optional (sets O-Ring ID &amp; CS)</div>
+            <select class="sq-size-sel" id="sq-as568" aria-label="AS568 standard size selector">
+              <option value="custom">Custom dimensions</option>
+              <!-- optgroups populated by script -->
+            </select>
+
+            <!-- DIMENSIONS TABLE -->
+            <div class="sq-lbl-sm" style="margin-top:16px;">Dimensions</div>
+            <table class="sq-dims" id="sq-dims-table" aria-label="Gland and O-ring dimensions">
+              <thead>
+                <tr>
+                  <th class="lbl">Dimension</th>
+                  <th>Nominal</th>
+                  <th>&plusmn;&thinsp;Tol</th>
+                  <th>Min / Max</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr id="sq-row-oringID" data-sqshow="piston rod">
+                  <td class="lbl">O-Ring inner &Oslash;<span class="sym">ID</span></td>
+                  <td><input type="number" id="sq-nom-oringID" step="0.0005" min="0.001" value="0.364" aria-label="O-ring ID nominal"></td>
+                  <td><input type="number" id="sq-tol-oringID" step="0.0005" min="0" value="0.005" aria-label="O-ring ID tolerance"></td>
+                  <td class="mm" id="sq-mm-oringID">&mdash;</td>
+                </tr>
+                <tr id="sq-row-oringCS" data-sqshow="piston rod face">
+                  <td class="lbl">O-Ring cross section<span class="sym">W</span></td>
+                  <td><input type="number" id="sq-nom-oringCS" step="0.0005" min="0.001" value="0.070" aria-label="O-ring cross section nominal"></td>
+                  <td><input type="number" id="sq-tol-oringCS" step="0.0005" min="0" value="0.003" aria-label="O-ring cross section tolerance"></td>
+                  <td class="mm" id="sq-mm-oringCS">&mdash;</td>
+                </tr>
+                <tr id="sq-row-groove" data-sqshow="piston">
+                  <td class="lbl">Piston groove root &Oslash;<span class="sym">G</span></td>
+                  <td><input type="number" id="sq-nom-groove" step="0.0005" min="0.001" value="0.3745" aria-label="Piston groove root diameter nominal"></td>
+                  <td><input type="number" id="sq-tol-groove" step="0.0005" min="0" value="0.0005" aria-label="Piston groove root diameter tolerance"></td>
+                  <td class="mm" id="sq-mm-groove">&mdash;</td>
+                </tr>
+                <tr id="sq-row-bore" data-sqshow="piston rod">
+                  <td class="lbl"><span id="sq-lbl-bore">Cylinder bore &Oslash;</span><span class="sym">B</span></td>
+                  <td><input type="number" id="sq-nom-bore" step="0.0005" min="0.001" value="0.4855" aria-label="Bore diameter nominal"></td>
+                  <td><input type="number" id="sq-tol-bore" step="0.0005" min="0" value="0.0005" aria-label="Bore diameter tolerance"></td>
+                  <td class="mm" id="sq-mm-bore">&mdash;</td>
+                </tr>
+                <tr id="sq-row-piston" data-sqshow="piston">
+                  <td class="lbl">Piston outer &Oslash;<span class="sym">P</span></td>
+                  <td><input type="number" id="sq-nom-piston" step="0.0005" min="0.001" value="0.4825" aria-label="Piston outer diameter nominal"></td>
+                  <td><input type="number" id="sq-tol-piston" step="0.0005" min="0" value="0.0005" aria-label="Piston outer diameter tolerance"></td>
+                  <td class="mm" id="sq-mm-piston">&mdash;</td>
+                </tr>
+                <tr id="sq-row-gland" data-sqshow="rod" class="sq-hidden">
+                  <td class="lbl">Gland (groove) &Oslash;<span class="sym">G</span></td>
+                  <td><input type="number" id="sq-nom-gland" step="0.0005" min="0.001" value="0.579" aria-label="Gland groove diameter nominal"></td>
+                  <td><input type="number" id="sq-tol-gland" step="0.0005" min="0" value="0.002" aria-label="Gland groove diameter tolerance"></td>
+                  <td class="mm" id="sq-mm-gland">&mdash;</td>
+                </tr>
+                <tr id="sq-row-rod" data-sqshow="rod" class="sq-hidden">
+                  <td class="lbl">Rod &Oslash;<span class="sym">R</span></td>
+                  <td><input type="number" id="sq-nom-rod" step="0.0005" min="0.001" value="0.463" aria-label="Rod diameter nominal"></td>
+                  <td><input type="number" id="sq-tol-rod" step="0.0005" min="0" value="0.001" aria-label="Rod diameter tolerance"></td>
+                  <td class="mm" id="sq-mm-rod">&mdash;</td>
+                </tr>
+                <tr id="sq-row-depth" data-sqshow="face" class="sq-hidden">
+                  <td class="lbl">Groove depth (axial)<span class="sym">D</span></td>
+                  <td><input type="number" id="sq-nom-depth" step="0.0005" min="0.001" value="0.051" aria-label="Groove depth nominal"></td>
+                  <td><input type="number" id="sq-tol-depth" step="0.0005" min="0" value="0.001" aria-label="Groove depth tolerance"></td>
+                  <td class="mm" id="sq-mm-depth">&mdash;</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- RUNOUT -->
+            <div class="sq-fieldrow" id="sq-runout-row" style="margin-top:14px;">
+              <div>
+                <label for="sq-runout">Runout TIR (diametral)</label>
+                <input type="number" id="sq-runout" step="0.0005" min="0" value="0.002" aria-label="Runout total indicator reading diametral">
+              </div>
+            </div>
+
+            <!-- GROOVE WIDTH (optional) -->
+            <details class="sq-adv">
+              <summary>Groove Width &mdash; enables Gland Fill</summary>
+              <div class="sq-fieldrow" style="margin-top:10px;">
+                <div>
+                  <label for="sq-gw-nom">Width nominal</label>
+                  <input type="number" id="sq-gw-nom" step="0.001" min="0" placeholder="(skip fill)" aria-label="Groove width nominal value">
+                </div>
+                <div>
+                  <label for="sq-gw-tol">Width &plusmn;&thinsp;tol</label>
+                  <input type="number" id="sq-gw-tol" step="0.001" min="0" value="0.005" aria-label="Groove width tolerance">
+                </div>
+              </div>
+            </details>
+
+            <!-- THERMAL (optional) -->
+            <details class="sq-adv">
+              <summary>Thermal Analysis &mdash; optional</summary>
+              <p class="sq-note">Leave temperatures blank to skip thermal analysis.</p>
+              <div class="sq-fieldrow" style="margin-top:10px;">
+                <div>
+                  <label for="sq-ti">Assembly temp (&deg;F)</label>
+                  <input type="number" id="sq-ti" step="1" placeholder="e.g. 75" aria-label="Assembly temperature degrees Fahrenheit">
+                </div>
+                <div>
+                  <label for="sq-tf">Operating temp (&deg;F)</label>
+                  <input type="number" id="sq-tf" step="1" placeholder="e.g. &minus;65" aria-label="Operating temperature degrees Fahrenheit">
+                </div>
+              </div>
+
+              <div class="sq-cte-row" style="margin-top:12px;">
+                <div>
+                  <label id="sq-cte-seal-lbl-sel" for="sq-cte-seal-sel">Seal (elastomer) material</label>
+                </div>
+                <div>
+                  <div class="sq-cte-ctrl">
+                    <select class="sq-cte-sel" id="sq-cte-seal-sel" aria-label="Seal CTE material preset"><option value="custom">Custom</option></select>
+                    <input class="sq-cte-inp" type="number" id="sq-cte-seal" step="0.000001" value="0.000090" aria-label="Seal CTE per degree F">
+                  </div>
+                </div>
+              </div>
+
+              <div class="sq-cte-row" style="margin-top:6px;">
+                <div>
+                  <label id="sq-cte-gland-lbl-sel" for="sq-cte-gland-sel">Piston / groove material</label>
+                  <span class="sq-cte-sub" id="sq-cte-gland-lbl">Piston / groove CTE (1/&deg;F)</span>
+                </div>
+                <div>
+                  <div class="sq-cte-ctrl">
+                    <select class="sq-cte-sel" id="sq-cte-gland-sel" aria-label="Gland material CTE preset"><option value="custom">Custom</option></select>
+                    <input class="sq-cte-inp" type="number" id="sq-cte-gland" step="0.0000001" value="0.0000120" aria-label="Gland CTE per degree F">
+                  </div>
+                </div>
+              </div>
+
+              <div class="sq-cte-row" id="sq-cte-mate-row" style="margin-top:6px;">
+                <div>
+                  <label id="sq-cte-mate-lbl-sel" for="sq-cte-mate-sel">Cylinder / bore material</label>
+                  <span class="sq-cte-sub" id="sq-cte-mate-lbl">Cylinder / bore CTE (1/&deg;F)</span>
+                </div>
+                <div>
+                  <div class="sq-cte-ctrl">
+                    <select class="sq-cte-sel" id="sq-cte-mate-sel" aria-label="Mating part material CTE preset"><option value="custom">Custom</option></select>
+                    <input class="sq-cte-inp" type="number" id="sq-cte-mate" step="0.0000001" value="0.0000120" aria-label="Mating part CTE per degree F">
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <button id="sq-calc-btn" class="btn btn-outline-info-bck" style="margin-top:16px; width:100%; font-weight:600;">Calculate</button>
+
+          </div><!-- end .sq-panel-b -->
+        </div><!-- end left .sq-panel -->
+
+        <!-- RIGHT PANEL: Results -->
+        <div class="sq-panel sq-sticky">
+          <div class="sq-panel-h"><span>Results</span></div>
+          <div class="sq-panel-b">
+
+            <!-- GLAND SCHEMATIC (live dimensions) -->
+            <div class="sq-diagram-wrap">
+              <svg class="sq-diagram" id="sq-diagram" viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Gland cross-section schematic with live dimensions">
+                <defs>
+                  <marker id="dgArrow" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto">
+                    <path d="M1,1 L7,4.5 L1,8" fill="none" stroke="#5A6168" stroke-width="0.9"/>
+                  </marker>
+                </defs>
+                <text class="sq-dg-cap" x="8" y="14">Gland Schematic &mdash; half cross-section, not to scale</text>
+
+                <!-- ══════ PISTON ══════ -->
+                <g id="dg-piston">
+                  <line class="sq-dg-cl" x1="25" y1="315" x2="575" y2="315"/>
+                  <text class="sq-dg-dim" x="565" y="312">&#8453;</text>
+                  <!-- cylinder material above bore -->
+                  <rect class="sq-dg-part" x="95" y="34" width="420" height="36"/>
+                  <line class="sq-dg-surface" x1="95" y1="70" x2="515" y2="70"/>
+                  <!-- piston body with groove -->
+                  <path class="sq-dg-part" d="M120,92 L300,92 L300,185 L400,185 L400,92 L500,92 L500,300 L120,300 Z"/>
+                  <!-- o-ring -->
+                  <circle class="sq-dg-oring" cx="350" cy="127" r="57"/>
+                  <text class="sq-dg-sym" x="350" y="131" text-anchor="middle">W</text>
+                  <!-- LEFT radial dims (nested) -->
+                  <line class="sq-dg-ext" x1="300" y1="185" x2="70" y2="185"/>
+                  <line class="sq-dg-line" x1="70" y1="315" x2="70" y2="185" marker-start="url(#dgArrow)" marker-end="url(#dgArrow)"/>
+                  <text class="sq-dg-dim" id="dg-p-G" x="66" y="250" text-anchor="middle" transform="rotate(-90 66 250)">&#216; G</text>
+                  <line class="sq-dg-ext" x1="120" y1="92" x2="48" y2="92"/>
+                  <line class="sq-dg-line" x1="48" y1="315" x2="48" y2="92" marker-start="url(#dgArrow)" marker-end="url(#dgArrow)"/>
+                  <text class="sq-dg-dim" id="dg-p-P" x="44" y="203" text-anchor="middle" transform="rotate(-90 44 203)">&#216; P</text>
+                  <line class="sq-dg-ext" x1="95" y1="70" x2="28" y2="70"/>
+                  <line class="sq-dg-line" x1="28" y1="315" x2="28" y2="70" marker-start="url(#dgArrow)" marker-end="url(#dgArrow)"/>
+                  <text class="sq-dg-dim" id="dg-p-B" x="24" y="192" text-anchor="middle" transform="rotate(-90 24 192)">&#216; B</text>
+                  <!-- RIGHT: W cross section -->
+                  <line class="sq-dg-ext" x1="350" y1="70" x2="482" y2="70"/>
+                  <line class="sq-dg-ext" x1="405" y1="184" x2="482" y2="184"/>
+                  <line class="sq-dg-line" x1="476" y1="70" x2="476" y2="184" marker-start="url(#dgArrow)" marker-end="url(#dgArrow)"/>
+                  <text class="sq-dg-dim" id="dg-p-W" x="490" y="127" text-anchor="middle" transform="rotate(-90 490 127)">W</text>
+                  <!-- ID callout -->
+                  <line class="sq-dg-line" x1="318" y1="150" x2="430" y2="262"/>
+                  <text class="sq-dg-dim" id="dg-p-ID" x="433" y="265" text-anchor="start">&#216; ID</text>
+                  <!-- groove width -->
+                  <line class="sq-dg-ext" x1="300" y1="185" x2="300" y2="216"/>
+                  <line class="sq-dg-ext" x1="400" y1="185" x2="400" y2="216"/>
+                  <line class="sq-dg-line" x1="300" y1="210" x2="400" y2="210" marker-start="url(#dgArrow)" marker-end="url(#dgArrow)"/>
+                  <text class="sq-dg-dim" id="dg-p-GW" x="350" y="227" text-anchor="middle">Gw</text>
+                  <!-- runout -->
+                  <text class="sq-dg-dim" id="dg-p-RO" x="350" y="293" text-anchor="middle">Runout</text>
+                </g>
+
+                <!-- ══════ ROD ══════ -->
+                <g id="dg-rod" style="display:none;">
+                  <line class="sq-dg-cl" x1="25" y1="315" x2="575" y2="315"/>
+                  <text class="sq-dg-dim" x="565" y="312">&#8453;</text>
+                  <!-- housing with groove opening downward -->
+                  <path class="sq-dg-part" d="M120,40 L500,40 L500,180 L400,180 L400,80 L300,80 L300,180 L120,180 Z"/>
+                  <!-- rod material below -->
+                  <rect class="sq-dg-part" x="95" y="205" width="420" height="95"/>
+                  <line class="sq-dg-surface" x1="95" y1="205" x2="515" y2="205"/>
+                  <!-- o-ring -->
+                  <circle class="sq-dg-oring" cx="350" cy="142" r="61"/>
+                  <text class="sq-dg-sym" x="350" y="146" text-anchor="middle">W</text>
+                  <!-- LEFT radial dims (nested from centerline) -->
+                  <line class="sq-dg-ext" x1="95" y1="205" x2="70" y2="205"/>
+                  <line class="sq-dg-line" x1="70" y1="315" x2="70" y2="205" marker-start="url(#dgArrow)" marker-end="url(#dgArrow)"/>
+                  <text class="sq-dg-dim" id="dg-r-R" x="66" y="260" text-anchor="middle" transform="rotate(-90 66 260)">&#216; R</text>
+                  <line class="sq-dg-ext" x1="120" y1="180" x2="48" y2="180"/>
+                  <line class="sq-dg-line" x1="48" y1="315" x2="48" y2="180" marker-start="url(#dgArrow)" marker-end="url(#dgArrow)"/>
+                  <text class="sq-dg-dim" id="dg-r-B" x="44" y="248" text-anchor="middle" transform="rotate(-90 44 248)">&#216; Bore</text>
+                  <line class="sq-dg-ext" x1="300" y1="80" x2="28" y2="80"/>
+                  <line class="sq-dg-line" x1="28" y1="315" x2="28" y2="80" marker-start="url(#dgArrow)" marker-end="url(#dgArrow)"/>
+                  <text class="sq-dg-dim" id="dg-r-G" x="24" y="200" text-anchor="middle" transform="rotate(-90 24 200)">&#216; G</text>
+                  <!-- RIGHT: W cross section -->
+                  <line class="sq-dg-ext" x1="350" y1="82" x2="482" y2="82"/>
+                  <line class="sq-dg-ext" x1="350" y1="203" x2="482" y2="203"/>
+                  <line class="sq-dg-line" x1="476" y1="82" x2="476" y2="203" marker-start="url(#dgArrow)" marker-end="url(#dgArrow)"/>
+                  <text class="sq-dg-dim" id="dg-r-W" x="490" y="142" text-anchor="middle" transform="rotate(-90 490 142)">W</text>
+                  <!-- ID callout -->
+                  <line class="sq-dg-line" x1="318" y1="165" x2="430" y2="262"/>
+                  <text class="sq-dg-dim" id="dg-r-ID" x="433" y="265" text-anchor="start">&#216; ID</text>
+                  <!-- groove width (above root) -->
+                  <line class="sq-dg-ext" x1="300" y1="80" x2="300" y2="52"/>
+                  <line class="sq-dg-ext" x1="400" y1="80" x2="400" y2="52"/>
+                  <line class="sq-dg-line" x1="300" y1="58" x2="400" y2="58" marker-start="url(#dgArrow)" marker-end="url(#dgArrow)"/>
+                  <text class="sq-dg-dim" id="dg-r-GW" x="350" y="49" text-anchor="middle">Gw</text>
+                  <!-- runout -->
+                  <text class="sq-dg-dim" id="dg-r-RO" x="350" y="290" text-anchor="middle">Runout</text>
+                </g>
+
+                <!-- ══════ FACE ══════ -->
+                <g id="dg-face" style="display:none;">
+                  <!-- upper plate -->
+                  <rect class="sq-dg-part" x="100" y="58" width="400" height="42"/>
+                  <line class="sq-dg-surface" x1="100" y1="100" x2="500" y2="100"/>
+                  <text class="sq-dg-cap" x="108" y="82">Upper sealing face</text>
+                  <!-- lower plate with groove -->
+                  <path class="sq-dg-part" d="M100,120 L290,120 L290,185 L410,185 L410,120 L500,120 L500,262 L100,262 Z"/>
+                  <!-- o-ring -->
+                  <circle class="sq-dg-oring" cx="350" cy="142" r="43"/>
+                  <text class="sq-dg-sym" x="350" y="146" text-anchor="middle">W</text>
+                  <!-- D groove depth (left) -->
+                  <line class="sq-dg-ext" x1="290" y1="120" x2="250" y2="120"/>
+                  <line class="sq-dg-ext" x1="290" y1="185" x2="250" y2="185"/>
+                  <line class="sq-dg-line" x1="256" y1="120" x2="256" y2="185" marker-start="url(#dgArrow)" marker-end="url(#dgArrow)"/>
+                  <text class="sq-dg-dim" id="dg-f-D" x="244" y="152" text-anchor="middle" transform="rotate(-90 244 152)">D</text>
+                  <!-- W cross section (right) -->
+                  <line class="sq-dg-ext" x1="350" y1="100" x2="478" y2="100"/>
+                  <line class="sq-dg-ext" x1="392" y1="184" x2="478" y2="184"/>
+                  <line class="sq-dg-line" x1="472" y1="100" x2="472" y2="184" marker-start="url(#dgArrow)" marker-end="url(#dgArrow)"/>
+                  <text class="sq-dg-dim" id="dg-f-W" x="486" y="142" text-anchor="middle" transform="rotate(-90 486 142)">W</text>
+                  <!-- groove width -->
+                  <line class="sq-dg-ext" x1="290" y1="185" x2="290" y2="216"/>
+                  <line class="sq-dg-ext" x1="410" y1="185" x2="410" y2="216"/>
+                  <line class="sq-dg-line" x1="290" y1="210" x2="410" y2="210" marker-start="url(#dgArrow)" marker-end="url(#dgArrow)"/>
+                  <text class="sq-dg-dim" id="dg-f-GW" x="350" y="227" text-anchor="middle">Gw</text>
+                </g>
+              </svg>
+            </div>
+
+            <div id="sq-errors" class="sq-errbox" style="display:none;"></div>
+            <div id="sq-warnings" class="sq-warnbox" style="display:none;"></div>
+
+            <div id="sq-results" style="display:none;">
+
+              <!-- STATUS CHIPS -->
+              <div class="sq-verdict" id="sq-chips"></div>
+
+              <!-- STRETCH -->
+              <div id="sq-stretch-section">
+                <div class="sq-lbl-sm">Installed Stretch (AS4716 A.2.1)</div>
+                <table class="sq-res" aria-label="Stretch results">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Min-squeeze</th>
+                      <th>Max-squeeze</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Stretch X</td>
+                      <td id="sq-res-xmin">&mdash;</td>
+                      <td id="sq-res-xmax">&mdash;</td>
+                    </tr>
+                    <tr>
+                      <td>CS reduction R</td>
+                      <td id="sq-res-rmin">&mdash;</td>
+                      <td id="sq-res-rmax">&mdash;</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- AMBIENT SQUEEZE -->
+              <table class="sq-res" aria-label="Squeeze results at assembly temperature">
+                <caption>Ambient Squeeze</caption>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Min-squeeze</th>
+                    <th>Max-squeeze</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Reduced cross section W&prime;</td>
+                    <td class="sq-dim" id="sq-a-wmin">&mdash;</td>
+                    <td class="sq-dim" id="sq-a-wmax">&mdash;</td>
+                  </tr>
+                  <tr>
+                    <td>Squeeze &mdash; concentric</td>
+                    <td id="sq-a-sc-min">&mdash;</td>
+                    <td id="sq-a-sc-max">&mdash;</td>
+                  </tr>
+                  <tr>
+                    <td>% Squeeze &mdash; concentric</td>
+                    <td id="sq-a-scp-min">&mdash;</td>
+                    <td id="sq-a-scp-max">&mdash;</td>
+                  </tr>
+                  <tr>
+                    <td>Squeeze &mdash; eccentric worst</td>
+                    <td id="sq-a-se-min">&mdash;</td>
+                    <td id="sq-a-se-max">&mdash;</td>
+                  </tr>
+                  <tr>
+                    <td>% Squeeze &mdash; eccentric worst</td>
+                    <td id="sq-a-sep-min">&mdash;</td>
+                    <td id="sq-a-sep-max">&mdash;</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- THERMAL SQUEEZE -->
+              <div id="sq-thermal-section" style="display:none;">
+                <table class="sq-res" aria-label="Squeeze results at operating temperature">
+                  <caption id="sq-thermal-caption">Thermal Squeeze</caption>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Min-squeeze</th>
+                      <th>Max-squeeze</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Scaled cross section W<sub>T</sub></td>
+                      <td class="sq-dim" id="sq-t-wmin">&mdash;</td>
+                      <td class="sq-dim" id="sq-t-wmax">&mdash;</td>
+                    </tr>
+                    <tr>
+                      <td>Squeeze &mdash; concentric</td>
+                      <td id="sq-t-sc-min">&mdash;</td>
+                      <td id="sq-t-sc-max">&mdash;</td>
+                    </tr>
+                    <tr>
+                      <td>% Squeeze &mdash; concentric</td>
+                      <td id="sq-t-scp-min">&mdash;</td>
+                      <td id="sq-t-scp-max">&mdash;</td>
+                    </tr>
+                    <tr>
+                      <td>Squeeze &mdash; eccentric worst</td>
+                      <td id="sq-t-se-min">&mdash;</td>
+                      <td id="sq-t-se-max">&mdash;</td>
+                    </tr>
+                    <tr>
+                      <td>% Squeeze &mdash; eccentric worst</td>
+                      <td id="sq-t-sep-min">&mdash;</td>
+                      <td id="sq-t-sep-max">&mdash;</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- GLAND FILL -->
+              <div id="sq-fill-section" style="display:none;">
+                <div class="sq-lbl-sm" style="margin-top:10px;">Gland Fill</div>
+                <table class="sq-res" aria-label="Gland fill results">
+                  <tbody>
+                    <tr>
+                      <td>Nominal fill</td>
+                      <td id="sq-fill-nom">&mdash;</td>
+                    </tr>
+                    <tr>
+                      <td>Worst-case fill</td>
+                      <td id="sq-fill-worst">&mdash;</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div><!-- end #sq-results -->
+
+          </div><!-- end .sq-panel-b -->
+        </div><!-- end right .sq-panel -->
+
+      </div><!-- end .sq-calc-grid -->
+    </div><!-- end .sq-main -->
+
+
+    <!-- DESIGN GUIDANCE TABLE -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3" style="max-width:860px;">
+
+            <div class="custom-heading">Design Guidance Bands</div>
+
+            <div class="mt-3">
+              <table class="table table-sm" style="font-size: 0.9rem; max-width: 680px;">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr><th>Check</th><th>Recommended</th><th>Warning</th><th>Critical</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Min % squeeze (eccentric worst case)</td><td>&ge; 10%</td><td>0% &ndash; 10%</td><td>&le; 0% (contact lost)</td></tr>
+                  <tr><td>Max % squeeze (eccentric worst case)</td><td>&le; 30%</td><td>30% &ndash; 40%</td><td>&gt; 40%</td></tr>
+                  <tr><td>Installed ID stretch X</td><td>0% &ndash; 5%</td><td>5% &ndash; 10%</td><td>&gt; 10%</td></tr>
+                  <tr><td>Gland fill (worst case)</td><td>&le; 85%</td><td>85% &ndash; 90%</td><td>&gt; 90%</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mt-2">
+              <p style="font-size:0.85rem;">
+                Bands follow common industry practice (Parker ORD 5700, AS4716 gland tables) and are intentionally generic.
+                Dynamic glands typically run lighter squeeze than static; small cross sections tolerate higher percentages.
+                Adjust <code>ORingSqueeze.GUIDANCE</code> to your application standard.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- METHOD REFERENCE -->
+    <section aria-label="O-ring squeeze method reference">
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12 px-3">
+
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Method Reference</div>
+          </div>
+
+          <div class="ref-wrapper">
+          <div class="ref-section-wrap">
+
+            <div class="ref-section-title">SAE AS4716 Appendix A &mdash; Worst-Case Squeeze</div>
+
+            <!-- ═══ §1 Stretch ═══ -->
+            <div class="ref-card" id="refCard1">
+              <div class="ref-card-header" onclick="toggleRefCard('refCard1')" role="button" tabindex="0" aria-expanded="true">
+                <span class="ref-num">&sect;1</span>
+                <h2>Stretch Reduction &mdash; AS4716 A.2.1</h2>
+                <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="ref-body two-col">
+                <div>
+                  <div class="ref-sub">Concept</div>
+                  <p>Stretching an O-ring over its seat (the piston groove root diameter for piston glands, or the rod diameter for rod glands) thins its cross section before any squeeze is applied. This reduces the effective sealing interference at assembly.</p>
+                  <p>The minimum-squeeze case uses the minimum O-ring ID with the minimum seat diameter; the maximum-squeeze case uses the maximum O-ring ID with the maximum seat diameter.</p>
+                  <div class="ref-callout"><strong>Face seals:</strong> the O-ring rests flat in the groove without circumferential stretch, so \(X = 0\) and \(R = 0\). The full nominal cross section is used for squeeze.</div>
+                </div>
+                <div>
+                  <div class="ref-sub">Equations</div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Stretch ratio (A.2.1)</span>
+                    \[ X = \frac{D_{seat} - ID_{oring}}{ID_{oring}} \]
+                  </div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Reduction factor R (A.2.1)</span>
+                    \[
+                      R =
+                      \begin{cases}
+                        0 & X \le 0 \\[4pt]
+                        0.0001 + 1.06\,X - 10\,X^{2} & 0 < X \le 0.03 \\[4pt]
+                        0.0056 + 0.59\,X - 0.046\,X^{2} & X > 0.03
+                      \end{cases}
+                    \]
+                  </div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Installed (reduced) cross section</span>
+                    \[ W' = W\,(1 - R) \]
+                  </div>
+                  <div class="ref-warn"><strong>Stretch limit:</strong> installed ID stretch above ~5% is generally avoided &mdash; beyond thinning the cross section, it accelerates elastomer aging and fatigue.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ §2 Squeeze Cases ═══ -->
+            <div class="ref-card" id="refCard2">
+              <div class="ref-card-header" onclick="toggleRefCard('refCard2')" role="button" tabindex="0" aria-expanded="true">
+                <span class="ref-num">&sect;2</span>
+                <h2>Worst-Case Squeeze with Eccentric Shift &amp; Runout &mdash; AS4716 A.2.3</h2>
+                <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div id="doubleEquationRefBody" class="ref-body two-col">
+                <div>
+                  <div class="ref-sub">Piston Gland (A.2.3.1 / A.2.3.2)</div>
+                  <p>A piston floats on its diametral clearance within the bore. In the worst position the piston shifts fully to one side, opening the gap at the O-ring by half the diametral clearance plus half the allowed runout between the groove root and the guide bore.</p>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Min-squeeze case (piston)</span>
+                    \[
+                      S_{min} = W'_{min} - \left[\frac{Bore_{max} - Groove_{min}}{2}
+                      + \frac{Bore_{max} - Piston_{min}}{2} + \frac{runout}{2}\right]
+                    \]
+                  </div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Max-squeeze case (piston)</span>
+                    \[
+                      S_{max} = W'_{max} - \left[\frac{Bore_{min} - Groove_{max}}{2}
+                      - \frac{Bore_{min} - Piston_{min}}{2} - \frac{runout}{2}\right]
+                    \]
+                  </div>
+                </div>
+                <div>
+                  <div class="ref-sub">Rod &amp; Face Glands</div>
+                  <p>Rod glands mirror the piston logic with the housing groove diameter, rod diameter, and the rod-guide bore diameter. The guide bore sets the rod&rsquo;s eccentric shift allowance.</p>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Min-squeeze case (rod)</span>
+                    \[
+                      S_{min} = W'_{min} - \left[\frac{Gland_{max} - Rod_{min}}{2}
+                      + \frac{Bore_{max} - Rod_{min}}{2} + \frac{runout}{2}\right]
+                    \]
+                  </div>
+                  <p>Face seals have no eccentric shift term &mdash; squeeze is purely axial cross section minus groove depth:</p>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Face seal</span>
+                    \[ S = W' - D_{groove} \]
+                  </div>
+                  <div class="ref-sub" style="margin-top:10px;">Percent Squeeze</div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Always referenced to W&prime;</span>
+                    \[ \%S = \frac{S}{W'} \]
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ §3 Thermal ═══ -->
+            <div class="ref-card" id="refCard3">
+              <div class="ref-card-header" onclick="toggleRefCard('refCard3')" role="button" tabindex="0" aria-expanded="true">
+                <span class="ref-num">&sect;3</span>
+                <h2>Thermal Contraction &amp; Expansion</h2>
+                <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="ref-body two-col">
+                <div>
+                  <div class="ref-sub">Concept</div>
+                  <p>Elastomers shrink roughly an order of magnitude faster than metals. A nitrile O-ring at \(\alpha \approx 9{\times}10^{-5}\,/\!{}^\circ\text{F}\) loses about 1.3% of its cross section going from 75&nbsp;&deg;F to &minus;65&nbsp;&deg;F, while steel barely moves.</p>
+                  <p>Each dimension is scaled independently by its own material&rsquo;s CTE. For a piston gland: the groove root and piston diameters scale by the piston CTE; the bore scales by the cylinder CTE. The reduced cross section \(W'\) scales by the seal CTE, then the full squeeze calculation is re-evaluated at the operating temperature.</p>
+                  <div class="ref-callout"><strong>Note:</strong> fluid swell (volume increase from chemical absorption) is not included. Add the volumetric swell fraction from compound data sheets to the fill and maximum-squeeze checks.</div>
+                </div>
+                <div>
+                  <div class="ref-sub">Equation</div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Linear thermal scaling</span>
+                    \[ d_T = d\,\bigl(1 + \alpha\,\Delta T\bigr) \]
+                    \[ \Delta T = T_{final} - T_{initial} \]
+                  </div>
+                  <div class="ref-sub" style="margin-top:8px;">CTE Defaults (mid-range, /&deg;F)</div>
+                  <table class="ref-table">
+                    <thead><tr><th>Material</th><th>&alpha; (&times;10<sup>6</sup> /&deg;F)</th></tr></thead>
+                    <tbody>
+                      <tr><td>Nitrile (NBR)</td><td>90</td></tr>
+                      <tr><td>Viton / FKM</td><td>83</td></tr>
+                      <tr><td>Silicone (VMQ)</td><td>100</td></tr>
+                      <tr><td>Steel 304/316</td><td>9.6 / 8.9</td></tr>
+                      <tr><td>Aluminum 6061</td><td>13.0</td></tr>
+                      <tr><td>Titanium Ti-6Al-4V</td><td>4.8</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ §4 Gland Fill ═══ -->
+            <div class="ref-card" id="refCard4">
+              <div class="ref-card-header" onclick="toggleRefCard('refCard4')" role="button" tabindex="0" aria-expanded="true">
+                <span class="ref-num">&sect;4</span>
+                <h2>Gland Fill</h2>
+                <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="ref-body two-col">
+                <div>
+                  <div class="ref-sub">Concept</div>
+                  <p>The O-ring must have room to deform under compression and to grow with heat and fluid swell. Fill compares the seal&rsquo;s cross-sectional area to the groove&rsquo;s cross-sectional area. Common practice limits worst-case fill to 85&ndash;90%.</p>
+                  <p>Worst-case fill uses the <em>maximum</em> cross section in the <em>minimum</em> groove space and groove width &mdash; the combination that leaves the least room.</p>
+                  <div class="ref-warn"><strong>Above 90%:</strong> no margin for thermal expansion or fluid swell; risk of extrusion damage and seal distortion on assembly.</div>
+                </div>
+                <div>
+                  <div class="ref-sub">Equation</div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Gland fill</span>
+                    \[
+                      Fill = \frac{\tfrac{\pi}{4}\,W^{2}}{depth \times width}
+                    \]
+                  </div>
+                  <p>where <em>depth</em> is the radial gland space (or axial groove depth for face seals) and <em>width</em> is the groove width.</p>
+                  <table class="ref-table" style="margin-top:8px;">
+                    <thead><tr><th>Fill</th><th>Status</th></tr></thead>
+                    <tbody>
+                      <tr><td>&le; 85%</td><td>OK &mdash; adequate room</td></tr>
+                      <tr><td>85&ndash;90%</td><td>Warning &mdash; monitor swell</td></tr>
+                      <tr><td>&gt; 90%</td><td>Critical &mdash; redesign</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- ref-section-wrap -->
+          </div><!-- ref-wrapper -->
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- NOTICES -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-1 mb-3 text-start" style="max-width:860px;">
+            <div class="custom-heading">References &amp; Notices</div>
+            <ul style="font-size:0.85rem; margin-top:0.75rem; line-height:1.75;">
+              <li>SAE AS4716, <em>Gland Design, O-ring and Other Elastomeric Seals</em> &mdash; Appendix A, sections A.2.1 (stretch/reduced cross section) and A.2.3 (squeeze cases). AS4716 is a copyrighted SAE standard; this page implements the calculation method and is not a substitute for the standard itself, which governs gland dimensions, surface finish, and application limits.</li>
+              <li>SAE AS568, <em>Aerospace Size Standard for O-rings</em> &mdash; source of standard O-ring inner diameters, cross sections, and tolerances (also published as Parker ORD-5700 Table 4-2). The size data was cross-checked against Trelleborg and Prepol AS568 catalogs. Two typographical errors were corrected: &minus;015 cross section (0.070&Prime;, printed &ldquo;0.007&rdquo;) and &minus;377 ID (9.975&Prime;, printed &ldquo;9.925&rdquo;). Sizes &minus;468 to &minus;470 are omitted pending verification. 9xx boss-gasket gland data is governed by SAE J1926-1, not this calculator.</li>
+              <li>Parker Hannifin <em>O-Ring Handbook</em> (ORD 5700) &mdash; general design guidance on squeeze, stretch, and gland fill. This calculator is not affiliated with or endorsed by SAE International or Parker Hannifin.</li>
+              <li>CTE values are representative mid-range figures from ASM Handbook Vol. 2, MMPDS-01, DuPont/Solvay data sheets, Parker ORD-5700 Appendix B, and NSWC-11 &sect;3.2.3. Verify against the specific compound and lot data for the application.</li>
+              <li>Results are a design screening aid based on worst-case linear tolerance stacking. Verify final designs against the governing standard and by test. Thermal results assume linear CTE with no fluid swell.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CITATION -->
+    <section>
+      <div id="citation-block" data-citation-page="ORingSqueezeCalculator"></div>
+    </section>
+
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <!-- ════════════════════════════════════════════════════════
+       INLINE SCRIPTS — load order matters:
+         1. AS568 size data     → window.AS568
+         2. CTE materials       → window.CTE_MATERIALS
+         3. Calculation engine  → window.ORingSqueeze
+         4. UI IIFE             → wires everything together
+       ════════════════════════════════════════════════════════ -->
+
+  <!-- SCRIPT 1: AS568 size data (inline) -->
+  <script>
+/**
+ * AS568 standard O-ring sizes (inches): inside diameter +/- tolerance and
+ * cross-section W +/- tolerance, per SAE AS568 (the size data referenced
+ * by Parker ORD-5700 Table 4-2).
+ *
+ * Source: Boyd Corporation AS568 size chart (boydcorp.com), cross-checked
+ * against the Trelleborg and Prepol AS568 catalogs. Two typographical
+ * errors in the source chart were corrected against the standard pattern
+ * and the cross-check catalogs: -015 cross section (0.070, printed
+ * "0.007") and -377 ID (9.975, printed "9.925"). Sizes -468 to -470 are
+ * omitted pending verification; -471 to -475 follow the Trelleborg
+ * catalog. 9xx boss-gasket sizes are included for reference (their gland
+ * data is governed by SAE J1926-1).
+ */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) { module.exports = factory(); }
+  else { root.AS568 = factory(); }
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+  // [dash, ID, ID tol, CS (W), CS tol] — inches
+  var DATA = [
+    ['001', 0.029, 0.004, 0.04, 0.003],
+    ['002', 0.042, 0.004, 0.05, 0.003],
+    ['003', 0.056, 0.004, 0.06, 0.003],
+    ['004', 0.07, 0.005, 0.07, 0.003],
+    ['005', 0.101, 0.005, 0.07, 0.003],
+    ['006', 0.114, 0.005, 0.07, 0.003],
+    ['007', 0.145, 0.005, 0.07, 0.003],
+    ['008', 0.176, 0.005, 0.07, 0.003],
+    ['009', 0.208, 0.005, 0.07, 0.003],
+    ['010', 0.239, 0.005, 0.07, 0.003],
+    ['011', 0.301, 0.005, 0.07, 0.003],
+    ['012', 0.364, 0.005, 0.07, 0.003],
+    ['013', 0.426, 0.005, 0.07, 0.003],
+    ['014', 0.489, 0.005, 0.07, 0.003],
+    ['015', 0.551, 0.007, 0.07, 0.003],
+    ['016', 0.614, 0.009, 0.07, 0.003],
+    ['017', 0.676, 0.009, 0.07, 0.003],
+    ['018', 0.739, 0.009, 0.07, 0.003],
+    ['019', 0.801, 0.009, 0.07, 0.003],
+    ['020', 0.864, 0.009, 0.07, 0.003],
+    ['021', 0.926, 0.009, 0.07, 0.003],
+    ['022', 0.989, 0.01, 0.07, 0.003],
+    ['023', 1.051, 0.01, 0.07, 0.003],
+    ['024', 1.114, 0.01, 0.07, 0.003],
+    ['025', 1.176, 0.011, 0.07, 0.003],
+    ['026', 1.239, 0.011, 0.07, 0.003],
+    ['027', 1.301, 0.011, 0.07, 0.003],
+    ['028', 1.364, 0.013, 0.07, 0.003],
+    ['029', 1.489, 0.013, 0.07, 0.003],
+    ['030', 1.614, 0.013, 0.07, 0.003],
+    ['031', 1.739, 0.015, 0.07, 0.003],
+    ['032', 1.864, 0.015, 0.07, 0.003],
+    ['033', 1.989, 0.018, 0.07, 0.003],
+    ['034', 2.114, 0.018, 0.07, 0.003],
+    ['035', 2.239, 0.018, 0.07, 0.003],
+    ['036', 2.364, 0.018, 0.07, 0.003],
+    ['037', 2.489, 0.018, 0.07, 0.003],
+    ['038', 2.614, 0.02, 0.07, 0.003],
+    ['039', 2.739, 0.02, 0.07, 0.003],
+    ['040', 2.864, 0.02, 0.07, 0.003],
+    ['041', 2.989, 0.024, 0.07, 0.003],
+    ['042', 3.239, 0.024, 0.07, 0.003],
+    ['043', 3.489, 0.024, 0.07, 0.003],
+    ['044', 3.739, 0.027, 0.07, 0.003],
+    ['045', 3.989, 0.027, 0.07, 0.003],
+    ['046', 4.239, 0.03, 0.07, 0.003],
+    ['047', 4.489, 0.03, 0.07, 0.003],
+    ['048', 4.739, 0.03, 0.07, 0.003],
+    ['049', 4.989, 0.037, 0.07, 0.003],
+    ['050', 5.239, 0.037, 0.07, 0.003],
+    ['102', 0.049, 0.005, 0.103, 0.003],
+    ['103', 0.081, 0.005, 0.103, 0.003],
+    ['104', 0.112, 0.005, 0.103, 0.003],
+    ['105', 0.143, 0.005, 0.103, 0.003],
+    ['106', 0.174, 0.005, 0.103, 0.003],
+    ['107', 0.206, 0.005, 0.103, 0.003],
+    ['108', 0.237, 0.005, 0.103, 0.003],
+    ['109', 0.299, 0.005, 0.103, 0.003],
+    ['110', 0.362, 0.005, 0.103, 0.003],
+    ['111', 0.424, 0.005, 0.103, 0.003],
+    ['112', 0.487, 0.005, 0.103, 0.003],
+    ['113', 0.549, 0.007, 0.103, 0.003],
+    ['114', 0.612, 0.009, 0.103, 0.003],
+    ['115', 0.674, 0.009, 0.103, 0.003],
+    ['116', 0.737, 0.009, 0.103, 0.003],
+    ['117', 0.799, 0.01, 0.103, 0.003],
+    ['118', 0.862, 0.01, 0.103, 0.003],
+    ['119', 0.924, 0.01, 0.103, 0.003],
+    ['120', 0.987, 0.01, 0.103, 0.003],
+    ['121', 1.049, 0.01, 0.103, 0.003],
+    ['122', 1.112, 0.01, 0.103, 0.003],
+    ['123', 1.174, 0.012, 0.103, 0.003],
+    ['124', 1.237, 0.012, 0.103, 0.003],
+    ['125', 1.299, 0.012, 0.103, 0.003],
+    ['126', 1.362, 0.012, 0.103, 0.003],
+    ['127', 1.424, 0.012, 0.103, 0.003],
+    ['128', 1.487, 0.012, 0.103, 0.003],
+    ['129', 1.549, 0.015, 0.103, 0.003],
+    ['130', 1.612, 0.015, 0.103, 0.003],
+    ['131', 1.674, 0.015, 0.103, 0.003],
+    ['132', 1.737, 0.015, 0.103, 0.003],
+    ['133', 1.799, 0.015, 0.103, 0.003],
+    ['134', 1.862, 0.015, 0.103, 0.003],
+    ['135', 1.925, 0.017, 0.103, 0.003],
+    ['136', 1.987, 0.017, 0.103, 0.003],
+    ['137', 2.05, 0.017, 0.103, 0.003],
+    ['138', 2.112, 0.017, 0.103, 0.003],
+    ['139', 2.175, 0.017, 0.103, 0.003],
+    ['140', 2.237, 0.017, 0.103, 0.003],
+    ['141', 2.3, 0.02, 0.103, 0.003],
+    ['142', 2.362, 0.02, 0.103, 0.003],
+    ['143', 2.425, 0.02, 0.103, 0.003],
+    ['144', 2.487, 0.02, 0.103, 0.003],
+    ['145', 2.55, 0.02, 0.103, 0.003],
+    ['146', 2.612, 0.02, 0.103, 0.003],
+    ['147', 2.675, 0.022, 0.103, 0.003],
+    ['148', 2.737, 0.022, 0.103, 0.003],
+    ['149', 2.8, 0.022, 0.103, 0.003],
+    ['150', 2.862, 0.022, 0.103, 0.003],
+    ['151', 2.987, 0.024, 0.103, 0.003],
+    ['152', 3.237, 0.024, 0.103, 0.003],
+    ['153', 3.487, 0.024, 0.103, 0.003],
+    ['154', 3.737, 0.028, 0.103, 0.003],
+    ['155', 3.987, 0.028, 0.103, 0.003],
+    ['156', 4.237, 0.03, 0.103, 0.003],
+    ['157', 4.487, 0.03, 0.103, 0.003],
+    ['158', 4.737, 0.03, 0.103, 0.003],
+    ['159', 4.987, 0.035, 0.103, 0.003],
+    ['160', 5.237, 0.035, 0.103, 0.003],
+    ['161', 5.487, 0.035, 0.103, 0.003],
+    ['162', 5.737, 0.035, 0.103, 0.003],
+    ['163', 5.987, 0.035, 0.103, 0.003],
+    ['164', 6.237, 0.04, 0.103, 0.003],
+    ['165', 6.487, 0.04, 0.103, 0.003],
+    ['166', 6.737, 0.04, 0.103, 0.003],
+    ['167', 6.987, 0.04, 0.103, 0.003],
+    ['168', 7.237, 0.045, 0.103, 0.003],
+    ['169', 7.487, 0.045, 0.103, 0.003],
+    ['170', 7.737, 0.045, 0.103, 0.003],
+    ['171', 7.987, 0.045, 0.103, 0.003],
+    ['172', 8.237, 0.05, 0.103, 0.003],
+    ['173', 8.487, 0.05, 0.103, 0.003],
+    ['174', 8.737, 0.05, 0.103, 0.003],
+    ['175', 8.987, 0.05, 0.103, 0.003],
+    ['176', 9.237, 0.055, 0.103, 0.003],
+    ['177', 9.487, 0.055, 0.103, 0.003],
+    ['178', 9.737, 0.055, 0.103, 0.003],
+    ['201', 0.171, 0.005, 0.139, 0.004],
+    ['202', 0.234, 0.005, 0.139, 0.004],
+    ['203', 0.296, 0.005, 0.139, 0.004],
+    ['204', 0.359, 0.005, 0.139, 0.004],
+    ['205', 0.421, 0.005, 0.139, 0.004],
+    ['206', 0.484, 0.005, 0.139, 0.004],
+    ['207', 0.546, 0.007, 0.139, 0.004],
+    ['208', 0.609, 0.009, 0.139, 0.004],
+    ['209', 0.671, 0.009, 0.139, 0.004],
+    ['210', 0.734, 0.01, 0.139, 0.004],
+    ['211', 0.796, 0.01, 0.139, 0.004],
+    ['212', 0.859, 0.01, 0.139, 0.004],
+    ['213', 0.921, 0.01, 0.139, 0.004],
+    ['214', 0.984, 0.01, 0.139, 0.004],
+    ['215', 1.046, 0.01, 0.139, 0.004],
+    ['216', 1.109, 0.012, 0.139, 0.004],
+    ['217', 1.171, 0.012, 0.139, 0.004],
+    ['218', 1.234, 0.012, 0.139, 0.004],
+    ['219', 1.296, 0.012, 0.139, 0.004],
+    ['220', 1.359, 0.012, 0.139, 0.004],
+    ['221', 1.421, 0.012, 0.139, 0.004],
+    ['222', 1.484, 0.015, 0.139, 0.004],
+    ['223', 1.609, 0.015, 0.139, 0.004],
+    ['224', 1.734, 0.015, 0.139, 0.004],
+    ['225', 1.859, 0.018, 0.139, 0.004],
+    ['226', 1.984, 0.018, 0.139, 0.004],
+    ['227', 2.109, 0.018, 0.139, 0.004],
+    ['228', 2.234, 0.02, 0.139, 0.004],
+    ['229', 2.359, 0.02, 0.139, 0.004],
+    ['230', 2.484, 0.02, 0.139, 0.004],
+    ['231', 2.609, 0.02, 0.139, 0.004],
+    ['232', 2.734, 0.024, 0.139, 0.004],
+    ['233', 2.859, 0.024, 0.139, 0.004],
+    ['234', 2.984, 0.024, 0.139, 0.004],
+    ['235', 3.109, 0.024, 0.139, 0.004],
+    ['236', 3.234, 0.024, 0.139, 0.004],
+    ['237', 3.359, 0.024, 0.139, 0.004],
+    ['238', 3.484, 0.024, 0.139, 0.004],
+    ['239', 3.609, 0.024, 0.139, 0.004],
+    ['240', 3.734, 0.028, 0.139, 0.004],
+    ['241', 3.859, 0.028, 0.139, 0.004],
+    ['242', 3.984, 0.028, 0.139, 0.004],
+    ['243', 4.109, 0.028, 0.139, 0.004],
+    ['244', 4.234, 0.03, 0.139, 0.004],
+    ['245', 4.359, 0.03, 0.139, 0.004],
+    ['246', 4.484, 0.03, 0.139, 0.004],
+    ['247', 4.609, 0.03, 0.139, 0.004],
+    ['248', 4.734, 0.03, 0.139, 0.004],
+    ['249', 4.859, 0.035, 0.139, 0.004],
+    ['250', 4.984, 0.035, 0.139, 0.004],
+    ['251', 5.109, 0.035, 0.139, 0.004],
+    ['252', 5.234, 0.035, 0.139, 0.004],
+    ['253', 5.359, 0.035, 0.139, 0.004],
+    ['254', 5.484, 0.035, 0.139, 0.004],
+    ['255', 5.609, 0.035, 0.139, 0.004],
+    ['256', 5.734, 0.035, 0.139, 0.004],
+    ['257', 5.859, 0.035, 0.139, 0.004],
+    ['258', 5.984, 0.035, 0.139, 0.004],
+    ['259', 6.234, 0.04, 0.139, 0.004],
+    ['260', 6.484, 0.04, 0.139, 0.004],
+    ['261', 6.734, 0.04, 0.139, 0.004],
+    ['262', 6.984, 0.04, 0.139, 0.004],
+    ['263', 7.234, 0.045, 0.139, 0.004],
+    ['264', 7.484, 0.045, 0.139, 0.004],
+    ['265', 7.734, 0.045, 0.139, 0.004],
+    ['266', 7.984, 0.045, 0.139, 0.004],
+    ['267', 8.234, 0.05, 0.139, 0.004],
+    ['268', 8.484, 0.05, 0.139, 0.004],
+    ['269', 8.734, 0.05, 0.139, 0.004],
+    ['270', 8.984, 0.05, 0.139, 0.004],
+    ['271', 9.234, 0.055, 0.139, 0.004],
+    ['272', 9.484, 0.055, 0.139, 0.004],
+    ['273', 9.734, 0.055, 0.139, 0.004],
+    ['274', 9.984, 0.055, 0.139, 0.004],
+    ['275', 10.484, 0.055, 0.139, 0.004],
+    ['276', 10.984, 0.065, 0.139, 0.004],
+    ['277', 11.484, 0.065, 0.139, 0.004],
+    ['278', 11.984, 0.065, 0.139, 0.004],
+    ['279', 12.984, 0.065, 0.139, 0.004],
+    ['280', 13.984, 0.065, 0.139, 0.004],
+    ['281', 14.984, 0.065, 0.139, 0.004],
+    ['282', 15.955, 0.075, 0.139, 0.004],
+    ['283', 16.955, 0.08, 0.139, 0.004],
+    ['284', 17.955, 0.085, 0.139, 0.004],
+    ['309', 0.412, 0.005, 0.21, 0.005],
+    ['310', 0.475, 0.005, 0.21, 0.005],
+    ['311', 0.537, 0.007, 0.21, 0.005],
+    ['312', 0.6, 0.009, 0.21, 0.005],
+    ['313', 0.662, 0.009, 0.21, 0.005],
+    ['314', 0.725, 0.01, 0.21, 0.005],
+    ['315', 0.787, 0.01, 0.21, 0.005],
+    ['316', 0.85, 0.01, 0.21, 0.005],
+    ['317', 0.912, 0.01, 0.21, 0.005],
+    ['318', 0.975, 0.01, 0.21, 0.005],
+    ['319', 1.034, 0.01, 0.21, 0.005],
+    ['320', 1.1, 0.012, 0.21, 0.005],
+    ['321', 1.162, 0.012, 0.21, 0.005],
+    ['322', 1.225, 0.012, 0.21, 0.005],
+    ['323', 1.287, 0.012, 0.21, 0.005],
+    ['324', 1.35, 0.012, 0.21, 0.005],
+    ['325', 1.475, 0.015, 0.21, 0.005],
+    ['326', 1.6, 0.015, 0.21, 0.005],
+    ['327', 1.725, 0.015, 0.21, 0.005],
+    ['328', 1.85, 0.015, 0.21, 0.005],
+    ['329', 1.975, 0.018, 0.21, 0.005],
+    ['330', 2.1, 0.018, 0.21, 0.005],
+    ['331', 2.225, 0.018, 0.21, 0.005],
+    ['332', 2.35, 0.018, 0.21, 0.005],
+    ['333', 2.475, 0.02, 0.21, 0.005],
+    ['334', 2.6, 0.02, 0.21, 0.005],
+    ['335', 2.725, 0.02, 0.21, 0.005],
+    ['336', 2.85, 0.02, 0.21, 0.005],
+    ['337', 2.975, 0.024, 0.21, 0.005],
+    ['338', 3.1, 0.024, 0.21, 0.005],
+    ['339', 3.225, 0.024, 0.21, 0.005],
+    ['340', 3.35, 0.024, 0.21, 0.005],
+    ['341', 3.475, 0.024, 0.21, 0.005],
+    ['342', 3.6, 0.028, 0.21, 0.005],
+    ['343', 3.725, 0.028, 0.21, 0.005],
+    ['344', 3.85, 0.028, 0.21, 0.005],
+    ['345', 3.975, 0.028, 0.21, 0.005],
+    ['346', 4.1, 0.028, 0.21, 0.005],
+    ['347', 4.225, 0.03, 0.21, 0.005],
+    ['348', 4.35, 0.03, 0.21, 0.005],
+    ['349', 4.475, 0.03, 0.21, 0.005],
+    ['350', 4.6, 0.03, 0.21, 0.005],
+    ['351', 4.725, 0.03, 0.21, 0.005],
+    ['352', 4.85, 0.03, 0.21, 0.005],
+    ['353', 4.975, 0.037, 0.21, 0.005],
+    ['354', 5.1, 0.037, 0.21, 0.005],
+    ['355', 5.225, 0.037, 0.21, 0.005],
+    ['356', 5.35, 0.037, 0.21, 0.005],
+    ['357', 5.475, 0.037, 0.21, 0.005],
+    ['358', 5.6, 0.037, 0.21, 0.005],
+    ['359', 5.725, 0.037, 0.21, 0.005],
+    ['360', 5.85, 0.037, 0.21, 0.005],
+    ['361', 5.975, 0.037, 0.21, 0.005],
+    ['362', 6.225, 0.04, 0.21, 0.005],
+    ['363', 6.475, 0.04, 0.21, 0.005],
+    ['364', 6.725, 0.04, 0.21, 0.005],
+    ['365', 6.975, 0.04, 0.21, 0.005],
+    ['366', 7.225, 0.045, 0.21, 0.005],
+    ['367', 7.475, 0.045, 0.21, 0.005],
+    ['368', 7.725, 0.045, 0.21, 0.005],
+    ['369', 7.975, 0.045, 0.21, 0.005],
+    ['370', 8.225, 0.05, 0.21, 0.005],
+    ['371', 8.475, 0.05, 0.21, 0.005],
+    ['372', 8.725, 0.05, 0.21, 0.005],
+    ['373', 8.975, 0.05, 0.21, 0.005],
+    ['374', 9.225, 0.055, 0.21, 0.005],
+    ['375', 9.475, 0.055, 0.21, 0.005],
+    ['376', 9.725, 0.055, 0.21, 0.005],
+    ['377', 9.975, 0.055, 0.21, 0.005],
+    ['378', 10.475, 0.06, 0.21, 0.005],
+    ['379', 10.975, 0.06, 0.21, 0.005],
+    ['380', 11.475, 0.065, 0.21, 0.005],
+    ['381', 11.975, 0.065, 0.21, 0.005],
+    ['382', 12.975, 0.065, 0.21, 0.005],
+    ['383', 13.975, 0.07, 0.21, 0.005],
+    ['384', 14.975, 0.07, 0.21, 0.005],
+    ['385', 15.955, 0.075, 0.21, 0.005],
+    ['386', 16.955, 0.075, 0.21, 0.005],
+    ['387', 17.955, 0.085, 0.21, 0.005],
+    ['388', 18.955, 0.09, 0.21, 0.005],
+    ['389', 19.955, 0.095, 0.21, 0.005],
+    ['390', 20.955, 0.095, 0.21, 0.005],
+    ['425', 4.475, 0.033, 0.275, 0.006],
+    ['426', 4.6, 0.033, 0.275, 0.006],
+    ['427', 4.725, 0.033, 0.275, 0.006],
+    ['428', 4.85, 0.033, 0.275, 0.006],
+    ['429', 4.975, 0.037, 0.275, 0.006],
+    ['430', 5.1, 0.037, 0.275, 0.006],
+    ['431', 5.225, 0.037, 0.275, 0.006],
+    ['432', 5.35, 0.037, 0.275, 0.006],
+    ['433', 5.475, 0.037, 0.275, 0.006],
+    ['434', 5.6, 0.037, 0.275, 0.006],
+    ['435', 5.725, 0.037, 0.275, 0.006],
+    ['436', 5.85, 0.037, 0.275, 0.006],
+    ['437', 5.975, 0.037, 0.275, 0.006],
+    ['438', 6.225, 0.04, 0.275, 0.006],
+    ['439', 6.475, 0.04, 0.275, 0.006],
+    ['440', 6.725, 0.04, 0.275, 0.006],
+    ['441', 6.975, 0.04, 0.275, 0.006],
+    ['442', 7.225, 0.045, 0.275, 0.006],
+    ['443', 7.475, 0.045, 0.275, 0.006],
+    ['444', 7.725, 0.045, 0.275, 0.006],
+    ['445', 7.975, 0.045, 0.275, 0.006],
+    ['446', 8.475, 0.055, 0.275, 0.006],
+    ['447', 8.975, 0.055, 0.275, 0.006],
+    ['448', 9.475, 0.055, 0.275, 0.006],
+    ['449', 9.975, 0.055, 0.275, 0.006],
+    ['450', 10.475, 0.06, 0.275, 0.006],
+    ['451', 10.975, 0.06, 0.275, 0.006],
+    ['452', 11.475, 0.06, 0.275, 0.006],
+    ['453', 11.975, 0.06, 0.275, 0.006],
+    ['454', 12.475, 0.06, 0.275, 0.006],
+    ['455', 12.975, 0.06, 0.275, 0.006],
+    ['456', 13.475, 0.07, 0.275, 0.006],
+    ['457', 13.975, 0.07, 0.275, 0.006],
+    ['458', 14.475, 0.07, 0.275, 0.006],
+    ['459', 14.975, 0.07, 0.275, 0.006],
+    ['460', 15.475, 0.07, 0.275, 0.006],
+    ['461', 15.955, 0.075, 0.275, 0.006],
+    ['462', 16.455, 0.075, 0.275, 0.006],
+    ['463', 16.955, 0.08, 0.275, 0.006],
+    ['464', 17.455, 0.085, 0.275, 0.006],
+    ['465', 17.955, 0.085, 0.275, 0.006],
+    ['466', 18.455, 0.085, 0.275, 0.006],
+    ['467', 18.955, 0.09, 0.275, 0.006],
+    ['471', 21.955, 0.1, 0.275, 0.006],
+    ['472', 22.94, 0.105, 0.275, 0.006],
+    ['473', 23.94, 0.11, 0.275, 0.006],
+    ['474', 24.94, 0.115, 0.275, 0.006],
+    ['475', 25.94, 0.12, 0.275, 0.006],
+    ['901', 0.185, 0.005, 0.056, 0.003],
+    ['902', 0.239, 0.005, 0.064, 0.003],
+    ['903', 0.301, 0.005, 0.064, 0.003],
+    ['904', 0.351, 0.005, 0.072, 0.003],
+    ['905', 0.414, 0.005, 0.072, 0.003],
+    ['906', 0.468, 0.005, 0.078, 0.003],
+    ['907', 0.53, 0.007, 0.082, 0.003],
+    ['908', 0.644, 0.009, 0.087, 0.003],
+    ['909', 0.706, 0.009, 0.097, 0.003],
+    ['910', 0.755, 0.009, 0.097, 0.003],
+    ['911', 0.863, 0.009, 0.116, 0.004],
+    ['912', 0.924, 0.009, 0.116, 0.004],
+    ['913', 0.986, 0.01, 0.116, 0.004],
+    ['914', 1.047, 0.01, 0.116, 0.004],
+    ['916', 1.171, 0.01, 0.116, 0.004],
+    ['918', 1.355, 0.012, 0.116, 0.004],
+    ['920', 1.475, 0.014, 0.118, 0.004],
+    ['924', 1.72, 0.014, 0.118, 0.004],
+    ['928', 2.09, 0.018, 0.118, 0.004],
+    ['932', 2.337, 0.018, 0.118, 0.004],
+  ];
+  var SERIES_LABEL = {"0": "0xx series — 0.070 in CS", "1": "1xx series — 0.103 in CS", "2": "2xx series — 0.139 in CS", "3": "3xx series — 0.210 in CS", "4": "4xx series — 0.275 in CS", "9": "9xx boss gaskets (SAE J1926)"};
+  var SIZES = DATA.map(function (r) {
+    return { dash: r[0], id: r[1], idTol: r[2], cs: r[3], csTol: r[4], series: r[0][0] };
+  });
+  function get(dash) {
+    var key = String(dash).replace(/^-/, '').padStart(3, '0');
+    for (var i = 0; i < SIZES.length; i++) if (SIZES[i].dash === key) return SIZES[i];
+    return null;
+  }
+  return { SIZES: SIZES, get: get, SERIES_LABEL: SERIES_LABEL };
+});
+  </script>
+
+  <!-- SCRIPT 2: CTE materials (inline) -->
+  <script>
+/* ============================================================
+   CTE_MATERIALS — coefficients of thermal expansion, 1/°F.
+   Sources:
+     Metals:    ASM Handbook Vol. 2 (1990); MMPDS-01 (2003)
+     Plastics:  DuPont / Solvay data sheets; Matweb ranges
+     Elastomers:NSWC-11 §3.2.3 (9e-5 /°F default for rubber),
+                Parker ORD-5700 Appendix B, compound data sheets.
+   All values in 1/°F. Each entry: { id, label, cte, range, group, note? }
+   ============================================================ */
+(function(root, factory){
+  if(typeof module==='object'&&module.exports) module.exports=factory();
+  else root.CTE_MATERIALS=factory();
+})(typeof self!=='undefined'?self:this, function(){
+  'use strict';
+  var METALS = [
+    {id:'steel-carbon',      label:'Carbon steel (1018/1020)',    cte:6.5e-6,  range:'6.3–6.7',  group:'Metals — Steel'},
+    {id:'steel-304',         label:'Stainless steel 304',         cte:9.6e-6,  range:'9.2–10.0', group:'Metals — Steel'},
+    {id:'steel-316',         label:'Stainless steel 316',         cte:8.9e-6,  range:'8.7–9.0',  group:'Metals — Steel'},
+    {id:'steel-17-4',        label:'17-4 PH stainless',           cte:6.0e-6,  range:'5.8–6.3',  group:'Metals — Steel'},
+    {id:'steel-tool-d2',     label:'Tool steel D2',               cte:5.6e-6,  range:'5.5–5.7',  group:'Metals — Steel'},
+    {id:'al-6061',           label:'Aluminum 6061-T6',            cte:13.0e-6, range:'12.8–13.2',group:'Metals — Aluminum'},
+    {id:'al-7075',           label:'Aluminum 7075-T6',            cte:12.9e-6, range:'12.6–13.1',group:'Metals — Aluminum'},
+    {id:'al-2024',           label:'Aluminum 2024-T3',            cte:12.9e-6, range:'12.7–13.1',group:'Metals — Aluminum'},
+    {id:'al-cast-380',       label:'Aluminum die-cast 380',       cte:11.7e-6, range:'11.4–12.0',group:'Metals — Aluminum'},
+    {id:'ti-6al4v',          label:'Titanium Ti-6Al-4V',          cte:4.8e-6,  range:'4.6–5.0',  group:'Metals — Titanium'},
+    {id:'ti-cp',             label:'Titanium CP grade 2',         cte:5.0e-6,  range:'4.8–5.2',  group:'Metals — Titanium'},
+    {id:'brass-360',         label:'Brass C360 (free-machining)', cte:11.4e-6, range:'11.1–11.6',group:'Metals — Copper alloys'},
+    {id:'bronze-c932',       label:'Bronze C932 (bearing)',       cte:10.0e-6, range:'9.8–10.3', group:'Metals — Copper alloys'},
+    {id:'copper-pure',       label:'Copper (ETP / pure)',         cte:9.4e-6,  range:'9.2–9.6',  group:'Metals — Copper alloys'},
+    {id:'beryllium-copper',  label:'Beryllium copper C17200',     cte:9.4e-6,  range:'9.2–9.7',  group:'Metals — Copper alloys'},
+    {id:'inconel-625',       label:'Inconel 625',                 cte:7.1e-6,  range:'6.9–7.3',  group:'Metals — Nickel alloys'},
+    {id:'inconel-718',       label:'Inconel 718',                 cte:7.2e-6,  range:'7.0–7.4',  group:'Metals — Nickel alloys'},
+    {id:'monel-400',         label:'Monel 400',                   cte:7.7e-6,  range:'7.5–7.9',  group:'Metals — Nickel alloys'},
+    {id:'hastelloy-c276',    label:'Hastelloy C-276',             cte:6.2e-6,  range:'6.1–6.4',  group:'Metals — Nickel alloys'},
+    {id:'invar-36',          label:'Invar 36 (low-expansion)',    cte:0.7e-6,  range:'0.5–0.9',  group:'Metals — Nickel alloys'},
+    {id:'magnesium-az31',    label:'Magnesium AZ31B',             cte:14.5e-6, range:'14.1–14.9',group:'Metals — Other'},
+    {id:'zinc-zamak',        label:'Zinc / Zamak die-cast',       cte:15.2e-6, range:'14.8–15.5',group:'Metals — Other'},
+    {id:'cast-iron-gray',    label:'Cast iron (gray)',            cte:6.2e-6,  range:'6.0–6.4',  group:'Metals — Other'},
+    {id:'cast-iron-ductile', label:'Cast iron (ductile)',         cte:6.4e-6,  range:'6.2–6.7',  group:'Metals — Other'},
+  ];
+  var PLASTICS = [
+    {id:'peek',              label:'PEEK',                        cte:26e-6,   range:'24–28',    group:'Plastics'},
+    {id:'torlon-pai',        label:'Torlon PAI',                  cte:17.5e-6, range:'16.5–20',  group:'Plastics',
+     note:'Anisotropic; value for isotropic grade'},
+    {id:'ptfe-pure',         label:'PTFE (pure)',                 cte:55e-6,   range:'50–60',    group:'Plastics'},
+    {id:'ptfe-filled25',     label:'PTFE 25% glass-filled',      cte:33e-6,   range:'28–38',    group:'Plastics'},
+    {id:'delrin-acetal',     label:'Acetal (Delrin POM)',         cte:56e-6,   range:'50–60',    group:'Plastics'},
+    {id:'nylon-66',          label:'Nylon 6/6 (PA66)',            cte:45e-6,   range:'40–55',    group:'Plastics',
+     note:'Moisture-sensitive; value at dry-as-moulded'},
+    {id:'polycarbonate',     label:'Polycarbonate (PC)',          cte:37e-6,   range:'35–39',    group:'Plastics'},
+    {id:'pps',               label:'PPS (Ryton)',                 cte:28e-6,   range:'25–30',    group:'Plastics'},
+    {id:'vespel-sp1',        label:'Vespel SP-1 (polyimide)',     cte:28e-6,   range:'27–30',    group:'Plastics'},
+    {id:'ultem-pei',         label:'Ultem PEI',                   cte:31e-6,   range:'28–34',    group:'Plastics'},
+    {id:'hdpe',              label:'HDPE',                        cte:67e-6,   range:'60–80',    group:'Plastics'},
+    {id:'glass-epoxy',       label:'G-10 / FR-4 (glass-epoxy)',  cte:9e-6,    range:'8–11',     group:'Plastics',
+     note:'In-plane (XY) direction'},
+  ];
+  var ELASTOMERS = [
+    {id:'nbr',               label:'Nitrile (NBR)',               cte:90e-6,   range:'85–95',    group:'Elastomers'},
+    {id:'hnbr',              label:'Hydrogenated nitrile (HNBR)', cte:90e-6,   range:'85–95',    group:'Elastomers'},
+    {id:'epdm',              label:'EPDM',                        cte:100e-6,  range:'90–110',   group:'Elastomers'},
+    {id:'fkm-viton',         label:'FKM / Viton (fluorocarbon)',  cte:83e-6,   range:'78–89',    group:'Elastomers'},
+    {id:'ffkm',              label:'FFKM (Kalrez / Simriz)',      cte:78e-6,   range:'70–84',    group:'Elastomers'},
+    {id:'vmq-silicone',      label:'Silicone (VMQ)',              cte:100e-6,  range:'90–110',   group:'Elastomers'},
+    {id:'fvmq',              label:'Fluorosilicone (FVMQ)',       cte:94e-6,   range:'89–100',   group:'Elastomers'},
+    {id:'cr-neoprene',       label:'Neoprene (CR)',               cte:92e-6,   range:'85–99',    group:'Elastomers'},
+    {id:'iir-butyl',         label:'Butyl (IIR)',                 cte:95e-6,   range:'88–100',   group:'Elastomers'},
+    {id:'pu-urethane',       label:'Polyurethane (AU/EU)',        cte:100e-6,  range:'83–111',   group:'Elastomers'},
+    {id:'ptfe-oring',        label:'PTFE / encapsulated PTFE',   cte:55e-6,   range:'50–60',    group:'Elastomers',
+     note:'Same as bulk PTFE — very high CTE; stretch reduction method may not apply'},
+  ];
+  var ALL = [].concat(METALS, PLASTICS, ELASTOMERS);
+  var BY_ID = {};
+  ALL.forEach(function(m){ BY_ID[m.id] = m; });
+  return { METALS:METALS, PLASTICS:PLASTICS, ELASTOMERS:ELASTOMERS, ALL:ALL, BY_ID:BY_ID };
+});
+  </script>
+
+  <!-- SCRIPT 3: ORingSqueeze engine (inline) -->
+  <script>
+/**
+ * O-Ring Squeeze Calculator — calculation engine
+ * Implements SAE AS4716 Appendix A squeeze and reduced-thickness method.
+ * Pure logic — no DOM. Browser global: ORingSqueeze.
+ */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) { module.exports = factory(); }
+  else { root.ORingSqueeze = factory(); }
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  function stretchRatio(seatDia, oringID) {
+    return (seatDia - oringID) / oringID;
+  }
+
+  function reductionFactor(X) {
+    if (X <= 0) return 0;
+    if (X <= 0.03) return 0.0001 + 1.06 * X - 10 * X * X;
+    return 0.0056 + 0.59 * X - 0.046 * X * X;
+  }
+
+  function reducedThickness(W, X) {
+    return W * (1 - reductionFactor(X));
+  }
+
+  function thermalScale(dim, cte, dT) {
+    return dim * (1 + cte * dT);
+  }
+
+  function glandFill(W, grooveDepth, grooveWidth) {
+    return (Math.PI / 4) * W * W / (grooveDepth * grooveWidth);
+  }
+
+  const GUIDANCE = {
+    squeezePctMin: 0.10,
+    squeezePctMax: 0.30,
+    stretchMax: 0.05,
+    fillWarn: 0.85,
+    fillCrit: 0.90,
+  };
+
+  function statusOf(value, kind, guidance) {
+    var g = guidance || GUIDANCE;
+    if (kind === 'minSqueezePct') {
+      if (value <= 0) return 'critical';
+      if (value < g.squeezePctMin) return 'warning';
+      return 'ok';
+    }
+    if (kind === 'maxSqueezePct') {
+      if (value > 0.40) return 'critical';
+      if (value > g.squeezePctMax) return 'warning';
+      return 'ok';
+    }
+    if (kind === 'stretch') {
+      if (value > g.stretchMax * 2) return 'critical';
+      if (value > g.stretchMax) return 'warning';
+      return 'ok';
+    }
+    if (kind === 'fill') {
+      if (value > g.fillCrit) return 'critical';
+      if (value > g.fillWarn) return 'warning';
+      return 'ok';
+    }
+    return 'ok';
+  }
+
+  function squeezeCase(Wred, space, shift, sign) {
+    var conc = Wred - space;
+    var ecc  = Wred - (space + sign * shift);
+    return {
+      reducedCS: Wred,
+      concentric: { squeeze: conc, pct: conc / Wred },
+      eccentric:  { squeeze: ecc,  pct: ecc  / Wred },
+    };
+  }
+
+  function pistonGeometry(d, which) {
+    if (which === 'min') {
+      return {
+        seat:  d.groove.min,
+        space: (d.bore.max - d.groove.min) / 2,
+        shift: (d.bore.max - d.piston.min) / 2 + d.runout / 2,
+      };
+    }
+    return {
+      seat:  d.groove.max,
+      space: (d.bore.min - d.groove.max) / 2,
+      shift: (d.bore.min - d.piston.min) / 2 + d.runout / 2,
+    };
+  }
+
+  function rodGeometry(d, which) {
+    if (which === 'min') {
+      return {
+        seat:  d.rod.min,
+        space: (d.gland.max - d.rod.min) / 2,
+        shift: (d.bore.max  - d.rod.min) / 2 + d.runout / 2,
+      };
+    }
+    return {
+      seat:  d.rod.max,
+      space: (d.gland.min - d.rod.max) / 2,
+      shift: (d.bore.min  - d.rod.max) / 2 + d.runout / 2,
+    };
+  }
+
+  function isNum(v) { return typeof v === 'number' && Number.isFinite(v); }
+  function mm(o) { return o && isNum(o.min) && isNum(o.max); }
+
+  function validate(inp) {
+    var errors = [];
+    if (!inp || ['piston','rod','face'].indexOf(inp.type) === -1) {
+      errors.push("type must be 'piston', 'rod', or 'face'.");
+      return errors;
+    }
+    if (!mm(inp.oringCS)) errors.push('oringCS {min,max} is required.');
+    else if (inp.oringCS.min <= 0 || inp.oringCS.max < inp.oringCS.min)
+      errors.push('oringCS must be positive with max ≥ min.');
+    if (inp.type !== 'face') {
+      if (!mm(inp.oringID)) errors.push('oringID {min,max} is required.');
+      else if (inp.oringID.min <= 0 || inp.oringID.max < inp.oringID.min)
+        errors.push('oringID must be positive with max ≥ min.');
+    }
+    var need = inp.type === 'piston' ? ['bore','groove','piston']
+             : inp.type === 'rod'    ? ['gland','rod','bore']
+             : ['depth'];
+    for (var i = 0; i < need.length; i++) {
+      var k = need[i];
+      if (!mm(inp[k])) errors.push(k + ' {min,max} is required for ' + inp.type + ' glands.');
+      else if (inp[k].min <= 0 || inp[k].max < inp[k].min)
+        errors.push(k + ' must be positive with max ≥ min.');
+    }
+    if (!errors.length) {
+      if (inp.type === 'piston' && inp.groove.max >= inp.bore.min)
+        errors.push('Piston groove Ø must be smaller than the bore Ø.');
+      if (inp.type === 'rod' && inp.rod.max >= inp.gland.min)
+        errors.push('Rod Ø must be smaller than the gland (groove) Ø.');
+      if (inp.runout != null && (!isNum(inp.runout) || inp.runout < 0))
+        errors.push('runout must be a non-negative number.');
+      if ((inp.tempFinal != null) !== (inp.tempInitial != null))
+        errors.push('Provide both tempInitial and tempFinal, or neither.');
+    }
+    return errors;
+  }
+
+  function calculate(inp) {
+    var errors = validate(inp);
+    if (errors.length) return { ok: false, errors: errors };
+
+    var warnings = [];
+    var g = Object.assign({}, GUIDANCE, inp.guidance || {});
+    var runout = inp.runout || 0;
+    var type = inp.type;
+
+    var geoMin, geoMax;
+    if (type === 'piston') {
+      var dp = { bore: inp.bore, groove: inp.groove, piston: inp.piston, runout: runout };
+      geoMin = pistonGeometry(dp, 'min');
+      geoMax = pistonGeometry(dp, 'max');
+    } else if (type === 'rod') {
+      var dr = { gland: inp.gland, rod: inp.rod, bore: inp.bore, runout: runout };
+      geoMin = rodGeometry(dr, 'min');
+      geoMax = rodGeometry(dr, 'max');
+    } else {
+      geoMin = { seat: null, space: inp.depth.max, shift: 0 };
+      geoMax = { seat: null, space: inp.depth.min, shift: 0 };
+    }
+
+    var Xmin = 0, Xmax = 0;
+    if (type !== 'face') {
+      Xmin = stretchRatio(geoMin.seat, inp.oringID.min);
+      Xmax = stretchRatio(geoMax.seat, inp.oringID.max);
+    }
+    var WredMin = reducedThickness(inp.oringCS.min, Xmin);
+    var WredMax = reducedThickness(inp.oringCS.max, Xmax);
+
+    var ambient = {
+      min: squeezeCase(WredMin, geoMin.space, geoMin.shift, +1),
+      max: squeezeCase(WredMax, geoMax.space, geoMax.shift, -1),
+    };
+
+    var thermal = null;
+    if (isNum(inp.tempFinal) && isNum(inp.tempInitial)) {
+      var dT = inp.tempFinal - inp.tempInitial;
+      var cteSeal  = isNum(inp.cteSeal)  ? inp.cteSeal  : 9e-5;
+      var cteGland = inp.cteGland || 0;
+      var cteMate  = inp.cteMate  || 0;
+      var s = function(v, cte) { return thermalScale(v, cte, dT); };
+      var tGeoMin, tGeoMax;
+      if (type === 'piston') {
+        var td = {
+          bore:   { min: s(inp.bore.min,   cteMate),  max: s(inp.bore.max,   cteMate)  },
+          groove: { min: s(inp.groove.min,  cteGland), max: s(inp.groove.max, cteGland) },
+          piston: { min: s(inp.piston.min,  cteGland), max: s(inp.piston.max, cteGland) },
+          runout: runout,
+        };
+        tGeoMin = pistonGeometry(td, 'min');
+        tGeoMax = pistonGeometry(td, 'max');
+      } else if (type === 'rod') {
+        var tdr = {
+          gland: { min: s(inp.gland.min, cteGland), max: s(inp.gland.max, cteGland) },
+          rod:   { min: s(inp.rod.min,   cteMate),  max: s(inp.rod.max,   cteMate)  },
+          bore:  { min: s(inp.bore.min,  cteGland), max: s(inp.bore.max,  cteGland) },
+          runout: runout,
+        };
+        tGeoMin = rodGeometry(tdr, 'min');
+        tGeoMax = rodGeometry(tdr, 'max');
+      } else {
+        tGeoMin = { space: s(inp.depth.max, cteGland), shift: 0 };
+        tGeoMax = { space: s(inp.depth.min, cteGland), shift: 0 };
+      }
+      var WtMin = thermalScale(WredMin, cteSeal, dT);
+      var WtMax = thermalScale(WredMax, cteSeal, dT);
+      thermal = {
+        dT: dT,
+        min: squeezeCase(WtMin, tGeoMin.space, tGeoMin.shift, +1),
+        max: squeezeCase(WtMax, tGeoMax.space, tGeoMax.shift, -1),
+      };
+    }
+
+    var fill = null;
+    if (inp.grooveWidth && isNum(inp.grooveWidth.min)) {
+      var depthMin = geoMax.space;
+      fill = {
+        worst:   glandFill(inp.oringCS.max, depthMin, inp.grooveWidth.min),
+        nominal: glandFill(
+          (inp.oringCS.max + inp.oringCS.min) / 2,
+          (geoMax.space + geoMin.space) / 2,
+          (inp.grooveWidth.min + inp.grooveWidth.max) / 2
+        ),
+      };
+    }
+
+    var minPct = ambient.min.eccentric.pct;
+    var maxPct = ambient.max.eccentric.pct;
+    var status = {
+      minSqueeze: statusOf(minPct, 'minSqueezePct', g),
+      maxSqueeze: statusOf(maxPct, 'maxSqueezePct', g),
+      stretchMin: statusOf(Xmin,   'stretch',       g),
+      stretchMax: statusOf(Xmax,   'stretch',       g),
+      fill: fill ? statusOf(fill.worst, 'fill', g) : null,
+    };
+
+    if (minPct <= 0)
+      warnings.push('Worst-case minimum squeeze is zero or negative at ambient — the seal can lose contact under full tolerance stack, eccentric shift, and runout.');
+    else if (minPct < g.squeezePctMin)
+      warnings.push('Worst-case minimum squeeze (' + (minPct*100).toFixed(1) + '%) is below the recommended ' + (g.squeezePctMin*100).toFixed(0) + '%.');
+    if (maxPct > g.squeezePctMax)
+      warnings.push('Worst-case maximum squeeze (' + (maxPct*100).toFixed(1) + '%) exceeds the recommended ' + (g.squeezePctMax*100).toFixed(0) + '% — check assembly force, friction, and compression set.');
+    if (type !== 'face' && Math.max(Xmin, Xmax) > g.stretchMax)
+      warnings.push('Installed ID stretch reaches ' + (Math.max(Xmin,Xmax)*100).toFixed(1) + '% (recommended ≤ ' + (g.stretchMax*100).toFixed(0) + '%) — expect cross-section thinning and accelerated aging.');
+    if (type !== 'face' && Math.min(Xmin, Xmax) < -0.005)
+      warnings.push('O-ring ID is larger than its seat (negative stretch) — the seal may not seat concentrically; consider the next smaller size.');
+    if (fill && fill.worst > g.fillCrit)
+      warnings.push('Worst-case gland fill ' + (fill.worst*100).toFixed(0) + '% exceeds ' + (g.fillCrit*100).toFixed(0) + '% — no room for thermal expansion or fluid swell; risk of extrusion damage.');
+    if (thermal && thermal.min.eccentric.pct <= 0 && minPct > 0)
+      warnings.push('Squeeze is positive at ambient but lost at the final temperature — thermal contraction governs this design.');
+
+    return {
+      ok: true, warnings: warnings, guidance: g,
+      stretch: {
+        minCase: { X: Xmin, reduction: reductionFactor(Xmin) },
+        maxCase: { X: Xmax, reduction: reductionFactor(Xmax) },
+      },
+      ambient: ambient, thermal: thermal, fill: fill, status: status,
+    };
+  }
+
+  return {
+    GUIDANCE: GUIDANCE,
+    stretchRatio: stretchRatio, reductionFactor: reductionFactor,
+    reducedThickness: reducedThickness, thermalScale: thermalScale,
+    glandFill: glandFill, statusOf: statusOf, calculate: calculate,
+  };
+});
+  </script>
+
+  <!-- SCRIPT 4: UI IIFE -->
+  <script>
+  /* ref-card toggle */
+  function toggleRefCard(id) {
+    var card = document.getElementById(id);
+    if (!card) return;
+    card.classList.toggle('collapsed');
+  }
+
+  /* ── UI IIFE ── */
+  (function () {
+    'use strict';
+
+    var AS568        = window.AS568;
+    var CTE_MATERIALS = window.CTE_MATERIALS;
+    var ENG          = window.ORingSqueeze;
+
+    var state = { type: 'piston', unitMM: false };
+
+    /* Defaults per gland type (inches) */
+    var DEFAULTS = {
+      piston: { oringID:{n:0.364,t:0.005}, oringCS:{n:0.070,t:0.003}, groove:{n:0.3745,t:0.0005}, bore:{n:0.4855,t:0.0005}, piston:{n:0.4825,t:0.0005} },
+      rod:    { oringID:{n:0.468,t:0.005}, oringCS:{n:0.078,t:0.003}, gland:{n:0.579,t:0.002}, rod:{n:0.463,t:0.001}, bore:{n:0.468,t:0.004} },
+      face:   { oringCS:{n:0.070,t:0.003}, depth:{n:0.051,t:0.001} },
+    };
+    var DEFAULT_DASH = { piston:'012', rod:'906', face:'012' };
+
+    var TYPE_NOTES = {
+      piston: 'O-ring seated in a piston groove, sealing against the cylinder bore.',
+      rod:    'O-ring seated in a housing groove, sealing against the rod. Guide bore sets the eccentric shift.',
+      face:   'O-ring compressed axially between two faces. No eccentric shift; runout is ignored.',
+    };
+    var CTE_LABELS = {
+      piston: ['Piston / groove CTE (1/°F):', 'Cylinder / bore CTE (1/°F):'],
+      rod:    ['Housing / gland CTE (1/°F):', 'Rod CTE (1/°F):'],
+      face:   ['Housing CTE (1/°F):', '— (unused for face seals)'],
+    };
+    var CTE_SEL_LABELS = {
+      piston: ['Piston / groove material CTE:', 'Cylinder / bore material CTE:'],
+      rod:    ['Housing / gland material CTE:', 'Rod material CTE:'],
+      face:   ['Housing material CTE:', '— (unused for face seals)'],
+    };
+
+    var ALL_DIM_IDS = ['oringID','oringCS','groove','bore','piston','gland','rod','depth'];
+
+    /* Formatting */
+    function fmtDim(v) { return Number.isFinite(v) ? (state.unitMM ? v.toFixed(3) : v.toFixed(4)) : '—'; }
+    function fmtPct(v) { return (v * 100).toFixed(2) + '%'; }
+
+    /* Diagram dimension string: "sym  nom ±tol" from a dimension row */
+    function dimStr(sym, id) {
+      var nomEl = document.getElementById('sq-nom-' + id);
+      var n = nomEl ? parseFloat(nomEl.value) : NaN;
+      if (!Number.isFinite(n)) return sym + '  —';
+      var tolEl = document.getElementById('sq-tol-' + id);
+      var t = tolEl ? parseFloat(tolEl.value) : NaN;
+      var tStr = Number.isFinite(t) ? ' ±' + fmtDim(t) : '';
+      return sym + '  ' + fmtDim(n) + tStr;
+    }
+
+    /* Refresh the live gland schematic */
+    function updateDiagram() {
+      var t = state.type;
+      var dgP = document.getElementById('dg-piston');
+      var dgR = document.getElementById('dg-rod');
+      var dgF = document.getElementById('dg-face');
+      if (dgP) dgP.style.display = t === 'piston' ? '' : 'none';
+      if (dgR) dgR.style.display = t === 'rod'    ? '' : 'none';
+      if (dgF) dgF.style.display = t === 'face'   ? '' : 'none';
+
+      function set(id, val) { var e = document.getElementById(id); if (e) e.textContent = val; }
+
+      var ro = parseFloat(document.getElementById('sq-runout').value);
+      var roStr = 'Runout TIR ' + (Number.isFinite(ro) ? fmtDim(ro) : '—');
+
+      var gwn = parseFloat(document.getElementById('sq-gw-nom').value);
+      var gwt = parseFloat(document.getElementById('sq-gw-tol').value);
+      var gwStr = Number.isFinite(gwn)
+        ? 'Gw ' + fmtDim(gwn) + (Number.isFinite(gwt) ? ' ±' + fmtDim(gwt) : '')
+        : 'Gw  —';
+
+      if (t === 'piston') {
+        set('dg-p-B',  dimStr('Ø B',  'bore'));
+        set('dg-p-P',  dimStr('Ø P',  'piston'));
+        set('dg-p-G',  dimStr('Ø G',  'groove'));
+        set('dg-p-W',  dimStr('W',         'oringCS'));
+        set('dg-p-ID', dimStr('Ø ID', 'oringID'));
+        set('dg-p-GW', gwStr);
+        set('dg-p-RO', roStr);
+      } else if (t === 'rod') {
+        set('dg-r-B',  dimStr('Ø Bore', 'bore'));
+        set('dg-r-R',  dimStr('Ø R',    'rod'));
+        set('dg-r-G',  dimStr('Ø G',    'gland'));
+        set('dg-r-W',  dimStr('W',           'oringCS'));
+        set('dg-r-ID', dimStr('Ø ID',   'oringID'));
+        set('dg-r-GW', gwStr);
+        set('dg-r-RO', roStr);
+      } else {
+        set('dg-f-D',  dimStr('D', 'depth'));
+        set('dg-f-W',  dimStr('W', 'oringCS'));
+        set('dg-f-GW', gwStr);
+      }
+    }
+
+    /* Show/hide rows */
+    function showRows(type) {
+      ALL_DIM_IDS.forEach(function(id) {
+        var row = document.getElementById('sq-row-' + id);
+        if (!row) return;
+        var show = row.getAttribute('data-sqshow').split(' ');
+        row.classList.toggle('sq-hidden', show.indexOf(type) === -1);
+      });
+      var boreLbl = document.getElementById('sq-lbl-bore');
+      if (boreLbl) boreLbl.textContent = type === 'rod' ? 'Guide bore Ø' : 'Cylinder bore Ø';
+      var ro = document.getElementById('sq-runout');
+      var roRow = document.getElementById('sq-runout-row');
+      if (ro)    ro.disabled = type === 'face';
+      if (roRow) roRow.style.opacity = type === 'face' ? '0.4' : '1';
+      var mateInp = document.getElementById('sq-cte-mate');
+      var mateSel = document.getElementById('sq-cte-mate-sel');
+      var mateRow = document.getElementById('sq-cte-mate-row');
+      if (mateInp) mateInp.disabled = type === 'face';
+      if (mateSel) mateSel.disabled = type === 'face';
+      if (mateRow) mateRow.style.opacity = type === 'face' ? '0.4' : '1';
+      var lbls    = CTE_LABELS[type];
+      var selLbls = CTE_SEL_LABELS[type];
+      var el;
+      el = document.getElementById('sq-cte-gland-lbl');    if (el) el.textContent = lbls[0];
+      el = document.getElementById('sq-cte-gland-lbl-sel');if (el) el.textContent = selLbls[0];
+      el = document.getElementById('sq-cte-mate-lbl');     if (el) el.textContent = lbls[1];
+      el = document.getElementById('sq-cte-mate-lbl-sel'); if (el) el.textContent = selLbls[1];
+    }
+
+    /* Load defaults into inputs */
+    function setDefaults(type) {
+      var defs = DEFAULTS[type];
+      var factor = state.unitMM ? 25.4 : 1;
+      var dp = state.unitMM ? 3 : 4;
+      Object.keys(defs).forEach(function(id) {
+        var nomEl = document.getElementById('sq-nom-' + id);
+        var tolEl = document.getElementById('sq-tol-' + id);
+        if (nomEl) nomEl.value = (defs[id].n * factor).toFixed(dp);
+        if (tolEl) tolEl.value = (defs[id].t * factor).toFixed(dp);
+      });
+    }
+
+    /* Read one dimension field */
+    function readDim(id) {
+      var nomEl = document.getElementById('sq-nom-' + id);
+      if (!nomEl) return null;
+      var n = parseFloat(nomEl.value);
+      var tolEl = document.getElementById('sq-tol-' + id);
+      var t = tolEl ? (parseFloat(tolEl.value) || 0) : 0;
+      if (!Number.isFinite(n)) return null;
+      var result = { min: n - t, max: n + t };
+      var mmCell = document.getElementById('sq-mm-' + id);
+      if (mmCell) mmCell.textContent = fmtDim(result.min) + ' / ' + fmtDim(result.max);
+      return result;
+    }
+
+    function refreshMinMax() {
+      ALL_DIM_IDS.forEach(function(id) {
+        var row = document.getElementById('sq-row-' + id);
+        if (row && !row.classList.contains('sq-hidden')) readDim(id);
+      });
+    }
+
+    /* Build engine input object */
+    function gather() {
+      var type = state.type;
+      var inp = { type: type };
+      inp.runout = parseFloat(document.getElementById('sq-runout').value) || 0;
+
+      var fields = ['oringCS'];
+      if (type !== 'face') fields.push('oringID');
+      if (type === 'piston') fields = fields.concat(['groove','bore','piston']);
+      if (type === 'rod')    fields = fields.concat(['gland','rod','bore']);
+      if (type === 'face')   fields.push('depth');
+
+      var ok = true;
+      fields.forEach(function(id) {
+        var v = readDim(id);
+        if (!v) { ok = false; } else { inp[id] = v; }
+      });
+      if (!ok) return null;
+
+      var gwNom = parseFloat(document.getElementById('sq-gw-nom').value);
+      if (Number.isFinite(gwNom)) {
+        var gwTol = parseFloat(document.getElementById('sq-gw-tol').value) || 0;
+        inp.grooveWidth = { min: gwNom - gwTol, max: gwNom + gwTol };
+      }
+
+      var ti = parseFloat(document.getElementById('sq-ti').value);
+      var tf = parseFloat(document.getElementById('sq-tf').value);
+      if (Number.isFinite(ti) && Number.isFinite(tf)) {
+        inp.tempInitial = ti; inp.tempFinal = tf;
+        inp.cteSeal  = parseFloat(document.getElementById('sq-cte-seal').value)  || 9e-5;
+        inp.cteGland = parseFloat(document.getElementById('sq-cte-gland').value) || 0;
+        inp.cteMate  = parseFloat(document.getElementById('sq-cte-mate').value)  || 0;
+      }
+      return inp;
+    }
+
+    /* Cell helpers */
+    function setCell(id, v, isPct) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      if (!Number.isFinite(v)) { el.textContent = '—'; el.className = ''; return; }
+      el.textContent = isPct ? fmtPct(v) : fmtDim(v);
+      el.className = (v <= 0 && isPct) ? 'sq-neg' : (isPct ? '' : 'sq-dim');
+    }
+    function statusCls(s)  { return s === 'ok' ? 'sq-ok' : s === 'warning' ? 'sq-warn' : 'sq-crit'; }
+    function statusWord(s) { return s === 'ok' ? 'OK' : s === 'warning' ? 'Warning' : 'Critical'; }
+    function worstSt(a, b) { var r = {ok:0,warning:1,critical:2}; return (r[a]||0) >= (r[b]||0) ? a : b; }
+
+    /* Render results */
+    function renderResults(r) {
+      var errBox  = document.getElementById('sq-errors');
+      var warnBox = document.getElementById('sq-warnings');
+      var resDiv  = document.getElementById('sq-results');
+      errBox.style.display = warnBox.style.display = resDiv.style.display = 'none';
+
+      if (!r) {
+        errBox.innerHTML = 'Enter a value for every required dimension, then click Calculate.';
+        errBox.style.display = 'block'; return;
+      }
+      if (!r.ok) {
+        errBox.innerHTML = r.errors.join('<br>');
+        errBox.style.display = 'block'; return;
+      }
+      if (r.warnings.length) {
+        warnBox.innerHTML = r.warnings.join('<br>');
+        warnBox.style.display = 'block';
+      }
+
+      /* Chips */
+      var h = '<span class="sq-chip ' + statusCls(r.status.minSqueeze) + '">Min squeeze: ' + statusWord(r.status.minSqueeze) + '</span>';
+      h    += '<span class="sq-chip ' + statusCls(r.status.maxSqueeze) + '">Max squeeze: ' + statusWord(r.status.maxSqueeze) + '</span>';
+      if (state.type !== 'face') {
+        var st = worstSt(r.status.stretchMin, r.status.stretchMax);
+        h += '<span class="sq-chip ' + statusCls(st) + '">Stretch: ' + statusWord(st) + '</span>';
+      }
+      if (r.status.fill)
+        h += '<span class="sq-chip ' + statusCls(r.status.fill) + '">Gland fill: ' + statusWord(r.status.fill) + '</span>';
+      document.getElementById('sq-chips').innerHTML = h;
+
+      /* Stretch */
+      var stretchSec = document.getElementById('sq-stretch-section');
+      if (state.type === 'face') {
+        stretchSec.style.display = 'none';
+      } else {
+        stretchSec.style.display = '';
+        document.getElementById('sq-res-xmin').textContent = fmtPct(r.stretch.minCase.X);
+        document.getElementById('sq-res-rmin').textContent = fmtPct(r.stretch.minCase.reduction);
+        document.getElementById('sq-res-xmax').textContent = fmtPct(r.stretch.maxCase.X);
+        document.getElementById('sq-res-rmax').textContent = fmtPct(r.stretch.maxCase.reduction);
+      }
+
+      /* Ambient */
+      setCell('sq-a-wmin',    r.ambient.min.reducedCS,          false);
+      setCell('sq-a-wmax',    r.ambient.max.reducedCS,          false);
+      setCell('sq-a-sc-min',  r.ambient.min.concentric.squeeze, false);
+      setCell('sq-a-sc-max',  r.ambient.max.concentric.squeeze, false);
+      setCell('sq-a-scp-min', r.ambient.min.concentric.pct,     true);
+      setCell('sq-a-scp-max', r.ambient.max.concentric.pct,     true);
+      setCell('sq-a-se-min',  r.ambient.min.eccentric.squeeze,  false);
+      setCell('sq-a-se-max',  r.ambient.max.eccentric.squeeze,  false);
+      setCell('sq-a-sep-min', r.ambient.min.eccentric.pct,      true);
+      setCell('sq-a-sep-max', r.ambient.max.eccentric.pct,      true);
+
+      /* Thermal */
+      var thermalSec = document.getElementById('sq-thermal-section');
+      if (r.thermal) {
+        thermalSec.style.display = '';
+        var sign = r.thermal.dT >= 0 ? '+' : '';
+        document.getElementById('sq-thermal-caption').textContent =
+          'Thermal Squeeze (ΔT = ' + sign + r.thermal.dT.toFixed(0) + '°F)';
+        setCell('sq-t-wmin',    r.thermal.min.reducedCS,          false);
+        setCell('sq-t-wmax',    r.thermal.max.reducedCS,          false);
+        setCell('sq-t-sc-min',  r.thermal.min.concentric.squeeze, false);
+        setCell('sq-t-sc-max',  r.thermal.max.concentric.squeeze, false);
+        setCell('sq-t-scp-min', r.thermal.min.concentric.pct,     true);
+        setCell('sq-t-scp-max', r.thermal.max.concentric.pct,     true);
+        setCell('sq-t-se-min',  r.thermal.min.eccentric.squeeze,  false);
+        setCell('sq-t-se-max',  r.thermal.max.eccentric.squeeze,  false);
+        setCell('sq-t-sep-min', r.thermal.min.eccentric.pct,      true);
+        setCell('sq-t-sep-max', r.thermal.max.eccentric.pct,      true);
+      } else {
+        thermalSec.style.display = 'none';
+      }
+
+      /* Fill */
+      var fillSec = document.getElementById('sq-fill-section');
+      if (r.fill) {
+        fillSec.style.display = '';
+        document.getElementById('sq-fill-nom').textContent = fmtPct(r.fill.nominal);
+        var wEl = document.getElementById('sq-fill-worst');
+        wEl.textContent = fmtPct(r.fill.worst);
+        wEl.style.color      = r.fill.worst > 0.90 ? '#c0392b' : r.fill.worst > 0.85 ? '#92560a' : '';
+        wEl.style.fontWeight = r.fill.worst > 0.85 ? '700' : '';
+      } else {
+        fillSec.style.display = 'none';
+      }
+
+      resDiv.style.display = '';
+    }
+
+    /* Debounced run */
+    var pending = null;
+    function scheduleCalc() {
+      if (pending) cancelAnimationFrame(pending);
+      pending = requestAnimationFrame(function() {
+        refreshMinMax();
+        updateDiagram();
+        var inp = gather();
+        renderResults(inp ? ENG.calculate(inp) : null);
+      });
+    }
+
+    /* AS568 dropdown */
+    function populateAS568() {
+      var sel = document.getElementById('sq-as568');
+      var groups = {};
+      AS568.SIZES.forEach(function(s) {
+        if (!groups[s.series]) {
+          var og = document.createElement('optgroup');
+          og.label = AS568.SERIES_LABEL[s.series];
+          sel.appendChild(og);
+          groups[s.series] = og;
+        }
+        var o = document.createElement('option');
+        o.value = s.dash;
+        o.textContent = '-' + s.dash + ' · ID ' + s.id.toFixed(3) + ' × W ' + s.cs.toFixed(3);
+        groups[s.series].appendChild(o);
+      });
+      sel.addEventListener('change', function() { applySelectedSize(); scheduleCalc(); });
+    }
+
+    function applySelectedSize() {
+      var sel = document.getElementById('sq-as568');
+      if (sel.value === 'custom') return;
+      var s = AS568.get(sel.value);
+      if (!s) return;
+      var factor = state.unitMM ? 25.4 : 1;
+      var dp = state.unitMM ? 3 : 4;
+      var set = function(nomId, tolId, n, t) {
+        var ne = document.getElementById(nomId); if (ne) ne.value = (n * factor).toFixed(dp);
+        var te = document.getElementById(tolId); if (te) te.value = (t * factor).toFixed(dp);
+      };
+      set('sq-nom-oringID','sq-tol-oringID', s.id,    s.idTol);
+      set('sq-nom-oringCS','sq-tol-oringCS', s.cs,    s.csTol);
+    }
+
+    /* CTE dropdowns */
+    var CTE_ROWS = [
+      { sel:'sq-cte-seal-sel',  inp:'sq-cte-seal',  groups:['Elastomers'] },
+      { sel:'sq-cte-gland-sel', inp:'sq-cte-gland', groups:['Metals — Steel','Metals — Aluminum','Metals — Titanium','Metals — Copper alloys','Metals — Nickel alloys','Metals — Other','Plastics','Elastomers'] },
+      { sel:'sq-cte-mate-sel',  inp:'sq-cte-mate',  groups:['Metals — Steel','Metals — Aluminum','Metals — Titanium','Metals — Copper alloys','Metals — Nickel alloys','Metals — Other','Plastics','Elastomers'] },
+    ];
+
+    function populateCTE() {
+      CTE_ROWS.forEach(function(row) {
+        var sel = document.getElementById(row.sel); if (!sel) return;
+        var seen = {};
+        CTE_MATERIALS.ALL.forEach(function(m) {
+          if (row.groups.indexOf(m.group) === -1) return;
+          if (!seen[m.group]) {
+            var og = document.createElement('optgroup'); og.label = m.group;
+            sel.appendChild(og); seen[m.group] = og;
+          }
+          var o = document.createElement('option');
+          o.value = m.id;
+          o.textContent = m.label + ' (' + (m.cte * 1e6).toFixed(1) + '×10⁻⁶/°F)';
+          if (m.note) o.title = m.note;
+          seen[m.group].appendChild(o);
+        });
+        sel.addEventListener('change', function() {
+          if (sel.value === 'custom') return;
+          var mat = CTE_MATERIALS.BY_ID[sel.value]; if (!mat) return;
+          var ie = document.getElementById(row.inp); if (ie) ie.value = mat.cte.toExponential(4);
+          scheduleCalc();
+        });
+      });
+      CTE_ROWS.forEach(function(row) {
+        var ie = document.getElementById(row.inp); if (!ie) return;
+        ie.addEventListener('input', function() { document.getElementById(row.sel).value = 'custom'; });
+      });
+    }
+
+    /* Unit conversion */
+    function convertDimInputs(factor) {
+      var dp = state.unitMM ? 3 : 4;
+      ALL_DIM_IDS.forEach(function(id) {
+        ['sq-nom-','sq-tol-'].forEach(function(pfx) {
+          var el = document.getElementById(pfx + id);
+          if (el && el.value !== '') { var v = parseFloat(el.value); if (Number.isFinite(v)) el.value = (v * factor).toFixed(dp); }
+        });
+      });
+      ['sq-runout','sq-gw-nom','sq-gw-tol'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && el.value !== '') { var v = parseFloat(el.value); if (Number.isFinite(v)) el.value = (v * factor).toFixed(dp); }
+      });
+    }
+
+    /* Type buttons */
+    document.querySelectorAll('#sq-type-seg button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        state.type = btn.getAttribute('data-sqtype');
+        document.querySelectorAll('#sq-type-seg button').forEach(function(b) {
+          b.classList.toggle('sq-active', b === btn);
+          b.setAttribute('aria-pressed', String(b === btn));
+        });
+        var noteEl = document.getElementById('sq-type-note');
+        if (noteEl) noteEl.textContent = TYPE_NOTES[state.type];
+        showRows(state.type);
+        setDefaults(state.type);
+        var as568 = document.getElementById('sq-as568');
+        if (as568) { as568.value = DEFAULT_DASH[state.type]; applySelectedSize(); }
+        updateDiagram();
+        scheduleCalc();
+      });
+    });
+
+    /* Unit buttons */
+    document.getElementById('sq-unit-in').addEventListener('click', function() {
+      if (!state.unitMM) return;
+      convertDimInputs(1 / 25.4); state.unitMM = false;
+      document.getElementById('sq-unit-in').classList.add('sq-active');
+      document.getElementById('sq-unit-mm').classList.remove('sq-active');
+      document.getElementById('sq-unit-in').setAttribute('aria-pressed','true');
+      document.getElementById('sq-unit-mm').setAttribute('aria-pressed','false');
+      updateDiagram();
+      scheduleCalc();
+    });
+    document.getElementById('sq-unit-mm').addEventListener('click', function() {
+      if (state.unitMM) return;
+      convertDimInputs(25.4); state.unitMM = true;
+      document.getElementById('sq-unit-mm').classList.add('sq-active');
+      document.getElementById('sq-unit-in').classList.remove('sq-active');
+      document.getElementById('sq-unit-mm').setAttribute('aria-pressed','true');
+      document.getElementById('sq-unit-in').setAttribute('aria-pressed','false');
+      updateDiagram();
+      scheduleCalc();
+    });
+
+    /* Live update on any input change */
+    document.querySelectorAll('#sq-calc-form input, #sq-calc-form select').forEach(function(el) {
+      el.addEventListener('input', scheduleCalc);
+    });
+
+    /* Init */
+    showRows(state.type);
+    setDefaults(state.type);
+    populateAS568();
+    document.getElementById('sq-as568').value = DEFAULT_DASH[state.type];
+    applySelectedSize();
+    populateCTE();
+    updateDiagram();
+    scheduleCalc();
+
+  })();
+  </script>
+
+  </body>
+</html>

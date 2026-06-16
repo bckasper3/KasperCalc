@@ -1,0 +1,2400 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: Static Seal &amp; Gasket Reliability Calculator (NSWC-11)</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, NSWC-11, static seal, gasket, reliability, failure rate, O-ring, lambda, MTBF, Naval Surface Warfare Center, mechanical reliability" />
+    <meta name="description" content="Calculate the failure rate of static seals and gaskets (O-rings, flange gaskets, bolt seals) using the NSWC-11 Handbook model. Covers CP, CQ, CDL, CH, CF, Cv, CT, and CN multiplying factors." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- NSWC-11 calculator engine (sync — must be available before page script) -->
+    <script src="js/nswc-static-seal-calculator.js"></script>
+    <!-- Parker O-Ring Handbook gland ID/OD lookup data -->
+    <script src="js/parker-gland-data.js"></script>
+
+    <!-- MathJax — configure before loading -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath:  [['\\(', '\\)']],
+          displayMath: [['\\[', '\\]']],
+          tags: 'none'
+        },
+        options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+        startup: { typeset: true }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XLCN0GJQ0');
+    </script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      /* ── Reference section shell ─────────────────────────── */
+      .ref-wrapper { margin: 0 auto; max-width: 62rem; font-family: "Roboto", Arial, sans-serif; }
+      .ref-card { background: #eee; border: 2px solid rgb(67,67,67); border-radius: 10px; box-shadow: 0 3px 5px rgba(0,0,0,.4); margin: 0 0 1rem; overflow: hidden; }
+      .ref-card-header { background: #6a746a; padding: 8px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+      .ref-card-header h2 { font-size: 13px; font-weight: 700; color: #eee; text-transform: uppercase; letter-spacing: 0.07em; margin: 0; flex: 1; }
+      .ref-card-header .ref-num { font-size: 12px; color: #A3C3CD; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
+      .ref-chevron { width: 14px; height: 14px; flex-shrink: 0; transition: transform 0.2s ease; color: #A3C3CD; }
+      .ref-card.collapsed .ref-chevron { transform: rotate(-90deg); }
+      .ref-card.collapsed .ref-body    { display: none; }
+      .ref-body { padding: 14px 16px; display: grid; grid-template-columns: 1fr; gap: 14px; }
+      .ref-body.two-col { grid-template-columns: 1fr 1fr; gap: 14px 24px; }
+      @media (max-width: 640px) { .ref-body.two-col { grid-template-columns: 1fr; } }
+      .ref-sub { font-size: 12px; font-weight: 700; color: #61828A; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #c0c0c0; padding-bottom: 3px; margin-bottom: 6px; }
+      .ref-body p { font-size: 13px; color: #333; line-height: 1.65; margin: 0 0 8px; }
+      .ref-body p:last-child { margin-bottom: 0; }
+      .ref-body ul, .ref-body ol { font-size: 13px; color: #333; line-height: 1.7; padding-left: 18px; margin: 0 0 8px; }
+      .ref-eq-block { background: #d9d9d9; border: 1.5px solid rgb(67,67,67); border-radius: 6px; padding: 10px 16px 8px; margin: 6px 0 10px; overflow-x: auto; }
+      .ref-eq-tag { font-size: 12px; color: #61828A; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; font-family: "Roboto", Arial, sans-serif; display: block; margin-bottom: 4px; }
+      mjx-container { color: #1a3a40 !important; margin: 0; }
+      mjx-container[jax="SVG"][display="true"] { margin: 0.7em 0 !important; }
+      mjx-container[jax="SVG"] { margin: 0 !important; }
+      .ref-callout { background: #e8f0f3; border-left: 3px solid #61828A; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 12px; color: #1a3a40; line-height: 1.55; }
+      .ref-callout strong { color: #3a6270; }
+      .ref-warn { background: #fff8e6; border-left: 3px solid #cc7700; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 12px; color: #5a3a00; line-height: 1.55; }
+      .ref-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin: 6px 0; }
+      .ref-table th { background: #d9d9d9; border: 1px solid #bbb; padding: 4px 8px; font-weight: 600; color: #444; text-align: left; }
+      .ref-table td { border: 1px solid #ccc; padding: 3px 8px; color: #333; vertical-align: top; }
+      .ref-table tr:nth-child(even) td { background: #f5f5f5; }
+      .ref-table-caption { font-size: 12px; color: #888; margin-top: 3px; font-style: italic; }
+      .ref-section-wrap { padding: 1rem 0.5rem 0.5rem; }
+      .ref-section-title { font-size: 16px; font-weight: 700; color: #6a746a; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; padding-left: 2px; }
+      .full-col { grid-column: 1 / -1; }
+      .ref-chart-wrap { height: 180px; position: relative; margin: 4px 0 2px; }
+      /* Calculator enhancements */
+      .calc-section-label { font-size: 0.7rem; font-weight: 700; color: #ffffff; text-transform: uppercase; letter-spacing: 0.08em; padding: 6px 0 2px 2px; border-bottom: 1px solid rgba(255,255,255,0.4); margin-bottom: 2px; }
+      .calc-warn-box { background: #fff8e6; border-left: 3px solid #cc7700; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 0.8rem; color: #5a3a00; margin-top: 8px; }
+      .calc-warn-box * { font-size: inherit; }
+      .calc-error-box { background: #fdecea; border-left: 3px solid #c0392b; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 0.8rem; color: #5a1a1a; margin-top: 8px; }
+      .calc-error-box * { font-size: inherit; }
+      .visc-mode-block { display: none; }
+      .factor-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0; }
+      .factor-chip { background: #d9d9d9; border: 1px solid #bbb; border-radius: 5px; padding: 3px 8px; font-size: 0.78rem; font-family: monospace; white-space: nowrap; }
+      .factor-chip span { font-weight: 700; }
+
+      /* ── Calculator skin — SpringCompressionRound-style cards ── */
+      #seal-calc-form { max-width: 72rem; background: #6a746a; border-radius: 20px; border: 3px solid rgb(67,67,67); padding: 0 0 0.5rem; }
+      #seal-calc-form .hdr2 { background:#eee; display:flex; justify-content:center; align-items:center; text-align:center; gap:10px; padding:0.5rem 0.7rem; margin:0.5rem; font-size:22px; font-weight:200; line-height:1.2; box-shadow:0 3px 5px rgba(0,0,0,.4); border-radius:10px; border:2px solid rgb(67,67,67); font-family:"Roboto",Arial,sans-serif; color:#1a3a40; }
+      #seal-calc-form .grp { background:#eee; margin:0 0.5rem 0.5rem; border-radius:10px; border:2px solid rgb(67,67,67); box-shadow:0 3px 5px rgba(0,0,0,.4); padding:8px 11px 10px; }
+      #seal-calc-form .grp-title { font-size:12px; font-weight:600; color:#61828A; text-transform:uppercase; letter-spacing:0.06em; border-bottom:1px solid #c0c0c0; padding-bottom:4px; margin-bottom:9px; }
+      #seal-calc-form .gco { display:grid; gap:9px 18px; }
+      #seal-calc-form .gco.g2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      #seal-calc-form .gco.g3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      #seal-calc-form .fld { display:flex; flex-direction:column; gap:3px; min-width:0; }
+      #seal-calc-form .fld.full { grid-column: 1 / -1; }
+      #seal-calc-form .fld label { font-size:12px; color:#444; font-weight:400; line-height:1.3; }
+      #seal-calc-form .fld input, #seal-calc-form .fld select { font-size:13px; padding:3px 7px; border-radius:5px; border:1.5px solid rgb(67,67,67); background:#d9d9d9; color:#000; width:100%; height:27px; font-family:"Roboto",Arial,sans-serif; }
+      #seal-calc-form .fld input:focus, #seal-calc-form .fld select:focus { outline:none; border-color:#61828A; background:#e8f0f3; }
+      #seal-calc-form .fld input[readonly] { background:#cdd2d2; color:#333; cursor:not-allowed; }
+      #seal-calc-form .vr { display:inline-flex; align-items:center; gap:5px; font-size:12.5px; color:#333; cursor:pointer; }
+      #seal-calc-form .vr input { accent-color:#61828A; width:12px; height:12px; }
+      /* Two-column result group (Calculated CH vs CH = 1) */
+      #seal-calc-form .res-col { background:#e3eaec; border:1.5px solid rgb(67,67,67); border-radius:8px; padding:9px 11px; display:flex; flex-direction:column; gap:9px; }
+      #seal-calc-form .res-col-head { font-size:12px; font-weight:700; color:#1a3a40; text-transform:uppercase; letter-spacing:0.04em; text-align:center; border-bottom:1px solid #aab8bb; padding-bottom:5px; }
+      /* Multiplying-factor tables (Symbol | Value) */
+      #seal-calc-form .mf-table { width:100%; border-collapse:collapse; font-size:12.5px; font-family:"Roboto",Arial,sans-serif; background:#fff; }
+      #seal-calc-form .mf-table th { background:#61828A; color:#fff; text-align:left; padding:4px 9px; border:1px solid rgb(67,67,67); font-weight:600; }
+      #seal-calc-form .mf-table td { padding:3px 9px; border:1px solid #b8c2c2; color:#222; }
+      #seal-calc-form .mf-table td:first-child { font-family:monospace; font-weight:600; white-space:nowrap; }
+      #seal-calc-form .mf-table tr:nth-child(even) td { background:#eef3f4; }
+      #seal-calc-form .mf-table tr.mf-total td { background:#dfe7e9; font-weight:700; font-size:13.5px; border-top:2px solid rgb(67,67,67); }
+      @media (max-width:640px){ #seal-calc-form .gco.g2, #seal-calc-form .gco.g3 { grid-template-columns:1fr; } }
+      #calc-warnings {font-size: var(--h6-font-size)!important;}
+      #calc-errors {font-size: var(--h6-font-size)!important;}
+      /* Segmented (sq-seg) dimension-source selector */
+      .sq-seg { display: inline-flex; flex-wrap: wrap; border: 1.5px solid rgb(67,67,67); border-radius: 6px; overflow: hidden; width: fit-content; }
+      .sq-seg button { appearance: none; border: 0; background: #d9d9d9; color: #333; font: 600 12.5px/1 "Roboto", Arial, sans-serif; padding: 7px 14px; cursor: pointer; border-right: 1.5px solid rgb(67,67,67); }
+      .sq-seg button:last-child { border-right: none; }
+      .sq-seg button:hover { background: #e8eff1; }
+      .sq-seg button.sq-active { background: #61828A; color: #fff; }
+
+      /* Download button (matches MIL-HDBK-5 .tbtn) */
+      .tbtn { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border-radius: 6px; border: 2px solid #4a5a4a; background: #f5f5f0; color: #222; font-size: 13px; font-weight: 400; padding: 5px 14px; transition: filter 0.15s, transform 0.1s; line-height: 1.3; text-decoration: none; }
+      .tbtn:hover { filter: brightness(0.93); }
+      .tbtn:active { transform: scale(0.97); }
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal & Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Spring Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-1.html">Parker Gland Dimensions (Design Table 4-1)</a>
+                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-2.html">Parker Gland Dimensions (Design Table 4-2)</a>
+                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-3.html">Parker Face Seal Glands (Design Chart 4-3)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- BANNER -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              Static Seal &amp; Gasket Reliability Calculator
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- INTRO -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3" style="max-width:860px;">
+            <div class="custom-heading">NSWC-11 Static Seal &amp; Gasket Reliability Model</div>
+            <div class="mt-3 text-start">
+              <p>
+                This tool estimates the failure rate of <span style="font-weight: var(--font-weight-normal)">static seals and gaskets</span> (O-rings, flange
+                gaskets, bolt seals and back-up rings) using the leakage-based model from the Naval Surface Warfare
+                Center <em>Handbook of Reliability Prediction Procedures for Mechanical Equipment</em> (NSWC-11, Chapter 3).
+                A seal &ldquo;fails&rdquo; when its leakage exceeds what the application can tolerate, so the model
+                multiplies a base failure rate by eight dimensionless factors covering pressure, allowable leakage,
+                seal size, contact stress/hardness, surface finish, fluid viscosity, temperature and contamination.
+              </p>
+              <p>
+                Enter the seal geometry, material, fluid and operating conditions, then press
+                <span style="font-weight: var(--font-weight-normal)">Calculate</span>. You get the predicted failure rate &lambda;<sub>SE</sub> in failures per
+                million hours plus MTBF, ready as <span style="font-weight: var(--font-weight-normal)">FMECA</span> inputs.
+              </p>
+              <div class="mt-2">
+                <button class="tbtn" onclick="window.open('/downloadable/NSWC-11_RELIABILITY_HDBK_MAY2011.pdf', '_blank')" aria-label="Download NSWC-11 reliability handbook (PDF)">
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                  </svg>
+                  Download NSWC-11 Handbook (PDF)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CALCULATOR -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12 px-3">
+
+          <div class="section-title-wrap">
+            <div class="h1 section-title">NSWC-11 Chapter 3 Failure Rate Calculator</div>
+          </div>
+
+          <div class="wrapper fs-6" id="seal-calc-form">
+            <div class="hdr2">Static Seal &amp; Gasket Reliability (NSWC-11 Eq.&nbsp;3-7)</div>
+
+            <!-- SEAL GEOMETRY -->
+            <div class="grp">
+              <div class="grp-title">Seal Geometry</div>
+              <div style="margin-bottom:9px;">
+                <div class="sq-seg" role="group" aria-label="Seal dimension source" id="dim-source">
+                  <button type="button" data-src="custom" class="sq-active" aria-pressed="true">Custom</button>
+                  <button type="button" data-src="4-1" aria-pressed="false">Parker Table 4-1</button>
+                  <button type="button" data-src="4-2" aria-pressed="false">Parker Table 4-2</button>
+                  <button type="button" data-src="as4395" aria-pressed="false">AS4395 / AS5202</button>
+                </div>
+              </div>
+              <div class="gco g2">
+                <div class="fld d-none" id="gland-type-row">
+                  <label for="gland-type">Gland Type</label>
+                  <select id="gland-type" aria-label="Male or female gland">
+                    <option value="male">Male Gland</option>
+                    <option value="female">Female Gland</option>
+                  </select>
+                </div>
+                <div class="fld d-none" id="dash-size-row">
+                  <label for="dash-size">Dash / Size</label>
+                  <select id="dash-size" aria-label="O-ring dash size"></select>
+                </div>
+                <div class="fld">
+                  <label for="seal-inner-dia">Inner Diameter D<sub>SL</sub> (in)</label>
+                  <input type="number" id="seal-inner-dia" value="0.778" step="0.001" min="0.001" aria-label="Seal inner diameter in inches" />
+                </div>
+                <div class="fld">
+                  <label for="seal-outer-dia">Outer Diameter (in)</label>
+                  <input type="number" id="seal-outer-dia" value="0.886" step="0.001" min="0.002" aria-label="Seal outer diameter in inches" />
+                </div>
+              </div>
+            </div>
+
+            <!-- PRESSURE -->
+            <div class="grp">
+              <div class="grp-title">Pressure</div>
+              <div class="gco g3">
+                <div class="fld">
+                  <label for="pressure-high">High-Side P<sub>1</sub> (psi)</label>
+                  <input type="number" id="pressure-high" value="180" step="1" min="0" aria-label="High-side pressure in psi" />
+                </div>
+                <div class="fld">
+                  <label for="pressure-low">Low-Side P<sub>2</sub> (psi)</label>
+                  <input type="number" id="pressure-low" value="0" step="1" min="0" aria-label="Low-side pressure in psi" />
+                </div>
+                <div class="fld">
+                  <label for="cp-mode">C<sub>P</sub> Pressure Mode</label>
+                  <select id="cp-mode" aria-label="Pressure mode for CP factor">
+                    <option value="differential">Differential (P&#x2081; &minus; P&#x2082;)</option>
+                    <option value="system">System (P&#x2081; alone)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- LEAKAGE & SURFACE -->
+            <div class="grp">
+              <div class="grp-title">Leakage &amp; Surface</div>
+              <div class="gco g2">
+                <div class="fld">
+                  <label for="leakage-rate">Allowable Leakage Q<sub>f</sub> (in<sup>3</sup>;/min)</label>
+                  <input type="number" id="leakage-rate" value="0" step="0.001" min="0" aria-label="Allowable leakage rate in cubic inches per minute; 0 for zero-leakage requirement" />
+                </div>
+                <div class="fld">
+                  <label for="surface-finish">Surface Finish f (&mu;in RMS)</label>
+                  <input type="number" id="surface-finish" value="32" step="1" min="0.1" aria-label="Gland or flange surface finish in micro-inch RMS" />
+                </div>
+              </div>
+            </div>
+
+            <!-- MATERIAL & TEMPERATURE -->
+            <div class="grp">
+              <div class="grp-title">Seal Material &amp; Temperature</div>
+              <div class="gco g3">
+                <div class="fld full">
+                  <label for="seal-material">Material Preset (sets T<sub>R</sub>)</label>
+                  <select id="seal-material" aria-label="Seal material — presets the rated temperature">
+                    <option value="">— Custom / enter T&#x2C3; below —</option>
+                  </select>
+                </div>
+                <div class="fld">
+                  <label for="durometer">Durometer (Shore A, 30&ndash;90)</label>
+                  <input type="number" id="durometer" value="70" step="1" min="30" max="90" aria-label="Seal durometer in Shore A units, 30 to 90" />
+                </div>
+                <div class="fld">
+                  <label for="rated-temp">Rated Temp T<sub>R</sub> (&deg;F)</label>
+                  <input type="number" id="rated-temp" value="300" step="1" aria-label="Seal material maximum rated temperature in degrees Fahrenheit" />
+                </div>
+                <div class="fld">
+                  <label for="operating-temp">Operating Temp T<sub>O</sub> (&deg;F)</label>
+                  <input type="number" id="operating-temp" value="150" step="1" aria-label="Operating temperature in degrees Fahrenheit" />
+                </div>
+              </div>
+            </div>
+
+            <!-- VISCOSITY -->
+            <div class="grp">
+              <div class="grp-title">Fluid Viscosity</div>
+              <div style="display:flex; flex-wrap:wrap; gap:6px 18px; margin-bottom:9px;">
+                <label class="vr"><input type="radio" name="visc-mode" value="fluid" checked>Fluid + Temperature</label>
+                <label class="vr"><input type="radio" name="visc-mode" value="kinematic">Kinematic (cSt)</label>
+                <label class="vr"><input type="radio" name="visc-mode" value="dynamic">Dynamic (lbf&middot;min/in<sup>2</sup>)</label>
+                <label class="vr"><input type="radio" name="visc-mode" value="jet-fuel">Jet Fuel (tabulated)</label>
+                <label class="vr"><input type="radio" name="visc-mode" value="pg">PG Concentration</label>
+                <label class="vr"><input type="radio" name="visc-mode" value="thermo">ThermoCalc Fluid</label>
+              </div>
+
+              <!-- Fluid mode -->
+              <div id="visc-fluid" class="visc-mode-block">
+                <div class="gco g2">
+                  <div class="fld">
+                    <label for="fluid-select">Fluid</label>
+                    <select id="fluid-select" aria-label="Sealed fluid from NSWC-11 Table 3-3 or registered fluid"></select>
+                  </div>
+                  <div class="fld">
+                    <label for="fluid-temp">Fluid Temp (&deg;F, blank&nbsp;= T<sub>O</sub>)</label>
+                    <input type="number" id="fluid-temp" placeholder="(= T&#x2080;)" step="1" aria-label="Fluid temperature for Cv lookup; defaults to operating temperature if blank" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kinematic mode -->
+              <div id="visc-kinematic" class="visc-mode-block">
+                <div class="gco g3">
+                  <div class="fld">
+                    <label for="kin-viscosity">Kinematic Viscosity (cSt)</label>
+                    <input type="number" id="kin-viscosity" step="0.001" min="0.0001" aria-label="Kinematic viscosity in centistokes" />
+                  </div>
+                  <div class="fld">
+                    <label for="kin-sg">Specific Gravity (blank ok)</label>
+                    <input type="number" id="kin-sg" step="0.001" min="0.001" placeholder="e.g. 0.82" aria-label="Specific gravity dimensionless for kinematic-to-dynamic conversion" />
+                  </div>
+                  <div class="fld">
+                    <label for="kin-density">Density kg/m&sup3; (if no SG)</label>
+                    <input type="number" id="kin-density" step="1" min="1" placeholder="e.g. 820" aria-label="Fluid density in kg per cubic meter" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dynamic mode -->
+              <div id="visc-dynamic" class="visc-mode-block">
+                <div class="gco g2">
+                  <div class="fld">
+                    <label for="dyn-viscosity">Dynamic Viscosity (lbf&middot;min/in&sup2;)</label>
+                    <input type="number" id="dyn-viscosity" step="1e-10" min="1e-12" value="4.461e-9" aria-label="Dynamic viscosity in lbf-min per square inch" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Jet Fuel mode -->
+              <div id="visc-jet-fuel" class="visc-mode-block">
+                <div class="gco g2">
+                  <div class="fld">
+                    <label for="jf-fluid-select">Jet Fuel</label>
+                    <select id="jf-fluid-select" aria-label="Jet fuel type for viscosity lookup">
+                      <option value="JP-5, Jet A, Jet A-1, JP-8">JP-5 / Jet A / Jet A-1 / JP-8</option>
+                      <option value="JP-4, Jet B">JP-4 / Jet B</option>
+                      <option value="JP-7">JP-7</option>
+                      <option value="JP-9, JP-10">JP-9 / JP-10</option>
+                      <option value="RJ-4">RJ-4</option>
+                      <option value="RJ-5">RJ-5</option>
+                      <option value="RJ-6">RJ-6</option>
+                      <option value="TS">TS</option>
+                      <option value="Av. Gas">Av. Gas</option>
+                    </select>
+                  </div>
+                  <div class="fld">
+                    <label for="jf-temp">Fluid Temp (&deg;F, blank&nbsp;= T<sub>O</sub>)</label>
+                    <input type="number" id="jf-temp" step="1" placeholder="(= T&#x2080;)" aria-label="Fluid temperature for jet fuel viscosity lookup; defaults to operating temperature if blank" />
+                  </div>
+                </div>
+                <div class="gco g2" style="margin-top:6px;">
+                  <div class="fld">
+                    <label for="jf-resolved-visc">Resolved &mu; (lbf&middot;min/in&sup2;)</label>
+                    <input type="text" id="jf-resolved-visc" readonly placeholder="&mdash;" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- PG Concentration mode -->
+              <div id="visc-pg" class="visc-mode-block">
+                <div class="gco g2">
+                  <div class="fld">
+                    <label for="pg-conc-select">PG Concentration (vol%)</label>
+                    <select id="pg-conc-select" aria-label="Propylene glycol concentration">
+                      <option value="25%">25%</option>
+                      <option value="30%">30%</option>
+                      <option value="35%">35%</option>
+                      <option value="40%">40%</option>
+                      <option value="45%">45%</option>
+                      <option value="50%" selected>50%</option>
+                      <option value="Freeze Curve">Freeze Curve (max conc.)</option>
+                    </select>
+                  </div>
+                  <div class="fld">
+                    <label for="pg-temp">Fluid Temp (&deg;F, blank&nbsp;= T<sub>O</sub>)</label>
+                    <input type="number" id="pg-temp" step="1" placeholder="(= T&#x2080;)" aria-label="Fluid temperature for PG viscosity lookup; defaults to operating temperature if blank" />
+                  </div>
+                </div>
+                <div class="gco g2" style="margin-top:6px;">
+                  <div class="fld">
+                    <label for="pg-resolved-visc">Resolved &mu; (lbf&middot;min/in&sup2;)</label>
+                    <input type="text" id="pg-resolved-visc" readonly placeholder="&mdash;" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- ThermoCalc Fluid mode -->
+              <div id="visc-thermo" class="visc-mode-block">
+                <!-- Fluid dropdown — full width -->
+                <div class="gco">
+                  <div class="fld full">
+                    <label for="thermo-fluid-name">CoolProp Fluid (402 fluids)</label>
+                    <select id="thermo-fluid-name" aria-label="CoolProp fluid for ThermoCalc viscosity lookup">
+                      <optgroup label="── Water &amp; Steam ──">
+                        <option value="Water" selected>Water / Steam (H&#x2082;O)</option>
+                        <option value="HeavyWater">Heavy Water (D&#x2082;O)</option>
+                      </optgroup>
+                      <optgroup label="── Air &amp; Atmospheric ──">
+                        <option value="Air">Air</option>
+                        <option value="Nitrogen">Nitrogen (N&#x2082;)</option>
+                        <option value="Oxygen">Oxygen (O&#x2082;)</option>
+                        <option value="Argon">Argon (Ar)</option>
+                        <option value="NitrousOxide">Nitrous Oxide (N&#x2082;O)</option>
+                      </optgroup>
+                      <optgroup label="── Noble Gases ──">
+                        <option value="Helium">Helium (He)</option>
+                        <option value="Neon">Neon (Ne)</option>
+                        <option value="Krypton">Krypton (Kr)</option>
+                        <option value="Xenon">Xenon (Xe)</option>
+                      </optgroup>
+                      <optgroup label="── Hydrogen &amp; Isotopes ──">
+                        <option value="Hydrogen">Hydrogen (H&#x2082;)</option>
+                        <option value="OrthoHydrogen">Ortho-Hydrogen</option>
+                        <option value="ParaHydrogen">Para-Hydrogen</option>
+                        <option value="Deuterium">Deuterium (D&#x2082;)</option>
+                        <option value="OrthoDeuterium">Ortho-Deuterium</option>
+                        <option value="ParaDeuterium">Para-Deuterium</option>
+                      </optgroup>
+                      <optgroup label="── Carbon, Sulfur &amp; Inorganics ──">
+                        <option value="Ammonia">Ammonia (NH&#x2083; / R-717)</option>
+                        <option value="CarbonDioxide">Carbon Dioxide (CO&#x2082; / R-744)</option>
+                        <option value="CarbonMonoxide">Carbon Monoxide (CO)</option>
+                        <option value="CarbonylSulfide">Carbonyl Sulfide (COS)</option>
+                        <option value="SulfurDioxide">Sulfur Dioxide (SO&#x2082;)</option>
+                        <option value="SulfurHexafluoride">Sulfur Hexafluoride (SF&#x2086;)</option>
+                        <option value="HydrogenSulfide">Hydrogen Sulfide (H&#x2082;S)</option>
+                        <option value="HydrogenChloride">Hydrogen Chloride (HCl)</option>
+                        <option value="Fluorine">Fluorine (F&#x2082;)</option>
+                      </optgroup>
+                      <optgroup label="── Refrigerants — HFC ──">
+                        <option value="R23">R-23 (HFC-23)</option>
+                        <option value="R32">R-32 (HFC-32)</option>
+                        <option value="R125">R-125 (HFC-125)</option>
+                        <option value="R134a">R-134a (HFC-134a)</option>
+                        <option value="R143a">R-143a (HFC-143a)</option>
+                        <option value="R152A">R-152a (HFC-152a)</option>
+                        <option value="R161">R-161 (HFC-161)</option>
+                        <option value="R116">R-116 (HFC-116)</option>
+                        <option value="R218">R-218 (PFC-218)</option>
+                        <option value="R236EA">R-236ea</option>
+                        <option value="R236FA">R-236fa</option>
+                        <option value="R245ca">R-245ca</option>
+                        <option value="R245fa">R-245fa</option>
+                        <option value="R365MFC">R-365mfc</option>
+                      </optgroup>
+                      <optgroup label="── Refrigerants — HFO Low-GWP ──">
+                        <option value="R1234yf">R-1234yf (HFO)</option>
+                        <option value="R1234ze(E)">R-1234ze(E) (HFO)</option>
+                        <option value="R1234ze(Z)">R-1234ze(Z) (HFO)</option>
+                        <option value="R1243zf">R-1243zf (HFO)</option>
+                        <option value="R1233zd(E)">R-1233zd(E) (HCFO)</option>
+                        <option value="R1336mzz(E)">R-1336mzz(E) (HFO)</option>
+                      </optgroup>
+                      <optgroup label="── Refrigerants — CFC / HCFC Legacy ──">
+                        <option value="R11">R-11 (CFC-11)</option>
+                        <option value="R12">R-12 (CFC-12)</option>
+                        <option value="R13">R-13 (CFC-13)</option>
+                        <option value="R14">R-14 (CFC-14)</option>
+                        <option value="R21">R-21 (HCFC-21)</option>
+                        <option value="R22">R-22 (HCFC-22)</option>
+                        <option value="R113">R-113 (CFC-113)</option>
+                        <option value="R114">R-114 (CFC-114)</option>
+                        <option value="R115">R-115 (CFC-115)</option>
+                        <option value="R123">R-123 (HCFC-123)</option>
+                        <option value="R124">R-124 (HCFC-124)</option>
+                        <option value="R141b">R-141b (HCFC-141b)</option>
+                        <option value="R142b">R-142b (HCFC-142b)</option>
+                        <option value="RC318">RC-318 (CFC-318)</option>
+                      </optgroup>
+                      <optgroup label="── Refrigerant Blends &amp; Special ──">
+                        <option value="R404A">R-404A (blend)</option>
+                        <option value="R407C">R-407C (blend)</option>
+                        <option value="R410A">R-410A (blend)</option>
+                        <option value="R507A">R-507A (blend)</option>
+                        <option value="SES36">SES36</option>
+                        <option value="Novec649">Novec 649</option>
+                        <option value="HFE143m">HFE-143m</option>
+                        <option value="R40">R-40 (Methyl Chloride)</option>
+                        <option value="R41">R-41 (Methyl Fluoride)</option>
+                        <option value="R13I1">R-13I1 (CF&#x2083;I)</option>
+                      </optgroup>
+                      <optgroup label="── Alkanes C1&#x2013;C5 ──">
+                        <option value="Methane">Methane (CH&#x2084;)</option>
+                        <option value="Ethane">Ethane (C&#x2082;H&#x2086;)</option>
+                        <option value="n-Propane">n-Propane (C&#x2083;H&#x2088;)</option>
+                        <option value="n-Butane">n-Butane (C&#x2084;H&#x2081;&#x2080;)</option>
+                        <option value="IsoButane">Isobutane (i-C&#x2084;H&#x2081;&#x2080;)</option>
+                        <option value="n-Pentane">n-Pentane (C&#x2085;H&#x2081;&#x2082;)</option>
+                        <option value="Isopentane">Isopentane</option>
+                        <option value="Neopentane">Neopentane</option>
+                      </optgroup>
+                      <optgroup label="── Alkanes C6&#x2013;C12 ──">
+                        <option value="n-Hexane">n-Hexane (C&#x2086;H&#x2081;&#x2084;)</option>
+                        <option value="Isohexane">Isohexane</option>
+                        <option value="n-Heptane">n-Heptane (C&#x2087;H&#x2081;&#x2086;)</option>
+                        <option value="n-Octane">n-Octane (C&#x2088;H&#x2081;&#x2088;)</option>
+                        <option value="n-Nonane">n-Nonane (C&#x2089;H&#x2082;&#x2080;)</option>
+                        <option value="n-Decane">n-Decane (C&#x2081;&#x2080;H&#x2082;&#x2082;)</option>
+                        <option value="n-Undecane">n-Undecane</option>
+                        <option value="n-Dodecane">n-Dodecane</option>
+                      </optgroup>
+                      <optgroup label="── Alkenes, Alkynes &amp; Dienes ──">
+                        <option value="Ethylene">Ethylene (C&#x2082;H&#x2084;)</option>
+                        <option value="Propylene">Propylene (C&#x2083;H&#x2086;)</option>
+                        <option value="1-Butene">1-Butene</option>
+                        <option value="cis-2-Butene">cis-2-Butene</option>
+                        <option value="trans-2-Butene">trans-2-Butene</option>
+                        <option value="IsoButene">Isobutene</option>
+                        <option value="Propyne">Propyne (Methylacetylene)</option>
+                        <option value="EthyleneOxide">Ethylene Oxide</option>
+                      </optgroup>
+                      <optgroup label="── Cyclic Hydrocarbons ──">
+                        <option value="CycloHexane">Cyclohexane</option>
+                        <option value="Cyclopentane">Cyclopentane</option>
+                        <option value="CycloPropane">Cyclopropane</option>
+                      </optgroup>
+                      <optgroup label="── Aromatics ──">
+                        <option value="Benzene">Benzene</option>
+                        <option value="Toluene">Toluene</option>
+                        <option value="EthylBenzene">Ethylbenzene</option>
+                        <option value="m-Xylene">m-Xylene</option>
+                        <option value="o-Xylene">o-Xylene</option>
+                        <option value="p-Xylene">p-Xylene</option>
+                      </optgroup>
+                      <optgroup label="── Oxygenates &amp; Alcohols ──">
+                        <option value="Acetone">Acetone</option>
+                        <option value="Methanol">Methanol (CH&#x2083;OH)</option>
+                        <option value="Ethanol">Ethanol (C&#x2082;H&#x2085;OH)</option>
+                        <option value="DiethylEther">Diethyl Ether</option>
+                        <option value="DimethylCarbonate">Dimethyl Carbonate</option>
+                        <option value="DimethylEther">Dimethyl Ether</option>
+                        <option value="Dichloroethane">1,2-Dichloroethane</option>
+                      </optgroup>
+                      <optgroup label="── Siloxanes ──">
+                        <option value="MM">MM &#x2014; Hexamethyldisiloxane</option>
+                        <option value="MDM">MDM &#x2014; Octamethyltrisiloxane</option>
+                        <option value="MD2M">MD2M &#x2014; Decamethyltetrasiloxane</option>
+                        <option value="MD3M">MD3M &#x2014; Dodecamethylpentasiloxane</option>
+                        <option value="MD4M">MD4M &#x2014; Tetradecamethylhexasiloxane</option>
+                        <option value="D4">D4 &#x2014; Octamethylcyclotetrasiloxane</option>
+                        <option value="D5">D5 &#x2014; Decamethylcyclopentasiloxane</option>
+                        <option value="D6">D6 &#x2014; Dodecamethylcyclohexasiloxane</option>
+                      </optgroup>
+                      <optgroup label="── FAMEs / Biodiesel ──">
+                        <option value="MethylLinoleate">Methyl Linoleate (C19:2)</option>
+                        <option value="MethylLinolenate">Methyl Linolenate (C19:3)</option>
+                        <option value="MethylOleate">Methyl Oleate (C19:1)</option>
+                        <option value="MethylPalmitate">Methyl Palmitate (C17:0)</option>
+                        <option value="MethylStearate">Methyl Stearate (C19:0)</option>
+                      </optgroup>
+                      <optgroup label="── INCOMP &#x2014; Pure / Process Fluids ──">
+                        <option value="INCOMP::Acetone">Acetone (INCOMP)</option>
+                        <option value="INCOMP::Air">Air (INCOMP)</option>
+                        <option value="INCOMP::AS10">AS10 &#x2014; Antifrogen S 10%</option>
+                        <option value="INCOMP::AS20">AS20 &#x2014; Antifrogen S 20%</option>
+                        <option value="INCOMP::AS30">AS30 &#x2014; Antifrogen S 30%</option>
+                        <option value="INCOMP::AS40">AS40 &#x2014; Antifrogen S 40%</option>
+                        <option value="INCOMP::AS55">AS55 &#x2014; Antifrogen S 55%</option>
+                        <option value="INCOMP::DEB">DEB &#x2014; Di-Ethylbenzene</option>
+                        <option value="INCOMP::DowJ">Dowtherm J</option>
+                        <option value="INCOMP::DowJ2">Dowtherm J2</option>
+                        <option value="INCOMP::DowQ">Dowtherm Q</option>
+                        <option value="INCOMP::DowQ2">Dowtherm Q2</option>
+                        <option value="INCOMP::DSF">DSF &#x2014; Dynalene SF</option>
+                        <option value="INCOMP::Ethanol">Ethanol (INCOMP)</option>
+                        <option value="INCOMP::FoodAsh">Food &#x2014; Ash</option>
+                        <option value="INCOMP::FoodCarbohydrate">Food &#x2014; Carbohydrate</option>
+                        <option value="INCOMP::FoodFat">Food &#x2014; Fat</option>
+                        <option value="INCOMP::FoodFiber">Food &#x2014; Fiber</option>
+                        <option value="INCOMP::FoodIce">Food &#x2014; Ice</option>
+                        <option value="INCOMP::FoodProtein">Food &#x2014; Protein</option>
+                        <option value="INCOMP::FoodWater">Food &#x2014; Water</option>
+                        <option value="INCOMP::HC10">HC10 &#x2014; Hydrocarbon 10%</option>
+                        <option value="INCOMP::HC20">HC20 &#x2014; Hydrocarbon 20%</option>
+                        <option value="INCOMP::HC30">HC30 &#x2014; Hydrocarbon 30%</option>
+                        <option value="INCOMP::HC40">HC40 &#x2014; Hydrocarbon 40%</option>
+                        <option value="INCOMP::HC50">HC50 &#x2014; Hydrocarbon 50%</option>
+                        <option value="INCOMP::HCB">HCB &#x2014; Hydrocarbon B</option>
+                        <option value="INCOMP::HCM">HCM &#x2014; Hydrocarbon M</option>
+                        <option value="INCOMP::Hexane">Hexane (INCOMP)</option>
+                        <option value="INCOMP::HFE">HFE-7100</option>
+                        <option value="INCOMP::HFE2">HFE-7200</option>
+                        <option value="INCOMP::HY20">HY20 &#x2014; Dynalene HY 20%</option>
+                        <option value="INCOMP::HY30">HY30 &#x2014; Dynalene HY 30%</option>
+                        <option value="INCOMP::HY40">HY40 &#x2014; Dynalene HY 40%</option>
+                        <option value="INCOMP::HY45">HY45 &#x2014; Dynalene HY 45%</option>
+                        <option value="INCOMP::HY50">HY50 &#x2014; Dynalene HY 50%</option>
+                        <option value="INCOMP::LiqNa">Liquid Sodium (Na)</option>
+                        <option value="INCOMP::NaK">Sodium-Potassium (NaK)</option>
+                        <option value="INCOMP::NBS">NBS Reference Fluid</option>
+                        <option value="INCOMP::PBB">PBB &#x2014; Polybromobiphenyl</option>
+                        <option value="INCOMP::PCL">PCL &#x2014; Parachlor</option>
+                        <option value="INCOMP::PCR">PCR &#x2014; Perichlor</option>
+                        <option value="INCOMP::PGLT">PGLT &#x2014; Propylene Glycol LT</option>
+                        <option value="INCOMP::PHE">PHE &#x2014; Phenol</option>
+                        <option value="INCOMP::PHR">PHR &#x2014; Phenol R</option>
+                        <option value="INCOMP::PLR">PLR</option>
+                        <option value="INCOMP::PMR">PMR</option>
+                        <option value="INCOMP::PMS1">PMS1 &#x2014; Polydimethylsiloxane 1</option>
+                        <option value="INCOMP::PMS2">PMS2 &#x2014; Polydimethylsiloxane 2</option>
+                        <option value="INCOMP::PNF">PNF &#x2014; Perfluorocarbon</option>
+                        <option value="INCOMP::PNF2">PNF2 &#x2014; Perfluorocarbon 2</option>
+                        <option value="INCOMP::S800">S800 &#x2014; Solutia</option>
+                        <option value="INCOMP::SAB">SAB &#x2014; Synthetic A/B Lube</option>
+                        <option value="INCOMP::T66">Therminol 66</option>
+                        <option value="INCOMP::T72">Therminol 72</option>
+                        <option value="INCOMP::TCO">TCO &#x2014; Synthetic Oil</option>
+                        <option value="INCOMP::TD12">TD12</option>
+                        <option value="INCOMP::TVP1">TVP1 &#x2014; Texatherm VP1</option>
+                        <option value="INCOMP::TVP1869">Therminol VP-1</option>
+                        <option value="INCOMP::TX22">TX22 &#x2014; Texatherm 22</option>
+                        <option value="INCOMP::TY10">TY10 &#x2014; Tyfoxit 10%</option>
+                        <option value="INCOMP::TY15">TY15 &#x2014; Tyfoxit 15%</option>
+                        <option value="INCOMP::TY20">TY20 &#x2014; Tyfoxit 20%</option>
+                        <option value="INCOMP::TY24">TY24 &#x2014; Tyfoxit 24%</option>
+                        <option value="INCOMP::Water">Water (INCOMP)</option>
+                        <option value="INCOMP::XLT">XLT &#x2014; Syltherm XLT</option>
+                        <option value="INCOMP::XLT2">XLT2 &#x2014; Syltherm XLT 2</option>
+                        <option value="INCOMP::ZS10">ZS10 &#x2014; Zitrec S 10%</option>
+                        <option value="INCOMP::ZS25">ZS25 &#x2014; Zitrec S 25%</option>
+                        <option value="INCOMP::ZS40">ZS40 &#x2014; Zitrec S 40%</option>
+                        <option value="INCOMP::ZS45">ZS45 &#x2014; Zitrec S 45%</option>
+                        <option value="INCOMP::ZS55">ZS55 &#x2014; Zitrec S 55%</option>
+                      </optgroup>
+                      <optgroup label="── INCOMP &#x2014; Ethylene Glycol Solutions ──">
+                        <option value="INCOMP::AEG[0.1]">AEG 10% (Antifrogen EG)</option>
+                        <option value="INCOMP::AEG[0.2]">AEG 20%</option>
+                        <option value="INCOMP::AEG[0.3]">AEG 30%</option>
+                        <option value="INCOMP::AEG[0.4]">AEG 40%</option>
+                        <option value="INCOMP::AEG[0.5]">AEG 50%</option>
+                        <option value="INCOMP::AEG[0.6]">AEG 60%</option>
+                        <option value="INCOMP::AL[0.1]">AL 10% (Antifrogen L)</option>
+                        <option value="INCOMP::AL[0.2]">AL 20%</option>
+                        <option value="INCOMP::AL[0.3]">AL 30%</option>
+                        <option value="INCOMP::AL[0.4]">AL 40%</option>
+                        <option value="INCOMP::AL[0.5]">AL 50%</option>
+                        <option value="INCOMP::AL[0.6]">AL 60%</option>
+                        <option value="INCOMP::AN[0.1]">AN 10% (Antifrogen N)</option>
+                        <option value="INCOMP::AN[0.2]">AN 20%</option>
+                        <option value="INCOMP::AN[0.3]">AN 30%</option>
+                        <option value="INCOMP::AN[0.4]">AN 40%</option>
+                        <option value="INCOMP::AN[0.5]">AN 50%</option>
+                        <option value="INCOMP::AN[0.6]">AN 60%</option>
+                        <option value="INCOMP::MEG[0.1]">MEG 10% (Monoethylene Glycol)</option>
+                        <option value="INCOMP::MEG[0.2]">MEG 20%</option>
+                        <option value="INCOMP::MEG[0.3]">MEG 30%</option>
+                        <option value="INCOMP::MEG[0.4]">MEG 40%</option>
+                        <option value="INCOMP::MEG[0.5]">MEG 50%</option>
+                        <option value="INCOMP::MEG[0.6]">MEG 60%</option>
+                        <option value="INCOMP::MEG2[0.1]">MEG2 10%</option>
+                        <option value="INCOMP::MEG2[0.2]">MEG2 20%</option>
+                        <option value="INCOMP::MEG2[0.3]">MEG2 30%</option>
+                        <option value="INCOMP::MEG2[0.4]">MEG2 40%</option>
+                        <option value="INCOMP::MEG2[0.5]">MEG2 50%</option>
+                      </optgroup>
+                      <optgroup label="── INCOMP &#x2014; Propylene Glycol Solutions ──">
+                        <option value="INCOMP::APG[0.1]">APG 10% (Antifrogen PG)</option>
+                        <option value="INCOMP::APG[0.2]">APG 20%</option>
+                        <option value="INCOMP::APG[0.3]">APG 30%</option>
+                        <option value="INCOMP::APG[0.4]">APG 40%</option>
+                        <option value="INCOMP::APG[0.5]">APG 50%</option>
+                        <option value="INCOMP::APG[0.6]">APG 60%</option>
+                        <option value="INCOMP::MGL[0.1]">MGL 10% (Monopropylene Glycol)</option>
+                        <option value="INCOMP::MGL[0.2]">MGL 20%</option>
+                        <option value="INCOMP::MGL[0.3]">MGL 30%</option>
+                        <option value="INCOMP::MGL[0.4]">MGL 40%</option>
+                        <option value="INCOMP::MGL[0.5]">MGL 50%</option>
+                        <option value="INCOMP::MGL[0.6]">MGL 60%</option>
+                        <option value="INCOMP::MGL2[0.2]">MGL2 20%</option>
+                        <option value="INCOMP::MGL2[0.3]">MGL2 30%</option>
+                        <option value="INCOMP::MGL2[0.4]">MGL2 40%</option>
+                        <option value="INCOMP::MGL2[0.5]">MGL2 50%</option>
+                        <option value="INCOMP::MGL2[0.6]">MGL2 60%</option>
+                        <option value="INCOMP::MPG[0.1]">MPG 10% (Prop. Glycol)</option>
+                        <option value="INCOMP::MPG[0.2]">MPG 20%</option>
+                        <option value="INCOMP::MPG[0.3]">MPG 30%</option>
+                        <option value="INCOMP::MPG[0.4]">MPG 40%</option>
+                        <option value="INCOMP::MPG[0.5]">MPG 50%</option>
+                        <option value="INCOMP::MPG[0.6]">MPG 60%</option>
+                        <option value="INCOMP::MPG2[0.2]">MPG2 20%</option>
+                        <option value="INCOMP::MPG2[0.3]">MPG2 30%</option>
+                        <option value="INCOMP::MPG2[0.4]">MPG2 40%</option>
+                        <option value="INCOMP::MPG2[0.5]">MPG2 50%</option>
+                        <option value="INCOMP::VMG[0.1]">VMG 10% (vol-frac PG)</option>
+                        <option value="INCOMP::VMG[0.2]">VMG 20%</option>
+                      </optgroup>
+                      <optgroup label="── INCOMP &#x2014; Methanol &amp; Ethanol Solutions ──">
+                        <option value="INCOMP::MMA[0.1]">MMA 10% (Methanol aq.)</option>
+                        <option value="INCOMP::MMA[0.2]">MMA 20%</option>
+                        <option value="INCOMP::MMA[0.3]">MMA 30%</option>
+                        <option value="INCOMP::MMA[0.4]">MMA 40%</option>
+                        <option value="INCOMP::MMA[0.5]">MMA 50%</option>
+                        <option value="INCOMP::MMA[0.6]">MMA 60%</option>
+                        <option value="INCOMP::MMA2[0.1]">MMA2 10%</option>
+                        <option value="INCOMP::MMA2[0.2]">MMA2 20%</option>
+                        <option value="INCOMP::MMA2[0.3]">MMA2 30%</option>
+                        <option value="INCOMP::MMA2[0.4]">MMA2 40%</option>
+                        <option value="INCOMP::MAM[0.1]">MAM 10% (Methanolamine)</option>
+                        <option value="INCOMP::MAM[0.2]">MAM 20%</option>
+                        <option value="INCOMP::MAM[0.3]">MAM 30%</option>
+                        <option value="INCOMP::MAM2[0.1]">MAM2 10%</option>
+                        <option value="INCOMP::MAM2[0.2]">MAM2 20%</option>
+                        <option value="INCOMP::VMA[0.1]">VMA 10% (vol-frac Methanol)</option>
+                        <option value="INCOMP::VMA[0.2]">VMA 20%</option>
+                        <option value="INCOMP::VMA[0.3]">VMA 30%</option>
+                        <option value="INCOMP::VMA[0.4]">VMA 40%</option>
+                        <option value="INCOMP::VMA[0.5]">VMA 50%</option>
+                        <option value="INCOMP::VMA[0.6]">VMA 60%</option>
+                        <option value="INCOMP::VMA[0.7]">VMA 70%</option>
+                        <option value="INCOMP::VMA[0.8]">VMA 80%</option>
+                        <option value="INCOMP::VMA[0.9]">VMA 90%</option>
+                        <option value="INCOMP::MEA[0.1]">MEA 10% (Ethanol aq.)</option>
+                        <option value="INCOMP::MEA[0.2]">MEA 20%</option>
+                        <option value="INCOMP::MEA[0.3]">MEA 30%</option>
+                        <option value="INCOMP::MEA[0.4]">MEA 40%</option>
+                        <option value="INCOMP::MEA[0.5]">MEA 50%</option>
+                        <option value="INCOMP::MEA[0.6]">MEA 60%</option>
+                        <option value="INCOMP::MEA2[0.2]">MEA2 20%</option>
+                        <option value="INCOMP::MEA2[0.3]">MEA2 30%</option>
+                        <option value="INCOMP::MEA2[0.4]">MEA2 40%</option>
+                        <option value="INCOMP::MEA2[0.5]">MEA2 50%</option>
+                        <option value="INCOMP::MEA2[0.6]">MEA2 60%</option>
+                      </optgroup>
+                      <optgroup label="── INCOMP &#x2014; Potassium Salt Solutions ──">
+                        <option value="INCOMP::AKF[0.4]">AKF 40% (Antifrogen KF)</option>
+                        <option value="INCOMP::AKF[0.5]">AKF 50%</option>
+                        <option value="INCOMP::AKF[0.6]">AKF 60%</option>
+                        <option value="INCOMP::AKF[0.7]">AKF 70%</option>
+                        <option value="INCOMP::AKF[0.8]">AKF 80%</option>
+                        <option value="INCOMP::AKF[0.9]">AKF 90%</option>
+                        <option value="INCOMP::FRE[0.2]">FRE 20% (Freezium)</option>
+                        <option value="INCOMP::FRE[0.3]">FRE 30%</option>
+                        <option value="INCOMP::FRE[0.4]">FRE 40%</option>
+                        <option value="INCOMP::FRE[0.5]">FRE 50%</option>
+                        <option value="INCOMP::GKN[0.1]">GKN 10% (Glykosol N)</option>
+                        <option value="INCOMP::GKN[0.2]">GKN 20%</option>
+                        <option value="INCOMP::GKN[0.3]">GKN 30%</option>
+                        <option value="INCOMP::GKN[0.4]">GKN 40%</option>
+                        <option value="INCOMP::GKN[0.5]">GKN 50%</option>
+                        <option value="INCOMP::GKN[0.6]">GKN 60%</option>
+                        <option value="INCOMP::MKA[0.1]">MKA 10% (Potassium Acetate)</option>
+                        <option value="INCOMP::MKA[0.2]">MKA 20%</option>
+                        <option value="INCOMP::MKA[0.3]">MKA 30%</option>
+                        <option value="INCOMP::MKA[0.4]">MKA 40%</option>
+                        <option value="INCOMP::MKA2[0.2]">MKA2 20%</option>
+                        <option value="INCOMP::MKA2[0.3]">MKA2 30%</option>
+                        <option value="INCOMP::MKA2[0.4]">MKA2 40%</option>
+                        <option value="INCOMP::MKC[0.1]">MKC 10% (Potassium Carbonate)</option>
+                        <option value="INCOMP::MKC[0.2]">MKC 20%</option>
+                        <option value="INCOMP::MKC[0.3]">MKC 30%</option>
+                        <option value="INCOMP::MKC[0.4]">MKC 40%</option>
+                        <option value="INCOMP::MKC2[0.1]">MKC2 10%</option>
+                        <option value="INCOMP::MKC2[0.2]">MKC2 20%</option>
+                        <option value="INCOMP::MKC2[0.3]">MKC2 30%</option>
+                        <option value="INCOMP::MKF[0.1]">MKF 10% (Potassium Formate)</option>
+                        <option value="INCOMP::MKF[0.2]">MKF 20%</option>
+                        <option value="INCOMP::MKF[0.3]">MKF 30%</option>
+                        <option value="INCOMP::MKF[0.4]">MKF 40%</option>
+                        <option value="INCOMP::PK2[0.3]">PK2 30% (Tyfoxit)</option>
+                        <option value="INCOMP::PK2[0.4]">PK2 40%</option>
+                        <option value="INCOMP::PK2[0.5]">PK2 50%</option>
+                        <option value="INCOMP::PK2[0.6]">PK2 60%</option>
+                        <option value="INCOMP::PK2[0.7]">PK2 70%</option>
+                        <option value="INCOMP::PK2[0.8]">PK2 80%</option>
+                        <option value="INCOMP::PK2[0.9]">PK2 90%</option>
+                        <option value="INCOMP::PKL[0.1]">PKL 10% (Pekasol)</option>
+                        <option value="INCOMP::PKL[0.2]">PKL 20%</option>
+                        <option value="INCOMP::PKL[0.3]">PKL 30%</option>
+                        <option value="INCOMP::PKL[0.4]">PKL 40%</option>
+                        <option value="INCOMP::PKL[0.5]">PKL 50%</option>
+                        <option value="INCOMP::PKL[0.6]">PKL 60%</option>
+                      </optgroup>
+                      <optgroup label="── INCOMP &#x2014; Chloride &amp; Salt Solutions ──">
+                        <option value="INCOMP::LiBr[0.1]">LiBr 10% (Lithium Bromide)</option>
+                        <option value="INCOMP::LiBr[0.2]">LiBr 20%</option>
+                        <option value="INCOMP::LiBr[0.3]">LiBr 30%</option>
+                        <option value="INCOMP::LiBr[0.4]">LiBr 40%</option>
+                        <option value="INCOMP::LiBr[0.5]">LiBr 50%</option>
+                        <option value="INCOMP::LiBr[0.6]">LiBr 60%</option>
+                        <option value="INCOMP::LiBr[0.7]">LiBr 70%</option>
+                        <option value="INCOMP::MCA[0.1]">MCA 10% (Calcium Chloride)</option>
+                        <option value="INCOMP::MCA[0.2]">MCA 20%</option>
+                        <option value="INCOMP::MCA[0.3]">MCA 30%</option>
+                        <option value="INCOMP::MCA2[0.1]">MCA2 10%</option>
+                        <option value="INCOMP::MCA2[0.2]">MCA2 20%</option>
+                        <option value="INCOMP::MLI[0.1]">MLI 10% (Lithium Chloride)</option>
+                        <option value="INCOMP::MLI[0.2]">MLI 20%</option>
+                        <option value="INCOMP::MMG[0.1]">MMG 10% (Magnesium Chloride)</option>
+                        <option value="INCOMP::MMG[0.2]">MMG 20%</option>
+                        <option value="INCOMP::MMG[0.3]">MMG 30%</option>
+                        <option value="INCOMP::MMG2[0.1]">MMG2 10%</option>
+                        <option value="INCOMP::MMG2[0.2]">MMG2 20%</option>
+                        <option value="INCOMP::MNA[0.1]">MNA 10% (Sodium Chloride)</option>
+                        <option value="INCOMP::MNA[0.2]">MNA 20%</option>
+                        <option value="INCOMP::MNA2[0.1]">MNA2 10%</option>
+                        <option value="INCOMP::MNA2[0.2]">MNA2 20%</option>
+                        <option value="INCOMP::VCA[0.2]">VCA 20% (vol-frac CaCl&#x2082;)</option>
+                        <option value="INCOMP::VKC[0.2]">VKC 20% (vol-frac K&#x2082;CO&#x2083;)</option>
+                        <option value="INCOMP::VKC[0.3]">VKC 30%</option>
+                        <option value="INCOMP::VNA[0.1]">VNA 10% (vol-frac NaCl)</option>
+                        <option value="INCOMP::VNA[0.2]">VNA 20%</option>
+                        <option value="INCOMP::ZAC[0.1]">ZAC 10% (Zitrec AC)</option>
+                        <option value="INCOMP::ZAC[0.2]">ZAC 20%</option>
+                        <option value="INCOMP::ZAC[0.3]">ZAC 30%</option>
+                        <option value="INCOMP::ZAC[0.4]">ZAC 40%</option>
+                        <option value="INCOMP::ZAC[0.5]">ZAC 50%</option>
+                        <option value="INCOMP::ZFC[0.3]">ZFC 30% (Zitrec FC)</option>
+                        <option value="INCOMP::ZFC[0.4]">ZFC 40%</option>
+                        <option value="INCOMP::ZFC[0.5]">ZFC 50%</option>
+                        <option value="INCOMP::ZFC[0.6]">ZFC 60%</option>
+                        <option value="INCOMP::ZLC[0.3]">ZLC 30% (Zitrec LC)</option>
+                        <option value="INCOMP::ZLC[0.4]">ZLC 40%</option>
+                        <option value="INCOMP::ZLC[0.5]">ZLC 50%</option>
+                        <option value="INCOMP::ZLC[0.6]">ZLC 60%</option>
+                        <option value="INCOMP::ZLC[0.7]">ZLC 70%</option>
+                        <option value="INCOMP::ZM[0.1]">ZM 10% (Zitrec M)</option>
+                        <option value="INCOMP::ZM[0.2]">ZM 20%</option>
+                        <option value="INCOMP::ZM[0.3]">ZM 30%</option>
+                        <option value="INCOMP::ZM[0.4]">ZM 40%</option>
+                        <option value="INCOMP::ZM[0.5]">ZM 50%</option>
+                        <option value="INCOMP::ZM[0.6]">ZM 60%</option>
+                        <option value="INCOMP::ZM[0.7]">ZM 70%</option>
+                        <option value="INCOMP::ZM[0.8]">ZM 80%</option>
+                        <option value="INCOMP::ZM[0.9]">ZM 90%</option>
+                        <option value="INCOMP::ZMC[0.3]">ZMC 30% (Zitrec MC)</option>
+                        <option value="INCOMP::ZMC[0.4]">ZMC 40%</option>
+                        <option value="INCOMP::ZMC[0.5]">ZMC 50%</option>
+                        <option value="INCOMP::ZMC[0.6]">ZMC 60%</option>
+                        <option value="INCOMP::ZMC[0.7]">ZMC 70%</option>
+                      </optgroup>
+                      <optgroup label="── INCOMP &#x2014; Ice Slurries &amp; Seawater ──">
+                        <option value="INCOMP::IceEA[0.1]">IceEA 10% (Ice / Ethanol)</option>
+                        <option value="INCOMP::IceEA[0.2]">IceEA 20%</option>
+                        <option value="INCOMP::IceEA[0.3]">IceEA 30%</option>
+                        <option value="INCOMP::IceNA[0.1]">IceNA 10% (Ice / NH&#x2083;)</option>
+                        <option value="INCOMP::IceNA[0.2]">IceNA 20%</option>
+                        <option value="INCOMP::IceNA[0.3]">IceNA 30%</option>
+                        <option value="INCOMP::IcePG[0.1]">IcePG 10% (Ice / Prop. Glycol)</option>
+                        <option value="INCOMP::IcePG[0.2]">IcePG 20%</option>
+                        <option value="INCOMP::IcePG[0.3]">IcePG 30%</option>
+                        <option value="INCOMP::MITSW[0.1]">MITSW (MIT Seawater)</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                </div>
+                <!-- Temperature, pressure, and resolved μ -->
+                <div class="gco g3" style="margin-top:6px;">
+                  <div class="fld">
+                    <label for="thermo-temp">Fluid Temp (&deg;F, blank&nbsp;= T<sub>O</sub>)</label>
+                    <input type="number" id="thermo-temp" step="1" placeholder="(= T&#x2080;)" aria-label="Fluid temperature for ThermoCalc viscosity lookup; defaults to operating temperature if blank" />
+                  </div>
+                  <div class="fld">
+                    <label for="thermo-pressure">Pressure (psia, blank&nbsp;= 14.696)</label>
+                    <input type="number" id="thermo-pressure" step="0.1" min="0" placeholder="14.696" aria-label="Pressure in psia for ThermoCalc viscosity lookup; defaults to atmospheric if blank" />
+                  </div>
+                  <div class="fld">
+                    <label for="thermo-resolved-visc">Resolved &mu; (lbf&middot;min/in&sup2;)</label>
+                    <input type="text" id="thermo-resolved-visc" readonly placeholder="&mdash;" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- OPTIONAL -->
+            <div class="grp">
+              <div class="grp-title">Optional Inputs</div>
+              <div class="gco g3">
+                <div class="fld">
+                  <label for="compression-force">Compression Force F<sub>C</sub> (lbf, blank&nbsp;= 2.5&times;M)</label>
+                  <input type="number" id="compression-force" step="0.1" min="0" placeholder="(= 2.5 M)" aria-label="Seal compression force in lbf; defaults to 2.5 times Meyer hardness" />
+                </div>
+                <div class="fld">
+                  <label for="cn-direct">C<sub>N</sub> Value (blank&nbsp;= 1.0)</label>
+                  <input type="number" id="cn-direct" step="0.001" min="0" placeholder="(= 1.0)" aria-label="Direct contaminant factor CN; defaults to 1.0" />
+                </div>
+                <div class="fld">
+                  <label for="ch-override">C<sub>H</sub> Override (blank&nbsp;= calculated)</label>
+                  <input type="number" id="ch-override" step="0.0001" min="0" placeholder="(calculated)" aria-label="Override CH factor; blank uses the calculated M-over-C formula" />
+                </div>
+              </div>
+            </div>
+
+            <!-- CALCULATE BUTTON -->
+            <div class="group" style="justify-content: center; padding-top: 6px;">
+              <button id="calc-btn" class="btn btn-outline-info-bck" style="width: 100%; max-width: 14rem; font-weight: 600;">Calculate</button>
+            </div>
+
+            <!-- ERROR / WARNING display -->
+            <div id="calc-errors" class="calc-error-box fs-6" style="display:none;"></div>
+            <div id="calc-warnings" class="calc-warn-box fs-6" style="display:none;"></div>
+
+            <!-- RESULTS -->
+            <div id="calc-results" style="display:none;">
+
+              <!-- Primary Results -->
+              <div class="grp" style="margin-top:0.5rem;">
+                <div class="grp-title">Primary Results</div>
+                <div class="gco g2">
+                  <!-- Column 1: Calculated CH -->
+                  <div class="res-col">
+                    <div class="res-col-head">Calculated C<sub>H</sub></div>
+                    <div class="fld">
+                      <label for="res-lambda">&lambda;<sub>SE</sub> (failures / 10<sup>6</sup> h)</label>
+                      <input type="text" id="res-lambda" readonly />
+                    </div>
+                    <div class="fld">
+                      <label for="res-mtbf">MTBF (hours)</label>
+                      <input type="text" id="res-mtbf" readonly />
+                    </div>
+                    <div class="fld">
+                      <label for="res-lambda-display">&lambda;<sub>SE,B</sub> &times; C<sub>P</sub> &times; C<sub>Q</sub> &times; C<sub>DL</sub> &times; <strong>C<sub>H</sub></strong> &times; C<sub>F</sub> &times; C<sub>&nu;</sub> &times; C<sub>T</sub> &times; C<sub>N</sub> = &lambda;<sub>SE</sub></label>
+                      <input type="text" id="res-lambda-display" readonly />
+                    </div>
+                  </div>
+                  <!-- Column 2: CH = 1 -->
+                  <div class="res-col">
+                    <div class="res-col-head">C<sub>H</sub> = 1</div>
+                    <div class="fld">
+                      <label for="res-lambda-unity">&lambda;<sub>SE</sub> (failures / 10<sup>6</sup> h)</label>
+                      <input type="text" id="res-lambda-unity" readonly />
+                    </div>
+                    <div class="fld">
+                      <label for="res-mtbf-unity">MTBF (hours)</label>
+                      <input type="text" id="res-mtbf-unity" readonly />
+                    </div>
+                    <div class="fld">
+                      <label for="res-lambda-display-unity">&lambda;<sub>SE,B</sub> &times; C<sub>P</sub> &times; C<sub>Q</sub> &times; C<sub>DL</sub> &times; <strong>1</strong> &times; C<sub>F</sub> &times; C<sub>&nu;</sub> &times; C<sub>T</sub> &times; C<sub>N</sub> = &lambda;<sub>SE</sub></label>
+                      <input type="text" id="res-lambda-display-unity" readonly />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Multiplying Factors -->
+              <div class="grp">
+                <div class="grp-title">Multiplying Factors</div>
+                <div class="gco g2" style="gap:0;">
+                  <div style="padding: 2px 16px 2px 0;">
+                    <div class="res-col-head" style="text-align:left; border:none; padding:0 0 6px;">Calculated C<sub>H</sub></div>
+                    <table class="mf-table">
+                      <thead><tr><th>Symbol</th><th>Value</th></tr></thead>
+                      <tbody id="mf-calc"></tbody>
+                    </table>
+                  </div>
+                  <div style="padding: 2px 0 2px 16px; border-left:1px dashed #6a746a;">
+                    <div class="res-col-head" style="text-align:left; border:none; padding:0 0 6px;">C<sub>H</sub> = 1</div>
+                    <table class="mf-table">
+                      <thead><tr><th>Symbol</th><th>Value</th></tr></thead>
+                      <tbody id="mf-unity"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Intermediates -->
+              <div class="grp">
+                <div class="grp-title">Intermediates</div>
+                <div class="gco g3">
+                  <div class="fld">
+                    <label for="res-M">Meyer Hardness M (psi)</label>
+                    <input type="text" id="res-M" readonly />
+                  </div>
+                  <div class="fld">
+                    <label for="res-Fc">Compression Force F<sub>C</sub> (lbf)</label>
+                    <input type="text" id="res-Fc" readonly />
+                  </div>
+                  <div class="fld">
+                    <label for="res-C">Contact Pressure C (psi)</label>
+                    <input type="text" id="res-C" readonly />
+                  </div>
+                  <div class="fld">
+                    <label for="res-MC">M / C Ratio (design ideal: 0.55)</label>
+                    <input type="text" id="res-MC" readonly />
+                  </div>
+                  <div class="fld">
+                    <label for="res-dyn-visc">Dynamic Viscosity used (lbf&middot;min/in<sup>2</sup>)</label>
+                    <input type="text" id="res-dyn-visc" readonly />
+                  </div>
+                  <div class="fld">
+                    <label for="res-ch-mode">C<sub>H</sub> mode</label>
+                    <input type="text" id="res-ch-mode" readonly />
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- end #calc-results -->
+
+          </div><!-- end .wrapper -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- MODEL OVERVIEW -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3" style="max-width:860px;">
+
+            <div class="custom-heading">The Failure-Rate Model (NSWC-11 Eq.&nbsp;3-7)</div>
+
+            <div class="mt-3">
+              <p class="text-start">
+                A static seal fails when its leakage exceeds the leakage the application can tolerate.
+                NSWC-11 derives the leak rate from laminar flow between two curved surfaces, then normalizes
+                it against U.S. Navy field-failure data (the 3-M maintenance system) to produce a base failure rate
+                with eight dimensionless multiplying factors. Each factor equals 1.0 at the reference condition
+                from which the field data was collected:
+              </p>
+            </div>
+
+            <div class="my-3 p-3" style="background: var(--section-bg-color, #f8f9fa); border-radius: 8px; overflow-x: auto;">
+              \[
+                \lambda_{SE} \;=\; \lambda_{SE,B}\;\cdot\; C_P \cdot C_Q \cdot C_{DL}
+                \cdot C_H \cdot C_F \cdot C_\nu \cdot C_T \cdot C_N
+              \]
+            </div>
+
+            <div class="mt-3 mx-auto">
+              <table class="table table-sm mx-auto" style="font-size: 0.9rem; max-width: 640px;">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr><th>Symbol</th><th>Meaning</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>&lambda;<sub>SE</sub></td><td>Predicted seal failure rate, failures per million hours</td></tr>
+                  <tr><td>&lambda;<sub>SE,B</sub> = 2.4</td><td>Base failure rate (failures / 10<sup>6</sup> h) — absorbs installation error, material compatibility, random cuts</td></tr>
+                  <tr><td>C<sub>P</sub></td><td>Fluid pressure factor</td></tr>
+                  <tr><td>C<sub>Q</sub></td><td>Allowable-leakage factor</td></tr>
+                  <tr><td>C<sub>DL</sub></td><td>Seal size factor</td></tr>
+                  <tr><td>C<sub>H</sub></td><td>Contact stress and seal hardness factor</td></tr>
+                  <tr><td>C<sub>F</sub></td><td>Surface finish (gland smoothness) factor</td></tr>
+                  <tr><td>C<sub>&nu;</sub></td><td>Fluid viscosity factor</td></tr>
+                  <tr><td>C<sub>T</sub></td><td>Operating temperature factor</td></tr>
+                  <tr><td>C<sub>N</sub></td><td>Fluid contaminant factor</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mt-2">
+              <p style="font-size:0.85rem;" class="text-start">
+                <strong>Scope:</strong> This model applies to gaskets and static seals — O-rings, bolt seals, flange gaskets, back-up rings —
+                where the sealing interface has no relative motion. Dynamic seals use a different base failure rate. The handbook cautions against
+                extracting equations without regard to application limits; warnings are displayed when inputs fall outside those limits.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- FACTOR REFERENCE GUIDE -->
+    <section aria-label="NSWC-11 factor reference guide">
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12 px-3">
+
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Multiplying Factor Reference Guide</div>
+          </div>
+
+          <div class="ref-wrapper">
+          <div class="ref-section-wrap">
+
+            <div class="ref-section-title">NSWC-11 Chapter 3 — Seals and Gaskets</div>
+
+            <!-- ═══ CP ═══ -->
+            <div class="ref-card" id="refCardCP">
+              <div class="ref-card-header" onclick="toggleRefCard('refCardCP')" role="button" tabindex="0" aria-expanded="true">
+                <span class="ref-num">C<sub style="color:#A3C3CD;">P</sub></span>
+                <h2>Fluid Pressure Factor &mdash; C<sub>P</sub></h2>
+                <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="ref-body two-col">
+                <div>
+                  <div class="ref-sub">Equation — NSWC-11 Figure 3.10</div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Eq. CP</span>
+                    \[
+                      C_P =
+                      \begin{cases}
+                        0.25 & P_S \le 1500\ \text{psi}\\[4pt]
+                        \left(\dfrac{P_S}{3000}\right)^{2} & P_S > 1500\ \text{psi}
+                      \end{cases}
+                    \]
+                    \[ P_S = P_1 - P_2 \quad\text{(differential, default)} \]
+                  </div>
+                  <p>Higher fluid pressure increases the load trying to extrude the seal into the clearance gap and raises the
+                  pressure gradient driving leakage. Below 1,500&nbsp;psi the effect is weak; above it grows with the square of pressure.
+                  The pressure used is the differential P<sub>1</sub>&minus;P<sub>2</sub> per NSWC-11 Figure 3.10.</p>
+                  <div class="ref-callout"><strong>Spreadsheet correction:</strong> the original Excel file had an operator-precedence bug
+                  <code>(P1-P2/3000)^2</code> instead of the correct <code>((P1-P2)/3000)^2</code>. This calculator uses the corrected form.</div>
+                </div>
+                <div>
+                  <div class="ref-sub">C<sub>P</sub> vs Pressure Differential (NSWC-11 Fig. 3.10)</div>
+                  <div class="ref-chart-wrap"><canvas id="chart-cp" aria-label="CP versus pressure differential"></canvas></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ CQ ═══ -->
+            <div class="ref-card" id="refCardCQ">
+              <div class="ref-card-header" onclick="toggleRefCard('refCardCQ')" role="button" tabindex="0" aria-expanded="true">
+                <span class="ref-num">C<sub style="color:#A3C3CD;">Q</sub></span>
+                <h2>Allowable Leakage Factor &mdash; C<sub>Q</sub></h2>
+                <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="ref-body two-col">
+                <div>
+                  <div class="ref-sub">Equation — NSWC-11 Figure 3.11</div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Eq. CQ</span>
+                    \[
+                      C_Q =
+                      \begin{cases}
+                        \dfrac{0.055}{Q_f} & Q_f > 0.03\ \text{in}^3/\text{min}\\[8pt]
+                        4.2 - 79\,Q_f & Q_f \le 0.03\ \text{in}^3/\text{min}
+                      \end{cases}
+                    \]
+                  </div>
+                  <p>&ldquo;Failure&rdquo; for a seal means leaking more than the application tolerates &mdash; and that threshold is a
+                  design decision. The tighter the allowable leakage Q<sub>f</sub>, the sooner degradation counts as failure.
+                  The two branches meet at Q<sub>f</sub> = 0.03&nbsp;in&sup3;/min. A zero-leakage requirement gives
+                  the maximum value C<sub>Q</sub> = 4.2.</p>
+                </div>
+                <div>
+                  <div class="ref-sub">C<sub>Q</sub> vs Leakage Rate (NSWC-11 Fig. 3.11)</div>
+                  <div class="ref-chart-wrap"><canvas id="chart-cq" aria-label="CQ versus allowable leakage"></canvas></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ CDL ═══ -->
+            <div class="ref-card" id="refCardCDL">
+              <div class="ref-card-header" onclick="toggleRefCard('refCardCDL')" role="button" tabindex="0" aria-expanded="true">
+                <span class="ref-num">C<sub style="color:#A3C3CD;">DL</sub></span>
+                <h2>Seal Size Factor &mdash; C<sub>DL</sub></h2>
+                <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="ref-body two-col">
+                <div>
+                  <div class="ref-sub">Equations — NSWC-11 Figures 3.12 / 3.13</div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Circular seal (Fig. 3.12)</span>
+                    \[ C_{DL} = 1.1\,D_{SL} + 0.32 \]
+                    <span class="ref-eq-tag" style="margin-top:8px;">Flat gasket variant (Fig. 3.13)</span>
+                    \[ C_{DL} = 0.45\left(\frac{L}{w}\right) + 0.32 \]
+                  </div>
+                  <p>A larger seal presents a longer leakage perimeter and more material exposed to degradation.
+                  D<sub>SL</sub> is the seal inner diameter (in). For non-circular gaskets, L is the total linear length
+                  and w is the minimum gasket width. The gasket form is available via
+                  <code>NSWCSeal.factorCDLGasket(L,&nbsp;w)</code>.</p>
+                </div>
+                <div>
+                  <div class="ref-sub">C<sub>DL</sub> vs Inner Diameter (NSWC-11 Fig. 3.12)</div>
+                  <div class="ref-chart-wrap"><canvas id="chart-cdl" aria-label="CDL versus seal inner diameter"></canvas></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ CH ═══ -->
+            <div class="ref-card" id="refCardCH">
+              <div class="ref-card-header" onclick="toggleRefCard('refCardCH')" role="button" tabindex="0" aria-expanded="true">
+                <span class="ref-num">C<sub style="color:#A3C3CD;">H</sub></span>
+                <h2>Contact Stress &amp; Hardness Factor &mdash; C<sub>H</sub></h2>
+                <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="ref-body">
+
+                <div class="full-col ref-warn">
+                  <strong>High sensitivity:</strong> C<sub>H</sub> varies as (M/C)<sup>4.3</sup>. Small changes in the M/C ratio
+                  swing the predicted failure rate by orders of magnitude. The calculator always reports both the calculated-C<sub>H</sub>
+                  result and the C<sub>H</sub>&nbsp;=&nbsp;1 result; the latter is the conservative reference value recommended
+                  when M/C is far from the design ideal of 0.55.
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px;">
+                  <div>
+                    <div class="ref-sub">Equation — NSWC-11 Figure 3.14</div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Eq. CH</span>
+                      \[ C_H = \left(\frac{M/C}{0.55}\right)^{4.3} \]
+                    </div>
+                    <div class="ref-sub" style="margin-top:8px;">Contact Pressure — Eqs. 3-9 / 3-10</div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Eq. Contact Pressure C</span>
+                      \[
+                        C = \frac{F_C - P_1 \pi r_i^{2} - (P_1{-}P_2)\tfrac{r_o{+}r_i}{2}(r_o{-}r_i)}
+                                 {\pi(r_o^{2} - r_i^{2})}
+                      \]
+                    </div>
+                    <p style="font-size:12px;">F<sub>C</sub> = compression force (default: 2.5&times;M); r<sub>i</sub>, r<sub>o</sub> = inner/outer seal radii.</p>
+                  </div>
+                  <div>
+                    <div class="ref-sub">C<sub>H</sub> vs M/C Ratio (log scale) — NSWC-11 Fig. 3.14</div>
+                    <div class="ref-chart-wrap"><canvas id="chart-ch" aria-label="CH versus hardness ratio M over C"></canvas></div>
+                    <div class="ref-sub" style="margin-top:12px;">Durometer vs Young&rsquo;s Modulus M — NSWC-11 Fig. 3.4</div>
+                    <div class="ref-chart-wrap"><canvas id="chart-youngs" aria-label="Young modulus versus Shore A durometer"></canvas></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- ═══ CF ═══ -->
+            <div class="ref-card" id="refCardCF">
+              <div class="ref-card-header" onclick="toggleRefCard('refCardCF')" role="button" tabindex="0" aria-expanded="true">
+                <span class="ref-num">C<sub style="color:#A3C3CD;">F</sub></span>
+                <h2>Surface Finish Factor &mdash; C<sub>F</sub></h2>
+                <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="ref-body two-col">
+                <div>
+                  <div class="ref-sub">Equation — NSWC-11 Figure 3.15</div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Eq. CF</span>
+                    \[
+                      C_F =
+                      \begin{cases}
+                        0.25 & f < 15\ \mu\text{in}\\[6pt]
+                        \dfrac{f^{\,1.65}}{353} & f \ge 15\ \mu\text{in}
+                      \end{cases}
+                    \]
+                  </div>
+                  <p>The seal must conform to the microscopic peaks and valleys of the harder mating surface (gland or flange).
+                  The rougher that surface, the more leak paths remain. f is the finish of the <em>harder</em> surface, RMS, in micro-inches.
+                  Typical values: 32&nbsp;&mu;in for elastomer seals, 16&nbsp;&mu;in for plastic seals, 8&nbsp;&mu;in for metal seals.</p>
+                  <div class="ref-callout">Surface finish deteriorates with contamination and wear over service life.
+                  Re-evaluate C<sub>F</sub> at later life stages using aged surface finish measurements.</div>
+                </div>
+                <div>
+                  <div class="ref-sub">C<sub>F</sub> vs Surface Finish (NSWC-11 Fig. 3.15)</div>
+                  <div class="ref-chart-wrap"><canvas id="chart-cf" aria-label="CF versus surface finish in micro-inch"></canvas></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ CV ═══ -->
+            <div class="ref-card" id="refCardCV">
+              <div class="ref-card-header" onclick="toggleRefCard('refCardCV')" role="button" tabindex="0" aria-expanded="true">
+                <span class="ref-num">C<sub style="color:#A3C3CD;">&nu;</sub></span>
+                <h2>Fluid Viscosity Factor &mdash; C<sub>&nu;</sub></h2>
+                <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="ref-body">
+                <div class="full-col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px;">
+                  <div>
+                    <div class="ref-sub">Equation — NSWC-11 Table 3-3</div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Eq. C&nu;</span>
+                      \[
+                        C_\nu = \frac{\nu_0}{\nu}, \qquad
+                        \nu_0 = 2{\times}10^{-8}\ \text{lbf}{\cdot}\text{min}/\text{in}^2
+                      \]
+                    </div>
+                    <p>Thin fluids find their way through residual leak paths far more readily than thick ones.
+                    &nu;<sub>0</sub> = 2&times;10<sup>&minus;8</sup> lbf&middot;min/in&sup2; is the MIL-H-83282 datum the field data was normalized against.
+                    Use the viscosity at operating temperature. The calculator accepts three viscosity input modes &mdash; see the calculator above.</p>
+                    <div class="ref-callout"><strong>Kinematic conversion:</strong>
+                    &nu;<sub>dyn</sub> [cP] = &nu;<sub>kin</sub> [cSt] &times; SG;
+                    &nbsp; 1&nbsp;cP = 2.41737&times;10<sup>&minus;9</sup> lbf&middot;min/in&sup2;.</div>
+                  </div>
+                  <div>
+                    <div class="ref-sub">Viscosity Input Modes</div>
+                    <ol class="mt-2">
+                      <li><strong>Fluid + temperature.</strong> All 14 NSWC-11 Table&nbsp;3-3 fluids are pre-registered; C<sub>&nu;</sub> is interpolated directly from the table. Additional fluids can be registered via <code>NSWCSeal.registerFluid(id,&nbsp;def)</code>.</li>
+                      <li><strong>Custom kinematic viscosity (cSt)</strong> plus specific gravity or density (kg/m&sup3;).</li>
+                      <li><strong>Direct dynamic viscosity</strong> in lbf&middot;min/in&sup2; (handbook native units).</li>
+                    </ol>
+                  </div>
+                </div>
+
+                <!-- Cv Table 3-3 -->
+                <div class="full-col">
+                  <div class="ref-sub">Table 3-3 — Fluid Viscosity / Temperature Multiplying Factor C<sub>&nu;</sub></div>
+                  <div style="overflow-x: auto;">
+                    <table class="ref-table">
+                      <thead>
+                        <tr>
+                          <th rowspan="2">Fluid</th>
+                          <th colspan="9" style="text-align:center;">Temperature (&deg;F)</th>
+                        </tr>
+                        <tr>
+                          <th>&minus;50</th><th>0</th><th>50</th><th>100</th><th>150</th><th>200</th><th>250</th><th>300</th><th>350</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>Air</td><td>554.0</td><td>503.4</td><td>462.9</td><td>430.1</td><td>402.6</td><td>379.4</td><td>359.5</td><td>—</td><td>—</td></tr>
+                        <tr><td>Oxygen</td><td>504.6</td><td>457.8</td><td>420.6</td><td>390.2</td><td>365.9</td><td>343.6</td><td>325.3</td><td>—</td><td>—</td></tr>
+                        <tr><td>Nitrogen</td><td>580.0</td><td>528.0</td><td>486.5</td><td>452.6</td><td>424.3</td><td>400.0</td><td>379.6</td><td>—</td><td>—</td></tr>
+                        <tr><td>Carbon Dioxide</td><td>—</td><td>599.9</td><td>510.7</td><td>449.7</td><td>395.9</td><td>352.1</td><td>—</td><td>—</td><td>—</td></tr>
+                        <tr><td>Water</td><td>—</td><td>—</td><td>6.309</td><td>12.15</td><td>19.43</td><td>27.30</td><td>—</td><td>—</td><td>—</td></tr>
+                        <tr><td>SAE 10 Oil</td><td>—</td><td>—</td><td>0.060</td><td>0.250</td><td>0.750</td><td>1.690</td><td>2.650</td><td>—</td><td>—</td></tr>
+                        <tr><td>SAE 20 Oil</td><td>—</td><td>—</td><td>0.0314</td><td>0.167</td><td>0.492</td><td>1.183</td><td>2.213</td><td>2.861</td><td>5.204</td></tr>
+                        <tr><td>SAE 30 Oil</td><td>—</td><td>—</td><td>0.0297</td><td>0.1129</td><td>0.3519</td><td>0.8511</td><td>1.768</td><td>2.861</td><td>4.309</td></tr>
+                        <tr><td>SAE 40 Oil</td><td>—</td><td>—</td><td>0.0122</td><td>0.0534</td><td>0.2462</td><td>0.6718</td><td>1.325</td><td>2.221</td><td>3.387</td></tr>
+                        <tr><td>SAE 50 Oil</td><td>—</td><td>—</td><td>0.0037</td><td>0.0326</td><td>0.1251</td><td>0.3986</td><td>0.8509</td><td>1.657</td><td>2.654</td></tr>
+                        <tr><td>SAE 90 Oil</td><td>—</td><td>—</td><td>0.0012</td><td>0.0189</td><td>0.0973</td><td>0.3322</td><td>0.7855</td><td>1.515</td><td>2.591</td></tr>
+                        <tr><td>Diesel Fuel</td><td>0.1617</td><td>0.7492</td><td>2.089</td><td>3.847</td><td>6.228</td><td>9.169</td><td>12.78</td><td>16.31</td><td>—</td></tr>
+                        <tr><td>MIL-H-83282</td><td>0.0031</td><td>0.0432</td><td>0.2137</td><td>0.6643</td><td>1.421</td><td>2.585</td><td>4.063</td><td>0.6114*</td><td>0.7766*</td></tr>
+                        <tr><td>MIL-H-5606</td><td>0.0188</td><td>0.0951</td><td>0.2829</td><td>0.6228</td><td>1.108</td><td>1.783</td><td>2.719</td><td>3.628</td><td>4.880</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p class="ref-table-caption">— = data unreliable at this temperature per NSWC-11. * The 300/350&nbsp;&deg;F values for MIL-H-83282 break the rising trend and appear to be source typos; reproduced as published.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ CT ═══ -->
+            <div class="ref-card" id="refCardCT">
+              <div class="ref-card-header" onclick="toggleRefCard('refCardCT')" role="button" tabindex="0" aria-expanded="true">
+                <span class="ref-num">C<sub style="color:#A3C3CD;">T</sub></span>
+                <h2>Temperature Factor &mdash; C<sub>T</sub></h2>
+                <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="ref-body two-col">
+                <div>
+                  <div class="ref-sub">Equation — NSWC-11 Eq. 3-11</div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Eq. CT</span>
+                    \[
+                      C_T =
+                      \begin{cases}
+                        \dfrac{1}{2^{\,t}},\quad t = \dfrac{T_R - T_O}{18}
+                          & \Delta T \le 40\ ^\circ\text{F}\\[10pt]
+                        0.21 & \Delta T > 40\ ^\circ\text{F}
+                      \end{cases}
+                    \]
+                  </div>
+                  <p>Heat ages elastomers: operating near the material&rsquo;s rated temperature T<sub>R</sub> continues vulcanization,
+                  hardening and embrittling the seal. Operating <em>at</em> the rating gives C<sub>T</sub> = 1; every 18&nbsp;&deg;F
+                  of margin halves the factor, flooring at 0.21 once the margin exceeds 40&nbsp;&deg;F.</p>
+
+                  <div class="ref-sub" style="margin-top:12px;">Table 3-5 — Typical Rated Temperatures T<sub>R</sub></div>
+                  <table class="ref-table">
+                    <thead>
+                      <tr><th>Material</th><th>T<sub>R</sub> (&deg;F)</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>Natural rubber</td><td>160</td></tr>
+                      <tr><td>Leather</td><td>200</td></tr>
+                      <tr><td>Urethane</td><td>210</td></tr>
+                      <tr><td>Ethylene propylene</td><td>250</td></tr>
+                      <tr><td>Neoprene</td><td>250</td></tr>
+                      <tr><td>Nitrile</td><td>250</td></tr>
+                      <tr><td>Butyl rubber</td><td>250</td></tr>
+                      <tr><td>Impregnated poromeric</td><td>250</td></tr>
+                      <tr><td>Polyacrylate</td><td>300</td></tr>
+                      <tr><td>Fluorosilicon</td><td>450</td></tr>
+                      <tr><td>Silicon rubbers</td><td>450</td></tr>
+                      <tr><td>Fluorocarbon</td><td>475</td></tr>
+                      <tr><td>Fluoroelastomers</td><td>500</td></tr>
+                      <tr><td>Fluoroplastics</td><td>500</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div>
+                  <div class="ref-sub">C<sub>T</sub> vs Temperature Margin T<sub>R</sub>&minus;T<sub>O</sub> (NSWC-11 Fig. 3.16)</div>
+                  <div class="ref-chart-wrap"><canvas id="chart-ct" aria-label="CT versus temperature margin"></canvas></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ CN ═══ -->
+            <div class="ref-card" id="refCardCN">
+              <div class="ref-card-header" onclick="toggleRefCard('refCardCN')" role="button" tabindex="0" aria-expanded="true">
+                <span class="ref-num">C<sub style="color:#A3C3CD;">N</sub></span>
+                <h2>Fluid Contaminant Factor &mdash; C<sub>N</sub></h2>
+                <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="ref-body two-col">
+                <div>
+                  <div class="ref-sub">Equation — NSWC-11 Table 3-4</div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Eq. CN</span>
+                    \[
+                      C_N = \left(\frac{C_0}{C_{10}}\right)^{3} F_R\, N_{10},
+                      \qquad C_{10} = 10\ \mu\text{m}
+                    \]
+                  </div>
+                  <p>Hard particles embed in the soft seal and abrade the mating surface, opening leak paths.
+                  C<sub>0</sub> = system filter size (&mu;m); F<sub>R</sub> = rated flow rate (GPM);
+                  N<sub>10</sub> = particles &lt;10&nbsp;&mu;m per hour per rated GPM generated by the upstream component (Table 3-4).</p>
+                  <div class="ref-callout">The source engineering analysis used C<sub>N</sub>&nbsp;=&nbsp;1.0 (&ldquo;based on other analyses&rdquo;
+                  — i.e. a clean, filtered system). This is the default when no contaminant inputs are given to the calculator.</div>
+
+                  <div class="ref-sub" style="margin-top:12px;">Table 3-4 — N<sub>10</sub> Particle-Generation Factors</div>
+                  <table class="ref-table">
+                    <thead>
+                      <tr><th>Upstream component</th><th>Particles</th><th>N<sub>10</sub></th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>Piston pump</td><td>steel</td><td>0.017</td></tr>
+                      <tr><td>Gear pump</td><td>steel</td><td>0.019</td></tr>
+                      <tr><td>Vane pump</td><td>steel</td><td>0.006</td></tr>
+                      <tr><td>Cylinder</td><td>steel</td><td>0.008</td></tr>
+                      <tr><td>Sliding action valve</td><td>steel</td><td>0.0004</td></tr>
+                      <tr><td>Hose</td><td>rubber</td><td>0.0013</td></tr>
+                    </tbody>
+                  </table>
+                  <p class="ref-table-caption">N<sub>10</sub> units: particles &lt;10&nbsp;&mu;m / hour / rated GPM.</p>
+                </div>
+                <div>
+                  <div class="ref-sub">C<sub>N</sub> vs Filter Size — 5&nbsp;GPM, various components</div>
+                  <div class="ref-chart-wrap"><canvas id="chart-cn" aria-label="CN versus system filter size"></canvas></div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- ref-section-wrap -->
+          </div><!-- ref-wrapper -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- WORKED EXAMPLE -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3" style="max-width: 860px;">
+
+            <div class="custom-heading">Worked Example</div>
+
+            <div style="text-align:left;" class="mt-3">
+              <p>A 70-durometer O-ring, 0.778&nbsp;in inner / 0.886&nbsp;in outer diameter, sealing 180&nbsp;psi against
+              atmospheric with a zero-leakage requirement. Gland finish 32&nbsp;&mu;in; fluid dynamic viscosity
+              4.461&times;10<sup>&minus;9</sup>&nbsp;lbf&middot;min/in&sup2; at 150&nbsp;&deg;F;
+              seal material rated to 300&nbsp;&deg;F.</p>
+
+              <div class="custom-subheading mt-3">Step-by-step</div>
+              <ul class="mt-2">
+                <li><strong>M</strong> = 925 psi (from Figure 3.4 at 70 Shore A)</li>
+                <li><strong>F<sub>C</sub></strong> = 2.5 &times; 925 = 2312.5 lbf (default rule)</li>
+                <li><strong>C</strong> &asymp; 15,749 psi (Eqs. 3-9/3-10); M/C &asymp; 0.059 (far from ideal 0.55)</li>
+                <li><strong>C<sub>P</sub></strong> = 0.25 (180 psi &lt; 1,500 psi threshold)</li>
+                <li><strong>C<sub>Q</sub></strong> = 4.2 (Q<sub>f</sub> = 0, maximum value)</li>
+                <li><strong>C<sub>DL</sub></strong> = 1.1 &times; 0.778 + 0.32 = 1.176</li>
+                <li><strong>C<sub>H</sub></strong> = (0.059/0.55)<sup>4.3</sup> &asymp; 6.65&times;10<sup>&minus;5</sup></li>
+                <li><strong>C<sub>F</sub></strong> = 32<sup>1.65</sup>/353 &asymp; 0.862</li>
+                <li><strong>C<sub>&nu;</sub></strong> = (2&times;10<sup>&minus;8</sup>) / (4.461&times;10<sup>&minus;9</sup>) &asymp; 4.48</li>
+                <li><strong>C<sub>T</sub></strong> = 1/2<sup>(300&minus;150)/18</sup> = 1/2<sup>8.33</sup> &asymp; 0.21 (margin &gt; 40 &deg;F floor)</li>
+                <li><strong>C<sub>N</sub></strong> = 1.0 (default)</li>
+              </ul>
+              <p class="mt-2">
+                &lambda;<sub>SE</sub> = 2.4 &times; 0.25 &times; 4.2 &times; 1.176 &times; 6.65&times;10<sup>&minus;5</sup>
+                &times; 0.862 &times; 4.48 &times; 0.21 &times; 1.0
+                &asymp; <strong>1.6&times;10<sup>&minus;4</sup> failures / 10<sup>6</sup> h</strong> (calculated C<sub>H</sub>).
+              </p>
+              <p>
+                With C<sub>H</sub>&nbsp;=&nbsp;1: &lambda;<sub>SE</sub> &asymp; <strong>2.41 failures / 10<sup>6</sup> h</strong>.
+                Because M/C = 0.059 is far from the 0.55 design ideal, the conservative C<sub>H</sub>&nbsp;=&nbsp;1 figure
+                is the value to carry in an analysis.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- DISCLAIMER -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3 mb-3" style="max-width:860px;">
+
+            <div class="custom-heading text-start">Important Notices</div>
+            <ul class="mt-3 text-start" style="font-size:0.9rem;">
+              <li class="mb-2"><strong>Not an official DoD document.</strong> NSWC-11 is the product of a Naval Surface Warfare Center
+              research program, approved for public release. The handbook cautions that limited funding prevented full validation of every
+              prediction equation and that it should not be treated as an official Department of Defense standard.</li>
+              <li class="mb-2"><strong>No Navy affiliation or endorsement.</strong> The Naval Surface Warfare Center, Carderock Division
+              and the U.S. Navy have not participated in the development of this calculator and do not approve or endorse it.</li>
+              <li class="mb-2"><strong>Use with the full procedure.</strong> NSWC-11 warns against extracting equations without regard to
+              application procedures and parameter limits. This calculator reproduces applicability limits alongside each factor and flags
+              out-of-range inputs &mdash; but results are a design screening tool, not a substitute for engineering analysis, testing,
+              or the judgment of a qualified engineer.</li>
+              <li class="mb-2"><strong>Static seals only.</strong> This model applies to gaskets and static seals with no relative motion.
+              Dynamic seals use a different base failure rate; mechanical face seals use a separate procedure entirely.</li>
+              <li><strong>Time-varying results.</strong> Seal hardness and gland surface finish degrade with service. Re-evaluate at
+              intervals (with aged hardness and worn finish) to estimate reliability across equipment life.</li>
+            </ul>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CITATION -->
+    <section class="mt-5 pt-3">
+      <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+        <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+          <div class="d-flex align-items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+            <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+          </div>
+          <style>
+            #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+            #citationTabs li { margin: 0; list-style: none; }
+            #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+            #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+            #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+          </style>
+          <div class="tab-content mt-2 mb-3" id="citationTabContent">
+            <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+              <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+              <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+              <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+              <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+          </div>
+          <ul id="citationTabs" class="nav" role="tablist">
+            <li role="presentation">
+              <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+  <script src="js/footer.js"></script>
+  <!-- END FOOTER -->
+
+
+  <!-- =====================================================================
+       CHART.JS (loaded here so it is available to the page script below)
+       ===================================================================== -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+  <!-- =====================================================================
+       PAGE SCRIPT — calculator logic + chart initialization
+       ===================================================================== -->
+  <script>
+  (function () {
+    'use strict';
+
+    // ── Ref-card toggle ─────────────────────────────────────────────────
+    window.toggleRefCard = function (id) {
+      var card = document.getElementById(id);
+      if (card) card.classList.toggle('collapsed');
+    };
+
+    // ── Build material preset dropdown ──────────────────────────────────
+    var matSel = document.getElementById('seal-material');
+    Object.keys(NSWCSeal.SEAL_MATERIAL_RATED_TEMPS).forEach(function (m) {
+      var opt = document.createElement('option');
+      opt.value = m;
+      opt.textContent = m + ' — Tᵣ = ' + NSWCSeal.SEAL_MATERIAL_RATED_TEMPS[m] + '°F';
+      matSel.appendChild(opt);
+    });
+    matSel.addEventListener('change', function () {
+      var v = matSel.value;
+      if (v && NSWCSeal.SEAL_MATERIAL_RATED_TEMPS[v] != null) {
+        document.getElementById('rated-temp').value = NSWCSeal.SEAL_MATERIAL_RATED_TEMPS[v];
+      }
+    });
+
+    // ── Build fluid dropdown ─────────────────────────────────────────────
+    var fluidSel = document.getElementById('fluid-select');
+    NSWCSeal.listFluids().forEach(function (f) {
+      var opt = document.createElement('option');
+      opt.value = f.id;
+      opt.textContent = f.label;
+      fluidSel.appendChild(opt);
+    });
+
+    // ── Viscosity mode switching ─────────────────────────────────────────
+    function setViscMode(mode) {
+      ['fluid', 'kinematic', 'dynamic', 'jet-fuel', 'pg', 'thermo'].forEach(function (m) {
+        var el = document.getElementById('visc-' + m);
+        if (el) el.style.display = (m === mode) ? 'block' : 'none';
+      });
+    }
+    document.querySelectorAll('input[name="visc-mode"]').forEach(function (r) {
+      r.addEventListener('change', function () { setViscMode(r.value); });
+    });
+    setViscMode('fluid');
+
+    // ── Lazy-load helper (never fetches the same src twice) ──────────────
+    var _loadedScripts = new Set();
+    function _loadScript(src) {
+      return new Promise(function (resolve, reject) {
+        if (_loadedScripts.has(src)) { resolve(); return; }
+        var s = document.createElement('script');
+        s.src = src;
+        s.onload  = function () { _loadedScripts.add(src); resolve(); };
+        s.onerror = function () { reject(new Error('Failed to load ' + src)); };
+        document.body.appendChild(s);
+      });
+    }
+
+    // ── CSV fetch cache + linear interpolation ────────────────────────────
+    var _csvCache = new Map();
+    function _parseCSVXY(text) {
+      var out = [];
+      text.trim().split('\n').forEach(function (row) {
+        var cols = row.split(',');
+        if (cols.length >= 2) {
+          var x = parseFloat(cols[0].trim()), y = parseFloat(cols[1].trim());
+          if (!isNaN(x) && !isNaN(y)) out.push({ x: x, y: y });
+        }
+      });
+      return out;
+    }
+    function _fetchCSV(path) {
+      if (_csvCache.has(path)) return Promise.resolve(_csvCache.get(path));
+      return fetch(path).then(function (res) { return res.text(); }).then(function (txt) {
+        var data = _parseCSVXY(txt);
+        _csvCache.set(path, data);
+        return data;
+      });
+    }
+    function _linInterp(xTarget, data) {
+      for (var i = 0; i < data.length - 1; i++) {
+        if (xTarget >= data[i].x && xTarget <= data[i + 1].x)
+          return data[i].y + (xTarget - data[i].x) * (data[i + 1].y - data[i].y) / (data[i + 1].x - data[i].x);
+      }
+      return NaN;
+    }
+
+    // Conversion factors (NSWC-11 §3 reference value: ν₀ = 2×10⁻⁸ lbf·min/in²)
+    var _CPS_TO_LBFMININ2 = 2.41737e-9;  // 1 mPa·s (= 1 cP) → lbf·min/in²
+    var _PAS_TO_LBFMININ2 = 2.41737e-6;  // 1 Pa·s → lbf·min/in²
+
+    // ── Jet fuel viscosity resolver ───────────────────────────────────────
+    // kinematicViscosity.js stores ν in cSt; density in kg/m³.
+    // μ[lbf·min/in²] = (ν[cSt] × ρ[kg/m³] / 1000) × 2.41737e-9
+    var _JF_VISC = {
+      'JP-5, Jet A, Jet A-1, JP-8': '../csvData/50.csv',
+      'JP-4, Jet B':                 '../csvData/48.csv',
+      'JP-7':                        '../csvData/51.csv',
+      'JP-9, JP-10':                 '../csvData/52.csv',
+      'RJ-4':                        '../csvData/53.csv',
+      'RJ-5':                        '../csvData/55.csv',
+      'RJ-6':                        '../csvData/54.csv',
+      'TS':                          '../csvData/49.csv',
+      'Av. Gas':                     '../csvData/47.csv',
+    };
+    var _JF_DENS = {
+      'JP-5, Jet A, Jet A-1, JP-8': '../csvData/4.csv',
+      'JP-4, Jet B':                 '../csvData/2.csv',
+      'JP-7':                        '../csvData/3.csv',
+      'JP-9, JP-10':                 '../csvData/8.csv',
+      'RJ-4':                        '../csvData/6.csv',
+      'RJ-5':                        '../csvData/10.csv',
+      'RJ-6':                        '../csvData/9.csv',
+      'TS':                          '../csvData/3.csv',
+      'Av. Gas':                     '../csvData/1.csv',
+    };
+    function _jetFuelDynVisc(fuel, tempF) {
+      var vf = _JF_VISC[fuel], df = _JF_DENS[fuel];
+      if (!vf || !df) return Promise.resolve(NaN);
+      return Promise.all([_fetchCSV(vf), _fetchCSV(df)]).then(function (arr) {
+        var nu  = _linInterp(tempF, arr[0]);  // cSt
+        var rho = _linInterp(tempF, arr[1]);  // kg/m³
+        if (isNaN(nu) || isNaN(rho) || rho <= 0) return NaN;
+        return (nu * rho / 1000) * _CPS_TO_LBFMININ2;
+      });
+    }
+
+    // ── PG viscosity resolver ─────────────────────────────────────────────
+    // pgViscKinematic.js stores dynamic viscosity directly in mPa·s (no CSV for kinematic).
+    var _PG_VISC_LABELS = ['Freeze Curve', '50%', '45%', '40%', '35%', '30%', '25%'];
+    var _PG_VISC_FILES  = [
+      '../csvData/propyleneglycol/pg-22.csv',
+      '../csvData/propyleneglycol/pg-23.csv',
+      '../csvData/propyleneglycol/pg-24.csv',
+      '../csvData/propyleneglycol/pg-25.csv',
+      '../csvData/propyleneglycol/pg-26.csv',
+      '../csvData/propyleneglycol/pg-27.csv',
+      '../csvData/propyleneglycol/pg-28.csv',
+    ];
+    function _pgDynVisc(concentration, tempF) {
+      var ci = _PG_VISC_LABELS.indexOf(concentration);
+      if (ci < 0) return Promise.resolve(NaN);
+      return _fetchCSV(_PG_VISC_FILES[ci]).then(function (data) {
+        var mu_mPas = _linInterp(tempF, data);
+        return isNaN(mu_mPas) ? NaN : mu_mPas * _CPS_TO_LBFMININ2;
+      });
+    }
+
+    // ── ThermoCalc viscosity resolver (lazy-loads thermodynamicsland.js) ──
+    // ThermoCalc.lookupPoint returns props.visc in Pa·s.
+    function _thermoDynVisc(fluidName, tempF, pressurePsia) {
+      return _loadScript('js/thermodynamicsland.js').then(function () {
+        var T_K  = (tempF - 32) * 5 / 9 + 273.15;
+        var P_Pa = pressurePsia * 6894.76;
+        return window.ThermoCalc.lookupPoint(fluidName, T_K, P_Pa);
+      }).then(function (props) {
+        if (!props || props.visc == null || isNaN(props.visc)) return NaN;
+        return props.visc * _PAS_TO_LBFMININ2;
+      });
+    }
+
+    // ── Read helper ───────────────────────────────────────────────────────
+    function numVal(id) {
+      var v = parseFloat(document.getElementById(id).value);
+      return isNaN(v) ? null : v;
+    }
+    function strVal(id) {
+      return document.getElementById(id).value.trim();
+    }
+
+    // ── Calculate ─────────────────────────────────────────────────────────
+    async function runCalculate() {
+      var inp = {
+        leakageRate:  numVal('leakage-rate'),
+        sealInnerDia: numVal('seal-inner-dia'),
+        sealOuterDia: numVal('seal-outer-dia'),
+        pressureHigh: numVal('pressure-high'),
+        pressureLow:  numVal('pressure-low'),
+        surfaceFinish:numVal('surface-finish'),
+        operatingTemp:numVal('operating-temp'),
+        ratedTemp:    numVal('rated-temp'),
+        durometer:    numVal('durometer'),
+        cpMode: strVal('cp-mode') || 'differential',
+      };
+
+      // Viscosity
+      var viscMode = document.querySelector('input[name="visc-mode"]:checked').value;
+      if (viscMode === 'fluid') {
+        inp.fluid = strVal('fluid-select');
+        var ft = numVal('fluid-temp');
+        if (ft !== null) inp.fluidTemp = ft;
+      } else if (viscMode === 'kinematic') {
+        var kv = numVal('kin-viscosity');
+        if (kv !== null) inp.kinematicViscosity = kv;
+        var sg = numVal('kin-sg');
+        var rho = numVal('kin-density');
+        if (sg !== null) inp.specificGravity = sg;
+        else if (rho !== null) inp.density = rho;
+      } else if (viscMode === 'dynamic') {
+        var dv = numVal('dyn-viscosity');
+        if (dv !== null) inp.dynamicViscosity = dv;
+      } else if (viscMode === 'jet-fuel') {
+        var jfFuel  = strVal('jf-fluid-select');
+        var jfTempF = numVal('jf-temp') !== null ? numVal('jf-temp') : inp.operatingTemp;
+        try {
+          var jfMu = await _jetFuelDynVisc(jfFuel, jfTempF);
+          document.getElementById('jf-resolved-visc').value = isNaN(jfMu) ? 'Out of range' : jfMu.toExponential(4);
+          if (!isNaN(jfMu)) inp.dynamicViscosity = jfMu;
+        } catch (e) { document.getElementById('jf-resolved-visc').value = 'Error'; }
+      } else if (viscMode === 'pg') {
+        var pgConc  = strVal('pg-conc-select');
+        var pgTempF = numVal('pg-temp') !== null ? numVal('pg-temp') : inp.operatingTemp;
+        try {
+          var pgMu = await _pgDynVisc(pgConc, pgTempF);
+          document.getElementById('pg-resolved-visc').value = isNaN(pgMu) ? 'Out of range' : pgMu.toExponential(4);
+          if (!isNaN(pgMu)) inp.dynamicViscosity = pgMu;
+        } catch (e) { document.getElementById('pg-resolved-visc').value = 'Error'; }
+      } else if (viscMode === 'thermo') {
+        var tFluid = strVal('thermo-fluid-name');
+        var tTempF = numVal('thermo-temp') !== null ? numVal('thermo-temp') : inp.operatingTemp;
+        var tPsia  = numVal('thermo-pressure') !== null ? numVal('thermo-pressure') : 14.696;
+        try {
+          var tMu = await _thermoDynVisc(tFluid, tTempF, tPsia);
+          document.getElementById('thermo-resolved-visc').value = isNaN(tMu) ? 'Out of range' : tMu.toExponential(4);
+          if (!isNaN(tMu)) inp.dynamicViscosity = tMu;
+        } catch (e) { document.getElementById('thermo-resolved-visc').value = 'Error: ' + e.message; }
+      }
+
+      // Optional
+      var fc = numVal('compression-force');
+      if (fc !== null) inp.compressionForce = fc;
+      var cn = numVal('cn-direct');
+      if (cn !== null) inp.contaminant = cn;
+      var chOv = numVal('ch-override');
+      if (chOv !== null) inp.chOverride = chOv;
+
+      var r = NSWCSeal.calculate(inp);
+      displayResults(r);
+    }
+
+    // ── Plain (non-scientific) number formatting ─────────────────────────
+    // Thousands separators; decimals scale with magnitude; sub-1 values keep
+    // 4 significant digits. Never emits scientific notation.
+    function fmtPlain(x) {
+      if (x == null || isNaN(x)) return '—';
+      if (!isFinite(x)) return '∞';
+      var a = Math.abs(x);
+      if (a !== 0 && a < 1) return x.toLocaleString('en-US', { maximumSignificantDigits: 4 });
+      var d = a >= 1000 ? 0 : (a >= 100 ? 1 : (a >= 10 ? 2 : 3));
+      return x.toLocaleString('en-US', { maximumFractionDigits: d });
+    }
+
+    // ── Display results ───────────────────────────────────────────────────
+    function displayResults(r) {
+      var errDiv  = document.getElementById('calc-errors');
+      var warnDiv = document.getElementById('calc-warnings');
+      var resDiv  = document.getElementById('calc-results');
+
+      errDiv.style.display  = 'none';
+      warnDiv.style.display = 'none';
+      errDiv.innerHTML  = '';
+      warnDiv.innerHTML = '';
+
+      if (!r.ok) {
+        errDiv.innerHTML = '<strong>Errors:</strong><ul style="margin-bottom:0.5rem;">' +
+          r.errors.map(function(e){ return '<li>' + e + '</li>'; }).join('') + '</ul>';
+        errDiv.style.display = '';
+        resDiv.style.display = 'none';
+        return;
+      }
+
+      if (r.warnings && r.warnings.length) {
+        warnDiv.innerHTML = '<strong>Warnings:</strong><ul style="margin-bottom:0.5rem;">' +
+          r.warnings.map(function(w){ return '<li>' + w + '</li>'; }).join('') + '</ul>';
+        warnDiv.style.display = '';
+      }
+
+      // Main results — two columns: calculated CH vs CH = 1, with MTBF for each.
+      // MTBF (hours) = 10^6 / λ (λ is failures per 10^6 hours), per the model.
+      var mtbfCalc  = r.mtbfHours;
+      var mtbfUnity = r.lambdaUnityCH > 0 ? 1e6 / r.lambdaUnityCH : Infinity;
+      document.getElementById('res-lambda').value       = fmtPlain(r.lambda);
+      document.getElementById('res-mtbf').value         = fmtPlain(mtbfCalc);
+      document.getElementById('res-lambda-unity').value = fmtPlain(r.lambdaUnityCH);
+      document.getElementById('res-mtbf-unity').value   = fmtPlain(mtbfUnity);
+      document.getElementById('res-lambda-display').value = fmtPlain(r.lambda);
+      document.getElementById('res-lambda-display-unity').value = fmtPlain(r.lambdaUnityCH);
+
+      // Factor tables — one per CH case (calculated vs CH = 1), each ending
+      // with the resulting λ_SE. Only the CH row and the final λ_SE differ.
+      var f = r.factors;
+      function buildFactorTable(tbodyId, chDisplay, lambdaValue) {
+        var rows = [
+          ['λ<sub>SE,B</sub> = ' + r.baseFailureRate.toFixed(1), 'Base failure rate (failures / 10<sup>6</sup> h)'],
+          ['C<sub>P</sub>',  f.CP.toFixed(4)],
+          ['C<sub>Q</sub>',  f.CQ.toFixed(4)],
+          ['C<sub>DL</sub>', f.CDL.toFixed(4)],
+          ['C<sub>H</sub>',  chDisplay],
+          ['C<sub>F</sub>',  f.CF.toFixed(4)],
+          ['C<sub>ν</sub>', f.CV.toFixed(4)],
+          ['C<sub>T</sub>',  f.CT.toFixed(4)],
+          ['C<sub>N</sub>',  f.CN.toFixed(4)],
+        ];
+        var html = rows.map(function (p) {
+          return '<tr><td>' + p[0] + '</td><td>' + p[1] + '</td></tr>';
+        }).join('');
+        html += '<tr class="mf-total"><td>λ<sub>SE</sub></td><td>' + fmtPlain(lambdaValue) + '</td></tr>';
+        document.getElementById(tbodyId).innerHTML = html;
+      }
+      buildFactorTable('mf-calc',  fmtPlain(f.CH), r.lambda);
+      buildFactorTable('mf-unity', '1.0000',      r.lambdaUnityCH);
+
+      // Intermediates
+      var im = r.intermediates;
+      document.getElementById('res-M').value = im.meyerHardness.toFixed(1);
+      document.getElementById('res-Fc').value = im.compressionForce.toFixed(2);
+      document.getElementById('res-C').value = fmtPlain(im.contactPressure);
+      document.getElementById('res-MC').value =
+        isNaN(im.hardnessRatio) ? 'N/A' : im.hardnessRatio.toFixed(5);
+      document.getElementById('res-dyn-visc').value =
+        im.viscosity.dynamicViscosity != null ? fmtPlain(im.viscosity.dynamicViscosity) : '—';
+      document.getElementById('res-ch-mode').value = im.chMode;
+
+      resDiv.style.display = '';
+    }
+
+    // Wire up button
+    document.getElementById('calc-btn').addEventListener('click', runCalculate);
+
+    // Enter key + live recalculation on any input or select change
+    document.querySelectorAll('#seal-calc-form input, #seal-calc-form select').forEach(function (el) {
+      el.addEventListener('keydown', function (e) { if (e.key === 'Enter') runCalculate(); });
+      el.addEventListener('change', runCalculate);
+      if (el.tagName === 'INPUT' && el.type !== 'radio') el.addEventListener('input', runCalculate);
+    });
+
+    // ── Chart.js helpers ─────────────────────────────────────────────────
+    var LINE_COLOR = 'rgb(68,119,170)';
+    var LINE_COLOR2 = 'rgb(238,102,119)';
+
+    function makeChart(canvasId, label, xData, yData, xTitle, yTitle, opts) {
+      var ctx = document.getElementById(canvasId);
+      if (!ctx) return;
+      var o = opts || {};
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [{
+            label: label,
+            data: xData.map(function(x, i){ return {x: x, y: yData[i]}; }),
+            fill: false,
+            borderColor: o.color || LINE_COLOR,
+            borderWidth: 2,
+            pointRadius: 0,
+            tension: 0.1,
+          }],
+        },
+        options: {
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              mode: 'nearest', intersect: false, axis: 'x',
+              callbacks: {
+                title: function(it) { return xTitle + ': ' + it[0].parsed.x.toPrecision(4); },
+                label: function(c)  { return yTitle + ': ' + c.parsed.y.toPrecision(4); },
+              },
+            },
+          },
+          scales: {
+            x: {
+              type: 'linear',
+              title: { display: true, text: xTitle, font: { size: 11 } },
+              ticks: { font: { size: 10 }, maxTicksLimit: 6 },
+            },
+            y: {
+              type: o.logY ? 'logarithmic' : 'linear',
+              title: { display: true, text: yTitle, font: { size: 11 } },
+              ticks: { font: { size: 10 }, maxTicksLimit: 5 },
+            },
+          },
+          animation: { duration: 0 },
+        },
+      });
+    }
+
+    // CP chart
+    (function() {
+      var s = NSWCSeal.chartSeries.cp();
+      makeChart('chart-cp', 'CP', s.x, s.y, 'Pressure differential (psi)', 'CP');
+    })();
+
+    // CQ chart
+    (function() {
+      var s = NSWCSeal.chartSeries.cq();
+      makeChart('chart-cq', 'CQ', s.x, s.y, 'Allowable leakage (in³/min)', 'CQ');
+    })();
+
+    // CDL chart
+    (function() {
+      var s = NSWCSeal.chartSeries.cdl();
+      makeChart('chart-cdl', 'CDL', s.x, s.y, 'Inner diameter (in)', 'CDL');
+    })();
+
+    // CH chart (log y-axis)
+    (function() {
+      var s = NSWCSeal.chartSeries.ch();
+      makeChart('chart-ch', 'CH', s.x, s.y, 'M / C ratio', 'CH', { logY: true });
+    })();
+
+    // Young's modulus chart
+    (function() {
+      var s = NSWCSeal.chartSeries.youngs();
+      var ctx = document.getElementById('chart-youngs');
+      if (!ctx) return;
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [{
+            label: "Young's modulus M",
+            data: s.x.map(function(x,i){ return {x: x, y: s.y[i]}; }),
+            fill: false,
+            borderColor: 'rgb(34,136,51)',
+            borderWidth: 2,
+            pointRadius: 3,
+            tension: 0.2,
+          }],
+        },
+        options: {
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { mode: 'nearest', intersect: false } },
+          scales: {
+            x: { type: 'linear', title: { display: true, text: 'Durometer (Shore A)', font: { size: 11 } }, ticks: { font: { size: 10 } } },
+            y: { type: 'linear', title: { display: true, text: 'M (lbf/in²)', font: { size: 11 } }, ticks: { font: { size: 10 }, maxTicksLimit: 5 } },
+          },
+          animation: { duration: 0 },
+        },
+      });
+    })();
+
+    // CF chart
+    (function() {
+      var s = NSWCSeal.chartSeries.cf();
+      makeChart('chart-cf', 'CF', s.x, s.y, 'Surface finish (μin)', 'CF');
+    })();
+
+    // CT chart
+    (function() {
+      var s = NSWCSeal.chartSeries.ct();
+      makeChart('chart-ct', 'CT', s.x, s.y, 'Temp margin Tᵣ−T₀ (°F)', 'CT');
+    })();
+
+    // CN chart — multiple lines for different components at 5 GPM
+    (function() {
+      var ctx = document.getElementById('chart-cn');
+      if (!ctx) return;
+      var components = NSWCSeal.N10_TABLE;
+      var colors = [
+        'rgb(68,119,170)', 'rgb(238,102,119)', 'rgb(34,136,51)',
+        'rgb(238,119,51)', 'rgb(170,51,119)', 'rgb(102,153,68)',
+      ];
+      var datasets = components.map(function(comp, i) {
+        var s = NSWCSeal.chartSeries.cn(5, comp.id);
+        return {
+          label: comp.label.split(' (')[0],
+          data: s.x.map(function(x, j){ return {x: x, y: s.y[j]}; }),
+          fill: false,
+          borderColor: colors[i % colors.length],
+          borderWidth: 1.5,
+          pointRadius: 0,
+          tension: 0.1,
+        };
+      });
+      new Chart(ctx, {
+        type: 'line',
+        data: { datasets: datasets },
+        options: {
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: true, labels: { font: { size: 9 }, boxHeight: 2, padding: 6 } },
+            tooltip: { mode: 'nearest', intersect: false, axis: 'x' },
+          },
+          scales: {
+            x: { type: 'linear', title: { display: true, text: 'Filter size (μm)', font: { size: 11 } }, ticks: { font: { size: 10 } } },
+            y: { type: 'linear', title: { display: true, text: 'CN (at 5 GPM)', font: { size: 11 } }, ticks: { font: { size: 10 }, maxTicksLimit: 5 } },
+          },
+          animation: { duration: 0 },
+        },
+      });
+    })();
+
+    // Run once with default values
+    runCalculate();
+
+  })();
+  </script>
+
+  <!-- Parker Handbook dimension auto-fill (ID/OD selector) -->
+  <script>
+  (function () {
+    var data     = window.PARKER_GLAND || {};
+    var seg      = document.getElementById('dim-source');   // .sq-seg button group
+    var glandRow = document.getElementById('gland-type-row');
+    var glandSel = document.getElementById('gland-type');
+    var dashRow  = document.getElementById('dash-size-row');
+    var dashSel  = document.getElementById('dash-size');
+    var innerInp = document.getElementById('seal-inner-dia');
+    var outerInp = document.getElementById('seal-outer-dia');
+    var calcBtn  = document.getElementById('calc-btn');
+    if (!seg) return;
+    var srcButtons = [].slice.call(seg.querySelectorAll('button[data-src]'));
+    var currentSrc = 'custom';
+
+    function show(el, on) { el.classList.toggle('d-none', !on); el.classList.toggle('d-flex', on); }
+    function hasGland(s) { return s === '4-1' || s === '4-2'; }     /* tables with male/female glands */
+    function hasTable(s) { return hasGland(s) || s === 'as4395'; }  /* any auto-fill data source */
+
+    function populateDashes(src) {
+      dashSel.innerHTML = '';
+      var sizes = (data[src] && data[src].sizes) || [];
+      sizes.forEach(function (s) {
+        var o = document.createElement('option');
+        o.value = s.dash; o.textContent = s.dash;
+        dashSel.appendChild(o);
+      });
+    }
+
+    function applyFill() {
+      if (!hasTable(currentSrc)) return;
+      var sizes = (data[currentSrc] && data[currentSrc].sizes) || [];
+      var rec = null;
+      for (var i = 0; i < sizes.length; i++) { if (sizes[i].dash === dashSel.value) { rec = sizes[i]; break; } }
+      if (!rec) return;
+      /* Parker gland tables carry male/female sub-objects; AS4395/AS5202 carries id/od directly (F = ID, D = OD) */
+      var g = rec.male ? (rec[glandSel.value] || rec.male) : rec;
+      innerInp.value = g.id;
+      outerInp.value = g.od;
+      if (calcBtn) calcBtn.click();
+    }
+
+    function lockManual(locked) {
+      [innerInp, outerInp].forEach(function (i) {
+        i.readOnly = locked;
+        i.style.background = locked ? '#eef0f0' : '';
+        i.title = locked ? 'Auto-filled from the selected table; choose “Custom” to edit.' : '';
+      });
+    }
+
+    function selectSource(src) {
+      currentSrc = src;
+      srcButtons.forEach(function (b) {
+        var on = b.getAttribute('data-src') === src;
+        b.classList.toggle('sq-active', on);
+        b.setAttribute('aria-pressed', String(on));
+      });
+      var gland = hasGland(src), table = hasTable(src);
+      show(glandRow, gland);
+      show(dashRow, table);
+      lockManual(table);
+      if (table) { populateDashes(src); applyFill(); }
+    }
+
+    srcButtons.forEach(function (b) {
+      b.addEventListener('click', function () { selectSource(b.getAttribute('data-src')); });
+    });
+    glandSel.addEventListener('change', applyFill);
+    dashSel.addEventListener('change', applyFill);
+  })();
+  </script>
+
+  </body>
+</html>

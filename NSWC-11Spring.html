@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: Spring Failure Rate Calculator (NSWC-11)</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, NSWC-11, spring, helical compression spring, extension spring, reliability, failure rate, fatigue, stress ratio, Wahl factor, FPMH, FIT, MTBF, FMECA, Naval Surface Warfare Center" />
+    <meta name="description" content="Calculate the failure rate of helical compression and extension springs using the NSWC-11 stress-ratio fatigue model. Computes Wahl factor, shear stress, base failure rate, temperature and cycling-rate factors, and time-based FPMH / FIT / MTBF metrics for FMECA." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XLCN0GJQ0');
+    </script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      /* ── Spring failure-rate calculator styles ─────────────── */
+      .nswc-wrap { max-width: 1100px; margin: 0 auto; }
+      .calc-section-label { font-size: 0.7rem; font-weight: 700; color: #6a746a; text-transform: uppercase; letter-spacing: 0.08em; padding: 6px 0 2px 2px; border-bottom: 1px solid #ccc; margin: 14px 0 6px; }
+
+      /* ── Green-wrapper card skin (matches NSWC-11StaticSeal) ── */
+      #spring-calc-form { max-width: 72rem; background: #6a746a; border-radius: 20px; border: 3px solid rgb(67,67,67); padding: 0 0 0.5rem; }
+      #spring-calc-form .hdr2 { background:#eee; display:flex; justify-content:center; align-items:center; text-align:center; gap:10px; padding:0.5rem 0.7rem; margin:0.5rem; font-size:22px; font-weight:200; line-height:1.2; box-shadow:0 3px 5px rgba(0,0,0,.4); border-radius:10px; border:2px solid rgb(67,67,67); font-family:"Roboto",Arial,sans-serif; color:#1a3a40; }
+      #spring-calc-form .grp { background:#eee; margin:0 0.5rem 0.5rem; border-radius:10px; border:2px solid rgb(67,67,67); box-shadow:0 3px 5px rgba(0,0,0,.4); padding:8px 11px 10px; }
+      #spring-calc-form .grp-title { font-size:12px; font-weight:600; color:#61828A; text-transform:uppercase; letter-spacing:0.06em; border-bottom:1px solid #c0c0c0; padding-bottom:4px; margin-bottom:9px; }
+      #spring-calc-form .gco { display:grid; gap:9px 18px; }
+      #spring-calc-form .gco.g2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      #spring-calc-form .gco.g3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      #spring-calc-form .fld { display:flex; flex-direction:column; gap:3px; min-width:0; }
+      #spring-calc-form .fld.full { grid-column: 1 / -1; }
+      #spring-calc-form .fld label { font-size:12px; color:#444; font-weight:400; line-height:1.3; }
+      #spring-calc-form .fld input, #spring-calc-form .fld select { font-size:13px; padding:3px 7px; border-radius:5px; border:1.5px solid rgb(67,67,67); background:#d9d9d9; color:#000; width:100%; height:27px; font-family:"Roboto",Arial,sans-serif; }
+      #spring-calc-form .fld input:focus, #spring-calc-form .fld select:focus { outline:none; border-color:#61828A; background:#e8f0f3; }
+      #spring-calc-form .fld { font-size:11px!important; color:#6a746a; line-height:1.3; }
+      .hint { font-size:11px!important; color:#6a746a; line-height:1.3; }
+      @media (max-width:640px){ #spring-calc-form .gco.g2, #spring-calc-form .gco.g3 { grid-template-columns:1fr; } }
+
+      /* Results grid (white tiles on the light card) */
+      .res-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; margin-top: 2px; }
+      .res-box { background: #fff; border: 1.5px solid rgb(67,67,67); border-left-width: 5px; border-radius: 7px; padding: 9px 12px; }
+      .res-box.good { border-left-color: #2e7d4f; }
+      .res-box.accent { border-left-color: #b3362b; }
+      .res-box .res-label { font-size: 0.74rem; color: #5a6168; line-height: 1.3; }
+      .res-box .res-value { font-size: 1.2rem; font-weight: 700; color: #1a3a40; margin-top: 4px; word-break: break-word; }
+
+      /* Formula callout */
+      .nswc-formula { background: #d9d9d9; border: 1.5px solid rgb(67,67,67); border-radius: 6px; padding: 10px 16px; margin: 10px 0; font-family: "Cambria Math", Georgia, serif; font-size: 0.95rem; color: #1a3a40; overflow-x: auto; }
+
+      /* Reference table */
+      .nswc-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 8px 0; }
+      .nswc-table th { background: #6a746a; color: #eee; border: 1px solid #4a5a4a; padding: 5px 9px; text-align: left; font-weight: 700; }
+      .nswc-table td { border: 1px solid #ccc; padding: 4px 9px; color: #333; }
+      .nswc-table tr:nth-child(even) td { background: #f5f5f5; }
+      .nswc-table td { vertical-align: top; }
+      .fm-list { margin: 0; padding-left: 1.05em; }
+      .fm-list li { margin: 1px 0; }
+
+      /* Calc steps */
+      .calc-steps { font-size: 0.82rem; color: #444; margin-top: 8px; border: 1px solid #ccc; border-radius: 6px; overflow: hidden; }
+      .calc-steps > div { padding: 4px 10px; border-bottom: 1px dashed #ddd; }
+      .calc-steps > div:nth-child(even) { background: #f7f7f7; }
+      .calc-steps > div:last-child { border-bottom: none; }
+      .calc-steps .val { color: #b3362b; font-weight: 700; }
+      .calc-warn-box { background: #fff8e6; border-left: 4px solid #cc7700; border-radius: 0 6px 6px 0; padding: 9px 13px; font-size: 0.82rem; color: #5a3a00; margin-top: 10px; }
+
+      /* Figure placeholders */
+      .figs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 14px; }
+      .fig-box { background: #eee; border: 2px solid rgb(67,67,67); border-radius: 8px; padding: 14px; }
+      .fig-ph { background: #fff; border: 1px dashed #6a746a; border-radius: 6px; min-height: 180px; display: flex; align-items: center; justify-content: center; text-align: center; color: #888; font-style: italic; padding: 18px; font-size: 0.85rem; }
+      /* Live chart canvas wrapper (replaces .fig-ph once a figure is populated) */
+      .fig-chart-wrap { background: #fff; border: 1px solid #6a746a; border-radius: 6px; height: 240px; position: relative; padding: 8px 8px 4px; }
+      .fig-cap { margin-top: 9px; font-size: 0.82rem; color: #444; line-height: 1.5; }
+      .fig-cap strong { color: #1a3a40; }
+      .fig-marker { display: inline-block; background: #6a746a; color: #fff; font-weight: 700; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; margin-right: 7px; }
+
+      details.nswc-details summary { cursor: pointer; color: #1a3a40; font-weight: 700; margin: 8px 0; }
+
+      /* Download button (matches MIL-HDBK-5 .tbtn) */
+      .tbtn { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border-radius: 6px; border: 2px solid #4a5a4a; background: #f5f5f0; color: #222; font-size: 13px; font-weight: 400; padding: 5px 14px; transition: filter 0.15s, transform 0.1s; line-height: 1.3; text-decoration: none; }
+      .tbtn:hover { filter: brightness(0.93); }
+      .tbtn:active { transform: scale(0.97); }
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal & Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Spring Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-1.html">Parker Gland Dimensions (Design Table 4-1)</a>
+                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-2.html">Parker Gland Dimensions (Design Table 4-2)</a>
+                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-3.html">Parker Face Seal Glands (Design Chart 4-3)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- BANNER -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">then press
+              Spring Failure Rate Calculator
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- INTRO -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3" style="max-width:860px;">
+            <div class="custom-heading">NSWC-11 Spring Reliability Model</div>
+            <div class="mt-3 text-start">
+              <p>
+                This tool estimates the failure rate of helical <span style="font-weight: var(--font-weight-normal)">compression and extension springs</span>
+                using the stress-ratio fatigue model from the Naval Surface Warfare Center
+                <em>Handbook of Reliability Prediction Procedures for Mechanical Equipment</em> (NSWC-11).
+                Spring failures are dominated by <span style="font-weight: var(--font-weight-normal)">fatigue</span> under cyclic shear stress, so the model
+                is driven by the ratio of operating stress to the material&rsquo;s torsional ultimate strength.
+              </p>
+              <p>
+                Enter the spring geometry, material strength, operating loads and environment below. The calculator also converts the cycle-based failure rate into
+                time-based metrics (FPMH, FIT, MTBF) suitable as <span style="font-weight: var(--font-weight-normal)">FMECA</span> inputs.
+              </p>
+              <div class="mt-2">
+                <button class="tbtn" onclick="window.open('/downloadable/NSWC-11_RELIABILITY_HDBK_MAY2011.pdf', '_blank')" aria-label="Download NSWC-11 reliability handbook (PDF)">
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                  </svg>
+                  Download NSWC-11 Handbook (PDF)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CALCULATOR -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12 px-3">
+
+          <div class="section-title-wrap">
+            <div class="h1 section-title">NSWC-11 Chapter 4 Failure Rate Calculator</div>
+          </div>
+
+          <div class="wrapper" id="spring-calc-form">
+            <div class="hdr2">Spring Failure Rate &mdash; Helical Compression / Extension (NSWC-11)</div>
+
+            <!-- SPRING GEOMETRY & MATERIAL -->
+            <div class="grp">
+              <div class="grp-title">Spring Geometry &amp; Material</div>
+              <div class="gco g2">
+                <div class="fld">
+                  <label for="wireDia">Wire Diameter, d (in)</label>
+                  <input type="number" id="wireDia" value="0.080" step="0.001" min="0.0001" aria-label="Wire diameter in inches" />
+                  <div class="hint">Diameter of the spring wire.</div>
+                </div>
+                <div class="fld">
+                  <label for="meanDia">Mean Coil Diameter, D (in)</label>
+                  <input type="number" id="meanDia" value="0.60" step="0.001" min="0.0001" aria-label="Mean coil diameter in inches" />
+                  <div class="hint">D = OD &minus; d.</div>
+                </div>
+                <div class="fld">
+                  <label for="shearMod">Shear Modulus, G (psi)</label>
+                  <input type="number" id="shearMod" value="11500000" step="100000" aria-label="Shear modulus in psi" />
+                  <div class="hint">~11.5&times;10<sup>6</sup> psi for music wire / steel.</div>
+                </div>
+                <div class="fld">
+                  <label for="ultTensile">Ultimate Tensile Strength, S<sub>u</sub> (psi)</label>
+                  <input type="number" id="ultTensile" value="220000" step="1000" aria-label="Ultimate tensile strength in psi" />
+                  <div class="hint">Used to determine allowable stress / stress ratio.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- LOADING CONDITIONS -->
+            <div class="grp">
+              <div class="grp-title">Loading Conditions</div>
+              <div class="gco g2">
+                <div class="fld">
+                  <label for="maxLoad">Maximum Operating Load, P<sub>max</sub> (lb)</label>
+                  <input type="number" id="maxLoad" value="25" step="0.1" aria-label="Maximum operating load in pounds" />
+                </div>
+                <div class="fld">
+                  <label for="minLoad">Minimum Operating Load, P<sub>min</sub> (lb)</label>
+                  <input type="number" id="minLoad" value="5" step="0.1" aria-label="Minimum operating load in pounds" />
+                </div>
+                <div class="fld">
+                  <label for="cyclingRate">Cycling Rate (cycles/min)</label>
+                  <input type="number" id="cyclingRate" value="60" step="1" aria-label="Cycling rate in cycles per minute" />
+                  <div class="hint">Operating frequency of spring cycling.</div>
+                </div>
+                <div class="fld">
+                  <label for="numCycles">Total Number of Cycles, N</label>
+                  <input type="number" id="numCycles" value="1000000" step="1000" aria-label="Total number of cycles" />
+                  <div class="hint">Total expected cycles over life.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ENVIRONMENT -->
+            <div class="grp">
+              <div class="grp-title">Environmental Factors</div>
+              <div class="gco g2">
+                <div class="fld">
+                  <label for="opTemp">Operating Temperature, T (&deg;F)</label>
+                  <input type="number" id="opTemp" value="200" step="1" aria-label="Operating temperature in degrees Fahrenheit" />
+                </div>
+                <div class="fld">
+                  <label for="corrEnv">Corrosion / Environment</label>
+                  <select id="corrEnv" aria-label="Environment multiplier pi_E">
+                    <option value="1.0">Benign (controlled, clean) &mdash; 1.0</option>
+                    <option value="2.0">Mild (occasional humidity) &mdash; 2.0</option>
+                    <option value="4.0">Severe (corrosive / marine) &mdash; 4.0</option>
+                  </select>
+                  <div class="hint">&pi;<sub>E</sub> environment multiplier (approx.).</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RESULTS -->
+            <div class="grp">
+              <div class="grp-title">Results</div>
+              <div class="res-grid">
+                <div class="res-box"><div class="res-label">Maximum Shear Stress, &tau;<sub>max</sub> (psi)</div><div class="res-value" id="r_tauMax">&ndash;</div></div>
+                <div class="res-box"><div class="res-label">Minimum Shear Stress, &tau;<sub>min</sub> (psi)</div><div class="res-value" id="r_tauMin">&ndash;</div></div>
+                <div class="res-box"><div class="res-label">Stress Ratio, S</div><div class="res-value" id="r_stressRatio">&ndash;</div></div>
+                <div class="res-box"><div class="res-label">Base Failure Rate, &lambda;<sub>b</sub> (fail / 10<sup>6</sup> cyc)</div><div class="res-value" id="r_lambdaB">&ndash;</div></div>
+                <div class="res-box"><div class="res-label">Temperature Factor, &pi;<sub>T</sub></div><div class="res-value" id="r_piT">&ndash;</div></div>
+                <div class="res-box"><div class="res-label">Environment Factor, &pi;<sub>E</sub></div><div class="res-value" id="r_piE">&ndash;</div></div>
+                <div class="res-box good"><div class="res-label">Predicted Failure Rate, &lambda;<sub>p</sub> (fail / 10<sup>6</sup> cyc)</div><div class="res-value" id="r_lambdaP">&ndash;</div></div>
+                <div class="res-box good"><div class="res-label">Failures over N Cycles</div><div class="res-value" id="r_failOverN">&ndash;</div></div>
+              </div>
+            </div>
+
+            <div class="grp">
+              <div class="grp-title">Time-Based Reliability Metrics (FMECA Inputs)</div>
+              <p style="font-size:0.78rem; color:#555; margin:0 0 8px;">
+                System-level FMECA typically requires failure rate per unit <em>time</em> rather than per cycle.
+                The cycling rate converts &lambda;<sub>p</sub> (failures per 10<sup>6</sup> cycles) into time-based units.
+              </p>
+              <div class="res-grid">
+                <div class="res-box accent"><div class="res-label">Failure Rate, &lambda;<sub>p</sub> (FPMH)</div><div class="res-value" id="r_fpmh">&ndash;</div><div class="hint">Failures Per Million Hours</div></div>
+                <div class="res-box accent"><div class="res-label">Failure Rate, &lambda;<sub>p</sub> (FIT)</div><div class="res-value" id="r_fit">&ndash;</div><div class="hint">Failures in Time (per 10<sup>9</sup> h)</div></div>
+                <div class="res-box accent"><div class="res-label">MTBF (hours)</div><div class="res-value" id="r_mtbfHours">&ndash;</div></div>
+                <div class="res-box accent"><div class="res-label">MTBF (years)</div><div class="res-value" id="r_mtbfYears">&ndash;</div></div>
+              </div>
+            </div>
+
+            <div id="warningBox" style="margin:0 0.5rem 0.5rem;"></div>
+
+            <div class="grp">
+              <details class="nswc-details">
+                <summary class="fs-6">Show detailed calculation steps</summary>
+                <div class="calc-steps" id="calcSteps"></div>
+              </details>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- MODEL EXPLANATION -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3 text-start" style="max-width:860px;">
+
+            <div class="custom-heading">Model Explanation</div>
+
+            <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">1. Spring Index and Wahl Stress Correction Factor</h3>
+            <div class="nswc-formula">C = D / d &nbsp;&nbsp;&nbsp; K<sub>w</sub> = (4C &minus; 1)/(4C &minus; 4) + 0.615/C</div>
+            <p>
+              C is the spring index (ratio of mean coil diameter to wire diameter). The Wahl factor K<sub>w</sub>
+              corrects the simple torsion formula for the curvature and direct-shear effects present in a coiled
+              wire. Springs with low index (C &lt; 4) experience significantly amplified stress concentrations.
+            </p>
+
+            <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">2. Shear Stress</h3>
+            <div class="nswc-formula">&tau; = K<sub>w</sub> &times; (8 P D) / (&pi; d&sup3;)</div>
+            <p>
+              &tau;<sub>max</sub> and &tau;<sub>min</sub> are computed from the maximum and minimum operating loads
+              (P<sub>max</sub>, P<sub>min</sub>). These represent the cyclic stress range the spring experiences in service.
+            </p>
+
+            <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">3. Stress Ratio</h3>
+            <div class="nswc-formula">S = &tau;<sub>max</sub> / S<sub>su</sub> &nbsp;&nbsp;&nbsp; (S<sub>su</sub> &asymp; 0.5 &times; S<sub>u</sub>)</div>
+            <p>
+              The stress ratio compares peak operating shear stress to the material&rsquo;s torsional ultimate shear
+              strength (approximated as half the ultimate tensile strength, S<sub>u</sub>). This ratio is the primary
+              driver of fatigue failure rate &mdash; as S approaches 1, the spring operates near its material limit and
+              failure probability rises sharply.
+            </p>
+
+            <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">4. Base Failure Rate, &lambda;<sub>b</sub></h3>
+            <p>
+              NSWC-11 provides &lambda;<sub>b</sub> as an empirically derived curve (in failures per 10<sup>6</sup> cycles)
+              that increases steeply with stress ratio. This calculator uses an exponential approximation of that curve:
+            </p>
+            <div class="nswc-formula">&lambda;<sub>b</sub> = 0.0001 &times; e<sup>8(S &minus; 0.3)</sup> &nbsp;&nbsp; for S &ge; 0.3, else &lambda;<sub>b</sub> = 0.0001</div>
+            <table class="nswc-table">
+              <thead><tr><th>Stress Ratio (S)</th><th>Approx. &lambda;<sub>b</sub> (per 10<sup>6</sup> cyc)</th><th>Interpretation</th></tr></thead>
+              <tbody>
+                <tr><td>&le; 0.3</td><td>~0.0001 (floor)</td><td>Very low fatigue risk</td></tr>
+                <tr><td>0.5</td><td>~0.0005</td><td>Low risk, typical conservative design</td></tr>
+                <tr><td>0.7</td><td>~0.0024</td><td>Moderate risk</td></tr>
+                <tr><td>0.9</td><td>~0.012</td><td>High risk &mdash; approaching fatigue limit</td></tr>
+                <tr><td>&ge; 1.0</td><td>Rapidly increasing</td><td>Likely overstressed / short life</td></tr>
+              </tbody>
+            </table>
+
+            <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">5. Temperature Factor, &pi;<sub>T</sub></h3>
+            <div class="nswc-formula">&pi;<sub>T</sub> = e<sup>0.01(T &minus; 70)</sup></div>
+            <p>
+              Elevated operating temperature reduces material fatigue strength and accelerates relaxation/creep in
+              spring materials. The factor is referenced to 70&deg;F (room temperature).
+            </p>
+
+            <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">6. Cycling Rate Factor, &pi;<sub>CY</sub></h3>
+            <div class="nswc-formula">&pi;<sub>CY</sub> = 1 + (cycling rate [cycles/min] / 1000)</div>
+            <p>
+              Higher cyclic frequencies generate additional heating and dynamic stress effects (resonance, impact
+              loading) that can slightly elevate the effective failure rate.
+            </p>
+
+            <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">7. Environment Factor, &pi;<sub>E</sub></h3>
+            <table class="nswc-table">
+              <thead><tr><th>Environment</th><th>&pi;<sub>E</sub></th></tr></thead>
+              <tbody>
+                <tr><td>Benign (clean, controlled)</td><td>1.0</td></tr>
+                <tr><td>Mild (occasional humidity/exposure)</td><td>2.0</td></tr>
+                <tr><td>Severe (corrosive, marine, chemical)</td><td>4.0</td></tr>
+              </tbody>
+            </table>
+
+            <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">8. Predicted Failure Rate</h3>
+            <div class="nswc-formula">&lambda;<sub>p</sub> = &lambda;<sub>b</sub> &times; &pi;<sub>T</sub> &times; &pi;<sub>CY</sub> &times; &pi;<sub>E</sub></div>
+            <p>
+              The combined failure rate &lambda;<sub>p</sub> (failures per 10<sup>6</sup> cycles) is then used to estimate
+              the expected number of failures over the spring&rsquo;s design life:
+            </p>
+            <div class="nswc-formula">Expected Failures = &lambda;<sub>p</sub> &times; (N / 10<sup>6</sup>)</div>
+
+            <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">9. Time-Based Reliability Metrics (FPMH, FIT, MTBF)</h3>
+            <p>
+              Cycle-based failure rates are useful for mechanical fatigue analysis, but system-level <strong>FMECA</strong>
+              and reliability block diagrams require failure rates in <strong>time-based units</strong> &mdash; typically
+              <strong>FPMH</strong> (Failures Per Million Hours) or <strong>FIT</strong> (Failures in Time, per 10<sup>9</sup> hours)
+              &mdash; so the spring&rsquo;s contribution can be combined with electronic and other component failure rates.
+              The input cycling rate bridges cycles and time.
+            </p>
+            <div class="nswc-formula">
+              Cycles per hour = Cycling Rate [cycles/min] &times; 60<br>
+              Failures per hour = &lambda;<sub>p</sub> &times; (Cycles per hour / 10<sup>6</sup>)<br>
+              FPMH = Failures per hour &times; 10<sup>6</sup>&nbsp;&nbsp;&middot;&nbsp;&nbsp;FIT = Failures per hour &times; 10<sup>9</sup><br>
+              MTBF [hours] = 1 / (Failures per hour)&nbsp;&nbsp;&middot;&nbsp;&nbsp;MTBF [years] = MTBF [hours] / (24 &times; 365.25)
+            </div>
+            <p>
+              MTBF is the inverse of the failure rate and assumes a constant (exponential) failure rate over the
+              spring&rsquo;s life &mdash; a reasonable approximation away from the wear-out region but less accurate as the
+              stress ratio S approaches 1.
+            </p>
+
+            <div class="calc-warn-box">
+              This calculator implements a simplified engineering-approximation of the NSWC-11 spring model for
+              educational and preliminary design-screening purposes. The original handbook derives the base failure rate
+              from empirical charts and includes additional correction factors (spring type, surface treatment, shot-peening).
+              For certified reliability predictions, designs near the fatigue limit, or safety-critical applications, consult
+              the full NSWC-11 handbook tables and/or perform physical fatigue testing.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- REFERENCE FIGURES -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12 px-3">
+          <div class="section-title-wrap">
+            <div class="h1 section-title">NSWC-11 Reference Figures &amp; Graphs</div>
+          </div>
+          <div class="nswc-wrap">
+            <p style="font-size:0.85rem; color:#444;">
+              The NSWC-11 spring failure-rate model multiplies a base failure rate by a set of dimensionless factors
+              derived from the spring&rsquo;s geometry and stress state. The five charts below reproduce the handbook
+              multiplying-factor figures (Figures&nbsp;4.10&ndash;4.14) directly from their governing equations. On the
+              geometry-driven charts a marker tracks the values implied by your current inputs (wire diameter d, mean
+              coil diameter D, spring index&nbsp;r&nbsp;=&nbsp;D/d).
+            </p>
+            <div class="figs-grid">
+              <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-cdw" aria-label="Wire diameter multiplying factor versus wire diameter"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.10</span><strong>Wire-Diameter Factor, C<sub>DW</sub>.</strong> C<sub>DW</sub> = (D<sub>W</sub>&nbsp;/&nbsp;0.085)<sup>3</sup>. Referenced to a 0.085&nbsp;in wire; the factor rises with the cube of wire diameter. Log scale. Marker = your wire diameter d.</div></div>
+              <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-cdc" aria-label="Coil diameter multiplying factor versus coil diameter"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.11</span><strong>Spring Coil-Diameter Factor, C<sub>DC</sub>.</strong> C<sub>DC</sub> = (0.58&nbsp;/&nbsp;D<sub>C</sub>)<sup>6</sup>. Referenced to a 0.58&nbsp;in mean coil diameter; falls steeply as coil diameter grows. Log scale. Marker = your mean coil diameter D.</div></div>
+              <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-cn" aria-label="Number of active coils multiplying factor"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.12</span><strong>Active-Coils Factor, C<sub>N</sub>.</strong> C<sub>N</sub> = (14&nbsp;/&nbsp;N<sub>a</sub>)<sup>3</sup>. Referenced to 14 active coils; more active coils lowers the factor. Log scale.</div></div>
+              <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-cl" aria-label="Spring deflection multiplying factor"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.13</span><strong>Spring-Deflection Factor, C<sub>L</sub>.</strong> C<sub>L</sub> = ((L<sub>1</sub>&minus;L<sub>2</sub>)&nbsp;/&nbsp;1.07)<sup>3</sup>, where L<sub>1</sub>&minus;L<sub>2</sub> is the working deflection (in). Log scale.</div></div>
+              <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-ck" aria-label="Stress concentration multiplying factor versus spring index"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.14</span><strong>Stress-Concentration Factor, C<sub>K</sub>.</strong> C<sub>K</sub> = (K<sub>W</sub>&nbsp;/&nbsp;1.219)<sup>3</sup>, K<sub>W</sub> = (4r&minus;1)/(4r&minus;4) + 0.616/r, r = D<sub>C</sub>/D<sub>W</sub>. Linear scale. Marker = your spring index r = D/d.</div></div>
+            </div>
+
+            <h3 style="font-size:1.05rem; color:#1a3a40; margin-top:26px;">Table 4-1 &mdash; Failure Modes for a Mechanical Spring</h3>
+            <table class="nswc-table">
+              <thead>
+                <tr><th style="width:30%;">Type of Spring / Stress Condition</th><th style="width:22%;">Failure Modes</th><th>Failure Causes</th></tr>
+              </thead>
+              <tbody class="fs-6">
+                <tr>
+                  <td><strong>Static</strong><br><span style="font-size:0.78rem; color:#555;">(constant deflection or constant load)</span></td>
+                  <td><ul class="fm-list"><li class="fs-6">Load loss</li><li class="fs-6">Creep</li><li class="fs-6">Set</li><li class="fs-6">Yielding</li></ul></td>
+                  <td><ul class="fm-list"><li class="fs-6">Parameter change</li><li class="fs-6">Hydrogen embrittlement</li></ul></td>
+                </tr>
+                <tr>
+                  <td><strong>Cyclic</strong><br><span style="font-size:0.78rem; color:#555;">(10,000 cycles or more during the life of the spring)</span></td>
+                  <td><ul class="fm-list"><li class="fs-6">Fracture</li><li class="fs-6">Damaged spring end</li><li class="fs-6">Fatigue failure</li><li class="fs-6">Buckling</li><li class="fs-6">Surging</li></ul></td>
+                  <td><ul class="fm-list"><li class="fs-6">Complex stress change as a function of time</li><li class="fs-6">Excessive mean stress, unidirectional operation</li><li class="fs-6">Material flaws</li><li class="fs-6">High-temperature operation</li><li class="fs-6">Imperfection on inside diameter of the spring</li><li class="fs-6">Hydrogen embrittlement</li><li class="fs-6">Stress concentration due to tooling marks and rough finishes</li><li class="fs-6">Sharp bends on spring ends (extension springs)</li><li class="fs-6">Surface imperfections (high cycle with no shot peening)</li><li class="fs-6">Corrosive atmosphere</li><li class="fs-6">Misalignment</li><li class="fs-6">Excessive stress range of reverse stress</li><li class="fs-6">Cycling temperature</li><li class="fs-6">Low-frequency vibration</li><li class="fs-6">High-frequency vibration</li></ul></td>
+                </tr>
+                <tr>
+                  <td><strong>Dynamic</strong><br><span style="font-size:0.78rem; color:#555;">(intermittent occurrences of a load surge)</span></td>
+                  <td><ul class="fm-list"><li class="fs-6">Fracture</li><li class="fs-6">Fatigue failure</li></ul></td>
+                  <td><ul class="fm-list"><li class="fs-6">Maximum load ratio exceeded</li><li class="fs-6">Insufficient space for operation</li><li class="fs-6">Shock impulse</li><li class="fs-6">Surface defects</li><li class="fs-6">Excessive stress range of reverse stress</li><li class="fs-6">Resonance surging</li></ul></td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="font-size:0.78rem; color:#888; margin-top:14px;">
+              Charts are computed directly from the NSWC-11 Figure&nbsp;4.10&ndash;4.14 equations, so they match the
+              handbook curves to within hand-plotting tolerance. Table&nbsp;4-1 reproduces the handbook failure-mode listing.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- DISCLAIMER -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap text-center">
+          <div class="mx-auto d-inline-block mt-3 mb-3 text-center" style="max-width:860px;">
+            <div class="custom-heading mx-auto">Source & Important Notices</div>
+            <ul class="mt-3 text-start" style="font-size:0.9rem;">
+              <li class="mb-2"><strong>Source model:</strong> Naval Surface Warfare Center, <em>Handbook of Reliability Prediction Procedures for Mechanical Equipment</em> (NSWC-11), spring (helical compression / extension) failure-rate model.</li>
+              <li class="mb-2"><strong>Approximation.</strong> The base failure rate here is an exponential fit to the NSWC-11 curve, not a table lookup. Results are intended for preliminary screening, not certification.</li>
+              <li><strong>Verify critical designs.</strong> Always confirm against the full NSWC-11 handbook and physical testing for safety-critical or pressure-containing applications. This tool is a reference aid, not a substitute for engineering judgment.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CITATION -->
+    <section class="mt-5 pt-3">
+      <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+        <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+          <div class="d-flex align-items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+            <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+          </div>
+          <style>
+            #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+            #citationTabs li { margin: 0; list-style: none; }
+            #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+            #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+            #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+          </style>
+          <div class="tab-content mt-2 mb-3" id="citationTabContent">
+            <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+              <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+              <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+              <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+              <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+          </div>
+          <ul id="citationTabs" class="nav" role="tablist">
+            <li role="presentation">
+              <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+  <script src="js/footer.js"></script>
+  <!-- END FOOTER -->
+
+  <!-- Chart.js (reference figures) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+  <!-- PAGE SCRIPT — NSWC-11 spring failure-rate calculator -->
+  <script>
+  (function () {
+    'use strict';
+
+    // Plain (non-scientific) number formatting with thousands separators.
+    // Decimal places scale with magnitude; sub-1 values keep 4 significant digits.
+    function fmtPlain(x) {
+      if (!isFinite(x)) return '∞';
+      var a = Math.abs(x);
+      if (a !== 0 && a < 1) return x.toLocaleString('en-US', { maximumSignificantDigits: 4 });
+      var d = a >= 1000 ? 0 : (a >= 100 ? 1 : (a >= 10 ? 2 : 3));
+      return x.toLocaleString('en-US', { maximumFractionDigits: d });
+    }
+
+    function calculate() {
+      // --- Read inputs ---
+      var d           = parseFloat(document.getElementById('wireDia').value);      // wire diameter, in
+      var D           = parseFloat(document.getElementById('meanDia').value);      // mean coil diameter, in
+      var Su          = parseFloat(document.getElementById('ultTensile').value);   // ultimate tensile strength, psi
+      var Pmax        = parseFloat(document.getElementById('maxLoad').value);      // lb
+      var Pmin        = parseFloat(document.getElementById('minLoad').value);      // lb
+      var cyclingRate = parseFloat(document.getElementById('cyclingRate').value);  // cycles/min
+      var N           = parseFloat(document.getElementById('numCycles').value);    // total cycles
+      var T           = parseFloat(document.getElementById('opTemp').value);       // deg F
+      var piE         = parseFloat(document.getElementById('corrEnv').value);      // environment factor
+
+      var steps = [];
+
+      // --- Spring index ---
+      var C = D / d;
+      steps.push('Spring Index C = D / d = ' + D + ' / ' + d + ' = <span class="val">' + C.toFixed(3) + '</span>');
+
+      // --- Wahl correction factor (stress concentration) ---
+      var Kw = (4 * C - 1) / (4 * C - 4) + 0.615 / C;
+      steps.push('Wahl Factor K_w = (4C-1)/(4C-4) + 0.615/C = <span class="val">' + Kw.toFixed(4) + '</span>');
+
+      // --- Shear stresses: tau = K_w * 8 * P * D / (pi * d^3) ---
+      var tauFactor = 8 * D / (Math.PI * Math.pow(d, 3));
+      var tauMax = Kw * tauFactor * Pmax;
+      var tauMin = Kw * tauFactor * Pmin;
+      steps.push('&tau;_max = K_w &times; 8 P_max D / (&pi; d&sup3;) = <span class="val">' + tauMax.toFixed(0) + ' psi</span>');
+      steps.push('&tau;_min = K_w &times; 8 P_min D / (&pi; d&sup3;) = <span class="val">' + tauMin.toFixed(0) + ' psi</span>');
+
+      // --- Stress ratio (S = tau_max / Ssu, Ssu ~ 0.5*Su) ---
+      var Ssu = 0.5 * Su;
+      var stressRatio = tauMax / Ssu;
+      steps.push('Torsional Ultimate Strength S_su &asymp; 0.5 &times; Su = <span class="val">' + Ssu.toFixed(0) + ' psi</span>');
+      steps.push('Stress Ratio S = &tau;_max / S_su = <span class="val">' + stressRatio.toFixed(3) + '</span>');
+
+      // --- Base failure rate lambda_b ---
+      var lambdaB;
+      if (stressRatio < 0.3) {
+        lambdaB = 0.0001;
+      } else {
+        lambdaB = 0.0001 * Math.exp(8.0 * (stressRatio - 0.3));
+      }
+      steps.push('Base Failure Rate &lambda;_b = 0.0001 &times; e^(8(S-0.3)) = <span class="val">' + lambdaB.toExponential(3) + '</span> failures/10^6 cycles');
+
+      // --- Temperature factor pi_T ---
+      var Tref = 70;
+      var piT = Math.exp(0.01 * (T - Tref));
+      steps.push('Temperature Factor &pi;_T = e^(0.01(T - 70)) = <span class="val">' + piT.toFixed(3) + '</span>');
+
+      // --- Cycling factor pi_CY ---
+      var piCY = 1 + (cyclingRate / 1000);
+      steps.push('Cycling Rate Factor &pi;_CY = 1 + (rate/1000) = <span class="val">' + piCY.toFixed(3) + '</span>');
+
+      // --- Predicted failure rate ---
+      var lambdaP = lambdaB * piT * piCY * piE;
+      steps.push('&lambda;_p = &lambda;_b &times; &pi;_T &times; &pi;_CY &times; &pi;_E = <span class="val">' + lambdaP.toExponential(3) + '</span> failures/10^6 cycles');
+
+      // --- Failures over N cycles ---
+      var failOverN = lambdaP * (N / 1e6);
+      steps.push('Expected Failures over N cycles = &lambda;_p &times; (N/10^6) = <span class="val">' + failOverN.toExponential(3) + '</span>');
+
+      // --- Time-based reliability metrics ---
+      var cyclesPerHour = cyclingRate * 60;
+      steps.push('Cycling Rate = ' + cyclingRate + ' cycles/min &times; 60 = <span class="val">' + cyclesPerHour.toFixed(0) + '</span> cycles/hour');
+
+      var failuresPerHour = lambdaP * (cyclesPerHour / 1e6);
+      steps.push('Failure Rate (failures/hour) = &lambda;_p &times; (cycles/hour / 10^6) = <span class="val">' + failuresPerHour.toExponential(3) + '</span>');
+
+      var fpmh = failuresPerHour * 1e6;
+      steps.push('FPMH = Failure Rate (per hour) &times; 10^6 = <span class="val">' + fpmh.toExponential(3) + '</span> FPMH');
+
+      var fit = failuresPerHour * 1e9;
+      steps.push('FIT = Failure Rate (per hour) &times; 10^9 = <span class="val">' + fit.toExponential(3) + '</span> FIT');
+
+      var mtbfHours = failuresPerHour > 0 ? (1 / failuresPerHour) : Infinity;
+      steps.push('MTBF (hours) = 1 / Failure Rate (per hour) = <span class="val">' + (isFinite(mtbfHours) ? mtbfHours.toExponential(3) : '&infin;') + '</span> hours');
+
+      var mtbfYears = mtbfHours / (24 * 365.25);
+      steps.push('MTBF (years) = MTBF (hours) / (24 &times; 365.25) = <span class="val">' + (isFinite(mtbfYears) ? mtbfYears.toExponential(3) : '&infin;') + '</span> years');
+
+      // --- Update result boxes ---
+      document.getElementById('r_tauMax').textContent = tauMax.toFixed(0) + ' psi';
+      document.getElementById('r_tauMin').textContent = tauMin.toFixed(0) + ' psi';
+      document.getElementById('r_stressRatio').textContent = stressRatio.toFixed(3);
+      document.getElementById('r_lambdaB').textContent = fmtPlain(lambdaB);
+      document.getElementById('r_piT').textContent = piT.toFixed(3);
+      document.getElementById('r_piE').textContent = piE.toFixed(2);
+      document.getElementById('r_lambdaP').textContent = fmtPlain(lambdaP);
+      document.getElementById('r_failOverN').textContent = fmtPlain(failOverN);
+      document.getElementById('r_fpmh').textContent = fmtPlain(fpmh);
+      document.getElementById('r_fit').textContent = fmtPlain(fit);
+      document.getElementById('r_mtbfHours').textContent = fmtPlain(mtbfHours);
+      document.getElementById('r_mtbfYears').textContent = fmtPlain(mtbfYears);
+
+      // --- Warning if stress ratio too high ---
+      var warningBox = document.getElementById('warningBox');
+      if (stressRatio > 0.8) {
+        warningBox.innerHTML = '<div class="calc-warn-box">&#9888; Stress ratio S = ' + stressRatio.toFixed(2) + ' is high (&gt;0.8). The spring is operating close to its torsional ultimate strength, and failure-rate predictions in this region carry high uncertainty. Consider redesign (larger wire diameter, larger spring index, or lower load).</div>';
+      } else {
+        warningBox.innerHTML = '';
+      }
+
+      // --- Calc steps ---
+      document.getElementById('calcSteps').innerHTML = steps.map(function (s) { return '<div>' + s + '</div>'; }).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var btn = document.getElementById('calc-btn');
+      if (btn) btn.addEventListener('click', calculate);
+      // Recalculate live as inputs change
+      ['wireDia','meanDia','shearMod','ultTensile','maxLoad','minLoad','cyclingRate','numCycles','opTemp','corrEnv'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener('input', calculate);
+      });
+      // Run once on load with the default values
+      calculate();
+    });
+  })();
+  </script>
+
+  <!-- REFERENCE FIGURE CHARTS (Chart.js) -->
+  <script>
+  (function () {
+    'use strict';
+    if (typeof Chart === 'undefined') return;
+
+    var LINE_COLOR  = 'rgb(68,119,170)';
+    var POINT_COLOR = 'rgb(238,102,119)';
+
+    function num(id) { var el = document.getElementById(id); var v = el ? parseFloat(el.value) : NaN; return isFinite(v) ? v : null; }
+    function kw(r) { return (4 * r - 1) / (4 * r - 4) + 0.616 / r; }   /* Wahl factor (Fig 4.14) */
+
+    // Generic NSWC-11 multiplying-factor chart, plotted directly from its exact equation.
+    // cfg.marker is an optional function returning {x,y} (or null) for the live input marker.
+    function buildFactorChart(cfg) {
+      var ctx = document.getElementById(cfg.id);
+      if (!ctx) return;
+      var curve = [], n = 220, step = (cfg.xMax - cfg.xMin) / n;
+      for (var i = 0; i <= n; i++) {
+        var x = cfg.xMin + i * step, y = cfg.fn(x);
+        if (isFinite(y) && y > 0) curve.push({ x: x, y: y });
+      }
+      var datasets = [{
+        label: cfg.zLabel, data: curve, parsing: false, fill: false,
+        borderColor: LINE_COLOR, borderWidth: 2, pointRadius: 0, tension: 0.1, order: 2,
+      }];
+      if (cfg.marker) datasets.push({
+        label: cfg.markerLabel, data: [], parsing: false, showLine: false,
+        borderColor: POINT_COLOR, backgroundColor: POINT_COLOR, pointRadius: 5, pointHoverRadius: 6, order: 1,
+      });
+      var chart = new Chart(ctx, {
+        type: 'line',
+        data: { datasets: datasets },
+        options: {
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: !!cfg.marker, labels: { font: { size: 9 }, boxHeight: 2, padding: 6 } },
+            tooltip: {
+              mode: 'nearest', intersect: false,
+              callbacks: {
+                title: function (it) { return cfg.xSym + ' = ' + it[0].parsed.x.toPrecision(4); },
+                label: function (c) { return cfg.ySym + ' = ' + c.parsed.y.toPrecision(4); },
+              },
+            },
+          },
+          scales: {
+            x: { type: 'linear', min: cfg.xMin, max: cfg.xMax, title: { display: true, text: cfg.xTitle, font: { size: 11 } }, ticks: { font: { size: 10 }, maxTicksLimit: 8 } },
+            y: { type: cfg.logY ? 'logarithmic' : 'linear', min: cfg.yMin, max: cfg.yMax, title: { display: true, text: cfg.yTitle, font: { size: 11 } }, ticks: { font: { size: 10 } } },
+          },
+          animation: { duration: 0 },
+        },
+      });
+      if (cfg.marker) {
+        var refresh = function () { var p = cfg.marker(); chart.data.datasets[1].data = p ? [p] : []; chart.update(); };
+        refresh();
+        ['wireDia', 'meanDia'].forEach(function (id) { var el = document.getElementById(id); if (el) el.addEventListener('input', refresh); });
+      }
+    }
+
+    // FIG 4.10 — Wire-diameter factor:  C_DW = (Dw / 0.085)^3
+    buildFactorChart({
+      id: 'chart-cdw', zLabel: 'C_DW', xSym: 'Dw', ySym: 'C_DW',
+      fn: function (dw) { return Math.pow(dw / 0.085, 3); },
+      xMin: 0.01, xMax: 0.18, logY: true, yMin: 0.001, yMax: 10,
+      xTitle: 'Wire diameter, Dw (in)', yTitle: 'Wire-dia. factor, C_DW',
+      markerLabel: 'Your wire dia. d',
+      marker: function () { var dw = num('wireDia'); return (dw != null && dw >= 0.01 && dw <= 0.18) ? { x: dw, y: Math.pow(dw / 0.085, 3) } : null; },
+    });
+
+    // FIG 4.11 — Spring coil-diameter factor:  C_DC = (0.58 / Dc)^6
+    buildFactorChart({
+      id: 'chart-cdc', zLabel: 'C_DC', xSym: 'Dc', ySym: 'C_DC',
+      fn: function (dc) { return Math.pow(0.58 / dc, 6); },
+      xMin: 0.20, xMax: 3.0, logY: true, yMin: 0.001, yMax: 10,
+      xTitle: 'Coil diameter, Dc (in)', yTitle: 'Coil-dia. factor, C_DC',
+      markerLabel: 'Your coil dia. D',
+      marker: function () { var dc = num('meanDia'); return (dc != null && dc >= 0.20 && dc <= 3.0) ? { x: dc, y: Math.pow(0.58 / dc, 6) } : null; },
+    });
+
+    // FIG 4.12 — Number of active coils factor:  C_N = (14 / Na)^3
+    buildFactorChart({
+      id: 'chart-cn', zLabel: 'C_N', xSym: 'Na', ySym: 'C_N',
+      fn: function (na) { return Math.pow(14 / na, 3); },
+      xMin: 4, xMax: 26, logY: true, yMin: 0.1, yMax: 100,
+      xTitle: 'Number of active coils, Na', yTitle: 'Active-coils factor, C_N',
+    });
+
+    // FIG 4.13 — Spring-deflection factor:  C_L = ((L1 - L2) / 1.07)^3
+    buildFactorChart({
+      id: 'chart-cl', zLabel: 'C_L', xSym: 'L1-L2', ySym: 'C_L',
+      fn: function (dl) { return Math.pow(dl / 1.07, 3); },
+      xMin: 0, xMax: 6.2, logY: true, yMin: 0.01, yMax: 1000,
+      xTitle: 'Spring deflection, L1 − L2 (in)', yTitle: 'Deflection factor, C_L',
+    });
+
+    // FIG 4.14 — Stress-concentration factor:  C_K = (Kw / 1.219)^3,  Kw = (4r-1)/(4r-4) + 0.616/r
+    buildFactorChart({
+      id: 'chart-ck', zLabel: 'C_K', xSym: 'r', ySym: 'C_K',
+      fn: function (r) { return Math.pow(kw(r) / 1.219, 3); },
+      xMin: 3, xMax: 17, logY: false, yMin: 0.6, yMax: 1.6,
+      xTitle: 'Spring index, r = Dc / Dw', yTitle: 'Stress-conc. factor, C_K',
+      markerLabel: 'Your spring index r',
+      marker: function () { var d = num('wireDia'), D = num('meanDia'); if (d == null || D == null || d <= 0) return null; var r = D / d; return (r >= 3 && r <= 17) ? { x: r, y: Math.pow(kw(r) / 1.219, 3) } : null; },
+    });
+  })();
+  </script>
+
+  </body>
+</html>
