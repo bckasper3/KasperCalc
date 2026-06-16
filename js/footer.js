@@ -86,7 +86,7 @@
           <div class="footerlink"><a href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a></div>
           <div class="footerlink"><a href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a></div>
           <div class="footerlink"><a href="Waterthermalconductivity.html">Thermal Conductivity</a></div>
-          <div class="footerlink"><a href="Waterviscosity.html">Viscosity</a></div>
+          <div class="footerlink"><a href="WaterViscosity.html">Viscosity</a></div>
           <div class="footerlink"><a href="WaterPrandltNumber.html">Prandtl Number</a></div>
           <div class="footerlink"><a href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a></div>
           <div class="footerlink"><a href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a></div>
@@ -138,6 +138,20 @@
           <div class="footerlink"><a href="Chapter2.6(steel).html" class="ms-4">2.6 (Precipitation Hardening Stainless Steel)</a></div>
           <div class="footerlink"><a href="Chapter2.7(steel).html" class="ms-4">2.7 (Austenitic Stainless Steels)</a></div>
           <div class="footerlink"><a href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a></div>
+        </div>
+
+        <div class="footerRow">
+          <h4 class="FooterRowTitle"><span class="footerflexbox">NSWC-11</span></h4>
+          <div class="footerlink"><a href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a></div>
+          <div class="footerlink"><a href="NSWC-11Spring.html">Spring Failure Rate</a></div>
+        </div>
+
+        <div class="footerRow">
+          <h4 class="FooterRowTitle"><span class="footerflexbox">O-Rings</span></h4>
+          <div class="footerlink"><a href="ParkerORingGlandDimensions4-1.html">Parker Gland Dimensions (Design Table 4-1)</a></div>
+          <div class="footerlink"><a href="ParkerORingGlandDimensions4-2.html">Parker Gland Dimensions (Design Table 4-2)</a></div>
+          <div class="footerlink"><a href="ParkerORingGlandDimensions4-3.html">Parker Face Seal Glands (Design Chart 4-3)</a></div>
+          <div class="footerlink"><a href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a></div>
         </div>
 
         <div class="footerRow">
