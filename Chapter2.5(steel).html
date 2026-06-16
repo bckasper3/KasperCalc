@@ -7,6 +7,113 @@
     <meta name="author" content="bckasper3" />
     <meta name="keywords" content="KasperCalc, MIL-HDBK-5, steel, high alloy steel, 18Ni maraging, AF1410, AerMet 100, mechanical properties, MMPDS" />
     <meta name="description" content="MIL-HDBK-5 Chapter 2 Section 2.5 High Alloy Steels — material properties for 18 Ni maraging steels, AF1410, and AerMet 100." />
+    <!-- Chart.js + HdbkUtil for interactive figures -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="js/hdbkCharts.js"></script>
+    <script>
+    /* ── HdbkUtil: multi-series chart helper for Chapter 2.5 ───────────────── */
+    window.HdbkUtil = (function () {
+      'use strict';
+      function linInterp(pts, step) {
+        var s = pts.slice().sort(function (a, b) { return a.x - b.x; });
+        var r = [], i = 0;
+        var xA = Math.ceil(s[0].x / step) * step;
+        var xB = Math.floor(s[s.length - 1].x / step) * step;
+        for (var x = xA; x <= xB + 1e-9; x += step) {
+          while (i < s.length - 2 && s[i + 1].x < x) { i++; }
+          var a = s[i].x, b = s[i + 1].x, ya = s[i].y, yb = s[i + 1].y;
+          r.push({ x: x, y: +(ya + (x - a) / (b - a) * (yb - ya)).toFixed(4) });
+        }
+        return r;
+      }
+      function logInterp(pts, ppd) {
+        var s = pts.slice().sort(function (a, b) { return a.x - b.x; });
+        var step = 1 / ppd;
+        var ls = Math.ceil(Math.log10(s[0].x) * ppd) / ppd;
+        var le = Math.floor(Math.log10(s[s.length - 1].x) * ppd) / ppd;
+        var r = [], i = 0;
+        for (var lx = ls; lx <= le + 1e-9; lx += step) {
+          var x = Math.pow(10, lx);
+          while (i < s.length - 2 && s[i + 1].x < x) { i++; }
+          var l0 = Math.log10(s[i].x), l1 = Math.log10(s[i + 1].x);
+          var t = (l1 === l0) ? 0 : (lx - l0) / (l1 - l0);
+          r.push({ x: x, y: +(s[i].y + t * (s[i + 1].y - s[i].y)).toFixed(3) });
+        }
+        return r;
+      }
+      var BG = {
+        id: 'customBg',
+        beforeDraw: function (c) {
+          var ctx = c.ctx; ctx.save();
+          ctx.globalCompositeOperation = 'destination-over';
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, c.width, c.height);
+          ctx.restore();
+        }
+      };
+      var PAL = ['#3a6270','#c87941','#5a9aaa','#b34040','#4a7a4a','#7a5a8a',
+                 '#40a0c0','#a08040','#2a4a55','#c04060','#3a7a5a','#806030'];
+      function makeMultiLine(id, datasets, opts) {
+        opts = opts || {};
+        var el = document.getElementById(id);
+        if (!el) { return null; }
+        var T = (opts.tension !== undefined) ? opts.tension : 0.3;
+        var ds = datasets.map(function (d, i) {
+          var pts;
+          if      (d.interp === 'lin') { pts = linInterp(d.data, d.step || 1); }
+          else if (d.interp === 'log') { pts = logInterp(d.data, d.ppd  || 20); }
+          else                         { pts = d.data; }
+          return {
+            label: d.label || ('S' + (i + 1)), data: pts, fill: false,
+            borderColor: d.color || PAL[i % PAL.length],
+            backgroundColor: d.color || PAL[i % PAL.length],
+            tension: T, pointRadius: 0, pointHoverRadius: 0,
+            borderWidth: d.width || 2, showLine: true
+          };
+        });
+        var xS = {
+          type: opts.xLog ? 'logarithmic' : 'linear',
+          ticks: { maxRotation: 0, font: { size: 14 } },
+          title: { display: true, text: opts.xLabel || 'x', font: { size: 16 } },
+          grid: { color: 'rgba(0,0,0,0.07)' }
+        };
+        if (opts.xMin !== undefined) { xS.min = opts.xMin; }
+        if (opts.xMax !== undefined) { xS.max = opts.xMax; }
+        var yS = {
+          ticks: { font: { size: 14 } },
+          title: { display: true, text: opts.yLabel || 'y', padding: 8, font: { size: 16 } },
+          grid: { color: 'rgba(0,0,0,0.07)' }
+        };
+        if (opts.yMin !== undefined) { yS.min = opts.yMin; }
+        if (opts.yMax !== undefined) { yS.max = opts.yMax; }
+        return new Chart(el.getContext('2d'), {
+          type: 'scatter', data: { datasets: ds },
+          options: {
+            maintainAspectRatio: false, responsive: true, animation: false,
+            layout: { padding: { left: 8, right: 20, top: 5, bottom: 5 } },
+            plugins: {
+              customBg: {},
+              legend: { position: 'top', labels: { boxHeight: 2, font: { size: 14 }, usePointStyle: false, padding: 14 } },
+              tooltip: { enabled: true, mode: 'nearest', intersect: false, axis: 'x' }
+            },
+            scales: { x: xS, y: yS }
+          },
+          plugins: [BG]
+        });
+      }
+      function addToggle(btnId, chart) {
+        var b = document.getElementById(btnId);
+        if (!b || !chart) { return; }
+        b.addEventListener('click', function () {
+          var t = chart.options.plugins.tooltip;
+          t.enabled = !t.enabled; chart.update();
+          b.textContent = t.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+        });
+      }
+      return { linInterp: linInterp, logInterp: logInterp, makeMultiLine: makeMultiLine, addToggle: addToggle };
+    }());
+    </script>
+
     <!-- DEFERRED JAVASCRIPT -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script defer src="js/citation.js"></script>
@@ -140,7 +247,7 @@
                   <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
                   <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
                   <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
-                  <a class="dropdown-item" href="Waterviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
                   <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
                   <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
                   <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
@@ -152,6 +259,7 @@
                   <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
                 </div>
               </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
               <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
                 <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
                   <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
@@ -196,18 +304,31 @@
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
                   <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
-                  <a class="dropdown-item" href="Chapter2.1(steel).html">&nbsp&nbsp&nbsp 2.1 (General)</a>
-                  <a class="dropdown-item" href="Chapter2.2(steel).html">&nbsp&nbsp&nbsp 2.2 (Carbon Steels)</a>
-                  <a class="dropdown-item" href="Chapter2.3(steel).html">&nbsp&nbsp&nbsp 2.3 (Low Alloy Steels)</a>
-                  <a class="dropdown-item" href="Chapter2.4(steel).html">&nbsp&nbsp&nbsp 2.4 (Intermediate Alloy Steels)</a>
-                  <a class="dropdown-item" href="Chapter2.5(steel).html">&nbsp&nbsp&nbsp 2.5 (High Alloy Steels)</a>
-                  <a class="dropdown-item" href="Chapter2.6(steel).html">&nbsp&nbsp&nbsp 2.6 (Precipitation Hardening Stainless Steel)</a>
-                  <a class="dropdown-item" href="Chapter2.7(steel).html">&nbsp&nbsp&nbsp 2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
                   <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
                 </div>
               </li>
-              <li class="nav-item" style="padding-right: 0px;">
-                <a class="nav-link" href="about.html">About</a>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal & Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Spring Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-1.html">Parker Gland Dimensions (Design Table 4-1)</a>
+                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-2.html">Parker Gland Dimensions (Design Table 4-2)</a>
+                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-3.html">Parker Face Seal Glands (Design Chart 4-3)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                </div>
               </li>
               <li class="nav-item text-center align-svg-bottom smallsearchbar">
                 <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
@@ -453,9 +574,39 @@
             <div class="section-heading lvl-2"><span class="section-num">2.5.0.2</span>Environmental Considerations</div>
             <p>The stress corrosion cracking resistance of high strength steels is of concern for highly loaded structural components such as landing gears and wing attach fittings that are subjected to corrosive environments such as sea spray or water. Figure 2.5.0.2(a) indicates the relative stress corrosion cracking resistance of several high-strength steel alloys. The data in this figure were obtained from Reference 2.5.0.2. The stress corrosion cracking threshold stress intensity (<em>K<sub>Issc</sub></em>) for each steel was defined as the value at which cracking did not occur. For most of these alloys, this value is about 20 ksi&radic;in. As indicated, there is a definite difference in the stress corrosion resistance between the alloys.</p>
             <p>In general, the high-strength steels do not reach a true threshold stress intensity until after 1000 hours of exposure. The highest stress corrosion cracking resistance in high-strength steels is associated with low carbon levels and lath martensite microstructure containing a fine distribution of M<sub>2</sub>C type carbides; alloys AF1410 and AerMet 100. The effect of low carbon is indicated between the AF1410 and 0.20AF1410 where the carbon levels are 0.15 and 0.20%, respectively. The lower stress cracking corrosion resistance is associated with higher carbon and the martensite is of plate morphology that exhibits a twinned structure; alloys 4340 and 300M. A slight anisotropic effect was observed for Hy-Tuf (TL vs LT); however, the effect was not apparent for AF1410. The differences in anisotropic properties may be due to differences in the cleanliness of the steels since Hy-Tuf was an air melted product and the others were either vacuum induction melted (VIM) or electroslag remelted (ESR).</p>
-            <div class="fig-placeholder" id="fig-2.5.0.2a">
-              <div class="fig-label">Figure 2.5.0.2(a)</div>
-              <div class="fig-caption">The relative stress corrosion cracking resistance of several high-strength steels tested in an environment of 3.5% NaCl (Reference 2.5.0.2). &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.0.2a">
+              <div class="canvasdiv">
+                <button id="toggle-fig250202a">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.0.2(a).png" download="Figure 2.5.0.2(a).png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.0.2(a).png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig250202a" class="chartcanvas" role="img" aria-label="Figure 2.5.0.2(a)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.0.2(a).</strong> The relative stress corrosion cracking resistance of several high-strength steels tested in an environment of 3.5% NaCl (Reference 2.5.0.2).</p>
+              <script>
+              (function(){
+                var d1=[{x:18.787,y:14.669},{x:246.208,y:12.020},{x:2167.896,y:10.594},{x:10072.136,y:9.168}];
+                var d2=[{x:17.370,y:21.392},{x:93.590,y:19.355},{x:207.319,y:18.132},{x:598.645,y:16.910},{x:1797.389,y:15.280},{x:4510.266,y:14.873},{x:5610.761,y:14.465},{x:9991.532,y:12.835}];
+                var d3=[{x:144.792,y:23.022},{x:473.643,y:21.800},{x:1179.397,y:20.170},{x:2473.769,y:19.151},{x:5742.097,y:18.336},{x:10066.538,y:17.725}];
+                var d4=[{x:110.001,y:52.767},{x:131.640,y:48.693},{x:160.023,y:43.599},{x:203.825,y:39.728},{x:269.933,y:36.061},{x:374.579,y:33.413},{x:584.341,y:29.134},{x:985.367,y:26.689},{x:1782.486,y:23.430},{x:3199.061,y:21.800},{x:5608.459,y:20.781},{x:10065.472,y:19.355}];
+                var d5=[{x:300.227,y:54.968},{x:404.572,y:47.878},{x:570.356,y:41.969},{x:810.391,y:35.654},{x:1142.457,y:29.949},{x:1648.422,y:26.893},{x:2472.917,y:24.448},{x:3652.404,y:22.003},{x:5696.673,y:20.577},{x:9987.168,y:19.559}];
+                var d6=[{x:239.370,y:85.569},{x:282.184,y:72.937},{x:319.823,y:65.806},{x:388.918,y:55.212},{x:451.208,y:48.693},{x:544.319,y:41.154},{x:682.693,y:34.839},{x:883.345,y:28.930},{x:1188.219,y:25.467},{x:1897.255,y:23.022},{x:3352.311,y:21.596},{x:5310.575,y:20.781},{x:10081.019,y:19.599}];
+                var d7=[{x:453.231,y:99.830},{x:494.117,y:90.458},{x:542.901,y:81.290},{x:615.365,y:72.937},{x:778.078,y:61.935},{x:945.964,y:54.805},{x:1132.280,y:47.674},{x:1431.258,y:41.154},{x:1910.764,y:33.820},{x:2631.270,y:29.134},{x:3708.831,y:26.037},{x:5309.478,y:23.959},{x:7424.658,y:23.022},{x:10063.074,y:23.022}];
+                var d8=[{x:546.557,y:97.997},{x:586.550,y:91.070},{x:644.485,y:81.290},{x:716.928,y:73.752},{x:843.528,y:66.825},{x:1006.418,y:61.324},{x:1333.035,y:55.416},{x:1751.588,y:52.564},{x:2488.054,y:50.526},{x:3791.097,y:48.367},{x:5776.479,y:46.452},{x:8939.870,y:44.618}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig250202a',[
+                  {label:'4340ESR',                      data:d1,interp:'log',ppd:20},
+                  {label:'300M',                         data:d2,interp:'log',ppd:20},
+                  {label:'Hy-Tuf (LT)',                  data:d3,interp:'log',ppd:20},
+                  {label:'Hy-Tuf (TL)',                  data:d4,interp:'log',ppd:20},
+                  {label:'AerMet 100',            data:d5,interp:'log',ppd:20},
+                  {label:'0.20C mod AF 1410',                   data:d6,interp:'log',ppd:20},
+                  {label:'AF 1410 (plate and billet)',   data:d7,interp:'log',ppd:20},
+                  {label:'AF 1410 (3.75" × 5.25" Bar)', data:d8,interp:'log',ppd:20}
+                ],{xLog:true,xLabel:'Time to Failure (hours)',yLabel:'Kᴵˢˢᶜ, ksi√in',yMin:0});
+                HdbkUtil.addToggle('toggle-fig250202a',chart);
+              })();
+              </script>
             </div>
           </div><!-- /2.5.0.2 -->
 
@@ -472,12 +623,283 @@
             <p><strong>Manufacturing Considerations.</strong> The 250 and 280 grades are readily hot worked by conventional rolling and forging operations. These grades also have good cold forming characteristics in spite of the relatively high hardness in the annealed (martensitic) condition. The machinability of the 250 and 280 grades is not unlike 4330 steel at equivalent hardness. The 18 Ni maraging steels can be readily welded in either the annealed or aged conditions without preheating. Welding of aged material should be followed by aging at 900&deg;F to strengthen the weld area.</p>
             <p><strong>Environmental Considerations.</strong> Although the 18 Ni maraging steels are high in alloy content, these grades are not corrosion resistant. Since the general corrosion resistance is similar to the low-alloy steels, these steels require protective coatings. The 250 grade reportedly has better resistance to stress corrosion cracking than the low-alloy steels at the same strength.</p>
             <p><strong>Specifications and Properties.</strong> Material specifications for these steels are shown in Table 2.5.1.0(a). The room temperature properties for material aged at 900&deg;F are shown in Tables 2.5.1.0(b) and (c), and the effect of temperature on physical properties is shown in Figure 2.5.1.0.</p>
-            <span class="table-placeholder" id="table-2.5.1.0a">Table 2.5.1.0(a). Material Specifications for 18 Ni Maraging Steels &mdash; (data table to be added)</span>
-            <span class="table-placeholder" id="table-2.5.1.0b">Table 2.5.1.0(b). Design Mechanical and Physical Properties of 250 Maraging Steel &mdash; (data table to be added)</span>
-            <span class="table-placeholder" id="table-2.5.1.0c">Table 2.5.1.0(c). Design Mechanical and Physical Properties of 280 Maraging Steel &mdash; (data table to be added)</span>
-            <div class="fig-placeholder" id="fig-2.5.1.0">
-              <div class="fig-label">Figure 2.5.1.0</div>
-              <div class="fig-caption">Effect of temperature on the physical properties of 250 and 280 maraging steels. &mdash; (figure to be added)</div>
+            <div class="hdbk-table-wrap" id="table-2.5.1.0a">
+              <table class="hdbk-table">
+                <caption>Table 2.5.1.0(a). Material Specifications for 18 Ni Maraging Steels</caption>
+                <thead>
+                  <tr>
+                    <th>Grade</th>
+                    <th>Specification</th>
+                    <th>Form</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>250</td><td class="td-left">AMS 6520</td><td class="td-left">Sheet and plate</td></tr>
+                  <tr><td>250</td><td class="td-left">AMS 6512</td><td class="td-left">Bar</td></tr>
+                  <tr><td>280 (300)</td><td class="td-left">AMS 6521<sup>a</sup></td><td class="td-left">Sheet and plate</td></tr>
+                  <tr><td>280 (300)</td><td class="td-left">AMS 6514</td><td class="td-left">Bar</td></tr>
+                </tbody>
+                <tfoot>
+                  <tr><td colspan="3">a &nbsp;Noncurrent specification.</td></tr>
+                </tfoot>
+              </table>
+            </div>
+            <div class="hdbk-table-wrap" id="table-2.5.1.0b">
+              <table class="hdbk-table">
+                <caption>Table 2.5.1.0(b). Design Mechanical and Physical Properties of 250 Maraging Steel</caption>
+                <thead>
+                  <tr>
+                    <th class="td-left">Specification</th>
+                    <th colspan="3">AMS 6520</th>
+                    <th colspan="2">AMS 6512</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Form</th>
+                    <th>Sheet</th>
+                    <th colspan="2">Plate</th>
+                    <th colspan="2">Bar</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Condition</th>
+                    <th colspan="3">Maraged at 900&deg;F</th>
+                    <th colspan="2">Maraged at 900&deg;F</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Thickness or diameter, in.</th>
+                    <th>&le;0.187</th>
+                    <th>0.187&ndash;0.250</th>
+                    <th>&gt;0.250</th>
+                    <th>&lt;4.000</th>
+                    <th>4.000&ndash;10.000</th>
+                  </tr>
+                  <tr class="subhead">
+                    <th class="td-left">Basis</th>
+                    <th>S</th>
+                    <th>S</th>
+                    <th>S</th>
+                    <th>S</th>
+                    <th>S</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="prop-section"><td colspan="6" class="td-left">Mechanical Properties:</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>247</td><td>252</td><td>&hellip;</td><td>255</td><td>245</td></tr>
+                  <tr><td class="td-indent">T</td><td>255</td><td>255</td><td>255</td><td>255</td><td>245</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>238</td><td>242</td><td>&hellip;</td><td>250</td><td>240</td></tr>
+                  <tr><td class="td-indent">T</td><td>245</td><td>245</td><td>245</td><td>250</td><td>240</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>221</td><td>&hellip;</td><td>&hellip;</td><td>260</td><td>&hellip;</td></tr>
+                  <tr><td class="td-indent">T</td><td>225</td><td>255</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>su</sub></em>, ksi</td></tr>
+                  <tr><td class="td-indent"></td><td>148</td><td>155</td><td>&hellip;</td><td>148</td><td>&hellip;</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 1.5)</td><td>327</td><td>352</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 2.0)</td><td>444</td><td>448</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 1.5)</td><td>278</td><td>324</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 2.0)</td><td>353</td><td>354</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>e</em>, percent:</td></tr>
+                  <tr><td class="td-indent">L</td><td><sup>a</sup></td><td><sup>a</sup></td><td><sup>a</sup></td><td>6</td><td>5</td></tr>
+                  <tr><td class="td-indent">T</td><td><sup>a</sup></td><td><sup>a</sup></td><td>&hellip;</td><td>4</td><td>3</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>RA</em>, percent:</td></tr>
+                  <tr><td class="td-indent">L</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>45</td><td>30</td></tr>
+                  <tr><td class="td-indent">T</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>35</td><td>20</td></tr>
+
+                  <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="5">26.5</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td colspan="5">28.2</td></tr>
+                  <tr><td class="td-indent">T</td><td colspan="5">29.4</td></tr>
+
+                  <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="5">&hellip;</td></tr>
+                  <tr><td class="td-left"><em>&mu;</em></td><td colspan="5">0.31</td></tr>
+
+                  <tr class="prop-section"><td colspan="6" class="td-left">Physical Properties:</td></tr>
+                  <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="5">0.286</td></tr>
+                  <tr><td class="td-left"><em>C</em>, <em>K</em>, and <em>&alpha;</em></td><td colspan="5">See Figure 2.5.1.0</td></tr>
+                </tbody>
+                <tfoot>
+                  <tr><td colspan="6"><sup>a</sup> Elongation properties vary with thickness as follows:
+                    &nbsp; &le;0.090 in.: 2.5% &nbsp;|&nbsp;
+                    0.091&ndash;0.125 in.: 3.0% &nbsp;|&nbsp;
+                    0.126&ndash;0.250 in.: 4.0% &nbsp;|&nbsp;
+                    0.251&ndash;0.375 in.: 5.0% &nbsp;|&nbsp;
+                    &ge;0.376 in.: 6.0%
+                  </td></tr>
+                </tfoot>
+              </table>
+            </div>
+            <div class="hdbk-table-wrap" id="table-2.5.1.0c">
+              <table class="hdbk-table">
+                <caption>Table 2.5.1.0(c). Design Mechanical and Physical Properties of 280 Maraging Steel</caption>
+                <thead>
+                  <tr>
+                    <th class="td-left">Specification</th>
+                    <th colspan="3">AMS 6521<sup>a</sup></th>
+                    <th colspan="2">AMS 6514</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Form</th>
+                    <th>Sheet</th>
+                    <th colspan="2">Plate</th>
+                    <th colspan="2">Bar</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Condition</th>
+                    <th colspan="3">Maraged at 900&deg;F</th>
+                    <th colspan="2">Maraged at 900&deg;F</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Thickness or diameter, in.</th>
+                    <th>&le;0.187</th>
+                    <th>0.188&ndash;0.250</th>
+                    <th>&gt;0.250</th>
+                    <th>&lt;4.000</th>
+                    <th>4.000&ndash;10.000</th>
+                  </tr>
+                  <tr class="subhead">
+                    <th class="td-left">Basis</th>
+                    <th>S</th>
+                    <th>S</th>
+                    <th>S</th>
+                    <th>S</th>
+                    <th>S</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="prop-section"><td colspan="6" class="td-left">Mechanical Properties:</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>271</td><td>276</td><td>&hellip;</td><td>280</td><td>275</td></tr>
+                  <tr><td class="td-indent">T</td><td>280</td><td>280</td><td>280</td><td>280</td><td>275</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>262</td><td>267</td><td>&hellip;</td><td>270</td><td>270</td></tr>
+                  <tr><td class="td-indent">T</td><td>270</td><td>270</td><td>270</td><td>270</td><td>270</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>244</td><td>&hellip;</td><td>&hellip;</td><td>281</td><td>&hellip;</td></tr>
+                  <tr><td class="td-indent">T</td><td>248</td><td>281</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>su</sub></em>, ksi</td></tr>
+                  <tr><td class="td-indent"></td><td>163</td><td>170</td><td>&hellip;</td><td>162</td><td>&hellip;</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 1.5)</td><td>359</td><td>386</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 2.0)</td><td>487</td><td>492</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 1.5)</td><td>306</td><td>357</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 2.0)</td><td>389</td><td>390</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>e</em>, percent:</td></tr>
+                  <tr><td class="td-indent">L</td><td><sup>b</sup></td><td><sup>b</sup></td><td><sup>b</sup></td><td>5</td><td>4</td></tr>
+                  <tr><td class="td-indent">T</td><td><sup>b</sup></td><td>&hellip;</td><td>&hellip;</td><td>4</td><td>2</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>RA</em>, percent:</td></tr>
+                  <tr><td class="td-indent">L</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>30</td><td>25</td></tr>
+                  <tr><td class="td-indent">T</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>25</td><td>20</td></tr>
+
+                  <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="5">26.5</td></tr>
+
+                  <tr class="prop-group"><td colspan="6" class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td colspan="5">28.6</td></tr>
+                  <tr><td class="td-indent">T</td><td colspan="5">29.6</td></tr>
+
+                  <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="5">&hellip;</td></tr>
+                  <tr><td class="td-left"><em>&mu;</em></td><td colspan="5">0.31</td></tr>
+
+                  <tr class="prop-section"><td colspan="6" class="td-left">Physical Properties:</td></tr>
+                  <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="5">0.286</td></tr>
+                  <tr><td class="td-left"><em>C</em>, <em>K</em>, and <em>&alpha;</em></td><td colspan="5">See Figure 2.5.1.0</td></tr>
+                </tbody>
+                <tfoot>
+                  <tr><td colspan="6"><sup>a</sup> Noncurrent specification.</td></tr>
+                  <tr><td colspan="6"><sup>b</sup> Elongation properties vary with thickness as follows:
+                    &nbsp; &le;0.090 in.: 2.5% &nbsp;|&nbsp;
+                    0.091&ndash;0.125 in.: 3.0% &nbsp;|&nbsp;
+                    0.126&ndash;0.250 in.: 4.0% &nbsp;|&nbsp;
+                    0.251&ndash;0.375 in.: 5.0% &nbsp;|&nbsp;
+                    &ge;0.376 in.: 6.0%
+                  </td></tr>
+                </tfoot>
+              </table>
+            </div>
+            <div class="hdbk-figure" id="fig-2.5.1.0">
+
+              <!-- K — Thermal Conductivity -->
+              <div class="canvasdiv">
+                <button id="toggle-fig25010k">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.0-K.png" download="Figure 2.5.1.0-K.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.0-K.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig25010k" class="chartcanvas" role="img" aria-label="Figure 2.5.1.0 — Thermal Conductivity K"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">K &mdash; At indicated Temperature.</p>
+
+              <!-- α — Thermal Expansion Coefficient -->
+              <div class="canvasdiv" style="margin-top:1.25rem;">
+                <button id="toggle-fig25010a">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.0-alpha.png" download="Figure 2.5.1.0-alpha.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.0-alpha.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig25010a" class="chartcanvas" role="img" aria-label="Figure 2.5.1.0 — Thermal Expansion Coefficient α"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">&alpha; &mdash; Between 70&deg;F and indicated Temperature.</p>
+
+              <!-- C — Specific Heat -->
+              <div class="canvasdiv" style="margin-top:1.25rem;">
+                <button id="toggle-fig25010c">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.0-C.png" download="Figure 2.5.1.0-C.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.0-C.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig25010c" class="chartcanvas" role="img" aria-label="Figure 2.5.1.0 — Specific Heat C"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">C &mdash; At indicated Temperature.</p>
+
+              <p class="fig-caption"><strong>Figure 2.5.1.0.</strong> Effect of temperature on the physical properties of 250 and 280 maraging steels.</p>
+
+              <script>
+              (function(){
+                /* ── K : Thermal Conductivity ─────────────────────────────── */
+                var dK=[{x:62.692,y:14.360},{x:208.606,y:15.628},{x:388.028,y:16.807},{x:509.177,y:17.263},{x:672.165,y:17.721},{x:776.690,y:17.906}];
+                var cK=HdbkUtil.makeMultiLine('canvas-fig25010k',[
+                  {label:'250 & 280',data:dK,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'K, Btu/[(hr)(ft²)(°F)/ft]',yMin:10,yMax:22});
+                HdbkUtil.addToggle('toggle-fig25010k',cK);
+
+                /* ── α : Thermal Expansion Coefficient ───────────────────── */
+                var dA250=[{x:-472.688,y:2.990},{x:-392.654,y:3.349},{x:-278.929,y:3.869},{x:-190.422,y:4.210},{x:-59.708,y:4.641},{x:92.148,y:5.071},{x:290.501,y:5.519},{x:450.935,y:5.805},{x:573.451,y:5.930},{x:734.068,y:6.001},{x:877.817,y:6.017},{x:1004.714,y:5.962},{x:1102.179,y:5.709},{x:1165.832,y:5.439},{x:1229.608,y:5.025},{x:1293.261,y:4.755},{x:1369.509,y:4.592},{x:1437.132,y:4.627},{x:1496.238,y:4.735},{x:1534.156,y:4.896},{x:1572.014,y:5.130},{x:1597.156,y:5.399}];
+                var dA280=[{x:-469.190,y:3.853},{x:-406.008,y:4.140},{x:-342.795,y:4.392},{x:-266.898,y:4.643},{x:-190.970,y:4.858},{x:-98.121,y:5.064},{x:24.327,y:5.270},{x:176.350,y:5.502},{x:341.104,y:5.680},{x:467.848,y:5.805},{x:598.821,y:5.930},{x:708.690,y:6.010},{x:898.961,y:6.015},{x:1004.698,y:5.980},{x:1064.002,y:5.854},{x:1114.894,y:5.673},{x:1153.102,y:5.493},{x:1208.344,y:5.169},{x:1276.272,y:4.845},{x:1318.707,y:4.664},{x:1390.650,y:4.592},{x:1445.589,y:4.627},{x:1496.209,y:4.768},{x:1555.207,y:5.004},{x:1588.729,y:5.363}];
+                var cA=HdbkUtil.makeMultiLine('canvas-fig25010a',[
+                  {label:'250 grade',data:dA250,interp:'lin',step:10},
+                  {label:'280 grade',data:dA280,interp:'lin',step:10}
+                ],{xLabel:'Temperature, °F',yLabel:'α, 10⁻⁶ in./in./°F',yMin:2,yMax:7});
+                HdbkUtil.addToggle('toggle-fig25010a',cA);
+
+                /* ── C : Specific Heat ────────────────────────────────────── */
+                var dC250=[{x:22.465,y:0.0795},{x:132.195,y:0.0966},{x:246.164,y:0.1128},{x:360.177,y:0.1254},{x:474.234,y:0.1343},{x:533.365,y:0.1397},{x:579.768,y:0.1487},{x:634.628,y:0.1577},{x:710.520,y:0.1757},{x:761.042,y:0.1938},{x:811.478,y:0.2190}];
+                var dC280=[{x:22.661,y:0.0633},{x:128.163,y:0.0804},{x:220.990,y:0.0966},{x:330.742,y:0.1119},{x:436.255,y:0.1280},{x:524.865,y:0.1433},{x:600.725,y:0.1641},{x:651.203,y:0.1857},{x:684.812,y:0.2037},{x:701.551,y:0.2181},{x:726.693,y:0.2371},{x:764.345,y:0.2704},{x:776.681,y:0.2993},{x:793.322,y:0.3218},{x:801.321,y:0.3597}];
+                var cC=HdbkUtil.makeMultiLine('canvas-fig25010c',[
+                  {label:'250 grade',data:dC250,interp:'lin',step:5},
+                  {label:'280 grade',data:dC280,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'C, Btu/[(lb)(°F)]',yMin:0,yMax:0.40});
+                HdbkUtil.addToggle('toggle-fig25010c',cC);
+              })();
+              </script>
             </div>
           </div><!-- /2.5.1.0 -->
 
@@ -485,41 +907,250 @@
           <div class="section lvl-2" id="2.5.1.1">
             <div class="section-heading lvl-2"><span class="section-num">2.5.1.1</span>Maraged Condition (Aged at 900&deg;F)</div>
             <p>Effect of temperature on 250 and 280 grade maraging steel is presented in Figures 2.5.1.1.1 through 2.5.1.1.4. Figures 2.5.1.1.6(a) and (b) are room and elevated temperature tensile stress-strain curves. Typical compressive stress-strain and tangent-modulus curves at room temperature are presented in Figures 2.5.1.1.6(c) and (d). Figure 2.5.1.1.6(e) is a full-range stress-strain curve at room temperature for 280 grade maraging steel.</p>
-            <div class="fig-placeholder" id="fig-2.5.1.1.1">
-              <div class="fig-label">Figure 2.5.1.1.1</div>
-              <div class="fig-caption">Effect of temperature on the tensile ultimate strength (<em>F<sub>tu</sub></em>) and the tensile yield strength (<em>F<sub>ty</sub></em>) of 250 and 280 maraging steel sheet and plate. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.1.1.1">
+              <div class="canvasdiv">
+                <button id="toggle-fig251111">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.1.png" download="Figure 2.5.1.1.1.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.1.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig251111" class="chartcanvas" role="img" aria-label="Figure 2.5.1.1.1"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.1.1.1.</strong> Effect of temperature on the tensile ultimate strength (<em>F<sub>tu</sub></em>) and the tensile yield strength (<em>F<sub>ty</sub></em>) of 250 and 280 maraging steel sheet and plate.</p>
+              <script>
+              (function(){
+                var d1=[{x:-321.177,y:122.156},{x:-257.930,y:113.792},{x:-182.720,y:108.326},{x:-65.472,y:104.034},{x:72.800,y:100.041},{x:211.083,y:95.469},{x:355.375,y:90.899},{x:481.625,y:87.190},{x:616.893,y:83.195},{x:713.095,y:79.763},{x:833.331,y:76.341},{x:887.468,y:73.180},{x:947.672,y:66.840},{x:998.848,y:61.364}];
+                var d2=[{x:-321.123,y:119.263},{x:-239.928,y:115.072},{x:-161.734,y:110.649},{x:-50.477,y:105.429},{x:63.782,y:100.326},{x:156.996,y:96.025},{x:262.232,y:91.439},{x:367.441,y:88.300},{x:502.666,y:86.620},{x:646.909,y:84.654},{x:743.098,y:81.916},{x:821.281,y:78.072},{x:875.431,y:74.217},{x:929.636,y:67.411},{x:953.768,y:62.213},{x:996.592,y:53.551}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig251111',[
+                  {label:'Ftu',data:d1,interp:'lin',step:5},
+                  {label:'Fty',data:d2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of Room Temperature Strength',yMin:0});
+                HdbkUtil.addToggle('toggle-fig251111',chart);
+              })();
+              </script>
+                          <p class="chart-note">Strength at temperature &nbsp;|&nbsp; Exposure up to &frac12; hr</p>
             </div>
-            <div class="fig-placeholder" id="fig-2.5.1.1.2">
-              <div class="fig-label">Figure 2.5.1.1.2</div>
-              <div class="fig-caption">Effect of temperature on the compressive yield strength (<em>F<sub>cy</sub></em>) and the shear ultimate strength (<em>F<sub>su</sub></em>) of 250 and 280 maraging steel sheet and plate. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.1.1.2">
+              <div class="canvasdiv">
+                <button id="toggle-fig251112">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.2.png" download="Figure 2.5.1.1.2.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.2.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig251112" class="chartcanvas" role="img" aria-label="Figure 2.5.1.1.2"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.1.1.2.</strong> Effect of temperature on the compressive yield strength (<em>F<sub>cy</sub></em>) and the shear ultimate strength (<em>F<sub>su</sub></em>) of 250 and 280 maraging steel sheet and plate.</p>
+              <script>
+              (function(){
+                var d1=[{x:84.824,y:99.840},{x:151.628,y:95.208},{x:253.933,y:90.415},{x:389.797,y:85.942},{x:519.846,y:83.227},{x:626.267,y:81.310},{x:738.570,y:78.754},{x:821.204,y:74.920},{x:895.870,y:69.808},{x:944.890,y:64.696},{x:1001.602,y:56.230}];
+                var d2=[{x:88.779,y:100.000},{x:191.094,y:95.367},{x:291.465,y:91.214},{x:409.554,y:86.422},{x:498.097,y:82.428},{x:586.678,y:79.073},{x:667.442,y:76.997},{x:746.320,y:76.358},{x:842.962,y:75.879},{x:896.116,y:73.962},{x:956.973,y:68.850},{x:1003.934,y:62.300}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig251112',[
+                  {label:'Fcy',data:d1,interp:'lin',step:5},
+                  {label:'Fsu',data:d2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of Room Temperature Strength',yMin:0});
+                HdbkUtil.addToggle('toggle-fig251112',chart);
+              })();
+              </script>
+                          <p class="chart-note">Strength at temperature &nbsp;|&nbsp; Exposure up to &frac12; hr</p>
             </div>
-            <div class="fig-placeholder" id="fig-2.5.1.1.3">
-              <div class="fig-label">Figure 2.5.1.1.3</div>
-              <div class="fig-caption">Effect of temperature on the bearing ultimate strength (<em>F<sub>bru</sub></em>) and the bearing yield strength (<em>F<sub>bry</sub></em>) of 250 and 280 maraging steel sheet and plate. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.1.1.3">
+              <div class="canvasdiv">
+                <button id="toggle-fig251113">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.3.png" download="Figure 2.5.1.1.3.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.3.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig251113" class="chartcanvas" role="img" aria-label="Figure 2.5.1.1.3"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.1.1.3.</strong> Effect of temperature on the bearing ultimate strength (<em>F<sub>bru</sub></em>) and the bearing yield strength (<em>F<sub>bry</sub></em>) of 250 and 280 maraging steel sheet and plate.</p>
+              <script>
+              (function(){
+                var d1=[{x:107.751,y:99.659},{x:197.205,y:97.014},{x:311.055,y:94.367},{x:408.640,y:92.215},{x:518.424,y:88.909},{x:624.142,y:85.932},{x:721.728,y:81.474},{x:841.677,y:74.543},{x:920.966,y:67.450},{x:967.726,y:61.185},{x:998.221,y:54.098}];
+                var d2=[{x:89.454,y:99.661},{x:154.511,y:96.524},{x:225.667,y:93.881},{x:353.748,y:90.408},{x:455.400,y:87.433},{x:563.151,y:84.621},{x:660.737,y:81.645},{x:760.356,y:76.528},{x:835.578,y:71.578},{x:898.602,y:65.970},{x:945.362,y:60.693},{x:998.221,y:54.098}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig251113',[
+                  {label:'Fbru',data:d1,interp:'lin',step:5},
+                  {label:'Fbry',data:d2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of Room Temperature Strength',yMin:0});
+                HdbkUtil.addToggle('toggle-fig251113',chart);
+              })();
+              </script>
+                          <p class="chart-note">Strength at temperature &nbsp;|&nbsp; Exposure up to &frac12; hr</p>
             </div>
-            <div class="fig-placeholder" id="fig-2.5.1.1.4">
-              <div class="fig-label">Figure 2.5.1.1.4</div>
-              <div class="fig-caption">Effect of temperature on the tensile and compressive moduli (<em>E</em> and <em>E<sub>c</sub></em>) of 250 and 280 maraging steel. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.1.1.4">
+              <div class="canvasdiv">
+                <button id="toggle-fig251114">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.4.png" download="Figure 2.5.1.1.4.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.4.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig251114" class="chartcanvas" role="img" aria-label="Figure 2.5.1.1.4"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.1.1.4.</strong> Effect of temperature on the tensile and compressive moduli (<em>E</em> and <em>E<sub>c</sub></em>) of 250 and 280 maraging steel.</p>
+              <script>
+              (function(){
+                var d1=[{x:-105.176,y:104.214},{x:-27.765,y:102.618},{x:127.059,y:99.229},{x:248.941,y:97.423},{x:400.471,y:95.019},{x:496.000,y:93.418},{x:604.706,y:92.207},{x:668.941,y:91.402},{x:759.529,y:87.834},{x:827.059,y:84.667},{x:899.529,y:80.514},{x:1000.000,y:73.204}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig251114',[
+                  {label:'E & Ec',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percent E & Ec at Room Temperature',yMin:0});
+                HdbkUtil.addToggle('toggle-fig251114',chart);
+              })();
+              </script>
+                          <p class="chart-note">Modulus at temperature &nbsp;|&nbsp; Exposure up to &frac12; hr</p>
             </div>
-            <div class="fig-placeholder" id="fig-2.5.1.1.6a">
-              <div class="fig-label">Figure 2.5.1.1.6(a)</div>
-              <div class="fig-caption">Typical tensile stress-strain curves at room and elevated temperatures for 250 maraging steel bar. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.1.1.6a">
+              <div class="canvasdiv">
+                <button id="toggle-fig251116a">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.6(a).png" download="Figure 2.5.1.1.6(a).png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.6(a).png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig251116a" class="chartcanvas" role="img" aria-label="Figure 2.5.1.1.6(a)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.1.1.6(a).</strong> Typical tensile stress-strain curves at room and elevated temperatures for 250 maraging steel bar.</p>
+              <script>
+              (function(){
+                var d1=[{x:-0.031,y:0},{x:2.769,y:55.080},{x:4.138,y:80.466},{x:5.258,y:101.062},{x:6.203,y:113.000},{x:7.651,y:126.469},{x:9.111,y:133.675},{x:10.546,y:139.063},{x:11.658,y:141.860}];
+                var d2=[{x:0.031,y:2.394},{x:3.859,y:87.637},{x:5.975,y:135.526},{x:7.095,y:158.037},{x:7.966,y:172.887},{x:8.495,y:181.031},{x:9.458,y:191.577},{x:10.329,y:199.345},{x:12.037,y:210.767},{x:13.466,y:217.015},{x:14.510,y:221.151}];
+                var d3=[{x:0.031,y:0.480},{x:3.486,y:84.759},{x:4.794,y:117.321},{x:5.877,y:143.276},{x:6.692,y:161.857},{x:7.532,y:182.447},{x:8.124,y:193.942},{x:8.776,y:201.133},{x:9.553,y:207.368},{x:10.671,y:212.654},{x:11.976,y:216.507},{x:12.876,y:218.535},{x:13.095,y:218.535}];
+                var d4=[{x:0.000,y:2.393},{x:6.475,y:164.723},{x:7.440,y:190.101},{x:7.969,y:202.073},{x:8.467,y:211.174},{x:9.151,y:219.322},{x:9.958,y:223.644},{x:10.921,y:227.491},{x:11.884,y:231.338},{x:13.095,y:233.276}];
+                var d5=[{x:-0.062,y:0.478},{x:4.546,y:121.622},{x:6.196,y:164.717},{x:7.379,y:196.320},{x:8.188,y:216.910},{x:9.246,y:238.462},{x:9.843,y:245.651},{x:10.831,y:252.848},{x:12.042,y:258.614},{x:14.030,y:264.395}];
+                var d6=[{x:-0.031,y:0},{x:2.211,y:60.810},{x:3.425,y:93.849},{x:4.297,y:119.225},{x:5.293,y:145.561},{x:6.009,y:165.671},{x:7.006,y:192.006},{x:7.784,y:213.553},{x:8.780,y:238.740},{x:9.639,y:255.599},{x:10.832,y:268.638},{x:12.541,y:278.720},{x:14.870,y:284.986}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig251116a',[
+                  {label:'1000°F',data:d1,interp:'lin',step:0.05},
+                  {label:'800°F',data:d2,interp:'lin',step:0.05},
+                  {label:'600°F',data:d3,interp:'lin',step:0.05},
+                  {label:'300°F',data:d4,interp:'lin',step:0.05},
+                  {label:'RT',   data:d5,interp:'lin',step:0.05},
+                  {label:'-100°F',data:d6,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig251116a',chart);
+              })();
+              </script>
+                          <p class="chart-note">Longitudinal &frac12;-hr exposure</p>
+              <p class="chart-note">Ramberg&ndash;Osgood: n (&minus;100&deg;F) = 24 &nbsp;|&nbsp; n (RT) = 26 &nbsp;|&nbsp; n (300&deg;F) = 29 &nbsp;|&nbsp; n (600&deg;F) = 26 &nbsp;|&nbsp; n (800&deg;F) = 11 &nbsp;|&nbsp; n (1000&deg;F) = 11</p>
             </div>
-            <div class="fig-placeholder" id="fig-2.5.1.1.6b">
-              <div class="fig-label">Figure 2.5.1.1.6(b)</div>
-              <div class="fig-caption">Typical tensile stress-strain curves at room and elevated temperatures for 280 maraging steel bar. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.1.1.6b">
+              <div class="canvasdiv">
+                <button id="toggle-fig251116b">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.6(b).png" download="Figure 2.5.1.1.6(b).png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.6(b).png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig251116b" class="chartcanvas" role="img" aria-label="Figure 2.5.1.1.6(b)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.1.1.6(b).</strong> Typical tensile stress-strain curves at room and elevated temperatures for 280 maraging steel bar.</p>
+              <script>
+              (function(){
+                var d1=[{x:-0.031,y:0},{x:2.504,y:48.038},{x:4.214,y:81.947},{x:5.130,y:99.466},{x:5.985,y:113.595},{x:6.595,y:123.203},{x:7.542,y:131.680},{x:8.397,y:137.896},{x:9.924,y:146.939},{x:12.397,y:155.981}];
+                var d2=[{x:0.061,y:1.130},{x:4.519,y:101.727},{x:6.168,y:140.157},{x:7.359,y:165.589},{x:8.305,y:182.882},{x:9.374,y:197.802},{x:10.626,y:210.122},{x:12.183,y:219.843},{x:14.290,y:228.885}];
+                var d3=[{x:0.031,y:0},{x:5.221,y:126.028},{x:7.084,y:171.240},{x:8.000,y:193.281},{x:9.252,y:214.192},{x:10.626,y:227.190},{x:12.336,y:237.363},{x:14.168,y:244.144}];
+                var d4=[{x:0.061,y:1.130},{x:7.298,y:185.482},{x:8.458,y:213.061},{x:9.282,y:228.320},{x:10.229,y:240.188},{x:11.389,y:251.039},{x:12.458,y:257.143},{x:13.466,y:262.003},{x:14.473,y:265.055}];
+                var d5=[{x:0.031,y:0},{x:5.527,y:146.939},{x:7.298,y:193.846},{x:8.641,y:228.320},{x:9.679,y:251.491},{x:10.626,y:265.620},{x:11.695,y:275.793},{x:12.885,y:282.575},{x:14.137,y:287.661},{x:15.115,y:291.052}];
+                var d6=[{x:0.079,y:1.243},{x:4.061,y:112.465},{x:6.656,y:183.108},{x:7.969,y:218.148},{x:8.824,y:241.319},{x:9.435,y:257.143},{x:10.198,y:272.967},{x:10.931,y:284.270},{x:11.695,y:292.747},{x:12.550,y:299.529},{x:13.924,y:307.328},{x:16.153,y:317.049}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig251116b',[
+                  {label:'1000°F',data:d1,interp:'lin',step:0.05},
+                  {label:'800°F',data:d2,interp:'lin',step:0.05},
+                  {label:'600°F',data:d3,interp:'lin',step:0.05},
+                  {label:'300°F',data:d4,interp:'lin',step:0.05},
+                  {label:'RT',   data:d5,interp:'lin',step:0.05},
+                  {label:'-100°F',data:d6,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig251116b',chart);
+              })();
+              </script>
+                          <p class="chart-note">Longitudinal &frac12;-hr exposure</p>
+              <p class="chart-note">Ramberg&ndash;Osgood: n (&minus;100&deg;F) = 19 &nbsp;|&nbsp; n (RT) = 22 &nbsp;|&nbsp; n (300&deg;F) = 17 &nbsp;|&nbsp; n (600&deg;F) = 17 &nbsp;|&nbsp; n (800&deg;F) = 12 &nbsp;|&nbsp; n (1000&deg;F) = 11</p>
             </div>
-            <div class="fig-placeholder" id="fig-2.5.1.1.6c">
-              <div class="fig-label">Figure 2.5.1.1.6(c)</div>
-              <div class="fig-caption">Typical compressive stress-strain and compressive tangent-modulus curves for 250 maraging steel bar at room temperature. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.1.1.6c">
+              <div class="canvasdiv">
+                <button id="toggle-fig251116c1">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.6(c)-ss.png" download="Figure 2.5.1.1.6(c)-ss.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.6(c)-ss.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig251116c1" class="chartcanvas" role="img" aria-label="Figure 2.5.1.1.6(c) — Compressive Stress-Strain"></canvas>
+                </div>
+              </div>
+              <div class="canvasdiv" style="margin-top:1rem;">
+                <button id="toggle-fig251116c2">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.6(c)-tm.png" download="Figure 2.5.1.1.6(c)-tm.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.6(c)-tm.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig251116c2" class="chartcanvas" role="img" aria-label="Figure 2.5.1.1.6(c) — Compressive Tangent Modulus"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.1.1.6(c).</strong> Typical compressive stress-strain and compressive tangent-modulus curves for 250 maraging steel bar at room temperature.</p>
+              <script>
+              (function(){
+                var dSS=[{x:0.041,y:-0.563},{x:1.101,y:29.913},{x:2.609,y:72.242},{x:4.036,y:114.569},{x:5.870,y:167.055},{x:7.134,y:203.175},{x:8.235,y:233.088},{x:9.578,y:258.496},{x:10.717,y:268.673},{x:12.342,y:277.170},{x:15.552,y:287.395}];
+                var dTM=[{x:2.231,y:287.072},{x:3.651,y:279.542},{x:6.645,y:270.238},{x:10.095,y:262.746},{x:13.343,y:256.943},{x:20.650,y:244.561},{x:24.506,y:234.483},{x:26.485,y:227.190},{x:27.550,y:219.315},{x:28.360,y:207.488},{x:28.611,y:191.703},{x:28.600,y:174.639},{x:28.659,y:173.095},{x:28.618,y:0.451},{x:28.630,y:0.000}];
+                var c1=HdbkUtil.makeMultiLine('canvas-fig251116c1',[
+                  {label:'RT',data:dSS,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig251116c1',c1);
+                var c2=HdbkUtil.makeMultiLine('canvas-fig251116c2',[
+                  {label:'RT',data:dTM,interp:'lin',step:0.05}
+                ],{xLabel:'Compressive Tangent Modulus, 10³ ksi',yLabel:'Stress, ksi',xMin:0,xMax:30,yMin:0});
+                HdbkUtil.addToggle('toggle-fig251116c2',c2);
+              })();
+              </script>
+                          <p class="chart-note">Longitudinal</p>
+              <p class="chart-note">Ramberg&ndash;Osgood: n = 22</p>
             </div>
-            <div class="fig-placeholder" id="fig-2.5.1.1.6d">
-              <div class="fig-label">Figure 2.5.1.1.6(d)</div>
-              <div class="fig-caption">Typical compressive stress-strain and compressive tangent-modulus curves for 280 maraging steel bar at room temperature. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.1.1.6d">
+              <div class="canvasdiv">
+                <button id="toggle-fig251116d1">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.6(d)-ss.png" download="Figure 2.5.1.1.6(d)-ss.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.6(d)-ss.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig251116d1" class="chartcanvas" role="img" aria-label="Figure 2.5.1.1.6(d) — Compressive Stress-Strain"></canvas>
+                </div>
+              </div>
+              <div class="canvasdiv" style="margin-top:1rem;">
+                <button id="toggle-fig251116d2">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.6(d)-tm.png" download="Figure 2.5.1.1.6(d)-tm.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.6(d)-tm.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig251116d2" class="chartcanvas" role="img" aria-label="Figure 2.5.1.1.6(d) — Compressive Tangent Modulus"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.1.1.6(d).</strong> Typical compressive stress-strain and compressive tangent-modulus curves for 280 maraging steel bar at room temperature.</p>
+              <script>
+              (function(){
+                var dSS=[{x:0.085,y:-0.595},{x:1.066,y:28.571},{x:2.303,y:62.500},{x:3.199,y:89.881},{x:4.435,y:123.810},{x:5.118,y:145.238},{x:6.142,y:173.810},{x:7.165,y:202.381},{x:8.061,y:227.976},{x:8.956,y:251.786},{x:9.893,y:271.429},{x:11.085,y:286.905},{x:12.318,y:296.429},{x:13.636,y:302.976},{x:15.633,y:309.286}];
+                var dTM=[{x:2.869,y:308.929},{x:4.885,y:299.405},{x:6.583,y:294.048},{x:8.759,y:288.214},{x:12.634,y:279.762},{x:14.439,y:276.786},{x:15.925,y:273.214},{x:18.260,y:268.452},{x:20.278,y:264.286},{x:22.029,y:260.595},{x:25.531,y:248.810},{x:27.281,y:238.690},{x:28.139,y:226.786},{x:28.551,y:210.714},{x:28.598,y:177.976},{x:28.620,y:0.119}];
+                var c1=HdbkUtil.makeMultiLine('canvas-fig251116d1',[
+                  {label:'RT',data:dSS,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig251116d1',c1);
+                var c2=HdbkUtil.makeMultiLine('canvas-fig251116d2',[
+                  {label:'RT',data:dTM,interp:'lin',step:1}
+                ],{xLabel:'Compressive Tangent Modulus, 10³ ksi',yLabel:'Stress, ksi',xMin:0,xMax:30,yMin:0});
+                HdbkUtil.addToggle('toggle-fig251116d2',c2);
+              })();
+              </script>
+                          <p class="chart-note">Longitudinal</p>
+              <p class="chart-note">Ramberg&ndash;Osgood: n = 21</p>
             </div>
-            <div class="fig-placeholder" id="fig-2.5.1.1.6e">
-              <div class="fig-label">Figure 2.5.1.1.6(e)</div>
-              <div class="fig-caption">Typical tensile stress-strain curve (full range) for 280 maraging steel bar at room temperature. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.1.1.6e">
+              <div class="canvasdiv">
+                <button id="toggle-fig251116e">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.6(e).png" download="Figure 2.5.1.1.6(e).png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.1.1.6(e).png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig251116e" class="chartcanvas" role="img" aria-label="Figure 2.5.1.1.6(e)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.1.1.6(e).</strong> Typical tensile stress-strain curve (full range) for 280 maraging steel bar at room temperature.</p>
+              <script>
+              (function(){
+                var d1=[{x:0.000001,y:1.425},{x:0.002428,y:71.185},{x:0.004692,y:131.926},{x:0.006793,y:188.397},{x:0.009209,y:236.321},{x:0.010335,y:255.774},{x:0.011139,y:268.584},{x:0.012099,y:276.171},{x:0.014333,y:282.325},{x:0.017044,y:286.101},{x:0.019275,y:286.083},{x:0.021505,y:282.743},{x:0.033449,y:267.933},{x:0.057497,y:237.838},{x:0.074378,y:215.963},{x:0.096674,y:187.876},{x:0.110688,y:170.012}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig251116e',[
+                  {label:'RT',data:d1,interp:'lin',step:0.001}
+                ],{xLabel:'Strain, in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig251116e',chart);
+              })();
+              </script>
+                          <p class="chart-note">Longitudinal</p>
             </div>
           </div><!-- /2.5.1.1 -->
 
@@ -536,21 +1167,171 @@
             <p><strong>Heat Treatment.</strong> The heat treatment for this alloy consists of heating to 1650 &plusmn; 25&deg;F for 1 hour, forced-air cooling to room temperature, reheating to 1525 &plusmn; 25&deg;F for 1 hour, forced-air cooling to room temperature, cooling to &minus;100 &plusmn; 15&deg;F, holding at temperature for 1 hour, warming to room temperature, and aging at 950 &plusmn; 10&deg;F for 5 hours, and air cooling. A forced-air cool from austenitizing temperatures should be used for section thicknesses up to 2 inches. For sections of greater thickness, an oil quench should be utilized. A single austenitizing treatment (1525 &plusmn; 25&deg;F) can be used to minimize heat treating distortion with a resulting slight decrease in fracture toughness.</p>
             <p><strong>Environmental Considerations.</strong> AF1410 has general corrosion resistance similar to the maraging steels. It should not be used in the unprotected condition. The alloy is highly resistant to stress-corrosion cracking compared to other high-strength steels.</p>
             <p><strong>Specification and Properties.</strong> A material specification for AF1410 is presented in Table 2.5.2.0(a). Room temperature mechanical properties are shown in Table 2.5.2.0(b).</p>
-            <span class="table-placeholder" id="table-2.5.2.0a">Table 2.5.2.0(a). Material Specification for AF1410 Steel &mdash; (data table to be added)</span>
-            <span class="table-placeholder" id="table-2.5.2.0b">Table 2.5.2.0(b). Design Mechanical and Physical Properties of AF1410 Steel Bar &mdash; (data table to be added)</span>
+            <div class="hdbk-table-wrap" id="table-2.5.2.0a">
+              <table class="hdbk-table">
+                <caption>Table 2.5.2.0(a). Material Specification for AF1410 Steel</caption>
+                <thead>
+                  <tr>
+                    <th>Specification</th>
+                    <th>Form</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td class="td-left">AMS 6527</td><td class="td-left">Bar and forging</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="hdbk-table-wrap" id="table-2.5.2.0b">
+              <table class="hdbk-table">
+                <caption>Table 2.5.2.0(b). Design Mechanical and Physical Properties of AF1410 Steel Bar</caption>
+                <thead>
+                  <tr>
+                    <th class="td-left">Specification</th>
+                    <th>AMS 6527</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Form</th>
+                    <th>Bar</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Condition</th>
+                    <th><sup>a</sup></th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Cross-sectional area, sq. in.</th>
+                    <th>&le;100<sup>b</sup></th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Thickness or diameter, in.</th>
+                    <th>&le;4.25<sup>b</sup></th>
+                  </tr>
+                  <tr class="subhead">
+                    <th class="td-left">Basis</th>
+                    <th>S</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="prop-section"><td colspan="2" class="td-left">Mechanical Properties:</td></tr>
+
+                  <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>235</td></tr>
+                  <tr><td class="td-indent">LT<sup>c</sup></td><td>235</td></tr>
+                  <tr><td class="td-indent">ST<sup>c</sup></td><td>235</td></tr>
+
+                  <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>215</td></tr>
+                  <tr><td class="td-indent">LT<sup>c</sup></td><td>215</td></tr>
+                  <tr><td class="td-indent">ST<sup>c</sup></td><td>215</td></tr>
+
+                  <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>223</td></tr>
+                  <tr><td class="td-indent">ST<sup>c</sup></td><td>225</td></tr>
+
+                  <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>su</sub></em>, ksi</td></tr>
+                  <tr><td class="td-indent"></td><td>141</td></tr>
+
+                  <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 1.5)</td><td>334</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 2.0)</td><td>435</td></tr>
+
+                  <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 1.5)</td><td>269</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 2.0)</td><td>300</td></tr>
+
+                  <tr class="prop-group"><td colspan="2" class="td-left"><em>e</em>, percent:</td></tr>
+                  <tr><td class="td-indent">L</td><td>12</td></tr>
+                  <tr><td class="td-indent">LT<sup>c</sup></td><td>12</td></tr>
+                  <tr><td class="td-indent">ST<sup>c</sup></td><td>12</td></tr>
+
+                  <tr class="prop-group"><td colspan="2" class="td-left"><em>RA</em>, percent:</td></tr>
+                  <tr><td class="td-indent">L</td><td>60</td></tr>
+                  <tr><td class="td-indent">LT<sup>c</sup></td><td>55</td></tr>
+                  <tr><td class="td-indent">ST<sup>c</sup></td><td>55</td></tr>
+
+                  <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td>29.4</td></tr>
+                  <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td>30.9</td></tr>
+                  <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td>&hellip;</td></tr>
+                  <tr><td class="td-left"><em>&mu;</em></td><td>&hellip;</td></tr>
+
+                  <tr class="prop-section"><td colspan="2" class="td-left">Physical Properties:</td></tr>
+                  <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td>0.283</td></tr>
+                  <tr><td class="td-left"><em>C</em>, <em>K</em>, and <em>&alpha;</em></td><td>&hellip;</td></tr>
+                </tbody>
+                <tfoot>
+                  <tr><td colspan="2"><sup>a</sup> Heat at 1650 &plusmn; 25&deg;F for one hour, forced-air cool to room temperature, heat at 1525 &plusmn; 25&deg;F for one hour, forced-air cool to room temperature, cool at &minus;100 &plusmn; 15&deg;F for one hour, age at 950 &plusmn; 10&deg;F for 5 hours, and air cool.</td></tr>
+                  <tr><td colspan="2"><sup>b</sup> Maximum size from which test specimens were rough machined prior to heat treatment.</td></tr>
+                  <tr><td colspan="2"><sup>c</sup> Applicable providing LT or ST dimension is &ge;2.500 inches.</td></tr>
+                </tfoot>
+              </table>
+            </div>
           </div><!-- /2.5.2.0 -->
 
           <!-- 2.5.2.1 -->
           <div class="section lvl-2" id="2.5.2.1">
             <div class="section-heading lvl-2"><span class="section-num">2.5.2.1</span>Heat-Treated Condition</div>
             <p>Typical stress-strain curves at room temperature are shown in Figures 2.5.2.1.6(a) and (b).</p>
-            <div class="fig-placeholder" id="fig-2.5.2.1.6a">
-              <div class="fig-label">Figure 2.5.2.1.6(a)</div>
-              <div class="fig-caption">Typical tensile stress-strain curves at room temperature for heat-treated AF1410 steel bar. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.2.1.6a">
+              <div class="canvasdiv">
+                <button id="toggle-fig252116a">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.2.1.6(a).png" download="Figure 2.5.2.1.6(a).png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.2.1.6(a).png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig252116a" class="chartcanvas" role="img" aria-label="Figure 2.5.2.1.6(a)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.2.1.6(a).</strong> Typical tensile stress-strain curves at room temperature for heat-treated AF1410 steel bar.</p>
+              <script>
+              (function(){
+                var d1=[{x:0.015,y:0.965},{x:1.092,y:31.851},{x:2.137,y:61.771},{x:3.044,y:89.763},{x:3.875,y:112.443},{x:4.674,y:136.090},{x:5.397,y:157.325},{x:6.320,y:178.553},{x:7.089,y:193.988},{x:7.797,y:204.595},{x:8.659,y:216.646},{x:9.274,y:222.425},{x:10.121,y:227.713},{x:10.568,y:231.854}];
+                var d2=[{x:0.031,y:0.965},{x:0.830,y:24.129},{x:1.522,y:43.915},{x:2.374,y:69.590},{x:3.121,y:92.176},{x:3.706,y:108.583},{x:4.505,y:131.748},{x:5.099,y:148.638},{x:5.778,y:168.327},{x:6.320,y:181.934},{x:6.951,y:193.993},{x:7.643,y:204.600},{x:8.551,y:213.268},{x:9.151,y:220.979},{x:9.844,y:226.755},{x:10.660,y:234.943}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig252116a',[
+                  {label:'Short Transverse',data:d1,interp:'lin',step:0.05},
+                  {label:'Longitudinal',data:d2,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig252116a',chart);
+              })();
+              </script>
+                          <p class="chart-note">Ramberg&ndash;Osgood: n (longitudinal) = 11 &nbsp;|&nbsp; n (short transverse) = 9.1</p>
+              <p class="chart-note">Thickness &le; 4.250 in</p>
             </div>
-            <div class="fig-placeholder" id="fig-2.5.2.1.6b">
-              <div class="fig-label">Figure 2.5.2.1.6(b)</div>
-              <div class="fig-caption">Typical compressive stress-strain and compressive tangent-modulus curves at room temperature for heat-treated AF1410 steel bar. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.2.1.6b">
+              <div class="canvasdiv">
+                <button id="toggle-fig252116b1">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.2.1.6(b)-ss.png" download="Figure 2.5.2.1.6(b)-ss.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.2.1.6(b)-ss.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig252116b1" class="chartcanvas" role="img" aria-label="Figure 2.5.2.1.6(b) — Compressive Stress-Strain"></canvas>
+                </div>
+              </div>
+              <div class="canvasdiv" style="margin-top:1rem;">
+                <button id="toggle-fig252116b2">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.2.1.6(b)-tm.png" download="Figure 2.5.2.1.6(b)-tm.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.2.1.6(b)-tm.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig252116b2" class="chartcanvas" role="img" aria-label="Figure 2.5.2.1.6(b) — Compressive Tangent Modulus"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.2.1.6(b).</strong> Typical compressive stress-strain and compressive tangent-modulus curves at room temperature for heat-treated AF1410 steel bar.</p>
+              <script>
+              (function(){
+                var dSS1=[{x:0.049,y:0.496},{x:1.495,y:45.620},{x:2.858,y:85.785},{x:4.385,y:132.793},{x:5.370,y:163.140},{x:6.833,y:199.339},{x:8.560,y:225.620},{x:9.647,y:237.025},{x:11.128,y:249.917}];
+                var dSS2=[{x:0.082,y:0.496},{x:2.102,y:62.479},{x:4.171,y:127.934},{x:5.847,y:175.041},{x:7.623,y:211.240},{x:9.383,y:233.355},{x:11.375,y:249.917}];
+                var dTM1=[{x:4.932,y:258.744},{x:7.956,y:240.992},{x:14.288,y:216.198},{x:17.190,y:206.182},{x:20.290,y:194.876},{x:23.854,y:181.488},{x:26.328,y:170.083},{x:28.374,y:157.190},{x:29.630,y:141.322},{x:30.324,y:127.438},{x:30.756,y:109.587},{x:30.814,y:0.992}];
+                var dTM2=[{x:5.052,y:259.835},{x:8.746,y:238.512},{x:12.012,y:227.107},{x:16.398,y:213.223},{x:19.894,y:201.322},{x:23.192,y:189.917},{x:26.194,y:178.017},{x:28.636,y:163.140},{x:29.890,y:150.248},{x:30.554,y:134.876},{x:30.820,y:116.033},{x:30.880,y:0.992}];
+                var c1=HdbkUtil.makeMultiLine('canvas-fig252116b1',[
+                  {label:'Longitudinal',data:dSS1,interp:'lin',step:0.05},
+                  {label:'Short Transverse',data:dSS2,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig252116b1',c1);
+                var c2=HdbkUtil.makeMultiLine('canvas-fig252116b2',[
+                  {label:'Longitudinal',data:dTM1,interp:'lin',step:0.05},
+                  {label:'Short Transverse',data:dTM2,interp:'lin',step:0.05}
+                ],{xLabel:'Compressive Tangent Modulus, 10³ ksi',yLabel:'Stress, ksi',xMin:0,xMax:32,yMin:0});
+                HdbkUtil.addToggle('toggle-fig252116b2',c2);
+              })();
+              </script>
+                          <p class="chart-note">Ramberg&ndash;Osgood: n (Longitudinal) = 9.0 &nbsp;|&nbsp; n (Short transverse) = 10</p>
+              <p class="chart-note">Thickness &le; 4.250 in &nbsp;|&nbsp; &frac12;-hr exposure</p>
             </div>
           </div><!-- /2.5.2.1 -->
 
@@ -567,25 +1348,193 @@
             <p><strong>Heat Treatment.</strong> This alloy can be heat treated to several strength levels. Consult the applicable materials specification for specific procedures.</p>
             <p><strong>Environmental Considerations.</strong> AerMet 100 is not considered corrosion resistant; consequently, parts should be protected with a corrosion resistant coating. The alloy is highly resistant to stress corrosion cracking compared to other high-strength steels of the same strength level. This alloy displays good toughness at cryogenic temperatures as well as high strength and stability at temperatures up to 800&deg;F.</p>
             <p><strong>Specification and Properties.</strong> A material specification for AerMet 100 is shown in Table 2.5.3.0(a). Room temperature mechanical properties are presented in Table 2.5.3.0(b) for both heat treated conditions.</p>
-            <span class="table-placeholder" id="table-2.5.3.0a">Table 2.5.3.0(a). Material Specification for AerMet 100 Steel &mdash; (data table to be added)</span>
-            <span class="table-placeholder" id="table-2.5.3.0b">Table 2.5.3.0(b). Design Mechanical and Physical Properties of AerMet 100 Steel Bar &mdash; (data table to be added)</span>
+            <div class="hdbk-table-wrap" id="table-2.5.3.0a">
+              <table class="hdbk-table">
+                <caption>Table 2.5.3.0(a). Material Specification for AerMet 100 Steel</caption>
+                <thead>
+                  <tr>
+                    <th>Specification</th>
+                    <th>Form</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td class="td-left">AMS 6532</td><td class="td-left">Bar and forging</td></tr>
+                  <tr><td class="td-left">AMS 6478</td><td class="td-left">Bar and forging</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="hdbk-table-wrap" id="table-2.5.3.0b">
+              <table class="hdbk-table">
+                <caption>Table 2.5.3.0(b). Design Mechanical and Physical Properties of AerMet 100 Steel Bar</caption>
+                <thead>
+                  <tr>
+                    <th class="td-left">Specification</th>
+                    <th colspan="2">AMS 6532</th>
+                    <th>AMS 6478</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Form</th>
+                    <th colspan="3">Bar and forging</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Condition</th>
+                    <th colspan="3">Solution treated and aged</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Cross-sectional area, in.<sup>2</sup></th>
+                    <th colspan="3">&lt; 100</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Thickness or diameter, in.</th>
+                    <th colspan="3">&le; 10.000</th>
+                  </tr>
+                  <tr class="subhead">
+                    <th class="td-left">Basis</th>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>S</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="prop-section"><td colspan="4" class="td-left">Mechanical Properties:</td></tr>
+
+                  <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>275</td><td>284</td><td>290</td></tr>
+                  <tr><td class="td-indent">LT<sup>a</sup></td><td>280</td><td>284</td><td>290</td></tr>
+                  <tr><td class="td-indent">ST<sup>a</sup></td><td>280<sup>b</sup></td><td>&hellip;</td><td>290</td></tr>
+
+                  <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>235</td><td>247</td><td>245</td></tr>
+                  <tr><td class="td-indent">LT<sup>a</sup></td><td>235</td><td>246</td><td>245</td></tr>
+                  <tr><td class="td-indent">ST<sup>a</sup></td><td>235<sup>b</sup></td><td>&hellip;</td><td>245</td></tr>
+
+                  <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>262</td><td>276</td><td>281</td></tr>
+                  <tr><td class="td-indent">ST<sup>a</sup></td><td>263</td><td>277</td><td>279</td></tr>
+
+                  <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>su</sub></em>, ksi</td></tr>
+                  <tr><td class="td-indent"></td><td>174</td><td>177</td><td>182</td></tr>
+
+                  <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>bru</sub></em><sup>c</sup>, ksi:</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 1.5)</td><td>432</td><td>440</td><td>448</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 2.0)</td><td>569</td><td>579</td><td>581</td></tr>
+
+                  <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>bry</sub></em><sup>c</sup>, ksi:</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 1.5)</td><td>361</td><td>380</td><td>378</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 2.0)</td><td>411</td><td>432</td><td>442</td></tr>
+
+                  <tr class="prop-group"><td colspan="4" class="td-left"><em>e</em>, percent: (S-basis)</td></tr>
+                  <tr><td class="td-indent">L</td><td>10</td><td>&hellip;</td><td>10</td></tr>
+                  <tr><td class="td-indent">LT<sup>a</sup></td><td>8</td><td>&hellip;</td><td>8</td></tr>
+                  <tr><td class="td-indent">ST<sup>a</sup></td><td>8</td><td>&hellip;</td><td>8</td></tr>
+
+                  <tr class="prop-group"><td colspan="4" class="td-left"><em>RA</em>, percent: (S-basis)</td></tr>
+                  <tr><td class="td-indent">L</td><td>55</td><td>&hellip;</td><td>50</td></tr>
+                  <tr><td class="td-indent">LT<sup>a</sup></td><td>45<sup>d</sup></td><td>&hellip;</td><td>35</td></tr>
+                  <tr><td class="td-indent">ST<sup>a</sup></td><td>45</td><td>&hellip;</td><td>35</td></tr>
+
+                  <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="3">28.0</td></tr>
+                  <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="3">28.1</td></tr>
+                  <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="3">&hellip;</td></tr>
+                  <tr><td class="td-left"><em>&mu;</em></td><td colspan="3">0.305</td></tr>
+
+                  <tr class="prop-section"><td colspan="4" class="td-left">Physical Properties:</td></tr>
+                  <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="3">0.285</td></tr>
+                  <tr><td class="td-left"><em>C</em>, <em>K</em>, and <em>&alpha;</em></td><td colspan="3">&hellip;</td></tr>
+                </tbody>
+                <tfoot>
+                  <tr><td colspan="4"><sup>a</sup> Applicable providing LT or ST dimension is &ge;2.500 inches.</td></tr>
+                  <tr><td colspan="4"><sup>b</sup> S-Basis value.</td></tr>
+                  <tr><td colspan="4"><sup>c</sup> Bearing values are &ldquo;dry pin&rdquo; values per Section 1.4.7.1.</td></tr>
+                  <tr><td colspan="4"><sup>d</sup> Rounded T<sub>90</sub> value is 41%.</td></tr>
+                </tfoot>
+              </table>
+            </div>
           </div><!-- /2.5.3.0 -->
 
           <!-- 2.5.3.1 -->
           <div class="section lvl-2" id="2.5.3.1">
             <div class="section-heading lvl-2"><span class="section-num">2.5.3.1</span>280&ndash;300 ksi Heat-Treated Condition</div>
             <p>Typical stress-strain curves at room temperature are shown in Figures 2.5.3.1.6(a) and (b). A full-range tensile stress-strain curve is presented in Figure 2.5.3.1.6(c).</p>
-            <div class="fig-placeholder" id="fig-2.5.3.1.6a">
-              <div class="fig-label">Figure 2.5.3.1.6(a)</div>
-              <div class="fig-caption">Typical tensile stress-strain curve at room temperature for AerMet 100 steel bar, heat treated to 280&ndash;300 ksi. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.3.1.6a">
+              <div class="canvasdiv">
+                <button id="toggle-fig253116a">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.1.6(a).png" download="Figure 2.5.3.1.6(a).png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.1.6(a).png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig253116a" class="chartcanvas" role="img" aria-label="Figure 2.5.3.1.6(a)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.3.1.6(a).</strong> Typical tensile stress-strain curve at room temperature for AerMet 100 steel bar, heat treated to 280&ndash;300 ksi.</p>
+              <script>
+              (function(){
+                var d1=[{x:-0.015,y:0.382},{x:1.550,y:43.396},{x:3.682,y:102.399},{x:5.396,y:148.457},{x:6.915,y:184.994},{x:8.270,y:210.104},{x:9.311,y:225.696},{x:10.292,y:238.622},{x:11.065,y:247.362}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig253116a',[
+                  {label:'RT',data:d1,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig253116a',chart);
+              })();
+              </script>
+                          <p class="chart-note">Ramberg&ndash;Osgood: n (longitudinal) = 6.8 &nbsp;|&nbsp; n (short transverse) = 6.8</p>
+              <p class="chart-note">Longitudinal and Short Transverse</p>
+              <p class="chart-note">Thickness &le; 10.000 in.</p>
             </div>
-            <div class="fig-placeholder" id="fig-2.5.3.1.6b">
-              <div class="fig-label">Figure 2.5.3.1.6(b)</div>
-              <div class="fig-caption">Typical compressive stress-strain and compressive tangent-modulus curves at room temperature for AerMet 100 steel bar, heat treated to 280&ndash;300 ksi. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.3.1.6b">
+              <div class="canvasdiv">
+                <button id="toggle-fig253116b1">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.1.6(b)-ss.png" download="Figure 2.5.3.1.6(b)-ss.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.1.6(b)-ss.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig253116b1" class="chartcanvas" role="img" aria-label="Figure 2.5.3.1.6(b) — Compressive Stress-Strain"></canvas>
+                </div>
+              </div>
+              <div class="canvasdiv" style="margin-top:1rem;">
+                <button id="toggle-fig253116b2">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.1.6(b)-tm.png" download="Figure 2.5.3.1.6(b)-tm.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.1.6(b)-tm.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig253116b2" class="chartcanvas" role="img" aria-label="Figure 2.5.3.1.6(b) — Compressive Tangent Modulus"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.3.1.6(b).</strong> Typical compressive stress-strain and compressive tangent-modulus curves at room temperature for AerMet 100 steel bar, heat treated to 280&ndash;300 ksi.</p>
+              <script>
+              (function(){
+                var dSS=[{x:0.015,y:-0.920},{x:1.215,y:33.175},{x:2.248,y:60.822},{x:2.992,y:82.937},{x:3.720,y:103.670},{x:4.647,y:129.013},{x:5.573,y:154.815},{x:6.454,y:179.235},{x:7.107,y:196.745},{x:8.125,y:221.723},{x:9.432,y:247.263},{x:10.800,y:266.365},{x:11.905,y:275.978}];
+                var dTM=[{x:4.720,y:300.533},{x:6.323,y:290.802},{x:8.343,y:279.883},{x:11.658,y:265.762},{x:14.060,y:256.596},{x:17.145,y:245.508},{x:19.318,y:236.799},{x:21.073,y:228.728},{x:23.398,y:216.617},{x:25.075,y:205.139},{x:26.183,y:192.733},{x:27.100,y:178.023},{x:27.683,y:162.112},{x:27.985,y:138.926},{x:28.005,y:0.000}];
+                var c1=HdbkUtil.makeMultiLine('canvas-fig253116b1',[
+                  {label:'RT',data:dSS,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig253116b1',c1);
+                var c2=HdbkUtil.makeMultiLine('canvas-fig253116b2',[
+                  {label:'RT',data:dTM,interp:'lin',step:1}
+                ],{xLabel:'Compressive Tangent Modulus, 10³ ksi',yLabel:'Stress, ksi',xMin:0,xMax:30,yMin:0});
+                HdbkUtil.addToggle('toggle-fig253116b2',c2);
+              })();
+              </script>
+                          <p class="chart-note">Ramberg&ndash;Osgood: n (Longitudinal) = 11 &nbsp;|&nbsp; n (Short transverse) = 12</p>
+              <p class="chart-note">Longitudinal and Short Transverse &nbsp;|&nbsp; Thickness &le; 10.000 in.</p>
             </div>
-            <div class="fig-placeholder" id="fig-2.5.3.1.6c">
-              <div class="fig-label">Figure 2.5.3.1.6(c)</div>
-              <div class="fig-caption">Typical tensile stress-strain curve (full range) at room temperature for AerMet 100 steel bar, heat treated to 280&ndash;300 ksi. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.3.1.6c">
+              <div class="canvasdiv">
+                <button id="toggle-fig253116c">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.1.6(c).png" download="Figure 2.5.3.1.6(c).png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.1.6(c).png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig253116c" class="chartcanvas" role="img" aria-label="Figure 2.5.3.1.6(c)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.3.1.6(c).</strong> Typical tensile stress-strain curve (full range) at room temperature for AerMet 100 steel bar, heat treated to 280&ndash;300 ksi.</p>
+              <script>
+              (function(){
+                var d1=[{x:0.000000,y:0.940},{x:0.003603,y:92.163},{x:0.006468,y:188.088},{x:0.009663,y:238.966},{x:0.012050,y:259.091},{x:0.016941,y:275.549},{x:0.022085,y:283.072},{x:0.028704,y:284.953},{x:0.037288,y:284.953},{x:0.053963,y:284.953},{x:0.062549,y:282.132},{x:0.073096,y:278.840},{x:0.081438,y:274.608},{x:0.090026,y:268.495},{x:0.102295,y:259.091},{x:0.111867,y:249.687},{x:0.124385,y:236.050},{x:0.133468,y:223.824},{x:0.143290,y:208.777},{x:0.152623,y:191.379},{x:0.159992,y:176.332},{x:0.168343,y:160.345}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig253116c',[
+                  {label:'RT',data:d1,interp:'lin',step:0.002}
+                ],{xLabel:'Strain, in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig253116c',chart);
+              })();
+              </script>
+                          <p class="chart-note">Longitudinal TYPICAL</p>
+              <p class="chart-note">Thickness: 5.000 in. &nbsp;|&nbsp; Based on one heat</p>
             </div>
           </div><!-- /2.5.3.1 -->
 
@@ -593,17 +1542,87 @@
           <div class="section lvl-2" id="2.5.3.2">
             <div class="section-heading lvl-2"><span class="section-num">2.5.3.2</span>290&ndash;310 ksi Heat-Treated Condition</div>
             <p>Typical tensile and compression stress-strain curves and compression tangent-modulus curves at room temperature are shown in Figures 2.5.3.2.6(a) and (b). A full-range tensile stress-strain curve is presented in Figure 2.5.3.2.6(c).</p>
-            <div class="fig-placeholder" id="fig-2.5.3.2.6a">
-              <div class="fig-label">Figure 2.5.3.2.6(a)</div>
-              <div class="fig-caption">Typical tensile stress-strain curve at room temperature for AerMet 100 steel bar, heat treated to 290&ndash;310 ksi. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.3.2.6a">
+              <div class="canvasdiv">
+                <button id="toggle-fig253216a">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.2.6(a).png" download="Figure 2.5.3.2.6(a).png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.2.6(a).png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig253216a" class="chartcanvas" role="img" aria-label="Figure 2.5.3.2.6(a)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.3.2.6(a).</strong> Typical tensile stress-strain curve at room temperature for AerMet 100 steel bar, heat treated to 290&ndash;310 ksi.</p>
+              <script>
+              (function(){
+                var d1=[{x:-0.015,y:-0.468},{x:0.762,y:21.529},{x:1.525,y:42.590},{x:2.182,y:61.778},{x:2.825,y:78.627},{x:3.438,y:96.412},{x:3.976,y:111.388},{x:4.484,y:125.429},{x:5.186,y:145.086},{x:5.724,y:160.062},{x:6.262,y:175.039},{x:6.726,y:188.144},{x:7.249,y:201.716},{x:7.757,y:213.885},{x:8.310,y:226.053},{x:8.803,y:234.477},{x:9.340,y:241.778},{x:9.848,y:247.207},{x:10.550,y:253.666},{x:11.192,y:258.159},{x:11.998,y:263.869}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig253216a',[
+                  {label:'RT',data:d1,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig253216a',chart);
+              })();
+              </script>
+                          <p class="chart-note">Longitudinal and Short Transverse &nbsp;|&nbsp; Thickness &le; 10.000 in.</p>
+              <p class="chart-note">Ramberg&ndash;Osgood: n (L-tension) = 15.9, TYS = 258 ksi &nbsp;|&nbsp; n (ST-tension) = 16.1, TYS = 258 ksi</p>
             </div>
-            <div class="fig-placeholder" id="fig-2.5.3.2.6b">
-              <div class="fig-label">Figure 2.5.3.2.6(b)</div>
-              <div class="fig-caption">Typical compressive stress-strain and compressive tangent-modulus curves at room temperature for AerMet 100 steel bar, heat treated to 290&ndash;310 ksi. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.3.2.6b">
+              <div class="canvasdiv">
+                <button id="toggle-fig253216b1">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.2.6(b)-ss.png" download="Figure 2.5.3.2.6(b)-ss.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.2.6(b)-ss.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig253216b1" class="chartcanvas" role="img" aria-label="Figure 2.5.3.2.6(b) — Compressive Stress-Strain"></canvas>
+                </div>
+              </div>
+              <div class="canvasdiv" style="margin-top:1rem;">
+                <button id="toggle-fig253216b2">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.2.6(b)-tm.png" download="Figure 2.5.3.2.6(b)-tm.png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.2.6(b)-tm.png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig253216b2" class="chartcanvas" role="img" aria-label="Figure 2.5.3.2.6(b) — Compressive Tangent Modulus"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.3.2.6(b).</strong> Typical compressive stress-strain and compressive tangent-modulus curves at room temperature for AerMet 100 steel bar, heat treated to 290&ndash;310 ksi.</p>
+              <script>
+              (function(){
+                var dSS=[{x:-0.038,y:-0.448},{x:1.750,y:49.252},{x:3.272,y:92.250},{x:4.794,y:133.575},{x:5.973,y:166.522},{x:7.145,y:200.026},{x:8.066,y:225.156},{x:8.979,y:246.382},{x:9.816,y:264.259},{x:10.310,y:273.200},{x:11.071,y:281.594},{x:12.820,y:299.281},{x:14.227,y:307.922}];
+                var dTM=[{x:5.710,y:307.605},{x:7.573,y:298.863},{x:10.386,y:288.149},{x:12.249,y:281.637},{x:14.683,y:273.920},{x:17.116,y:266.203},{x:19.511,y:258.485},{x:22.439,y:246.882},{x:24.530,y:236.364},{x:26.127,y:224.712},{x:27.305,y:209.141},{x:27.685,y:199.117},{x:27.951,y:184.627},{x:28.102,y:164.556},{x:28.102,y:136.672},{x:28.106,y:0.822}];
+                var c1=HdbkUtil.makeMultiLine('canvas-fig253216b1',[
+                  {label:'RT',data:dSS,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig253216b1',c1);
+                var c2=HdbkUtil.makeMultiLine('canvas-fig253216b2',[
+                  {label:'RT',data:dTM,interp:'lin',step:0.05}
+                ],{xLabel:'Compressive Tangent Modulus, 10³ ksi',yLabel:'Stress, ksi',xMin:0,xMax:30,yMin:0});
+                HdbkUtil.addToggle('toggle-fig253216b2',c2);
+              })();
+              </script>
+                          <p class="chart-note">Longitudinal and Short Transverse &nbsp;&mdash;&nbsp; TYPICAL</p>
+              <p class="chart-note">Ramberg&ndash;Osgood: n (L) = 9.6, TYS = 297 ksi &nbsp;|&nbsp; n (ST) = 13, TYS = 297 ksi</p>
+              <p class="chart-note">Thickness &le; 10.000 in.</p>
             </div>
-            <div class="fig-placeholder" id="fig-2.5.3.2.6c">
-              <div class="fig-label">Figure 2.5.3.2.6(c)</div>
-              <div class="fig-caption">Typical tensile stress-strain curve (full range) at room temperature for AerMet 100 steel bar, heat treated to 290&ndash;310 ksi. &mdash; (figure to be added)</div>
+            <div class="hdbk-figure" id="fig-2.5.3.2.6c">
+              <div class="canvasdiv">
+                <button id="toggle-fig253216c">Hide Tooltips</button>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.2.6(c).png" download="Figure 2.5.3.2.6(c).png"><button>Download Chart</button></a>
+                <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.5/Figure 2.5.3.2.6(c).png" target="_blank"><button>Open In New Tab</button></a>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig253216c" class="chartcanvas" role="img" aria-label="Figure 2.5.3.2.6(c)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.5.3.2.6(c).</strong> Typical tensile stress-strain curve (full range) at room temperature for AerMet 100 steel bar, heat treated to 290&ndash;310 ksi.</p>
+              <script>
+              (function(){
+                var d1=[{x:0.000000,y:0.469},{x:0.000600,y:27.212},{x:0.002129,y:68.968},{x:0.004282,y:114.947},{x:0.005502,y:151.073},{x:0.007966,y:200.805},{x:0.008951,y:220.979},{x:0.010679,y:252.413},{x:0.012985,y:272.116},{x:0.015804,y:283.374},{x:0.020447,y:293.597},{x:0.026228,y:298.940},{x:0.032704,y:300.341},{x:0.040881,y:299.769},{x:0.050632,y:297.413},{x:0.063530,y:292.708},{x:0.078634,y:283.308},{x:0.093113,y:270.625},{x:0.105706,y:256.536},{x:0.116727,y:242.449},{x:0.128693,y:226.484}];
+                var d2=[{x:0.000000,y:0.469},{x:0.001531,y:39.879},{x:0.003057,y:83.512},{x:0.004894,y:130.899},{x:0.006421,y:174.532},{x:0.009564,y:235.523},{x:0.011363,y:259.919},{x:0.013924,y:276.244},{x:0.018250,y:289.752},{x:0.024656,y:297.816},{x:0.032390,y:300.247},{x:0.040881,y:299.769},{x:0.052519,y:296.473},{x:0.068252,y:288.011},{x:0.080840,y:279.083},{x:0.100986,y:259.263},{x:0.116102,y:238.227},{x:0.130907,y:214.752},{x:0.148925,y:185.174}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig253216c',[
+                  {label:'Short Transverse',data:d1,interp:'lin',step:0.002},
+                  {label:'Longitudinal',data:d2,interp:'lin',step:0.002}
+                ],{xLabel:'Strain, in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig253216c',chart);
+              })();
+              </script>
+                          <p class="chart-note">TYPICAL</p>
+              <p class="chart-note">Thickness: 5.00 in. &nbsp;|&nbsp; Based on one heat</p>
             </div>
           </div><!-- /2.5.3.2 -->
 
@@ -624,8 +1643,6 @@
 
     </div><!-- /csscontainer -->
   </section>
-
-  </main>
 
   <!-- OTHER CHAPTERS -->
   <section>
@@ -691,6 +1708,8 @@
       </div>
     </div>
   </section>
+
+  </main>
 
   <footer id="site-footer"></footer>
 
