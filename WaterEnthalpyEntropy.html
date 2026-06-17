@@ -201,9 +201,9 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-1.html">Parker Gland Dimensions (Design Table 4-1)</a>
-                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-2.html">Parker Gland Dimensions (Design Table 4-2)</a>
-                  <a class="dropdown-item" href="ParkerORingGlandDimensions4-3.html">Parker Face Seal Glands (Design Chart 4-3)</a>
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
                   <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
                 </div>
               </li>
@@ -694,6 +694,39 @@ const waterEnthalpyImp = [
   [675,   29.64, 746,    1736,   415,   37.5,  0.944,  3.95]
 ];
 
+/* Dense interpolation helpers for 1-degree tooltip snapping */
+function makeDenseC(data, col, startC, endC) {
+  const pts = [];
+  for (let c = startC; c <= endC; c++) {
+    let y = data[0][col];
+    for (let i = 0; i < data.length - 1; i++) {
+      if (data[i][0] <= c && data[i + 1][0] >= c) {
+        const t = (c - data[i][0]) / (data[i + 1][0] - data[i][0]);
+        y = data[i][col] + t * (data[i + 1][col] - data[i][col]);
+        break;
+      }
+    }
+    pts.push({ x: c, y });
+  }
+  return pts;
+}
+
+function makeDenseF(data, col, startF, endF) {
+  const pts = [];
+  for (let f = startF; f <= endF; f++) {
+    let y = data[0][col];
+    for (let i = 0; i < data.length - 1; i++) {
+      if (data[i][0] <= f && data[i + 1][0] >= f) {
+        const t = (f - data[i][0]) / (data[i + 1][0] - data[i][0]);
+        y = data[i][col] + t * (data[i + 1][col] - data[i][col]);
+        break;
+      }
+    }
+    pts.push({ x: f, y });
+  }
+  return pts;
+}
+
 window.addEventListener('DOMContentLoaded', function () {
 
   const customBg = {
@@ -728,7 +761,7 @@ window.addEventListener('DOMContentLoaded', function () {
       datasets: [
         {
           label: 'Enthalpy (kJ/kg)',
-          data: waterEnthalpySI.map(r => ({ x: r[0], y: r[2] })),
+          data: makeDenseC(waterEnthalpySI, 2, 0, 373),
           fill: false,
           borderColor: 'rgb(68,119,170)',
           tension: 0.1,
@@ -736,7 +769,7 @@ window.addEventListener('DOMContentLoaded', function () {
         },
         {
           label: 'Entropy (kJ/kg·K)',
-          data: waterEnthalpySI.map(r => ({ x: r[0], y: r[7] })),
+          data: makeDenseC(waterEnthalpySI, 7, 0, 373),
           fill: false,
           borderColor: 'rgb(238,102,119)',
           tension: 0.1,
@@ -751,14 +784,14 @@ window.addEventListener('DOMContentLoaded', function () {
         customCanvasBackgroundColor: { color: 'white' },
         legend: makeLegend(),
         tooltip: {
-          enabled: true, mode: 'nearest', intersect: false, axis: 'x',
+          enabled: true, mode: 'index', intersect: false, axis: 'x',
           callbacks: {
-            title: items => items[0].parsed.x.toFixed(2) + ' °C',
+            title: items => items[0].parsed.x.toFixed(0) + ' °C',
             label: item  => item.dataset.label + ': ' + item.parsed.y.toFixed(4)
           }
         }
       },
-      interaction: { mode: 'nearest', axis: 'x' },
+      interaction: { mode: 'index', intersect: false, axis: 'x' },
       elements: { point: { radius: 0 } },
       scales: {
         x: {
@@ -796,7 +829,7 @@ window.addEventListener('DOMContentLoaded', function () {
       datasets: [
         {
           label: 'Enthalpy (Btu/lb)',
-          data: waterEnthalpyImp.map(r => ({ x: r[0], y: r[2] })),
+          data: makeDenseF(waterEnthalpyImp, 2, 33, 675),
           fill: false,
           borderColor: 'rgb(68,119,170)',
           tension: 0.1,
@@ -804,7 +837,7 @@ window.addEventListener('DOMContentLoaded', function () {
         },
         {
           label: 'Entropy (Btu/lb·°R)',
-          data: waterEnthalpyImp.map(r => ({ x: r[0], y: r[6] })),
+          data: makeDenseF(waterEnthalpyImp, 6, 33, 675),
           fill: false,
           borderColor: 'rgb(238,102,119)',
           tension: 0.1,
@@ -819,14 +852,14 @@ window.addEventListener('DOMContentLoaded', function () {
         customCanvasBackgroundColor: { color: 'white' },
         legend: makeLegend(),
         tooltip: {
-          enabled: true, mode: 'nearest', intersect: false, axis: 'x',
+          enabled: true, mode: 'index', intersect: false, axis: 'x',
           callbacks: {
             title: items => items[0].parsed.x.toFixed(0) + ' °F',
             label: item  => item.dataset.label + ': ' + item.parsed.y.toFixed(4)
           }
         }
       },
-      interaction: { mode: 'nearest', axis: 'x' },
+      interaction: { mode: 'index', intersect: false, axis: 'x' },
       elements: { point: { radius: 0 } },
       scales: {
         x: {
