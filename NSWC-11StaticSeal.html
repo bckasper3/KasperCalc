@@ -311,8 +311,9 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal & Gasket Reliability</a>
-                  <a class="dropdown-item" href="NSWC-11Spring.html">Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -532,7 +533,7 @@
               <div style="display:flex; flex-wrap:wrap; gap:6px 18px; margin-bottom:9px;">
                 <label class="vr"><input type="radio" name="visc-mode" value="fluid" checked>Fluid + Temperature</label>
                 <label class="vr"><input type="radio" name="visc-mode" value="kinematic">Kinematic (cSt)</label>
-                <label class="vr"><input type="radio" name="visc-mode" value="dynamic">Dynamic (lbf&middot;min/in<sup>2</sup>)</label>
+                <label class="vr"><input type="radio" name="visc-mode" value="dynamic">Dynamic (direct)</label>
                 <label class="vr"><input type="radio" name="visc-mode" value="jet-fuel">Jet Fuel (tabulated)</label>
                 <label class="vr"><input type="radio" name="visc-mode" value="pg">PG Concentration</label>
                 <label class="vr"><input type="radio" name="visc-mode" value="thermo">ThermoCalc Fluid</label>
@@ -574,7 +575,14 @@
               <div id="visc-dynamic" class="visc-mode-block">
                 <div class="gco g2">
                   <div class="fld">
-                    <label for="dyn-viscosity">Dynamic Viscosity (lbf&middot;min/in&sup2;)</label>
+                    <label for="dyn-visc-unit">Input Units</label>
+                    <select id="dyn-visc-unit" aria-label="Dynamic viscosity input unit">
+                      <option value="lbfminin2">lbf&middot;min/in&sup2;</option>
+                      <option value="mPas">mPa&middot;s (= cP)</option>
+                    </select>
+                  </div>
+                  <div class="fld">
+                    <label for="dyn-viscosity" id="dyn-viscosity-label">Dynamic Viscosity (lbf&middot;min/in&sup2;)</label>
                     <input type="number" id="dyn-viscosity" step="1e-10" min="1e-12" value="4.461e-9" aria-label="Dynamic viscosity in lbf-min per square inch" />
                   </div>
                 </div>
@@ -1273,11 +1281,11 @@
             <div class="mt-3 mx-auto">
               <table class="table table-sm mx-auto" style="font-size: 0.9rem; max-width: 640px;">
                 <thead style="background-color: var(--section-title-color); color: #fff;">
-                  <tr><th>Symbol</th><th>Meaning</th></tr>
+                  <tr><th style="width:100px;">Symbol</th><th>Meaning</th></tr>
                 </thead>
                 <tbody>
                   <tr><td>&lambda;<sub>SE</sub></td><td>Predicted seal failure rate, failures per million hours</td></tr>
-                  <tr><td>&lambda;<sub>SE,B</sub> = 2.4</td><td>Base failure rate (failures / 10<sup>6</sup> h) — absorbs installation error, material compatibility, random cuts</td></tr>
+                  <tr><td>&lambda;<sub>SE,B</sub> = 2.4</td><td>2.4 Base failure rate (failures / 10<sup>6</sup> h) — absorbs installation error, material compatibility, random cuts</td></tr>
                   <tr><td>C<sub>P</sub></td><td>Fluid pressure factor</td></tr>
                   <tr><td>C<sub>Q</sub></td><td>Allowable-leakage factor</td></tr>
                   <tr><td>C<sub>DL</sub></td><td>Seal size factor</td></tr>
@@ -1871,6 +1879,27 @@
     });
     setViscMode('fluid');
 
+    // ── Dynamic viscosity unit toggle ────────────────────────────────────
+    document.getElementById('dyn-visc-unit').addEventListener('change', function () {
+      var unit  = this.value;
+      var inp   = document.getElementById('dyn-viscosity');
+      var lbl   = document.getElementById('dyn-viscosity-label');
+      var cur   = parseFloat(inp.value);
+      if (unit === 'mPas') {
+        lbl.textContent = 'Dynamic Viscosity (mPa·s)';
+        inp.step = '0.0001';
+        inp.min  = '1e-6';
+        if (!isNaN(cur)) inp.value = (cur / _CPS_TO_LBFMININ2).toFixed(4);
+        inp.setAttribute('aria-label', 'Dynamic viscosity in mPa·s (centipoise)');
+      } else {
+        lbl.innerHTML = 'Dynamic Viscosity (lbf&middot;min/in&sup2;)';
+        inp.step = '1e-10';
+        inp.min  = '1e-12';
+        if (!isNaN(cur)) inp.value = (cur * _CPS_TO_LBFMININ2).toExponential(4);
+        inp.setAttribute('aria-label', 'Dynamic viscosity in lbf-min per square inch');
+      }
+    });
+
     // ── Lazy-load helper (never fetches the same src twice) ──────────────
     var _loadedScripts = new Set();
     function _loadScript(src) {
@@ -2026,7 +2055,10 @@
         else if (rho !== null) inp.density = rho;
       } else if (viscMode === 'dynamic') {
         var dv = numVal('dyn-viscosity');
-        if (dv !== null) inp.dynamicViscosity = dv;
+        if (dv !== null) {
+          var dynUnit = document.getElementById('dyn-visc-unit').value;
+          inp.dynamicViscosity = (dynUnit === 'mPas') ? dv * _CPS_TO_LBFMININ2 : dv;
+        }
       } else if (viscMode === 'jet-fuel') {
         var jfFuel  = strVal('jf-fluid-select');
         var jfTempF = numVal('jf-temp') !== null ? numVal('jf-temp') : inp.operatingTemp;
@@ -2119,7 +2151,7 @@
       var f = r.factors;
       function buildFactorTable(tbodyId, chDisplay, lambdaValue) {
         var rows = [
-          ['λ<sub>SE,B</sub> = ' + r.baseFailureRate.toFixed(1), 'Base failure rate (failures / 10<sup>6</sup> h)'],
+          ['λ<sub>SE,B</sub>', r.baseFailureRate.toFixed(1) + ' Base failure rate (failures / 10<sup>6</sup> h)'],
           ['C<sub>P</sub>',  f.CP.toFixed(4)],
           ['C<sub>Q</sub>',  f.CQ.toFixed(4)],
           ['C<sub>DL</sub>', f.CDL.toFixed(4)],
@@ -2146,7 +2178,7 @@
       document.getElementById('res-MC').value =
         isNaN(im.hardnessRatio) ? 'N/A' : im.hardnessRatio.toFixed(5);
       document.getElementById('res-dyn-visc').value =
-        im.viscosity.dynamicViscosity != null ? fmtPlain(im.viscosity.dynamicViscosity) : '—';
+        im.viscosity.dynamicViscosity != null ? im.viscosity.dynamicViscosity.toExponential(4) : '—';
       document.getElementById('res-ch-mode').value = im.chMode;
 
       resDiv.style.display = '';
