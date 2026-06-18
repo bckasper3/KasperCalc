@@ -47,6 +47,25 @@ async function processCSVFiles(filePaths) {
   return allData;  // Return an array of arrays
 }
 
+/* Interpolate an {x,y} point array to every 1°F */
+function makeDenseFFromXY(points) {
+  if (!points || points.length < 2) return points;
+  const sorted = points.slice().sort((a, b) => a.x - b.x);
+  const startF = Math.ceil(sorted[0].x);
+  const endF   = Math.floor(sorted[sorted.length - 1].x);
+  const dense  = [];
+  for (let f = startF; f <= endF; f++) {
+    for (let i = 0; i < sorted.length - 1; i++) {
+      if (sorted[i].x <= f && sorted[i + 1].x >= f) {
+        const t = (f - sorted[i].x) / (sorted[i + 1].x - sorted[i].x);
+        dense.push({ x: f, y: sorted[i].y + t * (sorted[i + 1].y - sorted[i].y) });
+        break;
+      }
+    }
+  }
+  return dense;
+}
+
 // Function to parse the CSV content into { x, y } objects
 function parseCSV(csvData) {
   const rows = csvData.trim().split('\n');  // Split the CSV into rows
@@ -93,7 +112,7 @@ function createGraph() {
   const datasets = fallData.map((dataSet, index) => {
       return {
         label: fixedLabels[index % fixedLabels.length],  //`Dataset ${index + 1}`,  // Give each dataset a unique label
-        data: dataSet.map(item => ({ x: item.x, y: item.y })),  // Map to Chart.js format
+        data: makeDenseFFromXY(dataSet),  // Dense 1°F interpolated points
         fill: false,  // Set to `true` if you want the area under the line to be filled
         borderColor:  fixedColors[index % fixedColors.length],//`hsl(${index * 60}, 100%, 50%)`,  // Set a unique color for each line (based on index)
         tension: 0.1  // Line smoothing (0 = no smoothing, 1 = highly smoothed)
@@ -122,7 +141,7 @@ function createGraph() {
             },
             tooltip: {
               enabled: true,
-              mode: 'nearest',
+              mode: 'index',
               intersect: false,
               axis: 'x',
             },
@@ -168,8 +187,8 @@ function createGraph() {
             },
           },
           interaction: {
-            mode: 'nearest', // Change interaction mode if needed
-            //intersect: false,
+            mode: 'index',
+            intersect: false,
             axis: 'x',
           },
           elements: {
