@@ -44,6 +44,26 @@ function interpolate(tempC) {
   return null;
 }
 
+function interpHCcol(tempC, col) {
+  if (tempC < 0.01) tempC = 0.01;
+  if (tempC > waterHcData[waterHcData.length - 1][0]) return waterHcData[waterHcData.length - 1][col];
+  for (let i = 0; i < waterHcData.length - 1; i++) {
+    if (tempC >= waterHcData[i][0] && tempC <= waterHcData[i + 1][0]) {
+      const t = (tempC - waterHcData[i][0]) / (waterHcData[i + 1][0] - waterHcData[i][0]);
+      return waterHcData[i][col] + t * (waterHcData[i + 1][col] - waterHcData[i][col]);
+    }
+  }
+  return waterHcData[0][col];
+}
+
+function makeDenseHCF(col, startF, endF) {
+  const pts = [];
+  for (let f = startF; f <= endF; f++) {
+    pts.push({ x: f, y: interpHCcol((f - 32) * 5 / 9, col) });
+  }
+  return pts;
+}
+
 function toTempC(val, unit) {
   if (unit === 'degF') return (val - 32) / 1.8;
   if (unit === 'degK') return val - 273.15;
@@ -97,14 +117,14 @@ document.addEventListener('DOMContentLoaded', function () {
       datasets: [
         {
           label: 'Cv — Isochoric',
-          data: temps_F.map((t, i) => ({ x: t, y: cvs[i] })),
+          data: makeDenseHCF(1, 32, 680),
           fill: false,
           borderColor: 'rgb(68,119,170)',
           tension: 0.1,
         },
         {
           label: 'Cp — Isobaric',
-          data: temps_F.map((t, i) => ({ x: t, y: cps[i] })),
+          data: makeDenseHCF(2, 32, 680),
           fill: false,
           borderColor: 'rgb(238,102,119)',
           tension: 0.1,
@@ -132,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         tooltip: {
           enabled: true,
-          mode: 'nearest',
+          mode: 'index',
           intersect: false,
           axis: 'x',
         },
@@ -143,7 +163,8 @@ document.addEventListener('DOMContentLoaded', function () {
         padding: { left: 10, right: 25, top: 5, bottom: 5 },
       },
       interaction: {
-        mode: 'nearest',
+        mode: 'index',
+        intersect: false,
         axis: 'x',
       },
       elements: {

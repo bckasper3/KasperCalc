@@ -143,14 +143,15 @@
         <div class="footerRow">
           <h4 class="FooterRowTitle"><span class="footerflexbox">NSWC-11</span></h4>
           <div class="footerlink"><a href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a></div>
-          <div class="footerlink"><a href="NSWC-11Spring.html">Spring Failure Rate</a></div>
+          <div class="footerlink"><a href="NSWC-11Spring.html">Compression Spring Failure Rate</a></div>
+          <div class="footerlink"><a href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a></div>
         </div>
 
         <div class="footerRow">
           <h4 class="FooterRowTitle"><span class="footerflexbox">O-Rings</span></h4>
-          <div class="footerlink"><a href="ParkerORingGlandDimensions4-1.html">Parker Gland Dimensions (Design Table 4-1)</a></div>
-          <div class="footerlink"><a href="ParkerORingGlandDimensions4-2.html">Parker Gland Dimensions (Design Table 4-2)</a></div>
-          <div class="footerlink"><a href="ParkerORingGlandDimensions4-3.html">Parker Face Seal Glands (Design Chart 4-3)</a></div>
+          <div class="footerlink"><a href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a></div>
+          <div class="footerlink"><a href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a></div>
+          <div class="footerlink"><a href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a></div>
           <div class="footerlink"><a href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a></div>
         </div>
 
