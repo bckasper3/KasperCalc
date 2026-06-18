@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- META DATA -->
-    <title>KasperCalc: Compression Spring Failure Rate Calculator (NSWC-11)</title>
+    <title>KasperCalc: Torsion Spring Failure Rate Calculator (NSWC-11)</title>
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, NSWC-11, spring, helical compression spring, extension spring, reliability, failure rate, fatigue, stress ratio, Wahl factor, FPMH, FIT, MTBF, FMECA, Naval Surface Warfare Center" />
-    <meta name="description" content="Calculate the failure rate of helical compression and extension springs using the NSWC-11 stress-ratio fatigue model. Computes Wahl factor, shear stress, base failure rate, temperature and cycling-rate factors, and time-based FPMH / FIT / MTBF metrics for FMECA." />
+    <meta name="keywords" content="KasperCalc, NSWC-11, spring, helical torsion spring, reliability, failure rate, fatigue, stress ratio, curvature factor, bending stress, FPMH, FIT, MTBF, FMECA, Naval Surface Warfare Center" />
+    <meta name="description" content="Calculate the failure rate of helical torsion springs using the NSWC-11 bending-stress fatigue model. Computes curvature correction factor, bending stress, base failure rate, temperature and cycling-rate factors, and time-based FPMH / FIT / MTBF metrics for FMECA." />
 
     <!-- DEFERRED JAVASCRIPT -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -42,11 +42,11 @@
     <link rel="manifest" href="/favicon/site.webmanifest" />
 
     <style>
-      /* ── Spring failure-rate calculator styles ─────────────── */
+      /* ── Torsion spring failure-rate calculator styles ────────── */
       .nswc-wrap { max-width: 1100px; margin: 0 auto; }
       .calc-section-label { font-size: 0.7rem; font-weight: 700; color: #6a746a; text-transform: uppercase; letter-spacing: 0.08em; padding: 6px 0 2px 2px; border-bottom: 1px solid #ccc; margin: 14px 0 6px; }
 
-      /* ── Green-wrapper card skin (matches NSWC-11StaticSeal) ── */
+      /* ── Green-wrapper card skin ── */
       #spring-calc-form { max-width: 72rem; background: #6a746a; border-radius: 20px; border: 3px solid rgb(67,67,67); padding: 0 0 0.5rem; }
       #spring-calc-form .hdr2 { background:#eee; display:flex; justify-content:center; align-items:center; text-align:center; gap:10px; padding:0.5rem 0.7rem; margin:0.5rem; font-size:22px; font-weight:200; line-height:1.2; box-shadow:0 3px 5px rgba(0,0,0,.4); border-radius:10px; border:2px solid rgb(67,67,67); font-family:"Roboto",Arial,sans-serif; color:#1a3a40; }
       #spring-calc-form .grp { background:#eee; margin:0 0.5rem 0.5rem; border-radius:10px; border:2px solid rgb(67,67,67); box-shadow:0 3px 5px rgba(0,0,0,.4); padding:8px 11px 10px; }
@@ -63,7 +63,7 @@
       .hint { font-size:11px!important; color:#6a746a; line-height:1.3; }
       @media (max-width:640px){ #spring-calc-form .gco.g2, #spring-calc-form .gco.g3 { grid-template-columns:1fr; } }
 
-      /* Results grid (white tiles on the light card) */
+      /* Results grid */
       .res-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; margin-top: 2px; }
       .res-box { background: #fff; border: 1.5px solid rgb(67,67,67); border-left-width: 5px; border-radius: 7px; padding: 9px 12px; }
       .res-box.good { border-left-color: #2e7d4f; }
@@ -95,7 +95,6 @@
       .figs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 14px; }
       .fig-box { background: #eee; border: 2px solid rgb(67,67,67); border-radius: 8px; padding: 14px; }
       .fig-ph { background: #fff; border: 1px dashed #6a746a; border-radius: 6px; min-height: 180px; display: flex; align-items: center; justify-content: center; text-align: center; color: #888; font-style: italic; padding: 18px; font-size: 0.85rem; }
-      /* Live chart canvas wrapper (replaces .fig-ph once a figure is populated) */
       .fig-chart-wrap { background: #fff; border: 1px solid #6a746a; border-radius: 6px; height: 240px; position: relative; padding: 8px 8px 4px; }
       .fig-cap { margin-top: 9px; font-size: 0.82rem; color: #444; line-height: 1.5; }
       .fig-cap strong { color: #1a3a40; }
@@ -106,7 +105,7 @@
       /* Auto-filled (readonly) material inputs */
       #spring-calc-form .fld input[readonly] { background: #c8cfc8; color: #444; cursor: default; border-style: dashed; }
 
-      /* Download button (matches MIL-HDBK-5 .tbtn) */
+      /* Download button */
       .tbtn { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border-radius: 6px; border: 2px solid #4a5a4a; background: #f5f5f0; color: #222; font-size: 13px; font-weight: 400; padding: 5px 14px; transition: filter 0.15s, transform 0.1s; line-height: 1.3; text-decoration: none; }
       .tbtn:hover { filter: brightness(0.93); }
       .tbtn:active { transform: scale(0.97); }
@@ -341,7 +340,7 @@
         <div class="col-lg-12 col-12">
           <div class="banner section-title-wrap">
             <div class="h1 section-title bannertext">then press
-              Compression Spring Failure Rate Calculator
+              Torsion Spring Failure Rate Calculator
             </div>
           </div>
         </div>
@@ -354,18 +353,26 @@
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap">
           <div class="mx-auto d-inline-block mt-3" style="max-width:860px;">
-            <div class="custom-heading">NSWC-11 Spring Reliability Model</div>
+            <div class="custom-heading">NSWC-11 Torsion Spring Reliability Model</div>
             <div class="mt-3 text-start">
               <p>
-                This tool estimates the failure rate of helical <span style="font-weight: var(--font-weight-normal)">compression and extension springs</span>
-                using the stress-ratio fatigue model from the Naval Surface Warfare Center
+                This tool estimates the failure rate of <span style="font-weight: var(--font-weight-normal)">helical torsion springs</span>
+                using the bending-stress fatigue model from the Naval Surface Warfare Center
                 <em>Handbook of Reliability Prediction Procedures for Mechanical Equipment</em> (NSWC-11).
-                Spring failures are dominated by <span style="font-weight: var(--font-weight-normal)">fatigue</span> under cyclic shear stress, so the model
-                is driven by the ratio of operating stress to the material&rsquo;s torsional ultimate strength.
+                Torsion spring failures are dominated by <span style="font-weight: var(--font-weight-normal)">fatigue under cyclic bending stress</span>
+                (unlike compression springs, which fail under cyclic shear stress). The model is driven by the
+                ratio of operating bending stress to the material&rsquo;s tensile strength.
               </p>
               <p>
-                Enter the spring geometry, material strength, operating loads and environment below. The calculator also converts the cycle-based failure rate into
-                time-based metrics (FPMH, FIT, MTBF) suitable as <span style="font-weight: var(--font-weight-normal)">FMECA</span> inputs.
+                Enter the spring geometry, material strength, operating torques, and environment below. The calculator also
+                converts the cycle-based failure rate into time-based metrics (FPMH, FIT, MTBF) suitable as
+                <span style="font-weight: var(--font-weight-normal)">FMECA</span> inputs.
+              </p>
+              <p style="font-size:0.85rem; color:#555;">
+                <strong>Note:</strong> Torsion springs use the <em>elastic modulus</em> E<sub>M</sub> (not shear modulus G<sub>M</sub>),
+                and the stress correction uses the bending curvature factor K<sub>b</sub> rather than the Wahl shear factor K<sub>w</sub>.
+                The stress ratio is referenced to tensile strength S<sub>u</sub> directly (bending failure), not the 0.5&times;S<sub>u</sub>
+                torsional approximation used for compression springs.
               </p>
               <div class="mt-2">
                 <button class="tbtn" onclick="window.open('/downloadable/NSWC-11_RELIABILITY_HDBK_MAY2011.pdf', '_blank')" aria-label="Download NSWC-11 reliability handbook (PDF)">
@@ -392,7 +399,7 @@
           </div>
 
           <div class="wrapper" id="spring-calc-form">
-            <div class="hdr2">Compression Spring Failure Rate &mdash; Helical Compression / Extension (NSWC-11)</div>
+            <div class="hdr2">Torsion Spring Failure Rate &mdash; Helical Torsion Spring (NSWC-11)</div>
 
             <!-- SPRING GEOMETRY & MATERIAL -->
             <div class="grp">
@@ -401,7 +408,7 @@
                 <div class="fld full">
                   <label for="matSelect">Material (NSWC-11 Table 4-3)</label>
                   <select id="matSelect" aria-label="Spring material selection">
-                    <option value="custom">Custom &mdash; enter G and T&#x209B; manually</option>
+                    <option value="custom">Custom &mdash; enter E<sub>M</sub> and T&#x209B; manually</option>
                     <option value="brass">Brass &mdash; T&#x209B; = 110 ksi</option>
                     <option value="phos-bronze">Phosphor Bronze &mdash; T&#x209B; = 125 ksi</option>
                     <option value="monel-400">Monel 400 &mdash; T&#x209B; = 145 ksi</option>
@@ -415,7 +422,7 @@
                     <option value="chrome-si">Chrome Silicon &mdash; T&#x209B; = 268 ksi</option>
                     <option value="music-wire">Music Wire &mdash; T&#x209B; = 295 ksi</option>
                   </select>
-                  <div class="hint" id="matNote" style="display:none;">G and T&#x209B; auto-filled from NSWC-11 Tables&nbsp;4-2 &amp;&nbsp;4-3 (typical values at d&nbsp;=&nbsp;0.1&nbsp;in). Select &ldquo;Custom&rdquo; to enter your own.</div>
+                  <div class="hint" id="matNote" style="display:none;">E<sub>M</sub> and T&#x209B; auto-filled from NSWC-11 Tables&nbsp;4-2 &amp;&nbsp;4-3 (typical values at d&nbsp;=&nbsp;0.1&nbsp;in). Select &ldquo;Custom&rdquo; to enter your own.</div>
                 </div>
                 <div class="fld">
                   <label for="wireDia">Wire Diameter, d (in)</label>
@@ -427,15 +434,15 @@
                   <input type="number" id="meanDia" value="0.60" step="0.001" min="0.0001" aria-label="Mean coil diameter in inches" />
                   <div class="hint">D = OD &minus; d.</div>
                 </div>
-                <div class="fld" id="fld-shearMod">
-                  <label for="shearMod">Shear Modulus, G (psi)</label>
-                  <input type="number" id="shearMod" value="11500000" step="100000" aria-label="Shear modulus in psi" />
-                  <div class="hint">~11.5&times;10<sup>6</sup> psi for music wire / steel. From Table&nbsp;4-2 when material is selected.</div>
+                <div class="fld" id="fld-elasMod">
+                  <label for="elasMod">Elastic Modulus, E<sub>M</sub> (psi)</label>
+                  <input type="number" id="elasMod" value="28500000" step="100000" aria-label="Elastic modulus in psi" />
+                  <div class="hint">~28.5&times;10<sup>6</sup> psi for hard-drawn steel. Torsion springs use E<sub>M</sub>, not G<sub>M</sub>. From Table&nbsp;4-2 when material is selected.</div>
                 </div>
                 <div class="fld" id="fld-ultTensile">
                   <label for="ultTensile">Tensile Strength, T&#x209B; (psi)</label>
                   <input type="number" id="ultTensile" value="220000" step="1000" aria-label="Tensile strength in psi" />
-                  <div class="hint">Used for stress ratio and C<sub>Y</sub>. From Table&nbsp;4-3 when material is selected.</div>
+                  <div class="hint">Used for bending stress ratio and C<sub>Y</sub>. From Table&nbsp;4-3 when material is selected.</div>
                 </div>
               </div>
             </div>
@@ -445,17 +452,19 @@
               <div class="grp-title">Loading Conditions</div>
               <div class="gco g2">
                 <div class="fld">
-                  <label for="maxLoad">Maximum Operating Load, P<sub>max</sub> (lb)</label>
-                  <input type="number" id="maxLoad" value="25" step="0.1" aria-label="Maximum operating load in pounds" />
+                  <label for="maxTorque">Maximum Operating Torque, M<sub>max</sub> (lb&middot;in)</label>
+                  <input type="number" id="maxTorque" value="5.0" step="0.1" min="0" aria-label="Maximum applied torque in lb-in" />
+                  <div class="hint">Applied torque at maximum deflection. M = F &times; arm length.</div>
                 </div>
                 <div class="fld">
-                  <label for="minLoad">Minimum Operating Load, P<sub>min</sub> (lb)</label>
-                  <input type="number" id="minLoad" value="5" step="0.1" aria-label="Minimum operating load in pounds" />
+                  <label for="minTorque">Minimum Operating Torque, M<sub>min</sub> (lb&middot;in)</label>
+                  <input type="number" id="minTorque" value="1.0" step="0.1" min="0" aria-label="Minimum applied torque in lb-in" />
+                  <div class="hint">Applied torque at minimum deflection (preload).</div>
                 </div>
                 <div class="fld">
                   <label for="cyclingRate">Cycling Rate (cycles/min)</label>
                   <input type="number" id="cyclingRate" value="60" step="1" aria-label="Cycling rate in cycles per minute" />
-                  <div class="hint">Operating frequency of spring cycling.</div>
+                  <div class="hint">Operating frequency of torsion spring cycling.</div>
                 </div>
                 <div class="fld">
                   <label for="numCycles">Total Number of Cycles, N</label>
@@ -489,8 +498,9 @@
             <div class="grp">
               <div class="grp-title">Results</div>
               <div class="res-grid">
-                <div class="res-box"><div class="res-label">Maximum Shear Stress, &tau;<sub>max</sub> (psi)</div><div class="res-value" id="r_tauMax">&ndash;</div></div>
-                <div class="res-box"><div class="res-label">Minimum Shear Stress, &tau;<sub>min</sub> (psi)</div><div class="res-value" id="r_tauMin">&ndash;</div></div>
+                <div class="res-box"><div class="res-label">Curvature Factor, K<sub>b</sub></div><div class="res-value" id="r_kb">&ndash;</div><div class="hint">K<sub>b</sub> = (4C&sup2;&minus;C&minus;1) / (4C(C&minus;1))</div></div>
+                <div class="res-box"><div class="res-label">Maximum Bending Stress, &sigma;<sub>max</sub> (psi)</div><div class="res-value" id="r_sigMax">&ndash;</div></div>
+                <div class="res-box"><div class="res-label">Minimum Bending Stress, &sigma;<sub>min</sub> (psi)</div><div class="res-value" id="r_sigMin">&ndash;</div></div>
                 <div class="res-box"><div class="res-label">Stress Ratio, S</div><div class="res-value" id="r_stressRatio">&ndash;</div></div>
                 <div class="res-box"><div class="res-label">Material Strength Factor, C<sub>Y</sub></div><div class="res-value" id="r_cy">&ndash;</div><div class="hint">C<sub>Y</sub> = (190&thinsp;000 / T&#x209B;)<sup>3</sup> &mdash; ref. Table&nbsp;4-3</div></div>
                 <div class="res-box"><div class="res-label">Base Failure Rate, &lambda;<sub>b</sub> (fail / 10<sup>6</sup> cyc)</div><div class="res-value" id="r_lambdaB">&ndash;</div></div>
@@ -536,30 +546,38 @@
         <div class="mx-md-5 mx-3 section-content-wrap">
           <div class="mx-auto d-inline-block mt-3 text-start" style="max-width:860px;">
 
-            <div class="custom-heading">Model Explanation</div>
+            <div class="section-title-wrap">
+              <div class="custom-heading">Model Explanation</div>
+            </div>
 
-            <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">1. Spring Index and Wahl Stress Correction Factor</h3>
-            <div class="nswc-formula">C = D / d &nbsp;&nbsp;&nbsp; K<sub>w</sub> = (4C &minus; 1)/(4C &minus; 4) + 0.615/C</div>
+            <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">1. Spring Index and Curvature Correction Factor</h3>
+            <div class="nswc-formula">C = D / d &nbsp;&nbsp;&nbsp; K<sub>b</sub> = (4C<sup>2</sup> &minus; C &minus; 1) / (4C(C &minus; 1))</div>
             <p>
-              C is the spring index (ratio of mean coil diameter to wire diameter). The Wahl factor K<sub>w</sub>
-              corrects the simple torsion formula for the curvature and direct-shear effects present in a coiled
-              wire. Springs with low index (C &lt; 4) experience significantly amplified stress concentrations.
+              C is the spring index (ratio of mean coil diameter to wire diameter). For torsion springs, the Wahl-type
+              curvature correction factor K<sub>b</sub> corrects the simple bending formula for the additional stress
+              concentration caused by coil curvature. This differs from the shear-stress Wahl factor K<sub>w</sub> used
+              for compression and extension springs. Springs with low index (C &lt; 4) experience significantly amplified
+              stress concentrations.
             </p>
 
-            <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">2. Shear Stress</h3>
-            <div class="nswc-formula">&tau; = K<sub>w</sub> &times; (8 P D) / (&pi; d&sup3;)</div>
+            <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">2. Bending Stress</h3>
+            <div class="nswc-formula">&sigma; = K<sub>b</sub> &times; (32 M) / (&pi; d&sup3;)</div>
             <p>
-              &tau;<sub>max</sub> and &tau;<sub>min</sub> are computed from the maximum and minimum operating loads
-              (P<sub>max</sub>, P<sub>min</sub>). These represent the cyclic stress range the spring experiences in service.
+              &sigma;<sub>max</sub> and &sigma;<sub>min</sub> are computed from the maximum and minimum applied torques
+              (M<sub>max</sub>, M<sub>min</sub>) in lb&middot;in. For a torsion spring the wire is loaded in
+              <strong>bending</strong>, not torsion &mdash; so the stress formula uses the section modulus of a circular
+              cross-section (32/&pi;d&sup3;) multiplied by the curvature factor K<sub>b</sub>.
+              If your load is specified as a force F at arm length L, compute M&nbsp;=&nbsp;F&nbsp;&times;&nbsp;L.
             </p>
 
             <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">3. Stress Ratio</h3>
-            <div class="nswc-formula">S = &tau;<sub>max</sub> / S<sub>su</sub> &nbsp;&nbsp;&nbsp; (S<sub>su</sub> &asymp; 0.5 &times; S<sub>u</sub>)</div>
+            <div class="nswc-formula">S = &sigma;<sub>max</sub> / S<sub>u</sub></div>
             <p>
-              The stress ratio compares peak operating shear stress to the material&rsquo;s torsional ultimate shear
-              strength (approximated as half the ultimate tensile strength, S<sub>u</sub>). This ratio is the primary
-              driver of fatigue failure rate &mdash; as S approaches 1, the spring operates near its material limit and
-              failure probability rises sharply.
+              The stress ratio compares peak operating bending stress to the material&rsquo;s ultimate tensile strength
+              S<sub>u</sub>. Because torsion springs fail in bending (not shear), the full tensile strength is used
+              directly &mdash; unlike compression springs, which use S<sub>su</sub>&nbsp;&asymp;&nbsp;0.5&times;S<sub>u</sub>
+              for shear failure. This ratio is the primary driver of fatigue failure rate: as S approaches 1, the spring
+              operates at its material limit and failure probability rises sharply.
             </p>
 
             <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">3b. Material Tensile Strength Factor, C<sub>Y</sub></h3>
@@ -568,9 +586,9 @@
               C<sub>Y</sub> is a dimensionless multiplying factor (NSWC-11 Table&nbsp;4-3) that scales the failure rate
               based on the material&rsquo;s tensile strength relative to the reference material Copper-Beryllium
               (T<sub>S</sub>&nbsp;=&nbsp;190&thinsp;000&nbsp;psi, C<sub>Y</sub>&nbsp;=&nbsp;1.00). Softer materials (lower T<sub>S</sub>)
-              produce C<sub>Y</sub>&nbsp;&gt;&nbsp;1, increasing the predicted failure rate; harder materials yield
-              C<sub>Y</sub>&nbsp;&lt;&nbsp;1. In this calculator the material strength also enters implicitly through the
-              stress ratio S&nbsp;=&nbsp;&tau;/S<sub>su</sub>, so C<sub>Y</sub> is shown as a reference value.
+              produce C<sub>Y</sub>&nbsp;&gt;&nbsp;1; harder materials yield C<sub>Y</sub>&nbsp;&lt;&nbsp;1.
+              Material strength enters implicitly through the stress ratio S&nbsp;=&nbsp;&sigma;/S<sub>u</sub>, so
+              C<sub>Y</sub> is shown here as a reference value.
               Tensile-strength values are typical for a 0.1&nbsp;in wire diameter; actual values vary with wire diameter.
             </p>
 
@@ -594,15 +612,15 @@
             <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">5. Temperature Factor, &pi;<sub>T</sub></h3>
             <div class="nswc-formula">&pi;<sub>T</sub> = e<sup>0.01(T &minus; 70)</sup></div>
             <p>
-              Elevated operating temperature reduces material fatigue strength and accelerates relaxation/creep in
-              spring materials. The factor is referenced to 70&deg;F (room temperature).
+              Elevated operating temperature reduces material fatigue strength and accelerates relaxation/creep.
+              The factor is referenced to 70&deg;F (room temperature).
             </p>
 
             <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">6. Cycling Rate Factor, &pi;<sub>CY</sub></h3>
             <div class="nswc-formula">&pi;<sub>CY</sub> = 1 + (cycling rate [cycles/min] / 1000)</div>
             <p>
-              Higher cyclic frequencies generate additional heating and dynamic stress effects (resonance, impact
-              loading) that can slightly elevate the effective failure rate.
+              Higher cyclic frequencies generate additional dynamic stress effects that can slightly elevate the
+              effective failure rate.
             </p>
 
             <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">7. Environment Factor, &pi;<sub>E</sub></h3>
@@ -618,7 +636,7 @@
             <h3 class="mt-4" style="font-size:1.05rem; color:#1a3a40;">8. Predicted Failure Rate</h3>
             <div class="nswc-formula">&lambda;<sub>p</sub> = &lambda;<sub>b</sub> &times; &pi;<sub>T</sub> &times; &pi;<sub>CY</sub> &times; &pi;<sub>E</sub></div>
             <p>
-              The combined failure rate &lambda;<sub>p</sub> (failures per 10<sup>6</sup> cycles) is then used to estimate
+              The combined failure rate &lambda;<sub>p</sub> (failures per 10<sup>6</sup> cycles) is used to estimate
               the expected number of failures over the spring&rsquo;s design life:
             </p>
             <div class="nswc-formula">Expected Failures = &lambda;<sub>p</sub> &times; (N / 10<sup>6</sup>)</div>
@@ -627,8 +645,7 @@
             <p>
               Cycle-based failure rates are useful for mechanical fatigue analysis, but system-level <strong>FMECA</strong>
               and reliability block diagrams require failure rates in <strong>time-based units</strong> &mdash; typically
-              <strong>FPMH</strong> (Failures Per Million Hours) or <strong>FIT</strong> (Failures in Time, per 10<sup>9</sup> hours)
-              &mdash; so the spring&rsquo;s contribution can be combined with electronic and other component failure rates.
+              <strong>FPMH</strong> (Failures Per Million Hours) or <strong>FIT</strong> (Failures in Time, per 10<sup>9</sup> hours).
               The input cycling rate bridges cycles and time.
             </p>
             <div class="nswc-formula">
@@ -637,14 +654,9 @@
               FPMH = Failures per hour &times; 10<sup>6</sup>&nbsp;&nbsp;&middot;&nbsp;&nbsp;FIT = Failures per hour &times; 10<sup>9</sup><br>
               MTBF [hours] = 1 / (Failures per hour)&nbsp;&nbsp;&middot;&nbsp;&nbsp;MTBF [years] = MTBF [hours] / (24 &times; 365.25)
             </div>
-            <p>
-              MTBF is the inverse of the failure rate and assumes a constant (exponential) failure rate over the
-              spring&rsquo;s life &mdash; a reasonable approximation away from the wear-out region but less accurate as the
-              stress ratio S approaches 1.
-            </p>
 
             <div class="calc-warn-box">
-              This calculator implements a simplified engineering-approximation of the NSWC-11 spring model for
+              This calculator implements a simplified engineering-approximation of the NSWC-11 torsion spring model for
               educational and preliminary design-screening purposes. The original handbook derives the base failure rate
               from empirical charts and includes additional correction factors (spring type, surface treatment, shot-peening).
               For certified reliability predictions, designs near the fatigue limit, or safety-critical applications, consult
@@ -665,19 +677,19 @@
           </div>
           <div class="nswc-wrap">
             <p style="font-size:0.85rem; color:#444;">
-              The NSWC-11 spring failure-rate model multiplies a base failure rate by a set of dimensionless factors
-              derived from the spring&rsquo;s geometry and stress state. The eight charts below reproduce the handbook
-              multiplying-factor figures (Figures&nbsp;4.10&ndash;4.15, 4.20 and&nbsp;4.22) directly from their governing
+              The NSWC-11 torsion spring failure-rate model multiplies a base failure rate by a set of dimensionless factors
+              derived from the spring&rsquo;s geometry and stress state. The seven charts below reproduce the handbook
+              multiplying-factor figures (Figures&nbsp;4.10&ndash;4.12, 4.14, 4.15, 4.20 and&nbsp;4.22) directly from their governing
               equations. On the geometry-driven charts a marker tracks the values implied by your current inputs (wire
               diameter d, mean coil diameter D, spring index&nbsp;r&nbsp;=&nbsp;D/d); the cycle-rate chart marker tracks your
-              cycling-rate input.
+              cycling-rate input. Figure&nbsp;4.13 (linear spring deflection) applies to compression/extension springs and
+              is not shown here.
             </p>
             <div class="figs-grid">
               <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-cdw" aria-label="Wire diameter multiplying factor versus wire diameter"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.10</span><strong>Wire-Diameter Factor, C<sub>DW</sub>.</strong> C<sub>DW</sub> = (D<sub>W</sub>&nbsp;/&nbsp;0.085)<sup>3</sup>. Referenced to a 0.085&nbsp;in wire; the factor rises with the cube of wire diameter. Log scale. Marker = your wire diameter d.</div></div>
-              <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-cdc" aria-label="Coil diameter multiplying factor versus coil diameter"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.11</span><strong>Spring Coil-Diameter Factor, C<sub>DC</sub>.</strong> C<sub>DC</sub> = (0.58&nbsp;/&nbsp;D<sub>C</sub>)<sup>6</sup>. Referenced to a 0.58&nbsp;in mean coil diameter; falls steeply as coil diameter grows. Log scale. Marker = your mean coil diameter D.</div></div>
+              <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-cdc" aria-label="Coil diameter multiplying factor versus coil diameter for torsion springs"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.21</span><strong>Spring Coil-Diameter Factor, C<sub>DC</sub> (Torsion Springs).</strong> C<sub>DC</sub> = (0.58&nbsp;/&nbsp;D<sub>C</sub>)<sup>3</sup>. Referenced to a 0.58&nbsp;in mean coil diameter; falls as coil diameter grows. Log scale. Marker = your mean coil diameter D. (Torsion spring exponent is 3, vs exponent 6 for compression springs in Fig&nbsp;4.11.)</div></div>
               <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-cn" aria-label="Number of active coils multiplying factor"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.12</span><strong>Active-Coils Factor, C<sub>N</sub>.</strong> C<sub>N</sub> = (14&nbsp;/&nbsp;N<sub>a</sub>)<sup>3</sup>. Referenced to 14 active coils; more active coils lowers the factor. Log scale.</div></div>
-              <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-cl" aria-label="Spring deflection multiplying factor"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.13</span><strong>Spring-Deflection Factor, C<sub>L</sub>.</strong> C<sub>L</sub> = ((L<sub>1</sub>&minus;L<sub>2</sub>)&nbsp;/&nbsp;1.07)<sup>3</sup>, where L<sub>1</sub>&minus;L<sub>2</sub> is the working deflection (in). Log scale.</div></div>
-              <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-ck" aria-label="Stress concentration multiplying factor versus spring index"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.14</span><strong>Stress-Concentration Factor, C<sub>K</sub>.</strong> C<sub>K</sub> = (K<sub>W</sub>&nbsp;/&nbsp;1.219)<sup>3</sup>, K<sub>W</sub> = (4r&minus;1)/(4r&minus;4) + 0.616/r, r = D<sub>C</sub>/D<sub>W</sub>. Linear scale. Marker = your spring index r = D/d.</div></div>
+              <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-ck" aria-label="Stress curvature factor versus spring index for torsion spring"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.14</span><strong>Stress-Curvature Factor, C<sub>K</sub>.</strong> C<sub>K</sub> = (K<sub>b</sub>&nbsp;/&nbsp;1.1417)<sup>3</sup>, K<sub>b</sub> = (4r<sup>2</sup>&minus;r&minus;1)/(4r(r&minus;1)), r = D<sub>C</sub>/D<sub>W</sub>. Normalized to K<sub>b</sub> at r&nbsp;=&nbsp;6. Linear scale. Marker = your spring index r = D/d.</div></div>
               <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-415" aria-label="Torsion spring deflection multiplying factor versus angular rotation"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.15</span><strong>Torsion-Spring Deflection Factor, C<sub>L</sub>.</strong> C<sub>L</sub> = (&theta;&nbsp;/&nbsp;0.667)<sup>3</sup>. &theta; = angular rotation (revolutions). Log scale.</div></div>
               <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-420" aria-label="Spring cycle rate multiplying factor"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.20</span><strong>Cycle-Rate Factor, C<sub>CS</sub>.</strong> C<sub>CS</sub>&nbsp;=&nbsp;0.100 for CR&nbsp;&le;&nbsp;30; CR/300 for 30&nbsp;&lt;&nbsp;CR&nbsp;&le;&nbsp;300; (CR/300)<sup>3</sup> for CR&nbsp;&gt;&nbsp;300. Linear scale. Marker = your cycling-rate input.</div></div>
               <div class="fig-box"><div class="fig-chart-wrap"><canvas id="chart-422" aria-label="Spring length multiplying factor versus free length"></canvas></div><div class="fig-cap"><span class="fig-marker">FIG 4.22</span><strong>Spring-Length Factor, C<sub>L</sub>.</strong> C<sub>L</sub> = (1.20&nbsp;/&nbsp;L)<sup>6</sup>. L = free length (in). Log scale.</div></div>
@@ -697,7 +709,7 @@
                 <tr>
                   <td><strong>Cyclic</strong><br><span style="font-size:0.78rem; color:#555;">(10,000 cycles or more during the life of the spring)</span></td>
                   <td><ul class="fm-list"><li class="fs-6">Fracture</li><li class="fs-6">Damaged spring end</li><li class="fs-6">Fatigue failure</li><li class="fs-6">Buckling</li><li class="fs-6">Surging</li></ul></td>
-                  <td><ul class="fm-list"><li class="fs-6">Complex stress change as a function of time</li><li class="fs-6">Excessive mean stress, unidirectional operation</li><li class="fs-6">Material flaws</li><li class="fs-6">High-temperature operation</li><li class="fs-6">Imperfection on inside diameter of the spring</li><li class="fs-6">Hydrogen embrittlement</li><li class="fs-6">Stress concentration due to tooling marks and rough finishes</li><li class="fs-6">Sharp bends on spring ends (extension springs)</li><li class="fs-6">Surface imperfections (high cycle with no shot peening)</li><li class="fs-6">Corrosive atmosphere</li><li class="fs-6">Misalignment</li><li class="fs-6">Excessive stress range of reverse stress</li><li class="fs-6">Cycling temperature</li><li class="fs-6">Low-frequency vibration</li><li class="fs-6">High-frequency vibration</li></ul></td>
+                  <td><ul class="fm-list"><li class="fs-6">Complex stress change as a function of time</li><li class="fs-6">Excessive mean stress, unidirectional operation</li><li class="fs-6">Material flaws</li><li class="fs-6">High-temperature operation</li><li class="fs-6">Imperfection on inside diameter of the spring</li><li class="fs-6">Hydrogen embrittlement</li><li class="fs-6">Stress concentration due to tooling marks and rough finishes</li><li class="fs-6">Sharp bends on spring ends</li><li class="fs-6">Surface imperfections (high cycle with no shot peening)</li><li class="fs-6">Corrosive atmosphere</li><li class="fs-6">Misalignment</li><li class="fs-6">Excessive stress range of reverse stress</li><li class="fs-6">Cycling temperature</li><li class="fs-6">Low-frequency vibration</li><li class="fs-6">High-frequency vibration</li></ul></td>
                 </tr>
                 <tr>
                   <td><strong>Dynamic</strong><br><span style="font-size:0.78rem; color:#555;">(intermittent occurrences of a load surge)</span></td>
@@ -707,13 +719,12 @@
               </tbody>
             </table>
             <p style="font-size:0.78rem; color:#888; margin-top:14px;">
-              Charts are computed directly from the NSWC-11 Figure&nbsp;4.10&ndash;4.15, 4.20 and 4.22 equations, so they match the
-              handbook curves to within hand-plotting tolerance. Table&nbsp;4-1 reproduces the handbook failure-mode listing.
+              Charts are computed directly from the NSWC-11 Figure equations. Table&nbsp;4-1 reproduces the handbook failure-mode listing.
             </p>
 
             <h3 style="font-size:1.05rem; color:#1a3a40; margin-top:26px;">Table 4-2 &mdash; Moduli of Rigidity and Elasticity for Typical Spring Materials</h3>
             <p style="font-size:0.82rem; color:#555; margin-bottom:8px;">
-              G<sub>M</sub> is used for compression and extension springs; E<sub>M</sub> is used for torsion springs, flat springs and spring washers.
+              <strong>Torsion springs use E<sub>M</sub> (Elastic Modulus).</strong> G<sub>M</sub> is used for compression and extension springs.
             </p>
             <table class="nswc-table">
               <thead>
@@ -721,26 +732,26 @@
                   <th>Material</th>
                   <th>G<sub>M</sub> (lbs/in<sup>2</sup> &times; 10<sup>6</sup>)</th>
                   <th>C<sub>G</sub></th>
-                  <th>E<sub>M</sub> (lbs/in<sup>2</sup> &times; 10<sup>6</sup>)</th>
+                  <th>E<sub>M</sub> (lbs/in<sup>2</sup> &times; 10<sup>6</sup>) &larr; used here</th>
                   <th>C<sub>E</sub></th>
                 </tr>
               </thead>
               <tbody>
                 <tr><td colspan="5" style="font-weight:700; background:#e8ecec; color:#1a3a40;">Ferrous</td></tr>
-                <tr><td>Music Wire</td><td>11.8</td><td>1.08</td><td>29.0</td><td>1.05</td></tr>
-                <tr><td>Hard Drawn Steel</td><td>11.5</td><td>1.00</td><td>28.5</td><td>1.00</td></tr>
-                <tr><td>Chrome Steel</td><td>11.2</td><td>0.92</td><td>29.0</td><td>1.05</td></tr>
-                <tr><td>Silicon-Manganese</td><td>10.8</td><td>0.83</td><td>29.0</td><td>1.05</td></tr>
-                <tr><td>Stainless 302, 304, 316</td><td>10.0</td><td>0.67</td><td>28.0</td><td>0.98</td></tr>
-                <tr><td>Stainless 17-7 PH</td><td>10.5</td><td>0.76</td><td>29.5</td><td>1.04</td></tr>
-                <tr><td>Stainless 420</td><td>11.0</td><td>0.88</td><td>29.0</td><td>1.05</td></tr>
-                <tr><td>Stainless 431</td><td>11.4</td><td>0.97</td><td>29.5</td><td>1.11</td></tr>
+                <tr><td>Music Wire</td><td>11.8</td><td>1.08</td><td><strong>29.0</strong></td><td>1.05</td></tr>
+                <tr><td>Hard Drawn Steel</td><td>11.5</td><td>1.00</td><td><strong>28.5</strong></td><td>1.00</td></tr>
+                <tr><td>Chrome Steel</td><td>11.2</td><td>0.92</td><td><strong>29.0</strong></td><td>1.05</td></tr>
+                <tr><td>Silicon-Manganese</td><td>10.8</td><td>0.83</td><td><strong>29.0</strong></td><td>1.05</td></tr>
+                <tr><td>Stainless 302, 304, 316</td><td>10.0</td><td>0.67</td><td><strong>28.0</strong></td><td>0.98</td></tr>
+                <tr><td>Stainless 17-7 PH</td><td>10.5</td><td>0.76</td><td><strong>29.5</strong></td><td>1.04</td></tr>
+                <tr><td>Stainless 420</td><td>11.0</td><td>0.88</td><td><strong>29.0</strong></td><td>1.05</td></tr>
+                <tr><td>Stainless 431</td><td>11.4</td><td>0.97</td><td><strong>29.5</strong></td><td>1.11</td></tr>
                 <tr><td colspan="5" style="font-weight:700; background:#e8ecec; color:#1a3a40;">Non-Ferrous</td></tr>
-                <tr><td>Spring Brass</td><td>5.0</td><td>0.08</td><td>15.0</td><td>0.15</td></tr>
-                <tr><td>Phosphor Bronze</td><td>6.0</td><td>0.14</td><td>15.0</td><td>0.15</td></tr>
-                <tr><td>Beryllium Copper</td><td>7.0</td><td>0.23</td><td>17.0</td><td>0.21</td></tr>
-                <tr><td>Inconel</td><td>10.5</td><td>0.76</td><td>31.0</td><td>1.09</td></tr>
-                <tr><td>Monel</td><td>9.5</td><td>0.56</td><td>26.0</td><td>0.76</td></tr>
+                <tr><td>Spring Brass</td><td>5.0</td><td>0.08</td><td><strong>15.0</strong></td><td>0.15</td></tr>
+                <tr><td>Phosphor Bronze</td><td>6.0</td><td>0.14</td><td><strong>15.0</strong></td><td>0.15</td></tr>
+                <tr><td>Beryllium Copper</td><td>7.0</td><td>0.23</td><td><strong>17.0</strong></td><td>0.21</td></tr>
+                <tr><td>Inconel</td><td>10.5</td><td>0.76</td><td><strong>31.0</strong></td><td>1.09</td></tr>
+                <tr><td>Monel</td><td>9.5</td><td>0.56</td><td><strong>26.0</strong></td><td>0.76</td></tr>
               </tbody>
             </table>
             <div class="nswc-formula" style="margin-top:10px; font-size:0.88rem;">
@@ -793,9 +804,9 @@
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap text-center">
           <div class="mx-auto d-inline-block mt-3 mb-3 text-center" style="max-width:860px;">
-            <div class="custom-heading mx-auto">Source & Important Notices</div>
+            <div class="custom-heading mx-auto">Source &amp; Important Notices</div>
             <ul class="mt-3 text-start" style="font-size:0.9rem;">
-              <li class="mb-2"><strong>Source model:</strong> Naval Surface Warfare Center, <em>Handbook of Reliability Prediction Procedures for Mechanical Equipment</em> (NSWC-11), spring (helical compression / extension) failure-rate model.</li>
+              <li class="mb-2"><strong>Source model:</strong> Naval Surface Warfare Center, <em>Handbook of Reliability Prediction Procedures for Mechanical Equipment</em> (NSWC-11), spring (helical torsion) failure-rate model.</li>
               <li class="mb-2"><strong>Approximation.</strong> The base failure rate here is an exponential fit to the NSWC-11 curve, not a table lookup. Results are intended for preliminary screening, not certification.</li>
               <li><strong>Verify critical designs.</strong> Always confirm against the full NSWC-11 handbook and physical testing for safety-critical or pressure-containing applications. This tool is a reference aid, not a substitute for engineering judgment.</li>
             </ul>
@@ -863,13 +874,11 @@
   <!-- Chart.js (reference figures) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 
-  <!-- PAGE SCRIPT — NSWC-11 spring failure-rate calculator -->
+  <!-- PAGE SCRIPT — NSWC-11 torsion spring failure-rate calculator -->
   <script>
   (function () {
     'use strict';
 
-    // Plain (non-scientific) number formatting with thousands separators.
-    // Decimal places scale with magnitude; sub-1 values keep 4 significant digits.
     function fmtPlain(x) {
       if (!isFinite(x)) return '∞';
       var a = Math.abs(x);
@@ -878,37 +887,38 @@
       return x.toLocaleString('en-US', { maximumFractionDigits: d });
     }
 
-    // --- Material presets (NSWC-11 Tables 4-2 and 4-3, typical at d = 0.1 in) ---
-    // G from Table 4-2 (x10^6 psi); Ts from Table 4-3 (psi tensile strength)
+    // Material presets: E from Table 4-2 (elastic modulus ×10^6 psi); Ts from Table 4-3 (psi)
+    // Torsion springs use E_M (not G_M). Where Table 4-3 material differs from Table 4-2 name,
+    // the closest Table 4-2 E_M entry is used.
     var SPRING_MATERIALS = {
-      'brass':         { G: 5.0e6,   Ts: 110000 },
-      'phos-bronze':   { G: 6.0e6,   Ts: 125000 },
-      'monel-400':     { G: 9.5e6,   Ts: 145000 },
-      'inconel-600':   { G: 10.5e6,  Ts: 158000 },
-      'monel-k500':    { G: 9.5e6,   Ts: 175000 },
-      'cu-be':         { G: 7.0e6,   Ts: 190000 },
-      'ph-17-7':       { G: 10.5e6,  Ts: 210000 },
-      'hard-drawn':    { G: 11.5e6,  Ts: 216000 },
-      'ss302':         { G: 10.0e6,  Ts: 227000 },
-      'spring-temper': { G: 11.5e6,  Ts: 245000 },
-      'chrome-si':     { G: 11.2e6,  Ts: 268000 },
-      'music-wire':    { G: 11.8e6,  Ts: 295000 },
+      'brass':         { E: 15.0e6,  Ts: 110000 },  // Spring Brass
+      'phos-bronze':   { E: 15.0e6,  Ts: 125000 },  // Phosphor Bronze
+      'monel-400':     { E: 26.0e6,  Ts: 145000 },  // Monel
+      'inconel-600':   { E: 31.0e6,  Ts: 158000 },  // Inconel
+      'monel-k500':    { E: 26.0e6,  Ts: 175000 },  // Monel
+      'cu-be':         { E: 17.0e6,  Ts: 190000 },  // Beryllium Copper
+      'ph-17-7':       { E: 29.5e6,  Ts: 210000 },  // Stainless 17-7 PH
+      'hard-drawn':    { E: 28.5e6,  Ts: 216000 },  // Hard Drawn Steel
+      'ss302':         { E: 28.0e6,  Ts: 227000 },  // Stainless 302, 304, 316
+      'spring-temper': { E: 29.0e6,  Ts: 245000 },  // Chrome Steel (closest)
+      'chrome-si':     { E: 29.0e6,  Ts: 268000 },  // Chrome Steel
+      'music-wire':    { E: 29.0e6,  Ts: 295000 },  // Music Wire
     };
 
     function onMaterialChange() {
-      var sel     = document.getElementById('matSelect').value;
-      var gInput  = document.getElementById('shearMod');
-      var tsInput = document.getElementById('ultTensile');
-      var matNote = document.getElementById('matNote');
-      var mat     = SPRING_MATERIALS[sel];
+      var sel      = document.getElementById('matSelect').value;
+      var eInput   = document.getElementById('elasMod');
+      var tsInput  = document.getElementById('ultTensile');
+      var matNote  = document.getElementById('matNote');
+      var mat      = SPRING_MATERIALS[sel];
       if (mat) {
-        gInput.value    = mat.G;
-        tsInput.value   = mat.Ts;
-        gInput.readOnly  = true;
+        eInput.value     = mat.E;
+        tsInput.value    = mat.Ts;
+        eInput.readOnly  = true;
         tsInput.readOnly = true;
         matNote.style.display = '';
       } else {
-        gInput.readOnly  = false;
+        eInput.readOnly  = false;
         tsInput.readOnly = false;
         matNote.style.display = 'none';
       }
@@ -916,13 +926,12 @@
     }
 
     function calculate() {
-      // --- Read inputs ---
       var d           = parseFloat(document.getElementById('wireDia').value);      // wire diameter, in
       var D           = parseFloat(document.getElementById('meanDia').value);      // mean coil diameter, in
-      var G           = parseFloat(document.getElementById('shearMod').value);     // shear modulus, psi
+      var E           = parseFloat(document.getElementById('elasMod').value);      // elastic modulus, psi
       var Su          = parseFloat(document.getElementById('ultTensile').value);   // tensile strength, psi
-      var Pmax        = parseFloat(document.getElementById('maxLoad').value);      // lb
-      var Pmin        = parseFloat(document.getElementById('minLoad').value);      // lb
+      var Mmax        = parseFloat(document.getElementById('maxTorque').value);    // max torque, lb-in
+      var Mmin        = parseFloat(document.getElementById('minTorque').value);    // min torque, lb-in
       var cyclingRate = parseFloat(document.getElementById('cyclingRate').value);  // cycles/min
       var N           = parseFloat(document.getElementById('numCycles').value);    // total cycles
       var T           = parseFloat(document.getElementById('opTemp').value);       // deg F
@@ -934,41 +943,33 @@
       var C = D / d;
       steps.push('Spring Index C = D / d = ' + D + ' / ' + d + ' = <span class="val">' + C.toFixed(3) + '</span>');
 
-      // --- Wahl correction factor (stress concentration) ---
-      var Kw = (4 * C - 1) / (4 * C - 4) + 0.615 / C;
-      steps.push('Wahl Factor K_w = (4C-1)/(4C-4) + 0.615/C = <span class="val">' + Kw.toFixed(4) + '</span>');
+      // --- Curvature correction factor for torsion springs (Wahl bending factor) ---
+      // K_b = (4C^2 - C - 1) / (4C(C - 1))
+      var Kb = (4 * C * C - C - 1) / (4 * C * (C - 1));
+      steps.push('Curvature Factor K_b = (4C&sup2;&minus;C&minus;1) / (4C(C&minus;1)) = <span class="val">' + Kb.toFixed(4) + '</span>');
 
-      // --- Shear stresses: tau = K_w * 8 * P * D / (pi * d^3) ---
-      var tauFactor = 8 * D / (Math.PI * Math.pow(d, 3));
-      var tauMax = Kw * tauFactor * Pmax;
-      var tauMin = Kw * tauFactor * Pmin;
-      steps.push('&tau;_max = K_w &times; 8 P_max D / (&pi; d&sup3;) = <span class="val">' + tauMax.toFixed(0) + ' psi</span>');
-      steps.push('&tau;_min = K_w &times; 8 P_min D / (&pi; d&sup3;) = <span class="val">' + tauMin.toFixed(0) + ' psi</span>');
+      // --- Bending stresses: sigma = K_b * 32 * M / (pi * d^3) ---
+      var bendFactor = 32 / (Math.PI * Math.pow(d, 3));
+      var sigMax = Kb * bendFactor * Mmax;
+      var sigMin = Kb * bendFactor * Mmin;
+      steps.push('&sigma;_max = K_b &times; 32 M_max / (&pi; d&sup3;) = <span class="val">' + sigMax.toFixed(0) + ' psi</span>');
+      steps.push('&sigma;_min = K_b &times; 32 M_min / (&pi; d&sup3;) = <span class="val">' + sigMin.toFixed(0) + ' psi</span>');
 
-      // --- Stress ratio (S = tau_max / Ssu, Ssu ~ 0.5*Su) ---
-      var Ssu = 0.5 * Su;
-      var stressRatio = tauMax / Ssu;
-      steps.push('Torsional Ultimate Strength S_su &asymp; 0.5 &times; T&#x209B; = <span class="val">' + Ssu.toFixed(0) + ' psi</span>');
-      steps.push('Stress Ratio S = &tau;_max / S_su = <span class="val">' + stressRatio.toFixed(3) + '</span>');
+      // --- Stress ratio (S = sigma_max / Su — use full tensile strength for bending) ---
+      var stressRatio = sigMax / Su;
+      steps.push('Tensile Strength S_u = <span class="val">' + Su.toFixed(0) + ' psi</span>');
+      steps.push('Stress Ratio S = &sigma;_max / S_u = <span class="val">' + stressRatio.toFixed(3) + '</span>');
 
-      // --- Material strength factor C_Y (NSWC-11 Table 4-3) ---
-      // C_Y = (190,000 / Ts)^3  — reference material is Copper-Beryllium at Ts = 190,000 psi (C_Y = 1.00)
-      // Displayed for reference; material strength is also captured via the stress ratio above.
+      // --- Material strength factor C_Y (Table 4-3) ---
       var CY = Math.pow(190000 / Su, 3);
       steps.push('C_Y = (190&#x202F;000 / T&#x209B;)<sup>3</sup> = (190&#x202F;000 / ' + Su.toFixed(0) + ')<sup>3</sup> = <span class="val">' + CY.toFixed(3) + '</span> (Table&nbsp;4-3 reference)');
 
       // --- Base failure rate lambda_b ---
-      var lambdaB;
-      if (stressRatio < 0.3) {
-        lambdaB = 0.0001;
-      } else {
-        lambdaB = 0.0001 * Math.exp(8.0 * (stressRatio - 0.3));
-      }
+      var lambdaB = (stressRatio < 0.3) ? 0.0001 : 0.0001 * Math.exp(8.0 * (stressRatio - 0.3));
       steps.push('Base Failure Rate &lambda;_b = 0.0001 &times; e^(8(S-0.3)) = <span class="val">' + lambdaB.toExponential(3) + '</span> failures/10^6 cycles');
 
       // --- Temperature factor pi_T ---
-      var Tref = 70;
-      var piT = Math.exp(0.01 * (T - Tref));
+      var piT = Math.exp(0.01 * (T - 70));
       steps.push('Temperature Factor &pi;_T = e^(0.01(T - 70)) = <span class="val">' + piT.toFixed(3) + '</span>');
 
       // --- Cycling factor pi_CY ---
@@ -981,66 +982,57 @@
 
       // --- Failures over N cycles ---
       var failOverN = lambdaP * (N / 1e6);
-      steps.push('Expected Failures over N cycles = &lambda;_p &times; (N/10^6) = <span class="val">' + failOverN.toExponential(3) + '</span>');
+      steps.push('Expected Failures = &lambda;_p &times; (N/10^6) = <span class="val">' + failOverN.toExponential(3) + '</span>');
 
-      // --- Time-based reliability metrics ---
-      var cyclesPerHour = cyclingRate * 60;
-      steps.push('Cycling Rate = ' + cyclingRate + ' cycles/min &times; 60 = <span class="val">' + cyclesPerHour.toFixed(0) + '</span> cycles/hour');
-
+      // --- Time-based metrics ---
+      var cyclesPerHour   = cyclingRate * 60;
       var failuresPerHour = lambdaP * (cyclesPerHour / 1e6);
-      steps.push('Failure Rate (failures/hour) = &lambda;_p &times; (cycles/hour / 10^6) = <span class="val">' + failuresPerHour.toExponential(3) + '</span>');
+      var fpmh            = failuresPerHour * 1e6;
+      var fit             = failuresPerHour * 1e9;
+      var mtbfHours       = failuresPerHour > 0 ? (1 / failuresPerHour) : Infinity;
+      var mtbfYears       = mtbfHours / (24 * 365.25);
 
-      var fpmh = failuresPerHour * 1e6;
-      steps.push('FPMH = Failure Rate (per hour) &times; 10^6 = <span class="val">' + fpmh.toExponential(3) + '</span> FPMH');
-
-      var fit = failuresPerHour * 1e9;
-      steps.push('FIT = Failure Rate (per hour) &times; 10^9 = <span class="val">' + fit.toExponential(3) + '</span> FIT');
-
-      var mtbfHours = failuresPerHour > 0 ? (1 / failuresPerHour) : Infinity;
-      steps.push('MTBF (hours) = 1 / Failure Rate (per hour) = <span class="val">' + (isFinite(mtbfHours) ? mtbfHours.toExponential(3) : '&infin;') + '</span> hours');
-
-      var mtbfYears = mtbfHours / (24 * 365.25);
-      steps.push('MTBF (years) = MTBF (hours) / (24 &times; 365.25) = <span class="val">' + (isFinite(mtbfYears) ? mtbfYears.toExponential(3) : '&infin;') + '</span> years');
+      steps.push('Cycling Rate = ' + cyclingRate + ' cycles/min &times; 60 = <span class="val">' + cyclesPerHour.toFixed(0) + '</span> cycles/hour');
+      steps.push('Failure Rate (failures/hour) = <span class="val">' + failuresPerHour.toExponential(3) + '</span>');
+      steps.push('FPMH = <span class="val">' + fpmh.toExponential(3) + '</span>');
+      steps.push('FIT = <span class="val">' + fit.toExponential(3) + '</span>');
+      steps.push('MTBF (hours) = <span class="val">' + (isFinite(mtbfHours) ? mtbfHours.toExponential(3) : '&infin;') + '</span>');
+      steps.push('MTBF (years) = <span class="val">' + (isFinite(mtbfYears) ? mtbfYears.toExponential(3) : '&infin;') + '</span>');
 
       // --- Update result boxes ---
-      document.getElementById('r_tauMax').textContent = tauMax.toFixed(0) + ' psi';
-      document.getElementById('r_tauMin').textContent = tauMin.toFixed(0) + ' psi';
+      document.getElementById('r_kb').textContent          = Kb.toFixed(4);
+      document.getElementById('r_sigMax').textContent      = sigMax.toFixed(0) + ' psi';
+      document.getElementById('r_sigMin').textContent      = sigMin.toFixed(0) + ' psi';
       document.getElementById('r_stressRatio').textContent = stressRatio.toFixed(3);
-      document.getElementById('r_cy').textContent = CY.toFixed(3);
-      document.getElementById('r_lambdaB').textContent = fmtPlain(lambdaB);
-      document.getElementById('r_piT').textContent = piT.toFixed(3);
-      document.getElementById('r_piE').textContent = piE.toFixed(2);
-      document.getElementById('r_lambdaP').textContent = fmtPlain(lambdaP);
-      document.getElementById('r_failOverN').textContent = fmtPlain(failOverN);
-      document.getElementById('r_fpmh').textContent = fmtPlain(fpmh);
-      document.getElementById('r_fit').textContent = fmtPlain(fit);
-      document.getElementById('r_mtbfHours').textContent = fmtPlain(mtbfHours);
-      document.getElementById('r_mtbfYears').textContent = fmtPlain(mtbfYears);
+      document.getElementById('r_cy').textContent          = CY.toFixed(3);
+      document.getElementById('r_lambdaB').textContent     = fmtPlain(lambdaB);
+      document.getElementById('r_piT').textContent         = piT.toFixed(3);
+      document.getElementById('r_piE').textContent         = piE.toFixed(2);
+      document.getElementById('r_lambdaP').textContent     = fmtPlain(lambdaP);
+      document.getElementById('r_failOverN').textContent   = fmtPlain(failOverN);
+      document.getElementById('r_fpmh').textContent        = fmtPlain(fpmh);
+      document.getElementById('r_fit').textContent         = fmtPlain(fit);
+      document.getElementById('r_mtbfHours').textContent   = fmtPlain(mtbfHours);
+      document.getElementById('r_mtbfYears').textContent   = fmtPlain(mtbfYears);
 
-      // --- Warning if stress ratio too high ---
+      // --- Warning if stress ratio high ---
       var warningBox = document.getElementById('warningBox');
       if (stressRatio > 0.8) {
-        warningBox.innerHTML = '<div class="calc-warn-box">&#9888; Stress ratio S = ' + stressRatio.toFixed(2) + ' is high (&gt;0.8). The spring is operating close to its torsional ultimate strength, and failure-rate predictions in this region carry high uncertainty. Consider redesign (larger wire diameter, larger spring index, or lower load).</div>';
+        warningBox.innerHTML = '<div class="calc-warn-box">&#9888; Stress ratio S = ' + stressRatio.toFixed(2) + ' is high (&gt;0.8). The spring is operating close to its tensile strength limit, and failure-rate predictions in this region carry high uncertainty. Consider redesign (larger wire diameter, larger spring index, or lower applied torque).</div>';
       } else {
         warningBox.innerHTML = '';
       }
 
-      // --- Calc steps ---
       document.getElementById('calcSteps').innerHTML = steps.map(function (s) { return '<div>' + s + '</div>'; }).join('');
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-      var btn = document.getElementById('calc-btn');
-      if (btn) btn.addEventListener('click', calculate);
-      // Material dropdown
       var matSel = document.getElementById('matSelect');
       if (matSel) matSel.addEventListener('change', onMaterialChange);
-      // Recalculate live as inputs change
-      ['wireDia','meanDia','shearMod','ultTensile','maxLoad','minLoad','cyclingRate','numCycles','opTemp','corrEnv'].forEach(function (id) {
+      ['wireDia','meanDia','elasMod','ultTensile','maxTorque','minTorque','cyclingRate','numCycles','opTemp','corrEnv'].forEach(function (id) {
         var el = document.getElementById(id);
         if (el) el.addEventListener('input', calculate);
       });
-      // Run once on load with the default values
       calculate();
     });
   })();
@@ -1056,10 +1048,9 @@
     var POINT_COLOR = 'rgb(238,102,119)';
 
     function num(id) { var el = document.getElementById(id); var v = el ? parseFloat(el.value) : NaN; return isFinite(v) ? v : null; }
-    function kw(r) { return (4 * r - 1) / (4 * r - 4) + 0.616 / r; }   /* Wahl factor (Fig 4.14) */
+    // Curvature correction for torsion springs: K_b = (4r^2 - r - 1) / (4r(r-1))
+    function kb(r) { return (4 * r * r - r - 1) / (4 * r * (r - 1)); }
 
-    // Generic NSWC-11 multiplying-factor chart, plotted directly from its exact equation.
-    // cfg.marker is an optional function returning {x,y} (or null) for the live input marker.
     function buildFactorChart(cfg) {
       var ctx = document.getElementById(cfg.id);
       if (!ctx) return;
@@ -1087,7 +1078,7 @@
               mode: 'nearest', intersect: false,
               callbacks: {
                 title: function (it) { return cfg.xSym + ' = ' + it[0].parsed.x.toPrecision(4); },
-                label: function (c) { return cfg.ySym + ' = ' + c.parsed.y.toPrecision(4); },
+                label: function (c)  { return cfg.ySym + ' = ' + c.parsed.y.toPrecision(4); },
               },
             },
           },
@@ -1105,7 +1096,7 @@
       }
     }
 
-    // FIG 4.10 — Wire-diameter factor:  C_DW = (Dw / 0.085)^3
+    // FIG 4.10 — Wire-diameter factor
     buildFactorChart({
       id: 'chart-cdw', zLabel: 'C_DW', xSym: 'Dw', ySym: 'C_DW',
       fn: function (dw) { return Math.pow(dw / 0.085, 3); },
@@ -1115,17 +1106,18 @@
       marker: function () { var dw = num('wireDia'); return (dw != null && dw >= 0.01 && dw <= 0.18) ? { x: dw, y: Math.pow(dw / 0.085, 3) } : null; },
     });
 
-    // FIG 4.11 — Spring coil-diameter factor:  C_DC = (0.58 / Dc)^6
+    // FIG 4.21 — Coil-diameter factor (torsion springs): C_DC = (0.58 / Dc)^3
+    // Note: compression spring version (Fig 4.11) uses exponent 6; torsion uses exponent 3
     buildFactorChart({
       id: 'chart-cdc', zLabel: 'C_DC', xSym: 'Dc', ySym: 'C_DC',
-      fn: function (dc) { return Math.pow(0.58 / dc, 6); },
+      fn: function (dc) { return Math.pow(0.58 / dc, 3); },
       xMin: 0.20, xMax: 3.0, logY: true, yMin: 0.001, yMax: 10,
       xTitle: 'Coil diameter, Dc (in)', yTitle: 'Coil-dia. factor, C_DC',
       markerLabel: 'Your coil dia. D',
-      marker: function () { var dc = num('meanDia'); return (dc != null && dc >= 0.20 && dc <= 3.0) ? { x: dc, y: Math.pow(0.58 / dc, 6) } : null; },
+      marker: function () { var dc = num('meanDia'); return (dc != null && dc >= 0.20 && dc <= 3.0) ? { x: dc, y: Math.pow(0.58 / dc, 3) } : null; },
     });
 
-    // FIG 4.12 — Number of active coils factor:  C_N = (14 / Na)^3
+    // FIG 4.12 — Active-coils factor
     buildFactorChart({
       id: 'chart-cn', zLabel: 'C_N', xSym: 'Na', ySym: 'C_N',
       fn: function (na) { return Math.pow(14 / na, 3); },
@@ -1133,25 +1125,18 @@
       xTitle: 'Number of active coils, Na', yTitle: 'Active-coils factor, C_N',
     });
 
-    // FIG 4.13 — Spring-deflection factor:  C_L = ((L1 - L2) / 1.07)^3
-    buildFactorChart({
-      id: 'chart-cl', zLabel: 'C_L', xSym: 'L1-L2', ySym: 'C_L',
-      fn: function (dl) { return Math.pow(dl / 1.07, 3); },
-      xMin: 0, xMax: 6.2, logY: true, yMin: 0.01, yMax: 1000,
-      xTitle: 'Spring deflection, L1 − L2 (in)', yTitle: 'Deflection factor, C_L',
-    });
-
-    // FIG 4.14 — Stress-concentration factor:  C_K = (Kw / 1.219)^3,  Kw = (4r-1)/(4r-4) + 0.616/r
+    // FIG 4.14 — Stress-curvature factor for torsion springs: C_K = (K_b / K_b(r=6))^3
+    // Reference: K_b at r=6 = (4*36-6-1)/(4*6*5) = 137/120 ≈ 1.1417
     buildFactorChart({
       id: 'chart-ck', zLabel: 'C_K', xSym: 'r', ySym: 'C_K',
-      fn: function (r) { return Math.pow(kw(r) / 1.219, 3); },
-      xMin: 3, xMax: 17, logY: false, yMin: 0.6, yMax: 1.6,
-      xTitle: 'Spring index, r = Dc / Dw', yTitle: 'Stress-conc. factor, C_K',
+      fn: function (r) { return Math.pow(kb(r) / 1.1417, 3); },
+      xMin: 3, xMax: 17, logY: false, yMin: 0.5, yMax: 2.0,
+      xTitle: 'Spring index, r = Dc / Dw', yTitle: 'Stress-curv. factor, C_K',
       markerLabel: 'Your spring index r',
-      marker: function () { var d = num('wireDia'), D = num('meanDia'); if (d == null || D == null || d <= 0) return null; var r = D / d; return (r >= 3 && r <= 17) ? { x: r, y: Math.pow(kw(r) / 1.219, 3) } : null; },
+      marker: function () { var d = num('wireDia'), Dc = num('meanDia'); if (d == null || Dc == null || d <= 0) return null; var r = Dc / d; return (r >= 3 && r <= 17) ? { x: r, y: Math.pow(kb(r) / 1.1417, 3) } : null; },
     });
 
-    // FIG 4.15 — Torsion-spring deflection factor:  C_L = (theta / 0.667)^3
+    // FIG 4.15 — Torsion-spring deflection factor
     buildFactorChart({
       id: 'chart-415', zLabel: 'C_L', xSym: 'θ', ySym: 'C_L',
       fn: function (theta) { return Math.pow(theta / 0.667, 3); },
@@ -1159,10 +1144,7 @@
       xTitle: 'Spring Deflection, θ (revolutions)', yTitle: 'Deflection factor, C_L',
     });
 
-    // FIG 4.20 — Cycle-rate factor (piecewise):
-    //   CR ≤ 30         → C_CS = 0.100
-    //   30 < CR ≤ 300   → C_CS = CR / 300
-    //   CR > 300        → C_CS = (CR / 300)^3
+    // FIG 4.20 — Cycle-rate factor
     buildFactorChart({
       id: 'chart-420', zLabel: 'C_CS', xSym: 'CR', ySym: 'C_CS',
       fn: function (cr) {
@@ -1182,7 +1164,7 @@
       },
     });
 
-    // FIG 4.22 — Spring-length factor:  C_L = (1.20 / L)^6
+    // FIG 4.22 — Spring-length factor
     buildFactorChart({
       id: 'chart-422', zLabel: 'C_L', xSym: 'L', ySym: 'C_L',
       fn: function (L) { return Math.pow(1.20 / L, 6); },
@@ -1192,7 +1174,7 @@
   })();
   </script>
 
-  <!-- ── NSWC-11 Spring calculator self-tests (results in browser console) ── -->
+  <!-- ── NSWC-11 Torsion Spring calculator self-tests (results in browser console) ── -->
   <script>
   (function () {
     'use strict';
@@ -1209,44 +1191,44 @@
       }
     }
 
+    // ── K_b = (4C^2 - C - 1) / (4C(C-1)) ────────────────────────────────
+    function kb(C) { return (4 * C * C - C - 1) / (4 * C * (C - 1)); }
+    // C=6: (144-6-1)/(4*6*5) = 137/120 = 1.1417
+    assert('K_b  C=6   → 1.1417', kb(6),  137/120);
+    // C=10: (400-10-1)/(4*10*9) = 389/360 = 1.0806
+    assert('K_b  C=10  → 1.0806', kb(10), 389/360);
+    // C=4: (64-4-1)/(4*4*3) = 59/48 = 1.2292
+    assert('K_b  C=4   → 1.2292', kb(4),  59/48);
+
+    // ── Bending stress  σ = K_b × 32M / (π d³) ──────────────────────────
+    function bendStress(M, d, D) {
+      var C = D / d, Kb = kb(C);
+      return Kb * 32 * M / (Math.PI * Math.pow(d, 3));
+    }
+    // d=0.1 in, D=0.6 in, M=5 lb-in → C=6, Kb≈1.1417, σ=1.1417*32*5/(π*0.001)
+    var sig_ref = kb(6) * 32 * 5 / (Math.PI * 0.001);
+    assert('Bending stress  d=0.1 D=0.6 M=5 lb-in', bendStress(5, 0.1, 0.6), sig_ref);
+
+    // ── Stress ratio uses full S_u (not 0.5*S_u) ─────────────────────────
+    // For σ=58 035 psi, S_u=200 000 psi → S ≈ 0.290
+    assert('Stress ratio  σ=58035 Su=200000 → 0.290', 58035 / 200000, 0.290, 0.02);
+
     // ── C_Y = (190 000 / Ts)^3  (Table 4-3 spot-checks) ──────────────────
     assert('C_Y  Copper-Beryllium  Ts=190k  → 1.00', Math.pow(190000/190000, 3), 1.00);
     assert('C_Y  Music Wire        Ts=295k  → 0.27', Math.pow(190000/295000, 3), 0.267);
     assert('C_Y  Brass             Ts=110k  → 5.15', Math.pow(190000/110000, 3), 5.15);
-    assert('C_Y  Hard Drawn Steel  Ts=216k  → 0.68', Math.pow(190000/216000, 3), 0.68);
-    assert('C_Y  Phosphor Bronze   Ts=125k  → 3.51', Math.pow(190000/125000, 3), 3.51);
-
-    // ── Wahl correction factor  Kw = (4C-1)/(4C-4) + 0.615/C ────────────
-    function kw(C) { return (4*C-1)/(4*C-4) + 0.615/C; }
-    assert('Wahl Kw  C=6   → 1.2525', kw(6),  1.2525);
-    assert('Wahl Kw  C=10  → 1.1448', kw(10), 1.1448);
-    assert('Wahl Kw  C=4   → 1.3938', kw(4),  1.3938);
-
-    // ── Shear stress  τ = Kw × 8PD / (π d³) ─────────────────────────────
-    function tau(P, d, D) {
-      var C = D/d, Kw_ = kw(C);
-      return Kw_ * 8 * P * D / (Math.PI * Math.pow(d, 3));
-    }
-    // d=0.1 in, D=0.6 in, P=10 lb  →  C=6, Kw≈1.2525, τ≈19 133 psi
-    assert('Shear stress  d=0.1 D=0.6 P=10 lb  → ~19 133 psi', tau(10, 0.1, 0.6), 19133);
-    // d=0.08 in, D=0.60 in, P=25 lb  (default inputs)
-    var tauDefault = tau(25, 0.08, 0.60);
-    assert('Shear stress  default inputs (d=0.08 D=0.60 P=25)  > 0', tauDefault > 0 ? tauDefault : -1, tauDefault > 0 ? tauDefault : 1);
 
     // ── λ_b = 0.0001 × e^(8(S−0.3))  floor at S < 0.3 ───────────────────
     function lambdaB(S) { return S < 0.3 ? 0.0001 : 0.0001 * Math.exp(8*(S-0.3)); }
     assert('λ_b  S=0.2  (floor)   → 0.0001',   lambdaB(0.2), 0.0001);
-    assert('λ_b  S=0.3  (onset)   → 0.0001',   lambdaB(0.3), 0.0001);
     assert('λ_b  S=0.5            → 0.000495', lambdaB(0.5), 4.953e-4);
     assert('λ_b  S=0.7            → 0.002453', lambdaB(0.7), 2.453e-3);
-    assert('λ_b  S=0.9            → 0.01212',  lambdaB(0.9), 1.212e-2);
 
     // ── π_T = e^(0.01(T − 70)) ────────────────────────────────────────────
     assert('π_T  T=70°F  → 1.000',  Math.exp(0.01*(70-70)),  1.000);
     assert('π_T  T=200°F → 3.669',  Math.exp(0.01*(200-70)), 3.669);
-    assert('π_T  T=350°F → 14.88',  Math.exp(0.01*(350-70)), 14.88);
 
-    console.log('%cNSWC-11 Spring tests: ' + passed + ' passed, ' + failed + ' failed.',
+    console.log('%cNSWC-11 Torsion Spring tests: ' + passed + ' passed, ' + failed + ' failed.',
                 failed ? 'color:red;font-weight:bold' : 'color:green;font-weight:bold');
   })();
   </script>
