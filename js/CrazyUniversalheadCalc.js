@@ -5,6 +5,8 @@ let result_Density;
 let result_lbin;
 let result_kgm;
 let result_kgm1;
+let result_kPa;
+let result_inHg;
 
 
 const csvFiles1 = [
@@ -77,7 +79,7 @@ function calculate() {
 
   // console.log('calculate() is being run');
   // console.log('operation:',operation);
-  // console.log('log and jog baby');  
+  // console.log('log and jog baby');
   // console.log('input 1',input1);
   // console.log('input 2',input2);
 
@@ -93,7 +95,8 @@ function calculate() {
         case "S.G.":
           result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
           result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places
-
+          result_kPa = (input1 * 6.89476).toFixed(4);
+          result_inHg = (input1 * 2.03602).toFixed(4);
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
@@ -105,14 +108,14 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-      
           varfuelHeadCalcResult1.style.display = 'none'; // Show element when checked
           varfuelHeadCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "LB / Gal":
           result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
-          result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places 
-          
+          result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places
+          result_kPa = (input1 * 6.89476).toFixed(4);
+          result_inHg = (input1 * 2.03602).toFixed(4);
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
@@ -124,14 +127,14 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'inline'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-      
           varfuelHeadCalcResult1.style.display = 'none'; // Show element when checked
           varfuelHeadCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "lbin":
           result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
           result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places
-          
+          result_kPa = (input1 * 6.89476).toFixed(4);
+          result_inHg = (input1 * 2.03602).toFixed(4);
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
@@ -143,14 +146,14 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'inline'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-      
           varfuelHeadCalcResult1.style.display = 'none'; // Show element when checked
           varfuelHeadCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "kgm":
           result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
-          result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places  
-          
+          result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places
+          result_kPa = (input1 * 6.89476).toFixed(4);
+          result_inHg = (input1 * 2.03602).toFixed(4);
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
@@ -162,14 +165,14 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'inline'; // Show element when unchecked
-      
           varfuelHeadCalcResult1.style.display = 'none'; // Show element when checked
           varfuelHeadCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "In. of H20":
           result_PSI = ((1/result_SG)*(1/denseWater)*27679.90471*(input1));    //Rounds to 5 decimal places
           result_InH2O = (result_PSI*result_SG).toFixed(4);      //Rounds to 3 decimal places
-          
+          result_kPa = (input1 * 6.89476).toFixed(4);
+          result_inHg = (input1 * 2.03602).toFixed(4);
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
@@ -181,7 +184,6 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-      
           varfuelHeadCalcResult1.style.display = 'none'; // Show element when checked
           varfuelHeadCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
@@ -190,16 +192,16 @@ function calculate() {
           result_Density = "";
           result_lbin = "";
           result_kgm = "";
-
-          result_InH2O = "";  
+          result_InH2O = "";
           result_PSI = "";
+          result_kPa = "";
+          result_inHg = "";
           varfuelHeadCalcOption1.style.display = 'none'; // Show element when checked
           varfuelHeadCalcOption2.style.display = 'inline'; // Show element when unchecked
           varfuelHeadCalcOption3.style.display = 'inline'; // Show element when checked
           varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-      
           varfuelHeadCalcResult1.style.display = 'none'; // Show element when checked
           varfuelHeadCalcResult2.style.display = 'inline'; // Show element when unchecked
         }
@@ -209,7 +211,8 @@ function calculate() {
           case "S.G.":
             result_PSI = (result_SG*denseWater*(1/27679.90471)*input1);    //Rounds to 5 decimal places
             result_InH2O = (result_PSI*(1/(denseWater*(1/27679.90471)))).toFixed(4);         //Rounds to 3 decimal places
-
+            result_kPa = (result_PSI * 6.89476).toFixed(4);
+            result_inHg = (result_PSI * 2.03602).toFixed(4);
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
@@ -221,14 +224,14 @@ function calculate() {
             varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-
             varfuelHeadCalcResult1.style.display = 'inline'; // Hide element when unchecked
             varfuelHeadCalcResult2.style.display = 'none'; // Hide element when unchecked
             break;
           case "LB / Gal":
             result_PSI = (result_SG*denseWater*(1/27679.90471)*input1);
             result_InH2O = (result_PSI*(1/(denseWater*(1/27679.90471)))).toFixed(4);            //Rounds to 3 decimal places
-
+            result_kPa = (result_PSI * 6.89476).toFixed(4);
+            result_inHg = (result_PSI * 2.03602).toFixed(4);
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
@@ -240,14 +243,14 @@ function calculate() {
             varfuelHeadCalcOption4.style.display = 'inline'; // Show element when unchecked
             varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-
             varfuelHeadCalcResult1.style.display = 'inline'; // Hide element when unchecked
             varfuelHeadCalcResult2.style.display = 'none'; // Hide element when unchecked
             break;
           case "lbin":
             result_PSI = (result_SG*denseWater*(1/27679.90471)*input1);
             result_InH2O = (result_PSI*(1/(denseWater*(1/27679.90471)))).toFixed(4);            //Rounds to 3 decimal places
-
+            result_kPa = (result_PSI * 6.89476).toFixed(4);
+            result_inHg = (result_PSI * 2.03602).toFixed(4);
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
@@ -259,14 +262,14 @@ function calculate() {
             varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption5.style.display = 'inline'; // Show element when unchecked
             varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-
             varfuelHeadCalcResult1.style.display = 'inline'; // Hide element when unchecked
             varfuelHeadCalcResult2.style.display = 'none'; // Hide element when unchecked
             break;
           case "kgm":
             result_PSI = (result_SG*denseWater*(1/27679.90471)*input1);
             result_InH2O = (result_PSI*(1/(denseWater*(1/27679.90471)))).toFixed(4);            //Rounds to 3 decimal places
-
+            result_kPa = (result_PSI * 6.89476).toFixed(4);
+            result_inHg = (result_PSI * 2.03602).toFixed(4);
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
@@ -278,14 +281,14 @@ function calculate() {
             varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption6.style.display = 'inline'; // Show element when unchecked
-
             varfuelHeadCalcResult1.style.display = 'inline'; // Hide element when unchecked
             varfuelHeadCalcResult2.style.display = 'none'; // Hide element when unchecked
             break;
-          case "In. of H20":     
+          case "In. of H20":
             result_PSI = (result_SG*denseWater*(1/27679.90471)*input1);
             result_InH2O = (result_PSI*(1/(denseWater*(1/27679.90471)))).toFixed(4);           //Rounds to 3 decimal places
-
+            result_kPa = (result_PSI * 6.89476).toFixed(4);
+            result_inHg = (result_PSI * 2.03602).toFixed(4);
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
@@ -297,7 +300,6 @@ function calculate() {
             varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-
             varfuelHeadCalcResult1.style.display = 'inline'; // Hide element when unchecked
             varfuelHeadCalcResult2.style.display = 'none'; // Hide element when unchecked
             break;
@@ -306,15 +308,16 @@ function calculate() {
             result_Density = "";
             result_lbin = "";
             result_kgm = "";
-            result_InH2O = "";  
+            result_InH2O = "";
             result_PSI = "";
+            result_kPa = "";
+            result_inHg = "";
             varfuelHeadCalcOption1.style.display = 'inline'; // Hide element when unchecked
             varfuelHeadCalcOption2.style.display = 'none'; // Hide element when unchecked
             varfuelHeadCalcOption3.style.display = 'inline'; // Show element when checked
             varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-
             varfuelHeadCalcResult1.style.display = 'inline'; // Hide element when unchecked
             varfuelHeadCalcResult2.style.display = 'none'; // Hide element when unchecked
         }
@@ -325,6 +328,8 @@ function calculate() {
   document.getElementById("result_kgm").innerText = result_kgm;
   document.getElementById("result_InH2O").innerText = result_InH2O;
   document.getElementById("result_PSI").innerText = result_PSI;
+  document.getElementById("result_kPa").innerText = result_kPa;
+  document.getElementById("result_inHg").innerText = result_inHg;
   document.getElementById("result_Densitylbft").innerText = (result_Density*7.48052).toFixed(4);
 }
 

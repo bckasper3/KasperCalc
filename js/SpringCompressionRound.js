@@ -29,11 +29,12 @@
 //     Hinged–Hinged  (both ends pivoting):               α = 1.0
 //     Fixed–Free     (one fixed, one laterally free):    α = 2.0
 //
-//   Stability criterion (exact Wahl/Stahl):
-//     ξ  = π·D / (α·Lf)          [buckle ratio]
-//     ξ > 1  → unconditionally stable (spring too short to buckle)
-//     ξ ≤ 1  → can buckle; critical deflection:
-//       δ_cr = Lf · [1 − √(1 − ξ²)]
+//   Stability criterion (Wahl/Stahl C₁–C₂ form, material-dependent):
+//     λ  = α·Lf / D              [effective slenderness]
+//     C₁ = E / [2·(E−G)],  C₂ = 2π²·(E−G) / (2G+E)
+//     λ < √C₂  → unconditionally stable (spring too short to buckle)
+//     λ ≥ √C₂  → can buckle; critical deflection:
+//       δ_cr = C₁·Lf · [1 − √(1 − C₂/λ²)]
 //       L_cr = Lf − δ_cr
 //       F_cr = k · δ_cr
 // ============================================================
@@ -552,9 +553,13 @@ function buildResiduals(x, structural = false) {
   {
     const alpha = getBucklingEffectiveLengthFactor();
     if (alpha && (userEnteredFieldIds.has('Lbuckle') || userEnteredFieldIds.has('Fbuckle'))) {
-      const xi = (Math.PI * v.D) / (alpha * Math.max(v.Lf, 1e-9));
-      if (xi <= 1.0) {
-        const delta_cr = v.Lf * (1 - Math.sqrt(1 - xi * xi));
+      const G_res  = readFieldValue('G') || 11.5e6;
+      const E_res  = parseFloat(selectedMaterialRecord?.['YOUNGS MODULUS (PSI)']) || (2 * G_res * (1 + (parseFloat(selectedMaterialRecord?.['POISSONS RATIO']) || 0.30)));
+      const C1_res = E_res / (2 * (E_res - G_res));
+      const C2_res = (2 * Math.PI * Math.PI * (E_res - G_res)) / (2 * G_res + E_res);
+      const lam    = (alpha * Math.max(v.Lf, 1e-9)) / Math.max(v.D, 1e-9);
+      if (lam >= Math.sqrt(C2_res)) {
+        const delta_cr = C1_res * v.Lf * (1 - Math.sqrt(1 - C2_res / (lam * lam)));
         const L_cr     = v.Lf - delta_cr;
         const F_cr     = v.k  * delta_cr;
 
@@ -1344,16 +1349,18 @@ function getSelectedInputMode() {
 // BUCKLING — WAHL / STAHL STABILITY EQUATIONS
 // ============================================================
 //
-// Wahl (1963) and Stahl (1974) express the critical buckling
-// deflection of a helical compression spring as:
+// Wahl (1963) and Stahl (1974) — correct C₁/C₂ form
 //
-//   ξ      = π·D / (α·Lf)          [dimensionless buckle ratio]
-//   δ_cr   = Lf · [1 − √(1 − ξ²)] [critical deflection, in]
-//   L_cr   = Lf − δ_cr             [length at onset of buckling, in]
-//   F_cr   = k · δ_cr              [load at onset of buckling, lb]
+//   λ      = α·Lf / D                              [effective slenderness]
+//   C₁     = E / [2·(E − G)]
+//   C₂     = 2π²·(E − G) / (2G + E)
+//   δ_cr   = C₁·Lf · [1 − √(1 − C₂/λ²)]          [critical deflection, in]
+//   L_cr   = Lf − δ_cr                             [length at onset, in]
+//   F_cr   = k · δ_cr                              [load at onset, lb]
 //
-// ξ > 1  → spring is STABLE (cannot buckle at any load)
-// ξ ≤ 1  → spring CAN buckle; δ_cr marks the instability point
+// For steel (E ≈ 30 Mpsi, G ≈ 11.5 Mpsi, ν ≈ 0.3): C₁ ≈ 0.812, C₂ ≈ 6.87
+//
+// Stability boundary: λ < √C₂  →  Lf/D < √C₂/α  →  unconditionally stable
 //
 // The four supported end conditions and their α factors:
 // ─────────────────────────────────────────────────────────
@@ -1365,12 +1372,11 @@ function getSelectedInputMode() {
 //   Fixed–Free     One end clamped, one laterally free  2.0
 // ─────────────────────────────────────────────────────────
 //
-// Critical slenderness ratio for each mode (ξ = 1 boundary):
-//   Lf/D_crit = π/α
-//   Fixed–Fixed:    Lf/D > π/0.5  = 6.283  → can buckle
-//   Fixed–Hinged:   Lf/D > π/0.707 = 4.443 → can buckle
-//   Hinged–Hinged:  Lf/D > π/1.0  = 3.142  → can buckle
-//   Fixed–Free:     Lf/D > π/2.0  = 1.571  → can buckle
+// Critical slenderness for steel (√C₂ ≈ 2.62):
+//   Fixed–Fixed:    Lf/D > 2.62/0.5   = 5.24  → can buckle
+//   Fixed–Hinged:   Lf/D > 2.62/0.707 = 3.71  → can buckle
+//   Hinged–Hinged:  Lf/D > 2.62/1.0   = 2.62  → can buckle
+//   Fixed–Free:     Lf/D > 2.62/2.0   = 1.31  → can buckle
 // ============================================================
 
 /**
@@ -1408,47 +1414,53 @@ function getBucklingEffectiveLengthFactor() {
 }
 
 /**
- * computeWahlStahlBuckling(Lf, D, k, alpha)
- * Applies the exact Wahl/Stahl stability equation.
+ * computeWahlStahlBuckling(Lf, D, k, alpha, E, G)
+ * Applies the correct Wahl/Stahl C₁–C₂ stability equation.
  *
  * @param {number} Lf    Free length (in)
  * @param {number} D     Mean coil diameter (in)
  * @param {number} k     Spring rate (lb/in)
  * @param {number} alpha Effective-length factor for end condition
+ * @param {number} E     Young's modulus (psi) — defaults to 30e6 (steel)
+ * @param {number} G     Shear modulus (psi)   — defaults to 11.5e6 (steel)
  *
  * @returns {{
- *   stable:       boolean,  — true = spring cannot buckle (ξ > 1)
- *   xi:           number,   — buckle ratio ξ = π·D / (α·Lf)
+ *   stable:       boolean,      — true = spring cannot buckle at any deflection
+ *   lambda:       number,       — effective slenderness λ = α·Lf/D
+ *   C1:           number,       — E / [2·(E−G)]
+ *   C2:           number,       — 2π²·(E−G) / (2G+E)
  *   delta_cr:     number|null,  — critical deflection (in)
  *   L_cr:         number|null,  — length at onset of buckling (in)
  *   F_cr:         number|null,  — load at onset of buckling (lb)
- *   Lf_D_ratio:   number,   — actual slenderness ratio Lf/D
- *   critical_LfD: number,   — critical Lf/D threshold = π/α
- *   margin_pct:   number,   — how close to limit: (Lf_D / critical_LfD) × 100
+ *   Lf_D_ratio:   number,       — actual slenderness ratio Lf/D
+ *   critical_LfD: number,       — critical Lf/D threshold = √C₂/α
+ *   margin_pct:   number,       — (Lf_D / critical_LfD) × 100
  * } | null}
  */
-function computeWahlStahlBuckling(Lf, D, k, alpha) {
+function computeWahlStahlBuckling(Lf, D, k, alpha, E = 30e6, G = 11.5e6) {
   if (!Lf || !D || !k || !alpha || Lf <= 0 || D <= 0 || k <= 0 || alpha <= 0) {
     console.warn('[buckle] computeWahlStahlBuckling: invalid inputs', { Lf, D, k, alpha });
     return null;
   }
 
-  // inner = πD/(α·Lf) — term inside the sqrt of the Wahl/Stahl formula.
-  // inner > 1  →  Lf/D < π/α  →  spring is too short/stubby to buckle (stable).
-  // inner ≤ 1  →  Lf/D ≥ π/α  →  spring can buckle; compute δ_cr.
-  const inner        = (Math.PI * D) / (alpha * Lf);
-  const critical_LfD = Math.PI / alpha;
+  // C₁ and C₂ are the Wahl/Stahl material constants.
+  // C₁ = E / [2·(E−G)],  C₂ = 2π²·(E−G) / (2G+E)
+  // For steel: C₁ ≈ 0.812, C₂ ≈ 6.87  →  √C₂ ≈ 2.62
+  const C1           = E / (2 * (E - G));
+  const C2           = (2 * Math.PI * Math.PI * (E - G)) / (2 * G + E);
+  const sqrtC2       = Math.sqrt(C2);
+  const lambda       = (alpha * Lf) / D;   // effective slenderness
+  const critical_LfD = sqrtC2 / alpha;      // onset threshold (Lf/D where stability boundary is reached)
   const Lf_D_ratio   = Lf / D;
   const margin_pct   = (Lf_D_ratio / critical_LfD) * 100;
 
-  // console.log('[buckle] WahlStahl | alpha:', alpha, '| inner(πD/αLf):', inner.toFixed(4),
-  //   '| Lf/D:', Lf_D_ratio.toFixed(3), '| crit Lf/D (π/α):', critical_LfD.toFixed(3),
-  //   '| margin%:', margin_pct.toFixed(1), '| stable:', inner > 1.0);
-
-  if (inner > 1.0) {
+  // λ < √C₂ → spring is too short/stubby to buckle at any deflection (unconditionally stable)
+  if (lambda < sqrtC2) {
     return {
       stable:       true,
-      xi:           inner,
+      lambda,
+      C1,
+      C2,
       delta_cr:     null,
       L_cr:         null,
       F_cr:         null,
@@ -1458,14 +1470,18 @@ function computeWahlStahlBuckling(Lf, D, k, alpha) {
     };
   }
 
-  // inner ≤ 1 → spring exceeds critical slenderness — apply Wahl/Stahl:
-  const delta_cr = Lf * (1 - Math.sqrt(1 - inner * inner));
+  // λ ≥ √C₂ → spring can buckle; apply the Wahl/Stahl formula:
+  //   δ_cr = C₁·Lf · [1 − √(1 − C₂/λ²)]
+  const inner2   = C2 / (lambda * lambda);
+  const delta_cr = C1 * Lf * (1 - Math.sqrt(1 - inner2));
   const L_cr     = Lf - delta_cr;
   const F_cr     = k  * delta_cr;
 
   return {
     stable: false,
-    xi: inner,
+    lambda,
+    C1,
+    C2,
     delta_cr,
     L_cr,
     F_cr,
@@ -2110,7 +2126,8 @@ function runDeterministicPostPass(sv, result) {
 
     } else {
       const { alpha, label } = endCond;
-      const bk = computeWahlStahlBuckling(Lf, D, k, alpha);
+      const E_bk = parseFloat(selectedMaterialRecord?.['YOUNGS MODULUS (PSI)']) || (2 * G * (1 + (parseFloat(selectedMaterialRecord?.['POISSONS RATIO']) || 0.30)));
+      const bk = computeWahlStahlBuckling(Lf, D, k, alpha, E_bk, G);
       console.log('[buckle] mode:', label, '| alpha:', alpha, '| bk:', bk);
 
       if (!bk) {
@@ -2405,7 +2422,8 @@ function runDeterministicPostPass(sv, result) {
     const endCond = getBucklingEndCondition();
     const bkLabel = endCond
       ? (() => {
-          const bk = computeWahlStahlBuckling(Lf, D, k, endCond.alpha);
+          const E_sb = parseFloat(selectedMaterialRecord?.['YOUNGS MODULUS (PSI)']) || (2 * G * (1 + (parseFloat(selectedMaterialRecord?.['POISSONS RATIO']) || 0.30)));
+          const bk = computeWahlStahlBuckling(Lf, D, k, endCond.alpha, E_sb, G);
           if (!bk) return '';
           if (bk.stable) return `Buckle: Stable (${endCond.label})`;
           return `Buckle: F_cr=${bk.F_cr.toFixed(1)} lb (${endCond.label})`;

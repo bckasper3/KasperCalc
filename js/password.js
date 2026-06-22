@@ -4,7 +4,8 @@ const PASSWORDS = [
   "KasperCalc",
   "admin",
   "ParkerORing2026",
-  "AllenAircraft"
+  "AllenAircraft",
+  "SAE_SPEC_TOOL"
 ];
 
 const STORAGE_KEY = "pageUnlocked";
