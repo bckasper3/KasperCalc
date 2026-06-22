@@ -358,6 +358,9 @@
                   <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
                   <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
                   <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -378,8 +381,9 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal & Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
                   <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -389,6 +393,9 @@
                   <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
                   <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
                   <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
                 </div>
               </li>
               <li class="nav-item text-center align-svg-bottom smallsearchbar">
@@ -1875,63 +1882,156 @@ mjx-container[jax="SVG"] {
     </div>
     <div class="ref-body two-col">
       <div>
-        <div class="ref-sub">When Buckling Occurs</div>
-        <p>A buckles (spring bows sideways) when its slenderness ratio (L<sub>f</sub> / D) is too high for the deflection imposed. Springs with L<sub>f</sub> / D greater than approximately 4 are candidates for buckling analysis. The critical threshold depends on how the ends are constrained:</p>
-        <!-- <ul>
-          <li style="font-size: 14px;"><strong>One end free to tip</strong> — most prone to buckling</li>
-          <li style="font-size: 14px;"><strong>Both ends on flat parallel plates</strong> — considerably more stable</li>
-          <li style="font-size: 14px;"><strong>One end laterally constrained</strong> — intermediate behavior</li>
-        </ul> -->
-        <ul class="cfg-buckling-guide">
-          <li style="font-size: 14px; margin-bottom: 8px;">
-            <strong>Fixed–Fixed (Parallel Plates):</strong> 
-            Both ends held flat and constrained (e.g., a piston in a cylinder). 
-            <em>(K ≈ 0.5)</em>.
-          </li>
-          
-          <li style="font-size: 14px; margin-bottom: 8px;">
-            <strong>Fixed–Hinged (Guarded Pivot):</strong> 
-            One end held flat, the other pivoted but laterally constrained. 
-            <em>(K ≈ 0.707)</em>.
-          </li>
-          
-          <li style="font-size: 14px; margin-bottom: 8px;">
-            <strong>Hinged–Hinged (Pivoted Ends):</strong> 
-            Both ends are free to pivot or rotate (e.g., pointed ends). 
-            <em>(K = 1.0)</em>.
-          </li>
-          
-          <li style="font-size: 14px; margin-bottom: 8px;">
-            <strong>Fixed–Free (Unguided):</strong> 
-            One end fixed, the other free to tilt and move sideways. 
-            <em>(K ≈ 2.0)</em>.
-          </li>
-        </ul>
-        <p>When a slender spring is unavoidable, stack multiple shorter springs in series inside a tube or over a rod, with intermediate guides between segments to prevent coil binding.</p>
-        <div class="ref-warn" style="margin-top:8px;">
-          Guiding a spring inside a bore or over a shaft prevents buckling but introduces sliding friction that shifts actual loads relative to calculated values. At high slenderness ratios,
-          this friction error can be significant and must be included in the force budget.
+        <div class="ref-sub">The Wahl / Stahl Buckling Model</div>
+        <p>A helical compression spring buckles (bows sideways) when the combination of its slenderness and the fraction of free length it is compressed exceed a material- and end-condition-dependent threshold. The exact criterion (Wahl 1963, Stahl 1974) expresses the <strong>critical deflection ratio</strong> as:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Critical deflection (Wahl / Stahl)</span>
+          \[ \frac{\delta_{cr}}{L_f} = C_1 \left[1 - \sqrt{1 - \frac{C_2}{\lambda^2}}\right] \]
         </div>
-        <div class="ref-fig" style="min-height:80px;margin-top:10px;">
-          <img src="img/Spring_Buckling_5.png" 
-              alt="Critical buckling curves — springs plotting above and to the right of a curve will buckle. Solid line: one end free to tip. Dashed line: parallel plate support." 
+        <p>where the <strong>effective slenderness</strong> λ = α L<sub>f</sub> / D, and the material constants are:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Material constants (steel: C₁ ≈ 0.812, C₂ ≈ 6.87)</span>
+          \[ C_1 = \frac{E}{2(E-G)} \qquad C_2 = \frac{2\pi^2(E-G)}{2G+E} \]
+        </div>
+        <p>A spring is <strong>unconditionally stable</strong> at any load when λ &lt; √C₂ — equivalently, when its slenderness ratio falls below the onset threshold:</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Onset threshold (L<sub>f</sub>/D below which no buckling is possible)</span>
+          \[ \left(\frac{L_f}{D}\right)_{cr} = \frac{\sqrt{C_2}}{\alpha} \]
+        </div>
+
+        <div class="ref-sub" style="margin-top:12px;">End Conditions and Onset Thresholds</div>
+        <p>α is the effective-length factor analogous to the Euler column end-fixity coefficient. For steel (√C₂ ≈ 2.62):</p>
+        <table class="ref-table" style="width:100%;font-size:13px;margin-bottom:10px;">
+          <thead>
+            <tr>
+              <th>End condition</th>
+              <th style="text-align:center;">α</th>
+              <th style="text-align:center;">Onset L<sub>f</sub>/D</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Fixed–Fixed</strong> — both ends flat on parallel plates</td>
+              <td style="text-align:center;">0.5</td>
+              <td style="text-align:center;">5.24</td>
+            </tr>
+            <tr>
+              <td><strong>Fixed–Hinged</strong> — one flat end, one pivoted</td>
+              <td style="text-align:center;">0.707</td>
+              <td style="text-align:center;">3.71</td>
+            </tr>
+            <tr>
+              <td><strong>Hinged–Hinged</strong> — both ends free to pivot</td>
+              <td style="text-align:center;">1.0</td>
+              <td style="text-align:center;">2.62</td>
+            </tr>
+            <tr>
+              <td><strong>Fixed–Free</strong> — one fixed, one free to tilt laterally</td>
+              <td style="text-align:center;">2.0</td>
+              <td style="text-align:center;">1.31</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>When a slender spring is unavoidable, nest multiple shorter springs in series inside a tube or over a rod with intermediate guides between segments.</p>
+        <div class="ref-warn" style="margin-top:8px;">
+          Guiding a spring inside a bore or over a shaft prevents buckling but introduces sliding friction that offsets actual loads from calculated values. At high slenderness ratios this friction error can be significant and must be carried in the force budget.
+        </div>
+
+        <div class="ref-fig" style="min-height:80px;margin-top:12px;">
+          <img src="img/Spring_Buckling_5.png"
+              alt="Four spring end-condition diagrams showing fixed-fixed, fixed-hinged, hinged-hinged, and fixed-free configurations."
               class="img-fluid h-100 object-fit-cover rounded-4 ref-zoomable" style="width:100%;">
           <span class="ref-fig-label pt-2">Spring Buckling End Conditions</span>
-          <!-- <span class="ref-fig-caption">Fixed-free, fixed-pinned, and pinned-pinned configurations used to select the correct buckling curve</span> -->
         </div>
       </div>
+
       <div>
-        <!-- FIGURE PLACEHOLDER -->
-        <div class="ref-fig" style="min-height:130px;">
-          <img src="img/Spring_Buckling.png" 
-              alt="Critical buckling curves — springs plotting above and to the right of a curve will buckle. Solid line: one end free to tip. Dashed line: parallel plate support." 
-              class="img-fluid h-100 object-fit-cover rounded-4 ref-zoomable" style="width:100%;">
-          <span class="ref-fig-label">Critical Spring Buckling Curves</span>
-          <span class="ref-fig-caption">Curve A (both ends on flat parallel plates) and Curve B (one end free to tip) define the critical buckling boundary. Springs whose Lf/D and
-            δ/Lf operating point plots above and to the right of a curve will buckle laterally, while points below and to the left are stable.</span>
+        <div class="ref-sub">Critical Buckling Boundary — Steel</div>
+        <p>Each curve shows the maximum deflection ratio δ/L<sub>f</sub> a spring can sustain without buckling for a given slenderness L<sub>f</sub>/D. A spring's operating point (its L<sub>f</sub>/D and the fraction of free length it is compressed) must fall <strong>below and to the left</strong> of its end-condition curve to remain stable.</p>
+
+        <!-- Legend -->
+        <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:8px;font-size:12px;">
+          <span style="display:flex;align-items:center;gap:5px;">
+            <span style="width:16px;height:0;border-top:2px solid #185FA5;display:inline-block;"></span>Fixed–Fixed (α=0.5)
+          </span>
+          <span style="display:flex;align-items:center;gap:5px;">
+            <span style="width:16px;height:0;border-top:2px dashed #0F6E56;display:inline-block;"></span>Fixed–Hinged (α=0.707)
+          </span>
+          <span style="display:flex;align-items:center;gap:5px;">
+            <span style="width:16px;height:0;border-top:2px dotted #BA7517;display:inline-block;"></span>Hinged–Hinged (α=1.0)
+          </span>
+          <span style="display:flex;align-items:center;gap:5px;">
+            <span style="width:16px;height:0;border-top:2px dashed #A32D2D;display:inline-block;"></span>Fixed–Free (α=2.0)
+          </span>
         </div>
-        <!-- Curve A represents the more stable fixed-fixed
-            end condition, while Curve B is the less stable fixed-free condition where buckling occurs at lower slenderness ratios and smaller deflections. -->
+
+        <!-- Chart -->
+        <div style="position:relative;width:100%;height:300px;">
+          <canvas id="bkBoundaryChart"
+            role="img"
+            aria-label="Critical buckling boundary chart: deflection ratio versus slenderness ratio for four end-fixation conditions. Onset slenderness is 5.24 for fixed-fixed, 3.71 for fixed-hinged, 2.62 for hinged-hinged, and 1.31 for fixed-free. Each curve descends from 81 percent maximum deflection ratio.">
+            Buckling boundary curves for steel helical compression springs.
+          </canvas>
+        </div>
+        <p style="font-size:12px;color:var(--color-text-tertiary);margin:6px 0 0;">
+          Steel (E=30 Mpsi, G=11.5 Mpsi): C₁=0.812, C₂=6.87. Region <em>below-left</em> of each curve is stable; <em>above-right</em> buckles.
+        </p>
+
+        <script>
+        (function () {
+          const C1 = 0.812, C2 = 6.87;
+          function bucklingCurve(alpha) {
+            const pts = [];
+            const xStart = Math.sqrt(C2) / alpha;
+            for (let i = 0; i <= 80; i++) {
+              const x   = xStart + (16 - xStart) * i / 80;
+              const lam = alpha * x;
+              const r   = 1 - C2 / (lam * lam);
+              const y   = C1 * (1 - Math.sqrt(Math.max(r, 0))) * 100;
+              pts.push({ x: Math.round(x * 1000) / 1000, y: Math.round(y * 100) / 100 });
+            }
+            return pts;
+          }
+          function initBkChart() {
+            const canvas = document.getElementById('bkBoundaryChart');
+            if (!canvas || typeof Chart === 'undefined') return;
+            new Chart(canvas, {
+              type: 'scatter',
+              data: {
+                datasets: [
+                  { label: 'Fixed–Fixed',   data: bucklingCurve(0.5),     borderColor: '#185FA5', showLine: true, pointRadius: 0, borderWidth: 2 },
+                  { label: 'Fixed–Hinged',  data: bucklingCurve(0.707145), borderColor: '#0F6E56', showLine: true, pointRadius: 0, borderWidth: 2, borderDash: [8, 4] },
+                  { label: 'Hinged–Hinged', data: bucklingCurve(1.0),      borderColor: '#BA7517', showLine: true, pointRadius: 0, borderWidth: 2, borderDash: [3, 3] },
+                  { label: 'Fixed–Free',    data: bucklingCurve(2.0),      borderColor: '#A32D2D', showLine: true, pointRadius: 0, borderWidth: 2, borderDash: [8, 4] },
+                ]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                  x: {
+                    type: 'linear', min: 0, max: 16,
+                    title: { display: true, text: 'Slenderness ratio  Lf / D' },
+                    grid: { color: 'rgba(128,128,128,0.15)' }
+                  },
+                  y: {
+                    min: 0, max: 90,
+                    title: { display: true, text: 'Critical deflection ratio  δ / Lf  (%)' },
+                    grid: { color: 'rgba(128,128,128,0.15)' }
+                  }
+                }
+              }
+            });
+          }
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initBkChart);
+          } else {
+            initBkChart();
+          }
+        })();
+        </script>
       </div>
     </div>
   </div>
