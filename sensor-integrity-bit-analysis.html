@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- SEO META DATA -->
+    <title>KasperCalc: Sensor Event &amp; Binary Integrity Analysis Tool</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="sensor data analysis, spike detection, DAQ diagnostics, bit flip detection, byte shift detection, sensor correlation, event detection algorithm, binary integrity analysis, ADC missing code, Hamming distance calculator, entropy monitor sensor data" />
+    <meta name="description" content="Client-side sensor event and binary integrity analysis tool. Detect spikes and events in time-series sensor/DAQ data, run cross-channel correlation, and perform bit-level integrity diagnostics including bit occupancy, toggle rate, Hamming distance, and power-of-two jump detection." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <script defer src="sensor-integrity-bit-analysis/js/sensor-manager.js"></script>
+    <script defer src="sensor-integrity-bit-analysis/js/sensor-import.js"></script>
+    <script defer src="sensor-integrity-bit-analysis/js/sensor-events.js"></script>
+    <script defer src="sensor-integrity-bit-analysis/js/sensor-bitdiag.js"></script>
+    <script defer src="sensor-integrity-bit-analysis/js/sensor-charts.js"></script>
+    <script defer src="sensor-integrity-bit-analysis/js/sensor-export.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="sensor-integrity-bit-analysis/css/sensor-tool.css" />
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <!-- Chart.js 4 + zoom plugin (pan/zoom on time plot) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+
+    <!-- SheetJS for Excel/CSV import -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.20.3/dist/xlsx.full.min.js"></script>
+
+    <!-- Calculator component styles -->
+    <style>
+    .wrapper{margin:0 auto;max-width:62rem;background:#6a746a;border-radius:20px;border:3px solid rgb(67,67,67)}
+    .hdr{background:#eee;display:flex;justify-content:center;align-items:center;gap:10px;padding:0.4rem 0.6rem;margin:0.5rem;font-size:22px;font-weight:200;box-shadow:0 3px 5px rgba(0,0,0,.4);border-radius:10px;border:2px solid rgb(67,67,67);font-family:"Roboto",Arial,sans-serif}
+    .toolbar{background:#eee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:5px 8px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+    .tbtn{font-size:13px;padding:3px 10px;border-radius:6px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;cursor:pointer;font-family:"Roboto",Arial,sans-serif;font-weight:400;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;line-height:1.4}
+    .tbtn:hover{background:#eee}
+    .tbtn.accent{background:#699dad;color:#fff;border-color:rgb(67,67,67)}
+    .tbtn.accent:hover{background:#5a8a9a}
+    .tbtn.active{background:#A3C3CD;border-color:rgb(67,67,67);font-weight:600}
+    .tbtn:disabled{opacity:0.45;cursor:default;pointer-events:none}
+    .tlabel{font-size:12px;color:#555;font-weight:400;margin-right:2px}
+    .grp{background:#eee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:6px 8px}
+    .grp-title{font-size:12px;font-weight:600;color:#61828A;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid #c0c0c0;padding-bottom:4px;margin-bottom:6px}
+    .thermo-g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+    .thermo-g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+    .thermo-f{display:flex;flex-direction:column;gap:2px}
+    .thermo-f label{font-size:12px;color:#444;font-weight:400}
+    .thermo-f input,.thermo-f select{font-size:12px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;width:100%;font-family:"Roboto",Arial,sans-serif;height:22px}
+    .thermo-f input:focus,.thermo-f select:focus{outline:none;border-color:#61828A;background:#e8f0f3}
+    .itype-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+    .itype-grid.two-col{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .it{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;padding:4px 8px;border:1.5px solid rgb(67,67,67);border-radius:6px;gap:6px;cursor:pointer;font-size:12px;color:#000;background:#d9d9d9;transition:background 0.15s}
+    .it:hover{background:#eee}
+    .it input[type=radio]{accent-color:#61828A;width:11px;height:11px;flex-shrink:0}
+    .it.sel{background:#A3C3CD;border-color:#3a6270;font-weight:600}
+    .sst{font-size:12px;font-weight:600;color:#61828A;margin-bottom:0;text-transform:uppercase;letter-spacing:0.05em;display:block}
+    .graph-banner{background:#eeeeee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);overflow:hidden}
+    .graph-tab-row{display:flex;border-bottom:2px solid rgb(67,67,67);background:#d9d9d9;flex-wrap:wrap}
+    .graph-tab{flex:1;min-width:80px;padding:5px 4px;font-size:12px;font-weight:500;color:#555;text-align:center;cursor:pointer;border-right:1px solid #b0b0b0;font-family:"Roboto",Arial,sans-serif;background:transparent;border-top:none;border-left:none;border-bottom:none}
+    .graph-tab:last-child{border-right:none}
+    .graph-tab:hover{background:#eee}
+    .graph-tab.active{background:#eeeeee;color:#1a3a40;font-weight:700;border-bottom:2px solid #eeeeee;margin-bottom:-2px}
+    .graph-tab.v2-tab{opacity:0.45;cursor:default;pointer-events:none}
+    .graph-content{padding:8px;display:none}
+    .graph-content.visible{display:block}
+    .bottom-bar{background:#eee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:6px 10px;display:flex;align-items:flex-start;gap:8px}
+    .status-dot{width:9px;height:9px;border-radius:50%;background:#aaa;flex-shrink:0;margin-top:2px}
+    .status-dot.ok{background:#2a7a2a}
+    .status-dot.warn{background:#cc7700}
+    .status-dot.err{background:#cc2222}
+    .prop-panel{background:#eee;margin:0 .5rem .5rem;border-radius:10px;border:2px solid #434343;box-shadow:0 3px 5px rgba(0,0,0,.4);padding:6px 8px}
+    .prop-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 14px;align-items:start}
+    .prop-col{display:flex;flex-direction:column;gap:0}
+    .prop-col-title{font-size:11px;font-weight:700;color:#61828A;text-transform:uppercase;letter-spacing:0.05em;padding:2px 0 3px;border-bottom:1px solid #ccc;margin-bottom:3px}
+    .prop-row{display:grid;grid-template-columns:108px 88px 1fr;align-items:center;gap:3px;padding:2px 0;border-bottom:.5px solid #d8d8d8}
+    .prop-row:last-child{border-bottom:none}
+    .prop-row-label{font-size:11px;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:2px}
+    .prop-row-label.italic{font-style:italic}
+    .prop-row input[type="number"]{font-size:12px;padding:1px 4px;border-radius:4px;border:1.5px solid #434343;background:#fff;color:#000;height:20px;font-family:"Roboto",Arial,sans-serif;width:100%;text-align:right}
+    .prop-row input[type="number"]:focus{outline:none;border-color:#61828a;background:#e8f0f3}
+    .prop-row input[type="number"][readonly]{background:#f5f5f5;color:#444}
+    .prop-row input[type="number"][readonly]::-webkit-inner-spin-button,
+    .prop-row input[type="number"][readonly]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+    .prop-row input[type="number"][readonly]{appearance:textfield;-moz-appearance:textfield}
+    .prop-row input[type="number"][readonly]::-webkit-outer-spin-button,
+    .prop-row input[type="number"][readonly]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+    .prop-row-unit{font-size:11px;color:#666;text-align:left;padding:1px 0 1px 2px;white-space:nowrap;min-width:0;overflow:hidden}
+    .prop-output{display:inline-flex;align-items:center;justify-content:center;height:20px;min-width:90px;font-size:12px;padding:0 4px;border-radius:4px;border:1.5px solid #434343;background:#f5f5f5;white-space:nowrap;color:#444}
+    .lt{width:100%;border-collapse:collapse;font-size:11.5px;min-width:500px}
+    .lt th{font-size:12px;font-weight:600;color:#fff;text-align:center;padding:4px 5px;background:#61828A;position:sticky;top:0;z-index:1}
+    .lt th:first-child{text-align:left}
+    .lt td{padding:2px 5px;vertical-align:middle;border-bottom:.5px solid #e0e0e0;text-align:right}
+    .lt td:first-child{text-align:left;color:#333;font-weight:500}
+    .lt tr:hover td{background:#f0f6f8}
+    .lt-wrap{overflow-x:auto;max-height:400px;overflow-y:auto}
+    .report-row{margin:0 0.5rem 0.5rem;display:flex;gap:8px;flex-wrap:wrap}
+    .report-row .grp{flex:1 1 240px;margin:0}
+    #sensorGraphsPrint{position:fixed;left:-9999px;top:0;width:750px;pointer-events:none;z-index:-1;background:#fff;}
+    .pg-item{margin-bottom:0;}
+    .pg-label{display:none;}
+    .pg-canvas-wrap{position:relative;height:260px;width:100%;}
+    .calc-lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+    .calc-lightbox-overlay.active{display:flex}
+    .calc-lightbox-img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:6px;box-shadow:0 8px 32px rgba(0,0,0,.6)}
+    .calc-lightbox-close{position:fixed;top:16px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:100000}
+    .calc-lightbox-close:hover{background:rgba(255,255,255,.3)}
+    @media(max-width:600px){
+      .prop-cols{grid-template-columns:1fr}
+      .itype-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+      .thermo-g3{grid-template-columns:1fr}
+      .thermo-g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    /* ── Reference card accordion ──── */
+    .ref-wrapper{margin:0 auto;max-width:62rem;font-family:"Roboto",Arial,sans-serif}
+    .ref-section-wrap{padding:1rem 0.5rem 0.5rem}
+    .ref-section-title{font-size:15px;font-weight:700;color:#6a746a;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.75rem;padding-left:2px}
+    .ref-card{background:#eee;border:2px solid rgb(67,67,67);border-radius:10px;box-shadow:0 3px 5px rgba(0,0,0,.4);margin:0 0 0.75rem;overflow:hidden}
+    .ref-card-header{background:#6a746a;padding:8px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+    .ref-card-header h2{font-size:13px;font-weight:700;color:#eee;text-transform:uppercase;letter-spacing:0.07em;margin:0;flex:1}
+    .ref-card-header .ref-num{font-size:12px;color:#A3C3CD;font-weight:600;letter-spacing:0.04em;white-space:nowrap}
+    .ref-chevron{width:14px;height:14px;flex-shrink:0;transition:transform 0.2s ease;color:#A3C3CD}
+    .ref-card.collapsed .ref-chevron{transform:rotate(-90deg)}
+    .ref-card.collapsed .ref-body{display:none}
+    .ref-body{padding:14px 16px;display:grid;grid-template-columns:1fr;gap:12px}
+    .ref-body.two-col{grid-template-columns:1fr 1fr;gap:12px 24px}
+    @media(max-width:640px){.ref-body.two-col{grid-template-columns:1fr}}
+    .full-col{grid-column:1 / -1}
+    .ref-sub{font-size:12px;font-weight:700;color:#61828A;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid #c0c0c0;padding-bottom:3px;margin-bottom:6px}
+    .ref-body p{font-size:13px;color:#333;line-height:1.65;margin:0 0 8px}
+    .ref-body p:last-child{margin-bottom:0}
+    .ref-body ul{font-size:13px;color:#333;line-height:1.7;padding-left:18px;margin:0 0 8px}
+    .ref-eq-block{background:#d9d9d9;border:1.5px solid rgb(67,67,67);border-radius:6px;padding:10px 16px 8px;margin:4px 0 8px;overflow-x:auto}
+    .ref-eq-tag{font-size:12px;color:#61828A;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;display:block;margin-bottom:4px}
+    .ref-eq{font-size:14px;font-family:"Courier New",Courier,monospace;color:#1a3a40;line-height:1.6;display:block;padding:2px 0}
+    .ref-callout{background:#e8f0f3;border-left:3px solid #61828A;border-radius:0 6px 6px 0;padding:8px 12px;font-size:12px;color:#1a3a40;line-height:1.55}
+    .ref-callout strong{color:#3a6270}
+    .ref-warn{background:#fff8e6;border-left:3px solid #cc7700;border-radius:0 6px 6px 0;padding:8px 12px;font-size:12px;color:#5a3a00;line-height:1.55}
+    .ref-table{width:100%;border-collapse:collapse;font-size:12px;margin:4px 0}
+    .ref-table th{background:#d9d9d9;border:1px solid #bbb;padding:4px 8px;font-weight:600;color:#444;text-align:left}
+    .ref-table td{border:1px solid #ccc;padding:3px 8px;color:#333;vertical-align:top}
+    .ref-table tr:nth-child(even) td{background:#f5f5f5}
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water &mdash; Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         BANNER
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              Sensor Event &amp; Binary Integrity Analysis
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <h1 class="visually-hidden">Sensor Event Detection, Cross-Channel Correlation, and Binary Integrity Diagnostics for Time-Series Sensor Data</h1>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SENSOR TOOL CALCULATOR
+    ═══════════════════════════════════════════════════════════════ -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+
+          <div class="section-title-wrap"></div>
+
+          <div class="mx-md-2 mx-1 mt-3 pb-3">
+            <div class="wrapper">
+
+              <!-- ── HEADER ──────────────────────────────────────────── -->
+              <div class="hdr">
+                Sensor Event &amp; Binary Integrity Analysis Tool
+              </div>
+
+              <!-- ═══════════════════════════════════════════════════════
+                   GROUP 1 — DATA SOURCE
+              ═══════════════════════════════════════════════════════ -->
+              <div class="grp" id="sensorDataSourceGrp">
+                <div class="grp-title">Data Source</div>
+
+                <!-- Method selector -->
+                <div style="margin-bottom:8px;">
+                  <span class="sst" style="margin-bottom:4px;">Import Method</span>
+                  <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">
+                    <label class="it sel" id="methodTabA">
+                      <input type="radio" name="importMethod" value="A" checked onchange="switchImportMethod('A')"> File Upload (.xlsx / .csv)
+                    </label>
+                    <label class="it" id="methodTabB">
+                      <input type="radio" name="importMethod" value="B" onchange="switchImportMethod('B')"> Paste Binary / Hex
+                    </label>
+                    <label class="it" style="opacity:0.45;cursor:default;" title="Coming in a future update">
+                      <input type="radio" name="importMethod" value="C" disabled> Manual Channel [V2]
+                    </label>
+                  </div>
+                </div>
+
+                <!-- ── METHOD A: FILE UPLOAD ── -->
+                <div id="methodASection">
+                  <div class="thermo-g3" style="align-items:start;margin-bottom:8px;">
+                    <div class="thermo-f" style="grid-column:1/3;">
+                      <label for="sensorFileInput">Spreadsheet File (.xlsx, .xls, .csv)</label>
+                      <label class="sensor-file-label" id="sensorFileLabel" for="sensorFileInput">
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;"><path d="M8 2v8M4 7l4 4 4-4M2 13h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        <span id="sensorFileLabelText">Choose file&hellip;</span>
+                        <input type="file" id="sensorFileInput" accept=".xlsx,.xls,.csv" style="display:none;">
+                      </label>
+                    </div>
+                    <div class="thermo-f" id="sheetSelectWrap" style="display:none;">
+                      <label for="sheetSelect">Sheet</label>
+                      <select id="sheetSelect" style="font-size:12px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;height:22px;"></select>
+                    </div>
+                  </div>
+
+                  <!-- Column preview table -->
+                  <div id="colPreviewWrap" style="display:none;margin-bottom:8px;">
+                    <div class="grp-title" style="border:none;margin-bottom:4px;">Column Preview (first 10 rows) — assign roles then click Confirm Import</div>
+                    <!-- Column role dropdowns injected here by JS -->
+                    <div id="colRoleRow" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px;"></div>
+                    <div class="lt-wrap" style="max-height:220px;">
+                      <table class="lt" id="colPreviewTable">
+                        <thead id="colPreviewThead"></thead>
+                        <tbody id="colPreviewTbody"></tbody>
+                      </table>
+                    </div>
+                    <div style="margin-top:6px;">
+                      <button class="tbtn accent" id="btnConfirmImport">Confirm Import</button>
+                      <button class="tbtn" id="btnCancelImport" style="margin-left:4px;">Cancel</button>
+                    </div>
+                  </div>
+                </div><!-- /#methodASection -->
+
+                <!-- ── METHOD B: PASTE BINARY / HEX ── -->
+                <div id="methodBSection" style="display:none;">
+                  <div class="thermo-f" style="margin-bottom:6px;">
+                    <label for="binaryPasteArea">Paste raw binary bits (010011…) or hex data (A23C… or 0xA23C…)</label>
+                    <textarea id="binaryPasteArea" rows="4"
+                      style="font-size:12px;padding:4px 6px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;color:#000;width:100%;font-family:'Courier New',monospace;resize:vertical;line-height:1.4;"
+                      placeholder="010011010110…  or  A23CF400…  or  0xA23C 0xF400…"></textarea>
+                  </div>
+
+                  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:6px;">
+                    <div>
+                      <span class="sst" style="margin-bottom:3px;">Data Type</span>
+                      <div class="itype-grid" style="margin-top:3px;" id="binaryTypeGrid">
+                        <label class="it sel" data-type="uint8"><input type="radio" name="binType" value="uint8" checked> uint8</label>
+                        <label class="it" data-type="uint16"><input type="radio" name="binType" value="uint16"> uint16</label>
+                        <label class="it" data-type="uint32"><input type="radio" name="binType" value="uint32"> uint32</label>
+                        <label class="it" data-type="int8"><input type="radio" name="binType" value="int8"> int8</label>
+                        <label class="it" data-type="int16"><input type="radio" name="binType" value="int16"> int16</label>
+                        <label class="it" data-type="int32"><input type="radio" name="binType" value="int32"> int32</label>
+                        <label class="it" data-type="float32"><input type="radio" name="binType" value="float32"> float32</label>
+                        <label class="it" data-type="float64"><input type="radio" name="binType" value="float64"> float64</label>
+                      </div>
+                    </div>
+                    <div>
+                      <span class="sst" style="margin-bottom:3px;">Endianness</span>
+                      <div class="itype-grid two-col" style="margin-top:3px;" id="endianGrid">
+                        <label class="it sel" data-end="little"><input type="radio" name="binEndian" value="little" checked> little-endian</label>
+                        <label class="it" data-end="big"><input type="radio" name="binEndian" value="big"> big-endian</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style="display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+                    <div class="thermo-f" style="min-width:140px;max-width:180px;">
+                      <label for="binarySampleRate">Sample Rate (Hz) <span style="color:#888;font-weight:400;">(optional)</span></label>
+                      <input type="number" id="binarySampleRate" placeholder="e.g. 1000" min="0" step="any">
+                    </div>
+                    <div class="thermo-f" style="min-width:140px;max-width:200px;">
+                      <label for="binaryChannelName">Channel Name</label>
+                      <input type="text" id="binaryChannelName" placeholder="e.g. Sensor A"
+                        style="font-size:12px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;height:22px;">
+                    </div>
+                    <button class="tbtn accent" id="btnConvertBinary" style="margin-bottom:1px;">Convert to Signal</button>
+                  </div>
+                </div><!-- /#methodBSection -->
+
+                <!-- ── METHOD C: MANUAL [V2 STUB] ── -->
+                <div id="methodCSection" style="display:none;">
+                  <div style="opacity:0.5;pointer-events:none;padding:10px 0;">
+                    <p style="font-size:12px;color:#888;margin:0;">Manual sensor channel creation (define derived signals, constants, and custom filters) — Coming in a future update.</p>
+                  </div>
+                </div>
+
+              </div><!-- /#sensorDataSourceGrp -->
+
+
+              <!-- ═══════════════════════════════════════════════════════
+                   GROUP 2 — SENSOR MANAGER
+              ═══════════════════════════════════════════════════════ -->
+              <div class="grp" id="sensorManagerGrp">
+                <div class="grp-title">Sensor Manager</div>
+                <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap;">
+                  <button class="tbtn" id="btnAlignChannels" title="Resample all enabled channels onto a shared timestamp grid (linear interpolation, highest sample rate as reference)">Align Channels</button>
+                  <button class="tbtn" id="btnNormalizeChannels" title="Toggle min-max normalization (0–1) for all enabled channels — non-destructive, raw values preserved">Normalize 0–1</button>
+                  <span id="normalizeActiveLabel" style="font-size:11px;color:#699dad;display:none;font-weight:600;">&#10003; Normalized view active</span>
+                  <button class="tbtn" id="btnClearAllChannels" style="margin-left:auto;color:#a00;" title="Remove all channels">Clear All</button>
+                </div>
+                <div class="lt-wrap">
+                  <table class="lt" id="sensorManagerTable">
+                    <thead>
+                      <tr>
+                        <th style="text-align:left;min-width:100px;">Sensor</th>
+                        <th>Samples</th>
+                        <th>Units</th>
+                        <th>Color</th>
+                        <th title="Treat this channel's samples as raw integers for bit-level diagnostics">Raw Int</th>
+                        <th title="Include in detection and charts">Enabled</th>
+                        <th title="Exclude from charts only (still included in detection)">Hidden</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="sensorManagerTbody">
+                      <tr id="sensorManagerEmptyRow"><td colspan="8" style="text-align:center;color:#888;font-style:italic;padding:10px 0;">No channels loaded &mdash; import data above.</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div><!-- /#sensorManagerGrp -->
+
+
+              <!-- ═══════════════════════════════════════════════════════
+                   GROUP 3 — EVENT DETECTION SETTINGS
+              ═══════════════════════════════════════════════════════ -->
+              <div class="grp" id="sensorEventDetectionGrp">
+                <div class="grp-title">Event Detection Settings</div>
+                <div class="thermo-g4">
+                  <div class="thermo-f">
+                    <label for="evtThreshold">Threshold</label>
+                    <input type="number" id="evtThreshold" placeholder="e.g. 1.0" min="0" step="any" title="Absolute value above which a sample triggers event detection">
+                  </div>
+                  <div class="thermo-f">
+                    <label for="evtMinDuration">Min Duration</label>
+                    <div style="display:flex;gap:3px;">
+                      <input type="number" id="evtMinDuration" placeholder="e.g. 3" min="0" step="1" title="Minimum contiguous length above threshold to count as an event" style="flex:1;min-width:0;">
+                      <select id="evtMinDurationUnit" style="width:55px;font-size:12px;padding:1px 2px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;height:22px;flex-shrink:0;">
+                        <option value="samples">smp</option>
+                        <option value="ms">ms</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="thermo-f">
+                    <label for="evtMinHeight">Min Height</label>
+                    <input type="number" id="evtMinHeight" placeholder="e.g. 0.5" min="0" step="any" title="Minimum peak value above baseline to count as an event">
+                  </div>
+                  <div class="thermo-f">
+                    <label for="evtDebounce">Debounce</label>
+                    <div style="display:flex;gap:3px;">
+                      <input type="number" id="evtDebounce" placeholder="e.g. 5" min="0" step="1" title="Minimum gap between two events — closer events are merged" style="flex:1;min-width:0;">
+                      <select id="evtDebounceUnit" style="width:55px;font-size:12px;padding:1px 2px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;height:22px;flex-shrink:0;">
+                        <option value="samples">smp</option>
+                        <option value="ms">ms</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:8px;">
+                  <button class="tbtn accent" id="btnRunDetection">
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 3l9 5-9 5V3z" fill="currentColor"/></svg>
+                    Run Detection
+                  </button>
+                </div>
+              </div><!-- /#sensorEventDetectionGrp -->
+
+
+              <!-- ═══════════════════════════════════════════════════════
+                   OUTPUT PROPERTIES PANEL
+              ═══════════════════════════════════════════════════════ -->
+              <div class="prop-panel" id="sensorOutputPanel">
+                <div class="prop-cols">
+
+                  <!-- Column 1: Event Counts & Timing -->
+                  <div class="prop-col">
+                    <div class="prop-col-title">Event Counts &amp; Timing</div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Total Events</span>
+                      <span class="prop-output" id="outTotalEvents">&mdash;</span>
+                      <span class="prop-row-unit"></span>
+                    </div>
+                    <div id="outPerChannelEvents">
+                      <!-- per-channel rows injected here by sensor-events.js -->
+                    </div>
+                  </div>
+
+                  <!-- Column 2: Spike Statistics -->
+                  <div class="prop-col">
+                    <div class="prop-col-title">Spike Statistics</div>
+                    <div style="margin-bottom:5px;">
+                      <select id="statsChannelSelect" style="font-size:12px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;width:100%;height:22px;">
+                        <option value="">— select channel —</option>
+                      </select>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Mean Height</span>
+                      <span class="prop-output" id="outMeanHeight">&mdash;</span>
+                      <span class="prop-row-unit" id="outMeanHeightUnit"></span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Median Height</span>
+                      <span class="prop-output" id="outMedianHeight">&mdash;</span>
+                      <span class="prop-row-unit"></span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Std Dev Height</span>
+                      <span class="prop-output" id="outStdDevHeight">&mdash;</span>
+                      <span class="prop-row-unit"></span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Max Height</span>
+                      <span class="prop-output" id="outMaxHeight">&mdash;</span>
+                      <span class="prop-row-unit"></span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Min Height</span>
+                      <span class="prop-output" id="outMinHeight">&mdash;</span>
+                      <span class="prop-row-unit"></span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Mean Duration</span>
+                      <span class="prop-output" id="outMeanDuration">&mdash;</span>
+                      <span class="prop-row-unit" id="outMeanDurationUnit">smp</span>
+                    </div>
+                  </div>
+
+                  <!-- Column 3: Burst & Energy -->
+                  <div class="prop-col">
+                    <div class="prop-col-title">Burst &amp; Energy</div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Events / sec</span>
+                      <span class="prop-output" id="outEventsPerSec">&mdash;</span>
+                      <span class="prop-row-unit">Hz</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Total Energy</span>
+                      <span class="prop-output" id="outTotalEnergy">&mdash;</span>
+                      <span class="prop-row-unit">area</span>
+                    </div>
+                    <div class="prop-row">
+                      <span class="prop-row-label">Recording Span</span>
+                      <span class="prop-output" id="outRecordingSpan">&mdash;</span>
+                      <span class="prop-row-unit" id="outRecordingSpanUnit">smp</span>
+                    </div>
+                  </div>
+
+                </div><!-- /.prop-cols -->
+              </div><!-- /.prop-panel -->
+
+
+              <!-- ═══════════════════════════════════════════════════════
+                   REPORT / EXPORT  +  STATUS & WARNINGS
+              ═══════════════════════════════════════════════════════ -->
+              <div class="report-row">
+                <div class="grp" id="sensorReportBtnsGrp">
+                  <div class="grp-title">Export</div>
+                  <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                    <button class="tbtn accent" id="btnExportCSV" title="Export detected event table as CSV">
+                      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                      Export CSV
+                    </button>
+                    <button class="tbtn" disabled title="Coming in a future update">Report PDF</button>
+                    <button class="tbtn" disabled title="Coming in a future update">Report With Graphs</button>
+                  </div>
+                </div>
+                <div class="grp">
+                  <div class="grp-title">Status &amp; Warnings</div>
+                  <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;">
+                    <div class="status-dot" id="sensorStatusDot"></div>
+                    <span id="sensorStatusText" style="font-size:12px;font-family:'Roboto',Arial,sans-serif;">
+                      Ready &mdash; import data to begin
+                    </span>
+                  </div>
+                  <div id="sensorWarnings" style="font-size:11px;color:#c07000;font-family:'Roboto',Arial,sans-serif;line-height:1.5;"></div>
+                </div>
+              </div><!-- /.report-row -->
+
+
+              <!-- ═══════════════════════════════════════════════════════
+                   GRAPHS (tabs)
+              ═══════════════════════════════════════════════════════ -->
+              <div class="graph-banner" role="region" aria-label="Sensor graphs">
+                <div class="grp-title" style="padding:6px 8px 0;margin:0;">Graphs</div>
+                <div class="graph-tab-row" role="tablist">
+                  <button class="graph-tab active" role="tab" aria-selected="true"
+                          onclick="switchSensorGraphTab(1,this)">Time Plot</button>
+                  <button class="graph-tab" role="tab" aria-selected="false"
+                          onclick="switchSensorGraphTab(2,this)">Spike Explorer</button>
+                  <button class="graph-tab" role="tab" aria-selected="false"
+                          onclick="switchSensorGraphTab(3,this)">Bit Plot</button>
+                  <button class="graph-tab v2-tab" role="tab" aria-selected="false"
+                          title="Coming in a future update">Correlation Heatmap</button>
+                  <button class="graph-tab v2-tab" role="tab" aria-selected="false"
+                          title="Coming in a future update">Cross-Correlation</button>
+                  <button class="graph-tab v2-tab" role="tab" aria-selected="false"
+                          title="Coming in a future update">Event Overlay</button>
+                  <button class="graph-tab v2-tab" role="tab" aria-selected="false"
+                          title="Coming in a future update">Spectrogram</button>
+                </div>
+
+                <!-- Tab 1: Time Plot -->
+                <div id="sensorGraphContent1" class="graph-content visible" role="tabpanel">
+                  <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center;flex-wrap:wrap;">
+                    <p style="font-size:11px;color:#888;margin:0;flex:1;">Multi-channel time series. Pan with click-drag, zoom with scroll wheel or pinch.</p>
+                    <button class="tbtn" id="btnResetZoom" style="font-size:11px;padding:2px 8px;" title="Reset pan and zoom">Reset Zoom</button>
+                  </div>
+                  <div style="position:relative;height:400px;width:100%;max-height:500px;">
+                    <canvas id="chartTimePlot"></canvas>
+                  </div>
+                </div>
+
+                <!-- Tab 2: Spike Explorer -->
+                <div id="sensorGraphContent2" class="graph-content" role="tabpanel">
+                  <p style="font-size:11px;color:#888;margin:0 0 8px;">Each detected event as a card. Click <strong>Zoom</strong> to center the Time Plot on that event window.</p>
+                  <div id="spikeExplorerContainer" style="display:flex;flex-wrap:wrap;gap:8px;padding:2px 0;">
+                    <p style="font-size:12px;color:#888;font-style:italic;">Run detection to see events here.</p>
+                  </div>
+                </div>
+
+                <!-- Tab 3: Bit Plot -->
+                <div id="sensorGraphContent3" class="graph-content" role="tabpanel">
+                  <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center;flex-wrap:wrap;">
+                    <div style="display:flex;align-items:center;gap:5px;">
+                      <span style="font-size:12px;color:#444;white-space:nowrap;">Channel (raw int):</span>
+                      <select id="bitPlotChannelSelect" style="font-size:12px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;height:22px;">
+                        <option value="">— select channel —</option>
+                      </select>
+                    </div>
+                    <div style="display:flex;gap:4px;">
+                      <label class="it sel" id="bitViewOccupancy" style="font-size:11px;padding:3px 8px;" title="P(bit=1) for each bit position">
+                        <input type="radio" name="bitPlotView" value="occupancy" checked onchange="SensorBitDiag.switchView('occupancy')"> Occupancy
+                      </label>
+                      <label class="it" id="bitViewToggle" style="font-size:11px;padding:3px 8px;" title="Fraction of consecutive pairs where this bit changes">
+                        <input type="radio" name="bitPlotView" value="toggle" onchange="SensorBitDiag.switchView('toggle')"> Toggle Rate
+                      </label>
+                    </div>
+                    <button class="tbtn" id="btnRunBitDiag" style="font-size:11px;padding:3px 10px;">Run Bit Diagnostics</button>
+                  </div>
+                  <div style="position:relative;height:260px;width:100%;">
+                    <canvas id="chartBitPlot"></canvas>
+                  </div>
+                  <p style="font-size:11px;color:#888;margin:10px 0 4px;">Hamming Distance Histogram — consecutive sample pairs</p>
+                  <div style="position:relative;height:180px;width:100%;">
+                    <canvas id="chartHamming"></canvas>
+                  </div>
+                </div>
+
+                <!-- V2 stubs -->
+                <div id="sensorGraphContent4" class="graph-content" role="tabpanel">
+                  <p style="font-size:12px;color:#888;margin:0;">Correlation Heatmap &mdash; Coming in a future update.</p>
+                </div>
+                <div id="sensorGraphContent5" class="graph-content" role="tabpanel">
+                  <p style="font-size:12px;color:#888;margin:0;">Cross-Correlation / Propagation &mdash; Coming in a future update.</p>
+                </div>
+                <div id="sensorGraphContent6" class="graph-content" role="tabpanel">
+                  <p style="font-size:12px;color:#888;margin:0;">Event Overlay &mdash; Coming in a future update.</p>
+                </div>
+                <div id="sensorGraphContent7" class="graph-content" role="tabpanel">
+                  <p style="font-size:12px;color:#888;margin:0;">Spectrogram &mdash; Coming in a future update.</p>
+                </div>
+              </div><!-- /.graph-banner graphs -->
+
+              <!-- Off-screen print canvases -->
+              <div id="sensorGraphsPrint" aria-hidden="true">
+                <div class="pg-item">
+                  <div class="pg-label">Time Plot</div>
+                  <div class="pg-canvas-wrap"><canvas id="chartTimePlot_p"></canvas></div>
+                </div>
+                <div class="pg-item">
+                  <div class="pg-label">Bit Occupancy</div>
+                  <div class="pg-canvas-wrap"><canvas id="chartBitPlot_p"></canvas></div>
+                </div>
+              </div><!-- /#sensorGraphsPrint -->
+
+
+              <!-- ═══════════════════════════════════════════════════════
+                   TABLES (tabs)
+              ═══════════════════════════════════════════════════════ -->
+              <div class="graph-banner" role="region" aria-label="Sensor tables">
+                <div class="grp-title" style="padding:6px 8px 0;margin:0;">Tables</div>
+                <div class="graph-tab-row" role="tablist">
+                  <button class="graph-tab active" role="tab" aria-selected="true"
+                          onclick="switchSensorTableTab(1,this)">Event Table</button>
+                  <button class="graph-tab" role="tab" aria-selected="false"
+                          onclick="switchSensorTableTab(2,this)">Bit Occupancy / Toggle / Hamming</button>
+                  <button class="graph-tab v2-tab" role="tab" aria-selected="false"
+                          title="Coming in a future update">Missing Code</button>
+                </div>
+
+                <!-- Tab 1: Event Table -->
+                <div id="sensorTableContent1" class="graph-content visible" role="tabpanel">
+                  <p style="font-size:11px;color:#888;margin:0 0 6px;">Click column headers to sort. All detected events across all channels.</p>
+                  <div class="lt-wrap">
+                    <table class="lt" id="eventTable">
+                      <thead>
+                        <tr>
+                          <th onclick="SensorEvents.sortEvents('channel')" style="cursor:pointer;" title="Sort">Channel &#x25BD;</th>
+                          <th onclick="SensorEvents.sortEvents('start')" style="cursor:pointer;" title="Sort">Start &#x25BD;</th>
+                          <th onclick="SensorEvents.sortEvents('peak')" style="cursor:pointer;" title="Sort">Peak &#x25BD;</th>
+                          <th onclick="SensorEvents.sortEvents('end')" style="cursor:pointer;" title="Sort">End &#x25BD;</th>
+                          <th onclick="SensorEvents.sortEvents('duration')" style="cursor:pointer;" title="Sort">Duration &#x25BD;</th>
+                          <th onclick="SensorEvents.sortEvents('height')" style="cursor:pointer;" title="Sort">Height &#x25BD;</th>
+                          <th onclick="SensorEvents.sortEvents('area')" style="cursor:pointer;" title="Sort">Area &#x25BD;</th>
+                          <th onclick="SensorEvents.sortEvents('rise')" style="cursor:pointer;" title="Sort">Rise &#x25BD;</th>
+                          <th onclick="SensorEvents.sortEvents('fall')" style="cursor:pointer;" title="Sort">Fall &#x25BD;</th>
+                        </tr>
+                      </thead>
+                      <tbody id="eventTableTbody">
+                        <tr><td colspan="9" style="text-align:center;color:#888;font-style:italic;padding:10px 0;">No events detected yet &mdash; run detection above.</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Tab 2: Bit Diagnostics Table -->
+                <div id="sensorTableContent2" class="graph-content" role="tabpanel">
+                  <div style="display:flex;gap:6px;margin-bottom:8px;align-items:center;">
+                    <span style="font-size:12px;color:#444;white-space:nowrap;">Channel:</span>
+                    <select id="bitTableChannelSelect" style="font-size:12px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;height:22px;">
+                      <option value="">— select channel —</option>
+                    </select>
+                  </div>
+                  <div class="lt-wrap">
+                    <table class="lt" id="bitDiagTable">
+                      <thead>
+                        <tr>
+                          <th style="text-align:left;">Bit</th>
+                          <th>Occupancy P(1)</th>
+                          <th>Toggle Rate</th>
+                          <th>Power-of-2 Jumps</th>
+                        </tr>
+                      </thead>
+                      <tbody id="bitDiagTbody">
+                        <tr><td colspan="4" style="text-align:center;color:#888;font-style:italic;padding:10px 0;">Select a raw integer channel and run bit diagnostics.</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- V2 stub -->
+                <div id="sensorTableContent3" class="graph-content" role="tabpanel">
+                  <p style="font-size:12px;color:#888;margin:0;">Missing Code Table &mdash; Coming in a future update.</p>
+                </div>
+              </div><!-- /.graph-banner tables -->
+
+
+              <!-- ── BOTTOM BAR ──────────────────────────────────────── -->
+              <div class="bottom-bar" role="contentinfo">
+                <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px;color:#999;">
+                  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/>
+                  <path d="M8 7v4.5M8 5.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+                <p style="font-size:11px;color:#666;margin:0;line-height:1.6;">
+                  All processing runs entirely in your browser &mdash; no data is sent to any server. Results are provided for diagnostic and informational purposes only. This is not a certified measurement instrument; verify critical findings with appropriate metrology or data acquisition tools.
+                </p>
+              </div>
+
+            </div><!-- /.wrapper -->
+          </div><!-- /mx-md-2 -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         REFERENCE GUIDE
+    ═══════════════════════════════════════════════════════════════ -->
+    <section aria-label="Sensor tool reference guide">
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12 px-3">
+          <div class="ref-wrapper">
+            <div class="ref-section-wrap">
+              <div class="ref-section-title">Reference Guide &mdash; Sensor Event &amp; Binary Integrity Analysis</div>
+
+
+              <!-- ══ CARD 01: HOW THIS TOOL WORKS ══════════════════ -->
+              <div class="ref-card" id="sensorCard1">
+                <div class="ref-card-header" onclick="toggleRefCard('sensorCard1')" role="button" tabindex="0" aria-expanded="true">
+                  <span class="ref-num">01</span>
+                  <h2>How This Tool Works</h2>
+                  <svg class="ref-chevron" viewBox="0 0 14 14" fill="none"><path d="M2 4l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </div>
+                <div class="ref-body">
+                  <div class="full-col">
+                    <p>This tool runs entirely in your web browser. No data leaves your machine &mdash; everything is processed locally using JavaScript. There is no server, no upload, and no account required. Simply import your data and the tool analyzes it on the spot.</p>
+                    <p>The general processing pipeline works in three stages:</p>
+                    <ul>
+                      <li><strong>Import:</strong> Load time-series sensor data from a spreadsheet file (.xlsx/.csv) or by pasting raw binary or hex-encoded samples. Each column of data becomes a <em>channel</em> in the Sensor Manager.</li>
+                      <li><strong>Detection:</strong> Once you set your detection parameters (Threshold, Min Duration, Min Height, Debounce) and click <em>Run Detection</em>, each enabled channel is scanned independently. Detection runs in a background Web Worker thread so the page stays responsive during computation.</li>
+                      <li><strong>Analysis:</strong> Detected events are shown in the Event Table, summarized in the Output Properties panel, and visualized in the Spike Explorer and Time Plot tabs. For channels flagged as raw integers, the Bit Plot tab provides bit-level integrity diagnostics.</li>
+                    </ul>
+                    <div class="ref-warn">
+                      <strong>Accuracy disclaimer:</strong> This tool is a diagnostic aid, not a certified measurement instrument. Detection results depend entirely on the parameters you set. Always verify anomalies found here with appropriate instrumentation or data acquisition software before drawing engineering conclusions.
+                    </div>
+                  </div>
+                </div>
+              </div><!-- /#sensorCard1 -->
+
+
+              <!-- ══ CARD 02: SUPPORTED IMPORT FORMATS ══════════════ -->
+              <div class="ref-card collapsed" id="sensorCard2">
+                <div class="ref-card-header" onclick="toggleRefCard('sensorCard2')" role="button" tabindex="0" aria-expanded="false">
+                  <span class="ref-num">02</span>
+                  <h2>Supported Import Formats</h2>
+                  <svg class="ref-chevron" viewBox="0 0 14 14" fill="none"><path d="M2 4l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </div>
+                <div class="ref-body two-col">
+                  <div>
+                    <div class="ref-sub">Method A &mdash; File Upload</div>
+                    <p>Accepted file extensions: <strong>.xlsx</strong>, <strong>.xls</strong>, <strong>.csv</strong>. Parsing is handled by SheetJS (xlsx library), running locally in the browser.</p>
+                    <p>After selecting a file, a column preview appears showing the first 10 rows. Use the dropdown above each column to assign its role:</p>
+                    <ul>
+                      <li><strong>Timestamp</strong> &mdash; one column only; treated as the x-axis for all channels.</li>
+                      <li><strong>Sensor Channel</strong> &mdash; any number of columns; each becomes an independent channel in the Sensor Manager.</li>
+                      <li><strong>Ignore</strong> &mdash; column is excluded from import.</li>
+                    </ul>
+                    <p>Auto-assignment applies when headers match (case-insensitive): <em>Timestamp</em>, <em>Sensor A</em>, <em>Sensor B</em>, <em>Sensor C</em>, etc. Override freely with the dropdowns. Click <em>Confirm Import</em> when satisfied. Importing a second file adds new channels without replacing existing ones.</p>
+                  </div>
+                  <div>
+                    <div class="ref-sub">Method B &mdash; Paste Binary / Hex</div>
+                    <p>Paste raw data directly into the text box. The tool auto-detects format:</p>
+                    <ul>
+                      <li><strong>Binary string:</strong> a string of <code>0</code> and <code>1</code> characters, e.g. <code>0100110101100001</code></li>
+                      <li><strong>Prefixed hex:</strong> hex pairs with <code>0x</code> prefix, e.g. <code>0xA2 0x3C</code></li>
+                      <li><strong>Bare hex:</strong> continuous hex characters (A–F, 0–9), e.g. <code>A23CF400</code></li>
+                    </ul>
+                    <p>Select the data type and endianness before converting. Supported types:</p>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;margin:4px 0 8px;">
+                      <span style="font-size:12px;"><code>uint8</code> &mdash; 1 byte unsigned</span>
+                      <span style="font-size:12px;"><code>int8</code> &mdash; 1 byte signed</span>
+                      <span style="font-size:12px;"><code>uint16</code> &mdash; 2 bytes unsigned</span>
+                      <span style="font-size:12px;"><code>int16</code> &mdash; 2 bytes signed</span>
+                      <span style="font-size:12px;"><code>uint32</code> &mdash; 4 bytes unsigned</span>
+                      <span style="font-size:12px;"><code>int32</code> &mdash; 4 bytes signed</span>
+                      <span style="font-size:12px;"><code>float32</code> &mdash; 4 bytes IEEE 754</span>
+                      <span style="font-size:12px;"><code>float64</code> &mdash; 8 bytes IEEE 754</span>
+                    </div>
+                    <p>Set <strong>Sample Rate (Hz)</strong> to assign real timestamps (<em>index / sampleRate</em> seconds). Without it, samples are indexed 0, 1, 2&hellip; The sample rate is important for meaningful timing statistics in the output panel.</p>
+                  </div>
+                </div>
+              </div><!-- /#sensorCard2 -->
+
+
+              <!-- ══ CARD 03: EVENT DETECTION PARAMETERS ══════════ -->
+              <div class="ref-card collapsed" id="sensorCard3">
+                <div class="ref-card-header" onclick="toggleRefCard('sensorCard3')" role="button" tabindex="0" aria-expanded="false">
+                  <span class="ref-num">03</span>
+                  <h2>Event Detection Parameters Explained</h2>
+                  <svg class="ref-chevron" viewBox="0 0 14 14" fill="none"><path d="M2 4l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </div>
+                <div class="ref-body two-col">
+                  <div>
+                    <div class="ref-sub">Threshold</div>
+                    <p>The absolute sample value above which the detector is "armed." Any sample with value &gt; Threshold is considered above the threshold. If a channel's values are all below this number, no events will be detected.</p>
+                    <p>Choose a threshold by eyeballing your data in the Time Plot, or by starting with a value slightly above the typical noise floor.</p>
+
+                    <div class="ref-sub" style="margin-top:10px;">Min Duration</div>
+                    <p>The minimum number of <em>contiguous</em> above-threshold samples (or milliseconds if you select ms units) that must occur before the segment is recognized as an event. This filter rejects brief noise spikes that momentarily cross the threshold.</p>
+                    <p>Example: if Min Duration = 3 samples, a 2-sample blip above threshold is ignored, but a 4-sample run above threshold is detected as an event.</p>
+                  </div>
+                  <div>
+                    <div class="ref-sub">Min Height</div>
+                    <p>The minimum peak value <em>above baseline</em> within the above-threshold region. Baseline is computed as the mean of the samples just before and just after each candidate event window (local average). Events whose peak doesn't exceed baseline + Min Height are discarded.</p>
+
+                    <div class="ref-sub" style="margin-top:10px;">Debounce</div>
+                    <p>If two detected events are separated by fewer than this many samples (or milliseconds), they are merged into a single event. The merged event spans from the start of the first to the end of the second, and the peak is taken as the higher of the two original peaks.</p>
+                    <p>This is useful when a single physical event causes brief sub-threshold dips in the middle, which would otherwise split it into two separate events.</p>
+
+                    <div class="ref-callout" style="margin-top:8px;">
+                      <strong>Tip:</strong> Start with Threshold and Min Duration. Add Min Height only if you are getting events from channel drift. Use Debounce only if you know your events have internal dips.
+                    </div>
+                  </div>
+                </div>
+              </div><!-- /#sensorCard3 -->
+
+
+              <!-- ══ CARD 04: BIT-LEVEL DIAGNOSTICS ═══════════════ -->
+              <div class="ref-card collapsed" id="sensorCard4">
+                <div class="ref-card-header" onclick="toggleRefCard('sensorCard4')" role="button" tabindex="0" aria-expanded="false">
+                  <span class="ref-num">04</span>
+                  <h2>Bit-Level Diagnostics Explained</h2>
+                  <svg class="ref-chevron" viewBox="0 0 14 14" fill="none"><path d="M2 4l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </div>
+                <div class="ref-body two-col">
+                  <div>
+                    <div class="ref-sub">Bit Occupancy</div>
+                    <p>For each bit position (bit 0 = LSB through bit N-1 = MSB, where N is the type's bit width), bit occupancy measures the fraction of samples where that bit is <code>1</code>:</p>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Bit Occupancy</span>
+                      <span class="ref-eq">P(bit k = 1) = count(bit k is 1) / total_samples</span>
+                    </div>
+                    <p>A healthy ADC or sensor should show occupancy near 0.5 for mid-range bits. Bits that are always 0 or always 1 may indicate a stuck bit, saturation, or a resolution problem. Very low occupancy on upper bits is expected for signals that don't use the full dynamic range.</p>
+
+                    <div class="ref-sub" style="margin-top:10px;">Bit Toggle Rate</div>
+                    <p>The fraction of consecutive sample pairs where a given bit changes state:</p>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Toggle Rate</span>
+                      <span class="ref-eq">T(bit k) = count(bit k[n] &ne; bit k[n-1]) / (N-1)</span>
+                    </div>
+                    <p>A bit that never toggles (rate = 0) is stuck. A bit that always toggles (rate = 1) is either noise-dominated or driven by a toggle pattern. Expected rates vary by bit position &mdash; lower bits toggle more frequently in a counting sequence.</p>
+                  </div>
+                  <div>
+                    <div class="ref-sub">Hamming Distance</div>
+                    <p>The Hamming distance between two consecutive integer samples is the number of bit positions that differ between them:</p>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Hamming Distance</span>
+                      <span class="ref-eq">H(n) = popcount(sample[n] XOR sample[n-1])</span>
+                    </div>
+                    <p>The histogram shows how often each distance (0 through bit-width) occurs across all consecutive pairs. A spike at distance 1 in otherwise large-jump data may suggest isolated bit flips. Systematic spikes at specific distances can reveal encoding artifacts.</p>
+
+                    <div class="ref-sub" style="margin-top:10px;">Power-of-Two Jump Detector</div>
+                    <p>Computes the absolute difference between each consecutive sample pair and flags any difference whose absolute value is exactly a power of two (1, 2, 4, 8, 16&hellip;):</p>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Power-of-2 Jump</span>
+                      <span class="ref-eq">|sample[n] - sample[n-1]| = 2^k, k &isin; {0, 1, ..., width-1}</span>
+                    </div>
+                    <p>A power-of-two jump is the direct signature of a single-bit flip in a binary-encoded value. The Bit Occupancy table shows a count of flagged jumps per bit position (a jump of 2^k flags bit k). A red badge with a non-zero count warrants investigation of that bit position.</p>
+                    <div class="ref-warn" style="margin-top:6px;">
+                      <strong>Note:</strong> Power-of-two jumps are <em>consistent with</em> bit flips but not conclusive proof &mdash; legitimate signal steps can also produce power-of-two deltas. Use alongside occupancy and toggle rate data.
+                    </div>
+                  </div>
+                </div>
+              </div><!-- /#sensorCard4 -->
+
+
+              <!-- ══ CARD 05: GLOSSARY / FORMULA REFERENCE ════════ -->
+              <div class="ref-card collapsed" id="sensorCard5">
+                <div class="ref-card-header" onclick="toggleRefCard('sensorCard5')" role="button" tabindex="0" aria-expanded="false">
+                  <span class="ref-num">05</span>
+                  <h2>Glossary &amp; Formula Reference</h2>
+                  <svg class="ref-chevron" viewBox="0 0 14 14" fill="none"><path d="M2 4l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </div>
+                <div class="ref-body two-col">
+                  <div>
+                    <div class="ref-sub">Event Shape Fields</div>
+                    <table class="ref-table">
+                      <tr><th>Field</th><th>Definition</th></tr>
+                      <tr><td><code>start</code></td><td>Timestamp of first above-threshold sample</td></tr>
+                      <tr><td><code>peak</code></td><td>Timestamp of maximum value within the event</td></tr>
+                      <tr><td><code>end</code></td><td>Timestamp of last above-threshold sample</td></tr>
+                      <tr><td><code>duration</code></td><td><code>end &minus; start</code></td></tr>
+                      <tr><td><code>height</code></td><td>Peak value minus local baseline</td></tr>
+                      <tr><td><code>area</code></td><td>Trapezoidal integral over start&hellip;end, baseline-subtracted</td></tr>
+                      <tr><td><code>rise</code></td><td><code>peak &minus; start</code> (in same units as timestamps)</td></tr>
+                      <tr><td><code>fall</code></td><td><code>end &minus; peak</code></td></tr>
+                    </table>
+
+                    <div class="ref-sub" style="margin-top:10px;">Event Area (Trapezoidal Integration)</div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Trapezoidal Area</span>
+                      <span class="ref-eq">Area = &sum;<sub>i=start</sub><sup>end-1</sup> (v[i] + v[i+1] - 2&middot;baseline) &middot; (t[i+1] - t[i]) / 2</span>
+                    </div>
+                    <p>Where <em>baseline</em> is the local mean computed from samples outside the event window. If timestamps are just sample indices (no sample rate set), &Delta;t = 1 for all pairs and area is in units of (value &middot; samples).</p>
+                  </div>
+                  <div>
+                    <div class="ref-sub">Debounce Merge Logic</div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Merge Condition</span>
+                      <span class="ref-eq">if event[i+1].start - event[i].end &lt; debounce:</span>
+                      <span class="ref-eq">  merged.start = event[i].start</span>
+                      <span class="ref-eq">  merged.end   = event[i+1].end</span>
+                      <span class="ref-eq">  merged.peak  = argmax(value[merged.start..end])</span>
+                    </div>
+                    <p>Applied iteratively: after merging a pair, the result is immediately checked against the next event. This means a series of closely-spaced events can cascade-merge into one.</p>
+
+                    <div class="ref-sub" style="margin-top:10px;">Hamming Distance (popcount)</div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Popcount (bit count)</span>
+                      <span class="ref-eq">popcount(x) = number of 1-bits in binary representation of x</span>
+                      <span class="ref-eq">H(a, b) = popcount(a XOR b)</span>
+                    </div>
+
+                    <div class="ref-sub" style="margin-top:10px;">Shannon Entropy (reference)</div>
+                    <div class="ref-eq-block">
+                      <span class="ref-eq-tag">Shannon Entropy (V2)</span>
+                      <span class="ref-eq">H = &minus; &sum;<sub>k</sub> p<sub>k</sub> &middot; log<sub>2</sub>(p<sub>k</sub>)</span>
+                    </div>
+                    <p>Where p<sub>k</sub> is the probability of value k in a rolling window. A fully random signal has maximum entropy (log<sub>2</sub>(N) for N possible values). The Entropy Monitor is scheduled for a future update.</p>
+                  </div>
+                </div>
+              </div><!-- /#sensorCard5 -->
+
+
+            </div><!-- /ref-section-wrap -->
+          </div><!-- /ref-wrapper -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         CITATION
+    ═══════════════════════════════════════════════════════════════ -->
+    <section class="mt-5 pt-3">
+      <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+        <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm"
+             style="border-left: 4px solid; border-color: var(--section-title-color);
+                    border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+          <div class="d-flex align-items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                 class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);"
+                 viewBox="0 0 16 16">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+            <h4 style="font-weight: var(--font-weight-bold);"
+                class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+          </div>
+          <style>
+            #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+            #citationTabs li { margin: 0; list-style: none; }
+            #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+            #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+            #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+          </style>
+          <div class="tab-content mt-2 mb-3" id="citationTabContent">
+            <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+              <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+              <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+              <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+              <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+          </div>
+          <ul id="citationTabs" class="nav" role="tablist">
+            <li role="presentation">
+              <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ── INLINE PAGE SCRIPTS ─────────────────────────────────────────── -->
+  <script>
+  /* ── Tab switching ─────────────────────────────────────────────── */
+  function switchSensorGraphTab(n, btn) {
+    var banner = btn.closest('.graph-banner');
+    banner.querySelectorAll('.graph-tab:not(.v2-tab)').forEach(function(t) {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    banner.querySelectorAll('.graph-content').forEach(function(c) {
+      c.classList.remove('visible');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    var panel = document.getElementById('sensorGraphContent' + n);
+    if (panel) panel.classList.add('visible');
+    /* Trigger chart resize when a hidden canvas becomes visible */
+    if (n === 1 && typeof SensorCharts !== 'undefined') SensorCharts.resizeTimePlot();
+    if (n === 3 && typeof SensorCharts !== 'undefined') SensorCharts.resizeBitPlot();
+  }
+
+  function switchSensorTableTab(n, btn) {
+    var banner = btn.closest('.graph-banner');
+    banner.querySelectorAll('.graph-tab:not(.v2-tab)').forEach(function(t) {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    banner.querySelectorAll('.graph-content').forEach(function(c) {
+      c.classList.remove('visible');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    var panel = document.getElementById('sensorTableContent' + n);
+    if (panel) panel.classList.add('visible');
+    if (n === 2 && typeof SensorBitDiag !== 'undefined') SensorBitDiag.onTableTabOpen();
+  }
+
+  /* ── Import method switcher ───────────────────────────────────── */
+  function switchImportMethod(method) {
+    document.getElementById('methodASection').style.display = (method === 'A') ? '' : 'none';
+    document.getElementById('methodBSection').style.display = (method === 'B') ? '' : 'none';
+    document.getElementById('methodCSection').style.display = (method === 'C') ? '' : 'none';
+    ['A','B','C'].forEach(function(m) {
+      var tab = document.getElementById('methodTab' + m);
+      if (tab) tab.classList.toggle('sel', m === method);
+    });
+  }
+
+  /* ── Radio card sel class toggle ─────────────────────────────── */
+  document.addEventListener('DOMContentLoaded', function() {
+    /* itype-grid radio cards */
+    document.querySelectorAll('.itype-grid .it input[type=radio]').forEach(function(r) {
+      r.addEventListener('change', function() {
+        var grid = this.closest('.itype-grid');
+        if (!grid) return;
+        grid.querySelectorAll('.it').forEach(function(l){ l.classList.remove('sel'); });
+        this.closest('.it').classList.add('sel');
+      });
+    });
+    /* Bit view radio */
+    document.querySelectorAll('input[name=bitPlotView]').forEach(function(r) {
+      r.addEventListener('change', function() {
+        document.getElementById('bitViewOccupancy').classList.toggle('sel', this.value === 'occupancy');
+        document.getElementById('bitViewToggle').classList.toggle('sel', this.value === 'toggle');
+      });
+    });
+  });
+
+  /* ── Reference card accordion ─────────────────────────────────── */
+  function toggleRefCard(id) {
+    var card = document.getElementById(id);
+    if (!card) return;
+    var isCollapsed = card.classList.contains('collapsed');
+    card.classList.toggle('collapsed', !isCollapsed);
+    var header = card.querySelector('.ref-card-header');
+    if (header) header.setAttribute('aria-expanded', isCollapsed ? 'true' : 'false');
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.ref-card-header').forEach(function(header) {
+      header.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          header.click();
+        }
+      });
+    });
+  });
+  </script>
+
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+  <script src="js/footer.js"></script>
+  <!-- END FOOTER -->
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5XLCN0GJQ0');
+  </script>
+
+  </body>
+</html>
