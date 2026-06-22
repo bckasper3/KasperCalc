@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- META DATA -->
-    <title>KasperCalc: AS5857 O-Ring Gland Dimensions</title>
+    <title>KasperCalc: AS5857 O-Ring Gland Dimensions (Static)</title>
     <meta name="author" content="bckasper3" />
     <meta name="keywords" content="KasperCalc, Parker O-Ring, gland dimensions, O-ring handbook, Design Table 4-1, SAE AS5857, static seal, gland design, bore diameter, gland OD, dash number" />
     <meta name="description" content="Interactive lookup for Parker O-Ring Handbook Design Table 4-1: gland design dimensions for O-ring and other elastomeric seals per SAE AS5857. Covers the full AS568 dash number range." />
@@ -250,63 +250,6 @@
       { dash: '460', max: [15.970, 15.978, 15.520, 15.497, 15.504, 15.960], min: [15.967, 15.974, 15.517, 15.494, 15.501, 15.956] },
     ];
 
-    const SERIES = {
-      '1': { label: '0XX  (1/16 &amp; smaller, –.070" cs)', wNom: 0.070, wTolNom: 0.003,
-             gWidth: 0.093, fMin: 0.050, fMax: 0.054,
-             gMin: 0.093, gMax: 0.098, g1Min: 0.138, g1Max: 0.143, g2Min: 0.205, g2Max: 0.210,
-             eMin: 0.002, eMax: 0.005, rMin: 0.005, rMax: 0.015, maxEcc: 0.002,
-             aTolPlus: 0.002, aTolMinus: 0.000,
-             a1TolPlus: 0.002, a1TolMinus: 0.000,
-             bTolPlus: 0.000, bTolMinus: 0.002,
-             b1TolPlus: 0.002, b1TolMinus: 0.000,
-             cTolPlus: 0.000, cTolMinus: 0.001,
-             dTolPlus: 0.001, dTolMinus: 0.000,
-             gTolPlus: 0.005, gTolMinus: 0.000 },
-      '2': { label: '2XX  (–.103" cs)', wNom: 0.103, wTolNom: 0.003,
-             gWidth: 0.140, fMin: 0.081, fMax: 0.085,
-             gMin: 0.140, gMax: 0.145, g1Min: 0.171, g1Max: 0.176, g2Min: 0.238, g2Max: 0.243,
-             eMin: 0.002, eMax: 0.005, rMin: 0.005, rMax: 0.015, maxEcc: 0.002,
-             aTolPlus: 0.002, aTolMinus: 0.000,
-             a1TolPlus: 0.002, a1TolMinus: 0.000,
-             bTolPlus: 0.000, bTolMinus: 0.002,
-             b1TolPlus: 0.002, b1TolMinus: 0.000,
-             cTolPlus: 0.000, cTolMinus: 0.001,
-             dTolPlus: 0.001, dTolMinus: 0.000,
-             gTolPlus: 0.005, gTolMinus: 0.000 },
-      '3': { label: '3XX  (–.139" cs)', wNom: 0.139, wTolNom: 0.004,
-             gWidth: 0.187, fMin: 0.111, fMax: 0.115,
-             gMin: 0.187, gMax: 0.192, g1Min: 0.208, g1Max: 0.213, g2Min: 0.275, g2Max: 0.280,
-             eMin: 0.003, eMax: 0.006, rMin: 0.010, rMax: 0.025, maxEcc: 0.003,
-             aTolPlus: 0.002, aTolMinus: 0.000,
-             a1TolPlus: 0.002, a1TolMinus: 0.000,
-             bTolPlus: 0.000, bTolMinus: 0.002,
-             b1TolPlus: 0.002, b1TolMinus: 0.000,
-             cTolPlus: 0.000, cTolMinus: 0.001,
-             dTolPlus: 0.001, dTolMinus: 0.000,
-             gTolPlus: 0.005, gTolMinus: 0.000 },
-      '4': { label: '4XX  (–.210" cs)', wNom: 0.210, wTolNom: 0.005,
-             gWidth: 0.281, fMin: 0.170, fMax: 0.174,
-             gMin: 0.281, gMax: 0.286, g1Min: 0.311, g1Max: 0.316, g2Min: 0.410, g2Max: 0.415,
-             eMin: 0.003, eMax: 0.006, rMin: 0.020, rMax: 0.035, maxEcc: 0.004,
-             aTolPlus: 0.002, aTolMinus: 0.000,
-             a1TolPlus: 0.004, a1TolMinus: 0.000,
-             bTolPlus: 0.000, bTolMinus: 0.002,
-             b1TolPlus: 0.004, b1TolMinus: 0.000,
-             cTolPlus: 0.000, cTolMinus: 0.001,
-             dTolPlus: 0.001, dTolMinus: 0.000,
-             gTolPlus: 0.005, gTolMinus: 0.000 },
-      '5': { label: '5XX  (–.275" cs)', wNom: 0.275, wTolNom: 0.006,
-             gWidth: 0.375, fMin: 0.226, fMax: 0.230,
-             gMin: 0.375, gMax: 0.380, g1Min: 0.408, g1Max: 0.413, g2Min: 0.538, g2Max: 0.543,
-             eMin: 0.004, eMax: 0.007, rMin: 0.020, rMax: 0.035, maxEcc: 0.005,
-             aTolPlus: 0.002, aTolMinus: 0.000,
-             a1TolPlus: 0.004, a1TolMinus: 0.000,
-             bTolPlus: 0.000, bTolMinus: 0.002,
-             b1TolPlus: 0.004, b1TolMinus: 0.000,
-             cTolPlus: 0.000, cTolMinus: 0.001,
-             dTolPlus: 0.001, dTolMinus: 0.000,
-             gTolPlus: 0.005, gTolMinus: 0.000 }
-    };
 
     /* -------------------------------------------------------
        Ring data rows
@@ -714,25 +657,6 @@
       if (lo === null || lo === undefined || hi === null || hi === undefined) return '—';
       return fmt(lo) + '–' + fmt(hi);
     }
-    /* Display label: explicit size string for appended rows, else series-dash */
-    function ringLabel(r) { return (r[14] !== undefined) ? r[14] : (r[9] + '-' + r[0]); }
-    function fmtTol(plus, minus) {
-      if (plus === 0 && minus === 0) return '±0';
-      const p = plus  ? `+.${String(Math.round(plus*1000)).padStart(3,'0')}` : '+.000';
-      const m = minus ? `−.${String(Math.round(minus*1000)).padStart(3,'0')}` : '−.000';
-      return `${p} / ${m}`;
-    }
-
-    /* Per-column gland tolerances (uniform across all series, per Design Table 4-2) */
-    const TOL = {
-      A:  '+.002/−.000',
-      B1: '+.000/−',
-      A1: '−.000/+',
-      B:  '+.000/−.002',
-      C:  '+.000/−.001',
-      D:  '+.001/−.000',
-      G:  '+.005/−.000'
-    };
 
     /* ── Design Chart 4-1 A — Standard Gland Width for Backup Rings (inches) ── */
     const CHART41A = [
@@ -784,7 +708,6 @@
       if (!key) return null;
       return TABLE41.find(c => c.dash === key) || null;
     }
-    function setTxt(id, v) { const e = document.getElementById(id); if (e) e.textContent = v; }
 
     /* Set a live dimension value; a range ("lo–hi") is stacked vertically as two lines */
     function setLive(id, v) {
@@ -1300,6 +1223,9 @@
                   <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
                   <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
                   <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -1320,8 +1246,9 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal & Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
                   <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -1331,6 +1258,9 @@
                   <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
                   <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
                   <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
                 </div>
               </li>
               <li class="nav-item text-center align-svg-bottom smallsearchbar">
@@ -1384,7 +1314,7 @@
         <div class="col-lg-12 col-12">
           <div class="banner section-title-wrap">
             <div class="h1 section-title bannertext">
-              AS5857 O-Ring Gland Dimensions
+              AS5857 O-Ring Gland Dimensions (Static)
             </div>
           </div>
         </div>

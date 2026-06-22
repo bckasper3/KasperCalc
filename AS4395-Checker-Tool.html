@@ -1,0 +1,1404 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: AS4395 Checker Tool</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, SAE AS4395, AS4395E08 Port Dimensions, CAD Design for AS4395, Drawing Checker for AS4395 port" />
+    <meta name="description" content="Interactive lookup for SAE AS4395 specification. This tool makes it easy to CAD model AS4395 ports and to check drawings using AS4395 ports." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <script src="js/password.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XLCN0GJQ0');
+    </script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <script>
+
+    const TABLE41 = [
+      { dash: '001', max: [0.084, 0.087, 0.035, 0.033, 0.036, 0.087], min: [0.083, 0.086, 0.034, 0.032, 0.035, 0.086] },
+      { dash: '002', max: [0.116, 0.119, 0.048, 0.048, 0.051, 0.119], min: [0.115, 0.118, 0.047, 0.047, 0.050, 0.118] },
+      { dash: '460', max: [15.970, 15.978, 15.520, 15.497, 15.504, 15.960], min: [15.967, 15.974, 15.517, 15.494, 15.501, 15.956] },
+    ];
+
+    const SERIES = {
+      '1': { label: '0XX  (1/16 &amp; smaller, –.070" cs)', wNom: 0.070, wTolNom: 0.003,
+             gWidth: 0.093, fMin: 0.050, fMax: 0.054,
+             gMin: 0.093, gMax: 0.098, g1Min: 0.138, g1Max: 0.143, g2Min: 0.205, g2Max: 0.210,
+             eMin: 0.002, eMax: 0.005, rMin: 0.005, rMax: 0.015, maxEcc: 0.002,
+             aTolPlus: 0.002, aTolMinus: 0.000,
+             a1TolPlus: 0.002, a1TolMinus: 0.000,
+             bTolPlus: 0.000, bTolMinus: 0.002,
+             b1TolPlus: 0.002, b1TolMinus: 0.000,
+             cTolPlus: 0.000, cTolMinus: 0.001,
+             dTolPlus: 0.001, dTolMinus: 0.000,
+             gTolPlus: 0.005, gTolMinus: 0.000 },
+      '2': { label: '2XX  (–.103" cs)', wNom: 0.103, wTolNom: 0.003,
+             gWidth: 0.140, fMin: 0.081, fMax: 0.085,
+             gMin: 0.140, gMax: 0.145, g1Min: 0.171, g1Max: 0.176, g2Min: 0.238, g2Max: 0.243,
+             eMin: 0.002, eMax: 0.005, rMin: 0.005, rMax: 0.015, maxEcc: 0.002,
+             aTolPlus: 0.002, aTolMinus: 0.000,
+             a1TolPlus: 0.002, a1TolMinus: 0.000,
+             bTolPlus: 0.000, bTolMinus: 0.002,
+             b1TolPlus: 0.002, b1TolMinus: 0.000,
+             cTolPlus: 0.000, cTolMinus: 0.001,
+             dTolPlus: 0.001, dTolMinus: 0.000,
+             gTolPlus: 0.005, gTolMinus: 0.000 },
+      '3': { label: '3XX  (–.139" cs)', wNom: 0.139, wTolNom: 0.004,
+             gWidth: 0.187, fMin: 0.111, fMax: 0.115,
+             gMin: 0.187, gMax: 0.192, g1Min: 0.208, g1Max: 0.213, g2Min: 0.275, g2Max: 0.280,
+             eMin: 0.003, eMax: 0.006, rMin: 0.010, rMax: 0.025, maxEcc: 0.003,
+             aTolPlus: 0.002, aTolMinus: 0.000,
+             a1TolPlus: 0.002, a1TolMinus: 0.000,
+             bTolPlus: 0.000, bTolMinus: 0.002,
+             b1TolPlus: 0.002, b1TolMinus: 0.000,
+             cTolPlus: 0.000, cTolMinus: 0.001,
+             dTolPlus: 0.001, dTolMinus: 0.000,
+             gTolPlus: 0.005, gTolMinus: 0.000 },
+      '4': { label: '4XX  (–.210" cs)', wNom: 0.210, wTolNom: 0.005,
+             gWidth: 0.281, fMin: 0.170, fMax: 0.174,
+             gMin: 0.281, gMax: 0.286, g1Min: 0.311, g1Max: 0.316, g2Min: 0.410, g2Max: 0.415,
+             eMin: 0.003, eMax: 0.006, rMin: 0.020, rMax: 0.035, maxEcc: 0.004,
+             aTolPlus: 0.002, aTolMinus: 0.000,
+             a1TolPlus: 0.004, a1TolMinus: 0.000,
+             bTolPlus: 0.000, bTolMinus: 0.002,
+             b1TolPlus: 0.004, b1TolMinus: 0.000,
+             cTolPlus: 0.000, cTolMinus: 0.001,
+             dTolPlus: 0.001, dTolMinus: 0.000,
+             gTolPlus: 0.005, gTolMinus: 0.000 },
+      '5': { label: '5XX  (–.275" cs)', wNom: 0.275, wTolNom: 0.006,
+             gWidth: 0.375, fMin: 0.226, fMax: 0.230,
+             gMin: 0.375, gMax: 0.380, g1Min: 0.408, g1Max: 0.413, g2Min: 0.538, g2Max: 0.543,
+             eMin: 0.004, eMax: 0.007, rMin: 0.020, rMax: 0.035, maxEcc: 0.005,
+             aTolPlus: 0.002, aTolMinus: 0.000,
+             a1TolPlus: 0.004, a1TolMinus: 0.000,
+             bTolPlus: 0.000, bTolMinus: 0.002,
+             b1TolPlus: 0.004, b1TolMinus: 0.000,
+             cTolPlus: 0.000, cTolMinus: 0.001,
+             dTolPlus: 0.001, dTolMinus: 0.000,
+             gTolPlus: 0.005, gTolMinus: 0.000 }
+    };
+
+    /* -------------------------------------------------------
+       Ring data rows
+       Each entry: [no, id, idTol, A, A1, B, B1, C, D, series, installNote]
+         no         : dash number (integer)
+         id         : O-ring inner diameter (in)
+         idTol      : ± tolerance on ID (in)
+         A          : Bore Dia. Male Gland (in)
+         A1         : Groove Dia. Female Gland (in)
+         B          : Tube OD Female Gland (in)
+         B1         : Groove Dia. Male Gland (in)
+         C          : Plug Dia. Male Gland (in) — null if installation note
+         D          : Throat Dia. Female Gland (in)
+         series     : '2','3','4', or '5'
+         installNote: true = considerable installation stretch required
+       Mean OD (Ref) = id + 2 × series.wNom (calculated)
+    ------------------------------------------------------- */
+    const RINGS = [
+      /* ── 2XX series  (wNom=.103", G†=.140") ─────────────── */
+      [138, 2.112, 0.017, 2.312, 2.287, 2.125, 2.150, 2.310, 2.127, '2', false],
+      [475, 25.940, 0.120, 26.500, 26.452, 26.000, 26.048, 26.496, 26.004, '5', false]
+    ];
+    /* Column index reference:
+       0=no, 1=id, 2=idTol, 3=A, 4=A1, 5=B, 6=B1, 7=C, 8=D, 9=series, 10=installNote,
+       11=wOverride, 12=gOverride, 13=meanOdOverride, 14=sizeLabel  (last four optional, used by appended object rows) */
+
+    /* ── Additional Parker AS568B "2-" static-seal gland sizes (object format) ─────
+       Sizes 2-001 … 2-050 (≤ 1/16 cs) and 2-102 … 2-137 (.103 cs).
+       Converted into RINGS below; each carries its own W, groove width, and Mean OD. */
+    const PARKER_2SERIES = [
+      { size: "2-001", id: 0.029, idTol: 0.004, w: 0.040, wTol: 0.003, meanOdRef: 0.109, aBoreDia: 0.105, a1GrooveDia: 0.101, bTubeOd: 0.040, b1GrooveDia: 0.044, cPlugDia: 0.103, dThroatDia: 0.042, gGrooveWidth: 0.055 },
+      { size: "2-002", id: 0.042, idTol: 0.004, w: 0.050, wTol: 0.003, meanOdRef: 0.142, aBoreDia: 0.138, a1GrooveDia: 0.132, bTubeOd: 0.053, b1GrooveDia: 0.059, cPlugDia: 0.136, dThroatDia: 0.055, gGrooveWidth: 0.070 },
+      { size: "2-137", id: 2.050, idTol: 0.017, w: 0.103, wTol: 0.003, meanOdRef: 2.256, aBoreDia: 2.250, a1GrooveDia: 2.224, bTubeOd: 2.062, b1GrooveDia: 2.088, cPlugDia: 2.248, dThroatDia: 2.064, gGrooveWidth: 0.140 }
+    ];
+    (function () {
+      function dashSeries(d) { return d < 100 ? '1' : d < 200 ? '2' : d < 300 ? '3' : d < 400 ? '4' : '5'; }
+      PARKER_2SERIES.forEach(function (o) {
+        var dash = parseInt(o.size.split('-')[1], 10);
+        RINGS.push([dash, o.id, o.idTol, o.aBoreDia, o.a1GrooveDia, o.bTubeOd, o.b1GrooveDia,
+                    o.cPlugDia, o.dThroatDia, dashSeries(dash), false,
+                    o.w, o.gGrooveWidth, o.meanOdRef, o.size]);
+      });
+      /* keep rows ordered by cross-section series, then dash number */
+      RINGS.sort(function (a, b) {
+        return (a[9] === b[9]) ? (a[0] - b[0]) : (Number(a[9]) - Number(b[9]));
+      });
+    })();
+
+    /* ── Render helpers ─────────────────────────────────── */
+    function fmt(v) {
+      if (v === null || v === undefined) return '—';
+      return v.toFixed(3);
+    }
+    function fmtRange(lo, hi) {
+      if (lo === null || lo === undefined || hi === null || hi === undefined) return '—';
+      return fmt(lo) + '–' + fmt(hi);
+    }
+    /* Display label: explicit size string for appended rows, else series-dash */
+    function ringLabel(r) { return (r[14] !== undefined) ? r[14] : (r[9] + '-' + r[0]); }
+    function fmtTol(plus, minus) {
+      if (plus === 0 && minus === 0) return '±0';
+      const p = plus  ? `+.${String(Math.round(plus*1000)).padStart(3,'0')}` : '+.000';
+      const m = minus ? `−.${String(Math.round(minus*1000)).padStart(3,'0')}` : '−.000';
+      return `${p} / ${m}`;
+    }
+
+    /* Per-column gland tolerances (uniform across all series, per Design Table 4-2) */
+    const TOL = {
+      A:  '+.002/−.000',
+      B1: '+.000/−',
+      A1: '−.000/+',
+      B:  '+.000/−.002',
+      C:  '+.000/−.001',
+      D:  '+.001/−.000',
+      G:  '+.005/−.000'
+    };
+
+    /* ── Design Chart 4-1 A — Standard Gland Width for Backup Rings (inches) ── */
+    const CHART41A = [
+      { lo:   1, hi:   1, wMin: 0.037, wMax: 0.043, backupMax: null,  gMin: 0.090, gMax: 0.095, g1Min: 0.174, g1Max: 0.184, g2Min: 0.230, g2Max: 0.240 },
+      { lo:   2, hi:   2, wMin: 0.047, wMax: 0.053, backupMax: null,  gMin: 0.095, gMax: 0.100, g1Min: 0.174, g1Max: 0.184, g2Min: 0.230, g2Max: 0.240 },
+      { lo:   3, hi:   3, wMin: 0.057, wMax: 0.063, backupMax: null,  gMin: 0.105, gMax: 0.110, g1Min: 0.174, g1Max: 0.184, g2Min: 0.230, g2Max: 0.240 },
+      { lo:   4, hi:   7, wMin: 0.067, wMax: 0.073, backupMax: 0.056, gMin: 0.115, gMax: 0.120, g1Min: 0.174, g1Max: 0.184, g2Min: 0.230, g2Max: 0.240 },
+      { lo:   8, hi:  28, wMin: 0.067, wMax: 0.073, backupMax: 0.056, gMin: 0.105, gMax: 0.110, g1Min: 0.164, g1Max: 0.174, g2Min: 0.220, g2Max: 0.230 },
+      { lo: 104, hi: 109, wMin: 0.100, wMax: 0.106, backupMax: 0.060, gMin: 0.150, gMax: 0.160, g1Min: 0.210, g1Max: 0.220, g2Min: 0.275, g2Max: 0.285 },
+      { lo: 110, hi: 149, wMin: 0.100, wMax: 0.106, backupMax: 0.060, gMin: 0.140, gMax: 0.150, g1Min: 0.200, g1Max: 0.210, g2Min: 0.265, g2Max: 0.275 },
+      { lo: 210, hi: 247, wMin: 0.135, wMax: 0.143, backupMax: 0.065, gMin: 0.185, gMax: 0.195, g1Min: 0.250, g1Max: 0.260, g2Min: 0.320, g2Max: 0.330 },
+      { lo: 325, hi: 349, wMin: 0.205, wMax: 0.215, backupMax: 0.090, gMin: 0.270, gMax: 0.280, g1Min: 0.360, g1Max: 0.370, g2Min: 0.455, g2Max: 0.465 },
+      { lo: 425, hi: 460, wMin: 0.269, wMax: 0.281, backupMax: 0.130, gMin: 0.345, gMax: 0.355, g1Min: 0.475, g1Max: 0.485, g2Min: 0.610, g2Max: 0.620 },
+    ];
+    function findChart41A(dash) {
+      const n = parseInt(dash, 10);
+      return CHART41A.find(row => n >= row.lo && n <= row.hi) || null;
+    }
+
+    /* Renders Design Table 4-1 (TABLE41) in the Parker two-row layout:
+       each dash number shows a max row (top) over a min row (bottom),
+       with the dash number spanning both. Columns: C, A, F, B, H, E. */
+    function buildTable(filter) {
+      const tbody = document.getElementById('oring-tbody');
+      if (!tbody) return;
+      const q = (filter || '').trim().toLowerCase();
+      const sFilter = document.getElementById('series-filter') ? document.getElementById('series-filter').value : '';
+      let rows = TABLE41;
+      if (sFilter) rows = rows.filter(r => r.dash[0] === sFilter);
+      if (q) rows = rows.filter(r => r.dash.includes(q));
+      const cell = v => `<td class="font-monospace">${fmt(v)}</td>`;
+      tbody.innerHTML = rows.map(r =>
+        `<tr class="t41-max" data-key="${r.dash}">
+          <td rowspan="2" class="t41-dash font-monospace">${r.dash}</td>
+          ${r.max.map(cell).join('')}
+        </tr>
+        <tr class="t41-min" data-key="${r.dash}">
+          ${r.min.map(cell).join('')}
+        </tr>`
+      ).join('');
+      const cnt = document.getElementById('oring-count');
+      if (cnt) cnt.textContent = rows.length + ' / ' + TABLE41.length + ' sizes';
+      /* keep the current figure selection highlighted after a rebuild */
+      if (pdCurrent) tbody.querySelectorAll('tr').forEach(tr => tr.classList.toggle('pd-active', tr.getAttribute('data-key') === pdCurrent.dash));
+    }
+
+    /* ── Placeholder gland diagram (linked to table) ────── */
+    function findRing(key) {
+      if (!key) return null;
+      return TABLE41.find(c => c.dash === key) || null;
+    }
+    function setTxt(id, v) { const e = document.getElementById(id); if (e) e.textContent = v; }
+
+    /* Set a live dimension value; a range ("lo–hi") is stacked vertically as two lines */
+    function setLive(id, v) {
+      const e = document.getElementById(id);
+      if (!e) return;
+      const x = e.getAttribute('x');
+      const parts = (typeof v === 'string' && v.includes('–')) ? v.split('–') : [v];
+      e.textContent = '';
+      /* Keep the block centered on the anchor y so nominal (1 line) and limit (2 lines)
+         share the same visual center: first line is lifted by half a line height. */
+      const lh = 1.05;            /* line height in em */
+      const first = parts.length > 1 ? -(lh / 2) : 0;
+      parts.forEach((p, i) => {
+        const ts = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+        ts.setAttribute('x', x);
+        ts.setAttribute('dy', (i === 0 ? first : lh) + 'em');
+        ts.textContent = p;
+        e.appendChild(ts);
+      });
+    }
+
+    /* Diagram display mode: 'nominal' = basic dimension, 'limit' = min–max limit dimensions */
+    let pdMode = 'nominal';
+    let pdCurrent = null;
+
+    /* Nominal value, or the min–max limits from an asymmetric tolerance (+plus / −minus) */
+    function fmt4(v) {
+      if (v === null || v === undefined || isNaN(v)) return fmt(v);
+      return v.toFixed(4);
+    }
+    /* O-ring cross-section W by AS568 series (first digit of the dash number) */
+    const WSERIES = {
+      '0': { nom: 0.070, tol: 0.003, frac: '1/16' },
+      '1': { nom: 0.103, tol: 0.003, frac: '3/32' },
+      '2': { nom: 0.139, tol: 0.004, frac: '1/8'  },
+      '3': { nom: 0.210, tol: 0.005, frac: '3/16' },
+      '4': { nom: 0.275, tol: 0.006, frac: '1/4'  },
+    };
+    /* Per-dash W overrides for 001–003, which have unique cross-sections within the 0XX series */
+    const WBYDASH = {
+      '001': { nom: 0.040, tol: 0.003, frac: '' },
+      '002': { nom: 0.050, tol: 0.003, frac: '' },
+      '003': { nom: 0.060, tol: 0.003, frac: '' },
+    };
+    /* Gland-detail break-corner radius R by AS568 series (first digit of the dash number).
+       Values mirror Parker Design Table 4-2 R groove radius, keyed by O-ring cross-section. */
+    const RSERIES = {
+      '0': { rMin: 0.005, rMax: 0.015 },   /* 0XX  (.070" cs) */
+      '1': { rMin: 0.005, rMax: 0.015 },   /* 1XX  (.103" cs) */
+      '2': { rMin: 0.010, rMax: 0.025 },   /* 2XX  (.139" cs) */
+      '3': { rMin: 0.020, rMax: 0.035 },   /* 3XX  (.210" cs) */
+      '4': { rMin: 0.020, rMax: 0.035 },   /* 4XX  (.275" cs) */
+    };
+
+    /* A max/min limit pair under the current display mode */
+    function limVal(min, max) {
+      if (pdMode === 'limit') return fmtRange(min, max);
+      if (pdMode === 'cad')   return fmt4((min + max) / 2);
+      return fmt((min + max) / 2);   /* nominal → mean of the limits (3 dp) */
+    }
+    /* The W cross-section (true nominal ± tolerance) */
+    function wVal(nom, tol) {
+      if (pdMode === 'limit') return fmtRange(nom - tol, nom + tol);
+      if (pdMode === 'cad')   return fmt4(nom);
+      return fmt(nom);
+    }
+    /* Radial clearance ½·(bore − plug). Bore = larger member (A or E), plug = smaller member (C or H).
+       Max clearance pairs the largest bore with the smallest plug; min pairs smallest bore with largest plug. */
+    function clrVal(boreMin, boreMax, plugMin, plugMax) {
+      const cMax = (boreMax - plugMin) / 2;
+      const cMin = (boreMin - plugMax) / 2;
+      if (pdMode === 'limit') return fmtRange(cMin, cMax);
+      if (pdMode === 'cad')   return fmt4((cMin + cMax) / 2);
+      return fmt((cMin + cMax) / 2);   /* nominal → mean clearance (3 dp) */
+    }
+    /* Spec range field (e.g. R radius): nominal shows the low value, limit the full range, CAD the mean (4 dp) */
+    function rangeVal(lo, hi) {
+      if (lo === null || lo === undefined) return '—';
+      if (pdMode === 'cad') return fmt4((lo + hi) / 2);
+      return (pdMode === 'nominal') ? fmt(lo) : fmtRange(lo, hi);
+    }
+
+    /* O-ring inside diameter ID (nominal in nominal/CAD mode; stacked min/max limit dimension in limit mode) */
+    function idVal(id, tol) {
+      if (id == null || tol == null) return '—';
+      if (pdMode === 'limit') return fmtRange(id - tol, id + tol);   /* (nom − tol)–(nom + tol), stacked */
+      if (pdMode === 'cad')   return fmt4(id);
+      return fmt(id);
+    }
+
+    /* Drive the figure from a Design Table 4-1 row.  max/min order: [C, A, F, B, H, E]. */
+    function updateParkerDiagram(r) {
+      if (!r) return;
+      pdCurrent = r;
+      /* keep whichever figure variant matches the current Hide-dimensions state */
+      setFigure(document.getElementById('pd-svg')?.classList.contains('pd-hide-dims'));
+      const w = WBYDASH[r.dash] || WSERIES[r.dash[0]] || { nom: NaN, tol: 0, frac: '' };
+      const modeTag = pdMode === 'limit' ? '   (limit dimensions)' : pdMode === 'cad' ? '   (CAD mean dimensions)' : '';
+      const elNo = document.getElementById('pd-no');
+      while (elNo.firstChild) elNo.removeChild(elNo.firstChild);
+      const t1No = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+      t1No.setAttribute("x", "14"); t1No.setAttribute("dy", "0");
+      t1No.textContent = "Selected ring:";
+      const t2No = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+      t2No.setAttribute("x", "14"); t2No.setAttribute("dy", "18");
+      t2No.textContent = r.dash + (w.frac ? ' (' + w.frac + '″ cs)' : '') + modeTag;
+      elNo.appendChild(t1No); elNo.appendChild(t2No);
+      setLive('pd-C',  limVal(r.min[0], r.max[0]));   /* C  Piston / Cylinder OD */
+      setLive('pd-A',  limVal(r.min[1], r.max[1]));   /* A  Cylinder Bore ID */
+      setLive('pd-F',  limVal(r.min[2], r.max[2]));   /* F  Gland OD */
+      setLive('pd-B',  limVal(r.min[3], r.max[3]));   /* B  Rod / Gland Sleeve OD */
+      setLive('pd-H',  limVal(r.min[4], r.max[4]));   /* H  Rod Bore ID */
+      setLive('pd-E',  limVal(r.min[5], r.max[5]));   /* E  Gland ID */
+      setLive('pd-W1', wVal(w.nom, w.tol));           /* W  cross-section (Section W-W) */
+      setLive('pd-W2', wVal(w.nom, w.tol));
+      const ga = findChart41A(r.dash);
+      setLive('pd-G',  ga                      ? limVal(ga.gMin,  ga.gMax)  : '—');
+      setLive('pd-G1', ga && ga.g1Min !== null ? limVal(ga.g1Min, ga.g1Max) : '—');
+      setLive('pd-G2', ga && ga.g2Min !== null ? limVal(ga.g2Min, ga.g2Max) : '—');
+      setLive('pd-D1', clrVal(r.min[1], r.max[1], r.min[0], r.max[0]));   /* D = ½(A − C)  male/piston radial clearance */
+      setLive('pd-D2', clrVal(r.min[4], r.max[4], r.min[3], r.max[3]));   /* D = ½(H − B)  rod-side radial clearance */
+      const rs = RSERIES[r.dash[0]];                                       /* R  gland-detail break-corner radius (by cross-section) */
+      setLive('pd-R',  rs ? rangeVal(rs.rMin, rs.rMax) : '—');
+      const ring = RINGS.find(x => String(x[0]).padStart(3, '0') === r.dash);  /* ID  O-ring inside diameter (± idTol in limit mode) */
+      setLive('pd-id', ring ? idVal(ring[1], ring[2]) : '—');
+      refreshDimBoxes();
+    }
+
+    function setPdMode(mode) {
+      pdMode = mode;
+      const nb = document.getElementById('pd-mode-nom'), lb = document.getElementById('pd-mode-lim'), cb = document.getElementById('pd-mode-cad');
+      if (nb && lb) {
+        nb.classList.toggle('sq-active', mode === 'nominal');
+        lb.classList.toggle('sq-active', mode === 'limit');
+        nb.setAttribute('aria-pressed', String(mode === 'nominal'));
+        lb.setAttribute('aria-pressed', String(mode === 'limit'));
+      }
+      if (cb) {
+        cb.classList.toggle('sq-active', mode === 'cad');
+        cb.setAttribute('aria-pressed', String(mode === 'cad'));
+      }
+      setHideDims(false); /* auto turn off "Hide dimensions" when a mode is picked */
+      const sel = document.getElementById('size-filter');
+      applyAS4395(sel ? sel.value : '');
+    }
+
+    /* AS4395 figure variants for each stacked image: redacted (printed labels removed — shown
+       under the live dimension overlay) vs. labelled (original printed dimensions — shown when
+       the live overlay is hidden). */
+    const PD_IMGS = [
+      { id: 'pd-img',  redacted: 'img/AS-4395-BCK-REDRAWN-2 - Redacted.png',   labelled: 'img/AS-4395-BCK-REDRAWN-2.png' },
+      { id: 'pd-img2', redacted: 'img/AS-4395-BCK-REDRAWN - Redacted.png', labelled: 'img/AS-4395-BCK-REDRAWN.png' }
+    ];
+    function setFigure(hidden) {
+      PD_IMGS.forEach(spec => {
+        const el = document.getElementById(spec.id);
+        if (!el) return;
+        const src = hidden ? spec.labelled : spec.redacted;
+        el.setAttribute('href', src);
+        el.setAttribute('xlink:href', src);
+      });
+    }
+
+    /* Show/hide the diagram dimension callouts and sync the toggle button */
+    function setHideDims(hidden) {
+      const svg = document.getElementById('pd-svg');
+      const hideBtn = document.getElementById('pd-hide');
+      if (!svg || !hideBtn) return;
+      svg.classList.toggle('pd-hide-dims', hidden);
+      hideBtn.classList.toggle('pd-on', hidden);
+      hideBtn.setAttribute('aria-pressed', String(hidden));
+      hideBtn.textContent = hidden ? 'Show dimensions' : 'Hide dimensions';
+      /* Hidden → show the original (labelled) figures; shown → redacted figures under our boxes */
+      setFigure(hidden);
+    }
+
+    /* Draw a #FDDAC4 background box behind each live dimension label */
+    function refreshDimBoxes() {
+      const svg = document.getElementById('pd-svg');
+      if (!svg) return;
+      svg.querySelectorAll('.pd-live').forEach(t => {
+        let box = t.previousElementSibling;
+        if (!box || !box.classList.contains('pd-livebg')) {
+          box = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          box.setAttribute('class', 'pd-livebg');
+          box.setAttribute('rx', '2');
+          t.parentNode.insertBefore(box, t);
+        }
+        try {
+          const b = t.getBBox();
+          const px = 3, py = 1.5;
+          box.setAttribute('x', b.x - px);
+          box.setAttribute('y', b.y - py);
+          box.setAttribute('width', b.width + px * 2);
+          box.setAttribute('height', b.height + py * 2);
+        } catch (e) { /* getBBox can throw if not yet rendered */ }
+      });
+    }
+    function selectRing(key) {
+      const r = findRing(key);
+      if (!r) return;
+      updateParkerDiagram(r);
+      const tbody = document.getElementById('oring-tbody');
+      if (tbody) tbody.querySelectorAll('tr').forEach(tr => {
+        tr.classList.toggle('pd-active', tr.getAttribute('data-key') === key);
+      });
+    }
+
+    /* ── AS4395 figure callouts ─────────────────────────────────────────────
+       Each label shows: prefix + the dimension's value (from the lookup tables) + suffix.
+       `dim` keys map to the table columns A,B,C,D,E,F,G,H,J,L,M,T,W. M and J appear twice
+       on the figure, so they have two label elements (…1 / …2). */
+    const AX_LABELS = [
+      { id: 'ax-M1', dim: 'M', pre: '',           suf: ''     },
+      { id: 'ax-L',  dim: 'L', pre: 'CHAM. 15°±5° TO ', suf: '' },
+      { id: 'ax-E',  dim: 'E', pre: '',           suf: '', below: 'HEX' },
+      { id: 'ax-J1', dim: 'J', pre: '',           suf: ''     },
+      { id: 'ax-H',  dim: 'H', pre: '',           suf: ''     },
+      { id: 'ax-G',  dim: 'G', pre: '',           suf: ''     },
+      { id: 'ax-B',  dim: 'B', pre: '',           suf: ''     },
+      { id: 'ax-A',  dim: 'A', pre: 'Ø',     suf: ''     },
+      { id: 'ax-D',  dim: 'D', pre: 'Ø',     suf: ''     },
+      { id: 'ax-C',  dim: 'C', pre: 'Ø',     suf: ''     },
+      { id: 'ax-W',  dim: 'W', pre: '',           suf: ' MIN' },
+      { id: 'ax-F',  dim: 'F', pre: 'Ø',     suf: ''     },
+      { id: 'ax-F2', dim: 'F', pre: 'Ø',     suf: ''     },
+      { id: 'ax-M2', dim: 'M', pre: '',           suf: ''     },
+      { id: 'ax-J2', dim: 'J', pre: '',           suf: ''     },
+      { id: 'ax-T',  dim: 'T', pre: '',           suf: ''     }
+    ];
+
+    /* Read the two oring-table-wrap tables into { sizeCode: { A,B,C,D,E,F,G,H,J,L,M,T,W } } */
+    let AS_DATA = {};
+    function buildAS4395Data() {
+      const data = {};
+      const tbls = document.querySelectorAll('table.as4395-dims');
+      /* Table 1 columns: 0 size, 1 nominal tube size, 2 T, 3 A, 4 B, 5 C, 6 D, 7 E */
+      if (tbls[0]) tbls[0].querySelectorAll('tbody tr').forEach(tr => {
+        const c = [...tr.children].map(td => td.textContent.trim());
+        data[c[0]] = Object.assign(data[c[0]] || {}, { T: c[2], A: c[3], B: c[4], C: c[5], D: c[6], E: c[7] });
+      });
+      /* Table 2 columns: 0 size, 1 F, 2 G, 3 H, 4 J, 5 L, 6 M, 7 W */
+      if (tbls[1]) tbls[1].querySelectorAll('tbody tr').forEach(tr => {
+        const c = [...tr.children].map(td => td.textContent.trim());
+        data[c[0]] = Object.assign(data[c[0]] || {}, { F: c[1], G: c[2], H: c[3], J: c[4], L: c[5], M: c[6], W: c[7] });
+      });
+      return data;
+    }
+
+    /* Per-dimension tolerance metadata, taken from the table column headers:
+         type 'text'  — non-numeric (T thread spec): shown verbatim in every mode.
+         type 'range' — A and E: the table value is already a min/max range; used as the
+                        limit dimension as-is. CAD = average of that range.
+         type 'tol'   — header gives an asymmetric/symmetric tolerance; limit = nom−minus … nom+plus.
+         type 'plain' — no tolerance on the column; the single value is its own limit. */
+    const AS_DIMTOL = {
+      T: { type: 'text' },
+      A: { type: 'range' },
+      E: { type: 'range' },
+      B: { type: 'tol', plus: 0.015, minus: 0.000 },
+      C: { type: 'tol', plus: 0.000, minus: 0.005 },
+      D: { type: 'tol', plus: 0.003, minus: 0.003 },
+      F: { type: 'tol', plus: 0.002, minus: 0.003 },
+      L: { type: 'tol', plus: 0.010, minus: 0.010 },
+      M: { type: 'tol', plus: 0.015, minus: 0.000 },
+      G: { type: 'plain' },
+      H: { type: 'plain' },
+      J: { type: 'tol', plus: 0.015, minus: 0.015 },
+      W: { type: 'plain' }
+    };
+    /* toFixed(dp) with the leading zero stripped to match the table style (".177", not "0.177"). */
+    function asFmt(v, dp) {
+      if (v === null || v === undefined || isNaN(v)) return '—';
+      return v.toFixed(dp).replace(/^(-?)0\./, '$1.');
+    }
+    /* Resolve a dimension's display string for the current mode: nominal (raw, ranges kept),
+       limit (tolerances applied), or cad (mean of the limits, 4 dp). */
+    function asValueFor(dim, raw, mode) {
+      if (raw == null || raw === '' || raw === '—') return '—';
+      const meta = AS_DIMTOL[dim] || { type: 'plain' };
+      if (meta.type === 'text') return raw;            /* thread spec — same in every mode */
+      if (mode === 'nominal') return raw;              /* leave ranges on the figure */
+
+      if (meta.type === 'range') {
+        const n = raw.split(/\s*-\s*/).map(parseFloat);
+        if (mode === 'cad' && n.length >= 2 && !isNaN(n[0]) && !isNaN(n[1])) return asFmt((n[0] + n[1]) / 2, 4);
+        return raw;                                    /* limit = table range as-is */
+      }
+      if (meta.type === 'tol') {
+        const nom = parseFloat(raw);
+        if (isNaN(nom)) return raw;
+        const min = nom - meta.minus, max = nom + meta.plus;
+        if (mode === 'cad') return asFmt((min + max) / 2, 4);
+        return (min === max) ? asFmt(min, 3) : asFmt(min, 3) + ' - ' + asFmt(max, 3);
+      }
+      /* plain: no tolerance — value is its own limit */
+      const num = parseFloat(raw);
+      if (isNaN(num)) return raw;
+      return (mode === 'cad') ? asFmt(num, 4) : raw;
+    }
+
+    /* Fill every figure callout from the selected size code (or em-dash when none/unknown). */
+    function applyAS4395(code) {
+      const row = AS_DATA[code] || null;
+      AX_LABELS.forEach(cfg => {
+        const e = document.getElementById(cfg.id);
+        if (!e) return;
+        const raw = row && row[cfg.dim] ? row[cfg.dim] : '—';
+        const val = asValueFor(cfg.dim, raw, pdMode);
+        const x = parseFloat(e.getAttribute('x')) || 0;
+        e.textContent = '';
+        /* Helper: one tspan, centered on (xx) horizontally and on its own line vertically. */
+        const addTspan = (xx, dy, text, anchor) => {
+          const ts = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+          ts.setAttribute('x', xx);
+          ts.setAttribute('dy', dy);
+          ts.setAttribute('text-anchor', anchor || 'middle');
+          ts.setAttribute('dominant-baseline', 'middle');
+          ts.textContent = text;
+          e.appendChild(ts);
+        };
+        const isDia = cfg.pre === 'Ø';
+        /* In limit mode a min/max range is stacked as two lines (min on top, max on bottom). */
+        const parts = (pdMode === 'limit' && typeof val === 'string' && val.includes(' - '))
+          ? val.split(' - ') : null;
+        /* Stacked Ø dims render the symbol separately (left, vertically centered on the stack). */
+        const diaStack = isDia && !!parts;
+        /* Numeric value line(s). */
+        const vlines = parts
+          ? [ (diaStack ? '' : cfg.pre) + parts[0], parts[1] + cfg.suf ]
+          : [ cfg.pre + val + cfg.suf ];
+        /* Optional note on its own centered line below the value (e.g. "HEX" on E). */
+        const lines = cfg.below ? vlines.concat([cfg.below]) : vlines;
+        const n = lines.length;
+        const top = -((n - 1) / 2);                        /* em; dominant-baseline:middle → symmetric block */
+        lines.forEach((line, i) => addTspan(x, (i === 0 ? top : 1) + 'em', line, 'middle'));
+        if (diaStack) {
+          /* Ø pulled out to the left of the value, vertically centered on the numeric stack
+             (monospace → width is predictable). */
+          const chW = 18 * 0.6;                            /* ~advance width at 18px monospace */
+          const offX = (Math.max(...vlines.map(s => s.length)) / 2 + 0.55) * chW;
+          const lastCum = top + (n - 1);                   /* baseline after the final line */
+          const numCenter = top + (vlines.length - 1) / 2; /* centre of the numeric lines */
+          addTspan(x - offX, (numCenter - lastCum) + 'em', 'Ø', 'end');
+        }
+      });
+      const t = document.getElementById('pd-no');
+      if (t) {
+        t.textContent = '';
+        const tx = t.getAttribute('x') || '14';
+        const a = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+        a.setAttribute('x', tx); a.setAttribute('dy', '0'); a.textContent = 'AS4395 Size Code:';
+        const b = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+        b.setAttribute('x', tx); b.setAttribute('dy', '18'); b.textContent = code || '—';
+        t.appendChild(a); t.appendChild(b);
+      }
+      if (typeof refreshDimBoxes === 'function') refreshDimBoxes();
+    }
+
+    /* Highlight the rows matching the selected AS4395 Size Code (first column) in both
+       dimension tables (no auto-scroll). Empty value clears it. */
+    function highlightSize(code) {
+      let first = null;
+      document.querySelectorAll('.as4395-dims tbody tr').forEach(tr => {
+        const cell = tr.querySelector('td');
+        const match = !!code && cell && cell.textContent.trim() === code;
+        tr.classList.toggle('size-active', match);
+        if (match && !first) first = tr;
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      AS_DATA = buildAS4395Data();
+      const sizeSel = document.getElementById('size-filter');
+      /* default the figure to the first AS4395 size */
+      if (sizeSel) sizeSel.value = '02';
+      applyAS4395(sizeSel ? sizeSel.value : '02');
+      if (sizeSel) sizeSel.addEventListener('change', () => {
+        applyAS4395(sizeSel.value);
+        highlightSize(sizeSel.value);
+      });
+      const mnom = document.getElementById('pd-mode-nom');
+      const mlim = document.getElementById('pd-mode-lim');
+      const mcad = document.getElementById('pd-mode-cad');
+      if (mnom) mnom.addEventListener('click', () => setPdMode('nominal'));
+      if (mlim) mlim.addEventListener('click', () => setPdMode('limit'));
+      if (mcad) mcad.addEventListener('click', () => setPdMode('cad'));
+      const hideBtn = document.getElementById('pd-hide');
+      const svg = document.getElementById('pd-svg');
+      if (hideBtn && svg) hideBtn.addEventListener('click', () => {
+        setHideDims(!svg.classList.contains('pd-hide-dims'));
+      });
+
+      /* ── DEV: label drag + live coordinate readout (currently always on) ── */
+      initLabelDragDev(svg);
+    });
+
+    /* Friendly names for each draggable label, shown in the dev hover tooltip. */
+    const PD_LABELS = {
+      'pd-no':  'Title — AS4395 Size Code',
+      'ax-M1':  'M',
+      'ax-L':   'L — 15°±5° TO',
+      'ax-E':   'E — HEX',
+      'ax-J1':  'J',
+      'ax-H':   'H',
+      'ax-G':   'G',
+      'ax-B':   'B',
+      'ax-A':   'A — ØA',
+      'ax-D':   'D — ØD',
+      'ax-C':   'C — ØC',
+      'ax-W':   'W — MIN',
+      'ax-F':   'F — ØF',
+      'ax-F2':  'F2 — ØF',
+      'ax-M2':  'M',
+      'ax-J2':  'J',
+      'ax-T':   'T — Thread'
+    };
+    const pdLabelName = el => PD_LABELS[el.id] || (el.id || '').replace(/^(pd|ax)-/, '') || 'label';
+
+    /* DEV ONLY — make every diagram label draggable and dump live coordinates. */
+    function initLabelDragDev(svg) {
+      if (!svg) return;
+      svg.classList.add('pd-dev');
+
+      /* Floating tooltip identifying the label under the cursor (setLive wipes any SVG
+         <title> child, so use an HTML overlay instead). */
+      const tip = document.createElement('div');
+      tip.className = 'pd-dev-tip';
+      document.body.appendChild(tip);
+      const showTip = (el, e) => {
+        tip.textContent = pdLabelName(el);
+        tip.style.display = 'block';
+        tip.style.left = (e.clientX + 14) + 'px';
+        tip.style.top  = (e.clientY + 14) + 'px';
+      };
+      const hideTip = () => { tip.style.display = 'none'; };
+      svg.addEventListener('pointermove', (e) => {
+        const t = e.target.closest('.pd-live, .pd-title');
+        if (t) showTip(t, e); else hideTip();
+      });
+      svg.addEventListener('pointerleave', hideTip);
+
+      /* Coordinate readout panel, rendered just below the diagram */
+      const panel = document.createElement('div');
+      panel.className = 'pd-dev-panel';
+      panel.innerHTML =
+        '<div class="pd-dev-head">DEV — drag labels to position; copy the lines below back into the SVG source' +
+        ' <button type="button" id="pd-dev-copy">Copy</button></div>' +
+        '<pre id="pd-dev-out"></pre>';
+      const wrap = svg.closest('.pd-wrap') || svg.parentNode;
+      //wrap.parentNode.insertBefore(panel, wrap.nextSibling); //Comments out the DEV PANEL (DRAG) LEAVES TOOLTIPS ACTIVE
+
+      const out = panel.querySelector('#pd-dev-out');
+      const labels = () => [...svg.querySelectorAll('.pd-live, .pd-title')];
+
+      function dump() {
+        out.textContent = labels().map(e => {
+          const a = e.getAttribute('text-anchor') || 'start';
+          return `<text class="${e.getAttribute('class')}" id="${e.id}" x="${e.getAttribute('x')}" y="${e.getAttribute('y')}" text-anchor="${a}">`;
+        }).join('\n');
+      }
+      panel.querySelector('#pd-dev-copy').addEventListener('click', () => {
+        navigator.clipboard && navigator.clipboard.writeText(out.textContent);
+      });
+
+      /* Convert a pointer event to SVG user-space (viewBox) coordinates */
+      function toSvg(evt) {
+        const pt = svg.createSVGPoint();
+        pt.x = evt.clientX; pt.y = evt.clientY;
+        return pt.matrixTransform(svg.getScreenCTM().inverse());
+      }
+
+      let drag = null, offX = 0, offY = 0;
+      svg.addEventListener('pointerdown', (e) => {
+        const t = e.target.closest('.pd-live, .pd-title');
+        if (!t) return;
+        drag = t;
+        const p = toSvg(e);
+        offX = p.x - parseFloat(t.getAttribute('x'));
+        offY = p.y - parseFloat(t.getAttribute('y'));
+        t.setPointerCapture(e.pointerId);
+        e.preventDefault();
+      });
+      svg.addEventListener('pointermove', (e) => {
+        if (!drag) return;
+        const p = toSvg(e);
+        const nx = Math.round(p.x - offX), ny = Math.round(p.y - offY);
+        drag.setAttribute('x', nx);
+        drag.setAttribute('y', ny);
+        /* Rebuild the callouts at their new anchors so multi-tspan layouts (stacked limits,
+           the offset Ø) re-lay-out correctly instead of collapsing onto one x. */
+        const sel = document.getElementById('size-filter');
+        applyAS4395(sel ? sel.value : '');
+        dump();
+      });
+      const end = () => { drag = null; };
+      svg.addEventListener('pointerup', end);
+      svg.addEventListener('pointercancel', end);
+      dump();
+    }
+    </script>
+
+    <style>
+      /* ── O-Ring page styles ───────────────────────────── */
+      .oring-filter-bar { background: #eee; border: 2px solid rgb(67,67,67); border-radius: 8px; padding: 12px 16px; margin-bottom: 1rem; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+      .oring-filter-bar label { font-size: 0.8rem; font-weight: 700; color: #6a746a; text-transform: uppercase; letter-spacing: 0.07em; margin: 0; }
+      .oring-count-tag { font-size: 0.78rem; color: #888; margin-left: auto; }
+
+      .oring-table-wrap { overflow-x: auto; border: 2px solid rgb(67,67,67); border-radius: 8px; }
+      .oring-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; margin: 0; }
+      .oring-table thead th { background: #6a746a; color: #eee; padding: 5px 8px; text-align: center; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; border-right: 1px solid #4a5a4a; position: sticky; top: 0; z-index: 1; }
+      .oring-table thead th:last-child { border-right: none; }
+      .oring-table thead tr:nth-child(2) th { background: #5a6a5a; font-size: 0.65rem; font-weight: 400; font-style: italic; padding: 2px 8px 4px; }
+      .oring-table tbody tr:nth-child(even) td { background: #f5f5f5; }
+      .oring-table tbody tr:hover td { background: #dde8dd; }
+      .oring-table tbody td { border-right: 1px solid #ddd; padding: 3px 8px; color: #333; white-space: nowrap; }
+      .oring-table tbody td:last-child { border-right: none; }
+      .oring-table tbody td:first-child { font-weight: 700; color: #1a3a40; }
+      .oring-table thead tr.oring-tol-row th { background: #e8efe8; color: #444; font-style: normal; font-weight: 600; font-size: 0.62rem; text-transform: none; letter-spacing: 0; padding: 3px 8px; position: static; border-top: 1px solid #4a5a4a; }
+      .oring-table tbody tr { cursor: pointer; }
+      .oring-table tbody tr.pd-active td { background: #cfe0cf !important; }
+      .oring-table.chart42 tbody tr { cursor: default; }
+      .oring-table.chart42 tbody tr:hover td { background: inherit; }
+
+      /* ── Design Table 4-1 — Parker two-row (max / min) layout ── */
+      .oring-table.t41 tbody tr { cursor: pointer; }
+      .oring-table.t41 tbody tr td { background: #fff; }
+      .oring-table.t41 tbody td:first-child { font-weight: 400; color: #333; }
+      .oring-table.t41 tbody td.t41-dash { vertical-align: middle; font-weight: 700; color: #1a3a40; font-size: 0.82rem; border-right: 1px solid #ccc; }
+      .oring-table.t41 tbody tr.t41-min td { border-bottom: 1.5px solid #cfcfcf; }
+      .oring-table.t41 tbody tr.t41-max:hover td,
+      .oring-table.t41 tbody tr.t41-min:hover td { background: #eef3ee; }
+
+      /* ── Placeholder gland diagram ───────────────────── */
+      .pd-wrap { margin-top: 1.25rem; max-width: 1201px; margin-left: auto; margin-right: auto; }
+      .pd-head { font-size: 0.8rem; font-weight: 700; color: #6a746a; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+      .sq-seg { display: inline-flex; border: 1px solid #b9bcb9; border-radius: 4px; overflow: hidden; width: fit-content; }
+      .sq-seg button { appearance: none; border: 0; background: #fff; color: #5a6168; font: 600 13px/1 "Roboto", Arial, sans-serif; padding: 8px 15px; cursor: pointer; border-right: 1px solid #b9bcb9; }
+      .sq-seg button:last-child { border-right: none; }
+      .sq-seg button.sq-active { background: #6a746a; color: #fff; }
+      .pd-hidebtn { appearance: none; border: 1px solid #b9bcb9; border-radius: 4px; background: #fff; color: #5a6168; font: 600 13px/1 "Roboto", Arial, sans-serif; padding: 9px 15px; cursor: pointer; }
+      .pd-hidebtn.pd-on { background: #6a746a; color: #fff; border-color: #6a746a; }
+      .pd-svg.pd-hide-dims .pd-live,
+      .pd-svg.pd-hide-dims .pd-livebg,
+      .pd-svg.pd-hide-dims .pd-title,
+      .pd-svg.pd-hide-dims .pd-no-bg { display: none; }
+      .pd-hint { font-size: 0.72rem; color: #888; margin-bottom: 8px; }
+      .pd-svg { width: 100%; height: auto; max-width: 100%; background: #fff; border: 2px solid rgb(67,67,67); border-radius: 8px; display: block; }
+      .pd-svg .pd-title { font-family: "Roboto", Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #1a3a40; paint-order: stroke; stroke: #fff; stroke-width: 3px; stroke-linejoin: round; }
+      .pd-svg .pd-live { font-family: ui-monospace, Consolas, monospace; font-size: 18px; font-weight: 700; fill: #000; }
+      .pd-svg .pd-livebg { fill: #ededed; stroke: #8a8a8a; stroke-width: 0.8px; }
+      /* DEV drag mode */
+      .pd-svg.pd-dev .pd-livebg { pointer-events: none; }
+      .pd-svg.pd-dev .pd-live, .pd-svg.pd-dev .pd-title { cursor: move; }
+      .pd-dev-panel { max-width: 1201px; margin: 8px auto 1rem; border: 2px solid #b3362b; border-radius: 8px; background: #fff; }
+      .pd-dev-head { background: #b3362b; color: #fff; font: 700 12px/1.4 "Roboto", Arial, sans-serif; padding: 6px 10px; }
+      .pd-dev-head button { margin-left: 10px; font-size: 11px; padding: 2px 8px; cursor: pointer; }
+      .pd-dev-panel pre { margin: 0; padding: 10px; font: 12px/1.5 ui-monospace, Consolas, monospace; color: #1c2227; white-space: pre; overflow-x: auto; }
+      .pd-dev-tip { display: none; position: fixed; z-index: 9999; pointer-events: none; background: #1c2227; color: #fff; font: 600 12px/1.3 "Roboto", Arial, sans-serif; padding: 4px 8px; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,.3); white-space: nowrap; }
+      .pd-svg text { font-family: "Roboto", Arial, sans-serif; }
+      .pd-part { fill: #dfe2e4; stroke: #1c2227; stroke-width: 1.2; }
+      .pd-oring { fill: rgba(106,116,106,.35); stroke: #1a3a40; stroke-width: 1.3; }
+      .pd-surface { stroke: #1c2227; stroke-width: 1.6; fill: none; }
+      .pd-lead { stroke: #999; stroke-width: 0.7; fill: none; }
+      .pd-cl { stroke: #999; stroke-width: 0.6; stroke-dasharray: 7 2 1.5 2; fill: none; }
+      .pd-sym { font-size: 11px; font-weight: 700; fill: #1a3a40; }
+      .pd-val { font-size: 11px; fill: #1c2227; font-family: ui-monospace, Consolas, monospace; }
+      .pd-title { font-size: 13px; font-weight: 700; fill: #1a3a40; }
+      .pd-tag { font-size: 9px; fill: #777; }
+
+      .oring-col-def { background: #eee; border: 2px solid rgb(67,67,67); border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
+      .oring-col-def-head { background: #6a746a; padding: 7px 14px; font-size: 12px; font-weight: 700; color: #eee; text-transform: uppercase; letter-spacing: 0.07em; }
+      .oring-col-def table { width: 100%; font-size: 12px; border-collapse: collapse; }
+      .oring-col-def table th { background: #d9d9d9; border: 1px solid #bbb; padding: 3px 8px; font-weight: 600; color: #444; text-align: left; }
+      .oring-col-def table td { border: 1px solid #ccc; padding: 3px 8px; color: #333; }
+      .oring-col-def table tr:nth-child(even) td { background: #f5f5f5; }
+
+      .prop65-box { background: #fff8e6; border-left: 4px solid #cc7700; border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 0.75rem; color: #5a3a00; line-height: 1.55; margin-bottom: 1rem; }
+      .prop65-box strong { color: #8a5000; }
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- BANNER -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              AS4395 Checker Tool
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- INTRO -->
+    <!-- <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3" style="max-width:860px;">
+            <div class="custom-heading">AS4395 Checker Tool</div>
+            <div class="mt-3 text-start">
+              <p>
+                This tool references and improves the functionality of <span style="font-weight: var(--font-weight-normal)">SAE AS4395</span> from the Parker O-Ring Handbook
+                (&ldquo;ORD 5700&rdquo;), covering gland design dimensions for O-ring and other elastomeric seals
+                per <span style="font-weight: var(--font-weight-normal)">SAE AS5857</span>. It spans the full AS568 dash-number range
+                (0XX, 1XX, 2XX, 3XX and 4XX series).
+              </p>
+              <p>
+                Use the search box to filter by dash number. All dimensions are in inches. Each dash number lists
+                maximum and minimum limits for every gland feature.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section> -->
+
+
+    <!-- FILTER + TABLE -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12 px-3">
+
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Fitting End, Flared, Tube Connection — Design Standard</div>
+          </div>
+
+          <div style="max-width:1201px; margin:0 auto;">
+
+            <!-- Size selector -->
+            <div class="oring-filter-bar mt-3">
+              <label for="size-filter">AS4395 Size Code:</label>
+              <select id="size-filter" class="dropdowncalc fs-6" style="width:11rem;" aria-label="Select AS4395 size code">
+                <option value="">All sizes</option>
+                <option value="02">02</option>
+                <option value="03">03</option>
+                <option value="04">04</option>
+                <option value="05">05</option>
+                <option value="06">06</option>
+                <option value="08">08</option>
+                <option value="10">10</option>
+                <option value="12">12</option>
+                <option value="16">16</option>
+                <option value="20">20</option>
+                <option value="24">24</option>
+                <option value="28">28</option>
+                <option value="32">32</option>
+                <option value="40">40</option>
+                <option value="48">48</option>
+              </select>
+            </div>
+
+            <!-- PLACEHOLDER GLAND DIAGRAM (linked to table selection) -->
+            <div class="pd-wrap mx-auto px-auto">
+              <div class="pd-head">Gland Cross-Section &mdash; Selected Ring</div>
+              <div class="pd-hint">Click any row below to load its dimensions; the diagram defaults to the first row shown.</div>
+              <div class="pd-toggle" style="margin-bottom:8px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <div class="sq-seg" role="group" aria-label="Dimension display mode">
+                  <button type="button" id="pd-mode-nom" class="sq-active" aria-pressed="true">Nominal Dimensions</button>
+                  <button type="button" id="pd-mode-lim" aria-pressed="false">Limit Dimensions</button>
+                  <button type="button" id="pd-mode-cad" aria-pressed="false">CAD Dimensions</button>
+                </div>
+                <button type="button" id="pd-hide" class="pd-hidebtn" aria-pressed="false">Hide dimensions</button>
+              </div>
+              <svg class="pd-svg" id="pd-svg" viewBox="0 0 1232 1768.2" style="max-width:80%; margin-left:auto; margin-right:auto;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="AS4395 gland figure with live dimensions for the selected ring">
+                <!-- Two AS4395 figures stacked vertically. Each is scaled to a common 1232 px width;
+                     heights preserve each source image's aspect ratio (1337×800 and 1128×944). -->
+                <image id="pd-img"  href="img/AS-4395-BCK-REDRAWN-2 - Redacted.png"   xlink:href="img/AS-4395-BCK-REDRAWN-2 - Redacted.png"   x="0" y="0"     width="1232" height="1031.0"  preserveAspectRatio="xMidYMin meet"/>
+                <image id="pd-img2" href="img/AS-4395-BCK-REDRAWN - Redacted.png" xlink:href="img/AS-4395-BCK-REDRAWN - Redacted.png" x="0" y="1031.0" width="1232" height="737.2" preserveAspectRatio="xMidYMin meet"/>
+
+                <rect id="pd-no-bg" class="pd-no-bg" x="5" y="5" width="225" height="50" rx="3" style="fill: #e0e0e0; stroke: #000; stroke-width: 1.5px;"/>
+                <text class="pd-title" id="pd-no" x="14" y="24" text-anchor="start"><tspan x="14" dy="0">Selected ring:</tspan><tspan x="14" dy="18">&mdash;</tspan></text>
+
+                <!-- AS4395 dimension callouts, driven by the size-code lookup tables.
+                     Text = optional prefix + the dimension value + optional suffix (see AX_LABELS in script).
+                     Positions are rough starting points stacked over both figures — drag them into place
+                     (drag mode is on) and copy the coordinates from the dev panel back into the source. -->
+                <text class="pd-live" id="ax-M1" x="134"  y="862"  text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-L"  x="177"  y="1202" text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-E"  x="1074" y="1138" text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-J1" x="283"  y="896"  text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-H"  x="282"  y="1627" text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-G"  x="318"  y="207"  text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-B"  x="465"  y="255"  text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-A"  x="518"  y="302"  text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-D"  x="607"  y="409"  text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-C"  x="685"  y="409"  text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-W"  x="962"  y="544"  text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-F"  x="79"   y="644"  text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-F2" x="205"  y="1376" text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-M2" x="456"  y="1075" text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-J2" x="424"  y="1593" text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-T"  x="97"   y="222"  text-anchor="middle">&mdash;</text>
+              </svg>
+            </div>
+            <div class="as-ident">
+                <div class="as-ident-text text-center">
+                  <div class="as-ident-title">Fitting End, Flared, Tube Connection &mdash; Design Standard</div>
+                  <div class="as-ident-src">Source: SAE Aerospace Standard AS4395, Revision B &middot; Custodian: SAE G-3/G-3B</div>
+                </div>
+                <!-- <svg class="as-proj-svg" viewBox="0 0 184 96" width="184" height="96" role="img" aria-label="Third angle projection symbol">
+                  <rect x="1" y="1" width="182" height="94" fill="none" stroke="#333" stroke-width="1.5"/>
+                  <line x1="1" y1="26" x2="183" y2="26" stroke="#333" stroke-width="1"/>
+                  <text x="92" y="18" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#333">THIRD ANGLE PROJECTION</text>
+                  <line x1="22" y1="61" x2="162" y2="61" stroke="#333" stroke-width="1" stroke-dasharray="7 3 1.5 3"/>
+                  <circle cx="58" cy="61" r="16" fill="none" stroke="#333" stroke-width="1.3"/>
+                  <line x1="58" y1="41" x2="58" y2="81" stroke="#333" stroke-width="1" stroke-dasharray="7 3 1.5 3"/>
+                  <polygon points="104,44 146,52 146,70 104,78" fill="none" stroke="#333" stroke-width="1.3"/>
+                </svg> -->
+              </div>
+
+            <!-- Note -->
+            <div style="font-size:0.72rem; color:#666; margin-bottom:6px; padding-left:2px;">
+              All dimensions in inches.
+            </div>
+
+            <!-- Data table -->
+            <style>
+              .as4395-dims { font-size: 0.7rem; }
+              .as4395-dims + .as4395-dims { margin-top: 1.5rem; }
+              .as4395-dims thead th { white-space: nowrap; }
+              .as4395-dims .tol { display: block; font-weight: 400; font-style: italic; font-size: 0.82em; opacity: 0.85; }
+              .as4395-dims tbody td:first-child { font-weight: 700; color: #1a3a40; }
+              .as4395-dims tbody tr.size-active td { background: #cfe0cf !important; }
+            </style>
+            <div class="oring-table-wrap">
+              <table class="oring-table chart42 as4395-dims" aria-label="AS4395 size code dimensions A through E">
+                <thead>
+                  <tr>
+                    <th>Basic No.<br>AS4395 /9/<br>Size Code</th>
+                    <th>Nominal<br>Tube Size</th>
+                    <th>T &mdash; Thread per<br>AS8879 Class 3A</th>
+                    <th>A</th>
+                    <th>B<span class="tol">+.015 / -.000</span></th>
+                    <th>C<span class="tol">+.000 / -.005</span></th>
+                    <th>D<span class="tol">&plusmn;.003</span></th>
+                    <th>E</th>
+                  </tr>
+                </thead>
+                <tbody class="text-center">
+                  <tr><td>02</td><td>.125</td><td>.3125-24 UNJF</td><td>.058 - .065</td><td>.177</td><td>.245</td><td>.083</td><td>.552 - .565</td></tr>
+                  <tr><td>03</td><td>.188</td><td>.3750-24 UNJF</td><td>.121 - .128</td><td>.177</td><td>.307</td><td>.146</td><td>.615 - .628</td></tr>
+                  <tr><td>04</td><td>.250</td><td>.4375-20 UNJF</td><td>.168 - .175</td><td>.193</td><td>.359</td><td>.193</td><td>.678 - .691</td></tr>
+                  <tr><td>05</td><td>.312</td><td>.5000-20 UNJF</td><td>.230 - .237</td><td>.193</td><td>.421</td><td>.255</td><td>.740 - .753</td></tr>
+                  <tr><td>06</td><td>.375</td><td>.5625-18 UNJF</td><td>.293 - .301</td><td>.198</td><td>.476</td><td>.318</td><td>.802 - .816</td></tr>
+                  <tr><td>08</td><td>.500</td><td>.7500-16 UNJF</td><td>.387 - .395</td><td>.253</td><td>.654</td><td>.426</td><td>.990 - 1.003</td></tr>
+                  <tr><td>10</td><td>.625</td><td>.8750-14 UNJF</td><td>.480 - .488</td><td>.266</td><td>.767</td><td>.539</td><td>1.113 - 1.128</td></tr>
+                  <tr><td>12</td><td>.750</td><td>1.0625-12 UNJ</td><td>.604 - .614</td><td>.315</td><td>.938</td><td>.664</td><td>1.363 - 1.380</td></tr>
+                  <tr><td>16</td><td>1.000</td><td>1.3125-12 UNJ</td><td>.839 - .851</td><td>.315</td><td>1.188</td><td>.913</td><td>1.613 - 1.630</td></tr>
+                  <tr><td>20</td><td>1.250</td><td>1.6250-12 UNJ</td><td>1.073 - 1.086</td><td>.367</td><td>1.501</td><td>1.147</td><td>1.863 - 1.880</td></tr>
+                  <tr><td>24</td><td>1.500</td><td>1.8750-12 UNJ</td><td>1.307 - 1.320</td><td>.378</td><td>1.750</td><td>1.381</td><td>2.109 - 2.135</td></tr>
+                  <tr><td>28</td><td>1.750</td><td>2.2500-12 UNJ</td><td>1.542 - 1.557</td><td>.451</td><td>2.125</td><td>1.646</td><td>2.484 - 2.510</td></tr>
+                  <tr><td>32</td><td>2.000</td><td>2.5000-12 UNJ</td><td>1.776 - 1.791</td><td>.461</td><td>2.375</td><td>1.880</td><td>2.734 - 2.760</td></tr>
+                  <tr><td>40</td><td>2.500</td><td>3.0000-12 UNJ</td><td>2.276 - 2.291</td><td>.395</td><td>2.882</td><td>2.380</td><td>3.234 - 3.260</td></tr>
+                  <tr><td>48</td><td>3.000</td><td>3.5000-12 UNJ</td><td>2.776 - 2.791</td><td>.395</td><td>3.382</td><td>2.880</td><td>3.734 - 3.760</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="oring-table-wrap as4395-dims" style="margin-top:1.25rem;">
+              <table class="oring-table chart42 as4395-dims" aria-label="AS4395 size code dimensions F through W">
+                <thead>
+                  <tr>
+                    <th>Basic No.<br>AS4395 /9/<br>Size Code</th>
+                    <th>F<span class="tol">+.002 / -.003</span></th>
+                    <th>G</th>
+                    <th>H</th>
+                    <th>J<span class="tol">&plusmn;.015</span></th>
+                    <th>L<span class="tol">&plusmn;.010</span></th>
+                    <th>M<span class="tol">+.015 / -.000</span></th>
+                    <th>W</th>
+                  </tr>
+                </thead>
+                <tbody class="text-center">
+                  <tr><td>02</td><td>.250</td><td>.433</td><td>.005</td><td>.448</td><td>.542</td><td>.063</td><td>.005</td></tr>
+                  <tr><td>03</td><td>.312</td><td>.464</td><td>.005</td><td>.479</td><td>.605</td><td>.063</td><td>.005</td></tr>
+                  <tr><td>04</td><td>.364</td><td>.535</td><td>.005</td><td>.550</td><td>.668</td><td>.075</td><td>.005</td></tr>
+                  <tr><td>05</td><td>.426</td><td>.535</td><td>.005</td><td>.550</td><td>.730</td><td>.075</td><td>.005</td></tr>
+                  <tr><td>06</td><td>.481</td><td>.541</td><td>.005</td><td>.556</td><td>.792</td><td>.083</td><td>.005</td></tr>
+                  <tr><td>08</td><td>.660</td><td>.642</td><td>.005</td><td>.657</td><td>.980</td><td>.094</td><td>.012</td></tr>
+                  <tr><td>10</td><td>.773</td><td>.743</td><td>.005</td><td>.758</td><td>1.103</td><td>.107</td><td>.022</td></tr>
+                  <tr><td>12</td><td>.945</td><td>.849</td><td>.008</td><td>.864</td><td>1.353</td><td>.125</td><td>.022</td></tr>
+                  <tr><td>16</td><td>1.195</td><td>.896</td><td>.008</td><td>.911</td><td>1.603</td><td>.125</td><td>.029</td></tr>
+                  <tr><td>20</td><td>1.507</td><td>.943</td><td>.008</td><td>.958</td><td>1.853</td><td>.125</td><td>.029</td></tr>
+                  <tr><td>24</td><td>1.756</td><td>1.068</td><td>.008</td><td>1.083</td><td>2.099</td><td>.125</td><td>.029</td></tr>
+                  <tr><td>28</td><td>2.131</td><td>1.193</td><td>.008</td><td>1.208</td><td>2.474</td><td>.125</td><td>.044</td></tr>
+                  <tr><td>32</td><td>2.381</td><td>1.318</td><td>.008</td><td>1.333</td><td>2.724</td><td>.125</td><td>.044</td></tr>
+                  <tr><td>40</td><td>2.881</td><td>1.094</td><td>.008</td><td>1.109</td><td>3.224</td><td>.125</td><td>.044</td></tr>
+                  <tr><td>48</td><td>3.381</td><td>1.172</td><td>.008</td><td>1.187</td><td>3.724</td><td>.125</td><td>.044</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- AS4395 standard notes -->
+            <style>
+              .as4395-notes { color: #333; font-size: 0.9rem; line-height: 1.6; text-align: left; margin-top: 1.25rem; }
+              .as4395-notes .as-ident { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: flex-start; justify-content: space-between; padding-bottom: 14px; margin-bottom: 16px; border-bottom: 1px solid #ccc; }
+              .as4395-notes .as-ident-text { flex: 1 1 320px; min-width: 260px; }
+              .as4395-notes .as-ident-title { font-weight: 700; font-size: 1.05rem; color: #1a3a40; }
+              .as4395-notes .as-ident-src { font-size: 0.82rem; color: #666; margin-top: 3px; }
+              .as4395-notes .as-proj-svg { flex: 0 0 auto; }
+              .as4395-notes .as-notes-head { font-weight: 700; font-size: 1rem; letter-spacing: 0.5px; margin-bottom: 12px; color: #1a3a40; }
+              .as4395-notes ol { list-style: none; padding-left: 0; margin: 0; }
+              .as4395-notes > ol > li { margin-bottom: 12px; position: relative; padding-left: 38px; text-align: justify; }
+              .as4395-notes .as-note-num { position: absolute; left: 0; top: 0; width: 32px; font-weight: 400; }
+              .as4395-notes .sub-list { list-style: lower-alpha; padding-left: 22px; margin-top: 6px; }
+              .as4395-notes .sub-list li { padding-left: 4px; margin-bottom: 5px; text-align: left; }
+              .as4395-notes pre.callout-diagram { margin: 12px 0 12px 20px; font-family: ui-monospace, "Courier New", Courier, monospace; font-size: 0.85rem; line-height: 1.2; white-space: pre; overflow-x: auto; }
+            </style>
+            <div class="as4395-notes">
+              <div class="as-notes-head">NOTES:</div>
+              <ol>
+                <li><span class="as-note-num">/1/</span>THIS FITTING END IS DESIGNED FOR USE WITH FITTINGS PER AS4841.</li>
+                <li><span class="as-note-num">/2/</span>THE CONICAL SEALING SURFACE SHALL BE FREE OF FLAWS, NICKS, AND CHATTER MARKS WHEN VIEWED WITH THE UNAIDED EYE.</li>
+                <li><span class="as-note-num">3.</span>INTERPRETATION OF DRAWING PER ARP4296.</li>
+                <li><span class="as-note-num">4.</span>INVENTORIED PARTS WITH FITTING ENDS CONFORMING TO THE PREVIOUS &ldquo;LETTER CHANGE&rdquo; OF THIS STANDARD MAY BE USED TO DEPLETION.</li>
+                <li><span class="as-note-num">5.</span>SURFACE TEXTURE: SYMBOLS PER ASME Y14.36M; REQUIREMENTS PER ASME B46.1. UNLESS OTHERWISE SPECIFIED, MACHINED SURFACES TO BE 125 &mu;in Ra.</li>
+                <li><span class="as-note-num">6.</span>BREAK EDGES .003 TO .015 UNLESS OTHERWISE SPECIFIED.</li>
+                <li><span class="as-note-num">7.</span>DIMENSIONING AND TOLERANCING: ASME Y14.5M-1994.</li>
+                <li><span class="as-note-num">8.</span>DIMENSIONS IN INCHES. UNLESS OTHERWISE SPECIFIED, TOLERANCES: LINEAR DIMENSIONS &plusmn;.015, ANGULAR DIMENSIONS &plusmn;0&deg;30'.</li>
+                <li>
+                  <span class="as-note-num">/9/</span>EXAMPLE OF DRAWING CALLOUT:
+                  <ul class="sub-list">
+                    <li style="font-size:0.9rem;">TABULATED DRAWING: FITTING END PER AS4395, STYLE G</li>
+                    <li style="font-size:0.9rem;">INDIVIDUAL DRAWING:</li>
+                  </ul>
+
+                  <pre class="callout-diagram">                        AS4395 G 08
+                        &#9474;      &#9474; &#9474;
+        BASIC NUMBER &#9472;&#9472;&#9472;&#9496;      &#9474; &#9474;
+  STYLE DESIGNATION &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496; &#9474;
+  SIZE CODE, NOMINAL TUBE &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+  SIZE IN .062 INCREMENTS</pre>
+                </li>
+                <li><span class="as-note-num">10.</span>THE CHANGE BAR ( | ) LOCATED IN THE LEFT MARGIN IS FOR THE CONVENIENCE OF THE USER IN LOCATING AREAS WHERE TECHNICAL REVISIONS, NOT EDITORIAL CHANGES, HAVE BEEN MADE TO THE PREVIOUS ISSUE OF THIS DOCUMENT. AN (R) SYMBOL TO THE LEFT OF THE DOCUMENT TITLE INDICATES A COMPLETE REVISION OF THE DOCUMENT.</li>
+              </ol>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOURCE NOTES & PROP 65 -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3 mb-3 text-start" style="max-width:860px;">
+            <div class="text-center">
+              <div class="custom-heading">Source &amp; Important Notices</div>
+            </div>
+            <ul class="mt-3" style="font-size:0.9rem;">
+              <li class="mb-2">
+                <strong>Source:</strong> SAE International, Aerospace Standard <em>AS4395 Revision B</em> &mdash;
+                &ldquo;Fitting End, Flared, Tube Connection, Design Standard.&rdquo; Custodian: SAE G-3/G-3B.
+                Drawings are interpreted in third angle projection.
+              </li>
+              <li class="mb-2">
+                <strong>No SAE affiliation or endorsement.</strong> SAE International has not
+                participated in the development of this lookup tool and does not approve or endorse it.
+                Verify all dimensions against the current issue of SAE AS4395 before use in design.
+              </li>
+              <li class="mb-2">
+                <strong>Related standards.</strong> Use with flared tube fittings per SAE AS4841;
+                interpret drawings per SAE ARP4296; dimensioning and tolerancing per ASME Y14.5M-1994.
+              </li>
+              <li>
+                <strong>Verify critical dimensions.</strong> Always confirm fitting-end dimensions against the
+                current SAE AS4395 standard for safety-critical or pressure-containing applications.
+                This tool is a reference aid, not a substitute for engineering judgment.
+              </li>
+            </ul>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CITATION -->
+    <section class="mt-5 pt-3">
+      <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+        <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+          <div class="d-flex align-items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+            <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+          </div>
+          <style>
+            #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+            #citationTabs li { margin: 0; list-style: none; }
+            #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+            #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+            #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+          </style>
+          <div class="tab-content mt-2 mb-3" id="citationTabContent">
+            <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+              <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+              <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+              <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+              <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+          </div>
+          <ul id="citationTabs" class="nav" role="tablist">
+            <li role="presentation">
+              <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+  <script src="js/footer.js"></script>
+  <!-- END FOOTER -->
+
+  </body>
+</html>

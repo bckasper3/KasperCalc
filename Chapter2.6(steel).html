@@ -297,6 +297,9 @@
                   <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
                   <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
                   <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -317,8 +320,9 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal & Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
                   <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -328,6 +332,9 @@
                   <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
                   <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
                   <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
                 </div>
               </li>
               <li class="nav-item text-center align-svg-bottom smallsearchbar">
@@ -4723,9 +4730,31 @@
               </tbody>
             </table>
 
-            <div class="fig-placeholder" id="fig-2.6.8.1.8b">
-              <div class="fig-label">Figure 2.6.8.1.8(b)</div>
-              <div class="fig-caption">Typical S/N curves for PH15-7Mo (TH1050), notched sheet.</div>
+            <!-- Fig 2.6.8.1.8(b) — S/N notched Kt=4.0, TH1050 sheet, longitudinal -->
+            <div class="hdbk-figure" id="fig-2.6.8.1.8b">
+              <div class="canvasdiv">
+                <button id="toggle-fig26818b">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26818b');var a=document.createElement('a');a.download='canvas-fig26818b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26818b').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26818b" class="chartcanvas" role="img" aria-label="Figure 2.6.8.1.8(b)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.8.1.8(b).</strong> Best-fit S/N curves for notched, K<sub>t</sub> = 4.0, PH15-7Mo (TH1050) sheet, longitudinal direction.</p>
+              <script>
+              (function(){
+                var dS1=[{x:2175.468,y:65.180},{x:5115.178,y:56.935},{x:7692.650,y:53.417},{x:14893.466,y:48.471},{x:24924.386,y:45.291},{x:71173.885,y:39.767},{x:209254.644,y:35.325},{x:609270.466,y:32.075},{x:1756813.817,y:29.661},{x:7048574.036,y:27.289}];
+                var dS2=[{x:1009.763,y:95.288},{x:1594.159,y:89.865},{x:2667.843,y:84.411},{x:5422.221,y:77.932},{x:11457.022,y:72.134},{x:27735.626,y:66.504},{x:83955.786,y:61.041},{x:242084.088,y:57.451},{x:1091376.715,y:53.514},{x:3784940.631,y:51.453},{x:8154407.395,y:50.420}];
+                var dS3=[{x:1012.442,y:119.830},{x:1641.307,y:114.376},{x:3784.941,y:106.193},{x:11127.907,y:98.347},{x:36762.145,y:91.862},{x:91627.390,y:88.274},{x:255259.083,y:85.195}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26818b',[
+                  {label:'Set 1',data:dS1},
+                  {label:'Set 2',data:dS2},
+                  {label:'Set 3',data:dS3}
+                ],{xLabel:'Cycles to failure',yLabel:'Maximum stress, ksi',xLog:true,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26818b',chart);
+              })();
+              </script>
+              <p class="chart-note">Notched &nbsp;|&nbsp; K<sub>t</sub> = 4.0 &nbsp;|&nbsp; Longitudinal direction</p>
             </div>
 
             <table class="corr-info-table">
@@ -4786,9 +4815,31 @@
               </tbody>
             </table>
 
-            <div class="fig-placeholder" id="fig-2.6.8.1.8c">
-              <div class="fig-label">Figure 2.6.8.1.8(c)</div>
-              <div class="fig-caption">Typical S/N curves for PH15-7Mo (TH1050), bar.</div>
+            <!-- Fig 2.6.8.1.8(c) — S/N unnotched TH1050 sheet at 500°F, longitudinal -->
+            <div class="hdbk-figure" id="fig-2.6.8.1.8c">
+              <div class="canvasdiv">
+                <button id="toggle-fig26818c">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26818c');var a=document.createElement('a');a.download='canvas-fig26818c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26818c').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26818c" class="chartcanvas" role="img" aria-label="Figure 2.6.8.1.8(c)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.8.1.8(c).</strong> Best-fit S/N curves for unnotched PH15-7Mo (TH1050) sheet at 500&deg;F, longitudinal direction.</p>
+              <script>
+              (function(){
+                var dS1=[{x:2218.235,y:134.612},{x:3718.281,y:125.263},{x:6287.516,y:117.141},{x:11604.830,y:108.867},{x:24639.675,y:100.288},{x:39880.487,y:95.387}];
+                var dS2=[{x:1604.439,y:164.976},{x:2713.064,y:154.944},{x:5866.870,y:142.307},{x:17359.760,y:128.198},{x:32606.785,y:121.667},{x:60182.147,y:116.167}];
+                var dS3=[{x:2179.732,y:185.058},{x:3121.020,y:178.481},{x:5231.560,y:170.359},{x:9655.858,y:161.932},{x:16909.738,y:155.247},{x:31761.510,y:148.911},{x:67169.023,y:142.270},{x:115036.723,y:138.359},{x:217973.171,y:134.352},{x:523155.962,y:129.805}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26818c',[
+                  {label:'Set 1',data:dS1},
+                  {label:'Set 2',data:dS2},
+                  {label:'Set 3',data:dS3}
+                ],{xLabel:'Cycles to failure',yLabel:'Maximum stress, ksi',xLog:true,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26818c',chart);
+              })();
+              </script>
+              <p class="chart-note">Unnotched &nbsp;|&nbsp; 500&deg;F &nbsp;|&nbsp; Longitudinal direction</p>
             </div>
 
             <table class="corr-info-table">
@@ -4852,9 +4903,31 @@
               </tbody>
             </table>
 
-            <div class="fig-placeholder" id="fig-2.6.8.1.8d">
-              <div class="fig-label">Figure 2.6.8.1.8(d)</div>
-              <div class="fig-caption">Typical S/N curves for PH15-7Mo (TH1050), additional data.</div>
+            <!-- Fig 2.6.8.1.8(d) — S/N notched Kt=4.0, TH1050 sheet at 500°F, longitudinal -->
+            <div class="hdbk-figure" id="fig-2.6.8.1.8d">
+              <div class="canvasdiv">
+                <button id="toggle-fig26818d">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26818d');var a=document.createElement('a');a.download='canvas-fig26818d.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26818d').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26818d" class="chartcanvas" role="img" aria-label="Figure 2.6.8.1.8(d)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.8.1.8(d).</strong> Best-fit S/N curves for notched, K<sub>t</sub> = 4.0, PH15-7Mo (TH1050) sheet at 500&deg;F, longitudinal direction.</p>
+              <script>
+              (function(){
+                var dS1=[{x:1003.594,y:64.628},{x:1803.710,y:60.209},{x:5219.170,y:52.637},{x:13403.519,y:46.971},{x:34735.683,y:41.625},{x:139668.772,y:34.879},{x:418892.482,y:30.502}];
+                var dS2=[{x:1026.776,y:84.736},{x:1862.326,y:80.318},{x:3839.705,y:75.271},{x:8061.963,y:70.647},{x:35530.981,y:62.603},{x:57479.311,y:60.337}];
+                var dS3=[{x:1011.804,y:108.990},{x:1903.469,y:104.734},{x:4543.189,y:99.381},{x:10941.856,y:94.595},{x:24487.799,y:90.817},{x:44842.750,y:88.111}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26818d',[
+                  {label:'Set 1',data:dS1},
+                  {label:'Set 2',data:dS2},
+                  {label:'Set 3',data:dS3}
+                ],{xLabel:'Cycles to failure',yLabel:'Maximum stress, ksi',xLog:true,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26818d',chart);
+              })();
+              </script>
+              <p class="chart-note">Notched &nbsp;|&nbsp; K<sub>t</sub> = 4.0 &nbsp;|&nbsp; 500&deg;F &nbsp;|&nbsp; Longitudinal direction</p>
             </div>
 
             <table class="corr-info-table">
@@ -4920,9 +4993,29 @@
               </tbody>
             </table>
 
-            <div class="fig-placeholder" id="fig-2.6.8.1.8e">
-              <div class="fig-label">Figure 2.6.8.1.8(e)</div>
-              <div class="fig-caption">Typical S/N curves for PH15-7Mo (TH1050), additional data.</div>
+            <!-- Fig 2.6.8.1.8(e) — S/N unnotched TH1050 sheet at 700°F, transverse -->
+            <div class="hdbk-figure" id="fig-2.6.8.1.8e">
+              <div class="canvasdiv">
+                <button id="toggle-fig26818e">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26818e');var a=document.createElement('a');a.download='canvas-fig26818e.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26818e').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26818e" class="chartcanvas" role="img" aria-label="Figure 2.6.8.1.8(e)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.8.1.8(e).</strong> Best-fit S/N curves for PH15-7Mo (TH1050) sheet at 700&deg;F, transverse direction.</p>
+              <script>
+              (function(){
+                var dS1=[{x:12674.802,y:144.989},{x:22924.196,y:141.427},{x:62717.050,y:135.767},{x:203238.760,y:129.365},{x:1074102.560,y:120.877},{x:4240831.142,y:114.162},{x:6178025.168,y:112.326}];
+                var dS2=[{x:67618.473,y:169.750},{x:133101.517,y:165.342},{x:381679.950,y:158.054},{x:1236859.193,y:150.762},{x:3580317.725,y:144.317},{x:9171033.939,y:138.735}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26818e',[
+                  {label:'Set 1',data:dS1},
+                  {label:'Set 2',data:dS2}
+                ],{xLabel:'Cycles to failure',yLabel:'Maximum stress, ksi',xLog:true,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26818e',chart);
+              })();
+              </script>
+              <p class="chart-note">Unnotched &nbsp;|&nbsp; 700&deg;F &nbsp;|&nbsp; Transverse direction</p>
             </div>
 
             <table class="corr-info-table">
@@ -4981,9 +5074,29 @@
               </tbody>
             </table>
 
-            <div class="fig-placeholder" id="fig-2.6.8.1.8f">
-              <div class="fig-label">Figure 2.6.8.1.8(f)</div>
-              <div class="fig-caption">Typical S/N curves for PH15-7Mo (TH1050), additional data.</div>
+            <!-- Fig 2.6.8.1.8(f) — S/N notched Kt=3.0, TH1050 sheet at 1000°F, transverse -->
+            <div class="hdbk-figure" id="fig-2.6.8.1.8f">
+              <div class="canvasdiv">
+                <button id="toggle-fig26818f">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26818f');var a=document.createElement('a');a.download='canvas-fig26818f.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26818f').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26818f" class="chartcanvas" role="img" aria-label="Figure 2.6.8.1.8(f)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.8.1.8(f).</strong> Best-fit S/N curves for notched, K<sub>t</sub> = 3.0, PH15-7Mo (TH1050) sheet at 1000&deg;F, transverse direction.</p>
+              <script>
+              (function(){
+                var dS1=[{x:1001.447,y:69.276},{x:1769.191,y:65.376},{x:5471.830,y:58.398},{x:14085.861,y:52.944},{x:106178.829,y:43.343},{x:483107.833,y:37.123},{x:822913.468,y:35.102}];
+                var dS2=[{x:17844.945,y:70.347},{x:47449.829,y:63.701},{x:132661.252,y:57.417},{x:410345.478,y:51.155},{x:1990681.238,y:43.626},{x:5882543.157,y:39.018}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26818f',[
+                  {label:'Set 1',data:dS1},
+                  {label:'Set 2',data:dS2}
+                ],{xLabel:'Cycles to failure',yLabel:'Maximum stress, ksi',xLog:true,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26818f',chart);
+              })();
+              </script>
+              <p class="chart-note">Notched &nbsp;|&nbsp; K<sub>t</sub> = 3.0 &nbsp;|&nbsp; 1000&deg;F &nbsp;|&nbsp; Transverse direction</p>
             </div>
 
             <table class="corr-info-table">
@@ -5344,30 +5457,157 @@
                 </tfoot>
               </table>
             </div>
-            <div class="fig-placeholder" id="fig-2.6.9.0">
-              <div class="fig-label">Figure 2.6.9.0</div>
-              <div class="fig-caption">Effect of temperature on the physical properties of 17-4PH stainless steel.</div>
+            <!-- Fig 2.6.9.0 — Physical properties 17-4PH: C, K, Alpha (3 sub-charts) -->
+            <div class="hdbk-figure" id="fig-2.6.9.0">
+              <div class="canvasdiv">
+                <button id="toggle-fig2690c">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig2690c');var a=document.createElement('a');a.download='canvas-fig2690c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig2690c').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig2690c" class="chartcanvas" role="img" aria-label="Figure 2.6.9.0 — C"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">C &mdash; At indicated temperature.</p>
+              <div class="canvasdiv" style="margin-top:1.25rem;">
+                <button id="toggle-fig2690k">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig2690k');var a=document.createElement('a');a.download='canvas-fig2690k.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig2690k').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig2690k" class="chartcanvas" role="img" aria-label="Figure 2.6.9.0 — K"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">K &mdash; At indicated temperature.</p>
+              <div class="canvasdiv" style="margin-top:1.25rem;">
+                <button id="toggle-fig2690a">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig2690a');var a=document.createElement('a');a.download='canvas-fig2690a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig2690a').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig2690a" class="chartcanvas" role="img" aria-label="Figure 2.6.9.0 — Alpha"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">&alpha; &mdash; Between 70&deg;F and indicated temperature.</p>
+              <p class="fig-caption"><strong>Figure 2.6.9.0.</strong> Effect of temperature on the physical properties of 17-4PH stainless steel.</p>
+              <script>
+              (function(){
+                var dC=[{x:6.100,y:0.1011},{x:83.550,y:0.1060},{x:167.114,y:0.1114},{x:236.417,y:0.1156},{x:315.929,y:0.1195},{x:389.306,y:0.1240},{x:464.712,y:0.1291},{x:538.080,y:0.1341},{x:603.276,y:0.1395},{x:674.568,y:0.1462},{x:727.527,y:0.1512},{x:778.446,y:0.1561},{x:825.281,y:0.1612},{x:866.001,y:0.1659},{x:914.866,y:0.1716},{x:950.211,y:0.1760},{x:1005.924,y:0.1825},{x:1045.171,y:0.1866},{x:1087.223,y:0.1897},{x:1112.613,y:0.1911},{x:1146.177,y:0.1919},{x:1175.502,y:0.1913},{x:1208.203,y:0.1890},{x:1235.737,y:0.1853},{x:1265.714,y:0.1800},{x:1288.854,y:0.1734},{x:1297.862,y:0.1684},{x:1310.091,y:0.1601},{x:1323.467,y:0.1501},{x:1334.924,y:0.1432},{x:1348.384,y:0.1383},{x:1365.890,y:0.1350},{x:1382.000,y:0.1330},{x:1407.517,y:0.1317},{x:1438.670,y:0.1325},{x:1478.886,y:0.1346},{x:1535.758,y:0.1388},{x:1600.409,y:0.1436}];
+                var cC=HdbkUtil.makeMultiLine('canvas-fig2690c',[
+                  {label:'C',data:dC,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'C, Btu/(lb)(°F)',yMin:0.08});
+                HdbkUtil.addToggle('toggle-fig2690c',cC);
+                var dK=[{x:201.429,y:9.998},{x:293.181,y:10.414},{x:419.594,y:10.990},{x:537.841,y:11.580},{x:685.376,y:12.293},{x:863.128,y:13.129}];
+                var cK=HdbkUtil.makeMultiLine('canvas-fig2690k',[
+                  {label:'K',data:dK,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'K, Btu/[(hr)(ft²)(°F)/ft]',yMin:8,yMax:15});
+                HdbkUtil.addToggle('toggle-fig2690k',cK);
+                var dA1=[{x:73.679,y:5.823},{x:264.615,y:5.986},{x:508.959,y:6.221},{x:802.543,y:6.466}];
+                var dA2=[{x:205.457,y:6.307},{x:355.337,y:6.440},{x:533.934,y:6.572},{x:712.560,y:6.733},{x:806.984,y:6.796}];
+                var dA3=[{x:74.952,y:6.156},{x:131.712,y:6.406},{x:207.824,y:6.615},{x:298.261,y:6.791},{x:446.136,y:6.969},{x:540.580,y:7.052},{x:715.067,y:7.177},{x:905.971,y:7.308}];
+                var cA=HdbkUtil.makeMultiLine('canvas-fig2690a',[
+                  {label:'α — Series 1',data:dA1,interp:'lin',step:5},
+                  {label:'α — Series 2',data:dA2,interp:'lin',step:5},
+                  {label:'α — Series 3',data:dA3,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'α, 10⁻⁶ in./in./°F',yMin:5,yMax:8});
+                HdbkUtil.addToggle('toggle-fig2690a',cA);
+              })();
+              </script>
             </div>
           </div><!-- /2.6.9.0 -->
 
           <!-- 2.6.9.1 -->
           <div class="section lvl-2" id="2.6.9.1">
             <div class="section-heading lvl-2"><span class="section-num">2.6.9.1</span>H900 Condition</div>
-            <div class="fig-placeholder" id="fig-2.6.9.1.2">
-              <div class="fig-label">Figure 2.6.9.1.2</div>
-              <div class="fig-caption">Effect of temperature on F<sub>cy</sub> for 17-4PH (H900).</div>
+            <!-- Fig 2.6.9.1.2 — Fcy and Fsu vs temperature, H900 bar -->
+            <div class="hdbk-figure" id="fig-2.6.9.1.2">
+              <div class="canvasdiv">
+                <button id="toggle-fig26912">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26912');var a=document.createElement('a');a.download='canvas-fig26912.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26912').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26912" class="chartcanvas" role="img" aria-label="Figure 2.6.9.1.2"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.9.1.2.</strong> Effect of temperature on the compressive yield strength (<em>F<sub>cy</sub></em>) and the shear ultimate strength (<em>F<sub>su</sub></em>) of 17-4PH (H900) stainless steel bar and forging.</p>
+              <script>
+              (function(){
+                var dFcy=[{x:90.535,y:99.465},{x:169.547,y:95.265},{x:253.498,y:91.066},{x:332.510,y:86.299},{x:511.635,y:76.027},{x:627.011,y:68.710},{x:741.489,y:60.850},{x:841.152,y:53.099},{x:948.298,y:44.178},{x:1081.631,y:30.485}];
+                var dFsu=[{x:92.181,y:99.465},{x:204.115,y:94.947},{x:332.510,y:89.432},{x:447.737,y:84.027},{x:582.716,y:77.118},{x:669.959,y:72.155},{x:775.309,y:65.725},{x:864.198,y:59.639},{x:941.564,y:53.404},{x:1012.346,y:47.427},{x:1081.481,y:41.340},{x:1159.147,y:34.155},{x:1198.504,y:30.310}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26912',[
+                  {label:'Fcy',data:dFcy,interp:'lin',step:5},
+                  {label:'Fsu',data:dFsu,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Strength, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26912',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.6.9.1.3">
-              <div class="fig-label">Figure 2.6.9.1.3</div>
-              <div class="fig-caption">Effect of temperature on F<sub>su</sub> for 17-4PH (H900).</div>
+
+            <!-- Fig 2.6.9.1.3 — Fbru and Fbry vs temperature, H900 bar -->
+            <div class="hdbk-figure" id="fig-2.6.9.1.3">
+              <div class="canvasdiv">
+                <button id="toggle-fig26913">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26913');var a=document.createElement('a');a.download='canvas-fig26913.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26913').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26913" class="chartcanvas" role="img" aria-label="Figure 2.6.9.1.3"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.9.1.3.</strong> Effect of temperature on the bearing ultimate strength (<em>F<sub>bru</sub></em>) and the bearing yield strength (<em>F<sub>bry</sub></em>) of 17-4PH (H900) stainless steel bar and forging.</p>
+              <script>
+              (function(){
+                var dFbru=[{x:88.232,y:99.855},{x:129.788,y:97.844},{x:229.557,y:94.007},{x:340.936,y:88.885},{x:463.958,y:83.362},{x:560.356,y:78.328},{x:650.094,y:73.283},{x:753.107,y:66.876},{x:837.822,y:60.971},{x:925.845,y:54.429},{x:1002.524,y:48.100}];
+                var dFbry=[{x:107.005,y:99.991},{x:163.053,y:96.831},{x:241.204,y:93.806},{x:327.666,y:90.370},{x:434.071,y:85.834},{x:530.495,y:81.573},{x:615.260,y:77.176},{x:704.103,y:72.492},{x:813.017,y:66.048},{x:901.068,y:60.329},{x:1000.736,y:53.487}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26913',[
+                  {label:'Fbru',data:dFbru,interp:'lin',step:5},
+                  {label:'Fbry',data:dFbry,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Strength, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26913',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.6.9.1.4">
-              <div class="fig-label">Figure 2.6.9.1.4</div>
-              <div class="fig-caption">Effect of temperature on F<sub>bru</sub> for 17-4PH (H900).</div>
+
+            <!-- Fig 2.6.9.1.4 — E and Ec vs temperature, H900 bar -->
+            <div class="hdbk-figure" id="fig-2.6.9.1.4">
+              <div class="canvasdiv">
+                <button id="toggle-fig26914">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26914');var a=document.createElement('a');a.download='canvas-fig26914.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26914').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26914" class="chartcanvas" role="img" aria-label="Figure 2.6.9.1.4"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.9.1.4.</strong> Effect of temperature on the tensile and compressive moduli (<em>E</em> and <em>E<sub>c</sub></em>) of 17-4PH (H900) stainless steel bar and forging.</p>
+              <script>
+              (function(){
+                var dE=[{x:81.602,y:99.724},{x:149.438,y:97.931},{x:283.715,y:94.621},{x:382.003,y:92.138},{x:514.879,y:89.266},{x:596.733,y:87.179},{x:732.217,y:83.963},{x:894.104,y:80.028}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26914',[
+                  {label:'E / Eₒ',data:dE,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature modulus',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26914',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.6.9.1.8a">
-              <div class="fig-label">Figure 2.6.9.1.8(a)</div>
-              <div class="fig-caption">Typical S/N curves for 17-4PH (H900), unnotched.</div>
+            <!-- Fig 2.6.9.1.8(a) — S/N unnotched H900 bar, longitudinal -->
+            <div class="hdbk-figure" id="fig-2.6.9.1.8a">
+              <div class="canvasdiv">
+                <button id="toggle-fig26918a">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26918a');var a=document.createElement('a');a.download='canvas-fig26918a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26918a').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26918a" class="chartcanvas" role="img" aria-label="Figure 2.6.9.1.8(a)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.9.1.8(a).</strong> Best-fit S/N curves for unnotched 17-4PH (H900) bar, longitudinal direction.</p>
+              <script>
+              (function(){
+                var dS1=[{x:7655.294,y:164.515},{x:13401.024,y:157.040},{x:24057.006,y:149.413},{x:46955.470,y:140.886},{x:85029.331,y:133.849},{x:159267.182,y:127.102},{x:370842.357,y:118.105},{x:1129116.699,y:107.145}];
+                var dS2=[{x:161722.694,y:192.568},{x:233493.393,y:186.748},{x:422423.214,y:177.789},{x:714750.474,y:169.580}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26918a',[
+                  {label:'Set 1',data:dS1},
+                  {label:'Set 2',data:dS2}
+                ],{xLabel:'Cycles to failure',yLabel:'Maximum stress, ksi',xLog:true,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26918a',chart);
+              })();
+              </script>
+              <p class="chart-note">Unnotched &nbsp;|&nbsp; Longitudinal direction</p>
             </div>
 
             <table class="corr-info-table">
@@ -5426,9 +5666,29 @@
               </tbody>
             </table>
 
-            <div class="fig-placeholder" id="fig-2.6.9.1.8b">
-              <div class="fig-label">Figure 2.6.9.1.8(b)</div>
-              <div class="fig-caption">Typical S/N curves for 17-4PH (H900), notched.</div>
+            <!-- Fig 2.6.9.1.8(b) — S/N notched Kt=3.0 H900 bar, longitudinal -->
+            <div class="hdbk-figure" id="fig-2.6.9.1.8b">
+              <div class="canvasdiv">
+                <button id="toggle-fig26918b">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26918b');var a=document.createElement('a');a.download='canvas-fig26918b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26918b').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26918b" class="chartcanvas" role="img" aria-label="Figure 2.6.9.1.8(b)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.9.1.8(b).</strong> Best-fit S/N curves for notched, K<sub>t</sub> = 3.0, 17-4PH (H900) bar, longitudinal direction.</p>
+              <script>
+              (function(){
+                var dS1=[{x:1042.392,y:125.023},{x:1277.783,y:118.489},{x:1637.201,y:110.554},{x:2269.918,y:101.846},{x:3010.100,y:95.163},{x:4133.744,y:88.327},{x:6142.845,y:80.718},{x:10595.215,y:71.677},{x:22941.008,y:61.565},{x:42753.402,y:55.155},{x:90794.888,y:49.424},{x:268703.083,y:43.314},{x:728063.542,y:39.351},{x:2947086.579,y:35.639}];
+                var dS2=[{x:4929.369,y:144.989},{x:6487.012,y:135.808},{x:9569.110,y:125.078},{x:14108.841,y:115.440},{x:20425.611,y:107.672},{x:30616.954,y:100.221},{x:48360.689,y:92.774},{x:81178.089,y:85.957},{x:122606.520,y:81.158},{x:249347.244,y:74.615},{x:489348.917,y:69.728}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26918b',[
+                  {label:'Set 1',data:dS1},
+                  {label:'Set 2',data:dS2}
+                ],{xLabel:'Cycles to failure',yLabel:'Maximum stress, ksi',xLog:true,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26918b',chart);
+              })();
+              </script>
+              <p class="chart-note">Notched &nbsp;|&nbsp; K<sub>t</sub> = 3.0 &nbsp;|&nbsp; Longitudinal direction</p>
             </div>
 
             <table class="corr-info-table">
@@ -5505,9 +5765,31 @@
               </tbody>
             </table>
 
-            <div class="fig-placeholder" id="fig-2.6.9.1.8c">
-              <div class="fig-label">Figure 2.6.9.1.8(c)</div>
-              <div class="fig-caption">Typical S/N curves for 17-4PH (H900), additional data.</div>
+            <!-- Fig 2.6.9.1.8(c) — S/N notched Kt=4.0 H900 bar, longitudinal -->
+            <div class="hdbk-figure" id="fig-2.6.9.1.8c">
+              <div class="canvasdiv">
+                <button id="toggle-fig26918c">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26918c');var a=document.createElement('a');a.download='canvas-fig26918c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26918c').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26918c" class="chartcanvas" role="img" aria-label="Figure 2.6.9.1.8(c)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.9.1.8(c).</strong> Best-fit S/N curves for notched, K<sub>t</sub> = 4.0, 17-4PH (H900) bar, longitudinal direction.</p>
+              <script>
+              (function(){
+                var dS1=[{x:6179.833,y:62.934},{x:10474.435,y:55.723},{x:17027.194,y:49.832},{x:28151.235,y:44.818},{x:44264.507,y:40.952},{x:76331.551,y:37.132},{x:143147.840,y:33.133},{x:261831.303,y:30.599},{x:525192.729,y:27.619},{x:890878.346,y:26.102},{x:1491737.808,y:24.693}];
+                var dS2=[{x:3110.531,y:107.048},{x:4590.435,y:97.054},{x:6468.021,y:88.833},{x:9746.376,y:80.606},{x:13173.714,y:75.169},{x:19526.118,y:68.992},{x:30692.586,y:62.811},{x:59494.659,y:55.297},{x:108774.749,y:49.691},{x:235219.113,y:44.217},{x:471754.895,y:40.359},{x:1011908.154,y:36.935},{x:1563936.893,y:35.372}];
+                var dS3=[{x:121789.617,y:77.779},{x:159232.440,y:74.539},{x:232159.903,y:70.613},{x:301033.149,y:68.198},{x:417415.108,y:65.326}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26918c',[
+                  {label:'Set 1',data:dS1},
+                  {label:'Set 2',data:dS2},
+                  {label:'Set 3',data:dS3}
+                ],{xLabel:'Cycles to failure',yLabel:'Maximum stress, ksi',xLog:true,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26918c',chart);
+              })();
+              </script>
+              <p class="chart-note">Notched &nbsp;|&nbsp; K<sub>t</sub> = 4.0 &nbsp;|&nbsp; Longitudinal direction</p>
             </div>
 
             <table class="corr-info-table">
@@ -5573,39 +5855,189 @@
           <!-- 2.6.9.2 -->
           <div class="section lvl-2" id="2.6.9.2">
             <div class="section-heading lvl-2"><span class="section-num">2.6.9.2</span>General Temperature Properties (Multiple Conditions)</div>
-            <div class="fig-placeholder" id="fig-2.6.9.2.1">
-              <div class="fig-label">Figure 2.6.9.2.1</div>
-              <div class="fig-caption">Effect of temperature on F<sub>tu</sub> and F<sub>ty</sub> for 17-4PH (multiple conditions).</div>
+            <!-- Fig 2.6.9.2.1 — Ftu and Fty vs temperature, multiple conditions -->
+            <div class="hdbk-figure" id="fig-2.6.9.2.1">
+              <div class="canvasdiv">
+                <button id="toggle-fig26921">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26921');var a=document.createElement('a');a.download='canvas-fig26921.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26921').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26921" class="chartcanvas" role="img" aria-label="Figure 2.6.9.2.1"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.9.2.1.</strong> Effect of temperature on the tensile ultimate strength (<em>F<sub>tu</sub></em>) and the tensile yield strength (<em>F<sub>ty</sub></em>) of 17-4PH (H900, H925, H1025, and H1075) stainless steel bar.</p>
+              <script>
+              (function(){
+                var dFtu=[{x:80.786,y:99.250},{x:150.485,y:96.019},{x:209.187,y:93.611},{x:304.592,y:90.296},{x:380.420,y:87.430},{x:491.728,y:83.668},{x:573.682,y:80.967},{x:669.109,y:78.550},{x:727.832,y:77.029},{x:781.648,y:75.065},{x:830.543,y:72.127},{x:868.414,y:68.937},{x:903.823,y:65.159},{x:942.880,y:60.406},{x:989.270,y:55.129},{x:1035.132,y:51.050},{x:1096.788,y:46.579}];
+                var dFty=[{x:99.705,y:99.235},{x:160.292,y:96.549},{x:244.686,y:93.525},{x:346.213,y:90.287},{x:450.193,y:87.214},{x:537.050,y:84.756},{x:610.468,y:83.453},{x:641.059,y:82.902},{x:688.773,y:81.716},{x:736.485,y:80.442},{x:785.407,y:78.601},{x:819.633,y:76.520},{x:856.292,y:73.829},{x:892.943,y:70.772},{x:935.693,y:66.859},{x:972.880,y:62.993},{x:1010.062,y:58.916},{x:1057.773,y:53.051},{x:1099.480,y:47.410}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26921',[
+                  {label:'Fₜᵤ',data:dFtu,interp:'lin',step:5},
+                  {label:'Fₜᵧ',data:dFty,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Strength, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26921',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.6.9.2.6a">
-              <div class="fig-label">Figure 2.6.9.2.6(a)</div>
-              <div class="fig-caption">Typical stress-strain and tangent-modulus curves for 17-4PH (H900).</div>
+
+            <!-- Fig 2.6.9.2.6(a) — Tensile stress-strain, various conditions, RT -->
+            <div class="hdbk-figure" id="fig-2.6.9.2.6a">
+              <div class="canvasdiv">
+                <button id="toggle-fig26926a">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26926a');var a=document.createElement('a');a.download='canvas-fig26926a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26926a').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26926a" class="chartcanvas" role="img" aria-label="Figure 2.6.9.2.6(a)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.9.2.6(a).</strong> Typical tensile stress-strain curves at room temperature for various heat treated conditions of 17-4PH stainless steel bar.</p>
+              <script>
+              (function(){
+                var dC1=[{x:0.019,y:0.721},{x:0.918,y:24.767},{x:1.914,y:52.898},{x:2.425,y:67.084},{x:3.635,y:100.266},{x:3.934,y:105.320},{x:4.347,y:111.099},{x:4.712,y:114.475},{x:5.199,y:118.357},{x:5.892,y:122.751},{x:6.876,y:127.134},{x:7.925,y:130.733},{x:8.744,y:132.665}];
+                var dC2=[{x:0.019,y:0.481},{x:1.442,y:39.587},{x:2.698,y:74.538},{x:3.710,y:102.670},{x:5.087,y:140.660},{x:5.386,y:147.002},{x:5.733,y:152.298},{x:6.098,y:156.416},{x:6.773,y:161.005},{x:7.869,y:165.654},{x:8.890,y:168.576},{x:9.611,y:170.111},{x:10.013,y:171.022}];
+                var dC3=[{x:0.024,y:0.351},{x:1.602,y:43.762},{x:2.585,y:71.652},{x:3.372,y:93.293},{x:4.169,y:114.693},{x:5.068,y:139.699},{x:5.509,y:150.368},{x:5.920,y:158.090},{x:6.468,y:166.537},{x:7.044,y:173.130},{x:7.803,y:180.385},{x:8.731,y:186.424},{x:9.546,y:191.019},{x:10.670,y:195.866},{x:11.527,y:199.130}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26926a',[
+                  {label:'Condition 1',data:dC1,interp:'lin',step:0.05},
+                  {label:'Condition 2',data:dC2,interp:'lin',step:0.05},
+                  {label:'Condition 3',data:dC3,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26926a',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.6.9.2.6b">
-              <div class="fig-label">Figure 2.6.9.2.6(b)</div>
-              <div class="fig-caption">Typical stress-strain and tangent-modulus curves for 17-4PH (multiple conditions).</div>
+
+            <!-- Fig 2.6.9.2.6(b) — Compressive SS + tangent modulus, various conditions (split) -->
+            <div class="hdbk-figure" id="fig-2.6.9.2.6b">
+              <div class="canvasdiv">
+                <button id="toggle-fig26926bss">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26926bss');var a=document.createElement('a');a.download='canvas-fig26926bss.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26926bss').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26926bss" class="chartcanvas" role="img" aria-label="Figure 2.6.9.2.6(b) — Compressive Stress-Strain"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">Compressive stress-strain</p>
+              <div class="canvasdiv" style="margin-top:1.25rem;">
+                <button id="toggle-fig26926bm">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26926bm');var a=document.createElement('a');a.download='canvas-fig26926bm.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26926bm').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26926bm" class="chartcanvas" role="img" aria-label="Figure 2.6.9.2.6(b) — Compressive Tangent Modulus"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">Compressive tangent modulus</p>
+              <p class="fig-caption"><strong>Figure 2.6.9.2.6(b).</strong> Typical compressive stress-strain and compressive tangent modulus curves at room temperature for various heat treated conditions of 17-4PH stainless steel bar.</p>
+              <script>
+              (function(){
+                var dSS1=[{x:-0.013,y:-0.279},{x:0.896,y:25.765},{x:1.684,y:48.475},{x:2.891,y:84.297},{x:3.263,y:93.256},{x:3.648,y:101.092},{x:4.253,y:108.918},{x:4.983,y:114.188},{x:6.028,y:119.341},{x:7.160,y:123.369},{x:8.205,y:125.258}];
+                var dSS2=[{x:0.000,y:-0.458},{x:1.262,y:36.127},{x:2.209,y:63.699},{x:3.093,y:89.898},{x:3.649,y:105.861},{x:4.053,y:117.343},{x:4.368,y:126.865},{x:4.671,y:134.986},{x:4.924,y:141.425},{x:5.390,y:148.034},{x:5.768,y:151.306},{x:6.221,y:154.038},{x:6.674,y:156.057},{x:7.794,y:159.805},{x:9.429,y:162.890}];
+                var cSS=HdbkUtil.makeMultiLine('canvas-fig26926bss',[
+                  {label:'Condition 1',data:dSS1,interp:'lin',step:0.05},
+                  {label:'Condition 2',data:dSS2,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Compressive stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26926bss',cSS);
+                var dTM1=[{x:2.053,y:127.031},{x:3.874,y:119.984},{x:5.979,y:114.054},{x:8.462,y:110.081},{x:11.071,y:106.385},{x:13.649,y:103.532},{x:16.541,y:99.832},{x:19.496,y:96.691},{x:22.702,y:92.704},{x:25.311,y:88.345},{x:26.819,y:85.257},{x:28.484,y:79.667},{x:29.363,y:73.785},{x:29.739,y:68.168},{x:29.988,y:60.564}];
+                var dTM2=[{x:1.844,y:164.061},{x:3.101,y:160.085},{x:5.363,y:154.892},{x:7.847,y:151.352},{x:10.016,y:149.016},{x:12.562,y:146.393},{x:16.240,y:142.474},{x:18.503,y:140.188},{x:21.081,y:137.895},{x:23.879,y:134.783},{x:26.362,y:130.784},{x:28.027,y:126.545},{x:29.001,y:122.319},{x:29.691,y:116.416},{x:30.034,y:108.555}];
+                var cTM=HdbkUtil.makeMultiLine('canvas-fig26926bm',[
+                  {label:'Condition 1',data:dTM1,interp:'lin',step:0.05},
+                  {label:'Condition 2',data:dTM2,interp:'lin',step:0.05}
+                ],{xLabel:'Compressive Tangent Modulus, 10³ ksi',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26926bm',cTM);
+              })();
+              </script>
             </div>
           </div><!-- /2.6.9.2 -->
 
           <!-- 2.6.9.3 -->
           <div class="section lvl-2" id="2.6.9.3">
             <div class="section-heading lvl-2"><span class="section-num">2.6.9.3</span>H1000 Condition</div>
-            <div class="fig-placeholder" id="fig-2.6.9.3.6a">
-              <div class="fig-label">Figure 2.6.9.3.6(a)</div>
-              <div class="fig-caption">Typical stress-strain and tangent-modulus curves for 17-4PH (H1000), longitudinal.</div>
+            <!-- Fig 2.6.9.3.6(a) — Tensile SS, H1000 casting, RT -->
+            <div class="hdbk-figure" id="fig-2.6.9.3.6a">
+              <div class="canvasdiv">
+                <button id="toggle-fig26936a">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26936a');var a=document.createElement('a');a.download='canvas-fig26936a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26936a').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26936a" class="chartcanvas" role="img" aria-label="Figure 2.6.9.3.6(a)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.9.3.6(a).</strong> Typical tensile stress-strain curve for 17-4PH (H1000) stainless steel casting at room temperature.</p>
+              <script>
+              (function(){
+                var dSS=[{x:0.000,y:-0.244},{x:0.429,y:11.611},{x:0.913,y:25.153},{x:1.507,y:42.002},{x:1.968,y:55.678},{x:2.934,y:83.028},{x:3.427,y:96.703},{x:3.963,y:112.332},{x:4.545,y:127.717},{x:4.777,y:132.823},{x:5.180,y:140.082},{x:5.609,y:145.543},{x:6.387,y:151.404},{x:6.967,y:155.467},{x:7.396,y:157.509},{x:7.817,y:158.619}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26936a',[
+                  {label:'RT',data:dSS,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26936a',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.6.9.3.6b">
-              <div class="fig-label">Figure 2.6.9.3.6(b)</div>
-              <div class="fig-caption">Typical stress-strain and tangent-modulus curves for 17-4PH (H1000), transverse.</div>
+
+            <!-- Fig 2.6.9.3.6(b) — Compressive SS + tangent modulus, H1000 casting, RT (split) -->
+            <div class="hdbk-figure" id="fig-2.6.9.3.6b">
+              <div class="canvasdiv">
+                <button id="toggle-fig26936bss">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26936bss');var a=document.createElement('a');a.download='canvas-fig26936bss.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26936bss').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26936bss" class="chartcanvas" role="img" aria-label="Figure 2.6.9.3.6(b) — Compressive Stress-Strain"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">Compressive stress-strain</p>
+              <div class="canvasdiv" style="margin-top:1.25rem;">
+                <button id="toggle-fig26936bm">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26936bm');var a=document.createElement('a');a.download='canvas-fig26936bm.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26936bm').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26936bm" class="chartcanvas" role="img" aria-label="Figure 2.6.9.3.6(b) — Compressive Tangent Modulus"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">Compressive tangent modulus</p>
+              <p class="fig-caption"><strong>Figure 2.6.9.3.6(b).</strong> Typical compressive stress-strain and compressive tangent modulus curves for 17-4PH (H1000) stainless steel casting at room temperature.</p>
+              <script>
+              (function(){
+                var dSS=[{x:0.024,y:0.541},{x:0.585,y:18.636},{x:1.434,y:44.081},{x:2.181,y:66.527},{x:2.764,y:83.712},{x:3.377,y:102.224},{x:3.757,y:113.533},{x:4.326,y:127.938},{x:4.764,y:137.400},{x:5.287,y:145.631},{x:5.918,y:153.047},{x:6.841,y:159.521},{x:7.855,y:164.493}];
+                var cSS=HdbkUtil.makeMultiLine('canvas-fig26936bss',[
+                  {label:'Compressive stress-strain',data:dSS,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Compressive stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26936bss',cSS);
+                var dTM=[{x:2.787,y:172.370},{x:4.454,y:164.777},{x:6.637,y:158.262},{x:8.850,y:152.559},{x:10.488,y:150.108},{x:12.793,y:145.659},{x:15.886,y:141.129},{x:18.251,y:137.417},{x:21.011,y:132.151},{x:23.225,y:128.712},{x:24.983,y:123.997},{x:26.439,y:120.736},{x:27.439,y:117.208},{x:28.227,y:113.142},{x:28.834,y:109.618},{x:29.318,y:104.472},{x:29.923,y:92.829}];
+                var cTM=HdbkUtil.makeMultiLine('canvas-fig26936bm',[
+                  {label:'Compressive tangent modulus',data:dTM,interp:'lin',step:0.05}
+                ],{xLabel:'Compressive Tangent Modulus, 10³ ksi',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26936bm',cTM);
+              })();
+              </script>
             </div>
           </div><!-- /2.6.9.3 -->
 
           <!-- 2.6.9.4 -->
           <div class="section lvl-2" id="2.6.9.4">
             <div class="section-heading lvl-2"><span class="section-num">2.6.9.4</span>H1025 Condition</div>
-            <div class="fig-placeholder" id="fig-2.6.9.4.8">
-              <div class="fig-label">Figure 2.6.9.4.8</div>
-              <div class="fig-caption">Typical S/N curves for 17-4PH (H1025).</div>
+            <!-- Fig 2.6.9.4.8 — S/N notched Kt=3.0 H1025 bar, long. and LT -->
+            <div class="hdbk-figure" id="fig-2.6.9.4.8">
+              <div class="canvasdiv">
+                <button id="toggle-fig26948">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26948');var a=document.createElement('a');a.download='canvas-fig26948.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26948').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26948" class="chartcanvas" role="img" aria-label="Figure 2.6.9.4.8"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.9.4.8.</strong> Best-fit S/N curves for notched, K<sub>t</sub> = 3.0, fatigue behavior of 17-4PH (H1025) stainless steel bar, longitudinal and long transverse directions.</p>
+              <script>
+              (function(){
+                var dS1=[{x:50039.756,y:44.899},{x:103759.284,y:41.608},{x:184686.107,y:39.180},{x:379675.827,y:36.476},{x:807485.996,y:33.482},{x:1591077.376,y:31.065},{x:3529728.648,y:28.810},{x:8309701.504,y:26.121},{x:11274920.693,y:25.275}];
+                var dS2=[{x:18591.004,y:79.993},{x:36656.921,y:74.349},{x:82785.728,y:67.841},{x:200053.970,y:61.781},{x:479298.221,y:56.307},{x:1072879.163,y:51.705}];
+                var dS3=[{x:88835.089,y:94.842},{x:145346.084,y:90.204},{x:265557.270,y:84.405},{x:481038.679,y:79.192},{x:886212.547,y:74.221},{x:2197133.270,y:67.191},{x:5216126.403,y:61.208}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26948',[
+                  {label:'Set 1',data:dS1},
+                  {label:'Set 2',data:dS2},
+                  {label:'Set 3',data:dS3}
+                ],{xLabel:'Cycles to failure',yLabel:'Maximum stress, ksi',xLog:true,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26948',chart);
+              })();
+              </script>
+              <p class="chart-note">Notched &nbsp;|&nbsp; K<sub>t</sub> = 3.0 &nbsp;|&nbsp; Longitudinal and long transverse directions</p>
             </div>
 
             <table class="corr-info-table">
@@ -5691,9 +6123,33 @@
           <!-- 2.6.9.5 -->
           <div class="section lvl-2" id="2.6.9.5">
             <div class="section-heading lvl-2"><span class="section-num">2.6.9.5</span>H1100 Condition</div>
-            <div class="fig-placeholder" id="fig-2.6.9.5.8">
-              <div class="fig-label">Figure 2.6.9.5.8</div>
-              <div class="fig-caption">Typical S/N curves for 17-4PH (H1100).</div>
+            <!-- Fig 2.6.9.5.8 — S/N notched Kt=4.0 H1100 bar, longitudinal -->
+            <div class="hdbk-figure" id="fig-2.6.9.5.8">
+              <div class="canvasdiv">
+                <button id="toggle-fig26958">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26958');var a=document.createElement('a');a.download='canvas-fig26958.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26958').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26958" class="chartcanvas" role="img" aria-label="Figure 2.6.9.5.8"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.9.5.8.</strong> Best-fit S/N curves for notched, K<sub>t</sub> = 4.0, 17-4PH (H1100) bar, longitudinal direction.</p>
+              <script>
+              (function(){
+                var dS1=[{x:30942.332,y:41.175},{x:48284.637,y:37.890},{x:94831.998,y:33.433},{x:194981.487,y:29.384},{x:467255.024,y:25.088},{x:611009.270,y:24.054}];
+                var dS2=[{x:12209.645,y:78.127},{x:21073.033,y:70.706},{x:45084.577,y:61.843},{x:83342.040,y:55.236},{x:155202.953,y:49.566},{x:352824.930,y:42.488},{x:913420.169,y:35.891}];
+                var dS3=[{x:164468.929,y:85.183},{x:220299.487,y:80.672},{x:290563.497,y:76.561}];
+                var dS4=[{x:416204.114,y:77.950},{x:520141.189,y:74.902},{x:670299.706,y:71.591}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26958',[
+                  {label:'Set 1',data:dS1},
+                  {label:'Set 2',data:dS2},
+                  {label:'Set 3',data:dS3},
+                  {label:'Set 4',data:dS4}
+                ],{xLabel:'Cycles to failure',yLabel:'Maximum stress, ksi',xLog:true,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26958',chart);
+              })();
+              </script>
+              <p class="chart-note">Notched &nbsp;|&nbsp; K<sub>t</sub> = 4.0 &nbsp;|&nbsp; Longitudinal direction</p>
             </div>
 
             <table class="corr-info-table">
@@ -5759,9 +6215,28 @@
           <!-- 2.6.9.6 -->
           <div class="section lvl-2" id="2.6.9.6">
             <div class="section-heading lvl-2"><span class="section-num">2.6.9.6</span>H1150 Condition</div>
-            <div class="fig-placeholder" id="fig-2.6.9.6.1">
-              <div class="fig-label">Figure 2.6.9.6.1</div>
-              <div class="fig-caption">Effect of temperature on F<sub>tu</sub> and F<sub>ty</sub> for 17-4PH (H1150).</div>
+            <!-- Fig 2.6.9.6.1 — Ftu and Fty vs temperature, H1150 bar -->
+            <div class="hdbk-figure" id="fig-2.6.9.6.1">
+              <div class="canvasdiv">
+                <button id="toggle-fig26961">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26961');var a=document.createElement('a');a.download='canvas-fig26961.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26961').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26961" class="chartcanvas" role="img" aria-label="Figure 2.6.9.6.1"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.9.6.1.</strong> Effect of temperature on the tensile ultimate strength (<em>F<sub>tu</sub></em>) and the tensile yield strength (<em>F<sub>ty</sub></em>) of 17-4PH (H1150) stainless steel bar.</p>
+              <script>
+              (function(){
+                var dFtu=[{x:86.614,y:99.486},{x:192.168,y:96.053},{x:333.168,y:92.106},{x:439.607,y:88.930},{x:526.694,y:86.470},{x:641.427,y:83.071},{x:752.011,y:79.705},{x:837.699,y:76.004},{x:908.172,y:72.068},{x:970.849,y:68.020},{x:1015.934,y:64.576},{x:1057.361,y:60.271},{x:1099.404,y:55.105}];
+                var dFty=[{x:89.881,y:99.385},{x:215.692,y:97.093},{x:312.468,y:95.225},{x:389.888,y:93.649},{x:489.430,y:91.770},{x:633.213,y:89.109},{x:706.478,y:87.085},{x:790.791,y:83.943},{x:847.449,y:81.058},{x:899.957,y:77.983},{x:944.655,y:73.857},{x:1004.546,y:68.411},{x:1050.494,y:63.715},{x:1101.576,y:57.565}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig26961',[
+                  {label:'Fₜᵤ',data:dFtu,interp:'lin',step:5},
+                  {label:'Fₜᵧ',data:dFty,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Strength, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig26961',chart);
+              })();
+              </script>
             </div>
           </div><!-- /2.6.9.6 -->
 
@@ -5872,42 +6347,250 @@
                 </tbody>
               </table>
             </div>
-            <div class="fig-placeholder" id="fig-2.6.10.0">
-              <div class="fig-label">Figure 2.6.10.0</div>
-              <div class="fig-caption">Effect of temperature on the physical properties of 17-7PH stainless steel.</div>
+            <!-- Fig 2.6.10.0 — Physical properties 17-7PH: K, Alpha, C (3 sub-charts) -->
+            <div class="hdbk-figure" id="fig-2.6.10.0">
+              <div class="canvasdiv">
+                <button id="toggle-fig26100k">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26100k');var a=document.createElement('a');a.download='canvas-fig26100k.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26100k').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26100k" class="chartcanvas" role="img" aria-label="Figure 2.6.10.0 — K"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">K &mdash; At indicated temperature.</p>
+              <div class="canvasdiv" style="margin-top:1.25rem;">
+                <button id="toggle-fig26100a">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26100a');var a=document.createElement('a');a.download='canvas-fig26100a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26100a').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26100a" class="chartcanvas" role="img" aria-label="Figure 2.6.10.0 — Alpha"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">&alpha; &mdash; Between 70&deg;F and indicated temperature.</p>
+              <div class="canvasdiv" style="margin-top:1.25rem;">
+                <button id="toggle-fig26100c">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig26100c');var a=document.createElement('a');a.download='canvas-fig26100c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig26100c').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig26100c" class="chartcanvas" role="img" aria-label="Figure 2.6.10.0 — C"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">C &mdash; At indicated temperature.</p>
+              <p class="fig-caption"><strong>Figure 2.6.10.0.</strong> Effect of temperature on the physical properties of 17-7PH stainless steel.</p>
+              <script>
+              (function(){
+                var dK=[{x:286.996,y:9.691},{x:398.206,y:10.123},{x:550.673,y:10.802},{x:719.283,y:11.590},{x:862.780,y:12.300},{x:981.166,y:12.879},{x:1167.713,y:13.843},{x:1289.686,y:14.667},{x:1403.506,y:15.552},{x:1501.345,y:16.527},{x:1594.619,y:17.587}];
+                var cK=HdbkUtil.makeMultiLine('canvas-fig26100k',[
+                  {label:'K',data:dK,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'K, Btu/[(hr)(ft²)(°F)/ft]',yMin:8,yMax:20});
+                HdbkUtil.addToggle('toggle-fig26100k',cK);
+                var dA=[{x:-459.682,y:3.545},{x:-418.829,y:3.994},{x:-372.616,y:4.467},{x:-317.369,y:4.867},{x:-254.904,y:5.218},{x:-187.036,y:5.545},{x:-103.003,y:5.848},{x:-13.699,y:6.092},{x:94.846,y:6.338},{x:170.882,y:6.467},{x:294.497,y:6.636},{x:454.029,y:6.758},{x:598.477,y:6.790}];
+                var cA=HdbkUtil.makeMultiLine('canvas-fig26100a',[
+                  {label:'α',data:dA,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'α, 10⁻⁶ in./in./°F',yMin:3,yMax:8});
+                HdbkUtil.addToggle('toggle-fig26100a',cA);
+                var dC1=[{x:-458.838,y:-0.0293},{x:-417.533,y:-0.0203},{x:-370.852,y:-0.0109},{x:-315.253,y:-0.0029},{x:-252.515,y:0.0042},{x:-184.420,y:0.0107},{x:-100.233,y:0.0168},{x:-10.863,y:0.0216},{x:97.698,y:0.0265},{x:173.691,y:0.0291},{x:297.187,y:0.0325},{x:456.443,y:0.0349},{x:600.542,y:0.0355}];
+                var dC2=[{x:188.940,y:0.0815},{x:262.306,y:0.0826},{x:382.197,y:0.0846},{x:482.408,y:0.0863},{x:582.631,y:0.0889},{x:629.163,y:0.0900},{x:677.459,y:0.0897},{x:716.776,y:0.0875},{x:742.721,y:0.0833},{x:766.692,y:0.0778},{x:786.326,y:0.0754},{x:822.104,y:0.0754},{x:850.779,y:0.0783},{x:879.475,y:0.0824},{x:901.046,y:0.0882},{x:923.775,y:0.0951},{x:949.482,y:0.1049},{x:971.447,y:0.1146},{x:1012.749,y:0.1324},{x:1027.160,y:0.1380},{x:1043.176,y:0.1424},{x:1055.899,y:0.1445},{x:1075.586,y:0.1450},{x:1100.442,y:0.1436},{x:1140.054,y:0.1397},{x:1168.453,y:0.1363},{x:1225.559,y:0.1285},{x:1261.237,y:0.1229},{x:1300.476,y:0.1163},{x:1339.727,y:0.1105},{x:1373.467,y:0.1057},{x:1427.201,y:0.1003},{x:1455.789,y:0.0984},{x:1491.545,y:0.0971},{x:1529.279,y:0.0974},{x:1563.290,y:0.0986},{x:1592.587,y:0.0999}];
+                var cC=HdbkUtil.makeMultiLine('canvas-fig26100c',[
+                  {label:'C (low temp)',data:dC1,interp:'lin',step:5},
+                  {label:'C (high temp)',data:dC2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'C, Btu/(lb)(°F)'});
+                HdbkUtil.addToggle('toggle-fig26100c',cC);
+              })();
+              </script>
             </div>
           </div><!-- /2.6.10.0 -->
 
           <!-- 2.6.10.1 -->
           <div class="section lvl-2" id="2.6.10.1">
             <div class="section-heading lvl-2"><span class="section-num">2.6.10.1</span>TH1050 Condition</div>
-            <div class="fig-placeholder" id="fig-2.6.10.1.1">
-              <div class="fig-label">Figure 2.6.10.1.1</div>
-              <div class="fig-caption">Effect of temperature on F<sub>tu</sub> and F<sub>ty</sub> for 17-7PH (TH1050).</div>
+            <!-- Fig 2.6.10.1.1 — Ftu and Fty vs temperature, TH1050 sheet -->
+            <div class="hdbk-figure" id="fig-2.6.10.1.1">
+              <div class="canvasdiv">
+                <button id="toggle-fig261011">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig261011');var a=document.createElement('a');a.download='canvas-fig261011.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig261011').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig261011" class="chartcanvas" role="img" aria-label="Figure 2.6.10.1.1"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.10.1.1.</strong> Effect of temperature on the tensile ultimate strength (<em>F<sub>tu</sub></em>), tensile yield strength (<em>F<sub>ty</sub></em>), and compressive yield strength (<em>F<sub>cy</sub></em>) of 17-7PH (TH1050) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dFtu=[{x:86.435,y:99.283},{x:135.650,y:97.477},{x:196.785,y:95.651},{x:266.868,y:93.494},{x:333.965,y:91.535},{x:408.507,y:89.722},{x:497.948,y:87.866},{x:548.627,y:86.945},{x:588.879,y:85.978},{x:621.690,y:84.766},{x:666.448,y:82.583},{x:713.537,y:79.439},{x:754.546,y:75.784},{x:791.913,y:71.653},{x:826.323,y:66.793},{x:859.374,y:62.064},{x:912.426,y:54.220},{x:948.347,y:48.629},{x:997.594,y:41.216}];
+                var dFty=[{x:86.435,y:99.283},{x:135.650,y:97.477},{x:196.785,y:95.651},{x:266.868,y:93.494},{x:333.965,y:91.535},{x:408.507,y:89.722},{x:497.948,y:87.866},{x:548.627,y:86.945},{x:588.879,y:85.978},{x:630.632,y:84.646},{x:673.882,y:83.071},{x:705.214,y:81.494},{x:764.931,y:77.246},{x:811.247,y:72.751},{x:842.908,y:69.239},{x:871.051,y:65.583},{x:902.481,y:60.721},{x:929.438,y:55.981},{x:960.886,y:50.511},{x:999.321,y:42.355}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig261011',[
+                  {label:'Fₜᵤ',data:dFtu,interp:'lin',step:5},
+                  {label:'Fₜᵧ / Fcy',data:dFty,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Strength, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig261011',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.6.10.1.2">
-              <div class="fig-label">Figure 2.6.10.1.2</div>
-              <div class="fig-caption">Effect of temperature on F<sub>cy</sub> for 17-7PH (TH1050).</div>
+
+            <!-- Fig 2.6.10.1.2 — Fsu vs temperature, TH1050 sheet -->
+            <div class="hdbk-figure" id="fig-2.6.10.1.2">
+              <div class="canvasdiv">
+                <button id="toggle-fig261012">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig261012');var a=document.createElement('a');a.download='canvas-fig261012.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig261012').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig261012" class="chartcanvas" role="img" aria-label="Figure 2.6.10.1.2"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.10.1.2.</strong> Effect of temperature on the ultimate shear strength (<em>F<sub>su</sub></em>) of 17-7PH (TH1050) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dFsu=[{x:82.202,y:100.102},{x:130.642,y:97.072},{x:180.684,y:94.265},{x:217.248,y:92.662},{x:264.220,y:90.950},{x:327.339,y:88.737},{x:387.523,y:86.792},{x:452.110,y:85.327},{x:516.030,y:83.450},{x:573.945,y:80.924},{x:626.789,y:77.983},{x:677.898,y:74.373},{x:733.945,y:69.880},{x:775.046,y:66.335},{x:800.400,y:62.888}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig261012',[
+                  {label:'Fsu',data:dFsu,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Strength, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig261012',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.6.10.1.4a">
-              <div class="fig-label">Figure 2.6.10.1.4(a)</div>
-              <div class="fig-caption">Effect of temperature on F<sub>bru</sub> for 17-7PH (TH1050), e/D = 1.5.</div>
+
+            <!-- Fig 2.6.10.1.4(a) — E and Ec vs temperature, TH1050 sheet -->
+            <div class="hdbk-figure" id="fig-2.6.10.1.4a">
+              <div class="canvasdiv">
+                <button id="toggle-fig261014a">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig261014a');var a=document.createElement('a');a.download='canvas-fig261014a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig261014a').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig261014a" class="chartcanvas" role="img" aria-label="Figure 2.6.10.1.4(a)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.10.1.4(a).</strong> Effect of temperature on the tensile and compressive moduli (<em>E</em> and <em>E<sub>c</sub></em>) of 17-7PH (TH1050) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dE=[{x:89.091,y:99.525},{x:168.256,y:97.035},{x:249.899,y:94.826},{x:345.151,y:92.418},{x:424.324,y:90.568},{x:528.245,y:88.657},{x:604.950,y:87.381},{x:695.261,y:85.692},{x:764.533,y:83.717},{x:823.900,y:81.312},{x:877.069,y:78.027},{x:910.555,y:74.997},{x:947.514,y:70.888},{x:1002.999,y:63.858}];
+                var dEc=[{x:97.753,y:99.527},{x:185.580,y:97.061},{x:280.843,y:95.486},{x:373.631,y:93.898},{x:460.236,y:92.726},{x:535.707,y:91.697},{x:637.162,y:90.550},{x:707.683,y:89.532},{x:757.168,y:88.497},{x:790.564,y:87.312},{x:832.611,y:85.218},{x:880.832,y:82.124},{x:942.644,y:77.322},{x:1006.914,y:71.082}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig261014a',[
+                  {label:'E / Eₒ',data:dE,interp:'lin',step:5},
+                  {label:'Ec / Ecₒ',data:dEc,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature modulus',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig261014a',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.6.10.1.4b">
-              <div class="fig-label">Figure 2.6.10.1.4(b)</div>
-              <div class="fig-caption">Effect of temperature on F<sub>bru</sub> for 17-7PH (TH1050), e/D = 2.0.</div>
+
+            <!-- Fig 2.6.10.1.4(b) — Poisson's ratio vs temperature, TH1050 sheet -->
+            <div class="hdbk-figure" id="fig-2.6.10.1.4b">
+              <div class="canvasdiv">
+                <button id="toggle-fig261014b">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig261014b');var a=document.createElement('a');a.download='canvas-fig261014b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig261014b').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig261014b" class="chartcanvas" role="img" aria-label="Figure 2.6.10.1.4(b)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.10.1.4(b).</strong> Effect of temperature on Poisson&rsquo;s ratio (&mu;) for 17-7PH (TH1050) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dMu=[{x:64.145,y:0.2801},{x:110.957,y:0.2819},{x:177.749,y:0.2846},{x:222.203,y:0.2864},{x:275.413,y:0.2885},{x:325.370,y:0.2906},{x:375.895,y:0.2929},{x:433.378,y:0.2956},{x:488.955,y:0.2981},{x:546.448,y:0.3011},{x:595.072,y:0.3037},{x:659.537,y:0.3075},{x:721.314,y:0.3114},{x:768.840,y:0.3150},{x:814.595,y:0.3195},{x:876.795,y:0.3269},{x:901.095,y:0.3300}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig261014b',[
+                  {label:'μ',data:dMu,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Poisson\'s ratio',xMin:0,yMin:0.25,yMax:0.35});
+                HdbkUtil.addToggle('toggle-fig261014b',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.6.10.1.6a">
-              <div class="fig-label">Figure 2.6.10.1.6(a)</div>
-              <div class="fig-caption">Typical stress-strain and tangent-modulus curves for 17-7PH (TH1050), longitudinal.</div>
+            <!-- Fig 2.6.10.1.6(a) — Tensile SS at various temperatures, TH1050 sheet -->
+            <div class="hdbk-figure" id="fig-2.6.10.1.6a">
+              <div class="canvasdiv">
+                <button id="toggle-fig261016a">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig261016a');var a=document.createElement('a');a.download='canvas-fig261016a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig261016a').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig261016a" class="chartcanvas" role="img" aria-label="Figure 2.6.10.1.6(a)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.10.1.6(a).</strong> Typical tensile stress-strain curves at various temperatures for 17-7PH (TH1050) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dT1=[{x:0.018,y:-0.602},{x:1.061,y:19.578},{x:1.780,y:34.337},{x:2.057,y:40.964},{x:2.380,y:45.482},{x:2.896,y:51.807},{x:3.403,y:56.325},{x:3.965,y:60.241},{x:4.638,y:64.458},{x:5.468,y:68.675},{x:6.611,y:72.289},{x:7.818,y:74.699}];
+                var dT2=[{x:0.018,y:-0.904},{x:1.291,y:27.711},{x:2.380,y:51.506},{x:2.998,y:65.060},{x:3.597,y:74.096},{x:4.224,y:81.024},{x:5.146,y:89.157},{x:6.105,y:94.880},{x:6.962,y:98.494},{x:7.641,y:100.575},{x:8.207,y:102.410}];
+                var dT3=[{x:0.018,y:0.000},{x:1.577,y:36.309},{x:2.629,y:60.843},{x:3.505,y:81.325},{x:4.179,y:95.783},{x:4.566,y:103.012},{x:5.110,y:111.145},{x:5.756,y:118.976},{x:6.502,y:126.205},{x:7.102,y:131.325},{x:7.884,y:137.076},{x:8.590,y:141.265},{x:9.019,y:142.908}];
+                var dT4=[{x:0.046,y:0.301},{x:1.882,y:49.398},{x:3.358,y:88.855},{x:4.170,y:110.843},{x:4.982,y:128.916},{x:5.480,y:136.145},{x:6.217,y:144.578},{x:7.443,y:154.874},{x:8.235,y:159.830},{x:8.974,y:163.253},{x:9.444,y:165.498}];
+                var dT5=[{x:0.028,y:-0.301},{x:1.947,y:51.506},{x:3.318,y:87.760},{x:4.193,y:111.446},{x:4.557,y:120.482},{x:5.212,y:132.831},{x:5.978,y:142.908},{x:6.525,y:148.850},{x:7.554,y:157.831},{x:8.384,y:163.253},{x:9.065,y:167.196},{x:9.426,y:168.812}];
+                var dT6=[{x:0.018,y:0.000},{x:1.918,y:53.341},{x:3.243,y:89.485},{x:3.856,y:105.723},{x:4.511,y:122.892},{x:4.955,y:132.202},{x:5.258,y:137.048},{x:5.757,y:145.181},{x:6.411,y:153.916},{x:7.066,y:161.446},{x:7.850,y:167.744},{x:8.701,y:174.288},{x:9.426,y:178.258}];
+                var dT7=[{x:0.028,y:0.000},{x:1.255,y:35.843},{x:2.168,y:61.747},{x:3.100,y:87.952},{x:3.746,y:106.627},{x:4.254,y:120.455},{x:4.798,y:135.487},{x:5.287,y:146.988},{x:5.748,y:155.422},{x:6.402,y:164.458},{x:6.956,y:169.880},{x:7.675,y:176.205},{x:8.440,y:180.723},{x:9.021,y:183.434},{x:9.528,y:185.843}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig261016a',[
+                  {label:'800°F',data:dT1,interp:'lin',step:0.05},
+                  {label:'600°F',data:dT2,interp:'lin',step:0.05},
+                  {label:'400°F',data:dT3,interp:'lin',step:0.05},
+                  {label:'200°F',data:dT4,interp:'lin',step:0.05},
+                  {label:'RT',data:dT5,interp:'lin',step:0.05},
+                  {label:'−65°F',data:dT6,interp:'lin',step:0.05},
+                  {label:'−200°F',data:dT7,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig261016a',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.6.10.1.6b">
-              <div class="fig-label">Figure 2.6.10.1.6(b)</div>
-              <div class="fig-caption">Typical stress-strain and tangent-modulus curves for 17-7PH (TH1050), transverse.</div>
+
+            <!-- Fig 2.6.10.1.6(b) — Compressive SS at various temperatures, TH1050 sheet -->
+            <div class="hdbk-figure" id="fig-2.6.10.1.6b">
+              <div class="canvasdiv">
+                <button id="toggle-fig261016b">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig261016b');var a=document.createElement('a');a.download='canvas-fig261016b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig261016b').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig261016b" class="chartcanvas" role="img" aria-label="Figure 2.6.10.1.6(b)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.10.1.6(b).</strong> Typical compressive stress-strain curves at various temperatures for 17-7PH (TH1050) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dC1=[{x:0.000,y:0.918},{x:1.472,y:32.246},{x:2.213,y:49.589},{x:2.701,y:61.151},{x:3.298,y:74.010},{x:3.657,y:83.056},{x:4.013,y:88.829},{x:4.538,y:96.115},{x:5.268,y:102.775},{x:6.138,y:108.813},{x:7.288,y:113.915},{x:8.251,y:118.309},{x:9.401,y:121.995}];
+                var dC2=[{x:0.038,y:0.610},{x:2.176,y:53.255},{x:3.358,y:82.136},{x:4.033,y:97.985},{x:4.539,y:108.020},{x:4.924,y:115.622},{x:5.533,y:124.427},{x:6.076,y:132.017},{x:6.862,y:139.588},{x:7.442,y:144.817},{x:8.443,y:152.288},{x:9.435,y:158.012}];
+                var dC3=[{x:0.000,y:0.918},{x:2.467,y:65.332},{x:3.406,y:90.402},{x:3.941,y:104.097},{x:4.382,y:115.663},{x:4.888,y:128.167},{x:5.263,y:136.658},{x:5.779,y:145.776},{x:6.377,y:154.000},{x:6.893,y:159.122},{x:7.539,y:165.483},{x:8.222,y:170.010},{x:8.783,y:172.714},{x:9.419,y:175.635}];
+                var dC4=[{x:0.028,y:2.137},{x:3.145,y:87.508},{x:4.064,y:112.635},{x:4.674,y:127.962},{x:5.020,y:135.761},{x:5.367,y:142.755},{x:5.910,y:150.955},{x:6.481,y:158.737},{x:7.184,y:166.121},{x:8.097,y:173.627},{x:9.158,y:180.511},{x:9.775,y:183.627},{x:10.406,y:187.103}];
+                var dC5=[{x:0.010,y:0.917},{x:3.933,y:112.950},{x:4.580,y:130.910},{x:5.143,y:146.130},{x:5.480,y:153.763},{x:5.931,y:161.443},{x:6.736,y:171.649},{x:7.401,y:178.286},{x:8.224,y:184.356},{x:9.103,y:190.089},{x:10.010,y:194.904},{x:10.427,y:196.259}];
+                var dC6=[{x:0.019,y:0.916},{x:1.202,y:36.235},{x:2.488,y:73.072},{x:3.815,y:112.237},{x:4.412,y:129.092},{x:4.909,y:143.400},{x:5.304,y:155.275},{x:5.829,y:165.919},{x:6.265,y:174.099},{x:6.827,y:183.381},{x:7.431,y:191.438},{x:8.067,y:198.104},{x:8.646,y:203.444},{x:9.265,y:208.086},{x:9.938,y:212.614},{x:10.434,y:215.628}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig261016b',[
+                  {label:'800°F',data:dC1,interp:'lin',step:0.05},
+                  {label:'600°F',data:dC2,interp:'lin',step:0.05},
+                  {label:'400°F',data:dC3,interp:'lin',step:0.05},
+                  {label:'200°F',data:dC4,interp:'lin',step:0.05},
+                  {label:'RT',data:dC5,interp:'lin',step:0.05},
+                  {label:'−65°F',data:dC6,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Compressive stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig261016b',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.6.10.1.6c">
-              <div class="fig-label">Figure 2.6.10.1.6(c)</div>
-              <div class="fig-caption">Typical stress-strain and tangent-modulus curves for 17-7PH (TH1050), short-transverse.</div>
+
+            <!-- Fig 2.6.10.1.6(c) — Compressive tangent modulus at various temperatures, TH1050 sheet -->
+            <div class="hdbk-figure" id="fig-2.6.10.1.6c">
+              <div class="canvasdiv">
+                <button id="toggle-fig261016c">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig261016c');var a=document.createElement('a');a.download='canvas-fig261016c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig261016c').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig261016c" class="chartcanvas" role="img" aria-label="Figure 2.6.10.1.6(c)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.6.10.1.6(c).</strong> Typical compressive tangent-modulus curves at various temperatures for 17-7PH (TH1050) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dM1=[{x:2.718,y:153.900},{x:4.215,y:145.195},{x:6.012,y:136.490},{x:8.375,y:128.482},{x:11.403,y:120.125},{x:13.866,y:113.510},{x:16.463,y:107.591},{x:18.759,y:100.627},{x:20.024,y:96.164},{x:21.122,y:90.877},{x:22.053,y:84.610},{x:22.818,y:75.557},{x:23.349,y:64.763},{x:23.481,y:50.836},{x:23.512,y:34.819}];
+                var dM2=[{x:3.923,y:208.217},{x:4.888,y:200.209},{x:6.352,y:190.934},{x:8.548,y:179.318},{x:10.478,y:170.993},{x:12.807,y:162.256},{x:14.471,y:156.337},{x:16.202,y:150.418},{x:17.933,y:143.106},{x:19.696,y:135.446},{x:21.327,y:126.741},{x:22.424,y:118.384},{x:23.757,y:104.457},{x:24.409,y:92.270},{x:24.716,y:76.950},{x:24.901,y:55.362}];
+                var dM3=[{x:3.294,y:230.850},{x:4.391,y:222.493},{x:5.822,y:214.833},{x:7.686,y:206.603},{x:10.215,y:198.595},{x:11.846,y:193.625},{x:14.775,y:185.585},{x:17.005,y:178.621},{x:19.003,y:173.525},{x:22.330,y:161.908},{x:24.859,y:148.677},{x:26.622,y:135.446},{x:27.254,y:128.134},{x:27.800,y:118.036},{x:28.186,y:104.805},{x:28.413,y:87.047}];
+                var dM4=[{x:4.094,y:237.718},{x:5.645,y:226.355},{x:7.487,y:215.877},{x:9.584,y:206.825},{x:12.146,y:196.727},{x:14.576,y:188.687},{x:16.839,y:181.407},{x:19.535,y:171.657},{x:22.197,y:161.560},{x:24.958,y:146.240},{x:26.155,y:131.964},{x:26.719,y:116.643},{x:26.935,y:100.627}];
+                var dM5=[{x:3.629,y:249.652},{x:5.293,y:238.510},{x:7.023,y:229.805},{x:9.286,y:220.404},{x:11.982,y:212.047},{x:14.877,y:204.039},{x:17.873,y:195.334},{x:20.502,y:187.674},{x:23.365,y:178.621},{x:25.827,y:167.827},{x:26.792,y:162.604},{x:27.959,y:153.108},{x:28.687,y:142.758},{x:29.131,y:132.312},{x:29.416,y:114.902}];
+                var dM6=[{x:4.699,y:280.926},{x:5.663,y:272.601},{x:7.027,y:263.484},{x:9.290,y:251.045},{x:11.153,y:241.992},{x:13.283,y:233.635},{x:15.613,y:224.804},{x:17.543,y:217.618},{x:19.473,y:209.610},{x:21.803,y:200.209},{x:24.398,y:188.592},{x:26.461,y:176.880},{x:28.091,y:162.256},{x:29.320,y:143.454},{x:29.718,y:132.312},{x:29.973,y:117.340}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig261016c',[
+                  {label:'800°F',data:dM1,interp:'lin',step:0.05},
+                  {label:'600°F',data:dM2,interp:'lin',step:0.05},
+                  {label:'400°F',data:dM3,interp:'lin',step:0.05},
+                  {label:'200°F',data:dM4,interp:'lin',step:0.05},
+                  {label:'RT',data:dM5,interp:'lin',step:0.05},
+                  {label:'−65°F',data:dM6,interp:'lin',step:0.05}
+                ],{xLabel:'Compressive Tangent Modulus, 10³ ksi',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig261016c',chart);
+              })();
+              </script>
             </div>
           </div><!-- /2.6.10.1 -->
 

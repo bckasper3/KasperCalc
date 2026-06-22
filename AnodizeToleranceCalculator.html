@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: Anodize Tolerance Calculator — MIL-A-8625 Type III</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, anodize, hardcoat, MIL-A-8625, Type III, pre-anodize, tolerance, thread, diameter, machining" />
+    <meta name="description" content="Calculate pre-anodize dimensions for flash and full hardcoat (Type III) per MIL-A-8625. Covers single surfaces, diameters, and thread features." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XLCN0GJQ0');
+    </script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+    <!-- LIGHTBOX STYLES (pattern from SpringCompressionRound.html) -->
+    <style>
+      .ref-zoomable{cursor:zoom-in;transition:opacity .15s}
+      .ref-zoomable:hover{opacity:.85}
+      .lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+      .lightbox-overlay.active{display:flex}
+      .lightbox-img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:6px;box-shadow:0 8px 32px rgba(0,0,0,.6);cursor:default;touch-action: pinch-zoom;}
+      .lightbox-close{position:fixed;top:16px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;z-index:100000}
+      .lightbox-close:hover{background:rgba(255,255,255,.3)}
+      .lightbox-caption{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.8);font-size:13px;font-family:Roboto,Arial,sans-serif;text-align:center;max-width:80vw;pointer-events:none}
+    </style>
+
+    <!-- ANODIZE TYPE DROPDOWN WIDTH -->
+    <style>
+      .calcinput[id$="-type"]{ width:auto; min-width:17rem; max-width:100%; text-align:left; }
+      .outputrow:has(.calcinput[id$="-type"]){ flex-wrap:wrap; gap:.25rem .5rem; }
+    </style>
+
+    <!-- BUILDUP / COATING-THICKNESS TOOLTIPS -->
+    <style>
+      .tooltip-icon{
+        display:inline-flex; align-items:center; justify-content:center;
+        width:1.15em; height:1.15em; margin-left:.3em;
+        border-radius:50%; background:var(--section-title-color); color:#fff;
+        font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:700;
+        font-size:.72em; line-height:1; cursor:help; vertical-align:middle;
+        position:relative; user-select:none;
+      }
+      .tooltip-icon::after{
+        content:"Coating thickness is the full anodic oxide layer (penetration + buildup). Buildup is only the outward-growing part that changes the part dimension - about half the coating thickness for Type III, roughly one-third for Type II. The calculators use buildup.";
+        position:absolute; bottom:calc(100% + 9px); left:50%; transform:translateX(-50%);
+        width:270px; max-width:72vw;
+        background:#222; color:#fff; text-align:left;
+        font-family:Roboto,Arial,sans-serif; font-style:normal; font-weight:400; font-size:.78rem; line-height:1.4;
+        padding:9px 11px; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,.4);
+        opacity:0; visibility:hidden; transition:opacity .15s; z-index:1200; pointer-events:none;
+        white-space:normal;
+      }
+      .tooltip-icon::before{
+        content:""; position:absolute; bottom:calc(100% + 3px); left:50%; transform:translateX(-50%);
+        border:6px solid transparent; border-top-color:#222;
+        opacity:0; visibility:hidden; transition:opacity .15s; z-index:1200;
+      }
+      .tooltip-icon:hover::after, .tooltip-icon:focus::after,
+      .tooltip-icon:hover::before, .tooltip-icon:focus::before{ opacity:1; visibility:visible; }
+    </style>
+
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                Anodize Tolerance Calculator &mdash; MIL-A-8625 Type III
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <h1 class="visually-hidden">Anodize Tolerance Calculator for pre-anodize machining dimensions per MIL-A-8625 Type III hardcoat</h1>
+
+      <!-- OVERVIEW -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-2" style="max-width:950px;">
+              <div class="custom-heading">Pre-Anodize Dimension Calculator</div>
+              <p class="mt-3 text-start">
+                Calculate the dimensions a part must be machined to <em>before</em> anodizing, so that the
+                finished part meets its drawing tolerances <em>after</em> anodizing. Covers flash hardcoat
+                and full hardcoat per <span style="font-weight:var(--font-weight-normal);">MIL-A-8625 Type&nbsp;III, Cl.1</span>.
+              </p>
+              <p class="text-start">
+                <span style="font-weight:var(--font-weight-normal);">Note:</span> Type&nbsp;II anodize per MIL-A-8625 adds no measurable dimensional
+                change on machined features and requires no pre-anodize adjustment.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ANODIZE REFERENCE LOOKUP -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Anodize Reference: Types, Classes, Sealing &amp; Color</div>
+            </div>
+
+            <div class="mx-auto" style="max-width:1500px;">
+              <style>
+                .anodize-ref-table td:first-child,
+                .anodize-ref-table th:first-child { white-space: nowrap; }
+              </style>
+              <p class="mt-3 text-start">
+                Anodize is called out by <span style="font-weight:var(--font-weight-normal);">Type</span> (the process/acid),
+                <span style="font-weight:var(--font-weight-normal);">Class</span> (undyed vs. dyed), and a
+                <span style="font-weight:var(--font-weight-normal);">seal</span>. Coating thickness<span class="tooltip-icon" tabindex="0">i</span> and color depend on all three plus
+                the alloy. A typical drawing callout reads, e.g.,
+                <em>&ldquo;Anodize per MIL-A-8625 Type&nbsp;II, Class&nbsp;2, black, dichromate seal.&rdquo;</em>
+                The tables below summarize the common combinations and when to use each.
+              </p>
+              <div class="mt-3 p-3" style="border-left: 4px solid var(--section-title-color); background-color: var(--section-bg-color); border-top-right-radius:.25rem; border-bottom-right-radius:.25rem;">
+                <p class="mb-1 text-start"><span style="font-weight:var(--font-weight-normal);">Thickness vs. buildup &mdash; key terms</span></p>
+                <ul class="mb-0 text-start small">
+                  <li><span style="font-weight:var(--font-weight-normal);">Coating thickness</span><span class="tooltip-icon" tabindex="0">i</span> &mdash; the full anodic oxide layer measured into one surface; this is what MIL-A-8625 and coating gauges report.</li>
+                  <li><span style="font-weight:var(--font-weight-normal);">Buildup (per surface)</span><span class="tooltip-icon" tabindex="0">i</span> &mdash; only the outward-growing portion that changes the part dimension. For Type&nbsp;III this is about half the coating thickness (the 50/50 rule); for Type&nbsp;II it is roughly one-third. <span style="font-weight:var(--font-weight-normal);">The calculators below use buildup, not coating thickness.</span></li>
+                  <li>On a diameter both sides grow, so diametral growth = 2&thinsp;&times;&thinsp;per-surface buildup.</li>
+                </ul>
+              </div>
+
+
+              <p class="mt-3 text-start"><span style="font-weight:var(--font-weight-normal);">Types &mdash; process, thickness, color, and when to use</span></p>
+              <div style="overflow-x:auto;">
+                <table class="table table-striped table-bordered table-hover table-sm align-middle text-start mb-1 anodize-ref-table" style="font-size:0.92rem;">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th>Type</th>
+                      <th>Typical callout</th>
+                      <th>Process</th>
+                      <th>Typical coating thickness</th>
+                      <th>Typical buildup (per surface)</th>
+                      <th>Natural (undyed) color</th>
+                      <th>When to use</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Type&nbsp;I</td>
+                      <td>MIL-A-8625 Type&nbsp;I, Cl.1/2</td>
+                      <td>Chromic acid</td>
+                      <td>0.00002&ndash;0.0001&Prime;<br>(0.5&ndash;2.5&thinsp;&micro;m)</td>
+                      <td>Negligible<br>(~0.00001&ndash;0.00005&Prime;)</td>
+                      <td>Gray to dark gray, iridescent</td>
+                      <td>Fatigue-critical parts; faying / lap joints &amp; weldments where sulfuric could be trapped; paint &amp; adhesive base. Minimal dimensional change.</td>
+                    </tr>
+                    <tr>
+                      <td>Type&nbsp;IB</td>
+                      <td>MIL-A-8625 Type&nbsp;IB, Cl.1/2</td>
+                      <td>Low-voltage chromic acid (22&nbsp;V)</td>
+                      <td>0.00002&ndash;0.0001&Prime;</td>
+                      <td>Negligible<br>(~0.00001&ndash;0.00005&Prime;)</td>
+                      <td>Gray</td>
+                      <td>Direct low-voltage alternative to Type&nbsp;I.</td>
+                    </tr>
+                    <tr>
+                      <td>Type&nbsp;IC</td>
+                      <td>MIL-A-8625 Type&nbsp;IC, Cl.1/2</td>
+                      <td>Non-chromic acid</td>
+                      <td>~0.0001&ndash;0.0002&Prime;</td>
+                      <td>Negligible<br>(~0.00005&ndash;0.0001&Prime;)</td>
+                      <td>Light gray</td>
+                      <td>Chromate-free replacement for Type&nbsp;I / IB (hex-chrome elimination).</td>
+                    </tr>
+                    <tr>
+                      <td>Type&nbsp;II</td>
+                      <td>MIL-A-8625 Type&nbsp;II, Cl.1/2</td>
+                      <td>Sulfuric acid (conventional)</td>
+                      <td>0.0001&ndash;0.001&Prime;<br>(Cl.1 min ~1.8&thinsp;&micro;m)</td>
+                      <td>Negligible on machined features<br>(~0.00003&ndash;0.0003&Prime;, ~1/3 of coating)</td>
+                      <td>Clear / silvery to light gray; readily accepts dye</td>
+                      <td>General corrosion protection, decorative dyeing, and paint base. Negligible dimensional change on machined features.</td>
+                    </tr>
+                    <tr>
+                      <td>Type&nbsp;IIB</td>
+                      <td>MIL-A-8625 Type&nbsp;IIB, Cl.1/2</td>
+                      <td>Thin sulfuric acid</td>
+                      <td>0.00005&ndash;0.0004&Prime;<br>(1.5&ndash;10&thinsp;&micro;m)</td>
+                      <td>Negligible<br>(~0.00002&ndash;0.00015&Prime;)</td>
+                      <td>Light gray</td>
+                      <td>Thin, chromate-free alternative to Type&nbsp;I / IB where a sulfuric process is acceptable.</td>
+                    </tr>
+                    <tr>
+                      <td>Type&nbsp;III<br>flash hardcoat</td>
+                      <td>MIL-A-8625 Type&nbsp;III, Cl.1/2</td>
+                      <td>Sulfuric acid (hard anodize), shorter cycle</td>
+                      <td>0.0003&ndash;0.0005&Prime; per surface</td>
+                      <td>0.00015&ndash;0.00025&Prime;</td>
+                      <td>Light gray to light bronze</td>
+                      <td>Hardcoat hardness &amp; wear resistance where a thin coating and tight tolerances are needed. Modest dimensional buildup.</td>
+                    </tr>
+                    <tr>
+                      <td>Type&nbsp;III<br>full hardcoat</td>
+                      <td>MIL-A-8625 Type&nbsp;III, Cl.1/2</td>
+                      <td>Sulfuric acid (hard anodize), full cycle</td>
+                      <td>0.0005&ndash;0.0045&Prime;;<br>0.002&Prime; (50&thinsp;&micro;m) typical</td>
+                      <td>0.00025&ndash;0.00225&Prime;;<br>0.001&Prime; typical</td>
+                      <td>Gray-bronze to dark brown / black; darkens with thickness &amp; alloy</td>
+                      <td>Maximum wear / abrasion resistance, electrical insulation, hydraulics, pistons, gears, bearings. Largest dimensional buildup &mdash; see calculators below.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <p class="mt-2 text-start">
+                <span style="font-weight:var(--font-weight-normal);">Class&nbsp;1</span> = not dyed (natural color shown above)<br>
+                <span style="font-weight:var(--font-weight-normal);">Class&nbsp;2</span> = dyed. <br>Type&nbsp;II Class&nbsp;2 takes the
+                widest range of colors (black, red, blue, gold, green, etc.); <br>Type&nbsp; III Class&nbsp;2 is almost always dyed
+                black. Chromic (Type&nbsp;I) coatings are too thin and opaque to dye reliably.
+              </p>
+
+              <p class="mt-3 text-start"><span style="font-weight:var(--font-weight-normal);">Sealing methods &mdash; color, corrosion resistance, and hazards</span></p>
+              <div style="overflow-x:auto;">
+                <table class="table table-striped table-bordered table-hover table-sm align-middle text-start mb-1 anodize-ref-table" style="font-size:0.92rem;">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th>Seal</th>
+                      <th>Process</th>
+                      <th>Effect on color</th>
+                      <th>Corrosion resistance</th>
+                      <th>Hazmat</th>
+                      <th>When to use</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Hot-water seal</td>
+                      <td>Hydration (boehmite) in ~190&ndash;212&deg;F deionized water</td>
+                      <td>Minimal; may slightly cloud / soften dye shade</td>
+                      <td>Good</td>
+                      <td>Chrome-free</td>
+                      <td>Default seal where maximum corrosion resistance is not required; preferred where hex-chrome is prohibited.</td>
+                    </tr>
+                    <tr>
+                      <td>Dichromate seal</td>
+                      <td>Hot sodium / potassium dichromate bath</td>
+                      <td>Adds a yellow / gold tint</td>
+                      <td>Excellent (chromate corrosion inhibitor)</td>
+                      <td><span style="font-weight:var(--font-weight-normal);">Contains hexavalent chromium (Cr&nbsp;VI)</span></td>
+                      <td>Salt-spray / corrosion-critical parts, especially Type&nbsp;I and Type&nbsp;II for aerospace &amp; defense.</td>
+                    </tr>
+                    <tr>
+                      <td>Nickel-acetate seal</td>
+                      <td>Mid-temperature nickel-salt bath</td>
+                      <td>Locks in dye; preserves color</td>
+                      <td>Good</td>
+                      <td>Nickel salts (sensitizer)</td>
+                      <td>Dyed Class&nbsp;2 parts where color and fade resistance matter.</td>
+                    </tr>
+                    <tr>
+                      <td>Duplex (dual) seal</td>
+                      <td>Dichromate seal <em>followed by</em> a hot-water seal</td>
+                      <td>Slight gold tint</td>
+                      <td>Best &mdash; chromate inhibitor plus full pore hydration</td>
+                      <td><span style="font-weight:var(--font-weight-normal);">Contains hexavalent chromium (Cr&nbsp;VI)</span></td>
+                      <td>Highest corrosion durability (aerospace / marine); combines the inhibitor of dichromate with the pore closure of hot-water sealing.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mt-3 p-3" style="border-left: 4px solid #b02a37; background-color: var(--section-bg-color); border-top-right-radius:.25rem; border-bottom-right-radius:.25rem;">
+                <p class="mb-1 text-start"><span style="font-weight:var(--font-weight-normal);">&#9888; Hazardous materials note</span></p>
+                <p class="mb-0 text-start small">
+                  Chromic acid anodize (Type&nbsp;I / IB) baths and dichromate seals (including the dichromate step of a duplex seal)
+                  contain <span style="font-weight:var(--font-weight-normal);">hexavalent chromium (Cr&nbsp;VI)</span>, a known
+                  carcinogen regulated by OSHA, the EPA, REACH (SVHC / Annex&nbsp;XIV), and RoHS. This is the primary driver behind
+                  chromate-free alternatives such as Type&nbsp;IC, Type&nbsp;IIB, and non-chrome seals. All anodize processing also
+                  involves strong sulfuric or chromic acid electrolytes and a caustic (NaOH) pre-etch. Specifying and handling these
+                  finishes requires appropriate PPE, local exhaust ventilation, and licensed hazardous-waste treatment. Confirm
+                  environmental and regulatory requirements with your finishing vendor before releasing a callout.
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- BACKGROUND -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">How Anodize Affects Dimensions</div>
+            </div>
+
+            <div class="mx-auto" style="max-width:1200px;">
+
+              <p class="mt-3"><span style="font-weight:var(--font-weight-normal);">The 50/50 rule &mdash; and why it is not universal</span></p>
+              <p>
+                The most widely cited rule of thumb is that anodize is 50% penetration (into the base metal)
+                and 50% build-up (on the surface). This is the basis for MIL-A-8625 guidance and the
+                calculators on this page. Only the build-up portion changes the external dimension, so at a
+                total coating of 0.002&Prime; the surface grows by 0.001&Prime; per side.
+              </p>
+              <p>However, the 50/50 split is an approximation, and the actual ratio depends on anodize type and alloy:</p>
+              <ul>
+                <li>
+                  <span style="font-weight:var(--font-weight-normal);">Type III hardcoat</span> &mdash; typically close to 50/50 in practice; Anoplate
+                  Corporation reports approximately 45% build-up / 55% penetration for Type&nbsp;III. The
+                  calculators use the 50/50 assumption because it is specified in MIL-A-8625 and is the basis
+                  for the Sanford Process tolerance guidelines.
+                </li>
+                <li>
+                  <span style="font-weight:var(--font-weight-normal);">Type II sulfuric anodize</span> &mdash; approximately <span style="font-weight:var(--font-weight-normal);">1/3 build-up /
+                  2/3 penetration</span>. This is why Type&nbsp;II causes less dimensional growth per unit
+                  of coating thickness<span class="tooltip-icon" tabindex="0">i</span> than hardcoat, and why many precision shops treat Type&nbsp;II as
+                  dimensionally negligible on machined features.
+                </li>
+                <li>
+                  <span style="font-weight:var(--font-weight-normal);">Type I chromic acid anodize</span> &mdash; coating is so thin (typically
+                  &lt;0.0001&Prime; per surface) that dimensional change is negligible for virtually all
+                  machined features.
+                </li>
+              </ul>
+
+              <div class="row g-4 my-4">
+                <div class="col-md-6">
+                  <figure class="figure d-block text-center mb-0">
+                    <div class="text-center fs-4 mb-2" style="color:var(--section-title-color);">All other anodize types &mdash; ~50/50</div>
+                    <img src="img/Anodize_Buildup_KasperCalc-Half.png" class="figure-img img-fluid rounded border ref-zoomable" alt="Cross-section of anodize showing approximately 50 percent build-up and 50 percent penetration for non-sulfuric coatings">
+                    <figcaption class="figure-caption text-start mt-2">
+                      Type&nbsp;I, Type&nbsp;III hardcoat, and other non-Type&nbsp;II coatings: roughly 50% build-up / 50% penetration. This is the 50/50 rule the calculators on this page use.
+                    </figcaption>
+                  </figure>
+                </div>
+                <div class="col-md-6">
+                  <figure class="figure d-block text-center mb-0">
+                    <div class="text-center fs-4 mb-2" style="color:var(--section-title-color);">Type&nbsp;II sulfuric anodize &mdash; ~1/3</div>
+                    <img src="img/Anodize_Buildup_KasperCalc-Third.png" class="figure-img img-fluid rounded border ref-zoomable" alt="Cross-section of anodize showing approximately one-third build-up and two-thirds penetration for Type II sulfuric anodize">
+                    <figcaption class="figure-caption text-start mt-2">
+                      Approximately 1/3 build-up / 2/3 penetration &mdash; less dimensional growth per unit of coating thickness<span class="tooltip-icon" tabindex="0">i</span> than hardcoat.
+                    </figcaption>
+                  </figure>
+                </div>
+              </div>
+
+              <p class="figure-caption text-start">
+                <span style="font-weight:var(--font-weight-normal);">Figure:</span> Anodize build-up vs. penetration. Type&nbsp;III hardcoat is approximately 45% build-up / 55% penetration; Type&nbsp;II sulfuric is approximately 1/3 build-up / 2/3 penetration. Ratios vary with alloy and process parameters. Source: Anoplate Corporation, <em>The Impact of Anodize on Dimensions</em>.
+              </p>
+
+              <div class="mt-3 p-3" style="border-left: 4px solid #b8860b; background-color: var(--section-bg-color); border-top-right-radius:.25rem; border-bottom-right-radius:.25rem;">
+                <p class="mb-0 text-start">
+                  <span style="font-weight:var(--font-weight-normal);">&#9888; Caution:</span> The 1/3&ndash;2/3 rule that some vendors and references cite applies primarily to <span style="font-weight:var(--font-weight-normal);">Type&nbsp;II sulfuric anodize</span>. Applying it to Type&nbsp;III hardcoat underestimates the build-up and will produce parts that are out of tolerance. Always confirm the build-up ratio and tolerance range with your specific anodizer and process type.
+                </p>
+              </div>
+
+
+
+              <p class="mt-3"><span style="font-weight:var(--font-weight-normal);">Type II vs. Type III</span></p>
+              <ul>
+                <li><span style="font-weight:var(--font-weight-normal);">Type II (sulfuric anodize)</span> &mdash; decorative, corrosion protection. No dimensional adjustment required on machined features.</li>
+                <li><span style="font-weight:var(--font-weight-normal);">Type III &mdash; Flash hardcoat</span> per MIL-A-8625 Type&nbsp;III, Cl.1: typical total buildup 0.0003&ndash;0.0005&Prime; (per surface = half that).</li>
+                <li><span style="font-weight:var(--font-weight-normal);">Type III &mdash; Full hardcoat</span> per MIL-A-8625 Type&nbsp;III, Cl.1: typical total buildup &plusmn;0.001&Prime; (0.001&Prime; per surface).</li>
+              </ul>
+              <p><em>Natural and black</em> hardcoat behave the same way dimensionally. Quantum Hard Color is typically thinner &mdash; 0.0013&thinsp;&plusmn;&thinsp;0.0003&Prime; total buildup.</p>
+
+              <p class="mt-3"><span style="font-weight:var(--font-weight-normal);">Thread features require larger adjustments</span></p>
+              <ul>
+                <li><span style="font-weight:var(--font-weight-normal);">Major and minor diameters</span> &mdash; <span style="font-weight:var(--font-weight-normal);">2&times; per-surface buildup</span> (coating on two opposing surfaces).</li>
+                <li><span style="font-weight:var(--font-weight-normal);">Pitch diameter of 60&deg; threads</span> &mdash; <span style="font-weight:var(--font-weight-normal);">4&times; per-surface buildup</span> (cos&thinsp;30&deg; geometry).</li>
+                <li><span style="font-weight:var(--font-weight-normal);">Root radius</span> &mdash; <span style="font-weight:var(--font-weight-normal);">1&times; buildup</span> (single curved surface).</li>
+              </ul>
+
+              <p class="mt-3"><span style="font-weight:var(--font-weight-normal);">Metal removal from pre-treatment</span></p>
+              <ul>
+                <li><span style="font-weight:var(--font-weight-normal);">Etching</span> (NaOH): removes 0.0001&ndash;0.0006&Prime; per surface (1&ndash;4 min); up to 0.00075&Prime; at 8 min.</li>
+                <li><span style="font-weight:var(--font-weight-normal);">Chemical brightening</span> (acid polish): removes ~0.0001&ndash;0.00024&Prime; per surface.</li>
+              </ul>
+              <p>These calculators compute the pre-anodize dimension only. Add any etch/polish removal separately.</p>
+
+              <p class="mt-3"><span style="font-weight:var(--font-weight-normal);">How to use these calculators</span></p>
+              <ol>
+                <li>Enter the <span style="font-weight:var(--font-weight-normal);">nominal finished dimension</span> and tolerances as they appear on the drawing <em>after</em> anodize.</li>
+                <li>Enter the <span style="font-weight:var(--font-weight-normal);">anodize buildup tolerances</span>. Use the typical values shown as a starting point.</li>
+                <li>Read the <span style="font-weight:var(--font-weight-normal);">pre-anodize dimensions</span> from the results table and use on the machining drawing.</li>
+              </ol>
+              <p><span style="font-weight:var(--font-weight-normal);">OD / outer features:</span> pre-anodize dimension is <em>smaller</em> (coating grows outward).</p>
+              <p><span style="font-weight:var(--font-weight-normal);">ID / inner features:</span> pre-anodize dimension is <em>larger</em> (coating encroaches inward).</p>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- CALCULATOR 1 — SINGLE SURFACE -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Calculator 1: Single Surface (Flat or Radius)</div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-12 px-3">
+            <div class="mx-auto" style="max-width:820px;">
+              <p class="mt-2">
+                Use for one surface only &mdash; a flat face, outer radius, or inner radius.
+                Typical flash hardcoat buildup<span class="tooltip-icon" tabindex="0">i</span> per surface: <span style="font-weight:var(--font-weight-normal);">0.00015&ndash;0.00025&Prime;</span>.
+                Typical full hardcoat: <span style="font-weight:var(--font-weight-normal);">0.0005&ndash;0.001&Prime;</span>.
+              </p>
+            </div>
+            <div class="wrapper" style="font-size:1.00em; max-width: 40rem;">
+              <div class="header text-center fs-4">Calculator 1: Single Surface</div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:600;">Finished Dimension (after anodize) &mdash; from drawing</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Nominal dimension (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="s-nom" step="0.0001" value="0.500" aria-label="Nominal dimension"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Upper tolerance (in) +:</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="s-utol" step="0.0001" min="0" value="0.001" aria-label="Upper tolerance"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Lower tolerance (in) &minus;:</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="s-ltol" step="0.0001" min="0" value="0.001" aria-label="Lower tolerance"></span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:600;">Anodize Buildup per Surface<span class="tooltip-icon" tabindex="0">i</span></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Anodize type / thickness:</span>
+                  <span class="output inputbox"><select class="calcinput fs-5" id="s-type" aria-label="Anodize type"><option value="i">Type I &mdash; Chromic acid</option><option value="ib">Type IB &mdash; Chromic, low voltage</option><option value="ic">Type IC &mdash; Non-chromic acid</option><option value="ii">Type II &mdash; Sulfuric</option><option value="iib">Type IIB &mdash; Thin sulfuric</option><option value="flash" selected>Type III &mdash; Flash hardcoat</option><option value="full">Type III &mdash; Full hardcoat</option><option value="custom">Custom (enter values)</option></select></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Upper buildup tolerance (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="s-bu" step="0.00001" min="0" value="0.00025" aria-label="Upper buildup"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Lower buildup tolerance (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="s-bl" step="0.00001" min="0" value="0.00015" aria-label="Lower buildup"></span>
+                </div>
+              </div>
+
+              <div class="group" style="overflow-x:auto; padding:0.5rem 1rem;">
+                <table class="table table-striped table-bordered table-hover table-sm text-center mb-1" style="font-size:inherit;">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th></th>
+                      <th>After Anodize (drawing)</th>
+                      <th>Before Anodize <br> OD / Non-radius</th>
+                      <th>Before Anodize <br> ID / Radius</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Maximum</td><td id="s-after-max">&mdash;</td><td id="s-before-max-nr">&mdash;</td><td id="s-before-max-r">&mdash;</td></tr>
+                    <tr><td>Minimum</td><td id="s-after-min">&mdash;</td><td id="s-before-min-nr">&mdash;</td><td id="s-before-min-r">&mdash;</td></tr>
+                    <tr><td>Nominal &plusmn; tol</td><td id="s-after-fmt">&mdash;</td><td id="s-before-fmt-nr">&mdash;</td><td id="s-before-fmt-r">&mdash;</td></tr>
+                  </tbody>
+                </table>
+                <p id="s-note" class="text-danger small mb-0"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- CALCULATOR 2 — DIAMETER -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Calculator 2: Diameter (OD or ID)</div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-12 px-3">
+            <div class="mx-auto" style="max-width:820px;">
+              <p class="mt-2">
+                Use for any cylindrical feature &mdash; shafts (OD), bores (ID), boss diameters, hole diameters.
+                Coating builds up on both sides simultaneously.
+                Typical flash hardcoat total diametral buildup<span class="tooltip-icon" tabindex="0">i</span>: <span style="font-weight:var(--font-weight-normal);">0.0003&ndash;0.0005&Prime;</span> (0.00015&ndash;0.00025&Prime; per side).
+                Typical full hardcoat: <span style="font-weight:var(--font-weight-normal);">&plusmn;0.001&Prime;</span> total (0.0005&ndash;0.001&Prime; per side).
+              </p>
+            </div>
+            <div class="wrapper" style="font-size:1.00em; max-width: 40rem;">
+              <div class="header text-center fs-4">Calculator 2 <br> Diameter (OD or ID)</div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:600;">Finished Diameter (after anodize) &mdash; from drawing</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Nominal diameter (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="d-nom" step="0.0001" value="0.500" aria-label="Nominal diameter"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Upper tolerance (in) +:</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="d-utol" step="0.0001" min="0" value="0.0005" aria-label="Upper tolerance"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Lower tolerance (in) &minus;:</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="d-ltol" step="0.0001" min="0" value="0.0005" aria-label="Lower tolerance"></span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:600;">Anodize Buildup per Surface (half the total diametral buildup)<span class="tooltip-icon" tabindex="0">i</span></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Anodize type / thickness:</span>
+                  <span class="output inputbox"><select class="calcinput fs-5" id="d-type" aria-label="Anodize type"><option value="i">Type I &mdash; Chromic acid</option><option value="ib">Type IB &mdash; Chromic, low voltage</option><option value="ic">Type IC &mdash; Non-chromic acid</option><option value="ii">Type II &mdash; Sulfuric</option><option value="iib">Type IIB &mdash; Thin sulfuric</option><option value="flash" selected>Type III &mdash; Flash hardcoat</option><option value="full">Type III &mdash; Full hardcoat</option><option value="custom">Custom (enter values)</option></select></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Upper buildup tolerance (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="d-bu" step="0.00001" min="0" value="0.00025" aria-label="Upper buildup"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Lower buildup tolerance (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="d-bl" step="0.00001" min="0" value="0.00015" aria-label="Lower buildup"></span>
+                </div>
+              </div>
+
+              <div class="group" style="overflow-x:auto; padding:0.5rem 1rem;">
+                <table class="table table-striped table-bordered table-hover table-sm text-center mb-1" style="font-size:inherit;">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th></th>
+                      <th>After Anodize (drawing)</th>
+                      <th>Before Anodize <br>OD (shaft / boss)</th>
+                      <th>Before Anodize <br>ID* (bore / hole)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Maximum</td><td id="d-after-max">&mdash;</td><td id="d-before-max-od">&mdash;</td><td id="d-before-max-id">&mdash;</td></tr>
+                    <tr><td>Minimum</td><td id="d-after-min">&mdash;</td><td id="d-before-min-od">&mdash;</td><td id="d-before-min-id">&mdash;</td></tr>
+                    <tr><td>Nominal &plusmn; tol</td><td id="d-after-fmt">&mdash;</td><td id="d-before-fmt-od">&mdash;</td><td id="d-before-fmt-id">&mdash;</td></tr>
+                  </tbody>
+                </table>
+                <p class="small mb-1">* For an ID, the pre-anodize bore must be <em>larger</em> than the finished bore.</p>
+                <p id="d-note" class="text-danger small mb-0"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- CALCULATOR 3 — THREAD MAJOR AND MINOR DIAMETER -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Calculator 3: Thread Major and Minor Diameter</div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-12 px-3">
+            <div class="mx-auto" style="max-width:820px;">
+              <p class="mt-2">
+                For 60&deg; threads (UN, UNF, metric): coating builds up on opposing flanks simultaneously.
+                Effective diametral change is <span style="font-weight:var(--font-weight-normal);">2&times; per-surface buildup</span> for major and minor diameters.
+                Run each separately with the appropriate nominal diameter.
+                Typical flash hardcoat: upper <span style="font-weight:var(--font-weight-normal);">0.00025&Prime;</span>, lower <span style="font-weight:var(--font-weight-normal);">0.00015&Prime;</span>.
+                Typical full hardcoat: upper <span style="font-weight:var(--font-weight-normal);">0.001&Prime;</span>, lower <span style="font-weight:var(--font-weight-normal);">0.0005&Prime;</span> per surface.
+              </p>
+            </div>
+            <div class="wrapper" style="font-size:1.00em; max-width: 40rem;">
+              <div class="header text-center fs-4">Calculator 3 <br> Thread Major / Minor Diameter (&times;2 factor)</div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:600;">Thread Diameter (after anodize) &mdash; major OR minor</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Nominal diameter (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="tm-nom" step="0.00001" value="1.06865" aria-label="Nominal diameter"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Upper tolerance (in) +:</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="tm-utol" step="0.00001" min="0" value="0.00225" aria-label="Upper tolerance"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Lower tolerance (in) &minus;:</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="tm-ltol" step="0.00001" min="0" value="0.00225" aria-label="Lower tolerance"></span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:600;">Anodize Buildup per Surface (factor &times;2 applied to diameter)<span class="tooltip-icon" tabindex="0">i</span></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Anodize type / thickness:</span>
+                  <span class="output inputbox"><select class="calcinput fs-5" id="tm-type" aria-label="Anodize type"><option value="i">Type I &mdash; Chromic acid</option><option value="ib">Type IB &mdash; Chromic, low voltage</option><option value="ic">Type IC &mdash; Non-chromic acid</option><option value="ii">Type II &mdash; Sulfuric</option><option value="iib">Type IIB &mdash; Thin sulfuric</option><option value="flash" selected>Type III &mdash; Flash hardcoat</option><option value="full">Type III &mdash; Full hardcoat</option><option value="custom">Custom (enter values)</option></select></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Upper buildup tolerance (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="tm-bu" step="0.00001" min="0" value="0.00025" aria-label="Upper buildup"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Lower buildup tolerance (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="tm-bl" step="0.00001" min="0" value="0.00015" aria-label="Lower buildup"></span>
+                </div>
+              </div>
+
+              <div class="group" style="overflow-x:auto; padding:0.5rem 1rem;">
+                <table class="table table-striped table-bordered table-hover table-sm text-center mb-1" style="font-size:inherit;">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th></th>
+                      <th>After Anodize (drawing)</th>
+                      <th>Before Anodize <br>External thread (OD)</th>
+                      <th>Before Anodize <br>Internal thread (ID)*</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Maximum</td><td id="tm-after-max">&mdash;</td><td id="tm-before-max-od">&mdash;</td><td id="tm-before-max-id">&mdash;</td></tr>
+                    <tr><td>Minimum</td><td id="tm-after-min">&mdash;</td><td id="tm-before-min-od">&mdash;</td><td id="tm-before-min-id">&mdash;</td></tr>
+                    <tr><td>Nominal &plusmn; tol</td><td id="tm-after-fmt">&mdash;</td><td id="tm-before-fmt-od">&mdash;</td><td id="tm-before-fmt-id">&mdash;</td></tr>
+                  </tbody>
+                </table>
+                <p class="small mb-1">* For an internal thread (tapped hole), the pre-anodize diameter must be <em>larger</em>.</p>
+                <p id="tm-note" class="text-danger small mb-0"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- CALCULATOR 4 — THREAD PITCH DIAMETER -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Calculator 4: Thread Pitch Diameter (60&deg; Threads)</div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-12 px-3">
+            <div class="mx-auto" style="max-width:820px;">
+              <p class="mt-2">
+                The pitch diameter of a 60&deg; thread is affected by anodize on the thread flanks. Because the flanks are angled at
+                30&deg; from the axis, the effective diametral change is <span style="font-weight:var(--font-weight-normal);">4&times; per-surface buildup</span>
+                (derived from 2&thinsp;&times;&thinsp;1/cos&thinsp;30&deg;).
+                Typical flash hardcoat: upper <span style="font-weight:var(--font-weight-normal);">0.00025&Prime;</span>, lower <span style="font-weight:var(--font-weight-normal);">0.00015&Prime;</span>.
+              </p>
+            </div>
+            <div class="wrapper" style="font-size:1.00em; max-width: 40rem;">
+              <div class="header text-center fs-4">Calculator 4 <br> Thread Pitch Diameter (&times;4 factor)</div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:600;">Pitch Diameter (after anodize) &mdash; from drawing</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Nominal pitch diameter (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="tp-nom" step="0.00001" value="1.06865" aria-label="Nominal pitch diameter"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Upper tolerance (in) +:</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="tp-utol" step="0.00001" min="0" value="0.00225" aria-label="Upper tolerance"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Lower tolerance (in) &minus;:</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="tp-ltol" step="0.00001" min="0" value="0.00225" aria-label="Lower tolerance"></span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:600;">Anodize Buildup per Surface (factor &times;4 applied to pitch dia)<span class="tooltip-icon" tabindex="0">i</span></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Anodize type / thickness:</span>
+                  <span class="output inputbox"><select class="calcinput fs-5" id="tp-type" aria-label="Anodize type"><option value="i">Type I &mdash; Chromic acid</option><option value="ib">Type IB &mdash; Chromic, low voltage</option><option value="ic">Type IC &mdash; Non-chromic acid</option><option value="ii">Type II &mdash; Sulfuric</option><option value="iib">Type IIB &mdash; Thin sulfuric</option><option value="flash" selected>Type III &mdash; Flash hardcoat</option><option value="full">Type III &mdash; Full hardcoat</option><option value="custom">Custom (enter values)</option></select></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Upper buildup tolerance (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="tp-bu" step="0.00001" min="0" value="0.00025" aria-label="Upper buildup"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Lower buildup tolerance (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="tp-bl" step="0.00001" min="0" value="0.00015" aria-label="Lower buildup"></span>
+                </div>
+              </div>
+
+              <div class="group" style="overflow-x:auto; padding:0.5rem 1rem;">
+                <table class="table table-striped table-bordered table-hover table-sm text-center mb-1" style="font-size:inherit;">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th></th>
+                      <th>After Anodize (drawing)</th>
+                      <th>Before Anodize <br>External thread (OD)</th>
+                      <th>Before Anodize <br>Internal thread (ID)*</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Maximum</td><td id="tp-after-max">&mdash;</td><td id="tp-before-max-od">&mdash;</td><td id="tp-before-max-id">&mdash;</td></tr>
+                    <tr><td>Minimum</td><td id="tp-after-min">&mdash;</td><td id="tp-before-min-od">&mdash;</td><td id="tp-before-min-id">&mdash;</td></tr>
+                    <tr><td>Nominal &plusmn; tol</td><td id="tp-after-fmt">&mdash;</td><td id="tp-before-fmt-od">&mdash;</td><td id="tp-before-fmt-id">&mdash;</td></tr>
+                  </tbody>
+                </table>
+                <p class="small mb-1">* For an internal thread (tapped hole), the pre-anodize pitch diameter must be <em>larger</em>.</p>
+                <p id="tp-note" class="text-danger small mb-0"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- CALCULATOR 5 — THREAD ROOT RADIUS -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Calculator 5: Thread Root Radius (60&deg; Threads)</div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-12 px-3">
+            <div class="mx-auto" style="max-width:820px;">
+              <p class="mt-2">
+                The root radius is a single curved surface: buildup factor is <span style="font-weight:var(--font-weight-normal);">1&times; per-surface buildup</span>.
+                If adding anodize to an <em>inner</em> radius, the pre-anodize inner radius must be <em>larger</em> than the finished inner radius.
+                Typical flash hardcoat: upper <span style="font-weight:var(--font-weight-normal);">0.00025&Prime;</span>, lower <span style="font-weight:var(--font-weight-normal);">0.00015&Prime;</span> (1:1 factor).
+              </p>
+            </div>
+            <div class="wrapper" style="font-size:1.00em; max-width: 40rem;">
+              <div class="header text-center fs-4">Calculator 5 <br> Thread Root Radius (&times;1 factor)</div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:600;">Root Radius (after anodize) &mdash; from drawing</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Nominal root radius (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="rr-nom" step="0.00001" value="0.007" aria-label="Nominal root radius"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Upper tolerance (in) +:</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="rr-utol" step="0.00001" min="0" value="0.001" aria-label="Upper tolerance"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Lower tolerance (in) &minus;:</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="rr-ltol" step="0.00001" min="0" value="0.001" aria-label="Lower tolerance"></span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:600;">Anodize Buildup per Surface (factor &times;1)<span class="tooltip-icon" tabindex="0">i</span></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Anodize type / thickness:</span>
+                  <span class="output inputbox"><select class="calcinput fs-5" id="rr-type" aria-label="Anodize type"><option value="i">Type I &mdash; Chromic acid</option><option value="ib">Type IB &mdash; Chromic, low voltage</option><option value="ic">Type IC &mdash; Non-chromic acid</option><option value="ii">Type II &mdash; Sulfuric</option><option value="iib">Type IIB &mdash; Thin sulfuric</option><option value="flash" selected>Type III &mdash; Flash hardcoat</option><option value="full">Type III &mdash; Full hardcoat</option><option value="custom">Custom (enter values)</option></select></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Upper buildup tolerance (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="rr-bu" step="0.000001" min="0" value="0.00025" aria-label="Upper buildup"></span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Lower buildup tolerance (in):</span>
+                  <span class="output inputbox"><input class="calcinput fs-5" type="number" id="rr-bl" step="0.000001" min="0" value="0.00015" aria-label="Lower buildup"></span>
+                </div>
+              </div>
+
+              <div class="group" style="overflow-x:auto; padding:0.5rem 1rem;">
+                <table class="table table-striped table-bordered table-hover table-sm text-center mb-1" style="font-size:inherit;">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th></th>
+                      <th>After Anodize (drawing)</th>
+                      <th>Before Anodize <br>Outer radius</th>
+                      <th>Before Anodize <br>Inner radius*</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Maximum</td><td id="rr-after-max">&mdash;</td><td id="rr-before-max-outer">&mdash;</td><td id="rr-before-max-inner">&mdash;</td></tr>
+                    <tr><td>Minimum</td><td id="rr-after-min">&mdash;</td><td id="rr-before-min-outer">&mdash;</td><td id="rr-before-min-inner">&mdash;</td></tr>
+                    <tr><td>Nominal &plusmn; tol</td><td id="rr-after-fmt">&mdash;</td><td id="rr-before-fmt-outer">&mdash;</td><td id="rr-before-fmt-inner">&mdash;</td></tr>
+                  </tbody>
+                </table>
+                <p class="small mb-1">* Inner radius pre-anodize value is larger than the finished value.</p>
+                <p id="rr-note" class="text-danger small mb-0"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- REFERENCES -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">References and Notices</div>
+            </div>
+            <div class="mx-auto" style="max-width:820px;">
+              <ul class="mt-3">
+                <li>MIL-A-8625F, <em>Anodic Coatings for Aluminum and Aluminum Alloys</em> &mdash; Type&nbsp;II (sulfuric, no dimensional change), Type&nbsp;III (hardcoat, 0.0003&ndash;0.002&Prime; typical total buildup depending on class).</li>
+                <li>Sanford Process Corporation, <em>Metal Tolerance Guidelines as it Relates to Hard Coat Classic and Quantum Hardcolor</em> &mdash; source for etch and brightening metal-removal guidance. Calculator formulas verified against Sanford's ANODIZE_TOLERANCES_RevB.xlsx.</li>
+                <li>Anoplate Corporation, <em>The Impact of Anodize on Dimensions</em> &mdash; source for Type&nbsp;III 45%/55% build-up/penetration data and Type&nbsp;II 1/3&ndash;2/3 ratio discussion.</li>
+                <li>All dimensions in inches. These calculators are design screening tools. Final pre-anodize dimensions should be confirmed with your anodizing vendor before releasing machining drawings.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- CITATION BLOCK -->
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+            <style>
+              #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+              #citationTabs li { margin: 0; list-style: none; }
+              #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+              #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+              #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+            </style>
+            <div class="tab-content mt-2 mb-3" id="citationTabContent">
+              <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+                <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+              </div>
+              <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+                <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+              </div>
+              <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+                <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+              </div>
+              <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+                <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+              </div>
+            </div>
+            <ul id="citationTabs" class="nav" role="tablist">
+              <li role="presentation">
+                <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+              </li>
+              <li role="presentation">
+                <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+              </li>
+              <li role="presentation">
+                <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+              </li>
+              <li role="presentation">
+                <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->
+
+
+    <!-- CALCULATION ENGINE -->
+    <script>
+    (function () {
+      'use strict';
+
+      function fmt(v) {
+        if (!isFinite(v)) return '—';
+        var s = v.toFixed(6);
+        s = s.replace(/(\.\d{4,}?)0+$/, '$1');
+        return s;
+      }
+
+      function fmtTol(nom, upperDiff, lowerDiff) {
+        if (!isFinite(nom) || !isFinite(upperDiff) || !isFinite(lowerDiff)) return '—';
+        var symm = Math.abs(upperDiff - lowerDiff) < 1e-9;
+        if (symm) return fmt(nom) + ' ±' + fmt(upperDiff);
+        return fmt(nom) + ' +' + fmt(upperDiff) + ' / −' + fmt(lowerDiff);
+      }
+
+      function calcDims(nom, utol, ltol, bu, bl, factor) {
+        var afterMax = nom + utol;
+        var afterMin = nom - ltol;
+        return {
+          afterMax:    afterMax,
+          afterMin:    afterMin,
+          beforeMaxOD: afterMax - factor * bu,
+          beforeMinOD: afterMin - factor * bl,
+          beforeMaxID: afterMax + factor * bl,
+          beforeMinID: afterMin + factor * bu
+        };
+      }
+
+      function setCell(id, value) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = fmt(value);
+      }
+
+      function read(id) {
+        var el = document.getElementById(id);
+        if (!el) return NaN;
+        var v = parseFloat(el.value);
+        return isFinite(v) ? v : NaN;
+      }
+
+      function warn(noteId, dims) {
+        var el = document.getElementById(noteId);
+        if (!el) return;
+        var msgs = [];
+        if (dims.beforeMinOD <= 0) msgs.push('Pre-anodize OD minimum is zero or negative — check inputs.');
+        if (dims.beforeMinID <= 0) msgs.push('Pre-anodize ID minimum is zero or negative — check inputs.');
+        el.textContent = msgs.join(' ');
+      }
+
+      function updateCalc(prefix, factor, odSuffix, idSuffix) {
+        var nom  = read(prefix + '-nom');
+        var utol = read(prefix + '-utol');
+        var ltol = read(prefix + '-ltol');
+        var bu   = read(prefix + '-bu');
+        var bl   = read(prefix + '-bl');
+        if ([nom, utol, ltol, bu, bl].some(isNaN)) return;
+
+        var r = calcDims(nom, utol, ltol, bu, bl, factor);
+
+        setCell(prefix + '-after-max', r.afterMax);
+        setCell(prefix + '-after-min', r.afterMin);
+        setCell(prefix + '-before-max-' + odSuffix, r.beforeMaxOD);
+        setCell(prefix + '-before-min-' + odSuffix, r.beforeMinOD);
+        setCell(prefix + '-before-max-' + idSuffix, r.beforeMaxID);
+        setCell(prefix + '-before-min-' + idSuffix, r.beforeMinID);
+
+        document.getElementById(prefix + '-after-fmt').textContent = fmtTol(nom, utol, ltol);
+        var nomOD = (r.beforeMaxOD + r.beforeMinOD) / 2;
+        document.getElementById(prefix + '-before-fmt-' + odSuffix).textContent =
+          fmtTol(nomOD, r.beforeMaxOD - nomOD, nomOD - r.beforeMinOD);
+        var nomID = (r.beforeMaxID + r.beforeMinID) / 2;
+        document.getElementById(prefix + '-before-fmt-' + idSuffix).textContent =
+          fmtTol(nomID, r.beforeMaxID - nomID, nomID - r.beforeMinID);
+        warn(prefix + '-note', r);
+      }
+
+      function wire(ids, fn) {
+        ids.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.addEventListener('input', fn);
+        });
+      }
+
+      var calcs = [
+        { prefix: 's',  factor: 1, od: 'nr',    id: 'r'     },
+        { prefix: 'd',  factor: 1, od: 'od',    id: 'id'    },
+        { prefix: 'tm', factor: 2, od: 'od',    id: 'id'    },
+        { prefix: 'tp', factor: 4, od: 'od',    id: 'id'    },
+        { prefix: 'rr', factor: 1, od: 'outer', id: 'inner' }
+      ];
+
+      var BUILDUP_PRESETS = {
+        i:     { bl: 0.00001, bu: 0.00005 },
+        ib:    { bl: 0.00001, bu: 0.00005 },
+        ic:    { bl: 0.00005, bu: 0.0001  },
+        ii:    { bl: 0.00003, bu: 0.0003  },
+        iib:   { bl: 0.00002, bu: 0.00015 },
+        flash: { bl: 0.00015, bu: 0.00025 },
+        full:  { bl: 0.0005,  bu: 0.001   }
+      };
+
+      function applyType(prefix) {
+        var sel = document.getElementById(prefix + '-type');
+        if (!sel) return;
+        var p = BUILDUP_PRESETS[sel.value];
+        if (!p) return;
+        var buEl = document.getElementById(prefix + '-bu');
+        var blEl = document.getElementById(prefix + '-bl');
+        if (buEl) buEl.value = p.bu;
+        if (blEl) blEl.value = p.bl;
+      }
+
+      calcs.forEach(function (c) {
+        var ids = [c.prefix+'-nom', c.prefix+'-utol', c.prefix+'-ltol',
+                   c.prefix+'-bu',  c.prefix+'-bl'];
+        var fn = updateCalc.bind(null, c.prefix, c.factor, c.od, c.id);
+        wire(ids, fn);
+
+        var sel = document.getElementById(c.prefix + '-type');
+        if (sel) {
+          sel.addEventListener('change', function () { applyType(c.prefix); fn(); });
+          [c.prefix + '-bu', c.prefix + '-bl'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.addEventListener('input', function () { sel.value = 'custom'; });
+          });
+        }
+
+        applyType(c.prefix);
+        fn();
+      });
+
+
+    })();
+    </script>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+      <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+      <img class="lightbox-img" id="lightboxImg" src="" alt="">
+      <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+
+    <!-- LIGHTBOX SCRIPT (pattern from SpringCompressionRound.html) -->
+    <script>
+    function initLightbox() {
+      const overlay  = document.getElementById('lightboxOverlay');
+      const img      = document.getElementById('lightboxImg');
+      const caption  = document.getElementById('lightboxCaption');
+      const closeBtn = document.getElementById('lightboxClose');
+
+      if (!overlay) return;
+
+      function openLightbox(src, alt, captionText) {
+        img.src             = src;
+        img.alt             = alt || '';
+        caption.textContent = captionText || '';
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        img.src = '';
+      }
+
+      document.addEventListener('click', e => {
+        const target = e.target.closest('.ref-zoomable');
+        if (!target) return;
+        const figLabel = target.closest('.ref-fig')
+          ?.querySelector('.ref-fig-label')
+          ?.textContent ?? target.alt ?? '';
+        openLightbox(target.src, target.alt, figLabel);
+      });
+
+      overlay.addEventListener('click', e => {
+        if (e.target === overlay) closeLightbox();
+      });
+
+      closeBtn.addEventListener('click', closeLightbox);
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          closeLightbox();
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', initLightbox);
+    </script>
+
+
+  </body>
+</html>

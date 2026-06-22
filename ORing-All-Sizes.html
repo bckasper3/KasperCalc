@@ -1,0 +1,856 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: O-Ring Size Finder (O-Ring Dimensions)</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, O-ring, O-ring size, AS568, Parker 5-XXX, JIS B2401, BS 4518, DIN 3771, ISO 6149, SAE J2244, o-ring dimensions, inside diameter, cross section, outside diameter, o-ring size chart" />
+    <meta name="description" content="Find O-ring sizes across AS568, Parker 5-XXX, JIS B2401, BS 4518, DIN 3771 and ISO 6149 standards. Search by size designation or find by ID, OD and cross-section with a tolerance window, in inches or millimeters." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XLCN0GJQ0');
+    </script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      /* ===== O-Ring Size Finder — KasperCalc themed =====
+         All rules scoped under .oring-finder so they never touch the
+         surrounding site. Palette/fonts mirror the rest of KasperCalc. */
+      .oring-finder{
+        --bg:#e6eae7; --panel:#eee; --panel-2:#d9d9d9; --line:rgb(67,67,67);
+        --line-soft:#c0c0c0; --ink:#1a3a40; --muted:#4a5a5f; --faint:#6a746a;
+        --brass:#61828A; --brass-dim:#4e6a72; --cyan:#3a6270; --hot:#cc5500;
+        --mono:"Roboto",Arial,sans-serif; --disp:"Roboto",Arial,sans-serif;
+        position:relative; width:90%; max-width:1400px; margin:1.5rem auto 2rem;
+        min-height:900px; display:flex; flex-direction:column;
+        background:var(--bg); color:var(--ink);
+        font-family:var(--mono); font-size:13px; line-height:1.4;
+        border:3px solid var(--line); border-radius:16px; overflow:hidden;
+        box-shadow:0 3px 5px rgba(0,0,0,.4);
+      }
+      .oring-finder *{box-sizing:border-box}
+      .oring-finder .app{flex:1;display:flex;flex-direction:column;min-height:0}
+      .oring-finder header{border-bottom:1px solid var(--line);background:#6a746a;padding:14px 20px;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+      .oring-finder .brand{font-family:var(--disp);font-weight:700;font-size:20px;letter-spacing:.01em;color:#eee}
+      .oring-finder .brand .o{color:#A3C3CD}
+      .oring-finder .tagline{color:#cdd6d9;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+      .oring-finder .totals{margin-left:auto;color:#cdd6d9;font-size:11px;letter-spacing:.04em}
+      .oring-finder .totals b{color:#fff}
+      .oring-finder .body{flex:1;display:grid;grid-template-columns:288px 1fr 320px;min-height:0}
+      .oring-finder nav,.oring-finder .detail{overflow:visible}
+      .oring-finder nav{border-right:1px solid var(--line);background:var(--panel);padding:10px}
+      .oring-finder .nav-h{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);padding:8px 8px 6px;display:flex;justify-content:space-between;align-items:center}
+      .oring-finder .bulk{display:flex;gap:6px;margin:0 6px 8px}
+      .oring-finder .bulk button{flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px;border-radius:6px;cursor:pointer}
+      .oring-finder .bulk button:hover{color:var(--ink);border-color:var(--brass)}
+      .oring-finder .std{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:1px solid transparent;color:var(--ink);font-family:var(--mono);font-size:12px;padding:8px 9px;border-radius:6px;cursor:pointer;margin-bottom:2px;transition:background .12s,border-color .12s}
+      .oring-finder .std:hover{background:var(--panel-2)}
+      .oring-finder .box{flex:none;width:15px;height:15px;border:1.5px solid var(--faint);border-radius:4px;display:grid;place-items:center;transition:.12s;background:#fff}
+      .oring-finder .box svg{width:10px;height:10px;opacity:0}
+      .oring-finder .std[aria-pressed="true"] .box{background:var(--brass);border-color:var(--brass)}
+      .oring-finder .std[aria-pressed="true"] .box svg{opacity:1;stroke:#fff}
+      .oring-finder .std .lbl{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+      .oring-finder .std .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .oring-finder .std[aria-pressed="true"] .nm{color:var(--brass);font-weight:700}
+      .oring-finder .std .sub{font-size:9.5px;color:var(--faint);letter-spacing:.04em}
+      .oring-finder .std .ct{font-size:10px;color:var(--muted);background:var(--panel-2);border-radius:10px;padding:2px 7px;flex:none}
+      .oring-finder .nav-note{margin-top:14px;border-top:1px dashed var(--line);padding-top:10px}
+      .oring-finder .nv{padding:7px 8px;border-radius:6px;cursor:pointer;color:var(--muted);font-size:11px}
+      .oring-finder .nv:hover{background:var(--panel-2);color:var(--ink)}
+      .oring-finder main{display:flex;flex-direction:column;min-width:0;background:var(--bg)}
+      .oring-finder .controls{border-bottom:1px solid var(--line);background:var(--panel)}
+      .oring-finder .crow{display:flex;gap:10px;align-items:center;padding:11px 16px;flex-wrap:wrap}
+      .oring-finder .crow+.crow{border-top:1px solid var(--line);background:var(--panel-2)}
+      .oring-finder .search{flex:1;min-width:160px;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:7px;padding:7px 10px}
+      .oring-finder .search:focus-within{border-color:var(--brass)}
+      .oring-finder .search input{flex:1;background:none;border:none;color:var(--ink);font-family:var(--mono);font-size:13px;outline:none}
+      .oring-finder .search input::placeholder{color:var(--faint)}
+      .oring-finder .search svg{flex:none;opacity:.5}
+      .oring-finder .toggle{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+      .oring-finder .toggle button{background:#fff;border:none;color:var(--muted);font-family:var(--mono);font-size:12px;padding:7px 13px;cursor:pointer;font-weight:500}
+      .oring-finder .toggle button[aria-pressed="true"]{background:var(--brass);color:#fff;font-weight:700}
+      .oring-finder .csfilter{display:flex;align-items:center;gap:6px;color:var(--faint);font-size:11px}
+      .oring-finder .csfilter select,.oring-finder .finder select{background:#fff;border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:12px;padding:6px 8px;border-radius:6px;outline:none}
+      .oring-finder .finder-tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);font-weight:700;display:flex;align-items:center;gap:6px}
+      .oring-finder .finder-tag svg{opacity:.8}
+      .oring-finder .fld{display:flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);border-radius:7px;padding:5px 9px}
+      .oring-finder .fld:focus-within{border-color:var(--brass)}
+      .oring-finder .fld label{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+      .oring-finder .fld input{width:66px;background:none;border:none;color:var(--ink);font-family:var(--mono);font-size:13px;outline:none;text-align:right;font-variant-numeric:tabular-nums}
+      .oring-finder .fld .u{font-size:10px;color:var(--faint)}
+      .oring-finder .tol{display:flex;align-items:center;gap:6px;color:var(--brass);font-size:11px;font-weight:700}
+      .oring-finder .clearf{background:#fff;border:1px solid var(--line);color:var(--muted);font-family:var(--mono);font-size:11px;padding:6px 10px;border-radius:6px;cursor:pointer}
+      .oring-finder .clearf:hover{color:var(--hot);border-color:var(--hot)}
+      .oring-finder .tablewrap{flex:1;overflow:visible;min-height:0}
+      .oring-finder table{border-collapse:collapse;width:100%}
+      .oring-finder thead th{position:sticky;top:0;background:#6a746a;color:#eee;font-weight:500;text-align:right;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;z-index:2}
+      .oring-finder thead th.l{text-align:left}
+      .oring-finder thead th .ar{color:#A3C3CD;margin-left:4px}
+      .oring-finder tbody td{padding:7px 14px;text-align:right;border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums;white-space:nowrap}
+      .oring-finder tbody td.l{text-align:left}
+      .oring-finder tbody td.size{color:var(--brass);font-weight:700}
+      .oring-finder .badge{font-size:9.5px;letter-spacing:.03em;color:var(--cyan);background:#e8f0f3;border:1px solid #b8ccd2;border-radius:5px;padding:2px 6px;white-space:nowrap}
+      .oring-finder tbody tr{cursor:pointer}
+      .oring-finder tbody tr:hover{background:#e3eaec}
+      .oring-finder tbody tr[aria-selected="true"]{background:#dfe7e9;box-shadow:inset 3px 0 0 var(--brass)}
+      .oring-finder .hit{color:var(--brass);font-weight:700}
+      .oring-finder .empty{padding:48px;text-align:center;color:var(--faint)}
+      .oring-finder .detail{border-left:1px solid var(--line);background:var(--panel);padding:18px;align-self:start;position:sticky;top:0}
+      .oring-finder .detail h2{font-family:var(--disp);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:0 0 14px;font-weight:700}
+      .oring-finder .diagram{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px;margin-bottom:16px}
+      .oring-finder .pick-prompt{color:var(--faint);font-size:11px;text-align:center;padding:30px 10px;line-height:1.7}
+      .oring-finder .dsize{font-family:var(--disp);font-size:26px;font-weight:700;color:var(--brass);letter-spacing:.01em;margin-bottom:2px}
+      .oring-finder .dstd{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:16px}
+      .oring-finder .spec{display:grid;grid-template-columns:auto 1fr 1fr;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+      .oring-finder .spec div{padding:8px 11px;border-bottom:1px solid var(--line-soft);font-size:12px}
+      .oring-finder .spec .h{background:var(--panel-2);color:var(--faint);font-size:10px;letter-spacing:.06em;text-transform:uppercase;text-align:right}
+      .oring-finder .spec .rk{background:var(--panel-2);color:var(--muted);font-size:10px;letter-spacing:.04em;text-transform:uppercase;text-align:left}
+      .oring-finder .spec .v{text-align:right;font-variant-numeric:tabular-nums}
+      .oring-finder .spec .v b{color:var(--ink)}
+      .oring-finder .spec>div:nth-last-child(-n+3){border-bottom:none}
+      .oring-finder .legend{margin-top:14px;font-size:10.5px;color:var(--faint);line-height:1.6}
+      .oring-finder .legend b{color:var(--cyan)}
+      .oring-finder .footnote{padding:8px 16px;border-top:1px solid var(--line);color:var(--faint);font-size:10px;background:var(--panel);letter-spacing:.02em}
+      .oring-finder .scrim{position:fixed;inset:0;background:rgba(20,30,30,.55);display:none;align-items:center;justify-content:center;padding:24px;z-index:1050}
+      .oring-finder .scrim.on{display:flex}
+      .oring-finder .modal{background:var(--panel);border:2px solid var(--line);border-radius:12px;max-width:620px;width:100%;max-height:84vh;overflow:auto;padding:24px 26px;box-shadow:0 3px 5px rgba(0,0,0,.4)}
+      .oring-finder .modal h3{font-family:var(--disp);font-size:18px;margin:0 0 4px;color:var(--ink)}
+      .oring-finder .modal .sx{color:var(--faint);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}
+      .oring-finder .note{border-left:2px solid var(--brass);padding:2px 0 2px 14px;margin-bottom:16px}
+      .oring-finder .note .nh{color:var(--brass);font-weight:700;font-size:13px;margin-bottom:4px}
+      .oring-finder .note p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
+      .oring-finder .closeb{position:sticky;top:0;float:right;background:var(--panel-2);border:1px solid var(--line);color:var(--ink);border-radius:6px;width:30px;height:30px;cursor:pointer;font-size:16px;line-height:1}
+      .oring-finder .menu-btn{display:none;background:var(--panel-2);border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:7px 10px;cursor:pointer;font-family:var(--mono);font-size:12px}
+      @media (max-width:1100px){.oring-finder .body{grid-template-columns:248px 1fr}.oring-finder .detail{display:none}}
+      @media (max-width:680px){
+        .oring-finder{width:100%;margin:1.5rem 0 2rem;border-radius:0;border-left:none;border-right:none}
+        .oring-finder .body{grid-template-columns:1fr}
+        .oring-finder nav{position:absolute;z-index:20;inset:0 auto 0 0;width:240px;transform:translateX(-100%);transition:transform .2s;box-shadow:8px 0 30px rgba(0,0,0,.5)}
+        .oring-finder nav.open{transform:none}
+        .oring-finder .menu-btn{display:inline-flex}
+      }
+      @media (prefers-reduced-motion:reduce){.oring-finder *{transition:none!important}}
+      .oring-finder :focus-visible{outline:2px solid var(--brass);outline-offset:1px}
+      /* diagram is click-to-enlarge */
+      .oring-finder .diagram svg{cursor:zoom-in}
+      .oring-finder .diagram-hint{display:block;margin-top:6px;text-align:center;font-size:9.5px;letter-spacing:.04em;color:var(--faint);text-transform:uppercase}
+
+      /* ===== Lightbox (matches SpringCompressionRound.html) ===== */
+      .lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+      .lightbox-overlay.active{display:flex}
+      .lightbox-stage{
+        /* re-declare the finder palette so cloned SVG vars resolve here */
+        --bg:#e6eae7; --cyan:#3a6270; --brass:#61828A; --muted:#4a5a5f; --faint:#6a746a;
+        --mono:"Roboto",Arial,sans-serif;
+        width:min(92vw,1000px); max-width:90vw; max-height:90vh; overflow:auto;
+        background:#fff; border:2px solid rgb(67,67,67); border-radius:12px;
+        box-shadow:0 8px 32px rgba(0,0,0,.6); cursor:default; padding:28px;
+      }
+      .lightbox-stage svg{width:100%;height:auto;display:block}
+      .lightbox-close{position:fixed;top:16px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;z-index:100000}
+      .lightbox-close:hover{background:rgba(255,255,255,.3)}
+      .lightbox-caption{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.8);font-size:13px;font-family:Roboto,Arial,sans-serif;text-align:center;max-width:80vw;pointer-events:none}
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- BANNER -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              O-Ring Size Finder
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- INTRO -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3" style="max-width:860px;">
+            <div class="custom-heading">Find O-Ring Sizes Across Standards</div>
+            <div class="mt-3 text-start">
+              <p class="mb-3">
+                Look up O-ring dimensions across AS568, Parker 5-XXX, JIS&nbsp;B2401, BS&nbsp;4518,
+                DIN&nbsp;3771 and ISO&nbsp;6149 / SAE&nbsp;J2244. Toggle standards on or off, switch between
+                inches and millimeters, and search by size designation (e.g. <span style="font-weight:var(--font-weight-normal)">214</span>,
+                <span style="font-weight:var(--font-weight-normal)">P10</span>, <span style="font-weight:var(--font-weight-normal)">5-578</span>).
+              </p>
+              <p>
+                Don't know the part number? Use <span style="font-weight:var(--font-weight-normal)">Find by dimension</span> to match any combination of
+                inside diameter, outside diameter and cross-section width within a tolerance window. Select any
+                row to see a scaled cross-section and the full inch/mm dimensions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- O-RING SIZE FINDER -->
+    <section aria-label="O-ring size finder">
+      <div class="oring-finder wrapper">
+        <div class="app">
+          <header>
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle standards list">&#9776;</button>
+            <div class="brand"><span class="o">O</span>-RING SIZE REFERENCE</div>
+            <span class="tagline">find sizes by ID &middot; OD &middot; width across standards</span>
+            <span class="totals" id="totals"></span>
+          </header>
+          <div class="body">
+            <nav id="nav" aria-label="Standards">
+              <div class="nav-h"><span>Standards</span><span id="navCount"></span></div>
+              <div class="bulk"><button id="allBtn">All</button><button id="noneBtn">None</button></div>
+              <div id="stdList"></div>
+              <div class="nav-note">
+                <div class="nav-h">Related / equivalent</div>
+                <div class="nv" data-note="ISO 3601-1">ISO 3601-1 (international)</div>
+                <div class="nv" data-note="BS 1806">BS 1806 (British inch)</div>
+                <div class="nv" data-note="NF T 47-501">NF T 47-501 (French)</div>
+                <div class="nv" data-note="SMS 1586">SMS 1586 (Swedish)</div>
+              </div>
+            </nav>
+            <main>
+              <div class="controls">
+                <div class="crow">
+                  <label class="search">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input id="search" type="search" placeholder="Search by size designation (e.g. 214, P10, 5-578)" autocomplete="off">
+                  </label>
+                  <div class="csfilter">CS<select id="csFilter"><option value="">all</option></select></div>
+                  <div class="toggle" role="group" aria-label="Units">
+                    <button id="uIn" aria-pressed="true">inch</button>
+                    <button id="uMm" aria-pressed="false">mm</button>
+                  </div>
+                </div>
+                <div class="crow finder">
+                  <span class="finder-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>Find by dimension</span>
+                  <div class="fld"><label for="fid">ID</label><input id="fid" type="number" step="any" placeholder="&ndash;"><span class="u" data-u>in</span></div>
+                  <div class="fld"><label for="fod">OD</label><input id="fod" type="number" step="any" placeholder="&ndash;"><span class="u" data-u>in</span></div>
+                  <div class="fld"><label for="fcs">Width</label><input id="fcs" type="number" step="any" placeholder="&ndash;"><span class="u" data-u>in</span></div>
+                  <div class="tol">&plusmn;<select id="tol"></select></div>
+                  <button class="clearf" id="clearf">Clear</button>
+                </div>
+              </div>
+              <div class="tablewrap">
+                <table>
+                  <thead><tr id="head"></tr></thead>
+                  <tbody id="rows"></tbody>
+                </table>
+                <div class="empty" id="empty" style="display:none">No sizes match. Loosen the tolerance, change units, or enable more standards.</div>
+              </div>
+              <div class="footnote" id="foot"></div>
+            </main>
+            <aside class="detail" id="detail">
+              <h2>Cross-section</h2>
+              <div class="diagram" id="diagram"><div class="pick-prompt">Select a size from the table<br>to see its scaled cross-section and full dimensions.</div></div>
+              <div id="detailBody"></div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="scrim" id="scrim">
+          <div class="modal" id="modal">
+            <button class="closeb" id="closeb" aria-label="Close">&times;</button>
+            <h3 id="mTitle"></h3>
+            <div class="sx">Standards captured by equivalence</div>
+            <div id="mBody"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CITATION -->
+    <section class="mt-5 pt-3">
+      <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+        <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+          <div class="d-flex align-items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+            <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+          </div>
+          <style>
+            #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+            #citationTabs li { margin: 0; list-style: none; }
+            #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+            #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+            #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+          </style>
+          <div class="tab-content mt-2 mb-3" id="citationTabContent">
+            <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+              <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+              <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+              <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+              <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+          </div>
+          <ul id="citationTabs" class="nav" role="tablist">
+            <li role="presentation">
+              <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+  <script src="js/footer.js"></script>
+  <!-- END FOOTER -->
+
+  <!-- LIGHTBOX (cross-section enlarge) -->
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Cross-section viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close cross-section viewer">&#x2715;</button>
+    <div class="lightbox-stage" id="lightboxStage"></div>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+
+  <!-- O-ring size data (defines ORING_DATA + ORING_NOTES globals) -->
+  <script src="js/oring-sizes.js"></script>
+
+  <!-- =====================================================================
+       PAGE SCRIPT — O-ring size finder logic
+       ===================================================================== -->
+  <script>
+const ORDER=Object.keys(ORING_DATA);
+const STD_SHORT={as568:"AS568",as568b:"AS568-900",parker5:"5-XXX",jisP:"JIS-P",jisG:"JIS-G",jisS:"JIS-S",jisV:"JIS-V",bs4518:"BS4518",din3771:"DIN3771",iso6149:"ISO6149"};
+const SUB={as568:"SAE aerospace/industrial",as568b:"straight-thread boss",parker5:"Parker tooled specials",jisP:"dynamic",jisG:"static",jisS:"special / compact",jisV:"vacuum flange",bs4518:"British metric",din3771:"German / ISO metric",iso6149:"metric port fittings"};
+const TOL_OPTS={in:[0.001,0.002,0.003,0.004,0.005],mm:[0.05,0.10,0.15,0.20,0.25]};
+const TOL_DEFAULT={in:0.002,mm:0.10};
+// pre-tag rows with their standard
+const TAGGED={};ORDER.forEach(k=>TAGGED[k]=ORING_DATA[k].rows.map(r=>({...r,_std:k})));
+
+let unit="in";
+let active=new Set(ORDER);          // all standards on by default
+let sort={key:"std",dir:1};
+let selected=null;                  // {size,std}
+
+const $=id=>document.getElementById(id);
+const fmt=v=>v==null?"–":v.toFixed(unit==="in"?3:2);
+const eps=1e-9;
+
+/* ---------- nav (built once, state toggled) ---------- */
+function buildNav(){
+  $("stdList").innerHTML=ORDER.map(k=>`<button class="std" data-k="${k}" aria-pressed="${active.has(k)}">
+    <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1206" stroke-width="3.5"><path d="M5 12l5 5 9-11"/></svg></span>
+    <span class="lbl"><span class="nm">${ORING_DATA[k].label.replace(/\s*\(.*?\)\s*/,"")}</span><span class="sub">${SUB[k]}</span></span>
+    <span class="ct">${ORING_DATA[k].rows.length}</span></button>`).join("");
+  $("stdList").querySelectorAll(".std").forEach(b=>b.onclick=()=>{
+    const k=b.dataset.k;
+    if(active.has(k))active.delete(k);else active.add(k);
+    b.setAttribute("aria-pressed",active.has(k));
+    afterActiveChange();
+  });
+  const total=ORDER.reduce((a,k)=>a+ORING_DATA[k].rows.length,0);
+  $("totals").innerHTML=`<b>${total.toLocaleString()}</b> sizes · ${ORDER.length} standard tables`;
+}
+function syncNavState(){
+  $("stdList").querySelectorAll(".std").forEach(b=>b.setAttribute("aria-pressed",active.has(b.dataset.k)));
+}
+function afterActiveChange(){
+  $("navCount").textContent=`${active.size}/${ORDER.length}`;
+  buildCsFilter();renderTable();
+}
+
+/* ---------- units / tolerance / cs filter ---------- */
+function buildTol(){
+  const cur=parseFloat($("tol").value);
+  $("tol").innerHTML=TOL_OPTS[unit].map(t=>`<option value="${t}">${unit==="in"?t.toFixed(3):t.toFixed(2)} ${unit}</option>`).join("");
+  const want=TOL_OPTS[unit].includes(cur)?cur:TOL_DEFAULT[unit];
+  $("tol").value=want;
+}
+function buildCsFilter(){
+  const set=new Set();
+  ORDER.forEach(k=>{if(active.has(k))ORING_DATA[k].rows.forEach(r=>set.add(unit==="in"?r.cs_in:r.cs_mm));});
+  const arr=[...set].sort((a,b)=>a-b);const prev=$("csFilter").value;
+  $("csFilter").innerHTML='<option value="">all</option>'+arr.map(c=>`<option value="${c}">${fmt(c)} ${unit}</option>`).join("");
+  $("csFilter").value=arr.map(String).includes(prev)?prev:"";
+}
+
+/* ---------- table head ---------- */
+const COLS=[["std","Standard",1],["size","Size",1],["id","ID",0],["cs","CS / W",0],["od","OD",0]];
+function buildHead(){
+  $("head").innerHTML=COLS.map(([k,l,left])=>{
+    const ar=sort.key===k?`<span class="ar">${sort.dir>0?"▲":"▼"}</span>`:"";
+    const u=(k!=="std"&&k!=="size")?` <span class="u">${unit}</span>`:"";
+    return `<th data-k="${k}" class="${left?'l':''}">${l}${u}${ar}</th>`;
+  }).join("");
+  $("head").querySelectorAll("th").forEach(th=>th.onclick=()=>{
+    const k=th.dataset.k;sort.key===k?sort.dir*=-1:sort={key:k,dir:1};renderTable();
+  });
+}
+
+/* ---------- filtering ---------- */
+function sizeSortVal(r){const m=r.size.match(/-?\d+\.?\d*/);return m?parseFloat(m[0]):0;}
+function finderState(){
+  const g=id=>{const v=parseFloat($(id).value);return isNaN(v)?null:v;};
+  return {id:g("fid"),od:g("fod"),cs:g("fcs"),tol:parseFloat($("tol").value)};
+}
+function activeRows(){let out=[];ORDER.forEach(k=>{if(active.has(k))out=out.concat(TAGGED[k]);});return out;}
+
+function currentRows(){
+  let rows=activeRows();
+  const q=$("search").value.trim().toLowerCase();
+  const cs=$("csFilter").value;
+  const f=finderState();
+  if(cs!=="")rows=rows.filter(r=>String(unit==="in"?r.cs_in:r.cs_mm)===cs);
+  if(q)rows=rows.filter(r=>r.size.toLowerCase().includes(q));
+  const dimActive=f.id!=null||f.od!=null||f.cs!=null;
+  if(dimActive){
+    rows=rows.filter(r=>{
+      const suf="_"+unit;
+      if(f.id!=null&&Math.abs(r["id"+suf]-f.id)>f.tol+eps)return false;
+      if(f.od!=null&&Math.abs(r["od"+suf]-f.od)>f.tol+eps)return false;
+      if(f.cs!=null&&Math.abs(r["cs"+suf]-f.cs)>f.tol+eps)return false;
+      return true;
+    });
+  }
+  rows.sort((a,b)=>{
+    let av,bv;
+    if(sort.key==="std"){av=ORDER.indexOf(a._std)*1e7+sizeSortVal(a);bv=ORDER.indexOf(b._std)*1e7+sizeSortVal(b);}
+    else if(sort.key==="size"){av=sizeSortVal(a);bv=sizeSortVal(b);}
+    else{av=a[sort.key+"_"+unit];bv=b[sort.key+"_"+unit];}
+    return (av>bv?1:av<bv?-1:0)*sort.dir;
+  });
+  return {rows,f,dimActive};
+}
+
+/* ---------- render ---------- */
+function renderTable(){
+  buildHead();
+  const {rows,f,dimActive}=currentRows();
+  const suf="_"+unit;
+  const cell=(r,key)=>{
+    const v=r[key+suf];const on=dimActive&&f[key]!=null;
+    return `<td class="${on?'hit':''}">${fmt(v)}</td>`;
+  };
+  $("rows").innerHTML=rows.map((r,i)=>`<tr data-i="${i}" aria-selected="${selected&&selected.size===r.size&&selected.std===r._std}">
+    <td class="l"><span class="badge">${STD_SHORT[r._std]}</span></td>
+    <td class="l size">${r.size}</td>${cell(r,"id")}${cell(r,"cs")}${cell(r,"od")}</tr>`).join("");
+  $("empty").style.display=rows.length?"none":"block";
+  $("rows").querySelectorAll("tr").forEach(tr=>{const r=rows[+tr.dataset.i];tr.onclick=()=>{selected={size:r.size,std:r._std};showDetail(r);renderTable();};});
+  const parts=[`${rows.length.toLocaleString()} sizes`,`${active.size} of ${ORDER.length} standards`];
+  if(dimActive){const d=[];if(f.id!=null)d.push(`ID ${fmt(f.id)}`);if(f.od!=null)d.push(`OD ${fmt(f.od)}`);if(f.cs!=null)d.push(`W ${fmt(f.cs)}`);parts.push(`match ${d.join(" · ")} ±${unit==="in"?f.tol.toFixed(3):f.tol.toFixed(2)} ${unit}`);}
+  $("foot").textContent=parts.join("  ·  ")+"  —  reference dimensions; verify tolerances against the controlling standard.";
+  if(selected){const r=(TAGGED[selected.std]||[]).find(x=>x.size===selected.size);if(r)showDetail(r);}
+}
+
+/* ---------- cross-section diagram ---------- */
+function showDetail(r){
+  const R=r.od_mm/2, ri=r.id_mm/2;
+  const W=620,Hh=240,cx=150,cy=Hh/2,drawR=86,scale=drawR/R;
+  const sR=R*scale,sRi=ri*scale,sCS=(R-ri)*scale;
+  const beadMax=72,beadR=beadMax/2,bx=470,by=cy;
+  const u=unit,uid=fmt(r["id_"+u]),ucs=fmt(r["cs_"+u]);
+  $("diagram").innerHTML=`
+  <svg viewBox="0 0 ${W} ${Hh}" width="100%" role="img" aria-label="O-ring cross-section ID ${uid} ${u}, width ${ucs} ${u}">
+    <defs><radialGradient id="rg" cx="38%" cy="34%" r="72%"><stop offset="0%" stop-color="#3a444f"/><stop offset="62%" stop-color="#2a323b"/><stop offset="100%" stop-color="#1d242b"/></radialGradient>
+    <linearGradient id="bead" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e9b964"/><stop offset="50%" stop-color="#d9a441"/><stop offset="100%" stop-color="#9c7327"/></linearGradient>
+    <marker id="a" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M6 1 L2 3.5 L6 6" fill="none" stroke="var(--cyan)" stroke-width="1"/></marker>
+    <marker id="b" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto"><path d="M6 1 L2 3.5 L6 6" fill="none" stroke="var(--brass)" stroke-width="1"/></marker></defs>
+    <circle cx="${cx}" cy="${cy}" r="${sR}" fill="url(#rg)" stroke="#3a444f"/>
+    <circle cx="${cx}" cy="${cy}" r="${sR}" fill="none" stroke="var(--brass)" stroke-width="${Math.max(2,sCS)}" opacity=".9"/>
+    <circle cx="${cx}" cy="${cy}" r="${sRi}" fill="var(--bg)" stroke="#3a444f"/>
+    <line x1="${cx-sRi}" y1="${cy}" x2="${cx+sRi}" y2="${cy}" stroke="var(--cyan)" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
+    <text x="${cx}" y="${cy-5}" fill="var(--cyan)" font-size="10" text-anchor="middle" font-family="var(--mono)">ID</text>
+    <line x1="${cx}" y1="${cy-sR}" x2="${cx}" y2="${cy-sR-12}" stroke="var(--muted)" stroke-width="1"/>
+    <text x="${cx}" y="${cy-sR-16}" fill="var(--muted)" font-size="9" text-anchor="middle" font-family="var(--mono)">OD</text>
+    <line x1="${cx+sR}" y1="${cy-sCS/2}" x2="${bx-beadR}" y2="${by-beadR}" stroke="var(--faint)" stroke-dasharray="3 3"/>
+    <line x1="${cx+sR}" y1="${cy+sCS/2}" x2="${bx-beadR}" y2="${by+beadR}" stroke="var(--faint)" stroke-dasharray="3 3"/>
+    <circle cx="${bx}" cy="${by}" r="${beadR}" fill="url(#bead)" stroke="#7d5e1f"/>
+    <circle cx="${bx-beadR*0.32}" cy="${by-beadR*0.32}" r="${beadR*0.5}" fill="#f0cd86" opacity=".35"/>
+    <line x1="${bx-beadR}" y1="${by+beadR+12}" x2="${bx+beadR}" y2="${by+beadR+12}" stroke="var(--brass)" stroke-width="1" marker-start="url(#b)" marker-end="url(#b)"/>
+    <text x="${bx}" y="${by+beadR+26}" fill="var(--brass)" font-size="10" text-anchor="middle" font-family="var(--mono)">CS (W) = ${ucs} ${u}</text>
+    <text x="${bx}" y="${by-beadR-8}" fill="var(--muted)" font-size="9" text-anchor="middle" font-family="var(--mono)">section ×${(beadMax/Math.max(sCS,0.001)).toFixed(1)}</text>
+  </svg>`;
+  $("detailBody").innerHTML=`
+    <div class="dsize">${r.size}</div>
+    <div class="dstd">${ORING_DATA[r._std].label}</div>
+    <div class="spec">
+      <div class="rk"></div><div class="h">inch</div><div class="h">mm</div>
+      <div class="rk">Inside Ø (ID)</div><div class="v"><b>${r.id_in.toFixed(3)}</b></div><div class="v"><b>${r.id_mm.toFixed(2)}</b></div>
+      <div class="rk">Cross-section (W)</div><div class="v"><b>${r.cs_in.toFixed(3)}</b></div><div class="v"><b>${r.cs_mm.toFixed(2)}</b></div>
+      <div class="rk">Outside Ø (OD)</div><div class="v">${r.od_in.toFixed(3)}</div><div class="v">${r.od_mm.toFixed(2)}</div>
+    </div>
+    <div class="legend"><b>Plan view</b> = ring to scale (ID, OD); <b>bead</b> = cross-section magnified. OD = ID + 2·CS.</div>`;
+}
+
+/* ---------- notes modal ---------- */
+function openNote(key){
+  $("mTitle").textContent=key;
+  $("mBody").innerHTML=Object.entries(ORING_NOTES).map(([k,v])=>`<div class="note" ${k===key?'style="border-color:var(--brass)"':''}><div class="nh">${k}</div><p>${v}</p></div>`).join("");
+  $("scrim").classList.add("on");
+}
+document.querySelectorAll(".nv").forEach(n=>n.onclick=()=>openNote(n.dataset.note));
+$("closeb").onclick=()=>$("scrim").classList.remove("on");
+$("scrim").onclick=e=>{if(e.target===$("scrim"))$("scrim").classList.remove("on");};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("scrim").classList.remove("on");});
+
+/* ---------- units, search, finder wiring ---------- */
+function setUnit(u){
+  if(u===unit)return;
+  // convert finder field values between units
+  const k=u==="mm"?25.4:1/25.4;
+  ["fid","fod","fcs"].forEach(id=>{const v=parseFloat($(id).value);if(!isNaN(v))$(id).value=(v*k).toFixed(u==="in"?3:2);});
+  unit=u;
+  $("uIn").setAttribute("aria-pressed",u==="in");$("uMm").setAttribute("aria-pressed",u==="mm");
+  document.querySelectorAll("[data-u]").forEach(e=>e.textContent=u);
+  buildTol();buildCsFilter();renderTable();
+}
+$("uIn").onclick=()=>setUnit("in");
+$("uMm").onclick=()=>setUnit("mm");
+$("search").oninput=renderTable;
+$("csFilter").onchange=renderTable;
+["fid","fod","fcs"].forEach(id=>$(id).oninput=renderTable);
+$("tol").onchange=renderTable;
+$("clearf").onclick=()=>{["fid","fod","fcs"].forEach(id=>$(id).value="");$("search").value="";$("csFilter").value="";renderTable();};
+$("allBtn").onclick=()=>{active=new Set(ORDER);syncNavState();afterActiveChange();};
+$("noneBtn").onclick=()=>{active=new Set();syncNavState();afterActiveChange();};
+$("menuBtn").onclick=()=>$("nav").classList.toggle("open");
+
+buildNav();buildTol();buildCsFilter();
+$("navCount").textContent=`${active.size}/${ORDER.length}`;
+renderTable();
+  </script>
+
+  <!-- =====================================================================
+       LIGHTBOX — click the cross-section diagram to enlarge it centered
+       ===================================================================== -->
+  <script>
+  (function () {
+    var overlay = document.getElementById('lightboxOverlay');
+    var stage   = document.getElementById('lightboxStage');
+    var caption = document.getElementById('lightboxCaption');
+    var closeBtn= document.getElementById('lightboxClose');
+    var diagram = document.getElementById('diagram');
+    if (!overlay || !stage || !diagram) return;
+
+    function openLightbox(svg) {
+      // clone so the original stays in the detail panel
+      var clone = svg.cloneNode(true);
+      clone.removeAttribute('width');
+      clone.removeAttribute('height');
+      stage.innerHTML = '';
+      stage.appendChild(clone);
+      var ds = document.querySelector('.oring-finder .dsize');
+      var st = document.querySelector('.oring-finder .dstd');
+      caption.textContent = (ds ? ds.textContent : '') + (st ? '  —  ' + st.textContent : '');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+      stage.innerHTML = '';
+    }
+
+    // Open when the generated diagram SVG is clicked
+    diagram.addEventListener('click', function (e) {
+      var svg = e.target.closest('svg');
+      if (svg && diagram.contains(svg)) openLightbox(svg);
+    });
+
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) closeLightbox(); });
+    closeBtn.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
+    });
+
+    // Append a "click to enlarge" hint whenever the diagram is (re)rendered
+    function addHint() {
+      if (diagram.querySelector('svg') && !diagram.querySelector('.diagram-hint')) {
+        var h = document.createElement('span');
+        h.className = 'diagram-hint';
+        h.textContent = 'Click to enlarge';
+        diagram.appendChild(h);
+      }
+    }
+    new MutationObserver(addHint).observe(diagram, { childList: true });
+    addHint();
+  })();
+  </script>
+
+  </body>
+</html>

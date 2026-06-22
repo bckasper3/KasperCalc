@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -92,7 +92,6 @@
     function fmt(v)  { if (v === null || v === undefined || isNaN(v)) return '—'; return v.toFixed(3); }
     function fmt4(v) { if (v === null || v === undefined || isNaN(v)) return '—'; return v.toFixed(4); }
     function fmtRange(lo, hi) { if (lo == null || hi == null) return '—'; return fmt(lo) + '–' + fmt(hi); }
-    function setTxt(id, v) { const e = document.getElementById(id); if (e) e.textContent = v; }
 
     /* A min-max range rendered under the current display mode */
     function rangeVal(lo, hi) {
@@ -642,7 +641,6 @@
     const SERIES_WNOM = { '1': 0.070, '2': 0.103, '3': 0.139, '4': 0.210, '5': 0.275 };
     function ringLabel(r) { return (r[14] !== undefined) ? r[14] : String(r[0]); }
     function tol3(t) { return '.' + String(Math.round(Math.abs(t) * 1000)).padStart(3, '0'); }
-    function signTol(t) { return (t < 0 ? '−' : '+') + tol3(t); }
     function ringW(r) { return (r[11] !== undefined) ? r[11] : SERIES_WNOM[r[9]]; }
     function ringMeanOD(r) { return (r[13] !== undefined) ? r[13] : (r[1] + 2 * ringW(r)); }
 
@@ -1084,6 +1082,9 @@
                   <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
                   <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
                   <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -1104,8 +1105,9 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal & Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
                   <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -1115,6 +1117,9 @@
                   <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
                   <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
                   <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
                 </div>
               </li>
               <li class="nav-item text-center align-svg-bottom smallsearchbar">
