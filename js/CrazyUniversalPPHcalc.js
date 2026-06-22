@@ -7,6 +7,8 @@ let result_kgm;
 let result_inches3sec;
 let result_gpm;
 let result_kgm1;
+let result_lpm;
+let result_ccm;
 
 
 
@@ -72,7 +74,7 @@ function calculate() {
 
   // console.log('calculate() is being run');
   // console.log('operation:',operation);
-  // console.log('log and jog baby');  
+  // console.log('log and jog baby');
   // console.log('input 1',input1);
   // console.log('input 2',input2);
 
@@ -88,7 +90,8 @@ function calculate() {
         case "S.G.":
           result_gpm = (input1*60*result_SG*denseWater*(1/27679.90471)*(231));    //Rounds to 5 decimal places
           result_inches3sec = (result_gpm*(1/3.8500177461755)).toFixed(4);
-
+          result_lpm = (result_gpm * 3.78541).toFixed(4);
+          result_ccm = (result_gpm * 3785.41).toFixed(4);
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
@@ -100,14 +103,14 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-      
           pphgpmCalcResult1.style.display = 'none'; // Show element when checked
           pphgpmCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "LB / Gal":
           result_gpm = (input1*60*result_SG*denseWater*(1/27679.90471)*(231));    //Rounds to 5 decimal places
           result_inches3sec = (result_gpm*(1/3.8500177461755)).toFixed(4);
-          
+          result_lpm = (result_gpm * 3.78541).toFixed(4);
+          result_ccm = (result_gpm * 3785.41).toFixed(4);
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
@@ -119,14 +122,14 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'inline'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-      
           pphgpmCalcResult1.style.display = 'none'; // Show element when checked
           pphgpmCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "lbin":
           result_gpm = (input1*60*result_SG*denseWater*(1/27679.90471)*(231));    //Rounds to 5 decimal places
           result_inches3sec = (result_gpm*(1/3.8500177461755)).toFixed(4);
-          
+          result_lpm = (result_gpm * 3.78541).toFixed(4);
+          result_ccm = (result_gpm * 3785.41).toFixed(4);
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
@@ -138,14 +141,14 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'inline'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-      
           pphgpmCalcResult1.style.display = 'none'; // Show element when checked
           pphgpmCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "kgm":
           result_gpm = (input1*60*result_SG*denseWater*(1/27679.90471)*(231));    //Rounds to 5 decimal places
           result_inches3sec = (result_gpm*(1/3.8500177461755)).toFixed(4);
-          
+          result_lpm = (result_gpm * 3.78541).toFixed(4);
+          result_ccm = (result_gpm * 3785.41).toFixed(4);
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
           result_lbin = result_lbin.toFixed(4);
@@ -157,17 +160,17 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'inline'; // Show element when unchecked
-      
           pphgpmCalcResult1.style.display = 'none'; // Show element when checked
           pphgpmCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         case "In. of H20":
           result_gpm = (input1*60*result_SG*denseWater*(1/27679.90471)*(231));    //Rounds to 5 decimal places
           result_inches3sec = (result_gpm*(1/3.8500177461755)).toFixed(4);
-          
+          result_lpm = (result_gpm * 3.78541).toFixed(4);
+          result_ccm = (result_gpm * 3785.41).toFixed(4);
           result_SG = result_SG.toFixed(4);
           result_Density = result_Density.toFixed(4);
-          result_lbin = result_lbin.toFixed(4); 
+          result_lbin = result_lbin.toFixed(4);
           result_kgm = result_kgm.toFixed(2);
           result_gpm = result_gpm.toFixed(4);
           varpphgpmCalcOption1.style.display = 'none'; // Show element when checked
@@ -176,20 +179,20 @@ function calculate() {
           varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-      
           pphgpmCalcResult1.style.display = 'none'; // Show element when checked
           pphgpmCalcResult2.style.display = 'inline'; // Show element when unchecked
           break;
         default:
           result_gpm = "0";
           result_inches3sec = "0";
+          result_lpm = "0";
+          result_ccm = "0";
           varpphgpmCalcOption1.style.display = 'none'; // Show element when checked
           varpphgpmCalcOption2.style.display = 'inline'; // Show element when unchecked
           varfuelHeadCalcOption3.style.display = 'inline'; // Show element when checked
           varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
           varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-      
           pphgpmCalcResult1.style.display = 'none'; // Show element when checked
           pphgpmCalcResult2.style.display = 'inline'; // Show element when unchecked
         }
@@ -199,7 +202,8 @@ function calculate() {
           case "S.G.":
             result_gpm = (input1*(1/60)*(1/result_SG)*(1/denseWater)*27679.90471*(1/231));    //Rounds to 5 decimal places
             result_inches3sec = (result_gpm*3.8500177461755).toFixed(4);
-
+            result_lpm = (result_gpm * 3.78541).toFixed(4);
+            result_ccm = (result_gpm * 3785.41).toFixed(4);
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
@@ -211,14 +215,14 @@ function calculate() {
             varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-
             pphgpmCalcResult1.style.display = 'inline'; // Hide element when unchecked
             pphgpmCalcResult2.style.display = 'none'; // Hide element when unchecked
             break;
           case "LB / Gal":
             result_gpm = (input1*(1/60)*(1/result_SG)*(1/denseWater)*27679.90471*(1/231));    //Rounds to 5 decimal places
             result_inches3sec = (result_gpm*3.8500177461755).toFixed(4);
-
+            result_lpm = (result_gpm * 3.78541).toFixed(4);
+            result_ccm = (result_gpm * 3785.41).toFixed(4);
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
@@ -230,14 +234,14 @@ function calculate() {
             varfuelHeadCalcOption4.style.display = 'inline'; // Show element when unchecked
             varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-
             pphgpmCalcResult1.style.display = 'inline'; // Hide element when unchecked
             pphgpmCalcResult2.style.display = 'none'; // Hide element when unchecked
             break;
           case "lbin":
             result_gpm = (input1*(1/60)*(1/result_SG)*(1/denseWater)*27679.90471*(1/231));    //Rounds to 5 decimal places
             result_inches3sec = (result_gpm*3.8500177461755).toFixed(4);
-
+            result_lpm = (result_gpm * 3.78541).toFixed(4);
+            result_ccm = (result_gpm * 3785.41).toFixed(4);
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
@@ -249,14 +253,14 @@ function calculate() {
             varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption5.style.display = 'inline'; // Show element when unchecked
             varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-
             pphgpmCalcResult1.style.display = 'inline'; // Hide element when unchecked
             pphgpmCalcResult2.style.display = 'none'; // Hide element when unchecked
             break;
           case "kgm":
             result_gpm = (input1*(1/60)*(1/result_SG)*(1/denseWater)*27679.90471*(1/231));    //Rounds to 5 decimal places
             result_inches3sec = (result_gpm*3.8500177461755).toFixed(4);
-
+            result_lpm = (result_gpm * 3.78541).toFixed(4);
+            result_ccm = (result_gpm * 3785.41).toFixed(4);
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
@@ -268,14 +272,14 @@ function calculate() {
             varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption6.style.display = 'inline'; // Show element when unchecked
-
             pphgpmCalcResult1.style.display = 'inline'; // Hide element when unchecked
             pphgpmCalcResult2.style.display = 'none'; // Hide element when unchecked
             break;
-          case "In. of H20":     
+          case "In. of H20":
             result_gpm = (input1*(1/60)*(1/result_SG)*(1/denseWater)*27679.90471*(1/231));    //Rounds to 5 decimal places
             result_inches3sec = (result_gpm*3.8500177461755).toFixed(4);
-
+            result_lpm = (result_gpm * 3.78541).toFixed(4);
+            result_ccm = (result_gpm * 3785.41).toFixed(4);
             result_SG = result_SG.toFixed(4);
             result_Density = result_Density.toFixed(4);
             result_lbin = result_lbin.toFixed(4);
@@ -287,20 +291,20 @@ function calculate() {
             varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-
             pphgpmCalcResult1.style.display = 'inline'; // Hide element when unchecked
             pphgpmCalcResult2.style.display = 'none'; // Hide element when unchecked
             break;
           default:
             result_gpm = "0";
             result_inches3sec = "0";
+            result_lpm = "0";
+            result_ccm = "0";
             varpphgpmCalcOption1.style.display = 'inline'; // Hide element when unchecked
             varpphgpmCalcOption2.style.display = 'none'; // Hide element when unchecked
             varfuelHeadCalcOption3.style.display = 'inline'; // Show element when checked
             varfuelHeadCalcOption4.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption5.style.display = 'none'; // Show element when unchecked
             varfuelHeadCalcOption6.style.display = 'none'; // Show element when unchecked
-
             pphgpmCalcResult1.style.display = 'inline'; // Hide element when unchecked
             pphgpmCalcResult2.style.display = 'none'; // Hide element when unchecked
         }
@@ -308,9 +312,11 @@ function calculate() {
 
     if (input1 == 0 || input1 == null) {
       result_gpm = 0.000;
-      result_gpm = result_gpm.toFixed(4)
+      result_gpm = result_gpm.toFixed(4);
       result_inches3sec = 0.000;
-      result_inches3sec = result_inches3sec.toFixed(4)
+      result_inches3sec = result_inches3sec.toFixed(4);
+      result_lpm = (0).toFixed(4);
+      result_ccm = (0).toFixed(4);
     }
 
   document.getElementById("result_SG").innerText = result_SG;
@@ -319,6 +325,8 @@ function calculate() {
   document.getElementById("result_kgm").innerText = result_kgm;
   document.getElementById("result_gpm").innerText = result_gpm;
   document.getElementById("result_inches3sec").innerText = result_inches3sec;
+  document.getElementById("result_lpm").innerText = result_lpm;
+  document.getElementById("result_ccm").innerText = result_ccm;
   document.getElementById("result_Densitylbft").innerText = (result_Density*7.48052).toFixed(4);
 
 }//end of calculate function

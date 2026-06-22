@@ -92,7 +92,6 @@
           <div class="footerlink"><a href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a></div>
           <div class="footerlink"><a href="WaterHeatVaporization.html">Heat of Vaporization</a></div>
           <div class="footerlink"><a href="WaterSaturationPressure.html">Saturation Pressure</a></div>
-          <div class="footerlink"><a href="WaterLiquidGasEquilibrium.html">Liquid Gas Equilibrium</a></div>
           <div class="footerlink"><a href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a></div>
           <div class="footerlink"><a href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a></div>
           <div class="footerlink"><a href="WaterThermalDiffusivity.html">Thermal Diffusivity</a></div>
@@ -124,6 +123,9 @@
           <div class="footerlink"><a href="densityAirAltitude.html">Air Pressure from Altitude</a></div>
           <div class="footerlink"><a href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a></div>
           <div class="footerlink"><a href="SpecificGravityExplanation.html">Specific Gravity Explanation</a></div>
+          <div class="footerlink"><a href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a></div>
+          <div class="footerlink"><a href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a></div>
+          <div class="footerlink"><a href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a></div>
         </div>
 
         <div class="footerRow">
@@ -153,6 +155,9 @@
           <div class="footerlink"><a href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a></div>
           <div class="footerlink"><a href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a></div>
           <div class="footerlink"><a href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a></div>
+          <div class="footerlink"><a href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a></div>
+          <div class="footerlink"><a href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a></div>
+          <div class="footerlink"><a href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a></div>
         </div>
 
         <div class="footerRow">

@@ -13,7 +13,7 @@ const SG_StoddardSolvent = 0.78156;
 function calculate() {
   const operation = document.getElementById("operation").value;
   const input1 = parseFloat(document.getElementById("input1").value) || 0;
-  let result_PSI;
+  let result_PSI, result_InH2O, result_kPa, result_inHg;
 
   let Density_JetA = SG_JetA*denseWater*(1/27679.904719)*231;    //Pounds per Gallon at 70°F
   let Density_JetB = SG_JetB*denseWater*(1/27679.904719)*231;    //Pounds per Gallon at 70°F
@@ -28,57 +28,73 @@ function calculate() {
     switch (operation) {
       case "JetA":
         result_PSI = (input1*(27679.904719/(SG_JetA*denseWater)));    //Rounds to 5 decimal places
-        result_InH2O = (input1*27.7076).toFixed(4); 
+        result_InH2O = (input1*27.7076).toFixed(4);
+        result_kPa = (input1 * 6.89476).toFixed(4);
+        result_inHg = (input1 * 2.03602).toFixed(4);
         result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
         result_SG = SG_JetA.toFixed(4);
         result_Density = Density_JetA.toFixed(4);
         break;
       case "JetB":
         result_PSI = (input1*(27679.904719/(SG_JetB*denseWater)));
-        result_InH2O = (input1*27.7076).toFixed(4); 
+        result_InH2O = (input1*27.7076).toFixed(4);
+        result_kPa = (input1 * 6.89476).toFixed(4);
+        result_inHg = (input1 * 2.03602).toFixed(4);
         result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
         result_SG = SG_JetB.toFixed(4);
-        result_Density = Density_JetB.toFixed(4); 
+        result_Density = Density_JetB.toFixed(4);
         break;
       case "JP4":
         result_PSI = (input1*(27679.904719/(SG_JP_4*denseWater)));
-        result_InH2O = (input1*27.7076).toFixed(4); 
+        result_InH2O = (input1*27.7076).toFixed(4);
+        result_kPa = (input1 * 6.89476).toFixed(4);
+        result_inHg = (input1 * 2.03602).toFixed(4);
         result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
         result_SG = SG_JP_4.toFixed(4);
         result_Density = Density_JP_4.toFixed(4);
         break;
       case "JP5":
         result_PSI = (input1*(27679.904719/(SG_JP_5*denseWater)));
-        result_InH2O = (input1*27.7076).toFixed(4);   
+        result_InH2O = (input1*27.7076).toFixed(4);
+        result_kPa = (input1 * 6.89476).toFixed(4);
+        result_inHg = (input1 * 2.03602).toFixed(4);
         result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
         result_SG = SG_JP_5.toFixed(4);
-        result_Density = Density_JP_5.toFixed(4);  
+        result_Density = Density_JP_5.toFixed(4);
         break;
       case "JP8":
         result_PSI = (input1*(27679.904719/(SG_JP_8*denseWater)));
-        result_InH2O = (input1*27.7076).toFixed(4); 
+        result_InH2O = (input1*27.7076).toFixed(4);
+        result_kPa = (input1 * 6.89476).toFixed(4);
+        result_inHg = (input1 * 2.03602).toFixed(4);
         result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
         result_SG = SG_JP_8.toFixed(4);
         result_Density = Density_JP_8.toFixed(4);
         break;
       case "AvGas":
         result_PSI = (input1*(27679.904719/(SG_AvGas*denseWater)));
-        result_InH2O = (input1*27.7076).toFixed(4); 
+        result_InH2O = (input1*27.7076).toFixed(4);
+        result_kPa = (input1 * 6.89476).toFixed(4);
+        result_inHg = (input1 * 2.03602).toFixed(4);
         result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
         result_SG = SG_AvGas.toFixed(4);
-        result_Density = Density_AvGas.toFixed(4);   
+        result_Density = Density_AvGas.toFixed(4);
         break;
-      case "StoddardSolvent":    
+      case "StoddardSolvent":
           result_PSI = (input1*(27679.904719/(SG_StoddardSolvent*denseWater)));
-          result_InH2O = (input1*27.7076).toFixed(4); 
+          result_InH2O = (input1*27.7076).toFixed(4);
+          result_kPa = (input1 * 6.89476).toFixed(4);
+          result_inHg = (input1 * 2.03602).toFixed(4);
           result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
           result_SG = SG_StoddardSolvent.toFixed(4);
-          result_Density = Density_StoddardSolvent.toFixed(4);      
-          break;      
+          result_Density = Density_StoddardSolvent.toFixed(4);
+          break;
       default:
         result_SG = "";
         result_Density = "";
-        result_InH2O = "";  
+        result_InH2O = "";
+        result_kPa = "";
+        result_inHg = "";
         result_PSI = "";
       }
   } else {
@@ -86,63 +102,81 @@ function calculate() {
       switch (operation) {
         case "JetA":
           result_PSI = (SG_JetA*denseWater*(1/27679.904719)*input1);    //Rounds to 5 decimal places
-          result_InH2O = (result_PSI*27.7076).toFixed(4); 
+          result_InH2O = (result_PSI*27.7076).toFixed(4);
+          result_kPa = (result_PSI * 6.89476).toFixed(4);
+          result_inHg = (result_PSI * 2.03602).toFixed(4);
           result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
           result_SG = SG_JetA.toFixed(4);
           result_Density = Density_JetA.toFixed(4);
           break;
         case "JetB":
           result_PSI = (SG_JetB*denseWater*(1/27679.904719)*input1);
-          result_InH2O = (result_PSI*27.7076).toFixed(4);  
+          result_InH2O = (result_PSI*27.7076).toFixed(4);
+          result_kPa = (result_PSI * 6.89476).toFixed(4);
+          result_inHg = (result_PSI * 2.03602).toFixed(4);
           result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
           result_SG = SG_JetB.toFixed(4);
-          result_Density = Density_JetB.toFixed(4);    
+          result_Density = Density_JetB.toFixed(4);
           break;
         case "JP4":
           result_PSI = (SG_JP_4*denseWater*(1/27679.904719)*input1);
-          result_InH2O = (result_PSI*27.7076).toFixed(4); 
+          result_InH2O = (result_PSI*27.7076).toFixed(4);
+          result_kPa = (result_PSI * 6.89476).toFixed(4);
+          result_inHg = (result_PSI * 2.03602).toFixed(4);
           result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
           result_SG = SG_JP_4.toFixed(4);
-          result_Density = Density_JP_4.toFixed(4);  
+          result_Density = Density_JP_4.toFixed(4);
           break;
         case "JP5":
           result_PSI = (SG_JP_5*denseWater*(1/27679.904719)*input1);
-          result_InH2O = (result_PSI*27.7076).toFixed(4); 
+          result_InH2O = (result_PSI*27.7076).toFixed(4);
+          result_kPa = (result_PSI * 6.89476).toFixed(4);
+          result_inHg = (result_PSI * 2.03602).toFixed(4);
           result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
           result_SG = SG_JP_5.toFixed(4);
-          result_Density = Density_JP_5.toFixed(4);   
+          result_Density = Density_JP_5.toFixed(4);
           break;
         case "JP8":
           result_PSI = (SG_JP_8*denseWater*(1/27679.904719)*input1);
-          result_InH2O = (result_PSI*27.7076).toFixed(4); 
+          result_InH2O = (result_PSI*27.7076).toFixed(4);
+          result_kPa = (result_PSI * 6.89476).toFixed(4);
+          result_inHg = (result_PSI * 2.03602).toFixed(4);
           result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
           result_SG = SG_JP_8.toFixed(4);
           result_Density = Density_JP_8.toFixed(4);
           break;
         case "AvGas":
           result_PSI = (SG_AvGas*denseWater*(1/27679.904719)*input1);
-          result_InH2O = (result_PSI*27.7076).toFixed(4); 
+          result_InH2O = (result_PSI*27.7076).toFixed(4);
+          result_kPa = (result_PSI * 6.89476).toFixed(4);
+          result_inHg = (result_PSI * 2.03602).toFixed(4);
           result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
           result_SG = SG_AvGas.toFixed(4);
           result_Density = Density_AvGas.toFixed(4);
           break;
         case "StoddardSolvent":
             result_PSI = (SG_StoddardSolvent*denseWater*(1/27679.904719)*input1);
-            result_InH2O = (result_PSI*27.7076).toFixed(4);  
+            result_InH2O = (result_PSI*27.7076).toFixed(4);
+            result_kPa = (result_PSI * 6.89476).toFixed(4);
+            result_inHg = (result_PSI * 2.03602).toFixed(4);
             result_PSI = result_PSI.toFixed(5);    //Rounds to 5 decimal places
             result_SG = SG_StoddardSolvent.toFixed(4);
-            result_Density = Density_StoddardSolvent.toFixed(4);  
-            break;      
+            result_Density = Density_StoddardSolvent.toFixed(4);
+            break;
         default:
           result_SG = "";
           result_Density = "";
-          result_InH2O = "";  
+          result_InH2O = "";
+          result_kPa = "";
+          result_inHg = "";
           result_PSI = "";
       }
   }
   document.getElementById("result_SG").innerText = result_SG;
   document.getElementById("result_Density").innerText = result_Density;
   document.getElementById("result_InH2O").innerText = result_InH2O;
+  document.getElementById("result_kPa").innerText = result_kPa;
+  document.getElementById("result_inHg").innerText = result_inHg;
   document.getElementById("result_PSI").innerText = result_PSI;
   document.getElementById("result_Densitylbft").innerText = (result_Density*7.48052).toFixed(4);
 }

@@ -12,7 +12,7 @@ const SG_StoddardSolvent = 0.790;
 function calculate() {
   const operation1 = document.getElementById("operation1").value;
   const input2 = parseFloat(document.getElementById("input2").value) || 0;
-  let result_gpm;
+  let result_gpm, result_inches3sec, result_lpm, result_ccm;
 
   let Density_JetA = SG_JetA*denseWater*(231/27679.90471); //Pounds per Gallon at 70°F
   let Density_JetB = SG_JetB*denseWater*(231/27679.90471);
@@ -23,105 +23,151 @@ function calculate() {
   let Density_StoddardSolvent = SG_StoddardSolvent*denseWater*(231/27679.90471);
 
 if (varPPHtoGPMcheck.checked) {
-  //GPM TO PPH CHECK BOX
+  //GPM TO PPH CHECK BOX — input2 is GPM
   switch (operation1) {
     case "JetA":
       result_SG = SG_JetA.toFixed(4);
       result_Density = Density_JetA.toFixed(4);
-      result_inches3sec = (input2*3.85).toFixed(4);      //Rounds to 3 decimal places
-      result_gpm = (input2*Density_JetA*60).toFixed(5);    //Rounds to 5 decimal places
+      result_inches3sec = (input2*3.85).toFixed(4);
+      result_lpm = (input2 * 3.78541).toFixed(4);
+      result_ccm = (input2 * 3785.41).toFixed(4);
+      result_gpm = (input2*Density_JetA*60).toFixed(5);
       break;
     case "JetB":
       result_SG = SG_JetB.toFixed(4);
       result_Density = Density_JetB.toFixed(4);
-      result_inches3sec = (input2*3.85).toFixed(4);       
+      result_inches3sec = (input2*3.85).toFixed(4);
+      result_lpm = (input2 * 3.78541).toFixed(4);
+      result_ccm = (input2 * 3785.41).toFixed(4);
       result_gpm = (input2*Density_JetB*60).toFixed(5);
       break;
     case "JP4":
       result_SG = SG_JP_4.toFixed(4);
       result_Density = Density_JP_4.toFixed(4);
-      result_inches3sec = (input2*3.85).toFixed(4);       
+      result_inches3sec = (input2*3.85).toFixed(4);
+      result_lpm = (input2 * 3.78541).toFixed(4);
+      result_ccm = (input2 * 3785.41).toFixed(4);
       result_gpm = (input2*Density_JP_4*60).toFixed(5);
       break;
     case "JP5":
       result_SG = SG_JP_5.toFixed(4);
       result_Density = Density_JP_5.toFixed(4);
-      result_inches3sec = (input2*3.85).toFixed(4);       
+      result_inches3sec = (input2*3.85).toFixed(4);
+      result_lpm = (input2 * 3.78541).toFixed(4);
+      result_ccm = (input2 * 3785.41).toFixed(4);
       result_gpm = (input2*Density_JP_5*60).toFixed(5);
       break;
     case "JP8":
       result_SG = SG_JP_8.toFixed(4);
       result_Density = Density_JP_8.toFixed(4);
-      result_inches3sec = (input2*3.85).toFixed(4);       
+      result_inches3sec = (input2*3.85).toFixed(4);
+      result_lpm = (input2 * 3.78541).toFixed(4);
+      result_ccm = (input2 * 3785.41).toFixed(4);
       result_gpm = (input2*Density_JP_8*60).toFixed(5);
       break;
     case "AvGas":
       result_SG = SG_AvGas.toFixed(4);
       result_Density = Density_AvGas.toFixed(4);
-      result_inches3sec = (input2*3.85).toFixed(4);       
+      result_inches3sec = (input2*3.85).toFixed(4);
+      result_lpm = (input2 * 3.78541).toFixed(4);
+      result_ccm = (input2 * 3785.41).toFixed(4);
       result_gpm = (input2*Density_AvGas*60).toFixed(5);
       break;
     case "StoddardSolvent":
         result_SG = SG_StoddardSolvent.toFixed(4);
         result_Density = Density_StoddardSolvent.toFixed(4);
-        result_inches3sec = (input2*3.85).toFixed(4);       
+        result_inches3sec = (input2*3.85).toFixed(4);
+        result_lpm = (input2 * 3.78541).toFixed(4);
+        result_ccm = (input2 * 3785.41).toFixed(4);
         result_gpm = (input2*Density_StoddardSolvent*60).toFixed(5);
-        break;      
+        break;
     default:
       result_SG = "";
       result_Density = "";
-      result_inches3sec = "";  
+      result_inches3sec = "";
+      result_lpm = "";
+      result_ccm = "";
       result_gpm = "";
     }
 } else {
-  //PPH TO GPM CHECKBOX
+  //PPH TO GPM CHECKBOX — input2 is PPH
     switch (operation1) {
-      case "JetA":
+      case "JetA": {
+        let gpmFloat = input2/(Density_JetA*60);
         result_SG = SG_JetA.toFixed(4);
         result_Density = Density_JetA.toFixed(4);
-        result_inches3sec = ((input2*231)/(3600*Density_JetA)).toFixed(4);           //Rounds to 3 decimal places
-        result_gpm = (input2/(Density_JetA*60)).toFixed(5);    //Rounds to 5 decimal places
+        result_inches3sec = ((input2*231)/(3600*Density_JetA)).toFixed(4);
+        result_lpm = (gpmFloat * 3.78541).toFixed(4);
+        result_ccm = (gpmFloat * 3785.41).toFixed(4);
+        result_gpm = gpmFloat.toFixed(5);
         break;
-      case "JetB":
+      }
+      case "JetB": {
+        let gpmFloat = input2/(Density_JetB*60);
         result_SG = SG_JetB.toFixed(4);
         result_Density = Density_JetB.toFixed(4);
-        result_inches3sec = ((input2*231)/(3600*Density_JetB)).toFixed(4);       
-        result_gpm = (input2/(Density_JetB*60)).toFixed(5);
+        result_inches3sec = ((input2*231)/(3600*Density_JetB)).toFixed(4);
+        result_lpm = (gpmFloat * 3.78541).toFixed(4);
+        result_ccm = (gpmFloat * 3785.41).toFixed(4);
+        result_gpm = gpmFloat.toFixed(5);
         break;
-      case "JP4":
+      }
+      case "JP4": {
+        let gpmFloat = input2/(Density_JP_4*60);
         result_SG = SG_JP_4.toFixed(4);
         result_Density = Density_JP_4.toFixed(4);
-        result_inches3sec = ((input2*231)/(3600*Density_JP_4)).toFixed(4);       
-        result_gpm = (input2/(Density_JP_4*60)).toFixed(5);
+        result_inches3sec = ((input2*231)/(3600*Density_JP_4)).toFixed(4);
+        result_lpm = (gpmFloat * 3.78541).toFixed(4);
+        result_ccm = (gpmFloat * 3785.41).toFixed(4);
+        result_gpm = gpmFloat.toFixed(5);
         break;
-      case "JP5":
+      }
+      case "JP5": {
+        let gpmFloat = input2/(Density_JP_5*60);
         result_SG = SG_JP_5.toFixed(4);
         result_Density = Density_JP_5.toFixed(4);
-        result_inches3sec = ((input2*231)/(3600*Density_JP_5)).toFixed(4);       
-        result_gpm = (input2/(Density_JP_5*60)).toFixed(5);
+        result_inches3sec = ((input2*231)/(3600*Density_JP_5)).toFixed(4);
+        result_lpm = (gpmFloat * 3.78541).toFixed(4);
+        result_ccm = (gpmFloat * 3785.41).toFixed(4);
+        result_gpm = gpmFloat.toFixed(5);
         break;
-      case "JP8":
+      }
+      case "JP8": {
+        let gpmFloat = input2/(Density_JP_8*60);
         result_SG = SG_JP_8.toFixed(4);
         result_Density = Density_JP_8.toFixed(4);
-        result_inches3sec = ((input2*231)/(3600*Density_JP_8)).toFixed(4);       
-        result_gpm = (input2/(Density_JP_8*60)).toFixed(5);
+        result_inches3sec = ((input2*231)/(3600*Density_JP_8)).toFixed(4);
+        result_lpm = (gpmFloat * 3.78541).toFixed(4);
+        result_ccm = (gpmFloat * 3785.41).toFixed(4);
+        result_gpm = gpmFloat.toFixed(5);
         break;
-      case "AvGas":
+      }
+      case "AvGas": {
+        let gpmFloat = input2/(Density_AvGas*60);
         result_SG = SG_AvGas.toFixed(4);
         result_Density = Density_AvGas.toFixed(4);
-        result_inches3sec = ((input2*231)/(3600*Density_AvGas)).toFixed(4);       
-        result_gpm = (input2/(Density_AvGas*60)).toFixed(5);
+        result_inches3sec = ((input2*231)/(3600*Density_AvGas)).toFixed(4);
+        result_lpm = (gpmFloat * 3.78541).toFixed(4);
+        result_ccm = (gpmFloat * 3785.41).toFixed(4);
+        result_gpm = gpmFloat.toFixed(5);
         break;
-      case "StoddardSolvent":
-          result_SG = SG_StoddardSolvent.toFixed(4);
-          result_Density = Density_StoddardSolvent.toFixed(4);
-          result_inches3sec = ((input2*231)/(3600*Density_StoddardSolvent)).toFixed(4);       
-          result_gpm = (input2/(Density_StoddardSolvent*60)).toFixed(5);
-          break;      
+      }
+      case "StoddardSolvent": {
+        let gpmFloat = input2/(Density_StoddardSolvent*60);
+        result_SG = SG_StoddardSolvent.toFixed(4);
+        result_Density = Density_StoddardSolvent.toFixed(4);
+        result_inches3sec = ((input2*231)/(3600*Density_StoddardSolvent)).toFixed(4);
+        result_lpm = (gpmFloat * 3.78541).toFixed(4);
+        result_ccm = (gpmFloat * 3785.41).toFixed(4);
+        result_gpm = gpmFloat.toFixed(5);
+        break;
+      }
       default:
         result_SG = "";
         result_Density = "";
-        result_inches3sec = "";  
+        result_inches3sec = "";
+        result_lpm = "";
+        result_ccm = "";
         result_gpm = "";
     }
 }
@@ -129,6 +175,8 @@ if (varPPHtoGPMcheck.checked) {
 document.getElementById("result_SG").innerText = result_SG;
 document.getElementById("result_Density").innerText = result_Density;
 document.getElementById("result_inches3sec").innerText = result_inches3sec;
+document.getElementById("result_lpm").innerText = result_lpm;
+document.getElementById("result_ccm").innerText = result_ccm;
 document.getElementById("result_gpm").innerText = result_gpm;
 document.getElementById("result_Densitylbft").innerText = (result_Density*7.48052).toFixed(4);
 }
