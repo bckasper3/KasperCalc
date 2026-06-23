@@ -182,11 +182,21 @@ function buildSeededVariableVector() {
     set('ID', (v.C - 1) * v.d);
   }
 
+  // ── Pass 1b: Seed missing L1 or L2 from travel ──────────
+  {
+    const hasTrav = userEnteredFieldIds.has('travelL1L2');
+    const trav    = hasTrav ? readFieldValue('travelL1L2') : null;
+    if (hasTrav && trav && trav > 0) {
+      if (userEnteredFieldIds.has('L1') && !userEnteredFieldIds.has('L2')) set('L2', v.L1 - trav);
+      if (userEnteredFieldIds.has('L2') && !userEnteredFieldIds.has('L1')) set('L1', v.L2 + trav);
+    }
+  }
+
   // ── Pass 2: Spring rate k from load / length inputs ───────
   const hasF1 = userEnteredFieldIds.has('F1');
-  const hasL1 = userEnteredFieldIds.has('L1');
+  const hasL1 = userEnteredFieldIds.has('L1') || travelEnabledHasL1();
   const hasF2 = userEnteredFieldIds.has('F2');
-  const hasL2 = userEnteredFieldIds.has('L2');
+  const hasL2 = userEnteredFieldIds.has('L2') || travelEnabledHasL2();
   const hasLf = userEnteredFieldIds.has('Lf');
 
   if (!userEnteredFieldIds.has('k')) {
@@ -255,8 +265,8 @@ function buildSeededVariableVector() {
 }
 
 function applyVariableVector(x) {
-  const hasL1 = userEnteredFieldIds.has('F1') || userEnteredFieldIds.has('L1');
-  const hasL2 = userEnteredFieldIds.has('F2') || userEnteredFieldIds.has('L2');
+  const hasL1 = userEnteredFieldIds.has('F1') || userEnteredFieldIds.has('L1') || travelEnabledHasL1();
+  const hasL2 = userEnteredFieldIds.has('F2') || userEnteredFieldIds.has('L2') || travelEnabledHasL2();
 
   LM_VARIABLES.forEach((id, i) => {
     if (userEnteredFieldIds.has(id)) return;
@@ -541,12 +551,20 @@ function buildResiduals(x, structural = false) {
     }
   }
 
-  // Load-deflection — only when column has user input
-  if (userEnteredFieldIds.has('F1') || userEnteredFieldIds.has('L1')) {
+  // Load-deflection — when column has user input, or travel makes it active
+  if (userEnteredFieldIds.has('F1') || userEnteredFieldIds.has('L1') || travelEnabledHasL1()) {
     r.push(W_PHYS * (v.F1 - v.k * (v.Lf - v.L1)) / Math.max(v.F1, 1.0));
   }
-  if (userEnteredFieldIds.has('F2') || userEnteredFieldIds.has('L2')) {
+  if (userEnteredFieldIds.has('F2') || userEnteredFieldIds.has('L2') || travelEnabledHasL2()) {
     r.push(W_PHYS * (v.F2 - v.k * (v.Lf - v.L2)) / Math.max(v.F2, 1.0));
+  }
+
+  // Travel — constrain L1 - L2 = travel when user pins the travel field
+  if (userEnteredFieldIds.has('travelL1L2')) {
+    const travel = readFieldValue('travelL1L2');
+    if (travel !== null && travel > 0) {
+      r.push(W_USER * (v.L1 - v.L2 - travel) / travel);
+    }
   }
 
   // Buckling — only when user pins Lbuckle or Fbuckle
@@ -1290,6 +1308,18 @@ function setDualOutput(baseId, value, className = null) {
   });
 }
 
+// Travel field activates the opposite load column when one side is pinned.
+// travelEnabledHasL1: travel + L2/F2 pinned → L1 is derivable
+// travelEnabledHasL2: travel + L1/F1 pinned → L2 is derivable
+function travelEnabledHasL1() {
+  return userEnteredFieldIds.has('travelL1L2') &&
+         (userEnteredFieldIds.has('F2') || userEnteredFieldIds.has('L2'));
+}
+function travelEnabledHasL2() {
+  return userEnteredFieldIds.has('travelL1L2') &&
+         (userEnteredFieldIds.has('F1') || userEnteredFieldIds.has('L1'));
+}
+
 
 // ============================================================
 // USER INPUT HANDLER
@@ -1589,6 +1619,39 @@ function runCalc() {
 
   runPreSolveOutputs();
 
+  // ── Gate 0b: Load-position anchor check (hardcoded) ─────────
+  // Entering L1 / L2 / Travel sets working positions but does NOT
+  // constrain the spring's free length.  Lf is only determined when:
+  //   • Lf is user-pinned directly, OR
+  //   • F1 is pinned with a known L1 (Lf = L1 + F1/k), OR
+  //   • F2 is pinned with a known L2 (Lf = L2 + F2/k).
+  // The Jacobian rank test misses this underdetermined case because
+  // the W_HARD / W_PHYS weight ratio (1e3 / 1) makes the Lf column
+  // numerically dominant via Tier B, causing Lf to appear as a
+  // used-up pivot even though it is still free.  This explicit check
+  // catches the case early and gives a targeted error.
+  {
+    const L1_known = userEnteredFieldIds.has('L1') ||
+                     (userEnteredFieldIds.has('travelL1L2') && userEnteredFieldIds.has('L2'));
+    const L2_known = userEnteredFieldIds.has('L2') ||
+                     (userEnteredFieldIds.has('travelL1L2') && userEnteredFieldIds.has('L1'));
+    const lfDetermined = userEnteredFieldIds.has('Lf') ||
+                         (userEnteredFieldIds.has('F1') && L1_known) ||
+                         (userEnteredFieldIds.has('F2') && L2_known);
+    if ((L1_known || L2_known) && !lfDetermined) {
+      const dot  = document.getElementById('bottomStatusDot');
+      const text = document.getElementById('bottomStatusSummary');
+      if (dot)  dot.className    = 'status-dot';
+      if (text) text.textContent =
+        `Underdefined — load positions are set but free length is unknown.\n` +
+        `Add free length (Lf), or pair each position with its load (F1 at L1, F2 at L2).`;
+      _lastSolvedState = null;
+      blankAllComputedOutputs();
+      updateAllCharts(null);
+      return;
+    }
+  }
+
   // ── Gate 1: Rank analysis — detects underdetermined systems ─
   // Uses Jacobian rank of structural constraints only (Tier A+B+C).
   // This naturally handles algebraically redundant inputs
@@ -1651,6 +1714,33 @@ function runCalc() {
           updateAllCharts(null);
           return;
         }
+      }
+    }
+  }
+
+  // ── Pre-solve: detect travel / L1 / L2 conflict ──────────
+  // If all three are user-pinned and L1 - L2 ≠ travel, it is a
+  // direct contradiction — bail with a plain-English error.
+  if (userEnteredFieldIds.has('travelL1L2') &&
+      userEnteredFieldIds.has('L1') &&
+      userEnteredFieldIds.has('L2')) {
+    const travV = readFieldValue('travelL1L2');
+    const L1v   = readFieldValue('L1');
+    const L2v   = readFieldValue('L2');
+    if (travV !== null && L1v !== null && L2v !== null) {
+      const impliedTravel = L1v - L2v;
+      if (Math.abs(impliedTravel - travV) > 1e-4) {
+        const dot  = document.getElementById('bottomStatusDot');
+        const text = document.getElementById('bottomStatusSummary');
+        if (dot) dot.className = 'status-dot err';
+        if (text) text.textContent =
+          `Conflicting values — L1 (${L1v.toFixed(3)}") minus L2 (${L2v.toFixed(3)}") ` +
+          `= ${impliedTravel.toFixed(3)}", but Travel is set to ${travV.toFixed(3)}". ` +
+          `Clear one of the three fields so the remaining two determine the third.`;
+        _lastSolvedState = null;
+        blankAllComputedOutputs();
+        updateAllCharts(null);
+        return;
       }
     }
   }
@@ -1880,8 +1970,8 @@ function runDeterministicPostPass(sv, result) {
   const warnings = [];
   const errors   = [];
 
-  const hasL1  = userEnteredFieldIds.has('F1') || userEnteredFieldIds.has('L1');
-  const hasL2  = userEnteredFieldIds.has('F2') || userEnteredFieldIds.has('L2');
+  const hasL1  = userEnteredFieldIds.has('F1') || userEnteredFieldIds.has('L1') || travelEnabledHasL1();
+  const hasL2  = userEnteredFieldIds.has('F2') || userEnteredFieldIds.has('L2') || travelEnabledHasL2();
   const peened = document.getElementById('condPeened')?.checked ?? false;
   const preset = document.getElementById('condPreset')?.checked ?? false;
 
