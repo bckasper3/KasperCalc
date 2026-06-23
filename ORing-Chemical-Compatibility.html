@@ -205,6 +205,8 @@
       .oring-finder .cat-ct { opacity:.55; font-size:10px }
       .oring-finder .sp-clear { background:#fff; border:1px solid var(--line); color:var(--muted); font-family:var(--mono); font-size:11px; padding:5px 10px; border-radius:6px; cursor:pointer }
       .oring-finder .sp-clear:hover { color:var(--hot); border-color:var(--hot) }
+      .oring-finder .sp-report { background:#fff; border:1px solid var(--line); color:var(--muted); font-family:var(--mono); font-size:11px; padding:5px 10px; border-radius:6px; cursor:pointer; white-space:nowrap }
+      .oring-finder .sp-report:hover { color:var(--brass); border-color:var(--brass) }
       .oring-finder .sp-tip-toggle { background:#fff; border:1px solid var(--line); color:var(--muted); font-family:var(--mono); font-size:11px; padding:5px 10px; border-radius:6px; cursor:pointer; transition:background .05s,border-color .05s,color .05s }
       .oring-finder .sp-tip-toggle[aria-pressed="true"] { background:var(--brass); border-color:var(--brass); color:#fff }
       .oring-finder .sp-tip-toggle[aria-pressed="false"]:hover { border-color:var(--brass); color:var(--brass) }
@@ -455,6 +457,7 @@
                   <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
                   <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
                   <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -593,6 +596,8 @@
               <div class="sp-actions">
                 <button class="sp-tip-toggle" id="tipToggle" aria-pressed="true">Tooltips On</button>
                 <button class="sp-clear" id="clearSel">Clear All</button>
+                <button class="sp-report" id="reportColor">Generate Report (Color)</button>
+                <button class="sp-report" id="reportBW">Generate Report (B&amp;W)</button>
               </div>
             </div>
             <div class="sp-chips" id="spChips">
@@ -1100,6 +1105,95 @@
       renderSelPanel();
       renderSelTable();
     };
+
+    function generateReport(withColor) {
+      if (selectedCompounds.size === 0) {
+        alert('Please select at least one fluid before generating a report.');
+        return;
+      }
+      var selList = [...selectedCompounds].sort().map(function(n){ return compoundMap.get(n); }).filter(Boolean);
+      var now = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+      var colorCSS = withColor
+        ? '.r1{background:#2a7a45;color:#fff}.r2{background:#c49000;color:#fff}.r3{background:#c06010;color:#fff}.r4{background:#b03030;color:#fff}.rx{background:#8a8a8a;color:#fff}' +
+          '.rl-badge.r1{background:#2a7a45;color:#fff}.rl-badge.r2{background:#c49000;color:#fff}.rl-badge.r3{background:#c06010;color:#fff}.rl-badge.r4{background:#b03030;color:#fff}.rl-badge.rx{background:#7a7a7a;color:#fff}'
+        : '.r1{background:#c8c8c8;color:#000}.r2{background:#b0b0b0;color:#000}.r3{background:#989898;color:#000}.r4{background:#808080;color:#fff}.rx{background:#e8e8e8;color:#555}' +
+          '.rl-badge.r1{background:#555;color:#fff}.rl-badge.r2{background:#777;color:#fff}.rl-badge.r3{background:#999;color:#fff}.rl-badge.r4{background:#bbb;color:#000}.rl-badge.rx{background:#ddd;color:#333}';
+
+      var C = '\x3C'; // '<' — keeps every literal '</' out of script source
+
+      var polyHeaders = POLY_FULL.map(function(name){
+        return '<th class="poly-h"><div><span>' + name + C + '/span>' + C + '/div>' + C + '/th>';
+      }).join('');
+
+      var tableRows = selList.map(function(c) {
+        var cells = c.ratings.map(function(r) {
+          var cls = RATING_CLASS[r] || '';
+          return '<td class="poly-cell ' + cls + '">' + (r === 'x' ? 'X' : r) + C + '/td>';
+        }).join('');
+        return '<tr><td class="fluid-cell">' + c.name + C + '/td><td class="ref-cell">' + c.ref + C + '/td>' + cells + C + '/tr>';
+      }).join('');
+
+      var html = [
+        '<!DOCTYPE html>',
+        '<html lang="en">',
+        '<head>',
+        '<meta charset="UTF-8">',
+        '<title>O-Ring Chemical Compatibility Report' + C + '/title>',
+        '<style>',
+        '*{box-sizing:border-box;margin:0;padding:0}',
+        'body{font-family:Arial,sans-serif;font-size:11px;color:#1a3a40;padding:20px}',
+        'h1{font-size:16px;font-weight:700;margin-bottom:4px}',
+        '.subtitle{font-size:11px;color:#555;margin-bottom:14px}',
+        '.section-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#6a746a;font-weight:700;margin-bottom:6px;margin-top:14px}',
+        '.rating-legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin-bottom:4px;padding:8px 10px;border:1px solid #c0c0c0;border-radius:4px;background:#f8f8f8}',
+        '.rl-item{display:flex;align-items:center;gap:6px;font-size:11px}',
+        '.rl-badge{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;border-radius:3px;font-size:11px;font-weight:700;padding:0 4px}',
+        colorCSS,
+        'table{border-collapse:collapse;width:100%;margin-top:8px}',
+        'th,td{border:1px solid #c0c0c0}',
+        '.fluid-h{text-align:left;padding:6px 8px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:#6a746a;color:#eee;min-width:180px;white-space:nowrap}',
+        '.ref-h{text-align:left;padding:6px 8px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:#6a746a;color:#eee;min-width:160px;white-space:nowrap}',
+        '.poly-h{background:#6a746a;color:#eee;width:34px;min-width:34px;max-width:34px;padding:0;height:130px;vertical-align:bottom}',
+        '.poly-h div{display:flex;align-items:flex-end;justify-content:flex-start;height:130px;padding:0 0 6px 7px}',
+        '.poly-h div span{writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;font-size:9px;font-weight:500;letter-spacing:.03em}',
+        '.fluid-cell{padding:4px 8px;font-size:11px;white-space:nowrap;min-width:180px}',
+        '.ref-cell{padding:4px 8px;font-size:10px;color:#4a5a5f;white-space:nowrap;min-width:160px}',
+        '.poly-cell{text-align:center;padding:3px 1px;font-size:10px;font-weight:700;width:34px;min-width:34px;max-width:34px}',
+        'tbody tr:nth-child(even) td.fluid-cell,tbody tr:nth-child(even) td.ref-cell{background:#f5f5f5}',
+        '.footnote{margin-top:12px;font-size:9px;color:#888;font-style:italic}',
+        '@media print{body{padding:6px}@page{margin:1.2cm;size:landscape}}',
+        C + '/style>',
+        C + '/head>',
+        '<body onload="window.print()">',
+        '<h1>O-Ring Chemical Compatibility Report' + C + '/h1>',
+        '<div class="subtitle">Parker O-Ring Chemical Compatibility Guide &middot; Ambient temperature ratings &middot; Generated ' + now + ' &middot; ' + selList.length + ' fluid' + (selList.length !== 1 ? 's' : '') + ' selected' + C + '/div>',
+        '<div class="section-label">Compatibility Rating Scale' + C + '/div>',
+        '<div class="rating-legend">',
+        '  <div class="rl-item"><span class="rl-badge r1">1' + C + '/span>Satisfactory' + C + '/div>',
+        '  <div class="rl-item"><span class="rl-badge r2">2' + C + '/span>Fair (usually OK for static seal)' + C + '/div>',
+        '  <div class="rl-item"><span class="rl-badge r3">3' + C + '/span>Doubtful (sometimes OK for static seal)' + C + '/div>',
+        '  <div class="rl-item"><span class="rl-badge r4">4' + C + '/span>Unsatisfactory' + C + '/div>',
+        '  <div class="rl-item"><span class="rl-badge rx">x' + C + '/span>Insufficient Data' + C + '/div>',
+        C + '/div>',
+        '<div class="section-label">Selected Fluids' + C + '/div>',
+        '<table>',
+        '<thead><tr><th class="fluid-h">Fluid / Chemical' + C + '/th><th class="ref-h">Recommended Parker Rubber Compound' + C + '/th>' + polyHeaders + C + '/tr>' + C + '/thead>',
+        '<tbody>' + tableRows + C + '/tbody>',
+        C + '/table>',
+        '<div class="footnote">Ratings are for ambient temperature. Elevated temperatures generally reduce compatibility. Verify against the controlling specification before use. &mdash; Parker O-Ring Chemical Compatibility Guide.' + C + '/div>',
+        C + '/body>',
+        C + '/html>',
+      ].join('\n');
+
+      var win = window.open('', '_blank');
+      if (!win) { alert('Pop-up was blocked. Please allow pop-ups for this site to generate reports.'); return; }
+      win.document.write(html);
+      win.document.close();
+    }
+
+    $('reportColor').onclick = () => generateReport(true);
+    $('reportBW').onclick    = () => generateReport(false);
 
     document.addEventListener('keydown', e => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
