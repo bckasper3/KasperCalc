@@ -22,6 +22,9 @@
     <script defer src="sensor-integrity-bit-analysis/js/sensor-bitdiag.js"></script>
     <script defer src="sensor-integrity-bit-analysis/js/sensor-charts.js"></script>
     <script defer src="sensor-integrity-bit-analysis/js/sensor-export.js"></script>
+    <script defer src="sensor-integrity-bit-analysis/js/sensor-datagen.js"></script>
+    <script defer src="sensor-integrity-bit-analysis/js/sensor-v2.js"></script>
+    <script defer src="sensor-integrity-bit-analysis/js/sensor-report.js"></script>
 
     <!-- CSS FILES -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -45,7 +48,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
 
     <!-- SheetJS for Excel/CSV import -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.20.3/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <!-- Calculator component styles -->
     <style>
@@ -159,6 +162,15 @@
     .ref-table th{background:#d9d9d9;border:1px solid #bbb;padding:4px 8px;font-weight:600;color:#444;text-align:left}
     .ref-table td{border:1px solid #ccc;padding:3px 8px;color:#333;vertical-align:top}
     .ref-table tr:nth-child(even) td{background:#f5f5f5}
+    /* ── Synthetic data generator ────────────────────────────────── */
+    .dgen-fault-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+    .dgen-fault-card{background:#f5f5f5;border:1.5px solid rgb(67,67,67);border-radius:5px;padding:6px 8px}
+    .dgen-fault-label{font-size:12px;font-weight:700;display:flex;align-items:center;gap:5px;cursor:pointer;margin:0;color:#333}
+    .dgen-fault-label input[type=checkbox]{margin:0;cursor:pointer}
+    .dgen-fault-params{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;padding-left:20px}
+    .dgen-fault-params.hidden{display:none}
+    .dgen-sel{font-size:12px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;height:22px;width:100%}
+    @media(max-width:600px){.dgen-fault-grid{grid-template-columns:1fr}}
     </style>
   </head>
 
@@ -443,8 +455,8 @@
                     <label class="it" id="methodTabB">
                       <input type="radio" name="importMethod" value="B" onchange="switchImportMethod('B')"> Paste Binary / Hex
                     </label>
-                    <label class="it" style="opacity:0.45;cursor:default;" title="Coming in a future update">
-                      <input type="radio" name="importMethod" value="C" disabled> Manual Channel [V2]
+                    <label class="it" id="methodTabC">
+                      <input type="radio" name="importMethod" value="C" onchange="switchImportMethod('C')"> Synthetic Data
                     </label>
                   </div>
                 </div>
@@ -530,12 +542,198 @@
                   </div>
                 </div><!-- /#methodBSection -->
 
-                <!-- ── METHOD C: MANUAL [V2 STUB] ── -->
+                <!-- ── METHOD C: SYNTHETIC DATA GENERATOR ── -->
                 <div id="methodCSection" style="display:none;">
-                  <div style="opacity:0.5;pointer-events:none;padding:10px 0;">
-                    <p style="font-size:12px;color:#888;margin:0;">Manual sensor channel creation (define derived signals, constants, and custom filters) — Coming in a future update.</p>
+
+                  <!-- Signal shape -->
+                  <span class="sst" style="margin-bottom:4px;">Signal Shape</span>
+                  <div class="thermo-g3" style="align-items:end;margin:4px 0 8px;">
+                    <div class="thermo-f">
+                      <label for="dgenSamples">Samples</label>
+                      <input type="number" id="dgenSamples" value="1000" min="10" max="100000" step="100">
+                    </div>
+                    <div class="thermo-f">
+                      <label for="dgenChannels">Channels</label>
+                      <input type="number" id="dgenChannels" value="2" min="1" max="8">
+                    </div>
+                    <div class="thermo-f">
+                      <label for="dgenSampleRate">Sample Rate (Hz)</label>
+                      <input type="number" id="dgenSampleRate" value="1000" min="1" step="any">
+                    </div>
                   </div>
-                </div>
+                  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px;">
+                    <div>
+                      <span class="sst" style="margin-bottom:3px;">Signal Type</span>
+                      <div class="itype-grid" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-top:4px;">
+                        <label class="it sel"><input type="radio" name="dgenSignal" value="sine" checked> Sine</label>
+                        <label class="it"><input type="radio" name="dgenSignal" value="sawtooth"> Sawtooth</label>
+                        <label class="it"><input type="radio" name="dgenSignal" value="walk"> Rnd Walk</label>
+                        <label class="it"><input type="radio" name="dgenSignal" value="step"> Step</label>
+                      </div>
+                    </div>
+                    <div class="thermo-f" style="min-width:120px;max-width:160px;">
+                      <label for="dgenAmplitude">Amplitude (counts)</label>
+                      <input type="number" id="dgenAmplitude" value="32767" min="1" max="65535">
+                    </div>
+                    <div class="thermo-f" style="min-width:100px;max-width:130px;">
+                      <label for="dgenNoise">Noise Floor (%)</label>
+                      <input type="number" id="dgenNoise" value="5" min="0" max="100">
+                    </div>
+                  </div>
+
+                  <!-- Fault injection -->
+                  <span class="sst" style="margin-bottom:4px;">Fault Injection</span>
+                  <div class="dgen-fault-grid" style="margin-top:4px;">
+
+                    <!-- 1 Stuck Bit -->
+                    <div class="dgen-fault-card">
+                      <label class="dgen-fault-label"><input type="checkbox" class="fault-cb" id="faultStuckBitEn"> Stuck Bit</label>
+                      <div class="dgen-fault-params hidden" id="faultStuckBitParams">
+                        <div class="thermo-f" style="flex:1 1 80px;">
+                          <label for="faultStuckBitPos">Bit (0&ndash;15)</label>
+                          <input type="number" id="faultStuckBitPos" value="7" min="0" max="15">
+                        </div>
+                        <div class="thermo-f" style="flex:1 1 100px;">
+                          <label for="faultStuckBitState">Stuck State</label>
+                          <select id="faultStuckBitState" class="dgen-sel">
+                            <option value="0">Low (0)</option>
+                            <option value="1" selected>High (1)</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 2 Bit Flip -->
+                    <div class="dgen-fault-card">
+                      <label class="dgen-fault-label"><input type="checkbox" class="fault-cb" id="faultBitFlipEn"> Bit Flip</label>
+                      <div class="dgen-fault-params hidden" id="faultBitFlipParams">
+                        <div class="thermo-f" style="flex:1 1 140px;">
+                          <label for="faultBitFlipRate">Flips per 1000 samples</label>
+                          <input type="number" id="faultBitFlipRate" value="1" min="1" max="100" step="1">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 3 Buffer Overload -->
+                    <div class="dgen-fault-card">
+                      <label class="dgen-fault-label"><input type="checkbox" class="fault-cb" id="faultBufOverloadEn"> Buffer Overload</label>
+                      <div class="dgen-fault-params hidden" id="faultBufOverloadParams">
+                        <div class="thermo-f" style="flex:1 1 140px;">
+                          <label for="faultBufOverloadPct">Clip threshold (% of 65535)</label>
+                          <input type="number" id="faultBufOverloadPct" value="80" min="10" max="99">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 4 Sensor Dropout -->
+                    <div class="dgen-fault-card">
+                      <label class="dgen-fault-label"><input type="checkbox" class="fault-cb" id="faultDropoutEn"> Sensor Dropout</label>
+                      <div class="dgen-fault-params hidden" id="faultDropoutParams">
+                        <div class="thermo-f" style="flex:1 1 80px;">
+                          <label for="faultDropoutRate">Rate (%)</label>
+                          <input type="number" id="faultDropoutRate" value="1" min="1" max="20" step="1">
+                        </div>
+                        <div class="thermo-f" style="flex:1 1 80px;">
+                          <label for="faultDropoutLen">Length (samples)</label>
+                          <input type="number" id="faultDropoutLen" value="20" min="1" max="500">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 5 Baseline Drift -->
+                    <div class="dgen-fault-card">
+                      <label class="dgen-fault-label"><input type="checkbox" class="fault-cb" id="faultDriftEn"> Baseline Drift</label>
+                      <div class="dgen-fault-params hidden" id="faultDriftParams">
+                        <div class="thermo-f" style="flex:1 1 140px;">
+                          <label for="faultDriftPct">Drift magnitude (% of amplitude)</label>
+                          <input type="number" id="faultDriftPct" value="20" min="1" max="200">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 6 Channel Correlation -->
+                    <div class="dgen-fault-card">
+                      <label class="dgen-fault-label"><input type="checkbox" class="fault-cb" id="faultCorrelEn"> Channel Correlation</label>
+                      <div class="dgen-fault-params hidden" id="faultCorrelParams">
+                        <div class="thermo-f" style="flex:1 1 80px;">
+                          <label for="faultCorrelDelay">Delay (samples)</label>
+                          <input type="number" id="faultCorrelDelay" value="10" min="0" max="500">
+                        </div>
+                        <div class="thermo-f" style="flex:1 1 80px;">
+                          <label for="faultCorrelGain">Gain</label>
+                          <input type="number" id="faultCorrelGain" value="0.8" min="0.01" max="2" step="0.05">
+                        </div>
+                        <div class="thermo-f" style="flex:1 1 80px;">
+                          <label for="faultCorrelNoise">Added noise (%)</label>
+                          <input type="number" id="faultCorrelNoise" value="5" min="0" max="100">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 7 Spike Injection -->
+                    <div class="dgen-fault-card">
+                      <label class="dgen-fault-label"><input type="checkbox" class="fault-cb" id="faultSpikeEn"> Spike Injection</label>
+                      <div class="dgen-fault-params hidden" id="faultSpikeParams">
+                        <div class="thermo-f" style="flex:1 1 130px;">
+                          <label for="faultSpikeRate">Spikes per 1000 samples</label>
+                          <input type="number" id="faultSpikeRate" value="2" min="1" max="50" step="1">
+                        </div>
+                        <div class="thermo-f" style="flex:1 1 120px;">
+                          <label for="faultSpikeAmp">Spike amplitude (counts)</label>
+                          <input type="number" id="faultSpikeAmp" value="60000" min="1" max="65535">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 8 Periodic Interference -->
+                    <div class="dgen-fault-card">
+                      <label class="dgen-fault-label"><input type="checkbox" class="fault-cb" id="faultInterferenceEn"> Periodic Interference</label>
+                      <div class="dgen-fault-params hidden" id="faultInterferenceParams">
+                        <div class="thermo-f" style="flex:1 1 80px;">
+                          <label for="faultIntFreq">Frequency (Hz)</label>
+                          <input type="number" id="faultIntFreq" value="50" min="0.1" max="10000" step="0.1">
+                        </div>
+                        <div class="thermo-f" style="flex:1 1 120px;">
+                          <label for="faultIntAmp">Amplitude (% of base)</label>
+                          <input type="number" id="faultIntAmp" value="20" min="1" max="200">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 9 Toggle Storm -->
+                    <div class="dgen-fault-card">
+                      <label class="dgen-fault-label"><input type="checkbox" class="fault-cb" id="faultToggleStormEn"> Toggle Storm</label>
+                      <div class="dgen-fault-params hidden" id="faultToggleStormParams">
+                        <div class="thermo-f" style="flex:1 1 80px;">
+                          <label for="faultToggleBit">Bit (0&ndash;15)</label>
+                          <input type="number" id="faultToggleBit" value="0" min="0" max="15">
+                        </div>
+                        <div class="thermo-f" style="flex:1 1 100px;">
+                          <label for="faultToggleRate">Toggle rate (%)</label>
+                          <input type="number" id="faultToggleRate" value="60" min="1" max="100">
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 10 Quantization Step -->
+                    <div class="dgen-fault-card">
+                      <label class="dgen-fault-label"><input type="checkbox" class="fault-cb" id="faultQuantEn"> Quantization Step</label>
+                      <div class="dgen-fault-params hidden" id="faultQuantParams">
+                        <div class="thermo-f" style="flex:1 1 140px;">
+                          <label for="faultQuantBits">LSBs zeroed (1&ndash;8)</label>
+                          <input type="number" id="faultQuantBits" value="3" min="1" max="8">
+                        </div>
+                      </div>
+                    </div>
+
+                  </div><!-- /.dgen-fault-grid -->
+
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <button class="tbtn accent" id="btnGenerate">Generate Channels</button>
+                    <span id="dgenStatus" style="font-size:12px;"></span>
+                  </div>
+
+                </div><!-- /#methodCSection -->
 
               </div><!-- /#sensorDataSourceGrp -->
 
@@ -711,8 +909,8 @@
                       <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                       Export CSV
                     </button>
-                    <button class="tbtn" disabled title="Coming in a future update">Report PDF</button>
-                    <button class="tbtn" disabled title="Coming in a future update">Report With Graphs</button>
+                    <button class="tbtn" id="btnReportPDF" title="Download a text PDF report of channels and events">Report PDF</button>
+                    <button class="tbtn" id="btnReportWithGraphs" title="Download a PDF report including all chart images (10 s render delay)">Report With Graphs</button>
                   </div>
                 </div>
                 <div class="grp">
@@ -740,14 +938,14 @@
                           onclick="switchSensorGraphTab(2,this)">Spike Explorer</button>
                   <button class="graph-tab" role="tab" aria-selected="false"
                           onclick="switchSensorGraphTab(3,this)">Bit Plot</button>
-                  <button class="graph-tab v2-tab" role="tab" aria-selected="false"
-                          title="Coming in a future update">Correlation Heatmap</button>
-                  <button class="graph-tab v2-tab" role="tab" aria-selected="false"
-                          title="Coming in a future update">Cross-Correlation</button>
-                  <button class="graph-tab v2-tab" role="tab" aria-selected="false"
-                          title="Coming in a future update">Event Overlay</button>
-                  <button class="graph-tab v2-tab" role="tab" aria-selected="false"
-                          title="Coming in a future update">Spectrogram</button>
+                  <button class="graph-tab" role="tab" aria-selected="false"
+                          onclick="switchSensorGraphTab(4,this)">Correlation Heatmap</button>
+                  <button class="graph-tab" role="tab" aria-selected="false"
+                          onclick="switchSensorGraphTab(5,this)">Cross-Correlation</button>
+                  <button class="graph-tab" role="tab" aria-selected="false"
+                          onclick="switchSensorGraphTab(6,this)">Event Overlay</button>
+                  <button class="graph-tab" role="tab" aria-selected="false"
+                          onclick="switchSensorGraphTab(7,this)">Spectrogram</button>
                 </div>
 
                 <!-- Tab 1: Time Plot -->
@@ -797,18 +995,84 @@
                   </div>
                 </div>
 
-                <!-- V2 stubs -->
+                <!-- Tab 4: Correlation Heatmap -->
                 <div id="sensorGraphContent4" class="graph-content" role="tabpanel">
-                  <p style="font-size:12px;color:#888;margin:0;">Correlation Heatmap &mdash; Coming in a future update.</p>
+                  <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
+                    <p style="font-size:11px;color:#888;margin:0;flex:1;">Pearson correlation coefficient between all pairs of enabled channels. Color scale: blue = −1 (anti-correlated), white = 0, red = +1 (fully correlated).</p>
+                    <button class="tbtn" id="btnComputeCorrel" style="font-size:11px;padding:3px 10px;">Compute Heatmap</button>
+                  </div>
+                  <div id="correlHeatmapMsg" style="font-size:12px;color:#888;padding:20px 0;text-align:center;">Enable ≥ 2 channels and click Compute Heatmap.</div>
+                  <div id="correlHeatmapWrap" style="overflow-x:auto;display:none;">
+                    <canvas id="chartCorrelHeatmap" style="display:block;"></canvas>
+                  </div>
                 </div>
+
+                <!-- Tab 5: Cross-Correlation -->
                 <div id="sensorGraphContent5" class="graph-content" role="tabpanel">
-                  <p style="font-size:12px;color:#888;margin:0;">Cross-Correlation / Propagation &mdash; Coming in a future update.</p>
+                  <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap;">
+                    <div style="display:flex;align-items:center;gap:4px;">
+                      <span style="font-size:12px;color:#444;white-space:nowrap;">Ch A:</span>
+                      <select id="xcorrChA" style="font-size:12px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;height:22px;">
+                        <option value="">— select —</option>
+                      </select>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:4px;">
+                      <span style="font-size:12px;color:#444;white-space:nowrap;">Ch B:</span>
+                      <select id="xcorrChB" style="font-size:12px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;height:22px;">
+                        <option value="">— select —</option>
+                      </select>
+                    </div>
+                    <div class="thermo-f" style="min-width:110px;max-width:150px;">
+                      <label for="xcorrMaxLag" style="font-size:10px;">Max lag (samples)</label>
+                      <input type="number" id="xcorrMaxLag" value="200" min="1" max="10000" step="1">
+                    </div>
+                    <button class="tbtn" id="btnComputeXCorr" style="font-size:11px;padding:3px 10px;">Compute</button>
+                  </div>
+                  <p style="font-size:11px;color:#888;margin:0 0 6px;">A peak at lag L means Channel A leads Channel B by L samples. Negative lag = B leads A.</p>
+                  <div style="position:relative;height:300px;width:100%;">
+                    <canvas id="chartXCorr"></canvas>
+                  </div>
                 </div>
+
+                <!-- Tab 6: Event Overlay -->
                 <div id="sensorGraphContent6" class="graph-content" role="tabpanel">
-                  <p style="font-size:12px;color:#888;margin:0;">Event Overlay &mdash; Coming in a future update.</p>
+                  <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap;">
+                    <p style="font-size:11px;color:#888;margin:0;flex:1;">All detected events overlaid. Each is centered at its peak (x = 0) and normalized to peak height = 1. Requires events to be detected first.</p>
+                    <div class="thermo-f" style="min-width:110px;max-width:150px;">
+                      <label for="overlayContext" style="font-size:10px;">Context (samples)</label>
+                      <input type="number" id="overlayContext" value="20" min="1" max="1000" step="1">
+                    </div>
+                    <button class="tbtn" id="btnRefreshOverlay" style="font-size:11px;padding:3px 10px;">Refresh</button>
+                    <span id="overlayStatus" style="font-size:11px;color:#555;"></span>
+                  </div>
+                  <div style="position:relative;height:320px;width:100%;">
+                    <canvas id="chartEventOverlay"></canvas>
+                  </div>
                 </div>
+
+                <!-- Tab 7: Spectrogram -->
                 <div id="sensorGraphContent7" class="graph-content" role="tabpanel">
-                  <p style="font-size:12px;color:#888;margin:0;">Spectrogram &mdash; Coming in a future update.</p>
+                  <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap;">
+                    <div style="display:flex;align-items:center;gap:4px;">
+                      <span style="font-size:12px;color:#444;white-space:nowrap;">Channel:</span>
+                      <select id="spectroChannelSelect" style="font-size:12px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;height:22px;">
+                        <option value="">— select channel —</option>
+                      </select>
+                    </div>
+                    <div style="display:flex;gap:4px;">
+                      <label class="it sel" id="spectroLinear" style="font-size:11px;padding:3px 8px;" title="Linear magnitude scale">
+                        <input type="radio" name="spectroScale" value="linear" checked> Linear
+                      </label>
+                      <label class="it" id="spectroDb" style="font-size:11px;padding:3px 8px;" title="Decibel magnitude scale">
+                        <input type="radio" name="spectroScale" value="db"> dB
+                      </label>
+                    </div>
+                    <button class="tbtn" id="btnComputeSpectrogram" style="font-size:11px;padding:3px 10px;">Compute FFT</button>
+                  </div>
+                  <p style="font-size:11px;color:#888;margin:0 0 6px;">Magnitude spectrum using the largest power-of-2 window (≤ 131 072 samples) centered on the signal. Hanning window applied to reduce spectral leakage.</p>
+                  <div style="position:relative;height:320px;width:100%;">
+                    <canvas id="chartSpectrogram"></canvas>
+                  </div>
                 </div>
               </div><!-- /.graph-banner graphs -->
 
@@ -835,8 +1099,8 @@
                           onclick="switchSensorTableTab(1,this)">Event Table</button>
                   <button class="graph-tab" role="tab" aria-selected="false"
                           onclick="switchSensorTableTab(2,this)">Bit Occupancy / Toggle / Hamming</button>
-                  <button class="graph-tab v2-tab" role="tab" aria-selected="false"
-                          title="Coming in a future update">Missing Code</button>
+                  <button class="graph-tab" role="tab" aria-selected="false"
+                          onclick="switchSensorTableTab(3,this)">Missing Code</button>
                 </div>
 
                 <!-- Tab 1: Event Table -->
@@ -889,9 +1153,34 @@
                   </div>
                 </div>
 
-                <!-- V2 stub -->
+                <!-- Tab 3: Missing Code -->
                 <div id="sensorTableContent3" class="graph-content" role="tabpanel">
-                  <p style="font-size:12px;color:#888;margin:0;">Missing Code Table &mdash; Coming in a future update.</p>
+                  <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center;flex-wrap:wrap;">
+                    <span style="font-size:12px;color:#444;white-space:nowrap;">Channel (raw int):</span>
+                    <select id="missingCodeChannelSelect" style="font-size:12px;padding:2px 5px;border-radius:5px;border:1.5px solid rgb(67,67,67);background:#d9d9d9;height:22px;">
+                      <option value="">— select channel —</option>
+                    </select>
+                    <button class="tbtn" id="btnComputeMissingCode" style="font-size:11px;padding:3px 10px;">Compute</button>
+                    <span id="missingCodeSummary" style="font-size:11px;color:#555;"></span>
+                  </div>
+                  <p style="font-size:11px;color:#888;margin:0 0 6px;">Integer values in the signal's observed range that never appear — gaps in ADC output can indicate missing codes, non-linearity, or quantization artifacts. Red bars = empty buckets.</p>
+                  <div style="position:relative;height:150px;width:100%;margin-bottom:8px;">
+                    <canvas id="chartMissingCode"></canvas>
+                  </div>
+                  <div class="lt-wrap" style="max-height:200px;">
+                    <table class="lt" id="missingCodeTable">
+                      <thead>
+                        <tr>
+                          <th style="text-align:left;">Missing Value</th>
+                          <th>Neighbors (prev / next seen)</th>
+                          <th>Gap Size</th>
+                        </tr>
+                      </thead>
+                      <tbody id="missingCodeTbody">
+                        <tr><td colspan="3" style="text-align:center;color:#888;font-style:italic;padding:10px 0;">Select a raw integer channel and click Compute.</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div><!-- /.graph-banner tables -->
 
@@ -936,10 +1225,10 @@
                   <div class="full-col">
                     <p>This tool runs entirely in your web browser. No data leaves your machine &mdash; everything is processed locally using JavaScript. There is no server, no upload, and no account required. Simply import your data and the tool analyzes it on the spot.</p>
                     <p>The general processing pipeline works in three stages:</p>
-                    <ul>
-                      <li><strong>Import:</strong> Load time-series sensor data from a spreadsheet file (.xlsx/.csv) or by pasting raw binary or hex-encoded samples. Each column of data becomes a <em>channel</em> in the Sensor Manager.</li>
-                      <li><strong>Detection:</strong> Once you set your detection parameters (Threshold, Min Duration, Min Height, Debounce) and click <em>Run Detection</em>, each enabled channel is scanned independently. Detection runs in a background Web Worker thread so the page stays responsive during computation.</li>
-                      <li><strong>Analysis:</strong> Detected events are shown in the Event Table, summarized in the Output Properties panel, and visualized in the Spike Explorer and Time Plot tabs. For channels flagged as raw integers, the Bit Plot tab provides bit-level integrity diagnostics.</li>
+                    <ul style="font-size:13px;">
+                      <li style="font-size:13px;"><strong>Import:</strong> Load time-series sensor data from a spreadsheet file (.xlsx/.csv) or by pasting raw binary or hex-encoded samples. Each column of data becomes a <em>channel</em> in the Sensor Manager.</li>
+                      <li style="font-size:13px;"><strong>Detection:</strong> Once you set your detection parameters (Threshold, Min Duration, Min Height, Debounce) and click <em>Run Detection</em>, each enabled channel is scanned independently. Detection runs in a background Web Worker thread so the page stays responsive during computation.</li>
+                      <li style="font-size:13px;"><strong>Analysis:</strong> Detected events are shown in the Event Table, summarized in the Output Properties panel, and visualized in the Spike Explorer and Time Plot tabs. For channels flagged as raw integers, the Bit Plot tab provides bit-level integrity diagnostics.</li>
                     </ul>
                     <div class="ref-warn">
                       <strong>Accuracy disclaimer:</strong> This tool is a diagnostic aid, not a certified measurement instrument. Detection results depend entirely on the parameters you set. Always verify anomalies found here with appropriate instrumentation or data acquisition software before drawing engineering conclusions.
@@ -950,8 +1239,8 @@
 
 
               <!-- ══ CARD 02: SUPPORTED IMPORT FORMATS ══════════════ -->
-              <div class="ref-card collapsed" id="sensorCard2">
-                <div class="ref-card-header" onclick="toggleRefCard('sensorCard2')" role="button" tabindex="0" aria-expanded="false">
+              <div class="ref-card" id="sensorCard2">
+                <div class="ref-card-header" onclick="toggleRefCard('sensorCard2')" role="button" tabindex="0" aria-expanded="true">
                   <span class="ref-num">02</span>
                   <h2>Supported Import Formats</h2>
                   <svg class="ref-chevron" viewBox="0 0 14 14" fill="none"><path d="M2 4l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -961,20 +1250,20 @@
                     <div class="ref-sub">Method A &mdash; File Upload</div>
                     <p>Accepted file extensions: <strong>.xlsx</strong>, <strong>.xls</strong>, <strong>.csv</strong>. Parsing is handled by SheetJS (xlsx library), running locally in the browser.</p>
                     <p>After selecting a file, a column preview appears showing the first 10 rows. Use the dropdown above each column to assign its role:</p>
-                    <ul>
-                      <li><strong>Timestamp</strong> &mdash; one column only; treated as the x-axis for all channels.</li>
-                      <li><strong>Sensor Channel</strong> &mdash; any number of columns; each becomes an independent channel in the Sensor Manager.</li>
-                      <li><strong>Ignore</strong> &mdash; column is excluded from import.</li>
+                    <ul style="font-size:13px;">
+                      <li style="font-size:13px;"><strong>Timestamp</strong> &mdash; one column only; treated as the x-axis for all channels.</li>
+                      <li style="font-size:13px;"><strong>Sensor Channel</strong> &mdash; any number of columns; each becomes an independent channel in the Sensor Manager.</li>
+                      <li style="font-size:13px;"><strong>Ignore</strong> &mdash; column is excluded from import.</li>
                     </ul>
                     <p>Auto-assignment applies when headers match (case-insensitive): <em>Timestamp</em>, <em>Sensor A</em>, <em>Sensor B</em>, <em>Sensor C</em>, etc. Override freely with the dropdowns. Click <em>Confirm Import</em> when satisfied. Importing a second file adds new channels without replacing existing ones.</p>
                   </div>
                   <div>
                     <div class="ref-sub">Method B &mdash; Paste Binary / Hex</div>
                     <p>Paste raw data directly into the text box. The tool auto-detects format:</p>
-                    <ul>
-                      <li><strong>Binary string:</strong> a string of <code>0</code> and <code>1</code> characters, e.g. <code>0100110101100001</code></li>
-                      <li><strong>Prefixed hex:</strong> hex pairs with <code>0x</code> prefix, e.g. <code>0xA2 0x3C</code></li>
-                      <li><strong>Bare hex:</strong> continuous hex characters (A–F, 0–9), e.g. <code>A23CF400</code></li>
+                    <ul style="font-size:13px;">
+                      <li style="font-size:13px;"><strong>Binary string:</strong> a string of <code>0</code> and <code>1</code> characters, e.g. <code>0100110101100001</code></li>
+                      <li style="font-size:13px;"><strong>Prefixed hex:</strong> hex pairs with <code>0x</code> prefix, e.g. <code>0xA2 0x3C</code></li>
+                      <li style="font-size:13px;"><strong>Bare hex:</strong> continuous hex characters (A–F, 0–9), e.g. <code>A23CF400</code></li>
                     </ul>
                     <p>Select the data type and endianness before converting. Supported types:</p>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;margin:4px 0 8px;">
@@ -994,8 +1283,8 @@
 
 
               <!-- ══ CARD 03: EVENT DETECTION PARAMETERS ══════════ -->
-              <div class="ref-card collapsed" id="sensorCard3">
-                <div class="ref-card-header" onclick="toggleRefCard('sensorCard3')" role="button" tabindex="0" aria-expanded="false">
+              <div class="ref-card" id="sensorCard3">
+                <div class="ref-card-header" onclick="toggleRefCard('sensorCard3')" role="button" tabindex="0" aria-expanded="true">
                   <span class="ref-num">03</span>
                   <h2>Event Detection Parameters Explained</h2>
                   <svg class="ref-chevron" viewBox="0 0 14 14" fill="none"><path d="M2 4l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -1027,8 +1316,8 @@
 
 
               <!-- ══ CARD 04: BIT-LEVEL DIAGNOSTICS ═══════════════ -->
-              <div class="ref-card collapsed" id="sensorCard4">
-                <div class="ref-card-header" onclick="toggleRefCard('sensorCard4')" role="button" tabindex="0" aria-expanded="false">
+              <div class="ref-card" id="sensorCard4">
+                <div class="ref-card-header" onclick="toggleRefCard('sensorCard4')" role="button" tabindex="0" aria-expanded="true">
                   <span class="ref-num">04</span>
                   <h2>Bit-Level Diagnostics Explained</h2>
                   <svg class="ref-chevron" viewBox="0 0 14 14" fill="none"><path d="M2 4l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -1076,8 +1365,8 @@
 
 
               <!-- ══ CARD 05: GLOSSARY / FORMULA REFERENCE ════════ -->
-              <div class="ref-card collapsed" id="sensorCard5">
-                <div class="ref-card-header" onclick="toggleRefCard('sensorCard5')" role="button" tabindex="0" aria-expanded="false">
+              <div class="ref-card" id="sensorCard5">
+                <div class="ref-card-header" onclick="toggleRefCard('sensorCard5')" role="button" tabindex="0" aria-expanded="true">
                   <span class="ref-num">05</span>
                   <h2>Glossary &amp; Formula Reference</h2>
                   <svg class="ref-chevron" viewBox="0 0 14 14" fill="none"><path d="M2 4l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -1218,6 +1507,7 @@
     /* Trigger chart resize when a hidden canvas becomes visible */
     if (n === 1 && typeof SensorCharts !== 'undefined') SensorCharts.resizeTimePlot();
     if (n === 3 && typeof SensorCharts !== 'undefined') SensorCharts.resizeBitPlot();
+    if (n >= 4 && typeof SensorV2 !== 'undefined') SensorV2.onTabVisible(n);
   }
 
   function switchSensorTableTab(n, btn) {
