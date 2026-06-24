@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: UltraTax to Canopy Client Converter</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, UltraTax, Canopy, Thomson Reuters, client conversion, tax software migration, client import, client list converter, CSV converter, practice management" />
+    <meta name="description" content="Convert client data exported from Thomson Reuters UltraTax into the format required for import into Canopy practice management software." />
+
+    <!-- DEFERRED JAVASCRIPT — Bootstrap + site utils -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <!-- Converter dependencies (load order matters) -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@30.2.1/dist/ag-grid-community.min.js"></script>
+    <script defer src="js/canopy-datamodel.js"></script>
+    <script defer src="js/canopy-coerce.js"></script>
+    <script defer src="js/canopy-mapping.js"></script>
+    <script defer src="js/canopy-classify.js"></script>
+    <script defer src="js/canopy-compose.js"></script>
+    <script defer src="js/canopy-validate.js"></script>
+    <script defer src="js/canopy-sampledata.js"></script>
+    <script defer src="js/canopy-parsers.js"></script>
+    <script defer src="js/canopy-export.js"></script>
+    <script defer src="js/CanopyConvert.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@30.2.1/styles/ag-grid.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@30.2.1/styles/ag-theme-alpine.min.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XLCN0GJQ0');
+    </script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      /* ── Shared widget chrome (matches site style) ───────────── */
+      *{box-sizing:border-box}
+      .cc-wrapper{margin:0 auto;max-width:120rem;background:#6a746a;border-radius:20px;border:3px solid rgb(67,67,67);padding-bottom:6px}
+      .cc-hdr{background:#eee;display:flex;justify-content:center;align-items:center;gap:10px;padding:0.4rem 0.6rem;margin:0.5rem 0.5rem 0;font-size:22px;font-weight:200;box-shadow:0 3px 5px rgba(0,0,0,.4);border-radius:10px;border:2px solid rgb(67,67,67);font-family:"Roboto",Arial,sans-serif}
+      .cc-grp{background:#eee;margin:0.5rem 0.5rem 0;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:7px 10px}
+      .cc-grp-title{font-size:11px;font-weight:700;color:#61828A;text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid #c8c8c8;padding-bottom:3px;margin-bottom:7px}
+      .cc-note{font-size:12px;color:#555;line-height:1.5;margin:0 0 6px}
+
+      /* ── Privacy bar ─────────────────────────────────────────── */
+      .cc-privacy{background:#d4edda;border:1.5px solid #5a9a6a;border-radius:8px;padding:6px 12px;font-size:12px;color:#1a5a2a;display:flex;align-items:center;gap:7px;margin:0.5rem 0.5rem 0}
+      .cc-privacy svg{flex-shrink:0}
+
+      /* ── Buttons ─────────────────────────────────────────────── */
+      .cc-btn{font-size:13px;padding:4px 12px;border-radius:6px;border:1.5px solid #555;background:#d9d9d9;color:#000;cursor:pointer;font-family:"Roboto",Arial,sans-serif;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;line-height:1.4}
+      .cc-btn:hover{background:#e8e8e8}
+      .cc-btn:disabled{opacity:.45;cursor:not-allowed}
+      .cc-btn.primary{background:#699dad;color:#fff;border-color:#4a7a8d}
+      .cc-btn.primary:hover{background:#5a8a9a}
+      .cc-btn.success{background:#5a8a5a;color:#fff;border-color:#3a6a3a}
+      .cc-btn.success:hover{background:#4a7a4a}
+      .cc-btn.danger{background:#c05050;color:#fff;border-color:#8a3a3a}
+      .cc-btn.sm{font-size:11px;padding:2px 8px}
+
+      /* ── Import section ──────────────────────────────────────── */
+      .cc-import-tabs{display:flex;gap:4px;margin-bottom:7px}
+      .cc-tab{font-size:12px;padding:3px 10px;border-radius:5px 5px 0 0;border:1.5px solid #bbb;border-bottom:none;background:#ddd;cursor:pointer;color:#444}
+      .cc-tab.active{background:#eee;border-color:#888;font-weight:600;color:#222}
+      .cc-tab-panel{display:none}
+      .cc-tab-panel.active{display:block}
+      .cc-drop-zone{border:2px dashed #888;border-radius:8px;padding:28px 16px;text-align:center;color:#666;font-size:13px;cursor:pointer;transition:border-color .15s,background .15s;background:#fafafa}
+      .cc-drop-zone:hover,.cc-drop-zone.drag-over{border-color:#699dad;background:#eaf5f9;color:#2a6a7a}
+      .cc-paste-area{width:100%;height:120px;font-size:12px;font-family:ui-monospace,monospace;border:1.5px solid #bbb;border-radius:6px;padding:7px 9px;resize:vertical;background:#fff}
+      .cc-paste-area:focus{outline:none;border-color:#699dad}
+      .cc-import-btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;align-items:center}
+      .cc-detect-info{font-size:11px;color:#666;margin-top:5px}
+
+      /* ── Workspace layout ────────────────────────────────────── */
+      #cc-workspace{display:none;gap:0.5rem;flex-direction:row;flex-wrap:wrap}
+      .cc-grid-col{flex:1 1 600px;min-width:0}
+      .cc-panel-col{width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:0}
+
+      /* ── Grid ────────────────────────────────────────────────── */
+      .cc-grid-toolbar{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:5px}
+      #cc-main-grid{width:100%}
+      .col-mapped .ag-header-cell-label{color:#1a5a1a}
+      .col-unmapped .ag-header-cell-label{color:#888}
+
+      /* ── Right panels ────────────────────────────────────────── */
+      .cc-counts{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:0}
+      .cc-count-cell{background:#f5f5f5;border:1px solid #ccc;border-radius:5px;padding:5px 8px;text-align:center}
+      .cc-count-cell .num{font-size:22px;font-weight:700;display:block;line-height:1}
+      .cc-count-cell .lbl{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#666;display:block;margin-top:2px}
+      .cc-count-cell.indiv .num{color:#2a7a8c}
+      .cc-count-cell.biz .num{color:#5a7a5a}
+      .cc-count-cell.unknown .num{color:#cc7700}
+
+      /* ── Mapping panel ───────────────────────────────────────── */
+      #cc-mapping-panel{max-height:500px;overflow-y:auto;font-size:11px}
+      .cc-map-row{display:flex;align-items:center;gap:5px;padding:2px 0;border-bottom:1px solid #e8e8e8}
+      .cc-map-colname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
+      .cc-map-select{font-size:11px;border:1px solid #bbb;border-radius:4px;background:#fff;padding:1px 2px;max-width:130px}
+
+      /* ── Validation summary ──────────────────────────────────── */
+      .cc-val-row{display:flex;justify-content:space-between;font-size:12px;padding:2px 0}
+      .cc-val-errors{color:#cc2222;font-weight:600}
+      .cc-val-warn{color:#cc7700}
+
+      /* ── Export section ──────────────────────────────────────── */
+      #cc-export-section{display:none;margin-top:0}
+      .cc-export-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+      .cc-convention-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px}
+      .cc-convention-row select{font-size:12px;border:1.5px solid #bbb;border-radius:5px;padding:2px 6px}
+
+      /* ── Status bar ──────────────────────────────────────────── */
+      .cc-status-bar{background:#eee;margin:.5rem .5rem 0;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:5px 10px;display:flex;align-items:center;gap:8px}
+      .status-dot{width:8px;height:8px;border-radius:50%;background:#aaa;flex-shrink:0}
+      .status-dot.ok{background:#2a7a2a}
+      .status-dot.warn{background:#cc7700}
+      .status-dot.err{background:#cc2222}
+
+      /* ── Edit Mode overlay ───────────────────────────────────── */
+      #cc-edit-overlay{display:none;position:fixed;inset:0;z-index:9000;background:#fff;flex-direction:column}
+      .cc-edit-toolbar{background:#333;color:#fff;padding:6px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+      .cc-edit-toolbar .cc-btn{background:#555;color:#fff;border-color:#777}
+      .cc-edit-toolbar .cc-btn:hover{background:#666}
+      .cc-edit-title{font-size:14px;font-weight:600;flex:1}
+      #cc-edit-grid{flex:1;width:100%;min-height:0}
+
+      /* ── Toast ───────────────────────────────────────────────── */
+      .cc-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#333;color:#fff;padding:8px 18px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:10000;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+      .cc-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- BANNER -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              UltraTax to Canopy Client Converter
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONVERTER -->
+    <section aria-label="UltraTax to Canopy converter">
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12 px-3">
+          <div class="cc-wrapper">
+
+            <div class="cc-hdr" role="banner">
+              UltraTax &rarr; Canopy Client Converter
+            </div>
+
+            <!-- Privacy notice -->
+            <div class="cc-privacy" role="note">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1L2 4v4c0 3.3 2.5 6.4 6 7 3.5-.6 6-3.7 6-7V4L8 1z" stroke="#1a5a2a" stroke-width="1.4" fill="#c3e6cb"/></svg>
+              <span><strong>Runs entirely in your browser.</strong> No client data is uploaded or stored. SSNs, EINs, and all other PII never leave this page.</span>
+            </div>
+
+            <!-- Import section -->
+            <div class="cc-grp" style="height:100%">
+              <div class="cc-grp-title">Import Client Data</div>
+
+              <div class="cc-import-tabs" role="tablist">
+                <button class="cc-tab active" role="tab" aria-selected="true"  id="tab-upload" onclick="switchTab('upload')">Upload File</button>
+                <button class="cc-tab"        role="tab" aria-selected="false" id="tab-paste"  onclick="switchTab('paste')">Paste Data</button>
+              </div>
+
+              <!-- Upload tab -->
+              <div class="cc-tab-panel active" id="panel-upload">
+                <div class="cc-drop-zone" id="cc-drop-zone" role="button" tabindex="0"
+                     aria-label="Drag and drop a CSV or DIF file here, or click to browse"
+                     onclick="document.getElementById('cc-file-input').click()"
+                     onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('cc-file-input').click()">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-bottom:6px;opacity:.5"><path d="M12 2v12M8 9l4-4 4 4M4 17v2a1 1 0 001 1h14a1 1 0 001-1v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  <div>Drag &amp; drop a <strong>.csv</strong>, <strong>.dif</strong>, or <strong>.txt</strong> file here</div>
+                  <div style="font-size:11px;margin-top:4px;color:#999">or click to browse</div>
+                </div>
+                <input type="file" id="cc-file-input" accept=".csv,.dif,.txt" style="display:none" aria-label="File upload input">
+              </div>
+
+              <!-- Paste tab -->
+              <div class="cc-tab-panel" id="panel-paste">
+                <textarea class="cc-paste-area" id="cc-paste-area"
+                  placeholder="Paste CSV or tab-delimited data here (including header row)…"
+                  aria-label="Paste client data here"></textarea>
+              </div>
+
+              <div class="cc-import-btns">
+                <button class="cc-btn primary" id="cc-parse-paste-btn" style="display:none">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  Parse Pasted Data
+                </button>
+                <button class="cc-btn" id="cc-sample-btn" title="Load ~30 fake rows to demo the full pipeline">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  Load Sample Data
+                </button>
+                <button class="cc-btn danger sm" id="cc-clear-btn" style="margin-left:auto">
+                  Clear All
+                </button>
+              </div>
+            </div>
+
+            <!-- Workspace (grid + right panels) — hidden until data loaded -->
+            <div id="cc-workspace" style="display:none;gap:0;flex-wrap:nowrap;flex-direction:column">
+
+              <!-- Grid row -->
+              <div style="display:flex;gap:0;flex-wrap:wrap">
+
+                <!-- Grid column -->
+                <div class="cc-grp cc-grid-col" style="flex:1 1 600px">
+                  <div class="cc-grp-title" style="display:flex;align-items:center;gap:6px">
+                    Data Preview
+                    <span style="font-size:10px;color:#888;font-weight:400">(click Type cell to cycle Individual / Business / Unknown &nbsp;·&nbsp; click column header to sort)</span>
+                  </div>
+                  <div class="cc-grid-toolbar">
+                    <button class="cc-btn sm" id="cc-restore-order" title="Restore original import row order">↩ Original Order</button>
+                    <button class="cc-btn sm primary" id="cc-edit-mode-btn" title="Open full-screen edit mode">✎ Edit Table</button>
+                    <button class="cc-btn sm" id="cc-undo-btn" disabled title="Undo (Ctrl+Z)">↩ Undo</button>
+                    <button class="cc-btn sm" id="cc-redo-btn" disabled title="Redo (Ctrl+Y)">↪ Redo</button>
+                  </div>
+                  <div id="cc-main-grid" class="ag-theme-alpine" style="width:100%"></div>
+                  <div class="cc-detect-info" id="cc-detect-info" aria-live="polite"></div>
+                </div>
+
+                <!-- Right panel column -->
+                <div class="cc-panel-col" style="display:flex;flex-direction:column;gap:0;min-width:220px;max-width:270px;flex-shrink:0">
+
+                  <!-- Classification counts -->
+                  <div class="cc-grp" style="margin-left:0">
+                    <div class="cc-grp-title">Classification</div>
+                    <div class="cc-counts">
+                      <div class="cc-count-cell indiv">
+                        <span class="num" id="cc-count-indiv">0</span>
+                        <span class="lbl">Individuals</span>
+                      </div>
+                      <div class="cc-count-cell biz">
+                        <span class="num" id="cc-count-biz">0</span>
+                        <span class="lbl">Businesses</span>
+                      </div>
+                      <div class="cc-count-cell unknown">
+                        <span class="num" id="cc-count-unknown">0</span>
+                        <span class="lbl" style="color:#cc7700">Unknown ⚠</span>
+                      </div>
+                      <div class="cc-count-cell">
+                        <span class="num" id="cc-count-total">0</span>
+                        <span class="lbl">Total</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Validation summary -->
+                  <div class="cc-grp" style="margin-left:0">
+                    <div class="cc-grp-title">Validation</div>
+                    <div class="cc-val-row">
+                      <span>Errors</span>
+                      <span class="cc-val-errors" id="cc-sum-errors">0</span>
+                    </div>
+                    <div class="cc-val-row">
+                      <span>Warnings</span>
+                      <span class="cc-val-warn" id="cc-sum-warnings">0</span>
+                    </div>
+                    <div style="font-size:10px;color:#888;margin-top:4px">Hover ◐/● in the grid for details</div>
+                  </div>
+
+                  <!-- Field mapping -->
+                  <div class="cc-grp" style="margin-left:0;flex:1">
+                    <div class="cc-grp-title">Column → Canopy Field Mapping</div>
+                    <div class="cc-note" style="margin-bottom:4px">Green = high confidence &nbsp; Orange = low confidence &nbsp; Grey = unmapped</div>
+                    <div id="cc-mapping-panel"><span style="color:#888;font-size:12px">No columns yet</span></div>
+                  </div>
+
+                </div><!-- /.cc-panel-col -->
+
+              </div><!-- grid row -->
+
+              <!-- Export section (inside workspace so it hides with it) -->
+              <div class="cc-grp" id="cc-export-section" style="display:block">
+                <div class="cc-grp-title">Export</div>
+
+                <div class="cc-convention-row">
+                  <label for="cc-convention" style="font-size:12px;white-space:nowrap">Client Name convention:</label>
+                  <select id="cc-convention" aria-label="Client Name naming convention"></select>
+                </div>
+
+                <div style="font-size:12px;font-weight:600;color:#3a5a3a;margin-bottom:4px">
+                  Canopy Import (Path A — two separate CSV files)
+                </div>
+                <div class="cc-export-row" style="margin-bottom:10px">
+                  <button class="cc-btn success" id="cc-export-canopy-btn">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    Download Canopy CSVs
+                  </button>
+                  <span style="font-size:11px;color:#555;align-self:center">Delivers <em>individuals.csv</em> + <em>businesses.csv</em> separately</span>
+                </div>
+
+                <div style="font-size:12px;font-weight:600;color:#3a3a5a;margin-bottom:4px">
+                  Canopy Import (Path B — Excel template layout)
+                </div>
+                <div class="cc-export-row" style="margin-bottom:10px">
+                  <button class="cc-btn primary" id="cc-export-xlsx-btn">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    Download Canopy .xlsx
+                  </button>
+                  <span style="font-size:11px;color:#555;align-self:center">Two-sheet workbook matching Canopy's template column order</span>
+                </div>
+
+                <div style="font-size:12px;font-weight:600;color:#555;margin-bottom:4px">
+                  Generic Exports
+                </div>
+                <div class="cc-export-row">
+                  <button class="cc-btn" id="cc-export-csv-btn">CSV</button>
+                  <button class="cc-btn" id="cc-export-json-btn">JSON</button>
+                  <button class="cc-btn" id="cc-export-generic-xl">Excel (.xlsx)</button>
+                </div>
+              </div>
+
+            </div><!-- /#cc-workspace -->
+
+            <!-- Status bar -->
+            <div class="cc-status-bar" role="status" aria-live="polite">
+              <div class="status-dot" id="statusDot" aria-hidden="true"></div>
+              <span style="font-size:12px;color:#555" id="statusSummary">No data loaded — upload a file, paste data, or try the sample</span>
+            </div>
+
+          </div><!-- /.cc-wrapper -->
+        </div>
+      </div>
+
+      <!-- Edit Mode overlay (full-screen, same tab) -->
+      <div id="cc-edit-overlay" role="dialog" aria-modal="true" aria-label="Table Edit Mode">
+        <div class="cc-edit-toolbar">
+          <span class="cc-edit-title">Table Edit Mode &mdash; click any cell to edit &nbsp;·&nbsp; click Type to toggle &nbsp;·&nbsp; Ctrl+Z to undo</span>
+          <button class="cc-btn sm" id="cc-edit-restore-btn" title="Restore original row order">↩ Original Order</button>
+          <button class="cc-btn sm" id="cc-edit-undo-btn" disabled>↩ Undo</button>
+          <button class="cc-btn sm" id="cc-edit-redo-btn" disabled>↪ Redo</button>
+          <button class="cc-btn sm" id="cc-edit-close-btn" style="background:#c05050;color:#fff;border-color:#8a3a3a;margin-left:8px">✕ Done</button>
+        </div>
+        <div id="cc-edit-grid" class="ag-theme-alpine" style="width:100%"></div>
+      </div>
+
+      <!-- Tab switching script (inline, needed before DOMContentLoaded) -->
+      <script>
+        function switchTab(tab) {
+          ['upload','paste'].forEach(t => {
+            document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+            document.getElementById('tab-'+t).setAttribute('aria-selected', t===tab);
+            document.getElementById('panel-'+t).classList.toggle('active', t===tab);
+          });
+          const parseBtn = document.getElementById('cc-parse-paste-btn');
+          if (parseBtn) parseBtn.style.display = tab === 'paste' ? 'inline-flex' : 'none';
+        }
+      </script>
+
+      <!-- Toast notification -->
+      <div id="cc-toast" class="cc-toast" aria-live="polite" aria-atomic="true"></div>
+
+    </section>
+
+
+    <!-- NOTICES -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-1 mb-3 text-start" style="max-width:860px;">
+            <div class="text-center">
+              <div class="custom-heading">References &amp; Important Notices</div>
+            </div>
+            <ul style="font-size:0.85rem; margin-top:0.75rem; line-height:1.75;">
+              <li>UltraTax CS is a product of Thomson Reuters. Canopy is a product of Canopy Tax, Inc. KasperCalc is not affiliated with, endorsed by, or sponsored by either company; product names are used only to describe the data formats this tool converts between.</li>
+              <li>This tool processes client data entirely in your browser; no data is uploaded or stored. Always verify the converted output against the Canopy import template before importing, and confirm client records after import.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CITATION -->
+    <section>
+      <div id="citation-block" data-citation-page="UltraTax-to-Canopy-Converter"></div>
+    </section>
+
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  </body>
+
+</html>
