@@ -127,6 +127,7 @@
           <div class="footerlink"><a href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a></div>
           <div class="footerlink"><a href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a></div>
           <div class="footerlink"><a href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a></div>
+          <div class="footerlink"><a href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a></div>
         </div>
 
         <div class="footerRow">
@@ -148,6 +149,7 @@
           <div class="footerlink"><a href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a></div>
           <div class="footerlink"><a href="NSWC-11Spring.html">Compression Spring Failure Rate</a></div>
           <div class="footerlink"><a href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a></div>
+          <div class="footerlink"><a href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a></div>
         </div>
 
         <div class="footerRow">
