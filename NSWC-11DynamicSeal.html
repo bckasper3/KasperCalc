@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- META DATA -->
-    <title>KasperCalc: Static Seal &amp; Gasket Reliability Calculator (NSWC-11)</title>
+    <title>KasperCalc: Dynamic Seal Reliability Calculator (NSWC-11)</title>
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, NSWC-11, static seal, gasket, reliability, failure rate, O-ring, lambda, MTBF, Naval Surface Warfare Center, mechanical reliability" />
-    <meta name="description" content="Calculate the failure rate of static seals and gaskets (O-rings, flange gaskets, bolt seals) using the NSWC-11 Handbook model. Covers CP, CQ, CDL, CH, CF, Cv, CT, and CN multiplying factors." />
+    <meta name="keywords" content="KasperCalc, NSWC-11, dynamic seal, reciprocating seal, rotary seal, mechanical seal, reliability, failure rate, O-ring, PV factor, lambda, MTBF, Naval Surface Warfare Center, mechanical reliability" />
+    <meta name="description" content="Calculate the failure rate of dynamic seals (reciprocating, rotary, mechanical seals) using the NSWC-11 Handbook model, Equations 3-14 and 3-16. Covers CP, CQ, CDL, CH, CF, Cv, CT, CN, and CPV multiplying factors." />
 
     <!-- DEFERRED JAVASCRIPT -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -16,11 +16,6 @@
     <script defer src="js/footer.js"></script>
     <script defer src="js/header-active-class.js"></script>
     <script defer src="js/navsearch.js"></script>
-
-    <!-- NSWC-11 calculator engine (sync — must be available before page script) -->
-    <script src="js/nswc-static-seal-calculator.js"></script>
-    <!-- Parker O-Ring Handbook gland ID/OD lookup data -->
-    <script src="js/parker-gland-data.js"></script>
 
     <!-- MathJax — configure before loading -->
     <script>
@@ -169,7 +164,7 @@
             <ul class="navbar-nav justify-content-end">
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
-                <div class="dropdown-menu dropdown-menu">
+                <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
                   <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
                   <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
@@ -182,7 +177,7 @@
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
-                <div class="dropdown-menu dropdown-menu">
+                <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
                   <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
                   <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
@@ -194,7 +189,7 @@
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
-                <div class="dropdown-menu dropdown-menu">
+                <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
                   <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
                   <a class="dropdown-item" href="PGdensity.html">Density</a>
@@ -270,13 +265,13 @@
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
-                <div class="dropdown-menu dropdown-menu">
+                <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
-                <div class="dropdown-menu dropdown-menu">
+                <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
                   <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
                   <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
@@ -286,15 +281,16 @@
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
-                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
-                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
-                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
-                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
-                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
-                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -316,23 +312,22 @@
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
-                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item active" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
                   <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
                   <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
                   <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
-                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
-                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
-                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
-                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
-                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
-                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
-                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
                 </div>
               </li>
               <li class="nav-item text-center align-svg-bottom smallsearchbar">
@@ -386,7 +381,7 @@
         <div class="col-lg-12 col-12">
           <div class="banner section-title-wrap">
             <div class="h1 section-title bannertext">
-              Static Seal &amp; Gasket Reliability Calculator
+              Dynamic Seal Reliability Calculator
             </div>
           </div>
         </div>
@@ -399,20 +394,27 @@
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap">
           <div class="mx-auto d-inline-block mt-3" style="max-width:860px;">
-            <div class="custom-heading">NSWC-11 Static Seal &amp; Gasket Reliability Model</div>
+            <div class="custom-heading">NSWC-11 Dynamic Seal Reliability Model</div>
             <div class="mt-3 text-start">
               <p>
-                This tool estimates the failure rate of <span style="font-weight: var(--font-weight-normal)">static seals and gaskets</span> (O-rings, flange
-                gaskets, bolt seals and back-up rings) using the leakage-based model from the Naval Surface Warfare
-                Center <em>Handbook of Reliability Prediction Procedures for Mechanical Equipment</em> (NSWC-11, Chapter 3).
-                A seal &ldquo;fails&rdquo; when its leakage exceeds what the application can tolerate, so the model
-                multiplies a base failure rate by eight dimensionless factors covering pressure, allowable leakage,
-                seal size, contact stress/hardness, surface finish, fluid viscosity, temperature and contamination.
+                This tool estimates the failure rate of <span style="font-weight: var(--font-weight-normal)">dynamic seals</span> &mdash;
+                reciprocating, rotary, oscillating, and mechanical face seals &mdash; using the model from the Naval Surface Warfare
+                Center <em>Handbook of Reliability Prediction Procedures for Mechanical Equipment</em> (NSWC-11, Chapter 3,
+                Sections 3.3 and 3.4). Unlike static seals, dynamic seals experience sliding contact between mating surfaces,
+                so wear rate, surface speed (PV factor), and surface finish play a dominant role.
               </p>
               <p>
-                Enter the seal geometry, material, fluid and operating conditions, then press
-                <span style="font-weight: var(--font-weight-normal)">Calculate</span>. You get the predicted failure rate &lambda;<sub>SE</sub> in failures per
-                million hours plus MTBF, ready as <span style="font-weight: var(--font-weight-normal)">FMECA</span> inputs.
+                The model uses <span style="font-weight: var(--font-weight-normal)">two equations</span>. <span style="font-weight: var(--font-weight-normal)">Eq.&nbsp;3-14</span> covers reciprocating, rotary, and oscillating
+                O-ring/lip seals. At speeds below 800&nbsp;rpm or 600&nbsp;ft/min, all nine factors apply; at higher speeds
+                C<sub>P</sub>, C<sub>DL</sub>, and C<sub>H</sub> are set to 1.0 and the pressure-velocity factor
+                C<sub>PV</sub> governs. <span style="font-weight: var(--font-weight-normal)">Eq.&nbsp;3-16</span> covers mechanical (face) seals and always uses C<sub>PV</sub>
+                without C<sub>P</sub>, C<sub>DL</sub>, or C<sub>H</sub>.
+                The base failure rate for dynamic seals is <span style="font-weight: var(--font-weight-normal)">22.8</span> failures per million hours (vs 2.4 for static seals).
+              </p>
+              <p>
+                Select the seal mode, enter operating conditions, then press
+                <span style="font-weight: var(--font-weight-normal)">Calculate</span>. Results include &lambda;<sub>SE</sub>,
+                MTBF, all multiplying factors, and a computed PV value ready for <span style="font-weight: var(--font-weight-normal)">FMECA</span> use.
               </p>
               <div class="mt-2">
                 <button class="tbtn" onclick="window.open('/downloadable/NSWC-11_RELIABILITY_HDBK_MAY2011.pdf', '_blank')" aria-label="Download NSWC-11 reliability handbook (PDF)">
@@ -435,96 +437,120 @@
         <div class="col-lg-12 col-12 px-3">
 
           <div class="section-title-wrap">
-            <div class="h1 section-title">NSWC-11 Chapter 3 Failure Rate Calculator</div>
+            <div class="h1 section-title">NSWC-11 Chapter 3 Dynamic Seal Failure Rate Calculator</div>
           </div>
 
           <div class="wrapper fs-6" id="seal-calc-form">
-            <div class="hdr2">Static Seal &amp; Gasket Reliability (NSWC-11 Eq.&nbsp;3-7)</div>
+            <div class="hdr2">Dynamic Seal Reliability (NSWC-11 Eq.&nbsp;3-14 / Eq.&nbsp;3-16)</div>
 
-            <!-- SEAL GEOMETRY -->
+            <!-- SEAL MODE -->
             <div class="grp">
-              <div class="grp-title">Seal Geometry</div>
+              <div class="grp-title">Seal Mode</div>
               <div style="margin-bottom:9px;">
-                <div class="sq-seg" role="group" aria-label="Seal dimension source" id="dim-source">
-                  <button type="button" data-src="custom" class="sq-active" aria-pressed="true">Custom</button>
-                  <button type="button" data-src="4-1" aria-pressed="false">Parker Table 4-1</button>
-                  <button type="button" data-src="4-2" aria-pressed="false">Parker Table 4-2</button>
-                  <button type="button" data-src="as4395" aria-pressed="false">AS4395 / AS5202</button>
+                <div class="sq-seg" role="group" aria-label="Seal equation mode" id="seal-mode-seg">
+                  <button type="button" data-mode="low" class="sq-active" aria-pressed="true">Eq.&nbsp;3-14 &mdash; Low Speed (&lt;800&nbsp;rpm / 600&nbsp;ft/min)</button>
+                  <button type="button" data-mode="high" aria-pressed="false">Eq.&nbsp;3-14 &mdash; High Speed (&ge;800&nbsp;rpm / 600&nbsp;ft/min)</button>
+                  <button type="button" data-mode="mech" aria-pressed="false">Eq.&nbsp;3-16 &mdash; Mechanical Seal</button>
                 </div>
               </div>
-              <div class="gco g2">
-                <div class="fld d-none" id="gland-type-row">
-                  <label for="gland-type">Gland Type</label>
-                  <select id="gland-type" aria-label="Male or female gland">
-                    <option value="male">Male Gland</option>
-                    <option value="female">Female Gland</option>
+              <div class="ref-callout" id="mode-callout-low">
+                <strong>Low-speed dynamic seal (reciprocating / oscillating / slow rotary).</strong>
+                All nine factors apply: C<sub>P</sub>&nbsp;&times;&nbsp;C<sub>Q</sub>&nbsp;&times;&nbsp;C<sub>DL</sub>&nbsp;&times;&nbsp;C<sub>H</sub>&nbsp;&times;&nbsp;C<sub>F</sub>&nbsp;&times;&nbsp;C<sub>&nu;</sub>&nbsp;&times;&nbsp;C<sub>T</sub>&nbsp;&times;&nbsp;C<sub>N</sub>. C<sub>PV</sub>&nbsp;=&nbsp;1.0.
+              </div>
+              <div class="ref-callout" id="mode-callout-high" style="display:none;">
+                <strong>High-speed dynamic seal (rotary / lip seal &ge;800&nbsp;rpm or 600&nbsp;ft/min).</strong>
+                C<sub>P</sub>&nbsp;=&nbsp;C<sub>DL</sub>&nbsp;=&nbsp;C<sub>H</sub>&nbsp;=&nbsp;1.0. Active factors: C<sub>Q</sub>&nbsp;&times;&nbsp;C<sub>F</sub>&nbsp;&times;&nbsp;C<sub>&nu;</sub>&nbsp;&times;&nbsp;C<sub>T</sub>&nbsp;&times;&nbsp;C<sub>N</sub>&nbsp;&times;&nbsp;C<sub>PV</sub>.
+              </div>
+              <div class="ref-callout" id="mode-callout-mech" style="display:none;">
+                <strong>Mechanical face seal (Eq.&nbsp;3-16).</strong>
+                No C<sub>P</sub>, C<sub>DL</sub>, or C<sub>H</sub> regardless of speed. Active factors: C<sub>Q</sub>&nbsp;&times;&nbsp;C<sub>F</sub>&nbsp;&times;&nbsp;C<sub>&nu;</sub>&nbsp;&times;&nbsp;C<sub>T</sub>&nbsp;&times;&nbsp;C<sub>N</sub>&nbsp;&times;&nbsp;C<sub>PV</sub>.
+              </div>
+            </div>
+
+            <!-- SPEED & PV INPUTS (high-speed and mechanical modes) -->
+            <div class="grp" id="grp-pv">
+              <div class="grp-title">Speed &amp; PV Inputs</div>
+              <div class="gco g3">
+                <div class="fld">
+                  <label for="ds-speed-val">Operating Speed</label>
+                  <input type="number" id="ds-speed-val" value="1200" step="1" min="0" aria-label="Operating speed" />
+                </div>
+                <div class="fld">
+                  <label for="ds-speed-unit">Speed Unit</label>
+                  <select id="ds-speed-unit" aria-label="Speed unit: rpm or ft/min">
+                    <option value="rpm">rpm</option>
+                    <option value="ftmin">ft/min</option>
                   </select>
                 </div>
-                <div class="fld d-none" id="dash-size-row">
-                  <label for="dash-size">Dash / Size</label>
-                  <select id="dash-size" aria-label="O-ring dash size"></select>
+                <div class="fld">
+                  <label for="ds-balance-k">Balance Factor k</label>
+                  <select id="ds-balance-k" aria-label="Seal balance factor k">
+                    <option value="0.4">0.4 &mdash; Balanced seal</option>
+                    <option value="1.0" selected>1.0 &mdash; Unbalanced seal</option>
+                  </select>
                 </div>
                 <div class="fld">
-                  <label for="seal-inner-dia">Inner Diameter D<sub>SL</sub> (in)</label>
+                  <label for="ds-pvds">Design PV Limit PV<sub>DS</sub> (lbf/in&sup2;&nbsp;&middot;&nbsp;ft/min)</label>
+                  <input type="number" id="ds-pvds" value="543000" step="1000" min="1" aria-label="Design PV limit from manufacturer" />
+                </div>
+                <div class="fld">
+                  <label for="ds-pvop-display">Calculated PV<sub>OP</sub> (lbf/in&sup2;&nbsp;&middot;&nbsp;ft/min)</label>
+                  <input type="text" id="ds-pvop-display" readonly placeholder="&mdash;" />
+                </div>
+                <div class="fld">
+                  <label for="ds-cpv-display">C<sub>PV</sub></label>
+                  <input type="text" id="ds-cpv-display" readonly placeholder="&mdash;" />
+                </div>
+              </div>
+            </div>
+
+            <!-- SEAL GEOMETRY (low-speed: needs ID/OD for CDL and CH; high/mech: diameter only for PV) -->
+            <div class="grp">
+              <div class="grp-title">Seal Geometry</div>
+              <div class="gco g2">
+                <div class="fld" id="grp-geo-inner">
+                  <label for="seal-inner-dia">Inner Diameter D<sub>SL</sub> (in) &mdash; C<sub>DL</sub></label>
                   <input type="number" id="seal-inner-dia" value="0.778" step="0.001" min="0.001" aria-label="Seal inner diameter in inches" />
                 </div>
-                <div class="fld">
-                  <label for="seal-outer-dia">Outer Diameter (in)</label>
+                <div class="fld" id="grp-geo-outer">
+                  <label for="seal-outer-dia">Outer Diameter (in) &mdash; C<sub>H</sub></label>
                   <input type="number" id="seal-outer-dia" value="0.886" step="0.001" min="0.002" aria-label="Seal outer diameter in inches" />
                 </div>
               </div>
             </div>
 
-            <!-- PRESSURE -->
+            <!-- PRESSURE (low-speed: P1/P2 differential; high/mech: DP directly) -->
             <div class="grp">
               <div class="grp-title">Pressure</div>
-              <div class="gco g3">
+              <div class="gco g2" id="grp-pressure-lo">
                 <div class="fld">
                   <label for="pressure-high">High-Side P<sub>1</sub> (psi)</label>
-                  <input type="number" id="pressure-high" value="180" step="1" min="0" aria-label="High-side pressure in psi" />
+                  <input type="number" id="pressure-high" value="500" step="1" min="0" aria-label="High-side pressure in psi" />
                 </div>
                 <div class="fld">
                   <label for="pressure-low">Low-Side P<sub>2</sub> (psi)</label>
                   <input type="number" id="pressure-low" value="0" step="1" min="0" aria-label="Low-side pressure in psi" />
                 </div>
+              </div>
+              <div class="gco g2" id="grp-pressure-hi" style="display:none;">
                 <div class="fld">
-                  <label for="cp-mode">C<sub>P</sub> Pressure Mode</label>
-                  <select id="cp-mode" aria-label="Pressure mode for CP factor">
-                    <option value="differential">Differential (P&#x2081; &minus; P&#x2082;)</option>
-                    <option value="system">System (P&#x2081; alone)</option>
-                  </select>
+                  <label for="pressure-diff">Pressure Differential DP (psi) &mdash; used for PV</label>
+                  <input type="number" id="pressure-diff" value="500" step="1" min="0" aria-label="Pressure differential across seal in psi" />
                 </div>
               </div>
             </div>
 
-            <!-- LEAKAGE & SURFACE -->
-            <div class="grp">
-              <div class="grp-title">Leakage &amp; Surface</div>
-              <div class="gco g2">
-                <div class="fld">
-                  <label for="leakage-rate">Allowable Leakage Q<sub>f</sub> (in<sup>3</sup>;/min)</label>
-                  <input type="number" id="leakage-rate" value="0" step="0.001" min="0" aria-label="Allowable leakage rate in cubic inches per minute; 0 for zero-leakage requirement" />
-                </div>
-                <div class="fld">
-                  <label for="surface-finish">Surface Finish f (&mu;in RMS)</label>
-                  <input type="number" id="surface-finish" value="32" step="1" min="0.1" aria-label="Gland or flange surface finish in micro-inch RMS" />
-                </div>
-              </div>
-            </div>
-
-            <!-- MATERIAL & TEMPERATURE -->
-            <div class="grp">
-              <div class="grp-title">Seal Material &amp; Temperature</div>
+            <!-- MATERIAL & CONTACT STRESS (low-speed: durometer; high/mech: hidden) -->
+            <div class="grp" id="grp-material-lo">
+              <div class="grp-title">Seal Material &amp; Contact Stress &mdash; C<sub>H</sub></div>
               <div class="gco g3">
                 <div class="fld full">
                   <label for="seal-material">Material Preset (sets T<sub>R</sub>)</label>
-                  <select id="seal-material" aria-label="Seal material — presets the rated temperature">
-                    <option value="">— Custom / enter T&#x2C3; below —</option>
-                  </select>
+                  <select id="seal-material" aria-label="Seal material — presets the rated temperature"></select>
                 </div>
                 <div class="fld">
                   <label for="durometer">Durometer (Shore A, 30&ndash;90)</label>
-                  <input type="number" id="durometer" value="70" step="1" min="30" max="90" aria-label="Seal durometer in Shore A units, 30 to 90" />
+                  <input type="number" id="durometer" value="70" step="1" min="30" max="90" aria-label="Seal durometer in Shore A units" />
                 </div>
                 <div class="fld">
                   <label for="rated-temp">Rated Temp T<sub>R</sub> (&deg;F)</label>
@@ -537,9 +563,47 @@
               </div>
             </div>
 
+            <!-- TEMPERATURE (high/mech: no durometer, just TR / TO) -->
+            <div class="grp" id="grp-material-hi" style="display:none;">
+              <div class="grp-title">Seal Material &amp; Temperature</div>
+              <div class="gco g3">
+                <div class="fld full">
+                  <label for="seal-material-hi">Material Preset (sets T<sub>R</sub>)</label>
+                  <select id="seal-material-hi" aria-label="Seal material rated temperature preset for high-speed mode"></select>
+                </div>
+                <div class="fld">
+                  <label for="rated-temp-hi">Rated Temp T<sub>R</sub> (&deg;F)</label>
+                  <input type="number" id="rated-temp-hi" value="300" step="1" aria-label="Seal material rated temperature in degrees Fahrenheit" />
+                </div>
+                <div class="fld">
+                  <label for="operating-temp-hi">Operating Temp T<sub>O</sub> (&deg;F)</label>
+                  <input type="number" id="operating-temp-hi" value="150" step="1" aria-label="Operating temperature in degrees Fahrenheit" />
+                </div>
+              </div>
+            </div>
+
+            <!-- LEAKAGE & SURFACE FINISH -->
+            <div class="grp">
+              <div class="grp-title">Leakage &amp; Surface Finish</div>
+              <div class="gco g2">
+                <div class="fld">
+                  <label for="leakage-rate">Allowable Leakage Q<sub>f</sub> (in<sup>3</sup>/min)</label>
+                  <input type="number" id="leakage-rate" value="0" step="0.001" min="0" aria-label="Allowable leakage rate in cubic inches per minute; 0 for zero-leakage requirement" />
+                </div>
+                <div class="fld">
+                  <label for="surface-finish">Surface Finish f (&mu;in RMS) &mdash; Fig.&nbsp;3.17</label>
+                  <input type="number" id="surface-finish" value="16" step="1" min="0.1" aria-label="Shaft or gland surface finish in micro-inch RMS (dynamic seal formula Fig 3.17)" />
+                </div>
+              </div>
+              <div class="ref-callout" style="margin-top:6px;">
+                <strong>Dynamic seals use Fig.&nbsp;3.17</strong> (not Fig.&nbsp;3.15). Optimum finish is 10&ndash;20&nbsp;&mu;in.
+                Below 8&nbsp;&mu;in increases frictional drag; above 20&nbsp;&mu;in accelerates wear.
+              </div>
+            </div>
+
             <!-- VISCOSITY -->
             <div class="grp">
-              <div class="grp-title">Fluid Viscosity</div>
+              <div class="grp-title">Fluid Viscosity &mdash; C<sub>&nu;</sub></div>
               <div style="display:flex; flex-wrap:wrap; gap:6px 18px; margin-bottom:9px;">
                 <label class="vr"><input type="radio" name="visc-mode" value="fluid" checked>Fluid + Temperature</label>
                 <label class="vr"><input type="radio" name="visc-mode" value="kinematic">Kinematic (cSt)</label>
@@ -1133,66 +1197,79 @@
               </div>
             </div>
 
-            <!-- OPTIONAL -->
+            <!-- CONTAMINANT -->
             <div class="grp">
-              <div class="grp-title">Optional Inputs</div>
+              <div class="grp-title">Fluid Contaminants &mdash; C<sub>N</sub></div>
               <div class="gco g3">
                 <div class="fld">
-                  <label for="compression-force">Compression Force F<sub>C</sub> (lbf, blank&nbsp;= 2.5&times;M)</label>
-                  <input type="number" id="compression-force" step="0.1" min="0" placeholder="(= 2.5 M)" aria-label="Seal compression force in lbf; defaults to 2.5 times Meyer hardness" />
+                  <label for="filter-size">System Filter Size C<sub>o</sub> (&mu;m)</label>
+                  <input type="number" id="filter-size" value="10" step="1" min="1" aria-label="System filter size in microns" />
                 </div>
                 <div class="fld">
-                  <label for="cn-direct">C<sub>N</sub> Value (blank&nbsp;= 1.0)</label>
-                  <input type="number" id="cn-direct" step="0.001" min="0" placeholder="(= 1.0)" aria-label="Direct contaminant factor CN; defaults to 1.0" />
+                  <label for="flow-rate">Rated Flow Rate FR (GPM)</label>
+                  <input type="number" id="flow-rate" value="5" step="0.1" min="0" aria-label="Rated flow rate in gallons per minute" />
                 </div>
                 <div class="fld">
-                  <label for="ch-override">C<sub>H</sub> Override (blank&nbsp;= calculated)</label>
-                  <input type="number" id="ch-override" step="0.0001" min="0" placeholder="(calculated)" aria-label="Override CH factor; blank uses the calculated M-over-C formula" />
+                  <label for="component-type">Upstream Component</label>
+                  <select id="component-type" aria-label="Hydraulic component generating particles upstream of seal"></select>
+                </div>
+              </div>
+            </div>
+
+            <!-- OPTIONAL OVERRIDES -->
+            <div class="grp">
+              <div class="grp-title">Optional Overrides</div>
+              <div class="gco g2">
+                <div class="fld">
+                  <label for="cn-direct-ds">C<sub>N</sub> Direct Value (blank&nbsp;= calculated)</label>
+                  <input type="number" id="cn-direct-ds" step="0.001" min="0" placeholder="(= calculated)" aria-label="Direct contaminant factor CN override" />
+                </div>
+                <div class="fld" id="grp-opt-ch">
+                  <label for="compression-force-ds">Compression Force F<sub>C</sub> (lbf, blank&nbsp;= 2.5&times;M)</label>
+                  <input type="number" id="compression-force-ds" step="0.1" min="0" placeholder="(= 2.5 M)" aria-label="Seal compression force in lbf" />
                 </div>
               </div>
             </div>
 
             <!-- ERROR / WARNING display -->
-            <div id="calc-errors" class="calc-error-box fs-6" style="display:none;"></div>
-            <div id="calc-warnings" class="calc-warn-box fs-6" style="display:none;"></div>
+            <div id="ds-calc-errors" class="calc-error-box fs-6" style="display:none;"></div>
+            <div id="ds-calc-warnings" class="calc-warn-box fs-6" style="display:none;"></div>
 
             <!-- RESULTS -->
-            <div id="calc-results" style="display:none;">
+            <div id="ds-calc-results" style="display:none;">
 
               <!-- Primary Results -->
               <div class="grp" style="margin-top:0.5rem;">
                 <div class="grp-title">Primary Results</div>
                 <div class="gco g2">
-                  <!-- Column 1: Calculated CH -->
                   <div class="res-col">
-                    <div class="res-col-head">Calculated C<sub>H</sub></div>
+                    <div class="res-col-head">Failure Rate</div>
                     <div class="fld">
-                      <label for="res-lambda">&lambda;<sub>SE</sub> (failures / 10<sup>6</sup> h)</label>
-                      <input type="text" id="res-lambda" readonly />
+                      <label for="ds-res-lambda">&lambda;<sub>SE</sub> (failures / 10<sup>6</sup> h)</label>
+                      <input type="text" id="ds-res-lambda" readonly />
                     </div>
                     <div class="fld">
-                      <label for="res-mtbf">MTBF (hours)</label>
-                      <input type="text" id="res-mtbf" readonly />
+                      <label for="ds-res-mtbf">MTBF (hours)</label>
+                      <input type="text" id="ds-res-mtbf" readonly />
                     </div>
                     <div class="fld">
-                      <label for="res-lambda-display">&lambda;<sub>SE,B</sub> &times; C<sub>P</sub> &times; C<sub>Q</sub> &times; C<sub>DL</sub> &times; <strong>C<sub>H</sub></strong> &times; C<sub>F</sub> &times; C<sub>&nu;</sub> &times; C<sub>T</sub> &times; C<sub>N</sub> = &lambda;<sub>SE</sub></label>
-                      <input type="text" id="res-lambda-display" readonly />
+                      <label for="ds-res-eq">Equation Used</label>
+                      <input type="text" id="ds-res-eq" readonly />
                     </div>
                   </div>
-                  <!-- Column 2: CH = 1 -->
                   <div class="res-col">
-                    <div class="res-col-head">C<sub>H</sub> = 1</div>
+                    <div class="res-col-head">PV Result</div>
                     <div class="fld">
-                      <label for="res-lambda-unity">&lambda;<sub>SE</sub> (failures / 10<sup>6</sup> h)</label>
-                      <input type="text" id="res-lambda-unity" readonly />
+                      <label for="ds-res-pvop">PV<sub>OP</sub> (lbf/in&sup2;&nbsp;&middot;&nbsp;ft/min)</label>
+                      <input type="text" id="ds-res-pvop" readonly />
                     </div>
                     <div class="fld">
-                      <label for="res-mtbf-unity">MTBF (hours)</label>
-                      <input type="text" id="res-mtbf-unity" readonly />
+                      <label for="ds-res-pvds">PV<sub>DS</sub> (lbf/in&sup2;&nbsp;&middot;&nbsp;ft/min)</label>
+                      <input type="text" id="ds-res-pvds" readonly />
                     </div>
                     <div class="fld">
-                      <label for="res-lambda-display-unity">&lambda;<sub>SE,B</sub> &times; C<sub>P</sub> &times; C<sub>Q</sub> &times; C<sub>DL</sub> &times; <strong>1</strong> &times; C<sub>F</sub> &times; C<sub>&nu;</sub> &times; C<sub>T</sub> &times; C<sub>N</sub> = &lambda;<sub>SE</sub></label>
-                      <input type="text" id="res-lambda-display-unity" readonly />
+                      <label for="ds-res-pv-margin">PV<sub>OP</sub> / PV<sub>DS</sub></label>
+                      <input type="text" id="ds-res-pv-margin" readonly />
                     </div>
                   </div>
                 </div>
@@ -1201,56 +1278,19 @@
               <!-- Multiplying Factors -->
               <div class="grp">
                 <div class="grp-title">Multiplying Factors</div>
-                <div class="gco g2" style="gap:0;">
-                  <div style="padding: 2px 16px 2px 0;">
-                    <div class="res-col-head" style="text-align:left; border:none; padding:0 0 6px;">Calculated C<sub>H</sub></div>
-                    <table class="mf-table">
-                      <thead><tr><th>Symbol</th><th>Value</th></tr></thead>
-                      <tbody id="mf-calc"></tbody>
-                    </table>
-                  </div>
-                  <div style="padding: 2px 0 2px 16px; border-left:1px dashed #6a746a;">
-                    <div class="res-col-head" style="text-align:left; border:none; padding:0 0 6px;">C<sub>H</sub> = 1</div>
-                    <table class="mf-table">
-                      <thead><tr><th>Symbol</th><th>Value</th></tr></thead>
-                      <tbody id="mf-unity"></tbody>
-                    </table>
-                  </div>
-                </div>
+                <table class="mf-table">
+                  <thead><tr><th>Symbol</th><th>Value</th><th>Notes</th></tr></thead>
+                  <tbody id="ds-mf-tbody"></tbody>
+                </table>
               </div>
 
               <!-- Intermediates -->
               <div class="grp">
                 <div class="grp-title">Intermediates</div>
-                <div class="gco g3">
-                  <div class="fld">
-                    <label for="res-M">Meyer Hardness M (psi)</label>
-                    <input type="text" id="res-M" readonly />
-                  </div>
-                  <div class="fld">
-                    <label for="res-Fc">Compression Force F<sub>C</sub> (lbf)</label>
-                    <input type="text" id="res-Fc" readonly />
-                  </div>
-                  <div class="fld">
-                    <label for="res-C">Contact Pressure C (psi)</label>
-                    <input type="text" id="res-C" readonly />
-                  </div>
-                  <div class="fld">
-                    <label for="res-MC">M / C Ratio (design ideal: 0.55)</label>
-                    <input type="text" id="res-MC" readonly />
-                  </div>
-                  <div class="fld">
-                    <label for="res-dyn-visc">Dynamic Viscosity used (lbf&middot;min/in<sup>2</sup>)</label>
-                    <input type="text" id="res-dyn-visc" readonly />
-                  </div>
-                  <div class="fld">
-                    <label for="res-ch-mode">C<sub>H</sub> mode</label>
-                    <input type="text" id="res-ch-mode" readonly />
-                  </div>
-                </div>
+                <div class="gco g3" id="ds-intermediates"></div>
               </div>
 
-            </div><!-- end #calc-results -->
+            </div><!-- end #ds-calc-results -->
 
           </div><!-- end .wrapper -->
         </div>
@@ -1264,50 +1304,66 @@
         <div class="mx-md-5 mx-3 section-content-wrap">
           <div class="mx-auto d-inline-block mt-3" style="max-width:860px;">
 
-            <div class="custom-heading">The Failure-Rate Model (NSWC-11 Eq.&nbsp;3-7)</div>
+            <div class="custom-heading">The Failure-Rate Models (NSWC-11 Eq.&nbsp;3-14 &amp; Eq.&nbsp;3-16)</div>
 
             <div class="mt-3">
               <p class="text-start">
-                A static seal fails when its leakage exceeds the leakage the application can tolerate.
-                NSWC-11 derives the leak rate from laminar flow between two curved surfaces, then normalizes
-                it against U.S. Navy field-failure data (the 3-M maintenance system) to produce a base failure rate
-                with eight dimensionless multiplying factors. Each factor equals 1.0 at the reference condition
-                from which the field data was collected:
+                Dynamic seals experience sliding contact between mating surfaces, so wear rate, surface speed, and surface finish
+                dominate reliability. NSWC-11 provides two equations for dynamic seals. Both share the same
+                base failure rate of <span style="font-weight: var(--font-weight-normal)">&lambda;<sub>SE,B</sub>&nbsp;=&nbsp;22.8 failures/10<sup>6</sup>&nbsp;h</span>
+                (roughly 9.5&times; higher than the 2.4 used for static seals), reflecting the additional wear mechanisms present.
               </p>
             </div>
 
-            <div class="my-3 p-3" style="background: var(--section-bg-color, #f8f9fa); border-radius: 8px; overflow-x: auto;">
+            <div class="mt-2 mb-1" style="font-weight:600; font-size:0.95rem;">Eq.&nbsp;3-14 &mdash; Reciprocating, Rotary &amp; Oscillating Seals</div>
+            <div class="my-2 p-3" style="background: var(--section-bg-color, #f8f9fa); border-radius: 8px; overflow-x: auto;">
               \[
-                \lambda_{SE} \;=\; \lambda_{SE,B}\;\cdot\; C_P \cdot C_Q \cdot C_{DL}
-                \cdot C_H \cdot C_F \cdot C_\nu \cdot C_T \cdot C_N
+                \lambda_{SE} \;=\; \lambda_{SE,B}\;\cdot\;
+                C_P \cdot C_Q \cdot C_{DL} \cdot C_H \cdot C_F \cdot C_\nu \cdot C_T \cdot C_N \cdot C_{PV}
               \]
             </div>
+            <p style="font-size:0.85rem;" class="text-start mb-3">
+              Speed regime governs which factors are active:
+              <strong>below 800&nbsp;rpm or 600&nbsp;ft/min</strong> — all factors apply, C<sub>PV</sub>&nbsp;=&nbsp;1.0;&nbsp;
+              <strong>at or above that threshold</strong> — C<sub>P</sub>&nbsp;=&nbsp;C<sub>DL</sub>&nbsp;=&nbsp;C<sub>H</sub>&nbsp;=&nbsp;1.0 and C<sub>PV</sub> is active.
+            </p>
+
+            <div class="mt-2 mb-1" style="font-weight:600; font-size:0.95rem;">Eq.&nbsp;3-16 &mdash; Mechanical (Face) Seals</div>
+            <div class="my-2 p-3" style="background: var(--section-bg-color, #f8f9fa); border-radius: 8px; overflow-x: auto;">
+              \[
+                \lambda_{SE} \;=\; \lambda_{SE,B}\;\cdot\;
+                C_Q \cdot C_F \cdot C_\nu \cdot C_T \cdot C_N \cdot C_{PV}
+              \]
+            </div>
+            <p style="font-size:0.85rem;" class="text-start mb-3">
+              Mechanical seals do not use C<sub>P</sub>, C<sub>DL</sub>, or C<sub>H</sub> at any speed.
+              C<sub>PV</sub> always applies. The failure rate equation assumes a <strong>balanced seal</strong> (k&nbsp;=&nbsp;0.4).
+            </p>
 
             <div class="mt-3 mx-auto">
-              <table class="table table-sm mx-auto" style="font-size: 0.9rem; max-width: 640px;">
+              <table class="table table-sm mx-auto" style="font-size: 0.9rem; max-width: 700px;">
                 <thead style="background-color: var(--section-title-color); color: #fff;">
-                  <tr><th style="width:100px;">Symbol</th><th>Meaning</th></tr>
+                  <tr><th style="width:130px;">Symbol</th><th>Meaning</th><th style="width:100px;">Eq. 3-14</th><th style="width:100px;">Eq. 3-16</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>&lambda;<sub>SE</sub></td><td>Predicted seal failure rate, failures per million hours</td></tr>
-                  <tr><td>&lambda;<sub>SE,B</sub> = 2.4</td><td>2.4 Base failure rate (failures / 10<sup>6</sup> h) — absorbs installation error, material compatibility, random cuts</td></tr>
-                  <tr><td>C<sub>P</sub></td><td>Fluid pressure factor</td></tr>
-                  <tr><td>C<sub>Q</sub></td><td>Allowable-leakage factor</td></tr>
-                  <tr><td>C<sub>DL</sub></td><td>Seal size factor</td></tr>
-                  <tr><td>C<sub>H</sub></td><td>Contact stress and seal hardness factor</td></tr>
-                  <tr><td>C<sub>F</sub></td><td>Surface finish (gland smoothness) factor</td></tr>
-                  <tr><td>C<sub>&nu;</sub></td><td>Fluid viscosity factor</td></tr>
-                  <tr><td>C<sub>T</sub></td><td>Operating temperature factor</td></tr>
-                  <tr><td>C<sub>N</sub></td><td>Fluid contaminant factor</td></tr>
+                  <tr><td>&lambda;<sub>SE,B</sub> = 22.8</td><td>Base failure rate (failures / 10<sup>6</sup> h)</td><td>&#10003;</td><td>&#10003;</td></tr>
+                  <tr><td>C<sub>P</sub></td><td>Fluid pressure factor — active only at low speed</td><td>Low speed</td><td>&mdash;</td></tr>
+                  <tr><td>C<sub>Q</sub></td><td>Allowable-leakage factor</td><td>&#10003;</td><td>&#10003;</td></tr>
+                  <tr><td>C<sub>DL</sub></td><td>Seal size factor — active only at low speed</td><td>Low speed</td><td>&mdash;</td></tr>
+                  <tr><td>C<sub>H</sub></td><td>Contact stress and seal hardness factor — active only at low speed</td><td>Low speed</td><td>&mdash;</td></tr>
+                  <tr><td>C<sub>F</sub></td><td>Surface finish factor (Fig.&nbsp;3.17 — dynamic formula)</td><td>&#10003;</td><td>&#10003;</td></tr>
+                  <tr><td>C<sub>&nu;</sub></td><td>Fluid viscosity factor</td><td>&#10003;</td><td>&#10003;</td></tr>
+                  <tr><td>C<sub>T</sub></td><td>Operating temperature factor</td><td>&#10003;</td><td>&#10003;</td></tr>
+                  <tr><td>C<sub>N</sub></td><td>Fluid contaminant factor</td><td>&#10003;</td><td>&#10003;</td></tr>
+                  <tr><td>C<sub>PV</sub></td><td>Pressure-velocity factor — active only at high speed</td><td>High speed</td><td>&#10003;</td></tr>
                 </tbody>
               </table>
             </div>
 
             <div class="mt-2">
               <p style="font-size:0.85rem;" class="text-start">
-                <strong>Scope:</strong> This model applies to gaskets and static seals — O-rings, bolt seals, flange gaskets, back-up rings —
-                where the sealing interface has no relative motion. Dynamic seals use a different base failure rate. The handbook cautions against
-                extracting equations without regard to application limits; warnings are displayed when inputs fall outside those limits.
+                <strong>Surface finish note:</strong> Dynamic seals use <strong>Fig.&nbsp;3.17</strong> (optimum 10&ndash;20&nbsp;&mu;in), not
+                Fig.&nbsp;3.15 used for static seals. The two curves are fundamentally different — using the wrong one will give incorrect results.
               </p>
             </div>
 
@@ -1329,7 +1385,7 @@
           <div class="ref-wrapper">
           <div class="ref-section-wrap">
 
-            <div class="ref-section-title">NSWC-11 Chapter 3 — Seals and Gaskets</div>
+            <div class="ref-section-title">NSWC-11 Chapter 3 — Dynamic Seals (Sections 3.3 &amp; 3.4)</div>
 
             <!-- ═══ CP ═══ -->
             <div class="ref-card" id="refCardCP">
@@ -1352,13 +1408,16 @@
                         \left(\dfrac{P_S}{3000}\right)^{2} & P_S > 1500\ \text{psi}
                       \end{cases}
                     \]
-                    \[ P_S = P_1 - P_2 \quad\text{(differential, default)} \]
+                    \[ P_S = P_1 - P_2 \]
                   </div>
                   <p>Higher fluid pressure increases the load trying to extrude the seal into the clearance gap and raises the
-                  pressure gradient driving leakage. Below 1,500&nbsp;psi the effect is weak; above it grows with the square of pressure.
-                  The pressure used is the differential P<sub>1</sub>&minus;P<sub>2</sub> per NSWC-11 Figure 3.10.</p>
-                  <div class="ref-callout"><strong>Spreadsheet correction:</strong> the original Excel file had an operator-precedence bug
-                  <code>(P1-P2/3000)^2</code> instead of the correct <code>((P1-P2)/3000)^2</code>. This calculator uses the corrected form.</div>
+                  pressure gradient driving leakage. Below 1,500&nbsp;psi the effect is weak; above it grows with the square of pressure.</p>
+                  <div class="ref-warn">
+                    <strong>Speed regime:</strong> C<sub>P</sub> applies only when seal movement is
+                    <strong>&lt;&nbsp;800&nbsp;rpm or &lt;&nbsp;600&nbsp;ft/min</strong>.
+                    At higher speeds, C<sub>P</sub>&nbsp;=&nbsp;1.0 (pressure effects are captured instead by C<sub>PV</sub>).
+                    C<sub>P</sub> is never used for mechanical seals (Eq.&nbsp;3-16).
+                  </div>
                 </div>
                 <div>
                   <div class="ref-sub">C<sub>P</sub> vs Pressure Differential (NSWC-11 Fig. 3.10)</div>
@@ -1412,17 +1471,18 @@
               </div>
               <div class="ref-body two-col">
                 <div>
-                  <div class="ref-sub">Equations — NSWC-11 Figures 3.12 / 3.13</div>
+                  <div class="ref-sub">Equation — NSWC-11 Figure 3.12</div>
                   <div class="ref-eq-block">
-                    <span class="ref-eq-tag">Circular seal (Fig. 3.12)</span>
+                    <span class="ref-eq-tag">Eq. CDL — Circular dynamic seal (Fig. 3.12)</span>
                     \[ C_{DL} = 1.1\,D_{SL} + 0.32 \]
-                    <span class="ref-eq-tag" style="margin-top:8px;">Flat gasket variant (Fig. 3.13)</span>
-                    \[ C_{DL} = 0.45\left(\frac{L}{w}\right) + 0.32 \]
                   </div>
-                  <p>A larger seal presents a longer leakage perimeter and more material exposed to degradation.
-                  D<sub>SL</sub> is the seal inner diameter (in). For non-circular gaskets, L is the total linear length
-                  and w is the minimum gasket width. The gasket form is available via
-                  <code>NSWCSeal.factorCDLGasket(L,&nbsp;w)</code>.</p>
+                  <p>A larger seal presents a longer leakage perimeter and more surface area exposed to wear and degradation.
+                  D<sub>SL</sub> is the seal inner diameter in inches.</p>
+                  <div class="ref-warn">
+                    <strong>Speed regime:</strong> C<sub>DL</sub> applies only when seal movement is
+                    <strong>&lt;&nbsp;800&nbsp;rpm or &lt;&nbsp;600&nbsp;ft/min</strong>.
+                    At higher speeds, C<sub>DL</sub>&nbsp;=&nbsp;1.0. Never used for mechanical seals (Eq.&nbsp;3-16).
+                  </div>
                 </div>
                 <div>
                   <div class="ref-sub">C<sub>DL</sub> vs Inner Diameter (NSWC-11 Fig. 3.12)</div>
@@ -1443,10 +1503,11 @@
               <div class="ref-body">
 
                 <div class="full-col ref-warn">
-                  <strong>High sensitivity:</strong> C<sub>H</sub> varies as (M/C)<sup>4.3</sup>. Small changes in the M/C ratio
-                  swing the predicted failure rate by orders of magnitude. The calculator always reports both the calculated-C<sub>H</sub>
-                  result and the C<sub>H</sub>&nbsp;=&nbsp;1 result; the latter is the conservative reference value recommended
-                  when M/C is far from the design ideal of 0.55.
+                  <strong>Speed regime:</strong> C<sub>H</sub> applies only when seal movement is
+                  <strong>&lt;&nbsp;800&nbsp;rpm or &lt;&nbsp;600&nbsp;ft/min</strong>.
+                  At higher speeds C<sub>H</sub>&nbsp;=&nbsp;1.0. Never used for mechanical seals (Eq.&nbsp;3-16).
+                  Additionally, C<sub>H</sub> varies as (M/C)<sup>4.3</sup> — small changes in the M/C ratio
+                  swing the predicted failure rate by orders of magnitude. Use the design ideal M/C&nbsp;=&nbsp;0.55 as a sanity check.
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px;">
@@ -1481,33 +1542,43 @@
             <div class="ref-card" id="refCardCF">
               <div class="ref-card-header" onclick="toggleRefCard('refCardCF')" role="button" tabindex="0" aria-expanded="true">
                 <span class="ref-num">C<sub style="color:#A3C3CD;">F</sub></span>
-                <h2>Surface Finish Factor &mdash; C<sub>F</sub></h2>
+                <h2>Surface Finish Factor &mdash; C<sub>F</sub> (Dynamic — Fig.&nbsp;3.17)</h2>
                 <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
                 </svg>
               </div>
               <div class="ref-body two-col">
                 <div>
-                  <div class="ref-sub">Equation — NSWC-11 Figure 3.15</div>
+                  <div class="ref-sub">Equation — NSWC-11 Figure 3.17 (dynamic seals)</div>
                   <div class="ref-eq-block">
-                    <span class="ref-eq-tag">Eq. CF</span>
+                    <span class="ref-eq-tag">Eq. CF — Dynamic (Fig. 3.17)</span>
                     \[
                       C_F =
                       \begin{cases}
-                        0.25 & f < 15\ \mu\text{in}\\[6pt]
-                        \dfrac{f^{\,1.65}}{353} & f \ge 15\ \mu\text{in}
+                        1.00 & f \le 10\ \mu\text{in}\\[6pt]
+                        \dfrac{1}{2^{\,(10-f)/38}} & f > 10\ \mu\text{in}
                       \end{cases}
                     \]
                   </div>
-                  <p>The seal must conform to the microscopic peaks and valleys of the harder mating surface (gland or flange).
-                  The rougher that surface, the more leak paths remain. f is the finish of the <em>harder</em> surface, RMS, in micro-inches.
-                  Typical values: 32&nbsp;&mu;in for elastomer seals, 16&nbsp;&mu;in for plastic seals, 8&nbsp;&mu;in for metal seals.</p>
-                  <div class="ref-callout">Surface finish deteriorates with contamination and wear over service life.
-                  Re-evaluate C<sub>F</sub> at later life stages using aged surface finish measurements.</div>
+                  <div class="ref-warn" style="margin-top:6px;">
+                    <strong>Dynamic seals use Fig.&nbsp;3.17, NOT Fig.&nbsp;3.15</strong> (static seal formula).
+                    The two equations are entirely different. The static formula has a minimum of 0.25 at smooth surfaces;
+                    the dynamic formula equals 1.0 at the optimum (10&nbsp;&mu;in) and rises above 1.0 as finish degrades.
+                  </div>
+                  <p style="margin-top:6px;">In dynamic applications the shaft or gland must mate smoothly with the seal lip.
+                  Maximum seal efficiency and life are obtained in the <strong>10&ndash;20&nbsp;&mu;in</strong> range.
+                  Below 8&nbsp;&mu;in increases frictional drag; above ~40&nbsp;&mu;in accelerates abrasive wear.</p>
+                  <div class="ref-callout">
+                    For f&nbsp;&gt;&nbsp;10: the exponent (10&minus;f)/38 is negative, so 2<sup>(10&minus;f)/38</sup>&nbsp;&lt;&nbsp;1,
+                    giving C<sub>F</sub>&nbsp;&gt;&nbsp;1 — a penalty factor that grows with roughness.
+                    At f&nbsp;=&nbsp;50&nbsp;&mu;in, C<sub>F</sub>&nbsp;&approx;&nbsp;2.1; at f&nbsp;=&nbsp;100&nbsp;&mu;in, C<sub>F</sub>&nbsp;&approx;&nbsp;5.2.
+                  </div>
                 </div>
                 <div>
-                  <div class="ref-sub">C<sub>F</sub> vs Surface Finish (NSWC-11 Fig. 3.15)</div>
-                  <div class="ref-chart-wrap"><canvas id="chart-cf" aria-label="CF versus surface finish in micro-inch"></canvas></div>
+                  <div class="ref-sub">C<sub>F</sub> vs Surface Finish (NSWC-11 Fig. 3.17 — dynamic)</div>
+                  <div class="ref-chart-wrap"><canvas id="chart-cf" aria-label="CF versus surface finish in micro-inch, dynamic formula Fig 3.17"></canvas></div>
+                  <div class="ref-sub" style="margin-top:12px;">Static C<sub>F</sub> (Fig.&nbsp;3.15) shown for comparison</div>
+                  <div class="ref-chart-wrap"><canvas id="chart-cf-static" aria-label="CF static formula Fig 3.15 shown for comparison"></canvas></div>
                 </div>
               </div>
             </div>
@@ -1542,9 +1613,8 @@
                   <div>
                     <div class="ref-sub">Viscosity Input Modes</div>
                     <ol class="mt-2">
-                      <li><strong>Fluid + temperature.</strong> All 14 NSWC-11 Table&nbsp;3-3 fluids are pre-registered; C<sub>&nu;</sub> is interpolated directly from the table. Additional fluids can be registered via <code>NSWCSeal.registerFluid(id,&nbsp;def)</code>.</li>
-                      <li><strong>Custom kinematic viscosity (cSt)</strong> plus specific gravity or density (kg/m&sup3;).</li>
-                      <li><strong>Direct dynamic viscosity</strong> in lbf&middot;min/in&sup2; (handbook native units).</li>
+                      <li><strong>Fluid + temperature.</strong> All 14 NSWC-11 Table&nbsp;3-3 fluids are available; C<sub>&nu;</sub> is interpolated directly from the table.</li>
+                      <li><strong>Direct dynamic viscosity</strong> in lbf&middot;min/in&sup2; or mPa&middot;s (handbook native units).</li>
                     </ol>
                   </div>
                 </div>
@@ -1687,6 +1757,185 @@
                 <div>
                   <div class="ref-sub">C<sub>N</sub> vs Filter Size — 5&nbsp;GPM, various components</div>
                   <div class="ref-chart-wrap"><canvas id="chart-cn" aria-label="CN versus system filter size"></canvas></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ CPV ═══ -->
+            <div class="ref-card" id="refCardCPV">
+              <div class="ref-card-header" onclick="toggleRefCard('refCardCPV')" role="button" tabindex="0" aria-expanded="true">
+                <span class="ref-num">C<sub style="color:#A3C3CD;">PV</sub></span>
+                <h2>Pressure-Velocity Factor &mdash; C<sub>PV</sub></h2>
+                <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="ref-body two-col">
+                <div>
+                  <div class="ref-sub">PV Calculation — NSWC-11 Eq. 3-13</div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Eq. 3-13 — PV factor (rpm input)</span>
+                    \[
+                      PV = \frac{\pi}{12}\, DP \cdot d \cdot V_{\text{rpm}} \cdot k
+                    \]
+                    <span class="ref-eq-tag" style="margin-top:8px;">Eq. 3-13 — PV factor (ft/min input)</span>
+                    \[
+                      PV = DP \cdot V_{\text{ft/min}} \cdot k
+                    \]
+                  </div>
+                  <p style="font-size:12px; margin-top:4px;">
+                    DP = pressure differential (psi); d = seal diameter (in); V = speed;
+                    k = 1.0 for unbalanced seals, 0.4 for balanced seals.
+                    PV units: lbf/in&sup2;&nbsp;&middot;&nbsp;ft/min.
+                  </p>
+                  <div class="ref-sub" style="margin-top:8px;">C<sub>PV</sub> — NSWC-11 Eq. 3-15</div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Eq. 3-15</span>
+                    \[
+                      C_{PV} = \frac{PV_{\text{OP}}}{PV_{\text{DS}}}
+                    \]
+                  </div>
+                  <p>PV<sub>OP</sub> is the operating PV computed from Eq.&nbsp;3-13.
+                  PV<sub>DS</sub> is the manufacturer&rsquo;s design limit for the seal face material combination.
+                  C<sub>PV</sub>&nbsp;=&nbsp;1.0 means operating at exactly the design limit; values above 1.0 indicate the limit is exceeded.</p>
+                  <div class="ref-warn">
+                    <strong>Speed regime:</strong> C<sub>PV</sub> applies to rotary seals, lip seals, and any dynamic seal at
+                    <strong>&ge;&nbsp;800&nbsp;rpm or &ge;&nbsp;600&nbsp;ft/min</strong> (and always for mechanical seals).
+                    Below that threshold, C<sub>PV</sub>&nbsp;=&nbsp;1.0 for Eq.&nbsp;3-14.
+                  </div>
+                  <div class="ref-sub" style="margin-top:8px;">Heat Input — NSWC-11 Eq. 3-12</div>
+                  <div class="ref-eq-block">
+                    <span class="ref-eq-tag">Eq. 3-12 — Heat generated at seal face</span>
+                    \[
+                      Q_S = 0.077 \cdot PV \cdot \mu \cdot a_o
+                    \]
+                  </div>
+                  <p style="font-size:12px;">&mu; = coefficient of friction (see Table 3-6 below); a<sub>o</sub> = seal face area (in&sup2;); Q<sub>S</sub> in BTU/hour.</p>
+                </div>
+                <div>
+                  <div class="ref-sub">Typical PV Limits — NSWC-11 Table 3-7</div>
+                  <table class="ref-table" style="margin-bottom:10px;">
+                    <thead>
+                      <tr><th>Face Material Combination</th><th>PV Limit (lbf/in&sup2;&nbsp;&middot;&nbsp;ft/min)</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>Carbon vs. hard-faced stainless steel</td><td>543,000</td></tr>
+                      <tr><td>Carbon vs. ceramic</td><td>543,000</td></tr>
+                      <tr><td>Carbon vs. leaded bronze</td><td>992,000</td></tr>
+                      <tr><td>Carbon vs. nickel iron</td><td>1,142,000</td></tr>
+                      <tr><td>Carbon vs. tungsten carbide</td><td>2,570,000</td></tr>
+                    </tbody>
+                  </table>
+                  <div class="ref-sub">Coefficient of Friction &mu; — NSWC-11 Table 3-6</div>
+                  <table class="ref-table">
+                    <thead>
+                      <tr><th>Rotating (seal head)</th><th>Stationary (mating ring)</th><th>&mu;</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td rowspan="5">Carbon-graphite (resin filled)</td><td>Cast iron</td><td>0.07</td></tr>
+                      <tr><td>Ceramic</td><td>0.07</td></tr>
+                      <tr><td>Tungsten carbide</td><td>0.07</td></tr>
+                      <tr><td>Silicon carbide</td><td>0.02</td></tr>
+                      <tr><td>Silicon carbide converted carbon</td><td>0.015</td></tr>
+                      <tr><td rowspan="4">Silicon carbide</td><td>Tungsten carbide</td><td>0.02</td></tr>
+                      <tr><td>Silicon carbide converted carbon</td><td>0.05</td></tr>
+                      <tr><td>Silicon carbide</td><td>0.02</td></tr>
+                      <tr><td>Tungsten carbide</td><td>0.08</td></tr>
+                    </tbody>
+                  </table>
+                  <div class="ref-sub" style="margin-top:10px;">C<sub>PV</sub> vs PV<sub>OP</sub>/PV<sub>DS</sub> Ratio</div>
+                  <div class="ref-chart-wrap"><canvas id="chart-cpv" aria-label="CPV versus operating-to-design PV ratio"></canvas></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ FAILURE MODES TABLE ═══ -->
+            <div class="ref-section-title" style="margin-top:1.5rem;">Dynamic Seal Failure Modes — NSWC-11 Table 3-2</div>
+            <div class="ref-card" id="refCardFM">
+              <div class="ref-card-header" onclick="toggleRefCard('refCardFM')" role="button" tabindex="0" aria-expanded="true">
+                <span class="ref-num" style="font-size:11px;">TABLE</span>
+                <h2>Failure Mechanisms &amp; Causes for Dynamic Seals (Table 3-2)</h2>
+                <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="ref-body">
+                <div class="full-col" style="overflow-x:auto;">
+                  <table class="ref-table">
+                    <thead>
+                      <tr><th>Failure Mode</th><th>Failure Mechanisms</th><th>Failure Causes</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td rowspan="5">Excessive leakage &mdash; Wear</td>
+                        <td rowspan="5">Abrasive wear of sealing surfaces</td>
+                        <td>Misalignment</td>
+                      </tr>
+                      <tr><td>Shaft out-of-roundness</td></tr>
+                      <tr><td>Excessive shaft end play</td></tr>
+                      <tr><td>Excessive torque</td></tr>
+                      <tr><td>Poor surface finish</td></tr>
+                      <tr>
+                        <td rowspan="2">Excessive leakage &mdash; Dynamic instability</td>
+                        <td rowspan="2">Vibration / shaft whip</td>
+                        <td>Contaminants</td>
+                      </tr>
+                      <tr><td>Inadequate lubrication</td></tr>
+                      <tr>
+                        <td rowspan="3">Excessive leakage &mdash; Embrittlement</td>
+                        <td rowspan="3">Thermal / chemical degradation</td>
+                        <td>Excessive rubbing speed (high PV)</td>
+                      </tr>
+                      <tr><td>Shaft misalignment</td></tr>
+                      <tr><td>Fluid / seal material incompatibility</td></tr>
+                      <tr>
+                        <td>Fracture</td>
+                        <td>Stress-corrosion cracking</td>
+                        <td>Thermal degradation; idle periods between use</td>
+                      </tr>
+                      <tr>
+                        <td rowspan="3">Excessive leakage &mdash; Edge chipping</td>
+                        <td rowspan="3">Brittle fracture of seal face</td>
+                        <td>Excessive PV value</td>
+                      </tr>
+                      <tr><td>Excessive fluid pressure on seal</td></tr>
+                      <tr><td>Excessive shaft deflection; faces out-of-square</td></tr>
+                      <tr>
+                        <td>Excessive leakage &mdash; Axial shear</td>
+                        <td>Seal face separation</td>
+                        <td>Excessive pressure loading; shaft whip</td>
+                      </tr>
+                      <tr>
+                        <td>Excessive leakage &mdash; Torsional shear</td>
+                        <td>Rotational overload</td>
+                        <td>Excessive torque due to improper lubrication</td>
+                      </tr>
+                      <tr>
+                        <td rowspan="2">Fluid seepage &mdash; Compression set</td>
+                        <td rowspan="2">Permanent deformation of elastomer</td>
+                        <td>Extreme temperature operation</td>
+                      </tr>
+                      <tr><td>Insufficient seal squeeze</td></tr>
+                      <tr>
+                        <td rowspan="2">Excessive leakage &mdash; Seal face distortion</td>
+                        <td rowspan="2">Thermal or mechanical distortion</td>
+                        <td>Foreign material trapped between faces</td>
+                      </tr>
+                      <tr><td>Excessive fluid pressure; insufficient lubrication</td></tr>
+                      <tr>
+                        <td rowspan="3">Slow mechanical response &mdash; Excessive friction</td>
+                        <td rowspan="3">Friction / stick-slip</td>
+                        <td>Excessive seal squeeze or swell</td>
+                      </tr>
+                      <tr><td>Seal extrusion</td></tr>
+                      <tr><td>Metal-to-metal contact (misalignment)</td></tr>
+                      <tr>
+                        <td>Mechanical spring failure</td>
+                        <td>Spring fatigue / corrosion</td>
+                        <td>See NSWC-11 Chapter 4, Table 4-1</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -1842,37 +2091,218 @@
   (function () {
     'use strict';
 
-    // ── Ref-card toggle ─────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════════════
+    //  REF-CARD TOGGLE
+    // ══════════════════════════════════════════════════════════════════════
     window.toggleRefCard = function (id) {
       var card = document.getElementById(id);
       if (card) card.classList.toggle('collapsed');
     };
 
-    // ── Build material preset dropdown ──────────────────────────────────
-    var matSel = document.getElementById('seal-material');
-    Object.keys(NSWCSeal.SEAL_MATERIAL_RATED_TEMPS).forEach(function (m) {
-      var opt = document.createElement('option');
-      opt.value = m;
-      opt.textContent = m + ' — Tᵣ = ' + NSWCSeal.SEAL_MATERIAL_RATED_TEMPS[m] + '°F';
-      matSel.appendChild(opt);
-    });
-    matSel.addEventListener('change', function () {
-      var v = matSel.value;
-      if (v && NSWCSeal.SEAL_MATERIAL_RATED_TEMPS[v] != null) {
-        document.getElementById('rated-temp').value = NSWCSeal.SEAL_MATERIAL_RATED_TEMPS[v];
+    // ══════════════════════════════════════════════════════════════════════
+    //  DATA TABLES (NSWC-11 Chapter 3)
+    // ══════════════════════════════════════════════════════════════════════
+    var BASE_RATE = 22.8;          // failures / 10^6 h — dynamic seals
+    var NU_0      = 2e-8;          // reference viscosity, lbf·min/in²
+    var CPS_TO_LBF = 2.41737e-9;   // 1 mPa·s → lbf·min/in²
+
+    // Shore A → Young's modulus M (lbf/in²), NSWC-11 Fig. 3.4
+    var DUROMETER_TABLE = [
+      [30,205],[32.5,225],[35,245],[37.5,255],[40,280],
+      [42.5,315],[45,350],[47.5,385],[50,420],[52.5,460],
+      [55,505],[57.5,555],[60,600],[62.5,670],[65,745],
+      [67.5,825],[70,925],[72.5,1030],[75,1145],[77.5,1300],
+      [80,1505],[82.5,1740],[85,2065],[87.5,2545],[90,3070]
+    ];
+
+    // N10 contamination factors, NSWC-11 Table 3-4
+    var N10_TABLE = [
+      { id:'piston_pump',          label:'Piston pump (steel)',           n10:0.017  },
+      { id:'gear_pump',            label:'Gear pump (steel)',             n10:0.019  },
+      { id:'vane_pump',            label:'Vane pump (steel)',             n10:0.006  },
+      { id:'cylinder',             label:'Cylinder (steel)',              n10:0.008  },
+      { id:'sliding_action_valve', label:'Sliding action valve (steel)',  n10:0.0004 },
+      { id:'hose',                 label:'Hose (rubber)',                 n10:0.0013 }
+    ];
+
+    // Seal material rated temperatures (°F), NSWC-11 Table 3-5
+    var SEAL_MAT_TEMPS = {
+      'Natural rubber':250, 'Ethylene propylene':250, 'Neoprene':250,
+      'Nitrile':250, 'Polyacrylate':300, 'Fluorosilicon':450,
+      'Fluorocarbon':475, 'Silicon rubbers':450, 'Butyl rubber':250,
+      'Urethane':210, 'Fluoroelastomers':500, 'Fluoroplastics':500,
+      'Leather':200, 'Impregnated poromeric material':250
+    };
+
+    // Cv factors vs temperature, NSWC-11 Table 3-3
+    var CV_TEMPS = [-50,0,50,100,150,200,250,300,350];
+    var CV_FLUIDS = {
+      'Air':           [554.0,503.4,462.9,430.1,402.6,379.4,359.5,null,null],
+      'Oxygen':        [504.6,457.8,420.6,390.2,365.9,343.6,325.3,null,null],
+      'Nitrogen':      [580.0,528.0,486.5,452.6,424.3,400.0,379.6,null,null],
+      'Carbon Dioxide':[null,599.9,510.7,449.7,395.9,352.1,null,null,null],
+      'Water':         [null,null,6.309,12.15,19.43,27.30,null,null,null],
+      'SAE 10 Oil':    [null,null,0.060,0.250,0.750,1.690,2.650,null,null],
+      'SAE 20 Oil':    [null,null,0.0314,0.167,0.492,1.183,2.213,2.861,5.204],
+      'SAE 30 Oil':    [null,null,0.0297,0.1129,0.3519,0.8511,1.768,2.861,4.309],
+      'SAE 40 Oil':    [null,null,0.0122,0.0534,0.2462,0.6718,1.325,2.221,3.387],
+      'SAE 50 Oil':    [null,null,0.0037,0.0326,0.1251,0.3986,0.8509,1.657,2.654],
+      'SAE 90 Oil':    [null,null,0.0012,0.0189,0.0973,0.3322,0.7855,1.515,2.591],
+      'Diesel Fuel':   [0.1617,0.7492,2.089,3.847,6.228,9.169,12.78,16.31,null],
+      'MIL-H-83282':   [0.0031,0.0432,0.2137,0.6643,1.421,2.585,4.063,0.6114,0.7766],
+      'MIL-H-5606':    [0.0188,0.0951,0.2829,0.6228,1.108,1.783,2.719,3.628,4.880]
+    };
+
+    // ══════════════════════════════════════════════════════════════════════
+    //  HELPERS
+    // ══════════════════════════════════════════════════════════════════════
+    function interpTable(tbl, x) {
+      if (x <= tbl[0][0]) return tbl[0][1];
+      var last = tbl[tbl.length-1];
+      if (x >= last[0]) return last[1];
+      for (var i=1; i<tbl.length; i++) {
+        if (x <= tbl[i][0]) {
+          var x0=tbl[i-1][0], y0=tbl[i-1][1], x1=tbl[i][0], y1=tbl[i][1];
+          return y0+(y1-y0)*(x-x0)/(x1-x0);
+        }
       }
+      return last[1];
+    }
+    function numVal(id) {
+      var el=document.getElementById(id); if(!el) return null;
+      var v=parseFloat(el.value); return isNaN(v)?null:v;
+    }
+    function strVal(id) {
+      var el=document.getElementById(id); return el?el.value.trim():'';
+    }
+    function fmtPlain(x) {
+      if (x==null||isNaN(x)) return '—';
+      if (!isFinite(x)) return '∞';
+      var a=Math.abs(x);
+      if (a!==0&&a<1) return x.toLocaleString('en-US',{maximumSignificantDigits:4});
+      var d=a>=1000?0:(a>=100?1:(a>=10?2:3));
+      return x.toLocaleString('en-US',{maximumFractionDigits:d});
+    }
+    function linspace(a,b,n) {
+      var out=[]; for(var i=0;i<n;i++) out.push(a+(b-a)*i/(n-1)); return out;
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    //  FACTOR FUNCTIONS
+    // ══════════════════════════════════════════════════════════════════════
+    function factorCP(P)   { return P>1500 ? Math.pow(P/3000,2) : 0.25; }
+    function factorCQ(Qf)  { return Qf>0.03 ? 0.055/Qf : 4.2-79*Qf; }
+    function factorCDL(d)  { return 0.32+1.1*d; }
+    function factorCH(M,C) { return Math.pow((M/C)/0.55, 4.3); }
+
+    function factorCF_dyn(f) {
+      // Dynamic seal: NSWC-11 Fig. 3.17
+      return f<=10 ? 1.0 : 1.0/Math.pow(2,(10-f)/38);
+    }
+    function factorCF_static(f) {
+      // Static seal: NSWC-11 Fig. 3.15 (comparison chart only)
+      return f<15 ? 0.25 : Math.pow(f,1.65)/353;
+    }
+    function factorCT(Tr,To) {
+      var d=Tr-To; return d>40 ? 0.21 : 1.0/Math.pow(2,d/18);
+    }
+    function factorCN(filterMic, flowGPM, compId, directOv) {
+      if (directOv!=null&&!isNaN(directOv)) return directOv;
+      var row=null;
+      for(var i=0;i<N10_TABLE.length;i++){if(N10_TABLE[i].id===compId){row=N10_TABLE[i];break;}}
+      if (!row) return 1.0;
+      return Math.pow(filterMic/10,3)*flowGPM*row.n10;
+    }
+    function meyerHardness(dur) { return interpTable(DUROMETER_TABLE,dur); }
+
+    function cvForFluid(fluid, tempF) {
+      var row=CV_FLUIDS[fluid]; if(!row) return null;
+      var pts=[];
+      for(var i=0;i<CV_TEMPS.length;i++){if(row[i]!=null)pts.push([CV_TEMPS[i],row[i]]);}
+      if(pts.length<2) return null;
+      if(tempF<pts[0][0]||tempF>pts[pts.length-1][0]) return null;
+      return interpTable(pts,tempF);
+    }
+
+    function computePV(unit, DP, d, V, k) {
+      return unit==='rpm' ? (Math.PI/12)*DP*d*V*k : DP*V*k;
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    //  BUILD DROPDOWNS
+    // ══════════════════════════════════════════════════════════════════════
+    function buildMatSel(selId, tempId) {
+      var sel=document.getElementById(selId); if(!sel) return;
+      var bl=document.createElement('option'); bl.value=''; bl.textContent='— Select material —';
+      sel.appendChild(bl);
+      Object.keys(SEAL_MAT_TEMPS).forEach(function(m){
+        var o=document.createElement('option');
+        o.value=m; o.textContent=m+' — Tᵣ = '+SEAL_MAT_TEMPS[m]+'°F';
+        sel.appendChild(o);
+      });
+      sel.addEventListener('change',function(){
+        var v=sel.value;
+        if(v&&SEAL_MAT_TEMPS[v]!=null){
+          var ti=document.getElementById(tempId); if(ti){ti.value=SEAL_MAT_TEMPS[v];}
+          runCalculate();
+        }
+      });
+    }
+    buildMatSel('seal-material',    'rated-temp');
+    buildMatSel('seal-material-hi', 'rated-temp-hi');
+
+    var fluidSel=document.getElementById('fluid-select');
+    if(fluidSel){
+      Object.keys(CV_FLUIDS).forEach(function(f){
+        var o=document.createElement('option'); o.value=f; o.textContent=f;
+        if(f==='MIL-H-83282') o.selected=true;
+        fluidSel.appendChild(o);
+      });
+    }
+    var compSel=document.getElementById('component-type');
+    if(compSel){
+      N10_TABLE.forEach(function(c){
+        var o=document.createElement('option'); o.value=c.id; o.textContent=c.label;
+        compSel.appendChild(o);
+      });
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    //  SEAL MODE SWITCHING (low / high / mech)
+    // ══════════════════════════════════════════════════════════════════════
+    var currentMode='low';
+
+    function applyMode(mode) {
+      currentMode=mode;
+      ['low','high','mech'].forEach(function(m){
+        var el=document.getElementById('mode-callout-'+m);
+        if(el) el.style.display=(m===mode)?'':'none';
+      });
+      var lo=document.getElementById('grp-material-lo');
+      var hi=document.getElementById('grp-material-hi');
+      if(lo) lo.style.display=(mode==='low')?'':'none';
+      if(hi) hi.style.display=(mode!=='low')?'':'none';
+      var plo=document.getElementById('grp-pressure-lo');
+      var phi=document.getElementById('grp-pressure-hi');
+      if(plo) plo.style.display=(mode==='low')?'':'none';
+      if(phi) phi.style.display=(mode!=='low')?'':'none';
+      var gouter=document.getElementById('grp-geo-outer');
+      if(gouter) gouter.style.display=(mode!=='low')?'none':'';
+      document.querySelectorAll('#seal-mode-seg button').forEach(function(b){
+        var on=b.getAttribute('data-mode')===mode;
+        b.classList.toggle('sq-active',on);
+        b.setAttribute('aria-pressed',String(on));
+      });
+      updatePVDisplay();
+      runCalculate();
+    }
+    document.querySelectorAll('#seal-mode-seg button').forEach(function(b){
+      b.addEventListener('click',function(){ applyMode(b.getAttribute('data-mode')); });
     });
 
-    // ── Build fluid dropdown ─────────────────────────────────────────────
-    var fluidSel = document.getElementById('fluid-select');
-    NSWCSeal.listFluids().forEach(function (f) {
-      var opt = document.createElement('option');
-      opt.value = f.id;
-      opt.textContent = f.label;
-      fluidSel.appendChild(opt);
-    });
-
-    // ── Viscosity mode switching ─────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════════════
+    //  VISCOSITY MODE SWITCHING
+    // ══════════════════════════════════════════════════════════════════════
     function setViscMode(mode) {
       ['fluid', 'kinematic', 'dynamic', 'jet-fuel', 'pg', 'thermo'].forEach(function (m) {
         var el = document.getElementById('visc-' + m);
@@ -1880,7 +2310,7 @@
       });
     }
     document.querySelectorAll('input[name="visc-mode"]').forEach(function (r) {
-      r.addEventListener('change', function () { setViscMode(r.value); });
+      r.addEventListener('change', function () { setViscMode(r.value); runCalculate(); });
     });
     setViscMode('fluid');
 
@@ -1903,6 +2333,7 @@
         if (!isNaN(cur)) inp.value = (cur * _CPS_TO_LBFMININ2).toExponential(4);
         inp.setAttribute('aria-label', 'Dynamic viscosity in lbf-min per square inch');
       }
+      runCalculate();
     });
 
     // ── Lazy-load helper (never fetches the same src twice) ──────────────
@@ -1956,13 +2387,11 @@
       return NaN;
     }
 
-    // Conversion factors (NSWC-11 §3 reference value: ν₀ = 2×10⁻⁸ lbf·min/in²)
+    // Conversion factors
     var _CPS_TO_LBFMININ2 = 2.41737e-9;  // 1 mPa·s (= 1 cP) → lbf·min/in²
     var _PAS_TO_LBFMININ2 = 2.41737e-6;  // 1 Pa·s → lbf·min/in²
 
     // ── Jet fuel viscosity resolver ───────────────────────────────────────
-    // kinematicViscosity.js stores ν in cSt; density in kg/m³.
-    // μ[lbf·min/in²] = (ν[cSt] × ρ[kg/m³] / 1000) × 2.41737e-9
     var _JF_VISC = {
       'JP-5, Jet A, Jet A-1, JP-8': '../csvData/50.csv',
       'JP-4, Jet B':                 '../csvData/48.csv',
@@ -1997,7 +2426,6 @@
     }
 
     // ── PG viscosity resolver ─────────────────────────────────────────────
-    // pgViscKinematic.js stores dynamic viscosity directly in mPa·s (no CSV for kinematic).
     var _PG_VISC_LABELS = ['Freeze Curve', '50%', '45%', '40%', '35%', '30%', '25%'];
     var _PG_VISC_FILES  = [
       '../csvData/propyleneglycol/pg-22.csv',
@@ -2018,7 +2446,6 @@
     }
 
     // ── ThermoCalc viscosity resolver (lazy-loads thermodynamicsland.js) ──
-    // ThermoCalc.lookupPoint returns props.visc in Pa·s.
     function _thermoDynVisc(fluidName, tempF, pressurePsia) {
       return _loadScript('js/thermodynamicsland.js').then(function () {
         var T_K  = (tempF - 32) * 5 / 9 + 273.15;
@@ -2030,417 +2457,394 @@
       });
     }
 
-    // ── Read helper ───────────────────────────────────────────────────────
-    function numVal(id) {
-      var v = parseFloat(document.getElementById(id).value);
-      return isNaN(v) ? null : v;
+    // ══════════════════════════════════════════════════════════════════════
+    //  LIVE PV DISPLAY
+    // ══════════════════════════════════════════════════════════════════════
+    function updatePVDisplay() {
+      var speedVal =numVal('ds-speed-val');
+      var speedUnit=strVal('ds-speed-unit')||'rpm';
+      var k        =numVal('ds-balance-k');
+      var pvDS     =numVal('ds-pvds');
+      var DP=null;
+      if(currentMode==='low'){var p1=numVal('pressure-high'),p2=numVal('pressure-low')||0; if(p1!=null)DP=p1-p2;}
+      else { DP=numVal('pressure-diff'); }
+      var d=numVal('seal-inner-dia');
+      var pvOpEl=document.getElementById('ds-pvop-display');
+      var cpvEl =document.getElementById('ds-cpv-display');
+      if(speedVal==null||DP==null||d==null||k==null){
+        if(pvOpEl)pvOpEl.value='—'; if(cpvEl)cpvEl.value='—'; return;
+      }
+      var pvOP=computePV(speedUnit,DP,d,speedVal,k);
+      if(pvOpEl) pvOpEl.value=fmtPlain(pvOP);
+      if(cpvEl&&pvDS!=null&&pvDS>0) cpvEl.value=(pvOP/pvDS).toFixed(4);
+      else if(cpvEl) cpvEl.value='—';
     }
-    function strVal(id) {
-      return document.getElementById(id).value.trim();
-    }
+    ['ds-speed-val','ds-speed-unit','ds-balance-k','ds-pvds',
+     'pressure-high','pressure-low','pressure-diff','seal-inner-dia'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el){ el.addEventListener('input',updatePVDisplay); el.addEventListener('change',updatePVDisplay); }
+    });
 
-    // ── Calculate ─────────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════════════
+    //  MAIN CALCULATOR  (Eq. 3-14 / Eq. 3-16)
+    // ══════════════════════════════════════════════════════════════════════
     async function runCalculate() {
-      var inp = {
-        leakageRate:  numVal('leakage-rate'),
-        sealInnerDia: numVal('seal-inner-dia'),
-        sealOuterDia: numVal('seal-outer-dia'),
-        pressureHigh: numVal('pressure-high'),
-        pressureLow:  numVal('pressure-low'),
-        surfaceFinish:numVal('surface-finish'),
-        operatingTemp:numVal('operating-temp'),
-        ratedTemp:    numVal('rated-temp'),
-        durometer:    numVal('durometer'),
-        cpMode: strVal('cp-mode') || 'differential',
-      };
+      updatePVDisplay();
+      var errors=[], warnings=[];
+      var mode     =currentMode;
+      var speedVal =numVal('ds-speed-val');
+      var speedUnit=strVal('ds-speed-unit')||'rpm';
+      var k        =numVal('ds-balance-k')||1.0;
+      var pvDS     =numVal('ds-pvds');
+      var innerDia =numVal('seal-inner-dia');
+      var outerDia =numVal('seal-outer-dia');
+      var surfFin  =numVal('surface-finish');
+      var leakRate =numVal('leakage-rate')||0;
+      var filterMic=numVal('filter-size')||10;
+      var flowRate =numVal('flow-rate')||5;
+      var compId   =strVal('component-type');
+      var cnDirect =numVal('cn-direct-ds');
+      var fcOver   =numVal('compression-force-ds');
+      var Tr, To, durometer;
+      if(mode==='low'){
+        Tr=numVal('rated-temp'); To=numVal('operating-temp'); durometer=numVal('durometer');
+      } else {
+        Tr=numVal('rated-temp-hi'); To=numVal('operating-temp-hi'); durometer=null;
+      }
+      var P1,P2,DP;
+      if(mode==='low'){
+        P1=numVal('pressure-high')||0; P2=numVal('pressure-low')||0; DP=P1-P2;
+      } else {
+        DP=numVal('pressure-diff')||0; P1=DP; P2=0;
+      }
 
-      // Viscosity
+      if(speedVal==null) errors.push('Speed value is required.');
+      if(surfFin==null)  errors.push('Surface finish is required.');
+      if(Tr==null)       errors.push('Rated temperature is required.');
+      if(To==null)       errors.push('Operating temperature is required.');
+
+      // ── Viscosity resolution (all 6 modes) ─────────────────────────────
+      var nu = null;
       var viscMode = document.querySelector('input[name="visc-mode"]:checked').value;
+      var To_visc = (mode==='low') ? (numVal('operating-temp')||100) : (numVal('operating-temp-hi')||100);
       if (viscMode === 'fluid') {
-        inp.fluid = strVal('fluid-select');
+        var fluid = strVal('fluid-select');
         var ft = numVal('fluid-temp');
-        if (ft !== null) inp.fluidTemp = ft;
+        var T_visc = (ft !== null) ? ft : To_visc;
+        var cv = cvForFluid(fluid, T_visc);
+        if (cv == null) errors.push('Cv out of range for ' + fluid + ' at ' + T_visc + ' °F');
+        else nu = NU_0 / cv;
       } else if (viscMode === 'kinematic') {
-        var kv = numVal('kin-viscosity');
-        if (kv !== null) inp.kinematicViscosity = kv;
-        var sg = numVal('kin-sg');
-        var rho = numVal('kin-density');
-        if (sg !== null) inp.specificGravity = sg;
-        else if (rho !== null) inp.density = rho;
+        var kv  = numVal('kin-viscosity');
+        var ksg = numVal('kin-sg');
+        var krho = numVal('kin-density');
+        if (kv == null) { errors.push('Enter a kinematic viscosity value.'); }
+        else {
+          var rho_kgm3 = (ksg !== null) ? ksg * 1000 : krho;
+          if (rho_kgm3 == null) errors.push('Specific gravity or density is required for kinematic mode.');
+          else nu = (kv * rho_kgm3 / 1000) * _CPS_TO_LBFMININ2;
+        }
       } else if (viscMode === 'dynamic') {
         var dv = numVal('dyn-viscosity');
-        if (dv !== null) {
+        if (dv == null) { errors.push('Enter a dynamic viscosity value.'); }
+        else {
           var dynUnit = document.getElementById('dyn-visc-unit').value;
-          inp.dynamicViscosity = (dynUnit === 'mPas') ? dv * _CPS_TO_LBFMININ2 : dv;
+          nu = (dynUnit === 'mPas') ? dv * _CPS_TO_LBFMININ2 : dv;
         }
       } else if (viscMode === 'jet-fuel') {
         var jfFuel  = strVal('jf-fluid-select');
-        var jfTempF = numVal('jf-temp') !== null ? numVal('jf-temp') : inp.operatingTemp;
+        var jfTempF = numVal('jf-temp') !== null ? numVal('jf-temp') : To_visc;
         try {
           var jfMu = await _jetFuelDynVisc(jfFuel, jfTempF);
           document.getElementById('jf-resolved-visc').value = isNaN(jfMu) ? 'Out of range' : jfMu.toExponential(4) + (jfTempF > 194 ? ' (extrap.)' : '');
-          if (!isNaN(jfMu)) inp.dynamicViscosity = jfMu;
-        } catch (e) { document.getElementById('jf-resolved-visc').value = 'Error'; }
+          if (!isNaN(jfMu)) nu = jfMu; else errors.push('Jet fuel viscosity out of range at ' + jfTempF + ' °F.');
+        } catch (e) { document.getElementById('jf-resolved-visc').value = 'Error'; errors.push('Jet fuel viscosity fetch error.'); }
       } else if (viscMode === 'pg') {
         var pgConc  = strVal('pg-conc-select');
-        var pgTempF = numVal('pg-temp') !== null ? numVal('pg-temp') : inp.operatingTemp;
+        var pgTempF = numVal('pg-temp') !== null ? numVal('pg-temp') : To_visc;
         try {
           var pgMu = await _pgDynVisc(pgConc, pgTempF);
           document.getElementById('pg-resolved-visc').value = isNaN(pgMu) ? 'Out of range' : pgMu.toExponential(4);
-          if (!isNaN(pgMu)) inp.dynamicViscosity = pgMu;
-        } catch (e) { document.getElementById('pg-resolved-visc').value = 'Error'; }
+          if (!isNaN(pgMu)) nu = pgMu; else errors.push('PG viscosity out of range at ' + pgTempF + ' °F.');
+        } catch (e) { document.getElementById('pg-resolved-visc').value = 'Error'; errors.push('PG viscosity fetch error.'); }
       } else if (viscMode === 'thermo') {
         var tFluid = strVal('thermo-fluid-name');
-        var tTempF = numVal('thermo-temp') !== null ? numVal('thermo-temp') : inp.operatingTemp;
+        var tTempF = numVal('thermo-temp') !== null ? numVal('thermo-temp') : To_visc;
         var tPsia  = numVal('thermo-pressure') !== null ? numVal('thermo-pressure') : 14.696;
         try {
           var tMu = await _thermoDynVisc(tFluid, tTempF, tPsia);
           document.getElementById('thermo-resolved-visc').value = isNaN(tMu) ? 'Out of range' : tMu.toExponential(4);
-          if (!isNaN(tMu)) inp.dynamicViscosity = tMu;
-        } catch (e) { document.getElementById('thermo-resolved-visc').value = 'Error: ' + e.message; }
+          if (!isNaN(tMu)) nu = tMu; else errors.push('ThermoCalc viscosity out of range.');
+        } catch (e) { document.getElementById('thermo-resolved-visc').value = 'Error: ' + e.message; errors.push('ThermoCalc error: ' + e.message); }
       }
 
-      // Optional
-      var fc = numVal('compression-force');
-      if (fc !== null) inp.compressionForce = fc;
-      var cn = numVal('cn-direct');
-      if (cn !== null) inp.contaminant = cn;
-      var chOv = numVal('ch-override');
-      if (chOv !== null) inp.chOverride = chOv;
+      if (errors.length) { showErrors(errors); return; }
+      if (nu == null || nu <= 0) { showErrors(['Viscosity could not be determined.']); return; }
 
-      var r = NSWCSeal.calculate(inp);
-      displayResults(r);
+      var CV_f = NU_0 / nu;
+
+      // Speed regime
+      var isHigh=(speedUnit==='rpm')?(speedVal>=800):(speedVal>=600);
+      if(mode==='mech') isHigh=true;
+
+      // PV
+      var pvOP=(innerDia!=null)?computePV(speedUnit,DP,innerDia,speedVal,k):0;
+      var cpv =(pvDS!=null&&pvDS>0)?pvOP/pvDS:1.0;
+
+      // Common factors
+      var CT=factorCT(Tr,To);
+      if(Tr-To<0) warnings.push('Operating temperature exceeds rated temperature — CT > 1.');
+      var CF=factorCF_dyn(surfFin);
+      var CN=factorCN(filterMic,flowRate,compId,cnDirect);
+
+      var lambda, factorsObj, eq;
+
+      if(!isHigh) {
+        // ── Eq. 3-14 low-speed: all factors active ──────────────────────
+        if(outerDia==null){errors.push('Outer diameter required for low-speed mode.');showErrors(errors);return;}
+        if(durometer==null){errors.push('Durometer required for low-speed mode.');showErrors(errors);return;}
+        var CP =factorCP(DP);
+        var CQ =factorCQ(leakRate);
+        var CDL=factorCDL(innerDia||0);
+        var M  =meyerHardness(durometer);
+        var ri =innerDia/2, ro=outerDia/2;
+        var Fc =(fcOver!=null)?fcOver:2.5*M;
+        var pLoad=(P1||0)*Math.PI*ri*ri;
+        var gLoad=DP*((ro+ri)/2)*(ro-ri);
+        var area =Math.PI*(ro*ro-ri*ri);
+        var C_c  =(Fc-pLoad-gLoad)/area;
+        var CH;
+        if(!isFinite(C_c)||C_c<=0){
+          warnings.push('Contact pressure C ≤ 0; CH set to 1.'); CH=1.0;
+        } else {
+          CH=factorCH(M,C_c);
+          if(Math.abs(M/C_c-0.55)>0.15)
+            warnings.push('M/C ratio far from 0.55; CH is highly sensitive here.');
+        }
+        lambda=BASE_RATE*CP*CQ*CDL*CH*CF*CV_f*CT*CN;
+        eq='Eq. 3-14 (low speed)';
+        factorsObj={
+          CPV:null,CP:CP,CQ:CQ,CDL:CDL,CH:CH,CF:CF,CV:CV_f,CT:CT,CN:CN,
+          pvOP:pvOP,pvDS:pvDS,cpv:cpv,M:M,Fc:Fc,C_c:C_c,MC:M/C_c
+        };
+      } else {
+        // ── Eq. 3-14 high-speed OR Eq. 3-16 mechanical seal ─────────────
+        lambda=BASE_RATE*cpv*CF*CV_f*CT*CN;
+        eq=(mode==='mech')?'Eq. 3-16 (mechanical seal)':'Eq. 3-14 (high speed)';
+        factorsObj={
+          CPV:cpv,CP:null,CQ:null,CDL:null,CH:null,CF:CF,CV:CV_f,CT:CT,CN:CN,
+          pvOP:pvOP,pvDS:pvDS,cpv:cpv,M:null,Fc:null,C_c:null,MC:null
+        };
+      }
+
+      var mtbf=(lambda>0)?1e6/lambda:Infinity;
+      displayResults({lambda:lambda,mtbf:mtbf,factors:factorsObj,eq:eq,
+                      warnings:warnings,nu:nu,Tr:Tr,To:To});
     }
 
-    // ── Plain (non-scientific) number formatting ─────────────────────────
-    // Thousands separators; decimals scale with magnitude; sub-1 values keep
-    // 4 significant digits. Never emits scientific notation.
-    function fmtPlain(x) {
-      if (x == null || isNaN(x)) return '—';
-      if (!isFinite(x)) return '∞';
-      var a = Math.abs(x);
-      if (a !== 0 && a < 1) return x.toLocaleString('en-US', { maximumSignificantDigits: 4 });
-      var d = a >= 1000 ? 0 : (a >= 100 ? 1 : (a >= 10 ? 2 : 3));
-      return x.toLocaleString('en-US', { maximumFractionDigits: d });
+    // ══════════════════════════════════════════════════════════════════════
+    //  DISPLAY
+    // ══════════════════════════════════════════════════════════════════════
+    function showErrors(errors) {
+      var errDiv=document.getElementById('ds-calc-errors');
+      var resDiv=document.getElementById('ds-calc-results');
+      if(errDiv){
+        errDiv.innerHTML='<strong>Errors:</strong><ul style="margin-bottom:0.5rem;">'+
+          errors.map(function(e){return '<li>'+e+'</li>';}).join('')+'</ul>';
+        errDiv.style.display='';
+      }
+      if(resDiv) resDiv.style.display='none';
     }
 
-    // ── Display results ───────────────────────────────────────────────────
     function displayResults(r) {
-      var errDiv  = document.getElementById('calc-errors');
-      var warnDiv = document.getElementById('calc-warnings');
-      var resDiv  = document.getElementById('calc-results');
-
-      errDiv.style.display  = 'none';
-      warnDiv.style.display = 'none';
-      errDiv.innerHTML  = '';
-      warnDiv.innerHTML = '';
-
-      if (!r.ok) {
-        errDiv.innerHTML = '<strong>Errors:</strong><ul style="margin-bottom:0.5rem;">' +
-          r.errors.map(function(e){ return '<li>' + e + '</li>'; }).join('') + '</ul>';
-        errDiv.style.display = '';
-        resDiv.style.display = 'none';
-        return;
+      var errDiv =document.getElementById('ds-calc-errors');
+      var warnDiv=document.getElementById('ds-calc-warnings');
+      var resDiv =document.getElementById('ds-calc-results');
+      if(errDiv) { errDiv.style.display='none'; errDiv.innerHTML=''; }
+      if(warnDiv){ warnDiv.style.display='none'; warnDiv.innerHTML=''; }
+      if(r.warnings&&r.warnings.length){
+        warnDiv.innerHTML='<strong>Warnings:</strong><ul style="margin-bottom:0.5rem;">'+
+          r.warnings.map(function(w){return '<li>'+w+'</li>';}).join('')+'</ul>';
+        warnDiv.style.display='';
       }
+      var el=function(id){return document.getElementById(id);};
+      function setV(id,v){ var e=el(id); if(e) e.value=v; }
+      setV('ds-res-lambda', fmtPlain(r.lambda));
+      setV('ds-res-mtbf',   fmtPlain(r.mtbf));
+      setV('ds-res-eq',     r.eq);
+      var f=r.factors;
+      setV('ds-res-pvop',      fmtPlain(f.pvOP));
+      setV('ds-res-pvds',      fmtPlain(f.pvDS));
+      setV('ds-res-pv-margin', f.cpv!=null?f.cpv.toFixed(4):'—');
 
-      if (r.warnings && r.warnings.length) {
-        warnDiv.innerHTML = '<strong>Warnings:</strong><ul style="margin-bottom:0.5rem;">' +
-          r.warnings.map(function(w){ return '<li>' + w + '</li>'; }).join('') + '</ul>';
-        warnDiv.style.display = '';
-      }
-
-      // Main results — two columns: calculated CH vs CH = 1, with MTBF for each.
-      // MTBF (hours) = 10^6 / λ (λ is failures per 10^6 hours), per the model.
-      var mtbfCalc  = r.mtbfHours;
-      var mtbfUnity = r.lambdaUnityCH > 0 ? 1e6 / r.lambdaUnityCH : Infinity;
-      document.getElementById('res-lambda').value       = fmtPlain(r.lambda);
-      document.getElementById('res-mtbf').value         = fmtPlain(mtbfCalc);
-      document.getElementById('res-lambda-unity').value = fmtPlain(r.lambdaUnityCH);
-      document.getElementById('res-mtbf-unity').value   = fmtPlain(mtbfUnity);
-      document.getElementById('res-lambda-display').value = fmtPlain(r.lambda);
-      document.getElementById('res-lambda-display-unity').value = fmtPlain(r.lambdaUnityCH);
-
-      // Factor tables — one per CH case (calculated vs CH = 1), each ending
-      // with the resulting λ_SE. Only the CH row and the final λ_SE differ.
-      var f = r.factors;
-      function buildFactorTable(tbodyId, chDisplay, lambdaValue) {
-        var rows = [
-          ['λ<sub>SE,B</sub>', r.baseFailureRate.toFixed(1) + ' Base failure rate (failures / 10<sup>6</sup> h)'],
-          ['C<sub>P</sub>',  f.CP.toFixed(4)],
-          ['C<sub>Q</sub>',  f.CQ.toFixed(4)],
-          ['C<sub>DL</sub>', f.CDL.toFixed(4)],
-          ['C<sub>H</sub>',  chDisplay],
-          ['C<sub>F</sub>',  f.CF.toFixed(4)],
-          ['C<sub>ν</sub>', f.CV.toFixed(4)],
-          ['C<sub>T</sub>',  f.CT.toFixed(4)],
-          ['C<sub>N</sub>',  f.CN.toFixed(4)],
+      // Factors table (Symbol | Value | Notes)
+      var tbody=el('ds-mf-tbody');
+      if(tbody){
+        var rows=[
+          ['&lambda;<sub>SE,B</sub>', BASE_RATE.toFixed(1), 'Base rate — failures / 10<sup>6</sup> h'],
+          ['C<sub>PV</sub>', f.CPV!=null?f.CPV.toFixed(4):'1.0000',
+                             f.CPV!=null?'PV<sub>OP</sub>/PV<sub>DS</sub>':'Not active (low-speed)'],
+          ['C<sub>P</sub>',  f.CP!=null?f.CP.toFixed(4):'1.0000',
+                             f.CP!=null?'':                    'Not active (high-speed / mech)'],
+          ['C<sub>Q</sub>',  f.CQ!=null?f.CQ.toFixed(4):'1.0000',
+                             f.CQ!=null?'':                    'Not active (high-speed / mech)'],
+          ['C<sub>DL</sub>', f.CDL!=null?f.CDL.toFixed(4):'1.0000',
+                             f.CDL!=null?'':                   'Not active (high-speed / mech)'],
+          ['C<sub>H</sub>',  f.CH!=null?f.CH.toFixed(4):'1.0000',
+                             f.CH!=null?'M/C = '+(f.MC!=null?f.MC.toFixed(4):'—'):'Not active (high-speed / mech)'],
+          ['C<sub>F</sub>',  f.CF.toFixed(4), 'Fig. 3.17 (dynamic)'],
+          ['C<sub>&nu;</sub>', f.CV.toFixed(4), '&nu;<sub>0</sub> / &nu;'],
+          ['C<sub>T</sub>',  f.CT.toFixed(4), 'T<sub>r</sub>&minus;T<sub>0</sub> = '+(r.Tr-r.To)+' °F'],
+          ['C<sub>N</sub>',  f.CN.toFixed(4), '']
         ];
-        var html = rows.map(function (p) {
-          return '<tr><td>' + p[0] + '</td><td>' + p[1] + '</td></tr>';
+        var html=rows.map(function(p){
+          return '<tr><td>'+p[0]+'</td><td>'+p[1]+'</td><td>'+p[2]+'</td></tr>';
         }).join('');
-        html += '<tr class="mf-total"><td>λ<sub>SE</sub></td><td>' + fmtPlain(lambdaValue) + '</td></tr>';
-        document.getElementById(tbodyId).innerHTML = html;
+        html+='<tr class="mf-total"><td colspan="2">&lambda;<sub>SE</sub></td><td>'+fmtPlain(r.lambda)+'</td></tr>';
+        tbody.innerHTML=html;
       }
-      buildFactorTable('mf-calc',  fmtPlain(f.CH), r.lambda);
-      buildFactorTable('mf-unity', '1.0000',      r.lambdaUnityCH);
 
       // Intermediates
-      var im = r.intermediates;
-      document.getElementById('res-M').value = im.meyerHardness.toFixed(1);
-      document.getElementById('res-Fc').value = im.compressionForce.toFixed(2);
-      document.getElementById('res-C').value = fmtPlain(im.contactPressure);
-      document.getElementById('res-MC').value =
-        isNaN(im.hardnessRatio) ? 'N/A' : im.hardnessRatio.toFixed(5);
-      document.getElementById('res-dyn-visc').value =
-        im.viscosity.dynamicViscosity != null ? im.viscosity.dynamicViscosity.toExponential(4) : '—';
-      document.getElementById('res-ch-mode').value = im.chMode;
-
-      resDiv.style.display = '';
+      var imDiv=el('ds-intermediates');
+      if(imDiv){
+        var lines=[];
+        if(r.nu!=null)   lines.push('<div class="fld"><label>Dynamic viscosity &nu; (lbf&middot;min/in&sup2;)</label><input type="text" readonly value="'+r.nu.toExponential(4)+'"/></div>');
+        if(f.M!=null)    lines.push('<div class="fld"><label>Meyer hardness M (lbf/in&sup2;)</label><input type="text" readonly value="'+fmtPlain(f.M)+'"/></div>');
+        if(f.Fc!=null)   lines.push('<div class="fld"><label>Compression force F<sub>C</sub> (lbf)</label><input type="text" readonly value="'+fmtPlain(f.Fc)+'"/></div>');
+        if(f.C_c!=null)  lines.push('<div class="fld"><label>Contact pressure C (lbf/in&sup2;)</label><input type="text" readonly value="'+fmtPlain(f.C_c)+'"/></div>');
+        if(f.MC!=null)   lines.push('<div class="fld"><label>M/C ratio</label><input type="text" readonly value="'+f.MC.toFixed(5)+'"/></div>');
+        if(f.pvOP!=null) lines.push('<div class="fld"><label>PV<sub>OP</sub> (lbf/in&sup2;&middot;ft/min)</label><input type="text" readonly value="'+fmtPlain(f.pvOP)+'"/></div>');
+        imDiv.innerHTML=lines.join('');
+      }
+      if(resDiv) resDiv.style.display='';
     }
 
-    // Wire up button
-    var _btn = document.getElementById('calc-btn'); if (_btn) _btn.addEventListener('click', runCalculate);
-
-    // Enter key + live recalculation on any input or select change
-    document.querySelectorAll('#seal-calc-form input, #seal-calc-form select').forEach(function (el) {
-      el.addEventListener('keydown', function (e) { if (e.key === 'Enter') runCalculate(); });
-      el.addEventListener('change', runCalculate);
-      if (el.tagName === 'INPUT' && el.type !== 'radio') el.addEventListener('input', runCalculate);
-    });
-
-    // ── Chart.js helpers ─────────────────────────────────────────────────
-    var LINE_COLOR = 'rgb(68,119,170)';
-    var LINE_COLOR2 = 'rgb(238,102,119)';
-
-    function makeChart(canvasId, label, xData, yData, xTitle, yTitle, opts) {
-      var ctx = document.getElementById(canvasId);
-      if (!ctx) return;
-      var o = opts || {};
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          datasets: [{
-            label: label,
-            data: xData.map(function(x, i){ return {x: x, y: yData[i]}; }),
-            fill: false,
-            borderColor: o.color || LINE_COLOR,
-            borderWidth: 2,
-            pointRadius: 0,
-            tension: 0.1,
-          }],
-        },
-        options: {
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              mode: 'nearest', intersect: false, axis: 'x',
-              callbacks: {
-                title: function(it) { return xTitle + ': ' + it[0].parsed.x.toPrecision(4); },
-                label: function(c)  { return yTitle + ': ' + c.parsed.y.toPrecision(4); },
-              },
-            },
-          },
-          scales: {
-            x: {
-              type: 'linear',
-              title: { display: true, text: xTitle, font: { size: 11 } },
-              ticks: { font: { size: 10 }, maxTicksLimit: 6 },
-            },
-            y: {
-              type: o.logY ? 'logarithmic' : 'linear',
-              title: { display: true, text: yTitle, font: { size: 11 } },
-              ticks: { font: { size: 10 }, maxTicksLimit: 5 },
-            },
-          },
-          animation: { duration: 0 },
-        },
+    // ══════════════════════════════════════════════════════════════════════
+    //  WIRE UP INPUTS
+    // ══════════════════════════════════════════════════════════════════════
+    var _btn=document.getElementById('ds-calc-btn'); if(_btn) _btn.addEventListener('click',runCalculate);
+    var form=document.getElementById('seal-calc-form');
+    if(form){
+      form.querySelectorAll('input,select').forEach(function(el){
+        el.addEventListener('keydown',function(e){if(e.key==='Enter')runCalculate();});
+        el.addEventListener('change', runCalculate);
+        if(el.tagName==='INPUT'&&el.type!=='radio') el.addEventListener('input',runCalculate);
       });
     }
 
-    // CP chart
-    (function() {
-      var s = NSWCSeal.chartSeries.cp();
-      makeChart('chart-cp', 'CP', s.x, s.y, 'Pressure differential (psi)', 'CP');
-    })();
+    // ══════════════════════════════════════════════════════════════════════
+    //  CHART HELPERS
+    // ══════════════════════════════════════════════════════════════════════
+    var LC1='rgb(68,119,170)', LC2='rgb(238,102,119)', LC3='rgb(34,136,51)';
 
-    // CQ chart
-    (function() {
-      var s = NSWCSeal.chartSeries.cq();
-      makeChart('chart-cq', 'CQ', s.x, s.y, 'Allowable leakage (in³/min)', 'CQ');
-    })();
+    function makeChart(canvasId,label,xs,ys,xT,yT,opts){
+      var ctx=document.getElementById(canvasId); if(!ctx) return;
+      var o=opts||{};
+      return new Chart(ctx,{
+        type:'line',
+        data:{datasets:[{label:label,
+          data:xs.map(function(x,i){return{x:x,y:ys[i]};}),
+          fill:false,borderColor:o.color||LC1,borderWidth:2,pointRadius:0,tension:0.1}]},
+        options:{
+          maintainAspectRatio:false,
+          plugins:{
+            legend:{display:false},
+            tooltip:{mode:'nearest',intersect:false,axis:'x',
+              callbacks:{
+                title:function(it){return xT+': '+it[0].parsed.x.toPrecision(4);},
+                label:function(c){return yT+': '+c.parsed.y.toPrecision(4);}}}},
+          scales:{
+            x:{type:'linear',title:{display:true,text:xT,font:{size:11}},ticks:{font:{size:10},maxTicksLimit:6}},
+            y:{type:o.logY?'logarithmic':'linear',title:{display:true,text:yT,font:{size:11}},ticks:{font:{size:10},maxTicksLimit:5}}},
+          animation:{duration:0}}});
+    }
 
-    // CDL chart
-    (function() {
-      var s = NSWCSeal.chartSeries.cdl();
-      makeChart('chart-cdl', 'CDL', s.x, s.y, 'Inner diameter (in)', 'CDL');
+    // CP (Fig. 3.10)
+    (function(){
+      var xs=linspace(0,6000,120);
+      makeChart('chart-cp','CP',xs,xs.map(factorCP),'Pressure differential (psi)','CP');
     })();
-
-    // CH chart (log y-axis)
-    (function() {
-      var s = NSWCSeal.chartSeries.ch();
-      makeChart('chart-ch', 'CH', s.x, s.y, 'M / C ratio', 'CH', { logY: true });
+    // CQ (Fig. 3.11)
+    (function(){
+      var xs=linspace(0.001,1.0,120);
+      makeChart('chart-cq','CQ',xs,xs.map(factorCQ),'Allowable leakage (in³/min)','CQ');
     })();
-
-    // Young's modulus chart
-    (function() {
-      var s = NSWCSeal.chartSeries.youngs();
-      var ctx = document.getElementById('chart-youngs');
-      if (!ctx) return;
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          datasets: [{
-            label: "Young's modulus M",
-            data: s.x.map(function(x,i){ return {x: x, y: s.y[i]}; }),
-            fill: false,
-            borderColor: 'rgb(34,136,51)',
-            borderWidth: 2,
-            pointRadius: 3,
-            tension: 0.2,
-          }],
-        },
-        options: {
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false }, tooltip: { mode: 'nearest', intersect: false } },
-          scales: {
-            x: { type: 'linear', title: { display: true, text: 'Durometer (Shore A)', font: { size: 11 } }, ticks: { font: { size: 10 } } },
-            y: { type: 'linear', title: { display: true, text: 'M (lbf/in²)', font: { size: 11 } }, ticks: { font: { size: 10 }, maxTicksLimit: 5 } },
-          },
-          animation: { duration: 0 },
-        },
+    // CDL (Fig. 3.12)
+    (function(){
+      var xs=linspace(0,5,60);
+      makeChart('chart-cdl','CDL',xs,xs.map(factorCDL),'Inner diameter (in)','CDL');
+    })();
+    // CH (Fig. 3.14, log Y)
+    (function(){
+      var xs=linspace(0.1,2.5,100);
+      makeChart('chart-ch','CH',xs,xs.map(function(x){return Math.pow(x/0.55,4.3);}),
+        'M/C ratio','CH',{logY:true});
+    })();
+    // Young's modulus (Fig. 3.4)
+    (function(){
+      var ctx=document.getElementById('chart-youngs'); if(!ctx) return;
+      var xs=DUROMETER_TABLE.map(function(p){return p[0];});
+      var ys=DUROMETER_TABLE.map(function(p){return p[1];});
+      new Chart(ctx,{type:'line',
+        data:{datasets:[{label:"M",data:xs.map(function(x,i){return{x:x,y:ys[i]};}),
+          fill:false,borderColor:LC3,borderWidth:2,pointRadius:3,tension:0.2}]},
+        options:{maintainAspectRatio:false,
+          plugins:{legend:{display:false},tooltip:{mode:'nearest',intersect:false}},
+          scales:{
+            x:{type:'linear',title:{display:true,text:'Durometer (Shore A)',font:{size:11}},ticks:{font:{size:10}}},
+            y:{type:'linear',title:{display:true,text:'M (lbf/in²)',font:{size:11}},ticks:{font:{size:10},maxTicksLimit:5}}},
+          animation:{duration:0}}});
+    })();
+    // CF dynamic (Fig. 3.17)
+    (function(){
+      var xs=linspace(0,120,120);
+      makeChart('chart-cf','CF (dynamic)',xs,xs.map(factorCF_dyn),
+        'Surface finish f (µin)','CF',{color:LC1});
+    })();
+    // CF static (Fig. 3.15, comparison)
+    (function(){
+      var xs=linspace(0,120,120);
+      makeChart('chart-cf-static','CF (static)',xs,xs.map(factorCF_static),
+        'Surface finish f (µin)','CF (static)',{color:LC2});
+    })();
+    // CT (Eq. 3-11)
+    (function(){
+      var xs=linspace(-50,200,100);
+      var ys=xs.map(function(d){return d>40?0.21:1.0/Math.pow(2,d/18);});
+      makeChart('chart-ct','CT',xs,ys,'Tᵣ − T₀ (°F)','CT');
+    })();
+    // CN multi-line
+    (function(){
+      var ctx=document.getElementById('chart-cn'); if(!ctx) return;
+      var colors=[LC1,LC2,LC3,'rgb(238,119,51)','rgb(170,51,119)','rgb(102,153,68)'];
+      var xs=linspace(1,25,80);
+      var datasets=N10_TABLE.map(function(comp,i){
+        return{label:comp.label.split(' (')[0],
+          data:xs.map(function(x,j){return{x:x,y:Math.pow(x/10,3)*5*comp.n10};}),
+          fill:false,borderColor:colors[i%colors.length],borderWidth:1.5,pointRadius:0,tension:0.1};
       });
+      new Chart(ctx,{type:'line',data:{datasets:datasets},
+        options:{maintainAspectRatio:false,
+          plugins:{legend:{display:true,labels:{font:{size:9},boxHeight:2,padding:6}},
+            tooltip:{mode:'nearest',intersect:false,axis:'x'}},
+          scales:{
+            x:{type:'linear',title:{display:true,text:'Filter size (µm)',font:{size:11}},ticks:{font:{size:10}}},
+            y:{type:'linear',title:{display:true,text:'CN (at 5 GPM)',font:{size:11}},ticks:{font:{size:10},maxTicksLimit:5}}},
+          animation:{duration:0}}});
+    })();
+    // CPV linear chart
+    (function(){
+      var xs=linspace(0,3,80);
+      makeChart('chart-cpv','CPV',xs,xs,'PV_OP / PV_DS ratio','CPV');
     })();
 
-    // CF chart
-    (function() {
-      var s = NSWCSeal.chartSeries.cf();
-      makeChart('chart-cf', 'CF', s.x, s.y, 'Surface finish (μin)', 'CF');
-    })();
-
-    // CT chart
-    (function() {
-      var s = NSWCSeal.chartSeries.ct();
-      makeChart('chart-ct', 'CT', s.x, s.y, 'Temp margin Tᵣ−T₀ (°F)', 'CT');
-    })();
-
-    // CN chart — multiple lines for different components at 5 GPM
-    (function() {
-      var ctx = document.getElementById('chart-cn');
-      if (!ctx) return;
-      var components = NSWCSeal.N10_TABLE;
-      var colors = [
-        'rgb(68,119,170)', 'rgb(238,102,119)', 'rgb(34,136,51)',
-        'rgb(238,119,51)', 'rgb(170,51,119)', 'rgb(102,153,68)',
-      ];
-      var datasets = components.map(function(comp, i) {
-        var s = NSWCSeal.chartSeries.cn(5, comp.id);
-        return {
-          label: comp.label.split(' (')[0],
-          data: s.x.map(function(x, j){ return {x: x, y: s.y[j]}; }),
-          fill: false,
-          borderColor: colors[i % colors.length],
-          borderWidth: 1.5,
-          pointRadius: 0,
-          tension: 0.1,
-        };
-      });
-      new Chart(ctx, {
-        type: 'line',
-        data: { datasets: datasets },
-        options: {
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: true, labels: { font: { size: 9 }, boxHeight: 2, padding: 6 } },
-            tooltip: { mode: 'nearest', intersect: false, axis: 'x' },
-          },
-          scales: {
-            x: { type: 'linear', title: { display: true, text: 'Filter size (μm)', font: { size: 11 } }, ticks: { font: { size: 10 } } },
-            y: { type: 'linear', title: { display: true, text: 'CN (at 5 GPM)', font: { size: 11 } }, ticks: { font: { size: 10 }, maxTicksLimit: 5 } },
-          },
-          animation: { duration: 0 },
-        },
-      });
-    })();
-
-    // Run once with default values
+    // ── Initial render ─────────────────────────────────────────────────
+    updatePVDisplay();
     runCalculate();
 
   })();
   </script>
 
-  <!-- Parker Handbook dimension auto-fill (ID/OD selector) -->
-  <script>
-  (function () {
-    var data     = window.PARKER_GLAND || {};
-    var seg      = document.getElementById('dim-source');   // .sq-seg button group
-    var glandRow = document.getElementById('gland-type-row');
-    var glandSel = document.getElementById('gland-type');
-    var dashRow  = document.getElementById('dash-size-row');
-    var dashSel  = document.getElementById('dash-size');
-    var innerInp = document.getElementById('seal-inner-dia');
-    var outerInp = document.getElementById('seal-outer-dia');
-    var calcBtn  = document.getElementById('calc-btn');
-    if (!seg) return;
-    var srcButtons = [].slice.call(seg.querySelectorAll('button[data-src]'));
-    var currentSrc = 'custom';
-
-    function show(el, on) { el.classList.toggle('d-none', !on); el.classList.toggle('d-flex', on); }
-    function hasGland(s) { return s === '4-1' || s === '4-2'; }     /* tables with male/female glands */
-    function hasTable(s) { return hasGland(s) || s === 'as4395'; }  /* any auto-fill data source */
-
-    function populateDashes(src) {
-      dashSel.innerHTML = '';
-      var sizes = (data[src] && data[src].sizes) || [];
-      sizes.forEach(function (s) {
-        var o = document.createElement('option');
-        o.value = s.dash; o.textContent = s.dash;
-        dashSel.appendChild(o);
-      });
-    }
-
-    function applyFill() {
-      if (!hasTable(currentSrc)) return;
-      var sizes = (data[currentSrc] && data[currentSrc].sizes) || [];
-      var rec = null;
-      for (var i = 0; i < sizes.length; i++) { if (sizes[i].dash === dashSel.value) { rec = sizes[i]; break; } }
-      if (!rec) return;
-      /* Parker gland tables carry male/female sub-objects; AS4395/AS5202 carries id/od directly (F = ID, D = OD) */
-      var g = rec.male ? (rec[glandSel.value] || rec.male) : rec;
-      innerInp.value = g.id;
-      outerInp.value = g.od;
-      if (calcBtn) calcBtn.click();
-    }
-
-    function lockManual(locked) {
-      [innerInp, outerInp].forEach(function (i) {
-        i.readOnly = locked;
-        i.style.background = locked ? '#eef0f0' : '';
-        i.title = locked ? 'Auto-filled from the selected table; choose “Custom” to edit.' : '';
-      });
-    }
-
-    function selectSource(src) {
-      currentSrc = src;
-      srcButtons.forEach(function (b) {
-        var on = b.getAttribute('data-src') === src;
-        b.classList.toggle('sq-active', on);
-        b.setAttribute('aria-pressed', String(on));
-      });
-      var gland = hasGland(src), table = hasTable(src);
-      show(glandRow, gland);
-      show(dashRow, table);
-      lockManual(table);
-      if (table) { populateDashes(src); applyFill(); }
-    }
-
-    srcButtons.forEach(function (b) {
-      b.addEventListener('click', function () { selectSource(b.getAttribute('data-src')); });
-    });
-    glandSel.addEventListener('change', applyFill);
-    dashSel.addEventListener('change', applyFill);
-  })();
-  </script>
 
   </body>
 </html>
