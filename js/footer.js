@@ -147,6 +147,7 @@
         <div class="footerRow">
           <h4 class="FooterRowTitle"><span class="footerflexbox">NSWC-11</span></h4>
           <div class="footerlink"><a href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a></div>
+          <div class="footerlink"><a href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a></div>
           <div class="footerlink"><a href="NSWC-11Spring.html">Compression Spring Failure Rate</a></div>
           <div class="footerlink"><a href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a></div>
           <div class="footerlink"><a href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a></div>

@@ -129,193 +129,195 @@ processCSVFiles(csvFiles)
   });
 
 function createGraph() {
-  // Code to run after the delay
   console.log('the big array', fallData);
 
   fallData.forEach((dataSet, index) => {
-  // You can now use each `dataSet` (an array of { x, y } objects) for a different chart
-  console.log(`Data from file ${csvFiles[index]}:`, dataSet);
-    });
+    console.log(`Data from file ${csvFiles[index]}:`, dataSet);
+  });
 
   const datasets = fallData.map((dataSet, index) => {
-      return {
-        label: fixedLabels[index % fixedLabels.length],  //`Dataset ${index + 1}`,  // Give each dataset a unique label
-        data: dataSet.map(item => ({ x: item.x, y: item.y })),  // Map to Chart.js format
-        fill: false,  // Set to `true` if you want the area under the line to be filled
-        borderColor:  fixedColors[index % fixedColors.length],//`hsl(${index * 60}, 100%, 50%)`,  // Set a unique color for each line (based on index)
-        tension: 0.1  // Line smoothing (0 = no smoothing, 1 = highly smoothed)
-      };
-    });
+    return {
+      label: fixedLabels[index % fixedLabels.length],
+      data: dataSet.map(item => ({ x: item.x, y: item.y })),
+      fill: false,
+      borderColor: fixedColors[index % fixedColors.length],
+      tension: 0.1
+    };
+  });
 
-    // console.log('the data set');
-    // console.log(datasets);
+  // Linear extrapolation dashed lines from 194°F to 350°F
+  const extrapolationDatasets = fallData.map((dataSet, index) => {
+    const n = dataSet.length;
+    const lastPt = dataSet[n - 1];
+    const prevPt = dataSet[n - 2];
+    const slope = (lastPt.y - prevPt.y) / (lastPt.x - prevPt.x);
+    const extrapPts = [];
+    for (let x = Math.round(lastPt.x); x <= 350; x++) {
+      extrapPts.push({ x, y: lastPt.y + slope * (x - lastPt.x) });
+    }
+    return {
+      label: fixedLabels[index % fixedLabels.length],
+      data: extrapPts,
+      fill: false,
+      borderColor: fixedColors[index % fixedColors.length],
+      borderDash: [6, 4],
+      tension: 0,
+      isExtrapolation: true,
+    };
+  });
+
+  const allDatasets = [...datasets, ...extrapolationDatasets];
 
   const config = {
-        type: 'line',  // Line chart type
-        data: {
-          datasets: datasets  // Use the datasets we created
+    type: 'line',
+    data: {
+      datasets: allDatasets
+    },
+    options: {
+      decimation: {
+        enabled: false
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            align: 'top',
+            padding: 20,
+            usePointStyle: false,
+            boxHeight: 2,
+            font: { size: 18 },
+            filter: (legendItem, chartData) => {
+              return !chartData.datasets[legendItem.datasetIndex].isExtrapolation;
+            },
+          },
+          onClick: function(e, legendItem, legend) {
+            const datasetIndex = legendItem.datasetIndex;
+            const ci = legend.chart;
+            const meta = ci.getDatasetMeta(datasetIndex);
+            meta.hidden = meta.hidden === null ? !ci.data.datasets[datasetIndex].hidden : null;
+            const extrapIndex = datasetIndex + fallData.length;
+            if (extrapIndex < ci.data.datasets.length) {
+              const extrapMeta = ci.getDatasetMeta(extrapIndex);
+              extrapMeta.hidden = meta.hidden;
+            }
+            ci.update();
+          },
         },
-        options: {
-          decimation: {
-          enabled: false // Disable data decimation completely [2, 7]
+        tooltip: {
+          enabled: true,
+          mode: 'nearest',
+          intersect: false,
+          axis: 'x',
+        },
+        customCanvasBackgroundColor: {
+          color: 'white',
+        },
+      },
+      maintainAspectRatio: false,
+      layout: {
+        padding: { left: 10, right: 25, top: 5, bottom: 5 },
+      },
+      interaction: {
+        mode: 'nearest',
+        axis: 'x',
+      },
+      elements: {
+        point: { radius: 0 },
+      },
+      responsive: true,
+      scales: {
+        x: {
+          type: 'linear',
+          min: -40,
+          max: 350,
+          ticks: {
+            maxRotation: 0,
+            font: { size: 16 },
           },
-          plugins:{
-            // decimation: {
-            //   enabled: false, // Disable data decimation completely [2, 7]
-            //   algorithm: 'min-max',
-            // },
-            legend: {
-              position: 'top',  // Position of the legend (optional)
-            },
-            tooltip: {
-              enabled: true,
-              mode: 'nearest',
-              intersect: false,
-              axis: 'x',
-            },
-            customCanvasBackgroundColor:{
-              color: 'white',
-            },
-            // title:{
-            //   align: 'center',
-            //   display: true,
-            //   text: 'Nominal Density',
-            //   fullSize: true,
-            // },
-            legend:{
-              labels:{
-                align: 'top',
-                padding: 20,
-                usePointStyle: false,
-                boxHeight: 2,
-                font: {
-                  size: 18, // Set the desired font size for legend labels
-                },
-              },
-
-            //makes the lines disappear faster
-              onClick: function(e, legendItem, legend) {
-                // This will toggle the dataset visibility when the legend item is clicked
-                const datasetIndex = legendItem.datasetIndex;
-                const ci = legend.chart;
-                const meta = ci.getDatasetMeta(datasetIndex);
-                meta.hidden = meta.hidden === null ? !ci.data.datasets[datasetIndex].hidden : null;
-                ci.update();
-            },
-
-            },
-          },
-          maintainAspectRatio: false,
-          layout: {
-            padding: {
-            left: 10,
-            right: 25,
-            top: 5,
-            bottom: 5,
-            },
-          },
-          interaction: {
-            mode: 'nearest', // Change interaction mode if needed
-            //intersect: false,
-            axis: 'x',
-          },
-          elements: {
-            point:{
-                radius: 0,
-            },
-          },
-          responsive: true,
-          scales: {
-            x:{
-              type: 'linear',
-              //beginAtZero: true,
-              min: -40,
-              max: 194,
-              //suggestedMax: 194, 
-              ticks:{
-                //stepSize:10,
-                //autoSkip: true,
-                //maxTicksLimit: 26,
-                maxRotation: 0,
-                font: {
-                  size: 16,
-                },
-              },
-              title: {
-                display:true,
-                text: 'Temperature °F',
-                font: {
-                  size: 20,
-                },
-              }
-            },
-            y:{
-              type: 'linear',
-              tick:{
-                crossAlign:'far',
-              },
-              //beginAtZero: true,
-              //min: 620,
-              //max:1200, 
-              ticks:{
-                //stepSize:20,
-                font: {
-                size: 16,
-              },
-              },
-              title: {
-                display:true,
-                text: 'Density, kg/m³',
-                padding: 10,
-                font: {
-                  size: 20,
-                },
-              }
-            },
+          title: {
+            display: true,
+            text: 'Temperature °F',
+            font: { size: 20 },
           }
-        }
-      };
+        },
+        y: {
+          type: 'linear',
+          tick: { crossAlign: 'far' },
+          ticks: { font: { size: 16 } },
+          title: {
+            display: true,
+            text: 'Density, kg/m³',
+            padding: 10,
+            font: { size: 20 },
+          }
+        },
+      }
+    }
+  };
 
   const ctx = document.getElementById('myChart').getContext('2d');
- myChart =  new Chart(ctx, config);
-
-};
+  myChart = new Chart(ctx, config);
+}
 
 
 
 function createExpansionChart() {
   const rho0 = linearInterpolationWater(68, densityWater); // water density at 68°F (not used)
-  // Reference density for each fuel type at 68°F
   const td = transformedData();
 
-  const datasets = td.map((ds, index) => {
+  const mainDatasets = [];
+  const extrapolationDatasets = [];
+
+  td.forEach((ds, index) => {
     const rho0F = (function() {
-      // interpolate fuel density at 68°F
-      const d = ds;
-      // simple inline interp
-      for (let i = 0; i < d.length - 1; i++) {
-        if (d[i][0] <= 68 && d[i+1][0] >= 68) {
-          const x0 = d[i][0], y0 = d[i][1], x1 = d[i+1][0], y1 = d[i+1][1];
+      for (let i = 0; i < ds.length - 1; i++) {
+        if (ds[i][0] <= 68 && ds[i+1][0] >= 68) {
+          const x0 = ds[i][0], y0 = ds[i][1], x1 = ds[i+1][0], y1 = ds[i+1][1];
           return y0 + (68 - x0) * (y1 - y0) / (x1 - x0);
         }
       }
       return null;
     })();
 
-    if (rho0F === null) return null;
+    if (rho0F === null) return;
 
     const pts = ds
       .filter(p => p[0] >= -40 && p[0] <= 194)
       .map(p => ({ x: p[0], y: (rho0F - p[1]) / p[1] * 100 }));
 
-    return {
+    mainDatasets.push({
       label: fixedLabels[index % fixedLabels.length],
       data: pts,
       fill: false,
       borderColor: fixedColors[index % fixedColors.length],
       tension: 0.1,
-    };
-  }).filter(d => d !== null);
+    });
+
+    // Linear extrapolation of fuel density from 194°F to 350°F
+    const n = ds.length;
+    const lastT = ds[n - 1][0];       // 194
+    const lastRho = ds[n - 1][1];
+    const dRho_dT = lastRho - ds[n - 2][1]; // slope per °F
+
+    const extrapPts = [];
+    for (let x = Math.round(lastT); x <= 350; x++) {
+      const rhoT = lastRho + dRho_dT * (x - lastT);
+      extrapPts.push({ x, y: (rho0F - rhoT) / rhoT * 100 });
+    }
+
+    extrapolationDatasets.push({
+      label: fixedLabels[index % fixedLabels.length],
+      data: extrapPts,
+      fill: false,
+      borderColor: fixedColors[index % fixedColors.length],
+      borderDash: [6, 4],
+      tension: 0,
+      isExtrapolation: true,
+    });
+  });
+
+  const allDatasets = [...mainDatasets, ...extrapolationDatasets];
+  const numMain = mainDatasets.length;
 
   const whiteBg = {
     id: 'customCanvasBackgroundColor',
@@ -332,7 +334,7 @@ function createExpansionChart() {
   const ctx = document.getElementById('ndExpChart').getContext('2d');
   ndExpChart = new Chart(ctx, {
     type: 'line',
-    data: { datasets },
+    data: { datasets: allDatasets },
     options: {
       maintainAspectRatio: false,
       responsive: true,
@@ -342,12 +344,25 @@ function createExpansionChart() {
       plugins: {
         legend: {
           position: 'top',
-          labels: { padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 } },
+          labels: {
+            padding: 20,
+            usePointStyle: false,
+            boxHeight: 2,
+            font: { size: 18 },
+            filter: (legendItem, chartData) => {
+              return !chartData.datasets[legendItem.datasetIndex].isExtrapolation;
+            },
+          },
           onClick: function(e, legendItem, legend) {
             const idx = legendItem.datasetIndex;
             const ci = legend.chart;
             const meta = ci.getDatasetMeta(idx);
             meta.hidden = meta.hidden === null ? !ci.data.datasets[idx].hidden : null;
+            const extrapIndex = idx + numMain;
+            if (extrapIndex < ci.data.datasets.length) {
+              const extrapMeta = ci.getDatasetMeta(extrapIndex);
+              extrapMeta.hidden = meta.hidden;
+            }
             ci.update();
           },
         },
@@ -358,7 +373,7 @@ function createExpansionChart() {
         x: {
           type: 'linear',
           min: -40,
-          max: 194,
+          max: 350,
           ticks: { maxRotation: 0, font: { size: 16 } },
           title: { display: true, text: 'Temperature °F', font: { size: 20 } },
         },
@@ -422,6 +437,13 @@ function ndExpCalc() {
       rhoT = ds[i][1] + (tF - ds[i][0]) * (ds[i+1][1] - ds[i][1]) / (ds[i+1][0] - ds[i][0]);
       break;
     }
+  }
+
+  // Extrapolate rhoT for temperatures beyond 194°F up to 350°F
+  if (rhoT === null && tF > 194 && tF <= 350) {
+    const n = ds.length;
+    const slope = ds[n-1][1] - ds[n-2][1];
+    rhoT = ds[n-1][1] + slope * (tF - ds[n-1][0]);
   }
 
   if (rho0 === null || rhoT === null || flag) {
@@ -602,6 +624,22 @@ function updateCalculator() {
   let interpolatedValue = linearInterpolation(fahrenheit, nonChartData[switchIndex]);
   console.log(`Interpolated value at x = ${fahrenheit} is y = ${interpolatedValue}`);
 
+  // Extrapolate fuel density for temperatures 194–350°F
+  let isExtrapolated = false;
+  if (flag === true) {
+    const tF_num = parseFloat(fahrenheit);
+    if (tF_num > 194 && tF_num <= 350) {
+      const ds = nonChartData[switchIndex];
+      const n = ds.length;
+      const slope = ds[n-1][1] - ds[n-2][1]; // density change per °F
+      interpolatedValue = ds[n-1][1] + slope * (tF_num - ds[n-1][0]);
+      flag = false;
+      isExtrapolated = true;
+    }
+  }
+  const warnEl = document.getElementById('extrapolationWarning');
+  if (warnEl) warnEl.style.display = isExtrapolated ? '' : 'none';
+
   let interp_densityWater = linearInterpolationWater(fahrenheit, densityWater);
 
   if (flag == true) {
@@ -619,7 +657,7 @@ function updateCalculator() {
       document.getElementById("result_density3").innerText = ((interpolatedValue*0.0083454063545262).toFixed(4));
       document.getElementById("result_density4").innerText = ((interpolatedValue/1000).toFixed(5));
       document.getElementById("result_density5").innerText = ((interpolatedValue/998).toFixed(5));
-      document.getElementById("result_density6").innerText = ((interpolatedValue/interp_densityWater).toFixed(5));
+      document.getElementById("result_density6").innerText = (interp_densityWater != null && !isNaN(interp_densityWater)) ? ((interpolatedValue/interp_densityWater).toFixed(5)) : 'N/A';
       document.getElementById("result_density7").innerText = (((141.5/(interpolatedValue/998))-131.5).toFixed(5));
       document.getElementById("result_density8").innerText = ((interpolatedValue*0.0083454063545262*7.48052).toFixed(4));
   }
