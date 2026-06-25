@@ -1,6 +1,73 @@
 'use strict';
 // Main app controller — wires DOM, AG Grid, events, Edit Mode overlay
 
+// ── Smart sort comparators (module-level; used inside buildColumnDefs) ────────
+const _DATE_SORT_FIELDS = new Set(['dob','spouse_dob','client_since','date_est']);
+
+function _parseDateForSort(v) {
+  if (!v) return null;
+  const s = v.trim();
+  let m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+  if (m) {
+    const y = m[3].length === 2 ? (parseInt(m[3]) < 30 ? 2000 + +m[3] : 1900 + +m[3]) : +m[3];
+    return new Date(y, +m[1] - 1, +m[2]).getTime();
+  }
+  m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m) return new Date(+m[1], +m[2] - 1, +m[3]).getTime();
+  return null;
+}
+
+// Keeps blanks at visual bottom regardless of sort direction.
+// isInverted=true means the grid flips the result (descending), so we flip sign to counteract.
+function _blankLast(a, b, isInverted) {
+  const ea = a == null || a === '', eb = b == null || b === '';
+  if (ea && eb) return 0;
+  if (ea) return isInverted ? -1 : 1;
+  if (eb) return isInverted ? 1 : -1;
+  return null; // both have values — caller continues
+}
+
+function _colComparator(mappedField) {
+  if (!mappedField) return null;
+
+  if (_DATE_SORT_FIELDS.has(mappedField)) {
+    return (a, b, _na, _nb, isInverted) => {
+      const bl = _blankLast(a, b, isInverted);
+      if (bl !== null) return bl;
+      const da = _parseDateForSort(a), db = _parseDateForSort(b);
+      if (da == null && db == null) return 0;
+      if (da == null) return isInverted ? -1 : 1;
+      if (db == null) return isInverted ? 1 : -1;
+      return da - db;
+    };
+  }
+
+  if (mappedField === 'state') {
+    return (a, b, _na, _nb, isInverted) => {
+      const bl = _blankLast(a, b, isInverted);
+      if (bl !== null) return bl;
+      const norm = (v) => {
+        const t = (v || '').trim();
+        const up = t.toUpperCase();
+        return CC.STATE_CODES.has(up) ? up : (CC.STATE_MAP[t.toLowerCase()] || up);
+      };
+      return norm(a).localeCompare(norm(b));
+    };
+  }
+
+  if (mappedField === 'zip') {
+    return (a, b, _na, _nb, isInverted) => {
+      const bl = _blankLast(a, b, isInverted);
+      if (bl !== null) return bl;
+      // Sort by first 5 digits numerically; ignores ZIP+4 extension for ordering
+      const toNum = (v) => parseInt((v || '').replace(/\D/g,'').slice(0,5).padStart(5,'0'), 10);
+      return toNum(a) - toNum(b);
+    };
+  }
+
+  return null;
+}
+
 function ccInit() {
 
   // ── AG Grid instances ────────────────────────────────────────────────────────
@@ -96,7 +163,14 @@ function ccInit() {
     CC.loadSampleData();
     showWorkspace();
     CC._refresh();
-    CC._toast('Sample data loaded — 30 fake rows for demo/testing');
+    CC._toast('Sample 1 loaded — 30 generic fake rows for demo/testing');
+  });
+
+  el('cc-sample2-btn') && el('cc-sample2-btn').addEventListener('click', () => {
+    CC.loadSampleData2();
+    showWorkspace();
+    CC._refresh();
+    CC._toast('Sample 2 loaded — 19 UltraTax-style rows (OH clients)');
   });
 
   // ── Clear ─────────────────────────────────────────────────────────────────────
@@ -122,6 +196,34 @@ function ccInit() {
     convSelect.addEventListener('change', () => {
       CC.activeConvention = convSelect.value;
       refreshMappingPanel();
+      refreshGrid();
+    });
+  }
+
+  // ── Name format selector + delimiter ─────────────────────────────────────────
+  const formatSelect   = el('cc-name-format');
+  const delimiterWrap  = el('cc-delimiter-wrap');
+  const delimiterInput = el('cc-name-delimiter');
+
+  if (formatSelect) {
+    CC.NAME_FORMATS.forEach(f => {
+      const opt = document.createElement('option');
+      opt.value = f.id; opt.textContent = f.label;
+      if (f.id === CC.activeNameFormat) opt.selected = true;
+      formatSelect.appendChild(opt);
+    });
+    formatSelect.addEventListener('change', () => {
+      CC.activeNameFormat = formatSelect.value;
+      if (delimiterWrap)
+        delimiterWrap.style.display = formatSelect.value === 'delimited' ? 'inline-flex' : 'none';
+      refreshGrid();
+    });
+  }
+
+  if (delimiterInput) {
+    delimiterInput.addEventListener('input', () => {
+      CC.activeNameDelimiter = delimiterInput.value;
+      refreshGrid();
     });
   }
 
@@ -145,6 +247,7 @@ function ccInit() {
   });
 
   el('cc-export-xlsx-btn')    && el('cc-export-xlsx-btn').addEventListener('click',    CC.exportCanopyPathB);
+  el('cc-export-combined-xl') && el('cc-export-combined-xl').addEventListener('click', CC.exportCombinedExcel);
   el('cc-export-csv-btn')     && el('cc-export-csv-btn').addEventListener('click',     CC.exportGenericCSV);
   el('cc-export-json-btn')    && el('cc-export-json-btn').addEventListener('click',    CC.exportGenericJSON);
   el('cc-export-generic-xl')  && el('cc-export-generic-xl').addEventListener('click',  CC.exportGenericExcel);
@@ -211,6 +314,8 @@ function ccInit() {
         industry: CC.INDUSTRIES,
       }[col.mappedField];
 
+      const cmp = _colComparator(col.mappedField);
+
       return {
         field: col.id,
         headerName,
@@ -226,6 +331,7 @@ function ccInit() {
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: { values: ['', ...dropdownValues] },
         } : {}),
+        ...(cmp ? { comparator: cmp } : {}),
       };
     });
 
@@ -235,7 +341,7 @@ function ccInit() {
       editable: false, sortable: true, pinned: false,
       cellStyle: { background: '#f0f8ff', fontStyle: 'italic', fontSize: '11px' },
       headerTooltip: 'Derived Client Name — what Canopy will receive. Not editable; set from name parts.',
-      valueGetter: (params) => CC.composeClientName(CC.dataset.records.find(r=>r.id===params.data?.__id)) || '',
+      valueGetter: (params) => CC.getFormattedClientName(CC.dataset.records.find(r=>r.id===params.data?.__id)) || '',
     };
 
     return [typeCol, flagCol, ...dataCols, derivedNameCol];

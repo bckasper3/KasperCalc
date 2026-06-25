@@ -90,8 +90,8 @@ CC.exportCanopyPathA = () => {
     const lines = [rowToCSV(headers)];
     for (const rec of records) {
       const coerced = coerceForCanopy(rec);
-      const composed = CC.composeClientName(rec, CC.activeConvention);
-      coerced.client_name = composed || coerced.client_name || '';
+      const composed = CC.getFormattedClientName(rec);
+      coerced.client_name = CC.getFormattedClientName(rec) || coerced.client_name || '';
       lines.push(rowToCSV(fields.map(f => coerced[f] || '')));
     }
     return lines.join('\n');
@@ -137,7 +137,7 @@ CC.exportCanopyPathB = () => {
     const rows = [headers];
     for (const rec of records) {
       const coerced = coerceForCanopy(rec);
-      coerced.client_name = CC.composeClientName(rec, CC.activeConvention) || coerced.client_name || '';
+      coerced.client_name = CC.getFormattedClientName(rec) || coerced.client_name || '';
       rows.push(fields.map(f => coerced[f] || ''));
     }
     return XLSX.utils.aoa_to_sheet(rows);
@@ -152,6 +152,49 @@ CC.exportCanopyPathB = () => {
   const buf = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
   const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
   downloadBlob(blob, `canopy-import-${todayStr()}.xlsx`);
+};
+
+// ── Combined single-sheet Excel (all clients, Type column prepended) ──────────
+const CANOPY_COMBINED_HEADERS = [
+  'Type',
+  'Client Name','Client ID','Client Owner','Source','Client Since','Active','Client Group',
+  'First name','Middle name','Last name','SSN','Date of birth',
+  'Spouse first name','Spouse middle name','Spouse last name','Spouse SSN','Spouse email','Spouse date of birth',
+  'Business Name','EIN','Business Type','Industry','Date Est./Inc.',
+  'Email','Phone number','Mobile number','Address line 1','Address line 2','City','State','Zip','Country',
+  'Tags',
+];
+const CANOPY_COMBINED_FIELDS = [
+  '__type',
+  'client_name','client_id','client_owner','source','client_since','active','client_group',
+  'first_name','middle_name','last_name','ssn','dob',
+  'spouse_first','spouse_middle','spouse_last','spouse_ssn','spouse_email','spouse_dob',
+  'business_name','ein','business_type','industry','date_est',
+  'email','phone','mobile','address1','address2','city','state','zip','country',
+  'tags',
+];
+
+CC.exportCombinedExcel = () => {
+  if (typeof XLSX === 'undefined') { alert('SheetJS library not loaded.'); return; }
+  const records = CC.dataset.records.filter(r => !r._deleted &&
+    (r.classification === 'individual' || r.classification === 'business'));
+  if (!records.length) { alert('No classified rows to export. Ensure rows are classified as Individual or Business.'); return; }
+
+  const rows = [CANOPY_COMBINED_HEADERS];
+  for (const rec of records) {
+    const coerced = coerceForCanopy(rec);
+    coerced.client_name = CC.getFormattedClientName(rec) || coerced.client_name || '';
+    coerced.__type = rec.classification === 'individual' ? 'Individual' : 'Business';
+    rows.push(CANOPY_COMBINED_FIELDS.map(f => coerced[f] || ''));
+  }
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'All Clients');
+  const buf = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  downloadBlob(blob, `canopy-all-clients-${todayStr()}.xlsx`);
+  CC._toast && CC._toast(`Downloading: canopy-all-clients-${todayStr()}.xlsx`);
 };
 
 // ── Generic CSV ───────────────────────────────────────────────────────────────

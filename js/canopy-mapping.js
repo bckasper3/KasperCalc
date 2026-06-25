@@ -27,6 +27,7 @@ CC.FIELD_ALIASES = {
   client_since:  ['clientsince','since','startdate','datestarted','clientstartdate'],
   client_group:  ['clientgroup','clientcategory','group'],
   business_type: ['businesstype','entitytype','orgtype','organizationtype'],
+  return_type:   ['returntype','returnformtype','taxreturntype','formtype','taxreturn'],
   industry:      ['industry','sector','businesssector'],
   date_est:      ['dateest','dateinc','incorporateddate','establisheddate','dateestablished','incdate'],
   contact_type:  ['contacttype'],
@@ -47,7 +48,7 @@ CC.FIELD_LABELS = {
   state:'State', zip:'Zip', country:'Country', dob:'Date of birth',
   client_name:'Client Name', active:'Active', client_owner:'Client Owner',
   source:'Source', client_since:'Client Since', client_group:'Client Group',
-  business_type:'Business Type', industry:'Industry', date_est:'Date Est./Inc.',
+  business_type:'Business Type', return_type:'Return / Entity Type', industry:'Industry', date_est:'Date Est./Inc.',
   contact_type:'Contact type', tags:'Tags',
   spouse_first:'Spouse first name', spouse_last:'Spouse last name',
   spouse_middle:'Spouse middle name', spouse_ssn:'Spouse SSN',
@@ -55,7 +56,10 @@ CC.FIELD_LABELS = {
   __ignore:'Do not import',
 };
 
-CC.BIZ_SUFFIX_RE = /\b(LLC|INC|CORP|LTD|LLP|CO|PC|PLLC|LP|PARTNERSHIP|TRUST|FOUNDATION|ASSOCIATES|GROUP)\b/i;
+CC.BIZ_SUFFIX_RE = /\b(LLC|INC|CORP|LTD|LLP|CO|PC|PLLC|LP|LLLP|PA|PLLP|PLC|DBA|PARTNERSHIP|TRUST|FOUNDATION|ASSOCIATES|GROUP|ENTERPRISES|HOLDINGS|PROPERTIES|INVESTMENTS|REALTY|FARMS|RENTALS|SERVICES|CONSTRUCTION|CONSULTING|TRUCKING|MANUFACTURING|DISTRIBUTION|INDUSTRIES|VENTURES)\b/i;
+
+// Strip dots and commas before testing BIZ_SUFFIX_RE so L.L.C. → LLC and "Smith, LLC" → "Smith LLC"
+CC.normBizName = (s) => String(s || '').replace(/\./g, '').replace(/,\s*/g, ' ').trim();
 
 // ── Normalization ─────────────────────────────────────────────────────────────
 CC.normalizeHeader = (s) => String(s).toLowerCase().trim().replace(/[^a-z0-9]/g, '');
@@ -103,7 +107,7 @@ CC.PATTERN_TESTS = {
   state:     v => CC.STATE_CODES.has(v.toUpperCase()) || !!CC.STATE_MAP[v.toLowerCase()],
   date:      v => /^(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}|\d{4}-\d{2}-\d{2})$/.test(v),
   name_lf:   v => /^[A-Za-z'\-]+,\s+[A-Za-z'\-. ]+$/.test(v),
-  biz_name:  v => CC.BIZ_SUFFIX_RE.test(v),
+  biz_name:  v => CC.BIZ_SUFFIX_RE.test(CC.normBizName(v)),
 };
 
 const PATTERN_TO_FIELD = {

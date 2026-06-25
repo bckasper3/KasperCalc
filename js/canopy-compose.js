@@ -11,6 +11,58 @@ CC.NAME_CONVENTIONS = [
 ];
 CC.activeConvention = 'last_first'; // default
 
+// Post-composition format transforms
+CC.NAME_FORMATS = [
+  { id: 'original',  label: 'Original (as composed)' },
+  { id: 'upper',     label: 'ALL UPPERCASE' },
+  { id: 'lower',     label: 'all lowercase' },
+  { id: 'camel',     label: 'camelCase' },
+  { id: 'kebab',     label: 'kebab-case' },
+  { id: 'delimited', label: 'Custom Delimiter…' },
+];
+CC.activeNameFormat    = 'original';
+CC.activeNameDelimiter = '_';
+
+// Split a composed name on all word-separator characters into clean tokens
+const _nameWords = (s) => (s || '').split(/[\s,\-&+]+/).filter(Boolean);
+
+CC.applyNameFormat = (name, format, delimiter) => {
+  if (!name) return name;
+  const fmt   = format    != null ? format    : CC.activeNameFormat;
+  const delim = delimiter != null ? delimiter : CC.activeNameDelimiter;
+
+  switch (fmt) {
+    case 'upper':
+      return name.toUpperCase();
+    case 'lower':
+      return name.toLowerCase();
+    case 'camel': {
+      const ws = _nameWords(name);
+      return ws.map((w, i) =>
+        i === 0
+          ? w.charAt(0).toLowerCase() + w.slice(1).toLowerCase()
+          : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
+      ).join('');
+    }
+    case 'kebab':
+      return _nameWords(name).join('-').toLowerCase();
+    case 'delimited':
+      return _nameWords(name).join(delim || '_');
+    default:
+      return name; // 'original' — pass through unchanged
+  }
+};
+
+// Compose + format in one call — used by grid preview and all exporters
+CC.getFormattedClientName = (record, convention, format, delimiter) => {
+  const raw = CC.composeClientName(record, convention || CC.activeConvention);
+  return CC.applyNameFormat(
+    raw,
+    format    != null ? format    : CC.activeNameFormat,
+    delimiter != null ? delimiter : CC.activeNameDelimiter
+  );
+};
+
 CC.composeClientName = (record, convention) => {
   const g = (f) => CC.getCellByField(record, f);
 

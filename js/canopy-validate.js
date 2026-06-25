@@ -52,6 +52,20 @@ CC.validateRecord = (record) => {
   if (state && CC.coerceState(state).status === 'unmatched')
     flags.push(flag('warning','UNMATCHED_VOCAB',`State "${state}" not recognized`, gc('state')));
 
+  // ZIP-to-state consistency check
+  const zip = g('zip');
+  if (zip && state) {
+    const stateCoerced = CC.coerceState(state);
+    if (stateCoerced.status !== 'unmatched') {
+      const expectedFromZip = CC.getExpectedStateFromZIP(zip);
+      if (expectedFromZip && expectedFromZip !== stateCoerced.value) {
+        flags.push(flag('warning','ZIP_STATE_MISMATCH',
+          `ZIP ${zip.trim()} belongs to ${expectedFromZip}, not ${stateCoerced.value}`,
+          gc('zip')));
+      }
+    }
+  }
+
   const bt = g('business_type');
   if (bt && CC.coerceBizType(bt).status === 'unmatched')
     flags.push(flag('warning','UNMATCHED_VOCAB',`Business type "${bt}" defaulted to Other`, gc('business_type')));
