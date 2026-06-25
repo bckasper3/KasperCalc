@@ -115,7 +115,7 @@
       .cc-count-cell.unknown .num{color:#cc7700}
 
       /* ── Mapping panel ───────────────────────────────────────── */
-      #cc-mapping-panel{max-height:500px;overflow-y:auto;font-size:11px}
+      #cc-mapping-panel{max-height:550px;overflow-y:auto;font-size:11px}
       .cc-map-row{display:flex;align-items:center;gap:5px;padding:2px 0;border-bottom:1px solid #e8e8e8}
       .cc-map-colname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
       .cc-map-select{font-size:11px;border:1px solid #bbb;border-radius:4px;background:#fff;padding:1px 2px;max-width:130px}
@@ -128,8 +128,9 @@
       /* ── Export section ──────────────────────────────────────── */
       #cc-export-section{display:none;margin-top:0}
       .cc-export-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-      .cc-convention-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px}
+      .cc-convention-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px;flex-wrap:wrap}
       .cc-convention-row select{font-size:12px;border:1.5px solid #bbb;border-radius:5px;padding:2px 6px}
+      .cc-convention-row input[type="text"]{font-size:12px;border:1.5px solid #bbb;border-radius:5px;padding:2px 6px;width:56px;font-family:ui-monospace,monospace}
 
       /* ── Status bar ──────────────────────────────────────────── */
       .cc-status-bar{background:#eee;margin:.5rem .5rem 0;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:5px 10px;display:flex;align-items:center;gap:8px}
@@ -173,7 +174,7 @@
             <ul class="navbar-nav justify-content-end">
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
-                <div class="dropdown-menu dropdown-menu-end">
+                <div class="dropdown-menu dropdown-menu">
                   <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
                   <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
                   <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
@@ -186,7 +187,7 @@
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
-                <div class="dropdown-menu dropdown-menu-end">
+                <div class="dropdown-menu dropdown-menu">
                   <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
                   <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
                   <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
@@ -198,7 +199,7 @@
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
-                <div class="dropdown-menu dropdown-menu-end">
+                <div class="dropdown-menu dropdown-menu">
                   <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
                   <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
                   <a class="dropdown-item" href="PGdensity.html">Density</a>
@@ -274,13 +275,13 @@
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
-                <div class="dropdown-menu dropdown-menu-end">
+                <div class="dropdown-menu dropdown-menu">
                   <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
-                <div class="dropdown-menu dropdown-menu-end">
+                <div class="dropdown-menu dropdown-menu">
                   <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
                   <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
                   <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
@@ -290,16 +291,15 @@
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
-                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
-                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
-                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
-                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
-                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
-                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
-                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -321,21 +321,23 @@
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
                   <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
                   <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
                   <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
-                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
-                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
-                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
-                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
-                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
-                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
                 </div>
               </li>
               <li class="nav-item text-center align-svg-bottom smallsearchbar">
@@ -409,7 +411,7 @@
             <!-- Privacy notice -->
             <div class="cc-privacy" role="note">
               <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1L2 4v4c0 3.3 2.5 6.4 6 7 3.5-.6 6-3.7 6-7V4L8 1z" stroke="#1a5a2a" stroke-width="1.4" fill="#c3e6cb"/></svg>
-              <span><strong>Runs entirely in your browser.</strong> No client data is uploaded or stored. SSNs, EINs, and all other PII never leave this page.</span>
+              <span><strong>Runs entirely in your browser.</strong> No client data is uploaded or stored. SSNs, EINs, and all other PII never leave this page. KasperCalc has no servers, nothing needs to be "deleted later" because nothing is sent to our servers. Because we don't have any servers.</span>
             </div>
 
             <!-- Import section -->
@@ -446,9 +448,13 @@
                   <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                   Parse Pasted Data
                 </button>
-                <button class="cc-btn" id="cc-sample-btn" title="Load ~30 fake rows to demo the full pipeline">
+                <button class="cc-btn" id="cc-sample-btn" title="Load ~30 fake rows (generic) to demo the full pipeline">
                   <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-                  Load Sample Data
+                  Sample 1 (Generic)
+                </button>
+                <button class="cc-btn" id="cc-sample2-btn" title="Load 19-row UltraTax-style export (realistic column names, OH clients)">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                  Sample 2 (UltraTax)
                 </button>
                 <button class="cc-btn danger sm" id="cc-clear-btn" style="margin-left:auto">
                   Clear All
@@ -534,8 +540,17 @@
                 <div class="cc-grp-title">Export</div>
 
                 <div class="cc-convention-row">
-                  <label for="cc-convention" style="font-size:12px;white-space:nowrap">Client Name convention:</label>
+                  <label for="cc-convention" style="white-space:nowrap">Name structure:</label>
                   <select id="cc-convention" aria-label="Client Name naming convention"></select>
+                </div>
+                <div class="cc-convention-row">
+                  <label for="cc-name-format" style="white-space:nowrap">Case / format:</label>
+                  <select id="cc-name-format" aria-label="Client Name case format"></select>
+                  <span id="cc-delimiter-wrap" style="display:none;align-items:center;gap:4px">
+                    <label for="cc-name-delimiter" style="white-space:nowrap">delimiter:</label>
+                    <input id="cc-name-delimiter" type="text" maxlength="5" value="_"
+                      aria-label="Word delimiter character" placeholder="_">
+                  </span>
                 </div>
 
                 <div style="font-size:12px;font-weight:600;color:#3a5a3a;margin-bottom:4px">
@@ -558,6 +573,17 @@
                     Download Canopy .xlsx
                   </button>
                   <span style="font-size:11px;color:#555;align-self:center">Two-sheet workbook matching Canopy's template column order</span>
+                </div>
+
+                <div style="font-size:12px;font-weight:600;color:#5a3a6a;margin-bottom:4px">
+                  Combined Export (both types, one sheet)
+                </div>
+                <div class="cc-export-row" style="margin-bottom:10px">
+                  <button class="cc-btn" id="cc-export-combined-xl" style="background:#7a5a9a;color:#fff;border-color:#5a3a7a">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    Download Combined Excel
+                  </button>
+                  <span style="font-size:11px;color:#555;align-self:center">Single sheet — all clients with a <em>Type</em> column</span>
                 </div>
 
                 <div style="font-size:12px;font-weight:600;color:#555;margin-bottom:4px">
@@ -610,6 +636,144 @@
       <!-- Toast notification -->
       <div id="cc-toast" class="cc-toast" aria-live="polite" aria-atomic="true"></div>
 
+    </section>
+
+
+    <!-- CLASSIFICATION EXPLAINER -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto mt-1 mb-3 text-start" style="max-width:860px;">
+
+            <div class="text-center">
+              <div class="custom-heading">How Individual vs. Business Classification Works</div>
+            </div>
+
+            <p style="font-size:0.88rem;line-height:1.75;margin-top:0.75rem;">
+              Every row in your import is independently scored against two sets of signals — one for <strong>Business</strong> and one for <strong>Individual</strong>.
+              The side with the higher point total wins and becomes the row's classification.
+              The confidence percentage shown in the type pill is the winner's score expressed as a share of the combined total.
+              If the two scores are too close (margin &lt;&nbsp;10&nbsp;pts) or no signals fire at all, the row is marked <strong>Unknown</strong> and flagged for manual review.
+            </p>
+
+            <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1rem;">
+
+              <!-- Business signals -->
+              <div style="flex:1 1 340px;min-width:280px;">
+                <div style="background:#e8f0e8;border:1.5px solid #5a7a5a;border-radius:8px;padding:10px 14px;">
+                  <div style="font-size:13px;font-weight:700;color:#2a5a2a;margin-bottom:8px;letter-spacing:.03em;">
+                    ▶ Business Signals
+                  </div>
+                  <table style="width:100%;font-size:0.82rem;border-collapse:collapse;">
+                    <thead>
+                      <tr style="border-bottom:1.5px solid #5a7a5a;">
+                        <th style="text-align:left;padding:3px 6px 5px 0;color:#2a5a2a;">Signal</th>
+                        <th style="text-align:center;padding:3px 8px 5px;color:#2a5a2a;white-space:nowrap;">Points</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style="border-bottom:1px solid #c0d0c0;">
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">Business name contains a recognized entity suffix (periods &amp; commas stripped first, so <em>L.L.C.</em> and <em>Smith, LLC</em> both match)<br><span style="color:#555;font-size:0.78rem;">LLC · INC · CORP · LTD · LLP · CO · PC · PLLC · LP · LLLP · PA · PLLP · PLC · DBA · PARTNERSHIP · TRUST · FOUNDATION · ASSOCIATES · GROUP · ENTERPRISES · HOLDINGS · PROPERTIES · INVESTMENTS · REALTY · FARMS · RENTALS · SERVICES · CONSTRUCTION · CONSULTING · TRUCKING · MANUFACTURING · DISTRIBUTION · INDUSTRIES · VENTURES</span></td>
+                        <td style="text-align:center;font-weight:700;color:#2a5a2a;padding:5px 8px;">+50</td>
+                      </tr>
+                      <tr style="border-bottom:1px solid #c0d0c0;">
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">Business name present, no recognized suffix</td>
+                        <td style="text-align:center;font-weight:700;color:#2a5a2a;padding:5px 8px;">+25</td>
+                      </tr>
+                      <tr style="border-bottom:1px solid #c0d0c0;">
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">EIN present in XX-XXXXXXX format</td>
+                        <td style="text-align:center;font-weight:700;color:#2a5a2a;padding:5px 8px;">+40</td>
+                      </tr>
+                      <tr style="border-bottom:1px solid #c0d0c0;">
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">Return / entity type is a business form or entity class<br><span style="color:#555;font-size:0.78rem;">1065 · 1120 · 1120S · 1120-S · 1041 · 990 · 990-EZ · 990-PF · Partnership · S-Corp · S Corporation · C-Corp · C Corporation · Fiduciary · Corporation · Exempt Org · LLC · LLP · LP · PC · PA …</span></td>
+                        <td style="text-align:center;font-weight:700;color:#2a5a2a;padding:5px 8px;">+45</td>
+                      </tr>
+                      <tr style="border-bottom:1px solid #c0d0c0;">
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">"Estate of …", "Trust", "Family Trust", "Living Trust", or "Irrevocable" found in client name or business name</td>
+                        <td style="text-align:center;font-weight:700;color:#2a5a2a;padding:5px 8px;">+40</td>
+                      </tr>
+                      <tr style="border-bottom:1px solid #c0d0c0;">
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">DBA / d/b/a / "doing business as" found in any name field</td>
+                        <td style="text-align:center;font-weight:700;color:#2a5a2a;padding:5px 8px;">+25</td>
+                      </tr>
+                      <tr style="border-bottom:1px solid #c0d0c0;">
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">Role-based email prefix<br><span style="color:#555;font-size:0.78rem;">info@ · accounting@ · admin@ · office@ · contact@ · support@ · billing@ · tax@</span></td>
+                        <td style="text-align:center;font-weight:700;color:#2a5a2a;padding:5px 8px;">+10</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">No first name, last name, or client name mapped at all</td>
+                        <td style="text-align:center;font-weight:700;color:#2a5a2a;padding:5px 8px;">+10</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div style="font-size:0.78rem;color:#3a5a3a;margin-top:8px;font-style:italic;">Maximum possible: 220 pts (theoretical)</div>
+                </div>
+              </div>
+
+              <!-- Individual signals -->
+              <div style="flex:1 1 340px;min-width:280px;">
+                <div style="background:#e8f0f4;border:1.5px solid #4a7a8d;border-radius:8px;padding:10px 14px;">
+                  <div style="font-size:13px;font-weight:700;color:#1a4a6a;margin-bottom:8px;letter-spacing:.03em;">
+                    ▶ Individual Signals
+                  </div>
+                  <table style="width:100%;font-size:0.82rem;border-collapse:collapse;">
+                    <thead>
+                      <tr style="border-bottom:1.5px solid #4a7a8d;">
+                        <th style="text-align:left;padding:3px 6px 5px 0;color:#1a4a6a;">Signal</th>
+                        <th style="text-align:center;padding:3px 8px 5px;color:#1a4a6a;white-space:nowrap;">Points</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style="border-bottom:1px solid #b8ccd4;">
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">SSN present in XXX-XX-XXXX format</td>
+                        <td style="text-align:center;font-weight:700;color:#1a4a6a;padding:5px 8px;">+40</td>
+                      </tr>
+                      <tr style="border-bottom:1px solid #b8ccd4;">
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">First name <em>and</em> last name both present</td>
+                        <td style="text-align:center;font-weight:700;color:#1a4a6a;padding:5px 8px;">+35</td>
+                      </tr>
+                      <tr style="border-bottom:1px solid #b8ccd4;">
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">First name <em>or</em> last name only (one present)</td>
+                        <td style="text-align:center;font-weight:700;color:#1a4a6a;padding:5px 8px;">+10</td>
+                      </tr>
+                      <tr style="border-bottom:1px solid #b8ccd4;">
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">Spouse first name present</td>
+                        <td style="text-align:center;font-weight:700;color:#1a4a6a;padding:5px 8px;">+20</td>
+                      </tr>
+                      <tr style="border-bottom:1px solid #b8ccd4;">
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">Client name matches <code style="font-size:0.78rem;">Last, First</code> pattern</td>
+                        <td style="text-align:center;font-weight:700;color:#1a4a6a;padding:5px 8px;">+15</td>
+                      </tr>
+                      <tr style="border-bottom:1px solid #b8ccd4;">
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">Return / entity type is an individual form<br><span style="color:#555;font-size:0.78rem;">1040 · 1040-SR · Individual</span></td>
+                        <td style="text-align:center;font-weight:700;color:#1a4a6a;padding:5px 8px;">+45</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:5px 6px 5px 0;line-height:1.45;">Personal email domain<br><span style="color:#555;font-size:0.78rem;">gmail · yahoo · outlook · icloud · aol · hotmail · comcast · me.com · live.com</span></td>
+                        <td style="text-align:center;font-weight:700;color:#1a4a6a;padding:5px 8px;">+10</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div style="font-size:0.78rem;color:#2a4a6a;margin-top:8px;font-style:italic;">Maximum possible: 165 pts (theoretical)</div>
+                </div>
+              </div>
+
+            </div><!-- /flex row -->
+
+            <!-- Decision rule -->
+            <div style="background:#f5f5e8;border:1.5px solid #9a9a5a;border-radius:8px;padding:10px 16px;margin-top:1rem;font-size:0.83rem;line-height:1.7;">
+              <strong style="display:block;margin-bottom:4px;color:#4a4a1a;">Decision Rule</strong>
+              The winner is whichever side scores higher.
+              <strong>Confidence %</strong> = winner's score ÷ combined total × 100, so a row with a return type of 1065 <em>and</em> an EIN <em>and</em> a recognized suffix (135&nbsp;pts) against zero individual signals scores 100% Business confidence.
+              A row is classified <strong>Unknown</strong> when the margin between the two scores is fewer than 10 points, or when no signals fire at all.
+              Theoretical maxima: <strong>220 pts</strong> (Business) and <strong>165 pts</strong> (Individual) — these affect confidence percentages in mixed-signal rows but not classification direction.
+              <br><br>
+              <strong>Manual override:</strong> Click any type pill in the grid (<span style="background:#2a7a8c;color:#fff;padding:1px 7px;border-radius:10px;font-size:11px;">indiv</span> or <span style="background:#5a7a5a;color:#fff;padding:1px 7px;border-radius:10px;font-size:11px;">biz</span>) to cycle through Individual → Business → Unknown → Individual. An overridden row is not re-scored automatically — override takes permanent precedence until cleared.
+            </div>
+
+          </div>
+        </div>
+      </div>
     </section>
 
 
