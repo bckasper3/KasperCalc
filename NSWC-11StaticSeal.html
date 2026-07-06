@@ -146,6 +146,18 @@
       .tbtn:hover { filter: brightness(0.93); }
       .tbtn:active { transform: scale(0.97); }
     </style>
+
+    <!-- LIGHTBOX STYLES (pattern from SpringCompressionRound.html) -->
+    <style>
+      .ref-zoomable{cursor:zoom-in;transition:opacity .15s}
+      .ref-zoomable:hover{opacity:.85}
+      .lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+      .lightbox-overlay.active{display:flex}
+      .lightbox-img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:6px;box-shadow:0 8px 32px rgba(0,0,0,.6);cursor:default;touch-action: pinch-zoom;}
+      .lightbox-close{position:fixed;top:16px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;z-index:100000}
+      .lightbox-close:hover{background:rgba(255,255,255,.3)}
+      .lightbox-caption{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.8);font-size:13px;font-family:Roboto,Arial,sans-serif;text-align:center;max-width:80vw;pointer-events:none}
+    </style>
   </head>
 
   <!-- BODY -->
@@ -333,6 +345,10 @@
                   <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
                   <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
                   <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
                 </div>
               </li>
               <li class="nav-item text-center align-svg-bottom smallsearchbar">
@@ -401,6 +417,29 @@
           <div class="mx-auto d-inline-block mt-3" style="max-width:860px;">
             <div class="custom-heading">NSWC-11 Static Seal &amp; Gasket Reliability Model</div>
             <div class="mt-3 text-start">
+              <p>
+                A seal is a device placed between two surfaces to prevent the flow of gas or liquid from one region
+                to another. Seals are used for both static and dynamic applications. Static seals such as gaskets,
+                bolt seals, back-up rings and sealants are used to prevent leakage through a mechanical joint when
+                there is no relative motion of mating surfaces. Truly static seals are designed to provide a complete
+                barrier to a potential leakage path. These seals are &ldquo;zero leakage&rdquo; seals (down to
+                10<sup>-11</sup> scc/sec helium). In a truly static seal, the mating gland parts are not subject to
+                relative movement except for thermal expansion and movement from the application of fluid pressure.
+                Some static seals are designed to accommodate limited movement of the surfaces being sealed due to
+                changes in pressure, vibration or thermal cycling, such as an expansion joint. These seals are
+                sometimes referred to as semi-static seals.
+              </p>
+              <p>
+                A dynamic seal is a mechanical device used to control leakage of fluid from one region to another
+                when there is rotating, oscillating or reciprocating motion between the sealing interfaces. An
+                O-ring can be used in both static and dynamic applications; however, the employment of O-rings as
+                primary dynamic seals is normally limited to short strokes and moderate pressures. An example of
+                static and dynamic seal applications is shown in Figure 3.1.
+              </p>
+              <figure class="ref-fig" id="fig-3.1" style="margin:1rem 0;text-align:center;">
+                <img src="img/NSWC-11-StaticAndDynamicSeals.png" alt="Figure 3.1 — Example of static and dynamic seal applications." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+                <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 3.1</strong> — Example of static and dynamic seal applications.</figcaption>
+              </figure>
               <p>
                 This tool estimates the failure rate of <span style="font-weight: var(--font-weight-normal)">static seals and gaskets</span> (O-rings, flange
                 gaskets, bolt seals and back-up rings) using the leakage-based model from the Naval Surface Warfare
@@ -2440,6 +2479,62 @@
     glandSel.addEventListener('change', applyFill);
     dashSel.addEventListener('change', applyFill);
   })();
+  </script>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- LIGHTBOX SCRIPT (pattern from SpringCompressionRound.html) -->
+  <script>
+  function initLightbox() {
+    const overlay  = document.getElementById('lightboxOverlay');
+    const img      = document.getElementById('lightboxImg');
+    const caption  = document.getElementById('lightboxCaption');
+    const closeBtn = document.getElementById('lightboxClose');
+
+    if (!overlay) return;
+
+    function openLightbox(src, alt, captionText) {
+      img.src             = src;
+      img.alt             = alt || '';
+      caption.textContent = captionText || '';
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+      img.src = '';
+    }
+
+    document.addEventListener('click', e => {
+      const target = e.target.closest('.ref-zoomable');
+      if (!target) return;
+      const figLabel = target.closest('.ref-fig')
+        ?.querySelector('.ref-fig-label')
+        ?.textContent ?? target.alt ?? '';
+      openLightbox(target.src, target.alt, figLabel);
+    });
+
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeLightbox();
+    });
+
+    closeBtn.addEventListener('click', closeLightbox);
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && overlay.classList.contains('active')) {
+        closeLightbox();
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initLightbox);
   </script>
 
   </body>

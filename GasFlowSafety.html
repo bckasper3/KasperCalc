@@ -1,0 +1,2363 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>KasperCalc: Gas Flow Safety Calculator</title>
+    <link rel="canonical" href="https://kaspercalc.com/GasFlowSafety.html" />
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, gas flow calculator, pipe velocity, oxygen velocity limit, hydrogen flow rate, orifice flow, Cv valve, gas safety" />
+    <meta name="description" content="Calculate gas pipe velocity from flow rate, pressure differential, orifice geometry, or valve Cv — with safety threshold comparison for oxygen, hydrogen, natural gas, and more." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- MathJax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      /* ── Calculator-local variables (light theme, KasperCalc palette) ── */
+      .gfs-wrap {
+        --gc-bg:      #f4f4f4;
+        --gc-card:    var(--calc-background-color);
+        --gc-border:  var(--calc-outline-color);
+        --gc-muted:   #555;
+        --gc-label:   #333;
+        --gc-primary: #000;
+        --gc-radius:  var(--border-radius-small);
+        --gc-ok:      #1a6630;
+        --gc-ok-bg:   #d4edda;
+        --gc-ok-bd:   #b8dac0;
+        --gc-warn:    #7a5500;
+        --gc-warn-bg: #fff3cd;
+        --gc-warn-bd: #f0d070;
+        --gc-danger:  #8b1a1a;
+        --gc-danger-bg: #f8d7da;
+        --gc-danger-bd: #e0a0a0;
+        --gc-fill-ok:     #2a7a4a;
+        --gc-fill-warn:   #c47c00;
+        --gc-fill-danger: #c0392b;
+        font-family: var(--body-font-family);
+      }
+
+      .gfs-wrap * { box-sizing: border-box; }
+
+      /* Sub-title */
+      .gfs-sub { font-size: 15px; color: var(--gc-muted); margin-bottom: 1.2rem; margin-top: .2rem; }
+
+      /* Cards */
+      .gfs-card {
+        background: var(--gc-card);
+        border: 2px solid var(--gc-border);
+        border-radius: 10px;
+        padding: .9rem 1.1rem;
+        margin-bottom: .85rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,.12);
+      }
+
+      /* Section label (like .stitle) */
+      .gfs-stitle {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--gc-muted);
+        text-transform: uppercase;
+        letter-spacing: .07em;
+        margin-bottom: 10px;
+        font-family: var(--title-font-family);
+      }
+
+      /* Form elements */
+      .gfs-wrap label { font-size: 13px; color: var(--gc-label); display: block; margin-bottom: 3px; }
+
+      .gfs-wrap input[type=number],
+      .gfs-wrap select {
+        width: 100%;
+        font-size: 14px;
+        padding: .35rem .5rem;
+        border: 1px solid #999;
+        border-radius: var(--gc-radius);
+        background: #fff;
+        color: var(--gc-primary);
+        font-family: var(--body-font-family);
+      }
+      .gfs-wrap input[type=number]:focus,
+      .gfs-wrap select:focus { outline: 2px solid var(--section-title-color); }
+
+      /* Grids */
+      .gfs-g2 { display: grid; grid-template-columns: 1fr 1fr;         gap: 10px; margin-bottom: 10px; }
+      .gfs-g3 { display: grid; grid-template-columns: 1fr 1fr 1fr;     gap: 10px; margin-bottom: 10px; }
+      .gfs-g4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+
+      /* Result rows */
+      .gfs-rrow { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; border-bottom: 1px solid #ddd; }
+      .gfs-rrow:last-child { border-bottom: none; }
+      .gfs-rl { font-size: 13px; color: var(--gc-label); }
+      .gfs-rv { font-size: 14px; font-weight: 600; color: var(--gc-primary); text-align: right; }
+
+      /* Status box */
+      .gfs-sb { border-radius: 8px; padding: .85rem 1rem; margin-bottom: .85rem; display: flex; align-items: flex-start; gap: 10px; border: 2px solid; }
+      .gfs-sb-ok     { background: var(--gc-ok-bg);     border-color: var(--gc-ok-bd); }
+      .gfs-sb-caution { background: var(--gc-warn-bg);   border-color: var(--gc-warn-bd); }
+      .gfs-sb-danger  { background: var(--gc-danger-bg); border-color: var(--gc-danger-bd); }
+      .gfs-si { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+      .gfs-st { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+      .gfs-sd { font-size: 13px; line-height: 1.5; color: var(--gc-label); }
+      .gfs-cs { color: var(--gc-ok); }
+      .gfs-cc { color: var(--gc-warn); }
+      .gfs-cd { color: var(--gc-danger); }
+
+      /* Velocity meter bar */
+      .gfs-mt { height: 12px; border-radius: 6px; background: #ddd; border: 1px solid #bbb; overflow: hidden; margin: 10px 0 4px; }
+      .gfs-mf { height: 100%; border-radius: 6px; transition: width .3s; }
+      .gfs-ml { display: flex; justify-content: space-between; font-size: 11px; color: var(--gc-muted); }
+
+      /* Tooltips */
+      .tooltip-wrap{position:relative;display:inline-flex;align-items:center;gap:4px}
+      .tooltip-icon{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:#61828a;color:#fff;font-size:9px;font-weight:700;font-style:normal;cursor:default;flex-shrink:0;line-height:1;user-select:none}
+      .tooltip-icon:focus+.tooltip-box,.tooltip-icon:hover+.tooltip-box{display:block}
+      .tooltip-box{display:none;position:absolute;bottom:calc(100% + 6px);left:0;width:240px;background:#1a3a40;color:#eee;font-size:12px;line-height:1.55;padding:7px 10px;border-radius:6px;border:1px solid #3a6270;box-shadow:0 3px 8px rgba(0,0,0,.4);z-index:100;pointer-events:none;font-weight:400;font-family:Roboto,Arial,sans-serif;white-space:normal;word-wrap:break-word;}
+      .tooltip-box::after{content:'';position:absolute;top:100%;left:12px;border:5px solid transparent;border-top-color:#1a3a40;z-index:100;}
+
+      /* Threshold tiles */
+      .gfs-tg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+      .gfs-ti { background: #fff; border: 1px solid #ccc; border-radius: var(--gc-radius); padding: 8px 10px; }
+      .gfs-tn { font-size: 11px; color: var(--gc-muted); margin-bottom: 2px; }
+      .gfs-tv { font-size: 14px; font-weight: 600; }
+      .gfs-tnt { font-size: 11px; color: var(--gc-label); margin-top: 1px; }
+
+      /* Mode tabs */
+      .sq-seg { display: inline-flex; flex-wrap: wrap; border: 1.5px solid rgb(67,67,67); border-radius: 6px; overflow: hidden; width: fit-content; }
+      .sq-seg button { appearance: none; border: 0; background: #d9d9d9; color: #333; font: 600 12.5px/1 "Roboto", Arial, sans-serif; padding: 7px 14px; cursor: pointer; border-right: 1.5px solid rgb(67,67,67); }
+      .sq-seg button:last-child { border-right: none; }
+      .sq-seg button:hover { background: #e8eff1; }
+      .sq-seg button.sq-active { background: #61828A; color: #fff; }
+
+      /* Unit toggle */
+      .gfs-tw { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
+      .gfs-tl { font-size: 13px; color: var(--gc-muted); white-space: nowrap; }
+      .gfs-tw2 { display: flex; border: 1px solid #999; border-radius: var(--gc-radius); overflow: hidden; }
+      .gfs-tb { padding: 5px 14px; font-size: 13px; background: #fff; border: none; cursor: pointer; color: var(--gc-muted); font-family: var(--body-font-family); transition: background .2s; }
+      .gfs-tb.active { background: var(--calc-background-color); color: var(--gc-primary); font-weight: 600; }
+
+      /* Gas info box */
+      .gfs-gi { background: #fff; border: 1px solid #ccc; border-radius: var(--gc-radius); padding: 9px 13px; margin-top: 10px; }
+      .gfs-gi p { font-size: 13px; color: var(--gc-label); line-height: 1.5; margin: 0; }
+
+      /* Hint text */
+      .gfs-hint { font-size: 12px; color: var(--gc-muted); padding-top: 5px; line-height: 1.4; margin: 0; }
+
+      /* Math steps */
+      .gfs-eq-step { margin-bottom: 16px; }
+      .gfs-eq-step-title { font-size: 11px; font-weight: 600; color: var(--gc-muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; font-family: var(--title-font-family); }
+      .gfs-eq-block { font-size: 13px; color: var(--gc-label); line-height: 1.6; margin-bottom: 4px; }
+      mjx-container { overflow-x: auto; overflow-y: visible; margin: 2px 0; padding: 6px 0; }
+
+      @media (max-width: 600px) {
+        .gfs-g3, .gfs-g4 { grid-template-columns: 1fr 1fr; }
+        .gfs-tg { grid-template-columns: 1fr; }
+        .gfs-mode-tab { font-size: 11px; padding: 6px 2px; }
+      }
+      @media (max-width: 400px) {
+        .gfs-g2, .gfs-g3, .gfs-g4 { grid-template-columns: 1fr; }
+      }
+
+      /* ── Green wrapper token system ── */
+      :root {
+        --sq-wrap:     #6a746a;
+        --sq-outline:  rgb(67,67,67);
+        --sq-panel:    #eeeeee;
+        --sq-blue:     #61828A;
+        --sq-ink:      #1C2227;
+        --sq-ink-soft: #5A6168;
+        --sq-ui:       "Roboto", Arial, sans-serif;
+      }
+      .sq-main { max-width: 1500px; margin: 0 auto; padding: 0 20px 60px; }
+      .sq-subtitle { font-family: var(--sq-ui); font-size: 13px; color: #eee; letter-spacing: .04em; margin-bottom: 10px; }
+      .sq-calc-grid { font-family: var(--sq-ui); display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 20px; align-items: start; background: var(--sq-wrap); border: 3px solid var(--sq-outline); border-radius: 18px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); padding: 20px; }
+      @media (max-width: 900px) { .sq-calc-grid { grid-template-columns: 1fr; } .sq-sticky { position: static; } }
+      .sq-panel { background: var(--sq-panel); border: 2px solid var(--sq-outline); border-radius: 10px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); overflow: hidden; }
+      .sq-panel-h { padding: 11px 16px; background: #fff; border-bottom: 2px solid var(--sq-outline); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--sq-ink); font-weight: 700; }
+      .sq-panel-b { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+      .sq-sticky { position: static; }
+      .sq-panel-b .gfs-card { margin-bottom: 0; }
+      .sq-panel-b .gfs-sb { margin-bottom: 0; }
+
+      /* ── Reference card system ── */
+      .ref-section-wrap { padding: 1.5rem 0 0.5rem; }
+      .ref-section-title { font-size: 16px; font-weight: 700; color: #6a746a; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; padding-left: 2px; }
+      .ref-wrapper { font-family: "Roboto", Arial, sans-serif; max-width: 58rem; margin: 0 auto; }
+      .ref-card { background: #eee; border: 2px solid rgb(67,67,67); border-radius: 10px; box-shadow: 0 3px 5px rgba(0,0,0,.4); margin: 0 0 1rem; overflow: hidden; }
+      .ref-card-header { background: #6a746a; padding: 8px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+      .ref-card-header h2 { font-size: 13px; font-weight: 700; color: #eee; text-transform: uppercase; letter-spacing: 0.07em; margin: 0; flex: 1; }
+      .ref-card-header .ref-num { font-size: 12px; color: #A3C3CD; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
+      .ref-chevron { width: 14px; height: 14px; flex-shrink: 0; transition: transform 0.2s ease; color: #A3C3CD; }
+      .ref-card.collapsed .ref-chevron { transform: rotate(-90deg); }
+      .ref-card.collapsed .ref-body { display: none; }
+      .ref-body { padding: 14px 16px; display: grid; grid-template-columns: 1fr; gap: 14px; }
+      .ref-body.two-col { grid-template-columns: 1fr 1fr; gap: 14px 24px; }
+      @media (max-width: 640px) { .ref-body.two-col { grid-template-columns: 1fr; } }
+      .ref-sub { font-size: 12px; font-weight: 700; color: #61828A; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #c0c0c0; padding-bottom: 3px; margin-bottom: 6px; }
+      .ref-body p { font-size: 13px; color: #333; line-height: 1.65; margin: 0 0 8px; }
+      .ref-body p:last-child { margin-bottom: 0; }
+      .ref-body ul, .ref-body ol { font-size: 13px; color: #333; line-height: 1.7; padding-left: 18px; margin: 0 0 8px; }
+      .ref-eq-block { background: #d9d9d9; border: 1.5px solid rgb(67,67,67); border-radius: 6px; padding: 10px 16px 8px; margin: 6px 0 10px; overflow-x: auto; }
+      .ref-eq-tag { font-size: 12px; color: #61828A; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; font-family: "Roboto", Arial, sans-serif; display: block; margin-bottom: 4px; }
+      .ref-callout { background: #e8f0f3; border-left: 3px solid #61828A; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 12px; color: #1a3a40; line-height: 1.55; }
+      .ref-callout strong { color: #3a6270; }
+      .ref-warn { background: #fff8e6; border-left: 3px solid #cc7700; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 12px; color: #5a3a00; line-height: 1.55; }
+      .ref-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin: 6px 0; }
+      .ref-table th { background: #d9d9d9; border: 1px solid #bbb; padding: 4px 8px; font-weight: 600; color: #444; text-align: left; }
+      .ref-table td { border: 1px solid #ccc; padding: 3px 8px; color: #333; vertical-align: top; }
+      .ref-table tr:nth-child(even) td { background: #f5f5f5; }
+      .full-col { grid-column: 1 / -1; }
+      .ref-body a { font-size: inherit; }
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- BANNER -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              Gas Flow Safety Calculator
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <h1 class="visually-hidden">Gas Pipe Velocity and Flow Safety Calculator — Flow Rate, Pressure Drop, Orifice, and Cv Modes</h1>
+
+    <!-- CALCULATOR -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Particle Ignition Calculator</div>
+            <p class="gfs-sub fs-5">Pipe velocity vs. safe particle-impingement and erosion limits.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="sq-main gfs-wrap">
+      <div class="sq-calc-grid">
+
+        <!-- ════════ LEFT PANEL: INPUTS (sticky) ════════ -->
+        <div class="sq-panel sq-sticky">
+          <div class="sq-panel-h">Inputs</div>
+          <div class="sq-panel-b">
+
+            <!-- Calculation Mode + Units card -->
+            <div class="gfs-card">
+              <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+
+                <div class="d-flex flex-column">
+                  <p class="gfs-stitle mb-2">Calculation Mode</p>
+                  <div class="sq-seg" role="group" aria-label="Calculation mode">
+                    <button type="button" id="gfsmt-flow"onclick="gfsSetMode('flow')"class="sq-active"aria-pressed="true">
+                        Flow Rate
+                    </button>
+                    <button type="button" id="gfsmt-dpdiam"onclick="gfsSetMode('dpdiam')"aria-pressed="false">
+                        ΔP + Diameter
+                    </button>
+                    <button type="button" id="gfsmt-orifice"onclick="gfsSetMode('orifice')"aria-pressed="false">
+                        Orifice
+                    </button>
+                    <button type="button" id="gfsmt-cv"onclick="gfsSetMode('cv')"aria-pressed="false">
+                        C<sub>v</sub> / K<sub>v</sub>
+                    </button>
+                  </div>
+                </div>
+
+              <div class="d-flex flex-column">
+                <p class="gfs-stitle mb-2">Default Units</p>
+                <div class="sq-seg" role="group" aria-label="Default units">
+                  <button type="button"id="btn-imperial"onclick="gfsSetUS('imperial')"class="sq-active"aria-pressed="true">
+                      Imperial
+                  </button>
+                  <button type="button"id="btn-metric"onclick="gfsSetUS('metric')"aria-pressed="false">
+                    Metric
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+            <!-- Gas card -->
+            <div class="gfs-card">
+              <p class="gfs-stitle">Gas</p>
+              <select id="gfs-gas" onchange="gfsUpdate()" style="margin-bottom:8px;"></select>
+              <div class="gfs-gi" id="gfs-gas-info-box"><p></p></div>
+            </div>
+
+            <!-- ── FLOW PANE ── -->
+            <div id="gfspane-flow" class="gfspane">
+              <div class="gfs-card">
+                <p class="gfs-stitle">Pipe dimensions &amp; flow rate</p>
+                <div class="gfs-g3">
+                  <div>
+                    <label>Inner diameter</label>
+                    <input type="number" id="gfsf-diam" value="2" min="0" step="any" oninput="gfsUpdate()"/>
+                  </div>
+                  <div>
+                    <label>Diameter unit</label>
+                    <select id="gfsf-diamU" onchange="gfsUpdate()">
+                      <option value="in" selected>in</option>
+                      <option value="mm">mm</option>
+                      <option value="cm">cm</option>
+                      <option value="ft">ft</option>
+                      <option value="m">m</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label><span class="tooltip-wrap">Pipe schedule<span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">NPS (Nominal Pipe Size) is a trade designation — it does not equal the actual OD or ID. Schedule (Sch 40, Sch 80) sets wall thickness; higher schedule = thicker wall = smaller inner diameter. Selecting a schedule fills in the actual inner diameter used for velocity calculation.</span></span></label>
+                    <select id="gfsf-sched" onchange="gfsApplySched('gfsf')">
+                      <option value="">— manual —</option>
+                      <optgroup label="── NPS ──"></optgroup>
+                      <optgroup label="Sch 40"><option value="0.622">½&quot; (ID 0.622&quot;)</option><option value="0.824">¾&quot; (ID 0.824&quot;)</option><option value="1.049">1&quot; (ID 1.049&quot;)</option><option value="1.610">1½&quot; (ID 1.610&quot;)</option><option value="2.067">2&quot; (ID 2.067&quot;)</option><option value="3.068">3&quot; (ID 3.068&quot;)</option><option value="4.026">4&quot; (ID 4.026&quot;)</option><option value="6.065">6&quot; (ID 6.065&quot;)</option><option value="7.981">8&quot; (ID 7.981&quot;)</option></optgroup>
+                      <optgroup label="Sch 80"><option value="0.546">½&quot; (ID 0.546&quot;)</option><option value="0.742">¾&quot; (ID 0.742&quot;)</option><option value="0.957">1&quot; (ID 0.957&quot;)</option><option value="1.500">1½&quot; (ID 1.500&quot;)</option><option value="1.939">2&quot; (ID 1.939&quot;)</option><option value="2.900">3&quot; (ID 2.900&quot;)</option><option value="3.826">4&quot; (ID 3.826&quot;)</option><option value="5.761">6&quot; (ID 5.761&quot;)</option><option value="7.625">8&quot; (ID 7.625&quot;)</option></optgroup>
+                      <optgroup label="SS Sch 10S (A312)"><option value="0.674">½&quot; (ID 0.674&quot;)</option><option value="0.884">¾&quot; (ID 0.884&quot;)</option><option value="1.097">1&quot; (ID 1.097&quot;)</option><option value="1.682">1½&quot; (ID 1.682&quot;)</option><option value="2.157">2&quot; (ID 2.157&quot;)</option><option value="3.260">3&quot; (ID 3.260&quot;)</option><option value="4.260">4&quot; (ID 4.260&quot;)</option><option value="6.357">6&quot; (ID 6.357&quot;)</option><option value="8.329">8&quot; (ID 8.329&quot;)</option></optgroup>
+                      <optgroup label="── OD × Wall ──"></optgroup>
+                      <optgroup label="¼&quot; OD"><option value="0.180">× 0.035&quot; wall (ID 0.180&quot;)</option><option value="0.152">× 0.049&quot; wall (ID 0.152&quot;)</option><option value="0.120">× 0.065&quot; wall (ID 0.120&quot;)</option></optgroup>
+                      <optgroup label="⅜&quot; OD"><option value="0.305">× 0.035&quot; wall (ID 0.305&quot;)</option><option value="0.277">× 0.049&quot; wall (ID 0.277&quot;)</option><option value="0.245">× 0.065&quot; wall (ID 0.245&quot;)</option></optgroup>
+                      <optgroup label="½&quot; OD"><option value="0.430">× 0.035&quot; wall (ID 0.430&quot;)</option><option value="0.402">× 0.049&quot; wall (ID 0.402&quot;)</option><option value="0.370">× 0.065&quot; wall (ID 0.370&quot;)</option><option value="0.334">× 0.083&quot; wall (ID 0.334&quot;)</option></optgroup>
+                      <optgroup label="¾&quot; OD"><option value="0.652">× 0.049&quot; wall (ID 0.652&quot;)</option><option value="0.620">× 0.065&quot; wall (ID 0.620&quot;)</option><option value="0.584">× 0.083&quot; wall (ID 0.584&quot;)</option><option value="0.560">× 0.095&quot; wall (ID 0.560&quot;)</option></optgroup>
+                      <optgroup label="1&quot; OD"><option value="0.902">× 0.049&quot; wall (ID 0.902&quot;)</option><option value="0.870">× 0.065&quot; wall (ID 0.870&quot;)</option><option value="0.834">× 0.083&quot; wall (ID 0.834&quot;)</option><option value="0.760">× 0.120&quot; wall (ID 0.760&quot;)</option></optgroup>
+                      <optgroup label="1½&quot; OD"><option value="1.370">× 0.065&quot; wall (ID 1.370&quot;)</option><option value="1.334">× 0.083&quot; wall (ID 1.334&quot;)</option><option value="1.260">× 0.120&quot; wall (ID 1.260&quot;)</option></optgroup>
+                      <optgroup label="2&quot; OD"><option value="1.870">× 0.065&quot; wall (ID 1.870&quot;)</option><option value="1.834">× 0.083&quot; wall (ID 1.834&quot;)</option><option value="1.760">× 0.120&quot; wall (ID 1.760&quot;)</option></optgroup>
+                    </select>
+                  </div>
+                </div>
+                <div class="gfs-g3">
+                  <div>
+                    <label>Flow rate</label>
+                    <input type="number" id="gfsf-flow" value="50" min="0" step="any" oninput="gfsUpdate()"/>
+                  </div>
+                  <div>
+                    <label>Flow unit</label>
+                    <select id="gfsf-flowU" onchange="gfsUpdate()">
+                      <optgroup label="Volumetric (standard)">
+                        <option value="scfm" selected>SCFM (std ft³/min)</option>
+                        <option value="scfh">SCFH (std ft³/hr)</option>
+                        <option value="slpm">SLPM (std L/min)</option>
+                        <option value="slph">SLPH (std L/hr)</option>
+                        <option value="sm3h">Sm³/h</option>
+                        <option value="sm3d">Sm³/day</option>
+                        <option value="mmscfd">MMSCFD</option>
+                      </optgroup>
+                      <optgroup label="Mass flow">
+                        <option value="kgh">kg/h</option>
+                        <option value="lbh">lb/h</option>
+                        <option value="gs">g/s</option>
+                      </optgroup>
+                      <optgroup label="Direct velocity">
+                        <option value="ms">m/s</option>
+                        <option value="fps">ft/s</option>
+                        <option value="fpm">ft/min</option>
+                        <option value="mph">mph</option>
+                        <option value="kmh">km/h</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                  <div><p class="gfs-hint" id="gfsf-mw-note" style="padding-top:1.5rem;"></p></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── ΔP + DIAMETER PANE ── -->
+            <div id="gfspane-dpdiam" class="gfspane" style="display:none;">
+              <div class="gfs-card">
+                <p class="gfs-stitle">Pressure differential → velocity (compressible Bernoulli)</p>
+                <div class="gfs-g3">
+                  <div><label>Upstream pressure P₁</label><input type="number" id="gfsdp-p1" value="30" step="any" oninput="gfsUpdate()"/></div>
+                  <div><label>Downstream pressure P₂</label><input type="number" id="gfsdp-p2" value="25" step="any" oninput="gfsUpdate()"/></div>
+                  <div>
+                    <label>Pressure unit</label>
+                    <select id="gfsdp-pU" onchange="gfsUpdate()">
+                      <option value="psia" selected>psia</option><option value="psig">psig</option>
+                      <option value="bara">bara</option><option value="barg">barg</option>
+                      <option value="kpa">kPa abs</option><option value="mpa">MPa abs</option><option value="atm">atm</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="gfs-g3">
+                  <div><label>Pipe inner diameter</label><input type="number" id="gfsdp-diam" value="2" min="0" step="0.125" oninput="gfsUpdate()"/></div>
+                  <div>
+                    <label>Diameter unit</label>
+                    <select id="gfsdp-diamU" onchange="gfsUpdate()">
+                      <option value="in" selected>in</option><option value="mm">mm</option><option value="cm">cm</option><option value="ft">ft</option><option value="m">m</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label><span class="tooltip-wrap">Pipe schedule<span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">NPS (Nominal Pipe Size) is a trade designation — it does not equal the actual OD or ID. Schedule (Sch 40, Sch 80) sets wall thickness; higher schedule = thicker wall = smaller inner diameter. Selecting a schedule fills in the actual inner diameter used for velocity calculation.</span></span></label>
+                    <select id="gfsdp-sched" onchange="gfsApplySched('gfsdp')">
+                      <option value="">— manual —</option>
+                      <optgroup label="── NPS ──"></optgroup>
+                      <optgroup label="Sch 40"><option value="0.622">½" (ID 0.622")</option><option value="0.824">¾" (ID 0.824")</option><option value="1.049">1" (ID 1.049")</option><option value="1.610">1½" (ID 1.610")</option><option value="2.067">2" (ID 2.067")</option><option value="3.068">3" (ID 3.068")</option><option value="4.026">4" (ID 4.026")</option><option value="6.065">6" (ID 6.065")</option><option value="7.981">8" (ID 7.981")</option></optgroup>
+                      <optgroup label="Sch 80"><option value="0.546">½" (ID 0.546")</option><option value="0.742">¾" (ID 0.742")</option><option value="0.957">1" (ID 0.957")</option><option value="1.500">1½" (ID 1.500")</option><option value="1.939">2" (ID 1.939")</option><option value="2.900">3" (ID 2.900")</option><option value="3.826">4" (ID 3.826")</option><option value="5.761">6" (ID 5.761")</option><option value="7.625">8" (ID 7.625")</option></optgroup>
+                      <optgroup label="SS Sch 10S (A312)"><option value="0.674">½" (ID 0.674")</option><option value="0.884">¾" (ID 0.884")</option><option value="1.097">1" (ID 1.097")</option><option value="1.682">1½" (ID 1.682")</option><option value="2.157">2" (ID 2.157")</option><option value="3.260">3" (ID 3.260")</option><option value="4.260">4" (ID 4.260")</option><option value="6.357">6" (ID 6.357")</option><option value="8.329">8" (ID 8.329")</option></optgroup>
+                      <optgroup label="── OD × Wall ──"></optgroup>
+                      <optgroup label="¼&quot; OD"><option value="0.180">× 0.035" wall (ID 0.180")</option><option value="0.152">× 0.049" wall (ID 0.152")</option><option value="0.120">× 0.065" wall (ID 0.120")</option></optgroup>
+                      <optgroup label="⅜&quot; OD"><option value="0.305">× 0.035" wall (ID 0.305")</option><option value="0.277">× 0.049" wall (ID 0.277")</option><option value="0.245">× 0.065" wall (ID 0.245")</option></optgroup>
+                      <optgroup label="½&quot; OD"><option value="0.430">× 0.035" wall (ID 0.430")</option><option value="0.402">× 0.049" wall (ID 0.402")</option><option value="0.370">× 0.065" wall (ID 0.370")</option><option value="0.334">× 0.083" wall (ID 0.334")</option></optgroup>
+                      <optgroup label="¾&quot; OD"><option value="0.652">× 0.049" wall (ID 0.652")</option><option value="0.620">× 0.065" wall (ID 0.620")</option><option value="0.584">× 0.083" wall (ID 0.584")</option><option value="0.560">× 0.095" wall (ID 0.560")</option></optgroup>
+                      <optgroup label="1&quot; OD"><option value="0.902">× 0.049" wall (ID 0.902")</option><option value="0.870">× 0.065" wall (ID 0.870")</option><option value="0.834">× 0.083" wall (ID 0.834")</option><option value="0.760">× 0.120" wall (ID 0.760")</option></optgroup>
+                      <optgroup label="1½&quot; OD"><option value="1.370">× 0.065" wall (ID 1.370")</option><option value="1.334">× 0.083" wall (ID 1.334")</option><option value="1.260">× 0.120" wall (ID 1.260")</option></optgroup>
+                      <optgroup label="2&quot; OD"><option value="1.870">× 0.065" wall (ID 1.870")</option><option value="1.834">× 0.083" wall (ID 1.834")</option><option value="1.760">× 0.120" wall (ID 1.760")</option></optgroup>
+                    </select>
+                  </div>
+                </div>
+                <div class="gfs-g2">
+                  <div><label>Temperature</label><input type="number" id="gfsdp-temp" value="68" step="any" oninput="gfsUpdate()"/></div>
+                  <div>
+                    <label>Temp unit</label>
+                    <select id="gfsdp-tempU" onchange="gfsUpdate()">
+                      <option value="F" selected>°F</option><option value="C">°C</option><option value="K">K</option><option value="R">°R</option>
+                    </select>
+                  </div>
+                </div>
+                <p class="gfs-hint">Uses the compressible Bernoulli / isentropic flow equation. Valid for ΔP/P₁ &lt; 0.4; for larger ratios choked-flow corrections apply.</p>
+              </div>
+            </div>
+
+            <!-- ── ORIFICE PANE ── -->
+            <div id="gfspane-orifice" class="gfspane" style="display:none;">
+              <div class="gfs-card">
+                <p class="gfs-stitle">Orifice / restriction plate</p>
+                <div class="gfs-g3">
+                  <div><label>Upstream pressure P₁</label><input type="number" id="gfsor-p1" value="30" step="any" oninput="gfsUpdate()"/></div>
+                  <div><label>Downstream pressure P₂</label><input type="number" id="gfsor-p2" value="14.696" step="any" oninput="gfsUpdate()"/></div>
+                  <div>
+                    <label>Pressure unit</label>
+                    <select id="gfsor-pU" onchange="gfsUpdate()">
+                      <option value="psia" selected>psia</option><option value="psig">psig</option>
+                      <option value="bara">bara</option><option value="barg">barg</option>
+                      <option value="kpa">kPa abs</option><option value="mpa">MPa abs</option><option value="atm">atm</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="gfs-g4">
+                  <div><label>Orifice diameter d</label><input type="number" id="gfsor-dorifice" value="0.5" min="0" step="any" oninput="gfsUpdate()"/></div>
+                  <div><label>Pipe diameter D</label><input type="number" id="gfsor-dpipe" value="2" min="0" step="any" oninput="gfsUpdate()"/></div>
+                  <div>
+                    <label>Diameter unit</label>
+                    <select id="gfsor-diamU" onchange="gfsUpdate()">
+                      <option value="in" selected>in</option><option value="mm">mm</option><option value="cm">cm</option><option value="ft">ft</option><option value="m">m</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label>Discharge coeff C<sub>d</sub></label>
+                    <input type="number" id="gfsor-cd" value="0.61" min=".01" max="1" step=".01" oninput="gfsUpdate()"/>
+                    <p class="gfs-hint">Sharp-edge: 0.61<br>Rounded: 0.80–0.98</p>
+                  </div>
+                </div>
+                <div class="gfs-g2">
+                  <div><label>Temperature</label><input type="number" id="gfsor-temp" value="68" step="any" oninput="gfsUpdate()"/></div>
+                  <div>
+                    <label>Temp unit</label>
+                    <select id="gfsor-tempU" onchange="gfsUpdate()">
+                      <option value="F" selected>°F</option><option value="C">°C</option><option value="K">K</option><option value="R">°R</option>
+                    </select>
+                  </div>
+                </div>
+                <p class="gfs-hint">Calculates orifice throat velocity and back-calculates pipe velocity. Choked flow indicated when P₂/P₁ ≤ critical pressure ratio.</p>
+              </div>
+            </div>
+
+            <!-- ── Cv PANE ── -->
+            <div id="gfspane-cv" class="gfspane" style="display:none;">
+              <div class="gfs-card">
+                <p class="gfs-stitle">Valve C<sub>v</sub> / K<sub>v</sub> flow coefficient</p>
+                <div class="gfs-g3">
+                  <div><label>Upstream pressure P₁</label><input type="number" id="gfscv-p1" value="30" step="any" oninput="gfsUpdate()"/></div>
+                  <div><label>Downstream pressure P₂</label><input type="number" id="gfscv-p2" value="14.696" step="any" oninput="gfsUpdate()"/></div>
+                  <div>
+                    <label>Pressure unit</label>
+                    <select id="gfscv-pU" onchange="gfsUpdate()">
+                      <option value="psia" selected>psia</option><option value="psig">psig</option>
+                      <option value="bara">bara</option><option value="barg">barg</option>
+                      <option value="kpa">kPa abs</option><option value="mpa">MPa abs</option><option value="atm">atm</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="gfs-g4">
+                  <div>
+                    <label>Coefficient type</label>
+                    <select id="gfscv-type" onchange="gfsUpdate()">
+                      <option value="cv">C<sub>v</sub> (US gpm)</option>
+                      <option value="kv">K<sub>v</sub> (m³/h)</option>
+                    </select>
+                  </div>
+                  <div><label id="gfscv-coeff-lbl">C<sub>v</sub> value</label><input type="number" id="gfscv-coeff" value="10" min="0" step="any" oninput="gfsUpdate()"/></div>
+                  <div><label>Downstream pipe ID</label><input type="number" id="gfscv-diam" value="2" min="0" step="any" oninput="gfsUpdate()"/></div>
+                  <div>
+                    <label>Diameter unit</label>
+                    <select id="gfscv-diamU" onchange="gfsUpdate()">
+                      <option value="in" selected>in</option><option value="mm">mm</option><option value="cm">cm</option><option value="ft">ft</option><option value="m">m</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="gfs-g2">
+                  <div><label>Temperature</label><input type="number" id="gfscv-temp" value="68" step="any" oninput="gfsUpdate()"/></div>
+                  <div>
+                    <label>Temp unit</label>
+                    <select id="gfscv-tempU" onchange="gfsUpdate()">
+                      <option value="F" selected>°F</option><option value="C">°C</option><option value="K">K</option><option value="R">°R</option>
+                    </select>
+                  </div>
+                </div>
+                <p class="gfs-hint">ISA S75.01 gas flow equation for compressible flow. Assumes non-choked subcritical flow. Pipe velocity computed at downstream conditions.</p>
+              </div>
+            </div>
+
+            <!-- Operating conditions (flow mode only) -->
+            <div class="gfs-card" id="gfscond-card">
+              <p class="gfs-stitle">Operating conditions</p>
+              <div class="gfs-g3" id="gfscond-flow-only">
+                <div><label>Pressure</label><input type="number" id="gfsc-pres" value="14.696" min=".01" step="any" oninput="gfsUpdate()"/></div>
+                <div>
+                  <label>Pressure unit</label>
+                  <select id="gfsc-presU" onchange="gfsUpdate()">
+                    <option value="psia" selected>psia</option><option value="psig">psig</option>
+                    <option value="bara">bara</option><option value="barg">barg</option>
+                    <option value="kpa">kPa abs</option><option value="mpa">MPa abs</option><option value="atm">atm</option>
+                  </select>
+                </div>
+                <div></div>
+              </div>
+              <div class="gfs-g3">
+                <div><label>Temperature</label><input type="number" id="gfsc-temp" value="68" step="any" oninput="gfsUpdate()"/></div>
+                <div>
+                  <label>Temp unit</label>
+                  <select id="gfsc-tempU" onchange="gfsUpdate()">
+                    <option value="F" selected>°F</option><option value="C">°C</option><option value="K">K</option><option value="R">°R</option>
+                  </select>
+                </div>
+                <div></div>
+              </div>
+            </div>
+
+          </div>
+        </div><!-- end left panel -->
+
+        <!-- ════════ RIGHT PANEL: RESULTS ════════ -->
+        <div class="sq-panel">
+          <div class="sq-panel-h">Results</div>
+          <div class="sq-panel-b">
+
+            <!-- Status box -->
+            <div id="gfsstatus-box" class="gfs-sb gfs-sb-ok">
+              <span class="gfs-si" id="gfsstatus-icon">✓</span>
+              <div>
+                <div class="gfs-st gfs-cs" id="gfsstatus-title">Safe operating range</div>
+                <div class="gfs-sd" id="gfsstatus-desc"></div>
+              </div>
+            </div>
+
+            <!-- Calculated Velocity -->
+            <div class="gfs-card">
+              <p class="gfs-stitle">Calculated Velocity</p>
+              <div id="gfsresults"></div>
+              <div class="gfs-mt"><div class="gfs-mf" id="gfsmeter" style="width:0%;background:#2a7a4a;"></div></div>
+              <div class="gfs-ml"><span>0</span><span id="gfsm-mid"></span><span id="gfsm-max"></span></div>
+            </div>
+
+            <!-- Safety thresholds -->
+            <div class="gfs-card">
+              <p class="gfs-stitle">Safety Thresholds — <span id="gfsthresh-gasname"></span></p>
+              <div id="gfsthresholds"></div>
+            </div>
+
+          </div>
+        </div><!-- end right panel -->
+
+      </div><!-- end sq-calc-grid -->
+
+      <!-- ════════ ADIABATIC COMPRESSION IGNITION RISK ════════ -->
+
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Rapid Pressurization Calculator</div>
+            <p class="gfs-sub fs-5">Adiabatic (heat-of-compression) heating vs. autoignition temperature.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+      <div class="sq-calc-grid">
+
+        <!-- ── LEFT: INPUTS ── -->
+        <div class="sq-panel sq-sticky">
+          <div class="sq-panel-h">Compression Heating — Inputs</div>
+          <div class="sq-panel-b">
+
+            <div class="gfs-card">
+              <p class="gfs-stitle">Gas / service</p>
+              <select id="gic-gas" onchange="gicGasChanged()" style="margin-bottom:8px;"></select>
+              <div class="gfs-gi" id="gic-gas-info"><p></p></div>
+            </div>
+
+            <div class="gfs-card">
+              <p class="gfs-stitle mb-2">Heating mechanism</p>
+              <div class="sq-seg" role="group" aria-label="Compression heating mode">
+                <button type="button" id="gicmt-ratio" onclick="gicSetMode('ratio')" class="sq-active" aria-pressed="true">Compression ΔT</button>
+                <button type="button" id="gicmt-fill" onclick="gicSetMode('fill')" aria-pressed="false">Fill charging ΔT</button>
+              </div>
+              <p class="gfs-hint" id="gic-mode-hint" style="margin-top:8px;"></p>
+            </div>
+
+            <div class="gfs-card">
+              <p class="gfs-stitle" id="gic-card-title">Pressurization event</p>
+              <div class="gfs-g3">
+                <div>
+                  <label id="gic-lbl-p1"></label>
+                  <input type="number" id="gic-p1" value="14.696" step="any" oninput="gicUpdate()"/>
+                </div>
+                <div>
+                  <label id="gic-lbl-p2"></label>
+                  <input type="number" id="gic-p2" value="50" step="any" oninput="gicUpdate()"/>
+                </div>
+                <div>
+                  <label>Pressure unit</label>
+                  <select id="gic-pU" onchange="gicUpdate()">
+                    <option value="psia" selected>psia</option><option value="psig">psig</option>
+                    <option value="bara">bara</option><option value="barg">barg</option>
+                    <option value="kpa">kPa abs</option><option value="mpa">MPa abs</option><option value="atm">atm</option>
+                  </select>
+                </div>
+              </div>
+              <div class="gfs-g2">
+                <div><label id="gic-lbl-t1"></label><input type="number" id="gic-t1" value="68" step="any" oninput="gicUpdate()"/></div>
+                <div>
+                  <label>Temp unit</label>
+                  <select id="gic-t1U" onchange="gicUpdate()">
+                    <option value="F" selected>°F</option><option value="C">°C</option><option value="K">K</option><option value="R">°R</option>
+                  </select>
+                </div>
+              </div>
+              <p class="gfs-hint" id="gic-hint-main"></p>
+            </div>
+
+            <div class="gfs-card">
+              <p class="gfs-stitle">Ignition threshold — compare peak temperature against</p>
+              <select id="gic-mat" onchange="gicUpdate()"></select>
+              <p class="gfs-hint" id="gic-mat-hint"></p>
+            </div>
+
+            <div class="gfs-card">
+              <p class="gfs-stitle">Stored energy (optional — rupture / blast estimate)</p>
+              <div class="gfs-g3">
+                <div><label>Pressurized volume</label><input type="number" id="gic-vol" value="0" min="0" step="any" oninput="gicUpdate()"/></div>
+                <div>
+                  <label>Volume unit</label>
+                  <select id="gic-volU" onchange="gicUpdate()">
+                    <option value="L" selected>L</option><option value="mL">mL</option><option value="m3">m³</option><option value="in3">in³</option><option value="ft3">ft³</option><option value="gal">US gal</option>
+                  </select>
+                </div>
+                <div><p class="gfs-hint" style="padding-top:1.5rem;">Leave 0 to skip. Uses internal energy of the compressed gas (Brode).</p></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ── RIGHT: RESULTS ── -->
+        <div class="sq-panel">
+          <div class="sq-panel-h">Compression Heating — Results</div>
+          <div class="sq-panel-b">
+
+            <div id="gic-status" class="gfs-sb gfs-sb-ok">
+              <span class="gfs-si" id="gic-status-icon">✓</span>
+              <div>
+                <div class="gfs-st gfs-cs" id="gic-status-title">Low ignition risk</div>
+                <div class="gfs-sd" id="gic-status-desc"></div>
+              </div>
+            </div>
+
+            <div class="gfs-card">
+              <p class="gfs-stitle" id="gic-res-title">Peak adiabatic temperature</p>
+              <div id="gic-results"></div>
+              <div class="gfs-mt"><div class="gfs-mf" id="gic-meter" style="width:0%;background:#2a7a4a;"></div></div>
+              <div class="gfs-ml"><span id="gic-m-lo">T₁</span><span id="gic-m-mid"></span><span id="gic-m-max">AIT</span></div>
+            </div>
+
+            <div class="gfs-card">
+              <p class="gfs-stitle">What this means</p>
+              <div class="gfs-gi"><p id="gic-explain" style="margin:0;"></p></div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- end compression ignition grid -->
+
+
+    <!-- ════════ FAST-VALVE STORED-GAS RELEASE ════════ -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div class="section-title-wrap">
+            <div class="h1 section-title">Fast Valve Release Calculator</div>
+            <p class="gfs-sub fs-5">Discharging a stored high-pressure gas into a downstream piping system.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+      <div class="sq-calc-grid">
+
+        <!-- ── LEFT: INPUTS ── -->
+        <div class="sq-panel">
+          <div class="sq-panel-h">Fast-Valve Release — Inputs</div>
+          <div class="sq-panel-b">
+
+            <div class="gfs-card">
+              <p class="gfs-stitle">Gas</p>
+              <select id="fvr-gas" onchange="fvrGasChanged()" style="margin-bottom:8px;"></select>
+              <div class="gfs-gi" id="fvr-gas-info"><p></p></div>
+            </div>
+
+            <div class="gfs-card">
+              <p class="gfs-stitle">Stored source &amp; downstream line</p>
+              <div class="gfs-g3">
+                <div>
+                  <label><span class="tooltip-wrap">Source pressure P<sub>s</sub><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">The stored gas pressure upstream of the valve — cylinder, receiver, or accumulator pressure.</span></span></label>
+                  <input type="number" id="fvr-psrc" value="50" step="any" oninput="fvrUpdate()"/>
+                </div>
+                <div>
+                  <label><span class="tooltip-wrap">Downstream initial P<sub>0</sub><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">Pressure already in the piping before the valve opens — usually atmospheric (~14.7 psia) for a vented or newly-connected line.</span></span></label>
+                  <input type="number" id="fvr-pinit" value="14.696" step="any" oninput="fvrUpdate()"/>
+                </div>
+                <div>
+                  <label>Pressure unit</label>
+                  <select id="fvr-pU" onchange="fvrUpdate()">
+                    <option value="psia" selected>psia</option><option value="psig">psig</option>
+                    <option value="bara">bara</option><option value="barg">barg</option>
+                    <option value="kpa">kPa abs</option><option value="mpa">MPa abs</option><option value="atm">atm</option>
+                  </select>
+                </div>
+              </div>
+              <div class="gfs-g2">
+                <div><label>Gas / ambient temperature</label><input type="number" id="fvr-temp" value="68" step="any" oninput="fvrUpdate()"/></div>
+                <div>
+                  <label>Temp unit</label>
+                  <select id="fvr-tempU" onchange="fvrUpdate()">
+                    <option value="F" selected>°F</option><option value="C">°C</option><option value="K">K</option><option value="R">°R</option>
+                  </select>
+                </div>
+              </div>
+              <p class="gfs-hint">Assumes source and downstream start at the same temperature, the valve opens fast (near-adiabatic), and the line fills to source pressure. This is a worst-case screen for the three ways a fast release bites: dead-end compression, bulk fill heating, and a sonic jet.</p>
+            </div>
+
+            <div class="gfs-card">
+              <p class="gfs-stitle">Ignition threshold — compare peak temperatures against</p>
+              <select id="fvr-mat" onchange="fvrUpdate()"></select>
+              <p class="gfs-hint" id="fvr-mat-hint"></p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ── RIGHT: RESULTS ── -->
+        <div class="sq-panel">
+          <div class="sq-panel-h">Fast-Valve Release — Results</div>
+          <div class="sq-panel-b">
+
+            <div id="fvr-status" class="gfs-sb gfs-sb-ok">
+              <span class="gfs-si" id="fvr-status-icon">✓</span>
+              <div>
+                <div class="gfs-st gfs-cs" id="fvr-status-title">Low risk</div>
+                <div class="gfs-sd" id="fvr-status-desc"></div>
+              </div>
+            </div>
+
+            <div class="gfs-card">
+              <p class="gfs-stitle">Release analysis</p>
+              <div id="fvr-results"></div>
+            </div>
+
+            <div class="gfs-card">
+              <p class="gfs-stitle">Three failure modes</p>
+              <div id="fvr-modes"></div>
+            </div>
+
+            <div class="gfs-card">
+              <p class="gfs-stitle">Recommended safeguards</p>
+              <div class="gfs-gi"><p id="fvr-advice" style="margin:0;"></p></div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- end fast-valve release grid -->
+
+      <!-- ════════ METHOD & EQUATIONS ════════ -->
+      <div class="ref-section-wrap">
+        <div class="ref-wrapper">
+          <div class="ref-section-title">Method &amp; Equations</div>
+
+          <!-- Card 01 — Overview -->
+          <!-- How the Calculation Works — live results from the calculator above -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">01</span>
+              <h2>How the Calculation Works</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body">
+              <div id="gfsmath-exp"></div>
+            </div>
+          </div>
+
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">02</span>
+              <h2>Overview</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body">
+              <div>
+                <p>This calculator determines gas pipe velocity from four input methods: volumetric or mass flow rate, pressure differential, orifice/restriction plate geometry, and valve flow coefficient (C<sub>v</sub>/K<sub>v</sub>). Velocity is the primary safety metric for gas flow — it drives particle ignition risk (oxygen), erosion, noise, and pressure wave concerns.</p>
+                <p>Output is always velocity in m/s, ft/s, km/h, and mph, compared against gas-specific safety thresholds sourced from CGA, NASA, API, and ISA standards. Status is classified as safe (green), caution (yellow), or danger (red) based on published limits for the selected gas.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 02 — Flow Rate Mode -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">03</span>
+              <h2>Flow Rate Mode (Q → Velocity)</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body two-col">
+              <div>
+                <p>Standard volumetric flow (SCFM, SLPM, Sm³/h) is referenced to standard conditions (288.15 K, 1.01325 bara). Actual volumetric flow at operating conditions is computed via the ideal gas law to account for pressure and temperature expansion.</p>
+                <p>Mean axial velocity equals actual volumetric flow divided by the pipe cross-section area. For mass flow units (kg/h, lb/h, g/s), the molecular weight of the selected gas is used to convert to standard volumetric flow before applying the ideal gas correction.</p>
+                <p>This is bulk average velocity. Local velocity at bends and constrictions will be higher.</p>
+              </div>
+              <div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Pipe cross-section area</span>
+                  $$ A = \frac{\pi d^2}{4} $$
+                </div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Standard to actual flow (ideal gas law)</span>
+                  $$ \dot{V}_{actual} = \dot{V}_{std} \cdot \frac{P_{std}}{P_{actual}} \cdot \frac{T_{actual}}{T_{std}} $$
+                </div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Mean axial velocity</span>
+                  $$ v = \frac{\dot{V}_{actual}}{A} $$
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 03 — Pressure Differential Mode -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">04</span>
+              <h2>Pressure Differential Mode (ΔP → Velocity)</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body two-col">
+              <div>
+                <p>Compressible Bernoulli — pressure drop across a pipe section drives flow velocity. Gas density is computed from the ideal gas law at upstream conditions using the gas molecular weight and the universal gas constant.</p>
+                <p>This approach is valid when ΔP/P₁ &lt; 0.4. For larger pressure ratios, isentropic corrections using the specific heat ratio γ are required, and choked flow may occur.</p>
+              </div>
+              <div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Gas density (ideal gas law)</span>
+                  $$ \rho = \frac{M \cdot P_1}{R \cdot T} $$
+                </div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Velocity from pressure drop (compressible Bernoulli)</span>
+                  $$ v = \sqrt{\frac{2\,\Delta P}{\rho}} $$
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 04 — Orifice Mode -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">05</span>
+              <h2>Orifice / Restriction Plate Mode</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body two-col">
+              <div>
+                <p>The discharge coefficient C<sub>d</sub> accounts for vena contracta and flow contraction through the orifice. Choked flow occurs when the downstream-to-upstream pressure ratio P₂/P₁ falls at or below the critical pressure ratio — at this point the throat velocity equals the local speed of sound and further reducing downstream pressure does not increase mass flow.</p>
+                <p>Pipe velocity is back-calculated from continuity using the area ratio between the orifice and the pipe. Typical C<sub>d</sub> values: sharp-edge ≈ 0.61; rounded entry ≈ 0.80–0.98.</p>
+              </div>
+              <div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Critical pressure ratio (choke condition)</span>
+                  $$ r_c = \left(\frac{2}{\gamma+1}\right)^{\gamma/(\gamma-1)} $$
+                </div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Orifice mass flow (subcritical)</span>
+                  $$ \dot{m} = C_d \cdot A_o \cdot \sqrt{2\,\rho_1\,(P_1-P_2)} $$
+                </div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Pipe velocity from continuity</span>
+                  $$ v_{pipe} = \frac{\dot{m}}{\rho_1 \cdot A_{pipe}} $$
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 05 — Cv / Kv Valve Mode -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">06</span>
+              <h2>C<sub>v</sub> / K<sub>v</sub> Valve Mode</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body two-col">
+              <div>
+                <p>C<sub>v</sub> (US customary) is defined as the flow in US gpm of water at 60°F that produces a 1 psi pressure drop. K<sub>v</sub> (metric) is the flow in m³/h of water at 1 bar drop. The ISA S75.01 gas flow equation for compressible subcritical flow relates C<sub>v</sub> to standard volumetric flow using the gas specific gravity, upstream pressure, and temperature.</p>
+                <p>Downstream pipe velocity is then computed at downstream conditions from continuity. C<sub>v</sub> and K<sub>v</sub> are related by a fixed unit conversion factor.</p>
+              </div>
+              <div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">ISA S75.01 gas flow (Cv)</span>
+                  $$ Q_{scfh} = 962 \cdot C_v \sqrt{\frac{\Delta P \cdot P_{avg}}{G_g \cdot T}} $$
+                </div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Cv to Kv conversion</span>
+                  $$ K_v = C_v \times 0.865 $$
+                </div>
+                <div class="ref-callout">
+                  <strong>Where:</strong> G<sub>g</sub> = gas specific gravity (ratio of gas MW to air MW = 28.97), T in Rankine for US units, P<sub>avg</sub> = (P₁ + P₂) / 2.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 06 — Gas Safety Velocity Limits -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">07</span>
+              <h2>Gas Safety Velocity Limits</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body">
+              <div class="full-col">
+                <p>Velocity limits vary significantly by gas and are driven by different physical mechanisms. Oxygen limits are particle-ignition-based (CGA G-4.4, NASA-STD-6001) — particle impingement at high velocity generates heat sufficient to ignite the oxygen system. Hydrogen limits are erosion- and noise-driven. Natural gas follows API RP 14E erosional velocity guidance. Nitrogen and helium limits are erosion/noise. Ammonia limits protect seal and joint integrity against dynamic pressure. Acetylene is unique: the <em>pressure</em> limit (103 kPa gauge maximum) is always primary — never exceed this regardless of velocity, as acetylene can detonate without oxygen above this pressure.</p>
+                <div class="ref-warn">
+                  These limits are guidelines, not absolute regulatory values. Always consult the applicable standard and a qualified engineer for design decisions.
+                </div>
+                <table class="ref-table" style="margin-top:10px;">
+                  <thead>
+                    <tr>
+                      <th>Gas</th>
+                      <th>Conservative limit (m/s)</th>
+                      <th>Industry max (m/s)</th>
+                      <th>Danger threshold (m/s)</th>
+                      <th>Primary concern</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Oxygen</td><td>7.6</td><td>30.5</td><td>61</td><td>Particle ignition</td></tr>
+                    <tr><td>Hydrogen</td><td>15</td><td>30</td><td>50</td><td>Erosion/noise</td></tr>
+                    <tr><td>Natural Gas</td><td>20</td><td>38</td><td>100</td><td>API 14E erosion</td></tr>
+                    <tr><td>Nitrogen</td><td>25</td><td>50</td><td>120</td><td>Erosion/noise</td></tr>
+                    <tr><td>Ammonia</td><td>15</td><td>25</td><td>60</td><td>Seal integrity</td></tr>
+                    <tr><td>Acetylene</td><td>5</td><td>10</td><td>20</td><td>Pressure &gt; velocity — see note</td></tr>
+                    <tr><td>Chlorine</td><td>10</td><td>20</td><td>40</td><td>Erosion-corrosion</td></tr>
+                    <tr><td>CO₂</td><td>20</td><td>40</td><td>80</td><td>Phase change</td></tr>
+                    <tr><td>Helium</td><td>30</td><td>60</td><td>150</td><td>Erosion/noise</td></tr>
+                    <tr><td>Propane</td><td>15</td><td>25</td><td>60</td><td>Erosion/noise</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 08 — Adiabatic Compression Ignition -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">08</span>
+              <h2>Adiabatic Compression Ignition (Heat of Compression)</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body two-col">
+              <div>
+                <p>When a gas is pressurized very rapidly — a fast-opening valve discharging into a dead-ended tube, a regulator slammed open, or gas hammering into a closed section — there is no time for the compressed gas to shed heat to the pipe wall. The compression is essentially <em>adiabatic</em>, and the work done on the gas appears as a sharp temperature spike.</p>
+                <p>Treating the gas as ideal and the compression as isentropic (reversible adiabatic), the peak temperature depends only on the pressure ratio and the specific-heat ratio γ. Because γ is fixed for a given gas, even a modest absolute pressure with a large <em>ratio</em> can produce hundreds of degrees.</p>
+                <p>Ignition follows the <strong>kindling-chain</strong> model: the hot gas raises the temperature of the nearest fuel — a hydrocarbon film, a polymer seat, an elastomer seal — above that material's autoignition temperature (AIT). That first ignition releases energy that ignites the next component, and the fire propagates. This is why oxygen systems are cleaned to remove hydrocarbons and why operators are trained to open valves slowly.</p>
+                <p>Oxygen and other oxidizers do not themselves "autoignite" — they are the oxidant. The governing threshold is the AIT of the <em>fuel present in the system</em> (contamination or non-metals), which is why the calculator lets you choose the material to compare against. For a flammable gas such as hydrogen or methane, the governing threshold is the gas's own autoignition temperature, which is lower in an oxygen-enriched atmosphere than in air.</p>
+              </div>
+              <div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Peak temperature (isentropic compression)</span>
+                  $$ T_2 = T_1 \left(\frac{P_2}{P_1}\right)^{\frac{\gamma-1}{\gamma}} $$
+                </div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Temperature rise</span>
+                  $$ \Delta T = T_2 - T_1 $$
+                </div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Fill / charging mode (bulk temperature)</span>
+                  $$ T_{fill} = \frac{\gamma\,T_1\,P_2}{P_2 - P_1 + \gamma\,P_1} \;\xrightarrow{P_1\to 0}\; \gamma\,T_1 $$
+                </div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Ignition criterion (either mode)</span>
+                  $$ T \; \geq \; T_{AIT} \;\Rightarrow\; \text{ignition possible} $$
+                </div>
+                <div class="ref-callout">
+                  <strong>Two modes.</strong> <em>Compression ΔT</em> is the localised isentropic spike when gas is squeezed instantly against a dead-end (top equation). <em>Fill charging ΔT</em> is the bulk temperature of gas charging a volume from a supply line — a transient energy balance that, for an initially empty line, tops out at γ·T₁. <strong>Where:</strong> T in absolute units (K or °R); P<sub>1</sub> = initial pressure, P<sub>2</sub> = applied/supply pressure, both absolute; γ = c<sub>p</sub>/c<sub>v</sub> (O₂ 1.40, H₂ 1.41, He 1.67, CH₄ 1.31). The ideal-gas forms slightly <em>over</em>-predict real-oxygen temperatures at very high pressure — conservative screening, not a precise flame prediction.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 09 — Autoignition thresholds -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">09</span>
+              <h2>Autoignition Temperatures &amp; Stored Energy</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body">
+              <div class="full-col">
+                <p>Autoignition temperature (AIT) is the lowest temperature at which a material spontaneously ignites without an external spark. Values vary with pressure, oxygen concentration, geometry, and test method — the figures below are representative published values and are deliberately on the conservative (low) side for screening. Fuels ignite at lower temperatures in oxygen-enriched atmospheres than in air.</p>
+                <table class="ref-table" style="margin-top:10px;">
+                  <thead>
+                    <tr><th>Material / gas</th><th>AIT in air (°C)</th><th>AIT in O₂ / oxidizer (°C)</th><th>Role</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Hydrogen</td><td>~500</td><td>~400</td><td>Fuel — wide flammability, very low ignition energy</td></tr>
+                    <tr><td>Methane / natural gas</td><td>~537</td><td>~450</td><td>Fuel</td></tr>
+                    <tr><td>Propane</td><td>~450</td><td>~350</td><td>Fuel</td></tr>
+                    <tr><td>Acetylene</td><td>~305</td><td>~275</td><td>Fuel — also decomposes/detonates &gt; ~1 barg</td></tr>
+                    <tr><td>Ammonia</td><td>~630</td><td>~550</td><td>Fuel — high ignition energy, hard to ignite</td></tr>
+                    <tr><td>Hydrocarbon oil / grease film</td><td>~200–260</td><td>~150–200</td><td>Contaminant — the usual culprit in O₂ fires</td></tr>
+                    <tr><td>Nitrile (Buna-N) seal</td><td>—</td><td>~170</td><td>Non-metal in O₂ service</td></tr>
+                    <tr><td>Fluorocarbon (Viton/FKM) seal</td><td>—</td><td>~300</td><td>Non-metal in O₂ service</td></tr>
+                    <tr><td>PTFE (Teflon) seat</td><td>—</td><td>~430</td><td>Non-metal in O₂ service</td></tr>
+                  </tbody>
+                </table>
+                <p style="margin-top:12px;">The optional stored-energy figure estimates the mechanical energy released if the pressurized volume fails catastrophically, using Brode's equation. It is a rupture/blast-hazard indicator, independent of ignition — a small high-pressure volume can still be dangerous even in an inert gas.</p>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Stored energy (Brode)</span>
+                  $$ E = \frac{(P_2 - P_{atm})\,V}{\gamma - 1} \qquad m_{TNT} = \frac{E}{4.6\times10^{6}\,\text{J/kg}} $$
+                </div>
+                <div class="ref-warn">
+                  These AIT values and the ideal-gas temperature estimate are screening guidelines, not certification data. Real ignition also depends on flow-driven shock heating, particle impact, gas velocity, contamination level, and geometry. Oxygen and flammable-gas systems must be designed, cleaned, and commissioned per the governing standards (CGA G-4.4, ASTM G88/G63, EIGA, NFPA) under a qualified engineer.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 10 — Fast-valve release -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">10</span>
+              <h2>Fast-Valve Stored-Gas Release</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body two-col">
+              <div>
+                <p>Snapping open a valve between a stored high-pressure gas and a low-pressure line is one of the most hazardous routine actions in gas handling. It attacks the system three ways at once, and this calculator screens all three from the source pressure, the initial line pressure, and temperature.</p>
+                <p><strong>1 · Dead-end compression.</strong> Gas trapped in a closed branch or against a shut downstream valve is compressed from the line pressure up toward the source pressure almost instantly. The peak temperature follows the same isentropic relation as heat-of-compression, using the source-to-line pressure ratio.</p>
+                <p><strong>2 · Bulk fill heating.</strong> Even with no dead-end, filling a volume from a supply line is a transient charging process. An energy balance on the filling volume (ideal gas, adiabatic) gives a bulk temperature that, for an initially empty line, approaches γ times the supply temperature — about 137 °C for oxygen filled from 20 °C.</p>
+                <p><strong>3 · Sonic jet.</strong> When the line-to-source pressure ratio is below the critical ratio, flow through the valve chokes and a sonic jet enters the pipe. For oxygen that high-velocity jet drives particle impingement — the dominant ignition mechanism in clean oxygen systems.</p>
+                <p>The overall verdict is the worst of the three. The fix for all three is the same: pressurize slowly.</p>
+              </div>
+              <div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Dead-end compression peak</span>
+                  $$ T_{peak} = T_1\left(\frac{P_s}{P_0}\right)^{\frac{\gamma-1}{\gamma}} $$
+                </div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Adiabatic fill temperature (charging)</span>
+                  $$ T_{fill} = \frac{\gamma\,T\,P_s}{P_s - P_0 + \gamma\,P_0} \;\xrightarrow{P_0\to 0}\; \gamma\,T $$
+                </div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Choke condition &amp; sonic jet velocity</span>
+                  $$ \frac{P_0}{P_s} \leq \left(\tfrac{2}{\gamma+1}\right)^{\frac{\gamma}{\gamma-1}}, \quad v^{*}=\sqrt{\gamma\,\tfrac{R}{M}\,T\,\tfrac{2}{\gamma+1}} $$
+                </div>
+                <div class="ref-callout">
+                  <strong>Where:</strong> P<sub>s</sub> = stored source pressure, P<sub>0</sub> = initial downstream pressure, both absolute; T in absolute units; the fill relation assumes source and line start at the same temperature and the line fills to source pressure. Screening estimates only — they omit shock heating, real-gas effects, and pipe/valve geometry.
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /ref-wrapper -->
+      </div><!-- /ref-section-wrap -->
+
+    </div><!-- /sq-main -->
+
+    <!-- REFERENCES & IMPORTANT NOTICES -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3 mb-3 text-start" style="max-width:860px;">
+            <div class="text-center">
+              <div class="custom-heading">References &amp; Important Notices</div>
+            </div>
+            <ul class="mt-3" style="font-size:0.9rem;">
+              <li class="mb-2"><strong>CGA G-4.4</strong> — Oxygen Pipeline and Piping Systems. Compressed Gas Association. Primary source for oxygen velocity limits in industrial and medical piping.</li>
+              <li class="mb-2"><strong>NASA-STD-6001</strong> (formerly NHB 8060.1) — Flammability, Odor, Offgassing, and Compatibility Requirements and Test Procedures for Materials in Environments that Support Combustion. Basis for high-purity oxygen velocity limits.</li>
+              <li class="mb-2"><strong>API RP 14E</strong> — Recommended Practice for Design and Installation of Offshore Production Platform Piping Systems. Erosional velocity guidance for natural gas and hydrocarbon gas piping.</li>
+              <li class="mb-2"><strong>ISA S75.01</strong> — Flow Equations for Sizing Control Valves. Basis for the C<sub>v</sub> gas flow equation used in valve mode.</li>
+              <li class="mb-2"><strong>ASME B31.3</strong> — Process Piping. General velocity guidance for compressible fluids in process piping systems.</li>
+              <li class="mb-2"><strong>Crane Co. Technical Paper 410</strong> — Flow of Fluids Through Valves, Fittings, and Pipe. Classic industry reference for C<sub>v</sub>/K<sub>v</sub> methodology and orifice flow calculations.</li>
+              <li class="mb-2"><strong>Important notice:</strong> For informational use only. These velocity thresholds are engineering guidelines compiled from industry sources. They are not a substitute for project-specific engineering analysis, applicable codes, or regulatory requirements. Always verify with a qualified engineer before specifying flow conditions in safety-critical or pressure-containing systems.</li>
+              <li class="mb-2"><strong>Oxygen systems notice:</strong> Oxygen systems require special cleanliness, compatible materials, and velocity limits that depend on system cleanliness level, pressure, and materials. The CGA and NASA limits shown are guidelines — consult CGA G-4.4 and NASA-STD-6001 for your specific application.</li>
+              <li class="mb-2"><strong>ASTM G88 / G63</strong> — Standard Guide for Designing Systems for Oxygen Service and Standard Guide for Evaluating Nonmetallic Materials for Oxygen Service. Primary references for ignition mechanisms including heat of compression and material autoignition.</li>
+              <li class="mb-2"><strong>ASTM G72 / G74</strong> — Autogenous ignition temperature and pneumatic-impact (adiabatic compression) test methods for materials in oxygen-enriched environments.</li>
+              <li class="mb-2"><strong>Barragan, Wilson &amp; Stoltzfus (NASA/ASTM STP)</strong> — <em>Adiabatic Compression of Oxygen: Real Fluid Temperatures.</em> Shows the ideal-gas isentropic estimate is conservative relative to real-fluid behavior at high pressure.</li>
+              <li class="mb-2"><strong>Autoignition &amp; compression-ignition notice:</strong> The peak-temperature calculation assumes ideal-gas isentropic compression and compares against representative autoignition temperatures. It is a conservative screening aid only. It does not account for shock/particle-impact heating, real-gas effects, contamination, or geometry, and is not a substitute for oxygen-system design review, material compatibility testing, or the governing standards.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CITATION -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div id="citation-container" data-page-title="Gas Flow Safety Calculator" data-page-url="https://kaspercalc.com/GasFlowSafety.html"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+  <!-- END FOOTER -->
+
+<script>
+const GFS_GASES = {
+  oxygen: {
+    name: "Oxygen (O₂)", mw: 32, gamma: 1.4,
+    info: "Pure oxygen dramatically accelerates combustion. High velocity causes particle-impact ignition. NASA/CGA limits vary by cleanliness and pressure.",
+    thresholds: [
+      { label: "CGA conservative limit",  value: 7.6,  unit: "m/s", note: "25 ft/s — general industrial, carbon steel",     level: "safe"    },
+      { label: "CGA clean-system limit",  value: 15,   unit: "m/s", note: "~50 ft/s — verified clean piping",                level: "caution" },
+      { label: "NASA high-purity limit",  value: 30.5, unit: "m/s", note: "100 ft/s — verified cleanliness + tested materials", level: "caution" },
+      { label: "Impingement danger",      value: 61,   unit: "m/s", note: "200 ft/s — severe particle ignition risk",        level: "danger"  }
+    ],
+    safeLimit: 7.6, cautionLimit: 30.5, dangerLimit: 61
+  },
+  hydrogen: {
+    name: "Hydrogen (H₂)", mw: 2, gamma: 1.41,
+    info: "Widest flammability range of any common gas (4–75% in air), invisible flame. Sonic velocity ~1270 m/s; limits are erosion/noise driven.",
+    thresholds: [
+      { label: "Conservative design",     value: 15, unit: "m/s", note: "~50 ft/s",            level: "safe"    },
+      { label: "API 14E noise threshold", value: 18, unit: "m/s", note: "~60 ft/s",            level: "caution" },
+      { label: "Industry maximum (dry)",  value: 30, unit: "m/s", note: "~100 ft/s",           level: "caution" },
+      { label: "Erosional velocity",      value: 50, unit: "m/s", note: "~165 ft/s",           level: "danger"  }
+    ],
+    safeLimit: 15, cautionLimit: 30, dangerLimit: 50
+  },
+  natural_gas: {
+    name: "Natural gas (methane-rich)", mw: 18, gamma: 1.31,
+    info: "Flammable 5–15% in air. Limits are erosion, pressure-drop, and noise driven.",
+    thresholds: [
+      { label: "Underground pipeline",     value: 20,  unit: "m/s", note: "~65 ft/s",      level: "safe"    },
+      { label: "Above-ground piping max",  value: 30,  unit: "m/s", note: "~100 ft/s",     level: "caution" },
+      { label: "Industrial plant limit",   value: 38,  unit: "m/s", note: "~125 ft/s",     level: "caution" },
+      { label: "Never exceed",             value: 100, unit: "m/s", note: "~330 ft/s",     level: "danger"  }
+    ],
+    safeLimit: 20, cautionLimit: 38, dangerLimit: 100
+  },
+  nitrogen: {
+    name: "Nitrogen (N₂)", mw: 28, gamma: 1.4,
+    info: "Inert but asphyxiant. Limits are erosion, pressure drop, and noise.",
+    thresholds: [
+      { label: "Normal industrial",       value: 25,  unit: "m/s", note: "~80 ft/s",           level: "safe"    },
+      { label: "Upper piping limit",      value: 50,  unit: "m/s", note: "~165 ft/s",          level: "caution" },
+      { label: "High-velocity limit",     value: 80,  unit: "m/s", note: "~260 ft/s",          level: "caution" },
+      { label: "Concern zone",            value: 120, unit: "m/s", note: "Near-sonic effects",  level: "danger"  }
+    ],
+    safeLimit: 25, cautionLimit: 50, dangerLimit: 120
+  },
+  ammonia: {
+    name: "Ammonia (NH₃)", mw: 17, gamma: 1.31,
+    info: "Toxic (IDLH 300 ppm) and flammable (15–28% in air). Low velocity reduces dynamic pressure on seals and joints.",
+    thresholds: [
+      { label: "Gas-phase limit",          value: 15, unit: "m/s", note: "~50 ft/s",    level: "safe"    },
+      { label: "Standard industrial max",  value: 25, unit: "m/s", note: "~80 ft/s",    level: "caution" },
+      { label: "High-velocity caution",    value: 40, unit: "m/s", note: "~130 ft/s",   level: "caution" },
+      { label: "Never exceed",             value: 60, unit: "m/s", note: "~200 ft/s",   level: "danger"  }
+    ],
+    safeLimit: 15, cautionLimit: 25, dangerLimit: 60
+  },
+  acetylene: {
+    name: "Acetylene (C₂H₂)", mw: 26, gamma: 1.26,
+    info: "Can detonate without oxygen above 15 psig. Pressure limit is primary; velocity is secondary. Never pressurize bare pipe above 103 kPa gauge.",
+    thresholds: [
+      { label: "Safe working velocity",     value: 5,  unit: "m/s", note: "~16 ft/s",                              level: "safe"    },
+      { label: "Welding/cutting normal",    value: 10, unit: "m/s", note: "~33 ft/s",                              level: "caution" },
+      { label: "⚠ Pressure limit PRIMARY", value: 0,  unit: "m/s", note: "Above 103 kPa gauge → detonation",      level: "danger"  },
+      { label: "Velocity upper limit",      value: 20, unit: "m/s", note: "~66 ft/s",                              level: "danger"  }
+    ],
+    safeLimit: 5, cautionLimit: 10, dangerLimit: 20
+  },
+  chlorine: {
+    name: "Chlorine (Cl₂)", mw: 71, gamma: 1.34,
+    info: "Highly toxic (IDLH 10 ppm), corrosive oxidizer. Limits prevent erosion-corrosion.",
+    thresholds: [
+      { label: "Dry Cl₂ limit",           value: 10, unit: "m/s", note: "~33 ft/s",    level: "safe"    },
+      { label: "Standard industrial",      value: 20, unit: "m/s", note: "~65 ft/s",    level: "caution" },
+      { label: "Erosion-corrosion zone",   value: 30, unit: "m/s", note: "~100 ft/s",   level: "caution" },
+      { label: "Never exceed",             value: 40, unit: "m/s", note: "~130 ft/s",   level: "danger"  }
+    ],
+    safeLimit: 10, cautionLimit: 20, dangerLimit: 40
+  },
+  co2: {
+    name: "Carbon dioxide (CO₂)", mw: 44, gamma: 1.3,
+    info: "Non-flammable asphyxiant; can form dry ice at high pressure drops. Limits: erosion, noise, phase-change avoidance.",
+    thresholds: [
+      { label: "Normal piping design",    value: 20, unit: "m/s", note: "~65 ft/s",    level: "safe"    },
+      { label: "Upper piping limit",      value: 40, unit: "m/s", note: "~130 ft/s",   level: "caution" },
+      { label: "Phase-change caution",    value: 60, unit: "m/s", note: "~200 ft/s",   level: "caution" },
+      { label: "Excessive flow zone",     value: 80, unit: "m/s", note: "~260 ft/s",   level: "danger"  }
+    ],
+    safeLimit: 20, cautionLimit: 40, dangerLimit: 80
+  },
+  helium: {
+    name: "Helium (He)", mw: 4, gamma: 1.67,
+    info: "Inert, non-flammable, asphyxiant. Very low density; sonic velocity ~970 m/s. Limits are erosion/noise.",
+    thresholds: [
+      { label: "Normal piping",           value: 30,  unit: "m/s", note: "~100 ft/s",   level: "safe"    },
+      { label: "Extended design limit",   value: 60,  unit: "m/s", note: "~200 ft/s",   level: "caution" },
+      { label: "High-velocity range",     value: 100, unit: "m/s", note: "~330 ft/s",   level: "caution" },
+      { label: "Avoid above",             value: 150, unit: "m/s", note: "~490 ft/s",   level: "danger"  }
+    ],
+    safeLimit: 30, cautionLimit: 60, dangerLimit: 150
+  },
+  propane: {
+    name: "Propane (C₃H₈)", mw: 44, gamma: 1.13,
+    info: "Heavier than air; collects in low spots. Flammable 2.1–9.5% in air. Limits are erosion/noise driven.",
+    thresholds: [
+      { label: "Normal distribution",     value: 15, unit: "m/s", note: "~50 ft/s",    level: "safe"    },
+      { label: "Industrial piping max",   value: 25, unit: "m/s", note: "~80 ft/s",    level: "caution" },
+      { label: "Extended velocity limit", value: 35, unit: "m/s", note: "~115 ft/s",   level: "caution" },
+      { label: "Never exceed",            value: 60, unit: "m/s", note: "~200 ft/s",   level: "danger"  }
+    ],
+    safeLimit: 15, cautionLimit: 25, dangerLimit: 60
+  }
+};
+
+let gfsMode = "flow", gfsUS = "imperial";
+
+function gfsSetUS(s) {
+  gfsUS = s;
+  const btnM = document.getElementById("btn-metric");
+  const btnI = document.getElementById("btn-imperial");
+  btnM.classList.toggle("sq-active", s === "metric");
+  btnM.setAttribute("aria-pressed", s === "metric" ? "true" : "false");
+  btnI.classList.toggle("sq-active", s === "imperial");
+  btnI.setAttribute("aria-pressed", s === "imperial" ? "true" : "false");
+  const isI = s === "imperial";
+  // diameter units
+  ["gfsf-diamU","gfsdp-diamU","gfsor-diamU","gfscv-diamU"].forEach(function(id) {
+    const el = document.getElementById(id); if (el) el.value = isI ? "in" : "mm";
+  });
+  // diameter values
+  [["gfsf-diam","gfsf-diamU"],["gfsdp-diam","gfsdp-diamU"],["gfsor-dpipe","gfsor-diamU"],["gfscv-diam","gfscv-diamU"]].forEach(function(p) {
+    const d = document.getElementById(p[0]); if (d) d.value = isI ? 2 : 50;
+  });
+  const el = document.getElementById("gfsor-dorifice"); if (el) el.value = isI ? 0.5 : 12.7;
+  // flow mode
+  const fu = document.getElementById("gfsf-flowU"); if (fu) fu.value = isI ? "scfm" : "sm3h";
+  const fv = document.getElementById("gfsf-flow");  if (fv) fv.value = isI ? 50 : 100;
+  // operating conditions
+  const pU = document.getElementById("gfsc-presU"); if (pU) pU.value = isI ? "psia" : "bara";
+  const pV = document.getElementById("gfsc-pres");  if (pV) pV.value = isI ? 14.696 : 1.01325;
+  const tU = document.getElementById("gfsc-tempU"); if (tU) tU.value = isI ? "F" : "C";
+  const tV = document.getElementById("gfsc-temp");  if (tV) tV.value = isI ? 68 : 20;
+  // other mode pressures/temps
+  ["dp","or","cv"].forEach(function(pfx) {
+    const ppu = document.getElementById("gfs"+pfx+"-pU"); if (ppu) ppu.value = isI ? "psia" : "bara";
+    const p1  = document.getElementById("gfs"+pfx+"-p1"); if (p1)  p1.value  = isI ? 30 : 2.07;
+    const p2  = document.getElementById("gfs"+pfx+"-p2"); if (p2)  p2.value  = isI ? 14.696 : 1.01325;
+    const tu2 = document.getElementById("gfs"+pfx+"-tempU"); if (tu2) tu2.value = isI ? "F" : "C";
+    const tv2 = document.getElementById("gfs"+pfx+"-temp");  if (tv2) tv2.value  = isI ? 68 : 20;
+  });
+  gfsUpdate();
+}
+
+function gfsSetMode(m) {
+  gfsMode = m;
+  ["flow","dpdiam","orifice","cv"].forEach(function(id) {
+    document.getElementById("gfspane-" + id).style.display = id === m ? "block" : "none";
+    const btn = document.getElementById("gfsmt-" + id);
+    btn.classList.toggle("sq-active", id === m);
+    btn.setAttribute("aria-pressed", id === m ? "true" : "false");
+  });
+  const condCard = document.getElementById("gfscond-card");
+  condCard.style.display = m === "flow" ? "block" : "none";
+  gfsUpdate();
+}
+
+function gfsToBar(v, u) {
+  if (u === "psia") return v * 0.0689476;
+  if (u === "psig") return (v + 14.696) * 0.0689476;
+  if (u === "bara") return v;
+  if (u === "barg") return v + 1.01325;
+  if (u === "kpa")  return v / 100;
+  if (u === "mpa")  return v * 10;
+  if (u === "atm")  return v * 1.01325;
+  return v;
+}
+function gfsToK(v, u) {
+  if (u === "F") return (v - 32) * 5 / 9 + 273.15;
+  if (u === "C") return v + 273.15;
+  if (u === "K") return v;
+  if (u === "R") return v * 5 / 9;
+  return v + 273.15;
+}
+function gfsToM(v, u) {
+  if (u === "mm") return v / 1000;
+  if (u === "cm") return v / 100;
+  if (u === "in") return v * 0.0254;
+  if (u === "ft") return v * 0.3048;
+  return v;
+}
+
+function gfsApplySched(pfx) {
+  const v = document.getElementById(pfx + "-sched").value;
+  if (!v) return;
+  const d = document.getElementById(pfx + "-diam");
+  const u = document.getElementById(pfx + "-diamU");
+  if (d) d.value = parseFloat(v).toFixed(3);
+  if (u) u.value = "in";
+  gfsUpdate();
+}
+
+function gfsGetVelocity() {
+  const gasKey = document.getElementById("gfs-gas").value;
+  const gas = GFS_GASES[gasKey];
+  const T_std = 288.15, P_std = 1.01325;
+  let vel = 0, extra = {};
+
+  if (gfsMode === "flow") {
+    const fv = parseFloat(document.getElementById("gfsf-flow").value) || 0;
+    const fu = document.getElementById("gfsf-flowU").value;
+    const dM = gfsToM(parseFloat(document.getElementById("gfsf-diam").value) || 0.05, document.getElementById("gfsf-diamU").value);
+    const pBara = gfsToBar(parseFloat(document.getElementById("gfsc-pres").value) || 1.01325, document.getElementById("gfsc-presU").value);
+    const tK    = gfsToK( parseFloat(document.getElementById("gfsc-temp").value) || 293,      document.getElementById("gfsc-tempU").value);
+    const aM2 = Math.PI * dM * dM / 4;
+    const isVel = ["ms","fps","fpm","mph","kmh"].includes(fu);
+    let vms = 0;
+    if      (fu === "ms")  vms = fv;
+    else if (fu === "fps") vms = fv * 0.3048;
+    else if (fu === "fpm") vms = fv * 0.3048 / 60;
+    else if (fu === "mph") vms = fv * 0.44704;
+    else if (fu === "kmh") vms = fv / 3.6;
+    else {
+      let stdM3s = 0;
+      if      (fu === "scfm")   stdM3s = fv * 4.71947e-4;
+      else if (fu === "scfh")   stdM3s = fv * 4.71947e-4 / 60;
+      else if (fu === "slpm")   stdM3s = fv / 60000;
+      else if (fu === "slph")   stdM3s = fv / 3600000;
+      else if (fu === "sm3h")   stdM3s = fv / 3600;
+      else if (fu === "sm3d")   stdM3s = fv / 86400;
+      else if (fu === "mmscfd") stdM3s = fv * 1e6 * 4.71947e-4 / 1440;
+      else if (fu === "kgh")    stdM3s = (fv / 3600) / (gas.mw * P_std * 1e5 / (8314 * T_std));
+      else if (fu === "lbh")    stdM3s = (fv * 0.453592 / 3600) / (gas.mw * P_std * 1e5 / (8314 * T_std));
+      else if (fu === "gs")     stdM3s = (fv / 1000) / (gas.mw * P_std * 1e5 / (8314 * T_std));
+      const actM3s = stdM3s * (P_std / pBara) * (tK / T_std);
+      vms = aM2 > 0 ? actM3s / aM2 : 0;
+    }
+    vel = vms;
+    extra = { dM, aM2, pBara, tK, isVel, fu, fv, dIn: dM / 0.0254 };
+
+  } else if (gfsMode === "dpdiam") {
+    const P1 = gfsToBar(parseFloat(document.getElementById("gfsdp-p1").value) || 2, document.getElementById("gfsdp-pU").value);
+    const P2 = gfsToBar(parseFloat(document.getElementById("gfsdp-p2").value) || 1, document.getElementById("gfsdp-pU").value);
+    const dM = gfsToM(parseFloat(document.getElementById("gfsdp-diam").value) || 0.05, document.getElementById("gfsdp-diamU").value);
+    const tK = gfsToK(parseFloat(document.getElementById("gfsdp-temp").value) || 293, document.getElementById("gfsdp-tempU").value);
+    const rho = gas.mw * P1 * 1e5 / (8314 * tK);
+    const dP  = Math.max(0, (P1 - P2) * 1e5);
+    vel = Math.sqrt(2 * dP / rho);
+    extra = { P1, P2, dM, tK, rho, dP, dIn: dM / 0.0254 };
+
+  } else if (gfsMode === "orifice") {
+    const P1  = gfsToBar(parseFloat(document.getElementById("gfsor-p1").value) || 2,    document.getElementById("gfsor-pU").value);
+    const P2  = gfsToBar(parseFloat(document.getElementById("gfsor-p2").value) || 1,    document.getElementById("gfsor-pU").value);
+    const dOr = gfsToM(parseFloat(document.getElementById("gfsor-dorifice").value) || 0.013, document.getElementById("gfsor-diamU").value);
+    const dPi = gfsToM(parseFloat(document.getElementById("gfsor-dpipe").value) || 0.05,    document.getElementById("gfsor-diamU").value);
+    const Cd  = parseFloat(document.getElementById("gfsor-cd").value) || 0.61;
+    const tK  = gfsToK(parseFloat(document.getElementById("gfsor-temp").value) || 293, document.getElementById("gfsor-tempU").value);
+    const gamma = gas.gamma;
+    const r = P2 / P1;
+    const r_crit = Math.pow(2 / (gamma + 1), gamma / (gamma - 1));
+    const choked = r <= r_crit;
+    const rho1 = gas.mw * P1 * 1e5 / (8314 * tK);
+    let v_throat;
+    if (choked) {
+      v_throat = Math.sqrt(gamma * 8314 / gas.mw * tK);
+    } else {
+      const dP_Pa = (P1 - P2) * 1e5;
+      v_throat = Cd * Math.sqrt(2 * dP_Pa / rho1 / (1 - Math.pow(dOr / dPi, 4)));
+    }
+    const aOr  = Math.PI * dOr * dOr / 4;
+    const aPipe = Math.PI * dPi * dPi / 4;
+    const Qact = Cd * aOr * v_throat;
+    const rho2 = gas.mw * P2 * 1e5 / (8314 * tK);
+    vel = aPipe > 0 ? Qact * rho1 / rho2 / aPipe : 0;
+    extra = { P1, P2, dOr, dPipe: dPi, Cd, tK, r, r_crit, choked, v_throat, rho1, rho2, dIn: dPi / 0.0254, dOrIn: dOr / 0.0254, gamma };
+
+  } else if (gfsMode === "cv") {
+    const P1   = gfsToBar(parseFloat(document.getElementById("gfscv-p1").value) || 2, document.getElementById("gfscv-pU").value);
+    const P2   = gfsToBar(parseFloat(document.getElementById("gfscv-p2").value) || 1, document.getElementById("gfscv-pU").value);
+    const cvType = document.getElementById("gfscv-type").value;
+    const coeff  = parseFloat(document.getElementById("gfscv-coeff").value) || 10;
+    document.getElementById("gfscv-coeff-lbl").innerHTML = cvType === "cv" ? "C<sub>v</sub> value" : "K<sub>v</sub> value";
+    const Kv  = cvType === "cv" ? coeff * 0.8646 : coeff;
+    const dM  = gfsToM(parseFloat(document.getElementById("gfscv-diam").value) || 0.05, document.getElementById("gfscv-diamU").value);
+    const tK  = gfsToK(parseFloat(document.getElementById("gfscv-temp").value) || 293,  document.getElementById("gfscv-tempU").value);
+    const Gf  = gas.mw / 28.97;
+    const dPpsi  = (P1 - P2) / 0.0689476;
+    const Pmean  = (P1 + P2) / 2 / 0.0689476;
+    const Q_scfh = Kv * 1.16 * Math.sqrt(dPpsi * Pmean / (Gf * (tK / 288.15)));
+    const stdM3s = Q_scfh * 4.71947e-4 / 60;
+    const actM3s = stdM3s * (1.01325 / P2) * (tK / 288.15);
+    const aM2    = Math.PI * dM * dM / 4;
+    vel = aM2 > 0 ? actM3s / aM2 : 0;
+    extra = { P1, P2, Kv, coeff, cvType, dM, tK, Gf, Q_scfh, stdM3s, actM3s, dIn: dM / 0.0254 };
+  }
+  return { vel, extra };
+}
+
+function gfsDiamStep(u) {
+  if (u === "in") return 0.125;
+  if (u === "mm") return 1;
+  if (u === "cm") return 0.1;
+  if (u === "ft") return 0.01;
+  return 0.001;
+}
+function gfsPresStep(u) {
+  if (u === "psia" || u === "psig") return 1;
+  if (u === "bara" || u === "barg") return 0.1;
+  if (u === "kpa") return 10;
+  if (u === "mpa") return 0.01;
+  return 0.01;
+}
+function gfsSyncSteps() {
+  [["gfsf-diam","gfsf-diamU"],["gfsdp-diam","gfsdp-diamU"],["gfsor-dpipe","gfsor-diamU"],["gfscv-diam","gfscv-diamU"]].forEach(function(p) {
+    const d = document.getElementById(p[0]), u = document.getElementById(p[1]);
+    if (d && u) d.step = gfsDiamStep(u.value);
+  });
+  const od = document.getElementById("gfsor-dorifice"), ou = document.getElementById("gfsor-diamU");
+  if (od && ou) od.step = gfsDiamStep(ou.value);
+  [["gfsc-pres","gfsc-presU"],["gfsdp-p1","gfsdp-pU"],["gfsdp-p2","gfsdp-pU"],
+   ["gfsor-p1","gfsor-pU"],["gfsor-p2","gfsor-pU"],
+   ["gfscv-p1","gfscv-pU"],["gfscv-p2","gfscv-pU"]].forEach(function(p) {
+    const v = document.getElementById(p[0]), u = document.getElementById(p[1]);
+    if (v && u) v.step = gfsPresStep(u.value);
+  });
+  ["gfsc-temp","gfsdp-temp","gfsor-temp","gfscv-temp"].forEach(function(id) {
+    const el = document.getElementById(id); if (el) el.step = 1;
+  });
+  const fv = document.getElementById("gfsf-flow"), fu = document.getElementById("gfsf-flowU");
+  if (fv && fu) {
+    const fSteps = { scfm:1, scfh:10, slpm:1, slph:10, sm3h:0.01, am3h:0.01, kgh:0.1, lbminh:0.1 };
+    fv.step = fSteps[fu.value] || 1;
+  }
+}
+
+function gfsUpdate() {
+  gfsSyncSteps();
+  const gasKey = document.getElementById("gfs-gas").value;
+  if (!gasKey) return;
+  const gas = GFS_GASES[gasKey];
+
+  document.querySelector("#gfs-gas-info-box p").textContent = gas.info;
+  document.getElementById("gfsthresh-gasname").textContent  = gas.name;
+
+  const isMass = gfsMode === "flow" && ["kgh","lbh","gs"].includes(document.getElementById("gfsf-flowU").value);
+  const mwNote = document.getElementById("gfsf-mw-note");
+  if (mwNote) mwNote.textContent = isMass ? "MW used: " + gas.mw + " g/mol" : "";
+
+  const { vel, extra } = gfsGetVelocity();
+  const velFps = vel * 3.2808, velKmh = vel * 3.6, velMph = vel * 2.237;
+  const isI = gfsUS === "imperial";
+  const vDisp = function(ms) { return isI ? (ms * 3.2808).toFixed(2) + " ft/s" : ms.toFixed(2) + " m/s"; };
+
+  let rows = '<div class="gfs-rrow"><span class="gfs-rl">Calculated pipe velocity</span><span class="gfs-rv">' +
+    vel.toFixed(3) + ' m/s &nbsp;|&nbsp; ' + velFps.toFixed(2) + ' ft/s &nbsp;|&nbsp; ' +
+    velKmh.toFixed(2) + ' km/h &nbsp;|&nbsp; ' + velMph.toFixed(2) + ' mph</span></div>';
+
+  if (gfsMode === "orifice" && extra.choked) {
+    rows += '<div class="gfs-rrow"><span class="gfs-rl">Flow condition</span><span class="gfs-rv" style="color:var(--gc-danger);">⚠ Choked flow — sonic at orifice throat</span></div>';
+    rows += '<div class="gfs-rrow"><span class="gfs-rl">Throat velocity (sonic)</span><span class="gfs-rv">' + vDisp(extra.v_throat) + ' (Mach 1)</span></div>';
+  } else if (gfsMode === "orifice") {
+    rows += '<div class="gfs-rrow"><span class="gfs-rl">Orifice throat velocity</span><span class="gfs-rv">' + extra.v_throat.toFixed(2) + ' m/s &nbsp;|&nbsp; ' + (extra.v_throat * 3.2808).toFixed(1) + ' ft/s</span></div>';
+    rows += '<div class="gfs-rrow"><span class="gfs-rl">Beta ratio (d/D)</span><span class="gfs-rv">' + (extra.dOr / extra.dPipe).toFixed(4) + '</span></div>';
+  }
+  if (gfsMode === "cv") {
+    rows += '<div class="gfs-rrow"><span class="gfs-rl">Volumetric flow (std)</span><span class="gfs-rv">' + extra.Q_scfh.toFixed(1) + ' SCFH &nbsp;|&nbsp; ' + (extra.stdM3s * 3600).toFixed(3) + ' Sm³/h</span></div>';
+  }
+  if (extra.dIn !== undefined) {
+    rows += '<div class="gfs-rrow"><span class="gfs-rl">Pipe inner diameter</span><span class="gfs-rv">' + extra.dIn.toFixed(3) + ' in &nbsp;|&nbsp; ' + (extra.dIn * 25.4).toFixed(2) + ' mm</span></div>';
+    const dM2 = extra.dM || extra.dPipe;
+    if (dM2) {
+      const areaDisp = isI
+        ? (Math.PI * dM2 * dM2 / 4 * 1550.003).toFixed(4) + ' in²'
+        : (Math.PI * dM2 * dM2 / 4 * 1e4).toFixed(3) + ' cm²';
+      rows += '<div class="gfs-rrow"><span class="gfs-rl">Pipe cross-section</span><span class="gfs-rv">' + areaDisp + '</span></div>';
+    }
+  }
+  document.getElementById("gfsresults").innerHTML = rows;
+
+  // Status
+  const level = vel <= gas.safeLimit ? "ok" : vel <= gas.cautionLimit ? "caution" : "danger";
+  const icons  = { ok: "✓", caution: "⚠", danger: "✕" };
+  const titles = { ok: "Safe operating range", caution: "Caution — elevated velocity", danger: "Danger — velocity exceeds safety limit" };
+  const descs  = {
+    ok:      vDisp(vel) + " is within the conservative safe limit of " + vDisp(gas.safeLimit) + ".",
+    caution: vDisp(vel) + " exceeds the conservative limit (" + vDisp(gas.safeLimit) + ") but is below the danger threshold (" + vDisp(gas.dangerLimit) + "). Additional safeguards may be required.",
+    danger:  vDisp(vel) + " exceeds the danger threshold of " + vDisp(gas.dangerLimit) + ". Reduce flow, increase pipe diameter, or lower pressure."
+  };
+  document.getElementById("gfsstatus-box").className   = "gfs-sb gfs-sb-" + level;
+  document.getElementById("gfsstatus-icon").textContent = icons[level];
+  document.getElementById("gfsstatus-title").textContent = titles[level];
+  document.getElementById("gfsstatus-title").className  = "gfs-st gfs-c" + (level === "ok" ? "s" : level === "caution" ? "c" : "d");
+  document.getElementById("gfsstatus-desc").textContent  = descs[level];
+
+  // Meter
+  const mMax = gas.dangerLimit * 1.5;
+  const pct  = Math.min(100, (vel / mMax) * 100);
+  const mColors = { ok: "#2a7a4a", caution: "#c47c00", danger: "#c0392b" };
+  document.getElementById("gfsmeter").style.width      = pct.toFixed(1) + "%";
+  document.getElementById("gfsmeter").style.background = mColors[level];
+  const mUnit = gfsUS === "imperial" ? "ft/s" : "m/s";
+  const mMid  = gfsUS === "imperial" ? mMax / 2 * 3.2808 : mMax / 2;
+  const mMaxD = gfsUS === "imperial" ? mMax * 3.2808      : mMax;
+  document.getElementById("gfsm-mid").textContent = mMid.toFixed(0) + " " + mUnit;
+  document.getElementById("gfsm-max").textContent = mMaxD.toFixed(0) + " " + mUnit;
+
+  // Thresholds
+  document.getElementById("gfsthresholds").innerHTML = '<div class="gfs-tg">' +
+    gas.thresholds.map(function(t) {
+      const tc = t.level === "safe" ? "#1a6630" : t.level === "caution" ? "#7a5500" : "#8b1a1a";
+      let tValStr;
+      if (t.value <= 0) {
+        tValStr = "—";
+      } else if (isI) {
+        tValStr = (t.value * 3.2808).toFixed(1) + " ft/s";
+      } else {
+        tValStr = t.value + " " + t.unit;
+      }
+      return '<div class="gfs-ti"><div class="gfs-tn">' + t.label + '</div>' +
+        '<div class="gfs-tv" style="color:' + tc + ';">' + tValStr + '</div>' +
+        '<div class="gfs-tnt">' + t.note + '</div></div>';
+    }).join("") + '</div>';
+
+  gfsRenderMath(gas, vel, extra);
+}
+
+function gfsRenderMath(gas, vel, extra) {
+  let html = "";
+  const T_std = 288.15, P_std = 1.01325;
+
+  if (gfsMode === "flow") {
+    const { dM, aM2, pBara, tK, isVel } = extra || {};
+    if (isVel) {
+      html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">Direct velocity input</div>' +
+        '<div class="gfs-eq-block">Velocity entered directly — no unit conversion beyond the factor shown. Value is compared directly against safety thresholds.</div></div>';
+    } else {
+      html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">Step 1 — Pipe cross-section area</div>' +
+        '<div class="gfs-eq-block">For a circular pipe of inner diameter \\(d\\):</div>' +
+        '\\[ A = \\frac{\\pi d^2}{4} = \\frac{\\pi \\times (' + (dM||0.05).toFixed(5) + '\\,\\text{m})^2}{4} = ' + ((aM2||0)*1e4).toFixed(4) + ' \\times 10^{-4}\\,\\text{m}^2 \\]</div>';
+      html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">Step 2 — Standard to actual volumetric flow (ideal gas law)</div>' +
+        '<div class="gfs-eq-block">Standard flow \\(\\dot{V}_{std}\\) is referenced to \\(T_{std}=288.15\\,\\text{K},\\; P_{std}=1.01325\\,\\text{bara}\\). Actual flow at operating conditions:</div>' +
+        '\\[ \\dot{V}_{actual} = \\dot{V}_{std} \\cdot \\frac{P_{std}}{P_{actual}} \\cdot \\frac{T_{actual}}{T_{std}} \\]' +
+        '<div class="gfs-eq-block">With \\(P_{actual}=' + (pBara||1).toFixed(4) + '\\,\\text{bara}\\) and \\(T_{actual}=' + (tK||293).toFixed(2) + '\\,\\text{K}\\), expansion ratio \\(= ' + ((P_std/(pBara||1))*((tK||293)/T_std)).toFixed(4) + '\\).</div></div>';
+      html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">Step 3 — Mean axial velocity</div>' +
+        '\\[ v = \\frac{\\dot{V}_{actual}}{A} \\]' +
+        '<div class="gfs-eq-block">This is the bulk average velocity. Local velocities at bends and constrictions will be higher.</div></div>';
+    }
+
+  } else if (gfsMode === "dpdiam") {
+    const { P1, P2, tK, rho, dP } = extra || {};
+    html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">Compressible Bernoulli equation</div>' +
+      '\\[ v = \\sqrt{\\frac{2\\,\\Delta P}{\\rho}} \\]' +
+      '<div class="gfs-eq-block">where \\(\\Delta P = P_1 - P_2 = ' + ((dP||0)/1e5).toFixed(4) + '\\,\\text{bara} = ' + ((dP||0)).toFixed(0) + '\\,\\text{Pa}\\) and \\(\\rho\\) is gas density at upstream conditions.</div></div>';
+    html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">Gas density via ideal gas law</div>' +
+      '\\[ \\rho = \\frac{M \\cdot P_1}{R \\cdot T} = \\frac{' + gas.mw + '\\,\\text{g/mol} \\times ' + ((P1||1)*1e5).toFixed(0) + '\\,\\text{Pa}}{8314\\,\\text{J/(kmol·K)} \\times ' + (tK||293).toFixed(2) + '\\,\\text{K}} = ' + (rho||0).toFixed(3) + '\\,\\text{kg/m}^3 \\]</div>';
+    html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">Substituting</div>' +
+      '\\[ v = \\sqrt{\\frac{2 \\times ' + ((dP||0)).toFixed(0) + '}{' + (rho||0).toFixed(3) + '}} = ' + vel.toFixed(3) + '\\,\\text{m/s} \\]' +
+      '<div class="gfs-eq-block" style="font-size:12px;color:#777;">Valid for ΔP/P₁ &lt; 0.4. For larger ratios use isentropic nozzle equations with \\(\\gamma\\) correction.</div></div>';
+
+  } else if (gfsMode === "orifice") {
+    const { P1, P2, dOr, dPipe, Cd, tK, r, r_crit, choked, v_throat, rho1, gamma } = extra || {};
+    const beta = (dOr||0.01) / (dPipe||0.05);
+    html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">Step 1 — Beta ratio and critical pressure ratio</div>' +
+      '\\[ \\beta = \\frac{d}{D} = \\frac{' + ((dOr||0.01)*1000).toFixed(1) + '\\,\\text{mm}}{' + ((dPipe||0.05)*1000).toFixed(1) + '\\,\\text{mm}} = ' + beta.toFixed(4) + ' \\]' +
+      '<div class="gfs-eq-block">Critical pressure ratio for \\(\\gamma = ' + (gamma||1.4).toFixed(2) + '\\):</div>' +
+      '\\[ \\left(\\frac{P_2}{P_1}\\right)_{crit} = \\left(\\frac{2}{\\gamma+1}\\right)^{\\gamma/(\\gamma-1)} = ' + (r_crit||0.528).toFixed(4) + ' \\]' +
+      '<div class="gfs-eq-block">Actual ratio \\(P_2/P_1 = ' + (r||0.5).toFixed(4) + '\\) — flow is <strong>' + (choked ? "CHOKED (sonic)" : "subcritical") + '</strong>.</div></div>';
+    if (choked) {
+      html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">Step 2 — Choked (sonic) throat velocity</div>' +
+        '\\[ v_{throat} = \\sqrt{\\gamma \\frac{R}{M} T_1} = \\sqrt{' + (gamma||1.4).toFixed(2) + ' \\times \\frac{8314}{' + gas.mw + '} \\times ' + (tK||293).toFixed(1) + '} = ' + (v_throat||0).toFixed(1) + '\\,\\text{m/s} \\]' +
+        '<div class="gfs-eq-block">Mass flow is independent of \\(P_2\\) once choked — further reducing downstream pressure does not increase flow.</div></div>';
+    } else {
+      html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">Step 2 — Subcritical orifice velocity (ISO 5167)</div>' +
+        '\\[ v_{throat} = \\frac{C_d}{\\sqrt{1-\\beta^4}} \\sqrt{\\frac{2\\,\\Delta P}{\\rho_1}} \\]' +
+        '<div class="gfs-eq-block">\\(C_d = ' + (Cd||0.61).toFixed(2) + '\\), \\(\\rho_1 = ' + (rho1||0).toFixed(3) + '\\,\\text{kg/m}^3\\), \\(\\Delta P = ' + (((P1||2)-(P2||1))*1e5).toFixed(0) + '\\,\\text{Pa}\\) → \\(v_{throat} = ' + (v_throat||0).toFixed(2) + '\\,\\text{m/s}\\).</div></div>';
+    }
+    html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">Step 3 — Back-calculate pipe velocity by continuity</div>' +
+      '<div class="gfs-eq-block">Volumetric flow at throat: \\(\\dot{Q} = C_d \\cdot A_{orifice} \\cdot v_{throat}\\). Convert to downstream pipe conditions using density ratio \\(\\rho_1/\\rho_2\\) and divide by pipe area:</div>' +
+      '\\[ v_{pipe} = \\frac{\\dot{Q} \\cdot \\rho_1/\\rho_2}{A_{pipe}} = ' + vel.toFixed(3) + '\\,\\text{m/s} \\]</div>';
+
+  } else if (gfsMode === "cv") {
+    const { P1, P2, Kv, coeff, cvType, tK, Gf, Q_scfh } = extra || {};
+    const dPpsi = ((P1||2) - (P2||1)) / 0.0689476;
+    const Pmean = ((P1||2) + (P2||1)) / 2 / 0.0689476;
+    html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">ISA S75.01 gas flow equation</div>' +
+      '\\[ Q_{SCFH} = C_v \\cdot N_9 \\sqrt{\\frac{\\Delta P \\cdot P_{mean}}{G_f \\cdot T / T_{std}}} \\]' +
+      '<div class="gfs-eq-block">\\(N_9 = 7.07\\) (US units), \\(G_f = M_{gas}/M_{air} = ' + gas.mw + '/28.97 = ' + (Gf||1).toFixed(4) + '\\), \\(\\Delta P = ' + dPpsi.toFixed(2) + '\\,\\text{psi}\\), \\(P_{mean} = ' + Pmean.toFixed(2) + '\\,\\text{psia}\\), \\(T = ' + (tK||293).toFixed(1) + '\\,\\text{K}\\).</div></div>';
+    html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">Converting C<sub>v</sub> ↔ K<sub>v</sub></div>' +
+      '\\[ K_v = 0.8646 \\cdot C_v \\qquad (\\text{or}\\; C_v = 1.156 \\cdot K_v) \\]' +
+      '<div class="gfs-eq-block">Entered: ' + (cvType === "cv" ? "Cv" : "Kv") + ' = ' + (coeff||10).toFixed(3) + ' → Kv = ' + (Kv||8.646).toFixed(3) + '. Flow at standard conditions: \\(\\dot{Q}_{std} = ' + (Q_scfh||0).toFixed(1) + '\\,\\text{SCFH}\\) = ' + ((Q_scfh||0)/35.3147).toFixed(3) + ' Sm³/h.</div></div>';
+    html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">Pipe velocity at downstream conditions</div>' +
+      '\\[ v_{pipe} = \\frac{\\dot{V}_{std} \\cdot (P_{std}/P_2) \\cdot (T/T_{std})}{A_{pipe}} = ' + vel.toFixed(3) + '\\,\\text{m/s} \\]</div>';
+  }
+
+  html += '<div class="gfs-eq-step"><div class="gfs-eq-step-title">Compressibility note</div>' +
+    '<div class="gfs-eq-block">All modes assume ideal gas (\\(Z=1\\)). For high-pressure systems above ~70 bara or gases near their critical point, apply the compressibility factor:</div>' +
+    '\\[ \\rho = \\frac{M \\cdot P}{Z \\cdot R \\cdot T} \\]</div>';
+
+  document.getElementById("gfsmath-exp").innerHTML = html;
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([document.getElementById("gfsmath-exp")]).catch(function(){});
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ADIABATIC COMPRESSION IGNITION MODULE
+// ══════════════════════════════════════════════════════════════
+// AIT values in °C. kind: "fuel" | "oxidizer" | "inert".
+// "targets" = list of {label, ait, note} to compare peak temp against.
+const GFS_IGNITION = {
+  oxygen: {
+    kind: "oxidizer",
+    info: "Oxygen is the oxidant, not the fuel — it does not autoignite. Rapid pressurization heats the gas; if the peak temperature reaches the autoignition point of any fuel present (oil film, seal, seat), a kindling-chain fire can start.",
+    targets: [
+      { label: "Hydrocarbon oil / grease film (contaminated)", ait: 200, note: "The usual cause of O₂ fires — this is why oxygen cleaning exists." },
+      { label: "Nitrile (Buna-N) seal", ait: 170, note: "Common elastomer; ignites readily in oxygen." },
+      { label: "Fluorocarbon (Viton/FKM) seal", ait: 300, note: "More O₂-compatible than nitrile, still combustible." },
+      { label: "PTFE (Teflon) seat", ait: 430, note: "Among the more O₂-compatible non-metals." },
+      { label: "Clean metal only (no non-metals, no oil)", ait: 1000, note: "Idealized — assumes verified cleanliness. Metals can still burn at extreme conditions." }
+    ]
+  },
+  chlorine: {
+    kind: "oxidizer",
+    info: "Chlorine is an oxidizer and supports combustion of hydrocarbons and some metals. Heat of compression can ignite contaminant films; titanium is prohibited in dry chlorine as it can react violently.",
+    targets: [
+      { label: "Hydrocarbon oil / grease film (contaminated)", ait: 200, note: "Contamination ignites in the oxidizing atmosphere." },
+      { label: "Clean, compatible system", ait: 900, note: "Idealized — assumes correct materials and cleanliness." }
+    ]
+  },
+  hydrogen: {
+    kind: "fuel",
+    info: "Hydrogen is flammable across a very wide range (4–75% in air) and has extremely low minimum ignition energy — almost any heat spike or spark ignites it. Compression heating alone can reach its AIT.",
+    targets: [
+      { label: "Hydrogen in oxygen-enriched atmosphere", ait: 400, note: "Lower AIT than in air." },
+      { label: "Hydrogen in air", ait: 500, note: "Representative published AIT." }
+    ]
+  },
+  natural_gas: {
+    kind: "fuel",
+    info: "Methane-rich natural gas is flammable 5–15% in air. Heat of compression can reach its autoignition temperature in high-ratio pressurizations.",
+    targets: [
+      { label: "Methane in oxygen-enriched atmosphere", ait: 450, note: "Lower AIT than in air." },
+      { label: "Methane in air", ait: 537, note: "Representative published AIT." }
+    ]
+  },
+  propane: {
+    kind: "fuel",
+    info: "Propane is flammable 2.1–9.5% in air and heavier than air, collecting in low spots. Autoignition is reachable by strong compression events.",
+    targets: [
+      { label: "Propane in oxygen-enriched atmosphere", ait: 350, note: "Lower AIT than in air." },
+      { label: "Propane in air", ait: 450, note: "Representative published AIT." }
+    ]
+  },
+  acetylene: {
+    kind: "fuel",
+    info: "Acetylene has a low AIT and, above roughly 1 barg, can decompose and detonate with NO oxygen present. For acetylene the pressure limit is primary — heat of compression only compounds an already pressure-sensitive gas.",
+    targets: [
+      { label: "Acetylene in oxygen-enriched atmosphere", ait: 275, note: "Also: never exceed ~1 barg in bare pipe — detonation risk." },
+      { label: "Acetylene in air", ait: 305, note: "Also: never exceed ~1 barg in bare pipe — detonation risk." }
+    ]
+  },
+  ammonia: {
+    kind: "fuel",
+    info: "Ammonia is flammable 15–28% in air but has a high ignition energy and high AIT, so it is comparatively hard to ignite. Its main hazard is toxicity (IDLH 300 ppm).",
+    targets: [
+      { label: "Ammonia in oxygen-enriched atmosphere", ait: 550, note: "Still hard to ignite; toxicity is the dominant hazard." },
+      { label: "Ammonia in air", ait: 630, note: "High AIT — ignition by compression alone is unlikely." }
+    ]
+  },
+  nitrogen: {
+    kind: "inert",
+    info: "Nitrogen is inert — there is no ignition mechanism from compression heating. The temperature spike can still thermally damage seals and is an asphyxiation reminder for the system as a whole.",
+    targets: [
+      { label: "Typical elastomer seal thermal limit", ait: 200, note: "Not ignition — thermal degradation of seals above continuous rating." }
+    ]
+  },
+  helium: {
+    kind: "inert",
+    info: "Helium is inert and non-flammable, but it has the highest γ here (1.67), so it produces the largest temperature rise per pressure ratio. No ignition, but seal/thermal effects and high stored energy matter.",
+    targets: [
+      { label: "Typical elastomer seal thermal limit", ait: 200, note: "Not ignition — thermal degradation of seals above continuous rating." }
+    ]
+  },
+  co2: {
+    kind: "inert",
+    info: "CO₂ is a non-flammable asphyxiant. No ignition from compression, though rapid decompression elsewhere can form dry ice. Temperature spike is a seal-thermal concern only.",
+    targets: [
+      { label: "Typical elastomer seal thermal limit", ait: 200, note: "Not ignition — thermal degradation of seals above continuous rating." }
+    ]
+  }
+};
+
+let gicMatIndex = 0;
+let gicMode = "ratio";   // "ratio" = compression ΔT | "fill" = charging ΔT
+
+function gicSetMode(m) {
+  gicMode = m;
+  document.getElementById("gicmt-ratio").classList.toggle("sq-active", m === "ratio");
+  document.getElementById("gicmt-ratio").setAttribute("aria-pressed", m === "ratio");
+  document.getElementById("gicmt-fill").classList.toggle("sq-active", m === "fill");
+  document.getElementById("gicmt-fill").setAttribute("aria-pressed", m === "fill");
+
+  if (m === "fill") {
+    document.getElementById("gic-mode-hint").innerHTML = "Bulk temperature of the gas <em>filling</em> a volume from a supply line — a transient charging energy balance. For an initially empty line the fill temperature approaches γ·T. Use this for &ldquo;how hot does the whole charge get,&rdquo; not the localised dead-end spike.";
+    document.getElementById("gic-card-title").textContent = "Fill / charging event";
+    document.getElementById("gic-lbl-p1").innerHTML = '<span class="tooltip-wrap">Downstream initial P<sub>0</sub><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">Pressure already in the volume before filling — use ~14.7 psia (1 atm) for a vented line, or lower if partially evacuated.</span></span>';
+    document.getElementById("gic-lbl-p2").innerHTML = '<span class="tooltip-wrap">Supply pressure P<sub>s</sub><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">The supply/source pressure the volume fills up to — the line settles to roughly this pressure once filled.</span></span>';
+    document.getElementById("gic-lbl-t1").innerHTML = 'Gas / supply temperature';
+    document.getElementById("gic-hint-main").innerHTML = "Assumes the supply and the initial downstream gas start at the same temperature and the volume fills to supply pressure. Adiabatic (no heat lost to the wall) — the realistic worst case for fill heating.";
+    document.getElementById("gic-res-title").textContent = "Bulk fill temperature";
+  } else {
+    document.getElementById("gic-mode-hint").innerHTML = "Localised temperature when gas is <em>compressed</em> almost instantly — the classic dead-end / fast-valve heat-of-compression spike. Isentropic, driven only by the pressure ratio and γ.";
+    document.getElementById("gic-card-title").textContent = "Pressurization event";
+    document.getElementById("gic-lbl-p1").innerHTML = '<span class="tooltip-wrap">Initial pressure P<sub>1</sub><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">The pressure in the section <em>before</em> the sudden pressurization — often the trapped/dead-volume pressure. If a valve opens into a line at atmospheric pressure, use ~14.7 psia (1 atm).</span></span>';
+    document.getElementById("gic-lbl-p2").innerHTML = '<span class="tooltip-wrap">Applied pressure P<sub>2</sub><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">The supply/system pressure that suddenly compresses the gas — e.g. cylinder or regulator upstream pressure reaching a fast-opening valve or a dead-ended tube.</span></span>';
+    document.getElementById("gic-lbl-t1").innerHTML = 'Initial gas temperature T<sub>1</sub>';
+    document.getElementById("gic-hint-main").innerHTML = "Models a near-instant (adiabatic) compression from P<sub>1</sub> to P<sub>2</sub>. Slow pressurization gives lower peak temperatures because heat escapes to the wall.";
+    document.getElementById("gic-res-title").textContent = "Peak adiabatic temperature";
+  }
+  gicUpdate();
+}
+
+function gicVolM3(v, u) {
+  if (u === "L")   return v / 1000;
+  if (u === "mL")  return v / 1e6;
+  if (u === "m3")  return v;
+  if (u === "in3") return v * 1.63871e-5;
+  if (u === "ft3") return v * 0.0283168;
+  if (u === "gal") return v * 3.78541e-3;
+  return v / 1000;
+}
+
+function gicGasChanged() {
+  gicMatIndex = 0;
+  gicBuildMaterials();
+  gicUpdate();
+}
+
+function gicBuildMaterials() {
+  const key = document.getElementById("gic-gas").value;
+  const ign = GFS_IGNITION[key];
+  const sel = document.getElementById("gic-mat");
+  sel.innerHTML = "";
+  ign.targets.forEach(function(t, i) {
+    const o = document.createElement("option");
+    o.value = i;
+    o.textContent = t.label + " — AIT " + t.ait + " °C";
+    sel.appendChild(o);
+  });
+  sel.value = String(Math.min(gicMatIndex, ign.targets.length - 1));
+  document.getElementById("gic-gas-info").querySelector("p").textContent = ign.info;
+}
+
+function gicUpdate() {
+  const key = document.getElementById("gic-gas").value;
+  if (!key) return;
+  const gas = GFS_GASES[key];
+  const ign = GFS_IGNITION[key];
+  const gamma = gas.gamma;
+
+  const P1 = gfsToBar(parseFloat(document.getElementById("gic-p1").value) || 1.01325, document.getElementById("gic-pU").value);
+  const P2 = gfsToBar(parseFloat(document.getElementById("gic-p2").value) || 1.01325, document.getElementById("gic-pU").value);
+  const T1 = gfsToK(parseFloat(document.getElementById("gic-t1").value) || 293, document.getElementById("gic-t1U").value);
+
+  const T1C = T1 - 273.15;
+  const active = P2 > P1;                       // a real compression / fill event
+  const ratio = (P1 > 0 && active) ? P2 / P1 : 1;
+
+  // Peak (mode-dependent) temperature, in Kelvin
+  let T2;
+  if (gicMode === "fill") {
+    // Adiabatic charging of a volume from a supply line (Ts = Ti = T1):
+    //   T_fill = γ·T·Ps / (Ps − P0 + γ·P0);  P0 = P1, Ps = P2
+    T2 = active ? (gamma * T1 * P2) / (P2 - P1 + gamma * P1) : T1;
+  } else {
+    // Isentropic compression from P1 to P2
+    T2 = T1 * Math.pow(ratio, (gamma - 1) / gamma);
+  }
+  const T2C = T2 - 273.15;
+  const dT = T2 - T1;
+
+  gicMatIndex = parseInt(document.getElementById("gic-mat").value || "0", 10);
+  const tgt = ign.targets[gicMatIndex] || ign.targets[0];
+  const ait = tgt.ait;                 // °C
+  document.getElementById("gic-mat-hint").textContent = tgt.note;
+
+  const isFill = gicMode === "fill";
+  const tempLabel = isFill ? "Bulk fill temperature" : "Peak gas temperature T₂";
+  const ratioLabel = isFill ? "Fill pressure ratio Pₛ/P₀" : "Compression ratio P₂/P₁";
+
+  // Results rows
+  const T2F = T2C * 9/5 + 32;
+  let rows = '<div class="gfs-rrow"><span class="gfs-rl">' + ratioLabel + '</span><span class="gfs-rv">' +
+    (active ? ratio.toFixed(2) + " : 1" : (isFill ? "— (no net fill)" : "— (no compression)")) + '</span></div>';
+  rows += '<div class="gfs-rrow"><span class="gfs-rl">' + tempLabel + '</span><span class="gfs-rv">' +
+    T2C.toFixed(0) + ' °C &nbsp;|&nbsp; ' + T2F.toFixed(0) + ' °F &nbsp;|&nbsp; ' + T2.toFixed(0) + ' K</span></div>';
+  rows += '<div class="gfs-rrow"><span class="gfs-rl">Temperature rise ΔT</span><span class="gfs-rv">' +
+    dT.toFixed(0) + ' °C (' + (dT * 9/5).toFixed(0) + ' °F)</span></div>';
+  if (isFill && active) {
+    rows += '<div class="gfs-rrow"><span class="gfs-rl">γ·T reference (empty line)</span><span class="gfs-rv">' +
+      (gamma * T1 - 273.15).toFixed(0) + ' °C &nbsp;<span style="font-weight:400;color:var(--gc-muted);">— fill temp ceiling as P₀→0</span></span></div>';
+  }
+  rows += '<div class="gfs-rrow"><span class="gfs-rl">' + (ign.kind === "inert" ? "Seal thermal limit" : "Autoignition threshold") + '</span><span class="gfs-rv">' +
+    ait + ' °C</span></div>';
+  const margin = ait - T2C;
+  rows += '<div class="gfs-rrow"><span class="gfs-rl">Margin to ' + (ign.kind === "inert" ? "seal limit" : "autoignition") + '</span><span class="gfs-rv" style="color:' +
+    (margin <= 0 ? 'var(--gc-danger)' : margin < ait * 0.3 ? 'var(--gc-warn)' : 'var(--gc-ok)') + ';">' +
+    (margin >= 0 ? '+' : '') + margin.toFixed(0) + ' °C</span></div>';
+
+  // Optional stored energy
+  const volRaw = parseFloat(document.getElementById("gic-vol").value) || 0;
+  if (volRaw > 0) {
+    const V = gicVolM3(volRaw, document.getElementById("gic-volU").value);
+    const Patm = 1.01325e5;
+    const E = Math.max(0, (P2 * 1e5 - Patm) * V / (gamma - 1)); // Joules (Brode)
+    const tnt = E / 4.6e6; // kg TNT
+    const tntG = tnt * 1000;
+    rows += '<div class="gfs-rrow"><span class="gfs-rl">Stored energy (rupture)</span><span class="gfs-rv">' +
+      (E >= 1000 ? (E/1000).toFixed(1) + ' kJ' : E.toFixed(0) + ' J') +
+      ' &nbsp;|&nbsp; ' + (tntG >= 1 ? tntG.toFixed(1) + ' g TNT eq' : (tntG*1000).toFixed(0) + ' mg TNT eq') + '</span></div>';
+  }
+  document.getElementById("gic-results").innerHTML = rows;
+
+  // Status classification
+  const tWord = isFill ? "bulk fill temperature" : "peak temperature";
+  const mechWord = isFill ? "filling" : "compression";
+  let level, title, desc, explain;
+  if (ign.kind === "inert") {
+    if (T2C >= ait) {
+      level = "caution"; title = "No ignition risk — seal thermal limit exceeded";
+      desc = "This gas cannot ignite, but the " + tWord + " (" + T2C.toFixed(0) + " °C) exceeds a typical elastomer seal rating (" + ait + " °C). Repeated events can degrade seals.";
+    } else {
+      level = "ok"; title = "Low risk — inert gas";
+      desc = "This gas cannot ignite from " + mechWord + ", and the " + tWord + " (" + T2C.toFixed(0) + " °C) is within typical seal limits.";
+    }
+    explain = ign.info + (volRaw > 0 ? " Note the stored-energy figure: even inert gas at high pressure is a rupture hazard." : "");
+  } else {
+    if (T2C >= ait) {
+      level = "danger"; title = "Danger — " + mechWord + " can reach autoignition";
+      desc = "The " + tWord + " " + T2C.toFixed(0) + " °C reaches or exceeds the " + ait + " °C autoignition threshold for the selected fuel/material. Ignition is credible. Pressurize slowly, verify cleanliness, and review materials.";
+    } else if (T2C >= ait * 0.7) {
+      level = "caution"; title = "Caution — approaching autoignition";
+      desc = "The " + tWord + " " + T2C.toFixed(0) + " °C is within " + margin.toFixed(0) + " °C of the " + ait + " °C threshold. Real systems have hot spots and shock effects the ideal-gas estimate misses — treat this as marginal.";
+    } else {
+      level = "ok"; title = "Low ignition risk (at these conditions)";
+      desc = "The " + tWord + " " + T2C.toFixed(0) + " °C stays comfortably below the " + ait + " °C autoignition threshold. Still open valves gradually and keep the system clean.";
+    }
+    explain = ign.info;
+  }
+
+  document.getElementById("gic-status").className = "gfs-sb gfs-sb-" + level;
+  document.getElementById("gic-status-icon").textContent = { ok: "✓", caution: "⚠", danger: "✕" }[level];
+  const titleEl = document.getElementById("gic-status-title");
+  titleEl.textContent = title;
+  titleEl.className = "gfs-st gfs-c" + (level === "ok" ? "s" : level === "caution" ? "c" : "d");
+  document.getElementById("gic-status-desc").textContent = desc;
+  document.getElementById("gic-explain").textContent = explain;
+
+  // Meter: T1 → AIT scale, filled to T2
+  const lo = T1C, hi = Math.max(ait, T1C + 1);
+  const pct = Math.max(0, Math.min(100, (T2C - lo) / (hi - lo) * 100));
+  const mColor = level === "danger" ? "#c0392b" : level === "caution" ? "#c47c00" : "#2a7a4a";
+  const meter = document.getElementById("gic-meter");
+  meter.style.width = pct.toFixed(1) + "%";
+  meter.style.background = mColor;
+  document.getElementById("gic-m-lo").textContent  = "T₁ " + T1C.toFixed(0) + "°C";
+  document.getElementById("gic-m-mid").textContent = (isFill ? "T_fill " : "T₂ ") + T2C.toFixed(0) + "°C";
+  document.getElementById("gic-m-max").textContent = (ign.kind === "inert" ? "limit " : "AIT ") + ait + "°C";
+}
+
+// ══════════════════════════════════════════════════════════════
+//  FAST-VALVE STORED-GAS RELEASE MODULE
+// ══════════════════════════════════════════════════════════════
+let fvrMatIndex = 0;
+function fvrRank(x) { return x === "danger" ? 2 : x === "caution" ? 1 : 0; }
+function fvrWorst(a, b) { return fvrRank(a) >= fvrRank(b) ? a : b; }
+
+function fvrGasChanged() { fvrMatIndex = 0; fvrBuildMaterials(); fvrUpdate(); }
+
+function fvrBuildMaterials() {
+  const key = document.getElementById("fvr-gas").value;
+  const ign = GFS_IGNITION[key];
+  const sel = document.getElementById("fvr-mat");
+  sel.innerHTML = "";
+  ign.targets.forEach(function(t, i) {
+    const o = document.createElement("option");
+    o.value = i;
+    o.textContent = t.label + " — AIT " + t.ait + " °C";
+    sel.appendChild(o);
+  });
+  sel.value = String(Math.min(fvrMatIndex, ign.targets.length - 1));
+  document.getElementById("fvr-gas-info").querySelector("p").textContent = ign.info;
+}
+
+function fvrUpdate() {
+  const key = document.getElementById("fvr-gas").value;
+  if (!key) return;
+  const gas = GFS_GASES[key];
+  const ign = GFS_IGNITION[key];
+  const g = gas.gamma, M = gas.mw;
+
+  const Ps = gfsToBar(parseFloat(document.getElementById("fvr-psrc").value)  || 1.01325, document.getElementById("fvr-pU").value);
+  const P0 = gfsToBar(parseFloat(document.getElementById("fvr-pinit").value) || 1.01325, document.getElementById("fvr-pU").value);
+  const T  = gfsToK(  parseFloat(document.getElementById("fvr-temp").value)  || 293,     document.getElementById("fvr-tempU").value);
+
+  fvrMatIndex = parseInt(document.getElementById("fvr-mat").value || "0", 10);
+  const tgt = ign.targets[fvrMatIndex] || ign.targets[0];
+  const ait = tgt.ait;
+  document.getElementById("fvr-mat-hint").textContent = tgt.note;
+
+  const released = Ps > P0;
+  const ratio = released ? Ps / P0 : 1;
+
+  // Mode 1 — dead-end compression peak temperature
+  const TpeakC = (T * Math.pow(ratio, (g - 1) / g)) - 273.15;
+  // Mode 2 — bulk adiabatic fill temperature (charging a volume, Ts = Ti = T)
+  const TfillC = (released ? (g * T * Ps) / (Ps - P0 + g * P0) : T) - 273.15;
+  // Mode 3 — choked flow + sonic throat velocity
+  const rcrit  = Math.pow(2 / (g + 1), g / (g - 1));
+  const choked = released && (P0 / Ps) <= rcrit;
+  const Rs = 8314 / M;                       // specific gas constant J/(kg·K)
+  const vThroat = Math.sqrt(g * Rs * T * (2 / (g + 1)));  // sonic velocity at choke plane, m/s
+  const aSource = Math.sqrt(g * Rs * T);     // speed of sound at ambient, m/s
+
+  // ── Per-mode severity ──
+  const inert = ign.kind === "inert";
+  let cLvl = "ok", fLvl = "ok", vLvl = "ok";
+  if (!inert) {
+    cLvl = TpeakC >= ait ? "danger" : TpeakC >= 0.7 * ait ? "caution" : "ok";
+    fLvl = TfillC >= ait ? "danger" : TfillC >= 0.7 * ait ? "caution" : "ok";
+  } else {
+    fLvl = TfillC >= ait ? "caution" : "ok";   // seal thermal limit, not ignition
+  }
+  if (choked) {
+    const overD = vThroat > gas.dangerLimit;
+    if (ign.kind === "oxidizer") vLvl = overD ? "danger" : "caution";   // particle-impact ignition
+    else vLvl = "caution";                                              // erosion / noise / velocity
+  }
+  let overall = fvrWorst(fvrWorst(cLvl, fLvl), vLvl);
+  if (!released) overall = "ok";
+
+  // ── Results rows ──
+  const TpeakF = TpeakC * 9 / 5 + 32, TfillF = TfillC * 9 / 5 + 32;
+  let rows = '<div class="gfs-rrow"><span class="gfs-rl">Source → line pressure ratio</span><span class="gfs-rv">' +
+    (released ? ratio.toFixed(1) + " : 1" : "— (source ≤ line, no release)") + '</span></div>';
+  rows += '<div class="gfs-rrow"><span class="gfs-rl">Flow condition</span><span class="gfs-rv"' +
+    (choked ? ' style="color:var(--gc-danger);"' : '') + '>' +
+    (choked ? "⚠ Choked — sonic jet (Mach 1)" : released ? "Subcritical" : "—") +
+    ' &nbsp;(crit. ratio ' + rcrit.toFixed(3) + ')</span></div>';
+  if (choked) {
+    rows += '<div class="gfs-rrow"><span class="gfs-rl">Sonic jet velocity</span><span class="gfs-rv">' +
+      vThroat.toFixed(0) + ' m/s &nbsp;|&nbsp; ' + (vThroat * 3.2808).toFixed(0) + ' ft/s &nbsp;(danger &gt; ' +
+      gas.dangerLimit + ' m/s)</span></div>';
+  }
+  rows += '<div class="gfs-rrow"><span class="gfs-rl">Dead-end peak temperature</span><span class="gfs-rv">' +
+    TpeakC.toFixed(0) + ' °C &nbsp;|&nbsp; ' + TpeakF.toFixed(0) + ' °F</span></div>';
+  rows += '<div class="gfs-rrow"><span class="gfs-rl">Bulk fill temperature</span><span class="gfs-rv">' +
+    TfillC.toFixed(0) + ' °C &nbsp;|&nbsp; ' + TfillF.toFixed(0) + ' °F</span></div>';
+  rows += '<div class="gfs-rrow"><span class="gfs-rl">' + (inert ? "Seal thermal limit" : "Autoignition threshold") +
+    '</span><span class="gfs-rv">' + ait + ' °C</span></div>';
+  document.getElementById("fvr-results").innerHTML = rows;
+
+  // ── Three-failure-mode summary ──
+  const badge = function(l) {
+    const c = l === "danger" ? "var(--gc-danger)" : l === "caution" ? "var(--gc-warn)" : "var(--gc-ok)";
+    const t = l === "danger" ? "DANGER" : l === "caution" ? "CAUTION" : "OK";
+    return '<span style="color:' + c + ';font-weight:700;">' + t + '</span>';
+  };
+  const modeRow = function(name, lvl, detail) {
+    return '<div class="gfs-rrow"><span class="gfs-rl">' + name + '<br><span style="font-size:11px;color:var(--gc-muted);">' +
+      detail + '</span></span><span class="gfs-rv">' + badge(lvl) + '</span></div>';
+  };
+  let modes = "";
+  modes += modeRow("1 · Dead-end compression ignition",
+    inert ? "ok" : cLvl,
+    inert ? "Inert — no ignition mechanism" : "Peak " + TpeakC.toFixed(0) + " °C vs AIT " + ait + " °C");
+  modes += modeRow("2 · Bulk fill heating",
+    fLvl,
+    (inert ? "Fill " + TfillC.toFixed(0) + " °C vs seal limit " + ait + " °C" : "Fill " + TfillC.toFixed(0) + " °C vs AIT " + ait + " °C"));
+  modes += modeRow("3 · Sonic-jet particle impingement",
+    vLvl,
+    choked ? "Sonic jet " + vThroat.toFixed(0) + " m/s" + (ign.kind === "oxidizer" ? " — O₂ particle-impact risk" : " — erosion/noise") : "Not choked — no sonic jet");
+  document.getElementById("fvr-modes").innerHTML = modes;
+
+  // ── Status + advice ──
+  const titles = {
+    ok: released ? "Low risk at these conditions" : "No release — source not above line pressure",
+    caution: "Caution — elevated release risk",
+    danger: "Danger — unsafe fast release"
+  };
+  let desc;
+  if (!released) {
+    desc = "Source pressure does not exceed the downstream line pressure, so no compression, heating, or jet develops.";
+  } else if (overall === "danger") {
+    const drivers = [];
+    if (cLvl === "danger") drivers.push("dead-end compression reaches autoignition");
+    if (fLvl === "danger") drivers.push("bulk fill temperature reaches autoignition");
+    if (vLvl === "danger") drivers.push("a sonic jet creates particle-impingement ignition risk");
+    desc = "A fast release here is unsafe: " + drivers.join("; ") + ". Do not open the valve quickly.";
+  } else if (overall === "caution") {
+    desc = "Marginal. One or more mechanisms approach their limit — treat a fast release as risky and add safeguards.";
+  } else {
+    desc = "The peak temperatures stay below autoignition and the jet is within limits. Still open valves gradually and keep the line clean.";
+  }
+  document.getElementById("fvr-status").className = "gfs-sb gfs-sb-" + overall;
+  document.getElementById("fvr-status-icon").textContent = { ok: "✓", caution: "⚠", danger: "✕" }[overall];
+  const st = document.getElementById("fvr-status-title");
+  st.textContent = titles[overall];
+  st.className = "gfs-st gfs-c" + (overall === "ok" ? "s" : overall === "caution" ? "c" : "d");
+  document.getElementById("fvr-status-desc").textContent = desc;
+
+  let advice;
+  if (inert) {
+    advice = "This gas cannot ignite, so the concerns are seal thermal damage, high-velocity erosion and noise, asphyxiation, and stored-energy release on a rupture. Open the valve gradually and confirm the downstream rating covers the source pressure.";
+  } else if (overall === "danger" || overall === "caution") {
+    advice = "Do not fast-open. Use a slow-opening, metering, or soft-start valve so the line pressurizes gradually and heat escapes. Install a flow-restricting orifice downstream of the valve, avoid dead-ends and closed branches where gas can be trapped and compressed, and verify the system is oxygen-clean (no hydrocarbon oil or grease) with compatible seat/seal materials. Pressurize in stages, pausing to let the line cool.";
+  } else {
+    advice = "Risk is low at these conditions, but good practice still applies: open the valve gradually rather than snapping it, keep the system clean and free of hydrocarbons, and avoid trapped dead-ends downstream.";
+  }
+  document.getElementById("fvr-advice").textContent = advice;
+}
+
+// Populate gas dropdown
+(function() {
+  const sel = document.getElementById("gfs-gas");
+  Object.keys(GFS_GASES).forEach(function(k) {
+    const o = document.createElement("option");
+    o.value = k;
+    o.textContent = GFS_GASES[k].name;
+    sel.appendChild(o);
+  });
+  gfsSetUS("imperial");
+  gfsSetMode("flow");
+
+  // Populate ignition-module gas dropdown (only gases with ignition data)
+  const gsel = document.getElementById("gic-gas");
+  Object.keys(GFS_IGNITION).forEach(function(k) {
+    const o = document.createElement("option");
+    o.value = k;
+    o.textContent = GFS_GASES[k].name;
+    gsel.appendChild(o);
+  });
+  gsel.value = "oxygen";
+  gicBuildMaterials();
+  gicSetMode("ratio");
+
+  // Populate fast-valve release gas dropdown
+  const fsel = document.getElementById("fvr-gas");
+  Object.keys(GFS_IGNITION).forEach(function(k) {
+    const o = document.createElement("option");
+    o.value = k;
+    o.textContent = GFS_GASES[k].name;
+    fsel.appendChild(o);
+  });
+  fsel.value = "oxygen";
+  fvrBuildMaterials();
+  fvrUpdate();
+})();
+</script>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+  <!-- END FOOTER -->
+
+</body>
+</html>

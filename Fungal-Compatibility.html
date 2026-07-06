@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: Plastics and Elastomer Fungal Resistance</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, fungal resistance, fungus resistance, plastics fungal resistance, elastomer fungal resistance, MIL-HDBK-454, MIL-STD-810 Method 508, ASTM G21, fungus-inert materials, trade name polymer lookup" />
+    <meta name="description" content="Cross-reference of ~200 plastic and elastomer trade names to their base polymer chemistry and typical fungal resistance rating, per MIL-HDBK-454 Group I/II, MIL-STD-810 Method 508, and ASTM G21." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XLCN0GJQ0');
+    </script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      /* ===== Plastics & Elastomer Fungal Resistance — KasperCalc themed ===== */
+      .fungal-finder {
+        --bg:#e6eae7; --panel:#eee; --panel-2:#d9d9d9; --line:rgb(67,67,67);
+        --line-soft:#c0c0c0; --ink:#1a3a40; --muted:#4a5a5f; --faint:#6a746a;
+        --brass:#61828A; --brass-dim:#4e6a72; --cyan:#3a6270; --hot:#cc5500;
+        --mono:"Roboto",Arial,sans-serif; --disp:"Roboto",Arial,sans-serif;
+        position:relative; width:90%; max-width:1500px; margin:1.5rem auto 2rem;
+        display:flex; flex-direction:column;
+        background:var(--bg); color:var(--ink);
+        font-family:var(--mono); font-size:13px; line-height:1.4;
+        border:3px solid var(--line); border-radius:16px; overflow:hidden;
+        box-shadow:0 3px 5px rgba(0,0,0,.4);
+      }
+      .fungal-finder * { box-sizing:border-box }
+      .fungal-finder .app { flex:1; display:flex; flex-direction:column }
+      .fungal-finder header { border-bottom:1px solid var(--line); background:#6a746a; padding:14px 20px; display:flex; align-items:baseline; gap:18px; flex-wrap:wrap }
+      .fungal-finder .brand { font-family:var(--disp); font-weight:700; font-size:20px; letter-spacing:.01em; color:#eee }
+      .fungal-finder .tagline { color:#cdd6d9; font-size:11px; letter-spacing:.06em; text-transform:uppercase }
+      .fungal-finder .totals { margin-left:auto; color:#cdd6d9; font-size:11px; letter-spacing:.04em }
+
+      .fungal-finder .body { flex:1; display:grid; grid-template-columns:280px 1fr; min-height:0 }
+
+      /* LEFT NAV */
+      .fungal-finder nav { border-right:1px solid var(--line); background:var(--panel); padding:10px; overflow:visible }
+      .fungal-finder .nav-h { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); padding:8px 8px 6px; display:flex; justify-content:space-between; align-items:center }
+      .fungal-finder .rating-legend { padding:4px 6px 10px }
+      .fungal-finder .rl-item { display:flex; align-items:flex-start; gap:9px; padding:5px 3px; font-size:12px; color:var(--ink); line-height:1.4 }
+      .fungal-finder .rl-badge { display:inline-flex; align-items:center; justify-content:center; min-width:22px; height:22px; border-radius:4px; font-size:12px; font-weight:700; flex:none; padding:0 5px }
+      .fungal-finder .rl-res  { background:#2a7a45; color:#fff }
+      .fungal-finder .rl-cond { background:#c49000; color:#fff }
+      .fungal-finder .rl-susc { background:#b03030; color:#fff }
+      .fungal-finder .nav-note { margin-top:14px; border-top:1px dashed var(--line); padding-top:10px }
+      .fungal-finder .nv { padding:7px 8px; border-radius:6px; color:var(--muted); font-size:11px; line-height:1.6 }
+
+      /* MAIN AREA */
+      .fungal-finder main { display:flex; flex-direction:column; min-width:0; background:var(--bg) }
+      .fungal-finder .cat-bar { padding:8px 12px 7px; border-bottom:1px solid var(--line); display:flex; flex-wrap:wrap; gap:5px; background:var(--panel) }
+      .fungal-finder .cat-btn { font-family:var(--mono); font-size:11px; padding:4px 10px; border:1px solid var(--line); border-radius:12px; background:#fff; color:var(--ink); cursor:pointer; white-space:nowrap; transition:background .1s,border-color .1s,color .1s; line-height:1.4 }
+      .fungal-finder .cat-btn:hover { border-color:var(--brass); color:var(--brass) }
+      .fungal-finder .cat-btn.active { background:var(--brass); border-color:var(--brass); color:#fff }
+      .fungal-finder .cat-ct { opacity:.6; font-size:10px }
+      .fungal-finder .controls { border-bottom:1px solid var(--line); background:var(--panel) }
+      .fungal-finder .crow { display:flex; gap:10px; align-items:center; padding:11px 16px; flex-wrap:wrap }
+      .fungal-finder .search { flex:1; min-width:160px; display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--line); border-radius:7px; padding:7px 10px }
+      .fungal-finder .search:focus-within { border-color:var(--brass) }
+      .fungal-finder .search input { flex:1; background:none; border:none; color:var(--ink); font-family:var(--mono); font-size:13px; outline:none }
+      .fungal-finder .search input::placeholder { color:var(--faint) }
+      .fungal-finder .search svg { flex:none; opacity:.5 }
+      .fungal-finder .clearf { background:#fff; border:1px solid var(--line); color:var(--muted); font-family:var(--mono); font-size:11px; padding:6px 10px; border-radius:6px; cursor:pointer }
+      .fungal-finder .clearf:hover { color:var(--hot); border-color:var(--hot) }
+
+      /* SELECTED MATERIALS PANEL */
+      .fungal-finder .sel-panel { border-bottom:1px solid var(--line); background:var(--panel); padding:10px 16px 12px }
+      .fungal-finder .sp-toolbar { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:8px }
+      .fungal-finder .sp-title { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); font-weight:700 }
+      .fungal-finder .sp-count { font-size:10px; color:var(--muted); background:var(--panel-2); border-radius:10px; padding:2px 8px; white-space:nowrap }
+      .fungal-finder .sp-actions { margin-left:auto; display:flex; gap:8px; align-items:center; flex-wrap:wrap }
+      .fungal-finder .sp-clear { background:#fff; border:1px solid var(--line); color:var(--muted); font-family:var(--mono); font-size:11px; padding:5px 10px; border-radius:6px; cursor:pointer }
+      .fungal-finder .sp-clear:hover { color:var(--hot); border-color:var(--hot) }
+      .fungal-finder .sp-report { background:#fff; border:1px solid var(--line); color:var(--muted); font-family:var(--mono); font-size:11px; padding:5px 10px; border-radius:6px; cursor:pointer; white-space:nowrap }
+      .fungal-finder .sp-report:hover { color:var(--brass); border-color:var(--brass) }
+      .fungal-finder .sp-tip-toggle { background:#fff; border:1px solid var(--line); color:var(--muted); font-family:var(--mono); font-size:11px; padding:5px 10px; border-radius:6px; cursor:pointer; transition:background .05s,border-color .05s,color .05s }
+      .fungal-finder .sp-tip-toggle[aria-pressed="true"] { background:var(--brass); border-color:var(--brass); color:#fff }
+      .fungal-finder .sp-tip-toggle[aria-pressed="false"]:hover { border-color:var(--brass); color:var(--brass) }
+      .fungal-finder .sp-chips { display:flex; flex-wrap:wrap; gap:6px; min-height:26px; align-items:flex-start }
+      .fungal-finder .sp-empty { color:var(--faint); font-size:12px; font-style:italic; padding:3px 2px }
+      .fungal-finder .sp-chip { display:inline-flex; align-items:center; gap:4px; background:var(--brass); color:#fff; border-radius:5px; padding:3px 6px 3px 10px; font-size:11px; font-family:var(--mono); max-width:280px }
+      .fungal-finder .sp-chip-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+      .fungal-finder .sp-chip-x { background:none; border:none; color:rgba(255,255,255,.7); font-size:15px; line-height:1; cursor:pointer; padding:0 2px; flex:none; transition:color .1s }
+      .fungal-finder .sp-chip-x:hover { color:#fff }
+
+      /* Custom tooltip (toggle-able) */
+      .fungal-tip {
+        position:fixed; top:0; left:0; z-index:9999; pointer-events:none;
+        visibility:hidden;
+        background:#1a1a1a; color:#fff;
+        font-family:var(--mono); font-size:12px; line-height:1.65;
+        padding:7px 11px; border-radius:5px;
+        white-space:nowrap;
+        will-change:transform;
+      }
+
+      /* Selected-materials mirror table */
+      .fungal-finder .sel-table-section { border-bottom:2px solid var(--brass); background:var(--bg) }
+      .fungal-finder .sel-table-label {
+        font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+        color:var(--brass); font-weight:700;
+        padding:8px 14px 4px;
+      }
+
+      .fungal-finder .tablewrap { overflow-x:auto; overflow-y:visible }
+      .fungal-finder table { border-collapse:collapse; width:100% }
+      .fungal-finder thead th {
+        background:#6a746a; color:#eee;
+        text-align:left; padding:9px 10px;
+        font-weight:500; font-size:10px; letter-spacing:.06em;
+        text-transform:uppercase; border-bottom:1px solid var(--line);
+        border-right:1px solid rgba(255,255,255,.14); white-space:nowrap;
+      }
+      .fungal-finder thead th.cb-h {
+        width:34px; min-width:34px; max-width:34px; padding:0; text-align:center;
+      }
+      .fungal-finder thead th.cb-h input[type="checkbox"],
+      .fungal-finder tbody td.cb-cell input[type="checkbox"] {
+        appearance:none; -webkit-appearance:none;
+        width:14px; height:14px; border:1.5px solid var(--faint);
+        border-radius:3px; background:#fff; cursor:pointer;
+        display:inline-block; vertical-align:middle;
+        position:relative; transition:background .1s, border-color .1s;
+      }
+      .fungal-finder thead th.cb-h input[type="checkbox"]:checked,
+      .fungal-finder tbody td.cb-cell input[type="checkbox"]:checked {
+        background:var(--brass); border-color:var(--brass);
+      }
+      .fungal-finder thead th.cb-h input[type="checkbox"]:checked::after,
+      .fungal-finder tbody td.cb-cell input[type="checkbox"]:checked::after {
+        content:''; position:absolute;
+        left:3px; top:0px; width:5px; height:9px;
+        border:2px solid #fff; border-top:none; border-left:none;
+        transform:rotate(45deg);
+      }
+      .fungal-finder thead th.cb-h input[type="checkbox"]:indeterminate {
+        background:var(--brass); border-color:var(--brass);
+      }
+      .fungal-finder thead th.cb-h input[type="checkbox"]:indeterminate::after {
+        content:''; position:absolute;
+        left:2px; top:5px; width:8px; height:2px;
+        background:#fff;
+      }
+      .fungal-finder thead th.sortable { cursor:pointer }
+      .fungal-finder thead th.sortable:hover { color:#A3C3CD }
+      .fungal-finder thead th.sorted { color:#A3C3CD; font-weight:700 }
+      .fungal-finder thead th.sorted.asc::after  { content:' \25B2'; font-size:9px }
+      .fungal-finder thead th.sorted.desc::after { content:' \25BC'; font-size:9px }
+      .fungal-finder tbody td {
+        padding:5px 10px; font-size:12px; color:var(--ink);
+        border-bottom:1px solid var(--line-soft);
+        border-right:1px solid var(--line-soft);
+        vertical-align:top;
+      }
+      .fungal-finder tbody td.cmpd { font-weight:600; white-space:nowrap }
+      .fungal-finder tbody td.basis-cell,
+      .fungal-finder tbody td.notes-cell { font-size:11px; color:var(--muted) }
+      .fungal-finder tbody td.rating-cell { text-align:center; white-space:nowrap }
+      .fungal-finder tbody td.cb-cell { text-align:center; cursor:pointer }
+      .fungal-finder tbody tr.row-selected { box-shadow:inset 3px 0 0 var(--brass) }
+      .fungal-finder tbody tr.row-selected td.cb-cell,
+      .fungal-finder tbody tr.row-selected td.cmpd { background:#dce8ec }
+      .fungal-finder tbody tr.row-selected td.cmpd { color:var(--brass); font-weight:700 }
+      .fungal-finder .rating-badge {
+        display:inline-flex; align-items:center; justify-content:center;
+        min-width:26px; height:22px; padding:0 6px; border-radius:4px;
+        font-size:12px; font-weight:700; color:#fff; cursor:default;
+      }
+      .fungal-finder .rating-badge.r0,
+      .fungal-finder .rating-badge.r1 { background:#2a7a45 }
+      .fungal-finder .rating-badge.r2 { background:#c49000 }
+      .fungal-finder .rating-badge.r3 { background:#c06010 }
+      .fungal-finder .rating-badge.r4 { background:#b03030 }
+      .fungal-finder tbody tr:hover td { background:#dfe7e9 }
+
+      .fungal-finder .empty { padding:48px; text-align:center; color:var(--faint) }
+      .fungal-finder .footnote { padding:8px 16px; border-top:1px solid var(--line); color:var(--faint); font-size:10px; background:var(--panel); letter-spacing:.02em }
+
+      @media (max-width:900px) {
+        .fungal-finder { width:100%; margin:1.5rem 0 2rem; border-radius:0; border-left:none; border-right:none }
+        .fungal-finder .body { grid-template-columns:1fr }
+        .fungal-finder nav { border-right:none; border-bottom:1px solid var(--line) }
+      }
+      @media (prefers-reduced-motion:reduce) { .fungal-finder * { transition:none!important } }
+      .fungal-finder :focus-visible { outline:2px solid var(--brass); outline-offset:1px }
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- BANNER -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              Plastics &amp; Elastomer Fungal Resistance
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- INTRO -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3" style="max-width:860px;">
+            <div class="custom-heading">Trade Name → Polymer → Fungal Resistance Lookup</div>
+            <div class="mt-3 text-start">
+              <p class="mb-3">
+                Cross-reference of 246 plastic and elastomer trade and generic names — spanning fluoropolymers,
+                polyimides, engineering thermoplastics, and common elastomer families — to their base
+                polymer chemistry and typical fungal resistance rating, per
+                <span style="font-weight: var(--font-weight-normal)">MIL-HDBK-454B</span> (Guideline&nbsp;4, Group&nbsp;I / Group&nbsp;II),
+                <span style="font-weight: var(--font-weight-normal)">MIL-STD-810</span> Method&nbsp;508 (28-day fungus exposure), and
+                <span style="font-weight: var(--font-weight-normal)">ASTM&nbsp;G21</span> (0–4 rating scale).
+              </p>
+              <p>
+                Search by trade name, owner, polymer, or abbreviation; filter by material type or
+                resistance category; and click any column header to sort. Ratings are typical for
+                <em>virgin, unfilled</em> material — plasticizers, cellulosic fillers, and some
+                colorants are the actual fungal food source, so a filled or plasticized grade of a
+                "Resistant" material can still support growth. See the legend at left and the
+                footnotes below the table for important caveats.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- FUNGAL RESISTANCE LOOKUP -->
+    <section aria-label="Plastics and elastomer fungal resistance lookup">
+      <div class="fungal-finder wrapper">
+        <div class="app">
+          <header>
+            <div class="brand">FUNGAL RESISTANCE LOOKUP</div>
+            <span class="tagline">246 trade &amp; generic names &middot; plastics &amp; elastomers</span>
+            <span class="totals" id="totals"></span>
+          </header>
+
+          <!-- SELECTED MATERIALS PANEL -->
+          <div class="sel-panel" id="selPanel">
+            <div class="sp-toolbar">
+              <span class="sp-title">Selected Materials</span>
+              <span class="sp-count" id="spCount">0 selected</span>
+              <div class="sp-actions">
+                <button class="sp-tip-toggle" id="tipToggle" aria-pressed="true">Tooltips On</button>
+                <button class="sp-clear" id="clearSel">Clear All</button>
+                <button class="sp-report" id="reportColor">Generate Report (Color)</button>
+                <button class="sp-report" id="reportBW">Generate Report (B&amp;W)</button>
+              </div>
+            </div>
+            <div class="sp-chips" id="spChips">
+              <span class="sp-empty">Check materials in the table below to add them here.</span>
+            </div>
+          </div>
+
+          <div class="body">
+
+            <!-- LEFT NAV: Rating Legend -->
+            <nav id="nav" aria-label="Fungal resistance rating scale">
+              <div class="nav-h">FUNGAL RESISTANCE RATING</div>
+              <div class="rating-legend">
+                <div class="rl-item"><span class="rl-badge rl-res">R</span>Resistant &mdash; non-nutrient; no/negligible growth (rating 0&ndash;1)</div>
+                <div class="rl-item"><span class="rl-badge rl-cond">C</span>Conditional &mdash; depends on grade/filler/plasticizer (rating ~1&ndash;3)</div>
+                <div class="rl-item"><span class="rl-badge rl-susc">S</span>Susceptible &mdash; supports fungal growth (rating 2&ndash;4)</div>
+              </div>
+              <div class="nav-note">
+                <div class="nav-h">Footnotes</div>
+                <div class="nv">
+                  <strong>1</strong> &mdash; Polyamide caveat: may be attacked by selective micro-organisms
+                  under certain conditions, but classed Group&nbsp;I for military use.<br>
+                  <strong>2</strong> &mdash; Not named in MIL-HDBK-454 Table&nbsp;4-I (a blend, copolymer,
+                  or later-developed polymer); base resin is a non-nutrient but strictly requires
+                  ASTM&nbsp;G21 / MIL-STD-810 Method&nbsp;508 testing.<br>
+                  <strong>3</strong> &mdash; Acrylics conflict: Table&nbsp;4-I lists "Acrylics" in
+                  Group&nbsp;I but "Polymethyl methacrylate" in Group&nbsp;II &mdash; treated here as
+                  Group&nbsp;II (nutrient).<br>
+                  <strong>*</strong> &mdash; Not a universally recognized single-owner trademark; used
+                  by several manufacturers for similar compounds.
+                </div>
+              </div>
+              <div class="nav-note">
+                <div class="nav-h">Caveats</div>
+                <div class="nv">
+                  Ratings are for virgin, unfilled material. Elastomer ratings are typical for the
+                  family &mdash; actual results depend on the specific compound, fillers, pigments and
+                  plasticizers. Family/umbrella brands (Teflon, Neoflon, Dyneon, Duratron, etc.) cover
+                  several polymers; the row reflects the most common form.
+                </div>
+              </div>
+            </nav>
+
+            <!-- MAIN: Table -->
+            <main>
+              <div class="cat-bar" id="typeBar"></div>
+              <div class="cat-bar" id="resBar"></div>
+              <div class="cat-bar" id="abbrevBar"></div>
+
+              <div class="controls">
+                <div class="crow">
+                  <label class="search">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input id="search" type="search" placeholder="Search by trade name, owner, polymer, or abbreviation" autocomplete="off">
+                  </label>
+                  <button class="clearf" id="clearf">Clear</button>
+                </div>
+              </div>
+
+              <!-- Selected-materials mirror table (hidden until something is selected) -->
+              <div class="sel-table-section" id="selTableWrap" style="display:none">
+                <div class="sel-table-label">Selected Materials</div>
+                <div class="tablewrap">
+                  <table>
+                    <thead><tr id="selHead"></tr></thead>
+                    <tbody id="selRows"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="tablewrap">
+                <table>
+                  <thead>
+                    <tr id="head"></tr>
+                  </thead>
+                  <tbody id="rows"></tbody>
+                </table>
+                <div class="empty" id="empty" style="display:none">No materials match the current search/filters.</div>
+              </div>
+              <div class="footnote">Rating scale 0&ndash;4 per ASTM&nbsp;G21 / MIL-STD-810 Method&nbsp;508. Superscript numbers in the Notes column reference the footnotes at left.</div>
+            </main>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- RATING KEY & SOURCES -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3 mb-3 text-start" style="max-width:900px;">
+            <div class="text-center">
+              <div class="custom-heading">Rating Scale &amp; Sources</div>
+            </div>
+
+            <div class="row g-4 mt-1">
+              <div class="col-12">
+                <div class="mt-1 mx-auto">
+                  <table class="table table-sm mx-auto" style="font-size: 0.9rem;">
+                    <thead style="background-color: var(--section-title-color); color: #fff;">
+                      <tr><th style="width:120px;">Category</th><th>Meaning</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td><strong>Resistant</strong></td><td>Base polymer is a non-nutrient; no/negligible growth. Fungus rating 0&ndash;1 (ASTM&nbsp;G21 / MIL-STD-810).</td></tr>
+                      <tr><td><strong>Conditional</strong></td><td>Depends on grade, filler, plasticizer, or blend phase; verify by test. Typical rating ~1&ndash;3.</td></tr>
+                      <tr><td><strong>Susceptible</strong></td><td>Supports fungal growth (nutrient); MIL-HDBK-454 Group&nbsp;II or nutrient chemistry. Rating 2&ndash;4.</td></tr>
+                    </tbody>
+                  </table>
+                  <p style="font-size:0.8rem; color:#666;" class="mt-2 text-center">
+                    Elastomer rating values are the supplied typical family ratings; plastic rating
+                    values are typical ranges inferred from the resistance category, not per-compound
+                    test data.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <div class="text-center">
+                <div class="custom-heading">Sources</div>
+              </div>
+              <ul class="mt-3" style="font-size:0.9rem;">
+                <li class="mb-2">MIL-HDBK-454B, Guideline&nbsp;4 (Fungus-Inert Materials), Table&nbsp;4-I &mdash; Group&nbsp;I (fungus-inert) / Group&nbsp;II (fungus-nutrient).</li>
+                <li class="mb-2">MIL-STD-810, Method&nbsp;508 &mdash; fungus test (28-day exposure), Grade&nbsp;0/1 pass criterion.</li>
+                <li class="mb-2">ASTM&nbsp;G21 &mdash; Standard Practice for Determining Resistance of Synthetic Polymeric Materials to Fungi (0&ndash;4 rating).</li>
+                <li class="mb-2">Parker O-Ring Handbook &mdash; customary source for elastomer family fungus ratings.</li>
+                <li>Trade-name ownership per manufacturer/vendor material data (Curbell, Boedeker, Ensinger, R&ouml;chling, and manufacturer datasheets).</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REFERENCES & IMPORTANT NOTICES -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3 mb-3 text-start" style="max-width:860px;">
+            <div class="text-center">
+              <div class="custom-heading">Important Notices</div>
+            </div>
+            <ul class="mt-3" style="font-size:0.9rem;">
+              <li class="mb-2">
+                <strong>Family/typical ratings, not per-compound test data.</strong> Ratings reflect the
+                typical resistance of the base polymer family. Fillers, plasticizers, colorants, and
+                specific compounding can shift an individual grade's actual fungal resistance —
+                e.g. NBR compounds have been reported ranging from 0 to 4 depending on formulation.
+              </li>
+              <li class="mb-2">
+                <strong>Verify before use.</strong> In critical applications, resistance should be
+                confirmed by ASTM&nbsp;G21 or MIL-STD-810 Method&nbsp;508 testing of the specific
+                compound and grade rather than relying on the family rating alone.
+              </li>
+              <li>
+                <strong>No affiliation or endorsement.</strong> Trade names are the property of their
+                respective owners. This lookup tool is an independent compilation for engineering
+                reference and is not endorsed by any of the manufacturers listed.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CITATION -->
+    <section class="mt-5 pt-3">
+      <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+        <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+          <div class="d-flex align-items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+            <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+          </div>
+          <style>
+            #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+            #citationTabs li { margin: 0; list-style: none; }
+            #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+            #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+            #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+          </style>
+          <div class="tab-content mt-2 mb-3" id="citationTabContent">
+            <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+              <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+              <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+              <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+              <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+          </div>
+          <ul id="citationTabs" class="nav" role="tablist">
+            <li role="presentation">
+              <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+  <script src="js/footer.js"></script>
+  <!-- END FOOTER -->
+
+  <!-- PAGE SCRIPT -->
+  <script src="js/Fungal-Compatibility.js"></script>
+
+  </body>
+</html>

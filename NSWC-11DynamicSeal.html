@@ -141,6 +141,18 @@
       .tbtn:hover { filter: brightness(0.93); }
       .tbtn:active { transform: scale(0.97); }
     </style>
+
+    <!-- LIGHTBOX STYLES (pattern from SpringCompressionRound.html) -->
+    <style>
+      .ref-zoomable{cursor:zoom-in;transition:opacity .15s}
+      .ref-zoomable:hover{opacity:.85}
+      .lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+      .lightbox-overlay.active{display:flex}
+      .lightbox-img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:6px;box-shadow:0 8px 32px rgba(0,0,0,.6);cursor:default;touch-action: pinch-zoom;}
+      .lightbox-close{position:fixed;top:16px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;z-index:100000}
+      .lightbox-close:hover{background:rgba(255,255,255,.3)}
+      .lightbox-caption{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.8);font-size:13px;font-family:Roboto,Arial,sans-serif;text-align:center;max-width:80vw;pointer-events:none}
+    </style>
   </head>
 
   <!-- BODY -->
@@ -164,7 +176,7 @@
             <ul class="navbar-nav justify-content-end">
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
-                <div class="dropdown-menu dropdown-menu-end">
+                <div class="dropdown-menu dropdown-menu">
                   <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
                   <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
                   <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
@@ -177,7 +189,7 @@
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
-                <div class="dropdown-menu dropdown-menu-end">
+                <div class="dropdown-menu dropdown-menu">
                   <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
                   <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
                   <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
@@ -189,7 +201,7 @@
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
-                <div class="dropdown-menu dropdown-menu-end">
+                <div class="dropdown-menu dropdown-menu">
                   <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
                   <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
                   <a class="dropdown-item" href="PGdensity.html">Density</a>
@@ -265,13 +277,13 @@
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
-                <div class="dropdown-menu dropdown-menu-end">
+                <div class="dropdown-menu dropdown-menu">
                   <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
-                <div class="dropdown-menu dropdown-menu-end">
+                <div class="dropdown-menu dropdown-menu">
                   <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
                   <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
                   <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
@@ -281,16 +293,15 @@
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
-                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
-                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
-                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
-                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
-                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
-                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
-                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -312,22 +323,27 @@
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
-                  <a class="dropdown-item active" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
                   <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
                   <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
                   <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
                 <div class="dropdown-menu dropdown-menu-end">
-                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
-                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
-                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
-                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
-                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
-                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
-                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
                 </div>
               </li>
               <li class="nav-item text-center align-svg-bottom smallsearchbar">
@@ -397,6 +413,29 @@
             <div class="custom-heading">NSWC-11 Dynamic Seal Reliability Model</div>
             <div class="mt-3 text-start">
               <p>
+                A seal is a device placed between two surfaces to prevent the flow of gas or liquid from one region
+                to another. Seals are used for both static and dynamic applications. Static seals such as gaskets,
+                bolt seals, back-up rings and sealants are used to prevent leakage through a mechanical joint when
+                there is no relative motion of mating surfaces. Truly static seals are designed to provide a complete
+                barrier to a potential leakage path. These seals are &ldquo;zero leakage&rdquo; seals (down to
+                10<sup>-11</sup> scc/sec helium). In a truly static seal, the mating gland parts are not subject to
+                relative movement except for thermal expansion and movement from the application of fluid pressure.
+                Some static seals are designed to accommodate limited movement of the surfaces being sealed due to
+                changes in pressure, vibration or thermal cycling, such as an expansion joint. These seals are
+                sometimes referred to as semi-static seals.
+              </p>
+              <p>
+                A dynamic seal is a mechanical device used to control leakage of fluid from one region to another
+                when there is rotating, oscillating or reciprocating motion between the sealing interfaces. An
+                O-ring can be used in both static and dynamic applications; however, the employment of O-rings as
+                primary dynamic seals is normally limited to short strokes and moderate pressures. An example of
+                static and dynamic seal applications is shown in Figure 3.1.
+              </p>
+              <figure class="ref-fig" id="fig-3.1" style="margin:1rem 0;text-align:center;">
+                <img src="img/NSWC-11-StaticAndDynamicSeals.png" alt="Figure 3.1 — Example of static and dynamic seal applications." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+                <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 3.1</strong> — Example of static and dynamic seal applications.</figcaption>
+              </figure>
+              <p>
                 This tool estimates the failure rate of <span style="font-weight: var(--font-weight-normal)">dynamic seals</span> &mdash;
                 reciprocating, rotary, oscillating, and mechanical face seals &mdash; using the model from the Naval Surface Warfare
                 Center <em>Handbook of Reliability Prediction Procedures for Mechanical Equipment</em> (NSWC-11, Chapter 3,
@@ -411,6 +450,16 @@
                 without C<sub>P</sub>, C<sub>DL</sub>, or C<sub>H</sub>.
                 The base failure rate for dynamic seals is <span style="font-weight: var(--font-weight-normal)">22.8</span> failures per million hours (vs 2.4 for static seals).
               </p>
+              <p>
+                The following paragraphs discuss the specific failure modes and model parameters for dynamic seals.
+                Mechanical seals are designed to prevent leakage between a rotating shaft and its housing. The
+                mechanical seal is indicated as the dynamic seal faces in Figure 3.8. Section 3.4 contains specific
+                information on mechanical seals.
+              </p>
+              <figure class="ref-fig" id="fig-3.8" style="margin:1rem 0;text-align:center;">
+                <img src="img/NSWC-11-DynamicSealExamples.png" alt="Figure 3.8 — Examples of dynamic seal configurations: piston, rod, and rotary seals." class="ref-zoomable" style="max-width:100%;border-radius:6px;display:block;margin:0 auto;">
+                <figcaption class="ref-fig-label" style="font-size:0.88rem;color:#555;margin-top:6px;font-style:italic;"><strong>Figure 3.8</strong> — Examples of dynamic seal configurations: piston, rod, and rotary seals.</figcaption>
+              </figure>
               <p>
                 Select the seal mode, enter operating conditions, then press
                 <span style="font-weight: var(--font-weight-normal)">Calculate</span>. Results include &lambda;<sub>SE</sub>,
@@ -1867,75 +1916,81 @@
                     </thead>
                     <tbody>
                       <tr>
-                        <td rowspan="5">Excessive leakage &mdash; Wear</td>
-                        <td rowspan="5">Abrasive wear of sealing surfaces</td>
+                        <td rowspan="31">Excessive leakage</td>
+                        <td rowspan="8">Wear</td>
                         <td>Misalignment</td>
                       </tr>
                       <tr><td>Shaft out-of-roundness</td></tr>
                       <tr><td>Excessive shaft end play</td></tr>
                       <tr><td>Excessive torque</td></tr>
                       <tr><td>Poor surface finish</td></tr>
+                      <tr><td>Contaminants</td></tr>
+                      <tr><td>Inadequate lubrication</td></tr>
+                      <tr><td>Excessive rubbing speed</td></tr>
                       <tr>
-                        <td rowspan="2">Excessive leakage &mdash; Dynamic instability</td>
-                        <td rowspan="2">Vibration / shaft whip</td>
+                        <td>Dynamic instability</td>
+                        <td>Shaft misalignment</td>
+                      </tr>
+                      <tr>
+                        <td rowspan="4">Embrittlement</td>
                         <td>Contaminants</td>
                       </tr>
-                      <tr><td>Inadequate lubrication</td></tr>
+                      <tr><td>Fluid/seal incompatibility</td></tr>
+                      <tr><td>Thermal degradation</td></tr>
+                      <tr><td>Idle periods between use</td></tr>
                       <tr>
-                        <td rowspan="3">Excessive leakage &mdash; Embrittlement</td>
-                        <td rowspan="3">Thermal / chemical degradation</td>
-                        <td>Excessive rubbing speed (high PV)</td>
+                        <td>Mechanical spring Failure</td>
+                        <td>See Chapter 4, Table 4-1</td>
                       </tr>
-                      <tr><td>Shaft misalignment</td></tr>
-                      <tr><td>Fluid / seal material incompatibility</td></tr>
                       <tr>
-                        <td>Fracture</td>
+                        <td rowspan="3">Fracture</td>
                         <td>Stress-corrosion cracking</td>
-                        <td>Thermal degradation; idle periods between use</td>
                       </tr>
-                      <tr>
-                        <td rowspan="3">Excessive leakage &mdash; Edge chipping</td>
-                        <td rowspan="3">Brittle fracture of seal face</td>
-                        <td>Excessive PV value</td>
-                      </tr>
+                      <tr><td>Excessive PV value</td></tr>
                       <tr><td>Excessive fluid pressure on seal</td></tr>
-                      <tr><td>Excessive shaft deflection; faces out-of-square</td></tr>
                       <tr>
-                        <td>Excessive leakage &mdash; Axial shear</td>
-                        <td>Seal face separation</td>
-                        <td>Excessive pressure loading; shaft whip</td>
+                        <td rowspan="3">Edge chipping</td>
+                        <td>Excessive shaft deflection</td>
+                      </tr>
+                      <tr><td>Seal faces out-of-square</td></tr>
+                      <tr><td>Excessive shaft whip</td></tr>
+                      <tr>
+                        <td>Axial shear</td>
+                        <td>Excessive pressure loading</td>
                       </tr>
                       <tr>
-                        <td>Excessive leakage &mdash; Torsional shear</td>
-                        <td>Rotational overload</td>
+                        <td rowspan="2">Torsional shear</td>
                         <td>Excessive torque due to improper lubrication</td>
                       </tr>
+                      <tr><td>Excessive fluid pressure</td></tr>
                       <tr>
-                        <td rowspan="2">Fluid seepage &mdash; Compression set</td>
-                        <td rowspan="2">Permanent deformation of elastomer</td>
+                        <td>Compression set</td>
                         <td>Extreme temperature operation</td>
                       </tr>
-                      <tr><td>Insufficient seal squeeze</td></tr>
                       <tr>
-                        <td rowspan="2">Excessive leakage &mdash; Seal face distortion</td>
-                        <td rowspan="2">Thermal or mechanical distortion</td>
-                        <td>Foreign material trapped between faces</td>
+                        <td rowspan="2">Fluid seepage</td>
+                        <td>Insufficient seal squeeze</td>
                       </tr>
-                      <tr><td>Excessive fluid pressure; insufficient lubrication</td></tr>
+                      <tr><td>Foreign material on rubbing surface</td></tr>
                       <tr>
-                        <td rowspan="3">Slow mechanical response &mdash; Excessive friction</td>
-                        <td rowspan="3">Friction / stick-slip</td>
-                        <td>Excessive seal squeeze or swell</td>
+                        <td rowspan="5">Seal face distortion</td>
+                        <td>Excessive fluid pressure on seal</td>
                       </tr>
+                      <tr><td>Foreign material trapped between faces</td></tr>
+                      <tr><td>Excessive PV value of seal operation</td></tr>
+                      <tr><td>Insufficient seal lubrication</td></tr>
+                      <tr><td>Seal shrinkage</td></tr>
+                      <tr>
+                        <td rowspan="4">Slow mechanical response</td>
+                        <td rowspan="4">Excessive friction</td>
+                        <td>Excessive squeeze</td>
+                      </tr>
+                      <tr><td>Excessive seal swell</td></tr>
                       <tr><td>Seal extrusion</td></tr>
-                      <tr><td>Metal-to-metal contact (misalignment)</td></tr>
-                      <tr>
-                        <td>Mechanical spring failure</td>
-                        <td>Spring fatigue / corrosion</td>
-                        <td>See NSWC-11 Chapter 4, Table 4-1</td>
-                      </tr>
+                      <tr><td>Metal &ndash; to &ndash; metal contact (out of alignment)</td></tr>
                     </tbody>
                   </table>
+                  <p class="ref-table-caption">Source: NSWC-11, Table 3-2 (also see Table 3-1, static seal failure modes).</p>
                 </div>
               </div>
             </div>
@@ -2629,10 +2684,11 @@
         };
       } else {
         // ── Eq. 3-14 high-speed OR Eq. 3-16 mechanical seal ─────────────
-        lambda=BASE_RATE*cpv*CF*CV_f*CT*CN;
+        var CQ_hi=factorCQ(leakRate);
+        lambda=BASE_RATE*CQ_hi*cpv*CF*CV_f*CT*CN;
         eq=(mode==='mech')?'Eq. 3-16 (mechanical seal)':'Eq. 3-14 (high speed)';
         factorsObj={
-          CPV:cpv,CP:null,CQ:null,CDL:null,CH:null,CF:CF,CV:CV_f,CT:CT,CN:CN,
+          CPV:cpv,CP:null,CQ:CQ_hi,CDL:null,CH:null,CF:CF,CV:CV_f,CT:CT,CN:CN,
           pvOP:pvOP,pvDS:pvDS,cpv:cpv,M:null,Fc:null,C_c:null,MC:null
         };
       }
@@ -2686,8 +2742,7 @@
                              f.CPV!=null?'PV<sub>OP</sub>/PV<sub>DS</sub>':'Not active (low-speed)'],
           ['C<sub>P</sub>',  f.CP!=null?f.CP.toFixed(4):'1.0000',
                              f.CP!=null?'':                    'Not active (high-speed / mech)'],
-          ['C<sub>Q</sub>',  f.CQ!=null?f.CQ.toFixed(4):'1.0000',
-                             f.CQ!=null?'':                    'Not active (high-speed / mech)'],
+          ['C<sub>Q</sub>',  f.CQ.toFixed(4), 'Always active (Eq. 3-14 &amp; 3-16)'],
           ['C<sub>DL</sub>', f.CDL!=null?f.CDL.toFixed(4):'1.0000',
                              f.CDL!=null?'':                   'Not active (high-speed / mech)'],
           ['C<sub>H</sub>',  f.CH!=null?f.CH.toFixed(4):'1.0000',
@@ -2843,6 +2898,62 @@
     runCalculate();
 
   })();
+  </script>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- LIGHTBOX SCRIPT (pattern from SpringCompressionRound.html) -->
+  <script>
+  function initLightbox() {
+    const overlay  = document.getElementById('lightboxOverlay');
+    const img      = document.getElementById('lightboxImg');
+    const caption  = document.getElementById('lightboxCaption');
+    const closeBtn = document.getElementById('lightboxClose');
+
+    if (!overlay) return;
+
+    function openLightbox(src, alt, captionText) {
+      img.src             = src;
+      img.alt             = alt || '';
+      caption.textContent = captionText || '';
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+      img.src = '';
+    }
+
+    document.addEventListener('click', e => {
+      const target = e.target.closest('.ref-zoomable');
+      if (!target) return;
+      const figLabel = target.closest('.ref-fig')
+        ?.querySelector('.ref-fig-label')
+        ?.textContent ?? target.alt ?? '';
+      openLightbox(target.src, target.alt, figLabel);
+    });
+
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeLightbox();
+    });
+
+    closeBtn.addEventListener('click', closeLightbox);
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && overlay.classList.contains('active')) {
+        closeLightbox();
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initLightbox);
   </script>
 
 

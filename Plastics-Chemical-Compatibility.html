@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- META DATA -->
-    <title>KasperCalc: O-Ring Chemical Compatibility Chart (Parker)</title>
+    <title>KasperCalc: Plastics Chemical Compatibility Chart</title>
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, O-ring, O-ring chemical compatibility, Parker compatibility chart, Nitrile NBR, EPDM, FKM Viton, FFKM Kalrez, neoprene CR, silicone VMQ, fluorosilicone FVMQ, HNBR, Aflas FEPM, elastomer chemical resistance, rubber compatibility chart, o-ring material selection" />
-    <meta name="description" content="Parker O-ring chemical compatibility chart. Look up compatibility ratings for Nitrile (NBR), EPDM, FKM (Viton), FFKM (Kalrez), Neoprene, Silicone, and 12 other elastomers against hundreds of chemicals, fluids, and compounds. Ratings 1–4 plus insufficient-data flag." />
+    <meta name="keywords" content="KasperCalc, plastics chemical compatibility, plastic resistance chart, HDPE, LDPE, PP, PVC, CPVC, PVDF, PTFE, nylon, polycarbonate, acetal, ABS, PEEK, PPS, FEP, ETFE, PEI, chemical resistance, polymer compatibility" />
+    <meta name="description" content="Plastics chemical compatibility chart. Look up compatibility ratings for HDPE, LDPE, PP, PVC, CPVC, PVDF, PTFE, Nylon, Polycarbonate, Acetal, ABS, PEEK, PPS, and other common engineering plastics against hundreds of chemicals, fluids, and compounds. Ratings 1–4 plus insufficient-data flag." />
 
     <!-- DEFERRED JAVASCRIPT -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -42,7 +42,7 @@
     <link rel="manifest" href="/favicon/site.webmanifest" />
 
     <style>
-      /* ===== O-Ring Chemical Compatibility — KasperCalc themed =====
+      /* ===== Plastics Chemical Compatibility — KasperCalc themed =====
          Palette/fonts mirror the rest of KasperCalc. */
       .oring-finder {
         --bg:#e6eae7; --panel:#eee; --panel-2:#d9d9d9; --line:rgb(67,67,67);
@@ -76,11 +76,15 @@
       .oring-finder .rating-legend { padding:4px 6px 10px }
       .oring-finder .rl-item { display:flex; align-items:flex-start; gap:9px; padding:5px 3px; font-size:12px; color:var(--ink); line-height:1.4 }
       .oring-finder .rl-badge { display:inline-flex; align-items:center; justify-content:center; min-width:22px; height:22px; border-radius:4px; font-size:12px; font-weight:700; flex:none; padding:0 5px }
-      .oring-finder .r1 { background:#2a7a45; color:#fff }
-      .oring-finder .r2 { background:#c49000; color:#fff }
-      .oring-finder .r3 { background:#c06010; color:#fff }
-      .oring-finder .r4 { background:#b03030; color:#fff }
-      .oring-finder .rx { background:#7a7a7a; color:#fff }
+      .oring-finder .r1  { background:#2a7a45; color:#fff }
+      .oring-finder .r2  { background:#c49000; color:#fff }
+      .oring-finder .r3  { background:#c06010; color:#fff }
+      .oring-finder .r4  { background:#b03030; color:#fff }
+      .oring-finder .rx  { background:#7a7a7a; color:#fff }
+      .oring-finder .rk  { background:#5a6a7a; color:#fff }
+      .oring-finder .rl  { background:#7a4a00; color:#fff }
+      .oring-finder .rp  { background:#8a8a6a; color:#fff }
+      .oring-finder .rhz { background:#3a3a5a; color:#e0e0ff; font-size:10px; min-width:26px }
 
       .oring-finder .nav-note { margin-top:14px; border-top:1px dashed var(--line); padding-top:10px }
       .oring-finder .nv { padding:7px 8px; border-radius:6px; color:var(--muted); font-size:11px; line-height:1.6 }
@@ -251,19 +255,40 @@
         font-variant-numeric:tabular-nums; white-space:nowrap;
       }
 
+      /* GROUP HEADER ROW (Thermoplastics / Fluoroplastics) */
+      .oring-finder thead th.poly-group-spacer {
+        position:sticky; top:0; z-index:4;
+        background:#6a746a;
+        border-bottom:1px solid rgba(255,255,255,.18);
+      }
+      .oring-finder thead th.poly-group-label {
+        position:sticky; top:0; z-index:3;
+        text-align:center; font-size:9px; letter-spacing:.12em;
+        text-transform:uppercase; font-weight:700;
+        padding:4px 6px;
+        border-bottom:2px solid var(--line);
+      }
+      .oring-finder thead th.thermo-group {
+        background:#4a6158; color:#c8e8c8;
+        border-right:2px solid var(--line);
+      }
+      .oring-finder thead th.fluoro-group {
+        background:#3a5068; color:#b8d8f0;
+      }
+
       /* POLYMER HEADER columns — vertical text */
       .oring-finder thead th.poly {
         position:sticky; top:0; z-index:2;
         background:#6a746a;
-        height:160px; width:38px; min-width:38px; max-width:38px;
-        padding:0; vertical-align:bottom; overflow:hidden;
+        height:200px; width:38px; min-width:38px; max-width:38px;
+        padding:0; vertical-align:bottom;
         border-bottom:1px solid var(--line);
         border-right:1px solid rgba(255,255,255,.12);
         cursor:pointer;
       }
       .oring-finder thead th.poly > div {
         display:flex; align-items:flex-end; justify-content:flex-start;
-        height:160px; padding:0 0 6px 8px;
+        height:200px; padding:0 0 6px 8px;
       }
       .oring-finder thead th.poly > div > span {
         writing-mode:vertical-rl;
@@ -275,6 +300,10 @@
       }
       .oring-finder thead th.poly:hover > div > span { color:#A3C3CD }
       .oring-finder thead th.poly.sorted > div > span { color:#A3C3CD; font-weight:700 }
+      .oring-finder thead th.poly.poly-thermo { background:#4a6158 }
+      .oring-finder thead th.poly.poly-fluoro { background:#3a5068 }
+      .oring-finder thead th.poly.poly-sep,
+      .oring-finder tbody td.poly-cell.poly-sep { border-left:2px solid var(--line) }
 
       /* RATING CELLS */
       .oring-finder tbody td.poly-cell {
@@ -553,7 +582,7 @@
         <div class="col-lg-12 col-12">
           <div class="banner section-title-wrap">
             <div class="h1 section-title bannertext">
-              O-Ring Chemical Compatibility
+              Plastics Chemical Compatibility
             </div>
           </div>
         </div>
@@ -566,17 +595,18 @@
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap">
           <div class="mx-auto d-inline-block mt-3" style="max-width:860px;">
-            <div class="custom-heading">Parker O-Ring Chemical Compatibility Guide</div>
+            <div class="custom-heading">Plastics Chemical Compatibility Guide</div>
             <div class="mt-3 text-start">
               <p class="mb-3">
-                Look up chemical compatibility ratings for 18 common elastomer types — including Nitrile&nbsp;(NBR),
-                EPDM, FKM&nbsp;(Viton), FFKM&nbsp;(Kalrez), Neoprene, Silicone, and more — against hundreds of
-                chemicals, fluids, and compounds from Parker's O-Ring Chemical Compatibility Guide.
+                Look up chemical compatibility ratings for 17 engineering plastics &amp; fluoroplastics — including HDPE, LDPE,
+                PP, PC, PETG, PMP, POM, PS, PSU, rigid &amp; flexible PVC, SAN, ECTFE/ETFE, FEP, PTFE&nbsp;(Teflon),
+                and PVDF&nbsp;(Kynar) — against hundreds of chemicals, fluids, and compounds.
               </p>
               <p>
                 Ratings range from <span style="font-weight: var(--font-weight-normal)">1&nbsp;(Satisfactory)</span> to <span style="font-weight: var(--font-weight-normal)">4&nbsp;(Unsatisfactory)</span>;
                 <span style="font-weight: var(--font-weight-normal)">x</span>&nbsp;indicates insufficient data. See the legend at left for the full scale.
-                Search by compound name to filter the table. Hover over a column header to see the full elastomer name.
+                Search by compound name to filter the table. Hover over a column header to see the full plastic name.
+                Ratings are for ambient temperature — verify against material specifications before use.
               </p>
             </div>
           </div>
@@ -585,13 +615,13 @@
     </section>
 
 
-    <!-- O-RING CHEMICAL COMPATIBILITY CHART -->
-    <section aria-label="O-ring chemical compatibility chart">
+    <!-- PLASTICS CHEMICAL COMPATIBILITY CHART -->
+    <section aria-label="Plastics chemical compatibility chart">
       <div class="oring-finder wrapper">
         <div class="app">
           <header>
-            <div class="brand"><span class="o">O</span>-RING CHEMICAL COMPATIBILITY</div>
-            <span class="tagline">Parker guide &middot; 18 elastomers &middot; ambient temperature ratings</span>
+            <div class="brand">PLASTICS CHEMICAL COMPATIBILITY</div>
+            <span class="tagline">17 plastics &amp; fluoroplastics &middot; ambient temperature ratings</span>
             <span class="totals" id="totals"></span>
           </header>
 
@@ -616,28 +646,50 @@
 
             <!-- LEFT NAV: Rating Legend -->
             <nav id="nav" aria-label="Compatibility rating scale">
-              <div class="nav-h">COMPOUND COMPATIBILITY RATING</div>
+              <div class="nav-h">PLASTIC COMPATIBILITY RATING</div>
               <div class="rating-legend">
-                <div class="rl-item"><span class="rl-badge r1">1</span>Satisfactory</div>
-                <div class="rl-item"><span class="rl-badge r2">2</span>Fair (usually OK for static seal)</div>
-                <div class="rl-item"><span class="rl-badge r3">3</span>Doubtful (sometimes OK for static seal)</div>
-                <div class="rl-item"><span class="rl-badge r4">4</span>Unsatisfactory</div>
-                <div class="rl-item"><span class="rl-badge rx">x</span>Insufficient Data</div>
+                <div class="rl-item"><span class="rl-badge r1">1</span>Resistant</div>
+                <div class="rl-item"><span class="rl-badge r2">2</span>Practically resistant</div>
+                <div class="rl-item"><span class="rl-badge r3">3</span>Partially resistant</div>
+                <div class="rl-item"><span class="rl-badge r4">4</span>Not resistant</div>
+                <div class="rl-item"><span class="rl-badge rk">K</span>No general info</div>
+                <div class="rl-item"><span class="rl-badge rl">L</span>Pitting / stress-cracking risk</div>
+                <div class="rl-item"><span class="rl-badge rp">( )</span>Estimated value</div>
+                <div class="rl-item"><span class="rl-badge rx">X</span>No data available</div>
               </div>
-              <div class="nav-note" style="border-top:1px dashed var(--line);padding-top:10px;margin-top:10px">
+              <div class="nav-note">
+                <div class="nav-h">Temperature</div>
+                <div class="nv">Source data has two ratings per substance: <strong>left = +20&thinsp;°C</strong>, right = +50&thinsp;°C. This page shows <strong>ambient (+20&thinsp;°C)</strong> only.</div>
+              </div>
+              <div class="nav-note">
+                <div class="nav-h">Hazard Codes (Notes column)</div>
+                <div class="rating-legend" style="padding-bottom:4px">
+                  <div class="rl-item"><span class="rl-badge rhz">E</span>Explosive</div>
+                  <div class="rl-item"><span class="rl-badge rhz">O</span>Oxidizing</div>
+                  <div class="rl-item"><span class="rl-badge rhz">F</span>Highly flammable</div>
+                  <div class="rl-item"><span class="rl-badge rhz">F+</span>Extremely flammable</div>
+                  <div class="rl-item"><span class="rl-badge rhz">T</span>Toxic</div>
+                  <div class="rl-item"><span class="rl-badge rhz">T+</span>Very toxic</div>
+                  <div class="rl-item"><span class="rl-badge rhz">C</span>Corrosive</div>
+                  <div class="rl-item"><span class="rl-badge rhz">Xn</span>Harmful</div>
+                  <div class="rl-item"><span class="rl-badge rhz">Xi</span>Irritant</div>
+                  <div class="rl-item"><span class="rl-badge rhz">N</span>Environ. hazard</div>
+                </div>
+              </div>
+              <div class="nav-note">
                 <div class="nav-h"><span>Fluid Groups</span><span id="navCount"></span></div>
                 <div class="bulk"><button id="allBtn">All</button><button id="noneBtn">None</button></div>
                 <div id="letterList"></div>
               </div>
               <div class="nav-note">
                 <div class="nav-h">Notes</div>
-                <div class="nv">Ratings are for ambient temperature. Elevated temperatures generally reduce compatibility. Verify against the controlling specification before use.</div>
+                <div class="nv">Ratings are for ambient temperature. Elevated temperatures generally reduce chemical resistance. Verify against material specifications and the controlling specification before use.</div>
               </div>
             </nav>
 
             <!-- MAIN: Table -->
             <main>
-              <!-- Category quick-select buttons (populated from fluids_by_category.csv) -->
+              <!-- Category quick-select buttons (populated from plastics_fluids_by_category.csv) -->
               <div class="cat-bar" id="catBar"></div>
 
               <div class="controls">
@@ -662,7 +714,14 @@
 
               <div class="tablewrap">
                 <table>
-                  <thead><tr id="head"></tr></thead>
+                  <thead>
+                    <tr>
+                      <th colspan="3" class="poly-group-spacer"></th>
+                      <th colspan="13" class="poly-group-label thermo-group">Thermoplastics</th>
+                      <th colspan="4" class="poly-group-label fluoro-group">Fluoroplastics</th>
+                    </tr>
+                    <tr id="head"></tr>
+                  </thead>
                   <tbody id="rows"></tbody>
                 </table>
                 <div class="empty" id="empty" style="display:none">No fluids match the search term.</div>
@@ -675,6 +734,159 @@
       </div>
     </section>
 
+
+    <!-- RATING KEY, HAZARD SYMBOLS & MATERIAL REFERENCE TABLES -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3 mb-3 text-start" style="max-width:900px;">
+            <div class="text-center">
+              <div class="custom-heading">Rating Key &amp; Material Reference</div>
+            </div>
+            <p class="mt-3" style="font-size:0.9rem;">
+              The following tables reproduce the legend and material descriptions from the source document
+              (Bürkle GmbH, Version 3.2). The source data contains two ratings per substance
+              — left value at +20&nbsp;°C and right value at +50&nbsp;°C. This page displays the +20&nbsp;°C
+              (ambient) value only.
+            </p>
+
+            <!-- Row: Rating Scale + Hazard Symbols side by side -->
+            <div class="row g-4 mt-1">
+              <div class="col-12 col-md-6">
+                <div class="mt-1 mx-auto">
+                  <table class="table table-sm mx-auto" style="font-size: 0.9rem;">
+                    <thead style="background-color: var(--section-title-color); color: #fff;">
+                      <tr><th style="width:80px;">Rating</th><th>Meaning</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td><strong>1</strong></td><td>Resistant</td></tr>
+                      <tr><td><strong>2</strong></td><td>Practically resistant</td></tr>
+                      <tr><td><strong>3</strong></td><td>Partially resistant</td></tr>
+                      <tr><td><strong>4</strong></td><td>Not resistant</td></tr>
+                      <tr><td><strong>K</strong></td><td>No general information available</td></tr>
+                      <tr><td><strong>L</strong></td><td>Danger of pitting or stress-cracking corrosion</td></tr>
+                      <tr><td><strong>( )</strong></td><td>Estimated value</td></tr>
+                      <tr><td><strong>0 / X</strong></td><td>No data available</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-12 col-md-6">
+                <div class="mt-1 mx-auto">
+                  <table class="table table-sm mx-auto" style="font-size: 0.9rem;">
+                    <thead style="background-color: var(--section-title-color); color: #fff;">
+                      <tr><th style="width:80px;">Symbol</th><th>EU Hazard Classification</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td><strong>E</strong></td><td>Explosive</td></tr>
+                      <tr><td><strong>O</strong></td><td>Oxidizing</td></tr>
+                      <tr><td><strong>F</strong></td><td>Highly flammable</td></tr>
+                      <tr><td><strong>F+</strong></td><td>Extremely flammable</td></tr>
+                      <tr><td><strong>T</strong></td><td>Toxic</td></tr>
+                      <tr><td><strong>T+</strong></td><td>Very toxic</td></tr>
+                      <tr><td><strong>C</strong></td><td>Corrosive</td></tr>
+                      <tr><td><strong>Xn</strong></td><td>Harmful</td></tr>
+                      <tr><td><strong>Xi</strong></td><td>Irritant</td></tr>
+                      <tr><td><strong>N</strong></td><td>Dangerous for the environment</td></tr>
+                    </tbody>
+                  </table>
+                  <p style="font-size:0.8rem; color:#666;" class="mt-1">
+                    Hazard symbols appear in the Notes&nbsp;/&nbsp;Source column and reflect EU CLP classifications
+                    from the original data file.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Material descriptions table (full width) -->
+            <div class="mt-3 mx-auto">
+              <table class="table table-sm mx-auto" style="font-size: 0.9rem; max-width:860px;">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th style="width:130px;">Abbreviation</th>
+                    <th>Full Material Name</th>
+                    <th>Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>HDPE</strong></td><td>Polyethylene, high density</td><td>Thermoplastic</td></tr>
+                  <tr><td><strong>LDPE</strong></td><td>Polyethylene, low density</td><td>Thermoplastic</td></tr>
+                  <tr><td><strong>PA</strong></td><td>Polyamide (Nylon)</td><td>Thermoplastic</td></tr>
+                  <tr><td><strong>PC</strong></td><td>Polycarbonate</td><td>Thermoplastic</td></tr>
+                  <tr><td><strong>PETG</strong></td><td>Polyethylene terephthalate glycol (PET copolymer)</td><td>Thermoplastic</td></tr>
+                  <tr><td><strong>PMP</strong></td><td>Polymethylpentene (TPX)</td><td>Thermoplastic</td></tr>
+                  <tr><td><strong>POM</strong></td><td>Polyoxymethylene / polyacetal (Acetal, Delrin)</td><td>Thermoplastic</td></tr>
+                  <tr><td><strong>PP</strong></td><td>Polypropylene</td><td>Thermoplastic</td></tr>
+                  <tr><td><strong>PS</strong></td><td>Polystyrene</td><td>Thermoplastic</td></tr>
+                  <tr><td><strong>PSU</strong></td><td>Polysulfone</td><td>Thermoplastic</td></tr>
+                  <tr><td><strong>PVC-H</strong></td><td>Polyvinyl chloride, rigid (hard)</td><td>Thermoplastic</td></tr>
+                  <tr><td><strong>PVC-S</strong></td><td>Polyvinyl chloride, soft (flexible)</td><td>Thermoplastic</td></tr>
+                  <tr><td><strong>SAN</strong></td><td>Styrene-acrylonitrile</td><td>Thermoplastic</td></tr>
+                  <tr><td><strong>ECTFE&nbsp;/&nbsp;ETFE</strong></td><td>Ethylene-chlorotrifluoroethylene (Halar) / Ethylene-tetrafluoroethylene</td><td>Fluoroplastic</td></tr>
+                  <tr><td><strong>FEP</strong></td><td>Tetrafluoroethylene-perfluoropropylene (Teflon FEP)</td><td>Fluoroplastic</td></tr>
+                  <tr><td><strong>PTFE</strong></td><td>Polytetrafluoroethylene (Teflon)</td><td>Fluoroplastic</td></tr>
+                  <tr><td><strong>PVDF</strong></td><td>Polyvinylidene fluoride (Kynar)</td><td>Fluoroplastic</td></tr>
+                </tbody>
+              </table>
+              <p style="font-size:0.8rem; color:#666;" class="mt-1 text-center">
+                The source document also includes ratings for EPDM, FPM/FKM, NBR, SI (elastomers)
+                and Al, V2A, V4A, Hastelloy&nbsp;C (metals), which are not shown in this table.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REFERENCES & IMPORTANT NOTICES -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3 mb-3 text-start" style="max-width:860px;">
+            <div class="text-center">
+              <div class="custom-heading">References &amp; Important Notices</div>
+            </div>
+            <ul class="mt-3" style="font-size:0.9rem;">
+              <li class="mb-2">
+                <strong>Source:</strong> Bürkle GmbH, <em>Chemical resistance of plastics</em>,
+                Version&nbsp;3.2 (26&nbsp;January&nbsp;2015). Table made available via Kendrion Kuhnke
+                Automation GmbH layout adaptation. Publisher: Bürkle GmbH, Rheinauen&nbsp;5,
+                D-79415&nbsp;Bad&nbsp;Bellingen, Germany.
+                <a href="https://www.buerkle.de" target="_blank" rel="noopener noreferrer">www.buerkle.de</a>
+              </li>
+              <li class="mb-2">
+                <strong>Laboratory data only.</strong> The values in this table are based solely on
+                laboratory tests with raw materials. Plastic components produced from these raw materials
+                are frequently subject to influences that cannot be recognized in laboratory tests
+                (temperature, pressure, material stress, effects of chemicals, construction features,
+                etc.). The values given are guidelines only. In critical cases it is essential that a
+                test is carried out first.
+              </li>
+              <li class="mb-2">
+                <strong>No liability.</strong> No legal claims can be derived from this information.
+                Neither Bürkle GmbH nor Kendrion Kuhnke Automation GmbH accepts any liability for the
+                values presented. A knowledge of chemical and mechanical resistance alone is not
+                sufficient for the evaluation of the usability of a product. Regulations concerning
+                flammable liquids (explosion prevention) must also be taken into consideration.
+              </li>
+              <li class="mb-2">
+                <strong>Copyright notice (reproduced per source document).</strong> This table has been
+                published and updated by Bürkle GmbH, D-79415&nbsp;Bad&nbsp;Bellingen as a work of
+                reference. The copyright clause must not be removed. The table may be freely passed on
+                and copied, provided that the information about the publisher is retained.
+              </li>
+              <li>
+                <strong>No affiliation or endorsement.</strong> Bürkle GmbH and Kendrion Kuhnke
+                Automation GmbH have not participated in the development of this lookup tool and do not
+                approve or endorse it. Verify all ratings against the current published version of the
+                source table before use in design.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- CITATION -->
     <section class="mt-5 pt-3">
@@ -732,595 +944,8 @@
   <script src="js/footer.js"></script>
   <!-- END FOOTER -->
 
-  <!-- =====================================================================
-       PAGE SCRIPT — O-ring chemical compatibility table
-       Loads data from csvData/ParkerORingCompatibilityTable.csv via fetch()
-       ===================================================================== -->
-  <script>
-  (async function () {
-
-    const $ = id => document.getElementById(id);
-
-    /* ---- RFC 4180 CSV parser (handles quoted fields with embedded commas/newlines) ---- */
-    function parseCSV(text) {
-      const rows = [];
-      let i = 0, n = text.length;
-      while (i < n) {
-        const row = [];
-        while (i < n) {
-          let field = '';
-          if (text[i] === '"') {
-            i++;
-            while (i < n) {
-              if (text[i] === '"') {
-                if (text[i + 1] === '"') { field += '"'; i += 2; }
-                else { i++; break; }
-              } else { field += text[i++]; }
-            }
-          } else {
-            while (i < n && text[i] !== ',' && text[i] !== '\r' && text[i] !== '\n') field += text[i++];
-          }
-          row.push(field);
-          if (i < n && text[i] === ',') i++;
-          else break;
-        }
-        if (i < n && text[i] === '\r') i++;
-        if (i < n && text[i] === '\n') i++;
-        if (row.some(f => f !== '')) rows.push(row);
-      }
-      return rows;
-    }
-
-    function parseRating(s) {
-      const v = s.trim().toUpperCase();
-      if (!v || v === 'X') return 'x';
-      const n = parseInt(v, 10);
-      return isNaN(n) ? 'x' : n;
-    }
-
-    /* show loading indicator */
-    $('rows').innerHTML = '<tr><td colspan="22" style="text-align:center;padding:40px;color:#6a746a;font-style:italic">Loading compatibility data…</td></tr>';
-
-    let compounds, categoryMap;
-    try {
-      const [compatResp, catResp] = await Promise.all([
-        fetch('csvData/ParkerORingCompatibilityTable.csv'),
-        fetch('csvData/fluids_by_category.csv'),
-      ]);
-      if (!compatResp.ok) throw new Error(`HTTP ${compatResp.status} (compatibility table)`);
-      if (!catResp.ok)    throw new Error(`HTTP ${catResp.status} (category list)`);
-      const [compatText, catText] = await Promise.all([compatResp.text(), catResp.text()]);
-
-      /* build compounds array from compatibility CSV */
-      const compatRows = parseCSV(compatText);
-      const hIdx = compatRows.findIndex(r => r[0].trim() === 'Compound / Fluid');
-      compounds = compatRows.slice(hIdx + 1)
-        .filter(r => r[0] && r[0].trim())
-        .map(r => ({
-          name:    r[0].trim(),
-          ref:     (r[1] || '').trim(),
-          ratings: r.slice(2, 20).map(parseRating),
-        }));
-
-      /* build category map from fluids_by_category.csv */
-      categoryMap = new Map();
-      parseCSV(catText).slice(1).forEach(r => {          /* skip header row */
-        const cat   = (r[0] || '').trim();
-        const fluid = (r[1] || '').trim();
-        if (!cat || !fluid || cat === 'Category') return;
-        if (!categoryMap.has(cat)) categoryMap.set(cat, []);
-        categoryMap.get(cat).push(fluid);
-      });
-    } catch (e) {
-      $('rows').innerHTML = `<tr><td colspan="22" style="text-align:center;padding:40px;color:#b03030">Failed to load data: ${e.message}</td></tr>`;
-      return;
-    }
-
-    /* Short labels for the 18 polymer columns */
-    const POLY_SHORT = [
-      'Nitrile  NBR',
-      'Hydrogenated Nitrile  HNBR',
-      'Ethylene Propylene  EPDM',
-      'Fluorocarbon  FKM',
-      'Hifluor  FKM',
-      'Perfluoroelastomer  FFKM',
-      'Aflas (TFE/Propylene)  FEPM',
-      'Neoprene/Chloroprene  CR',
-      'Styrene-Butadiene  SBR',
-      'Polyacrylate  ACM',
-      'Polyurethane  AU, EU',
-      'Butyl  IIR',
-      'Butadiene  BR',
-      'Isoprene  IR',
-      'Natural Rubber  NR',
-      'Hypalon  CSM',
-      'Fluorosilicone  FVMQ',
-      'Silicone  MQ, VMQ, PVMQ',
-    ];
-    const POLY_FULL  = [
-      'NBR (Nitrile)', 'HNBR (Hydrog. Nitrile)', 'EPDM (Ethylene Propylene)',
-      'FKM (Fluorocarbon)', 'FKM (Hifluor)', 'FFKM (Perfluoroelastomer)',
-      'FEPM (Aflas)', 'CR (Neoprene)', 'SBR (Styrene-Butadiene)',
-      'ACM (Polyacrylate)', 'AU/EU (Polyurethane)', 'IIR (Butyl)',
-      'BR (Butadiene)', 'IR (Isoprene)', 'NR (Natural Rubber)',
-      'CSM (Hypalon)', 'FVMQ (Fluorosilicone)', 'MQ/VMQ/PVMQ (Silicone)',
-    ];
-
-    const RATING_CLASS = { 1:'r1', 2:'r2', 3:'r3', 4:'r4', 'x':'rx' };
-    const RATING_LABEL = { 1:'Satisfactory', 2:'Fair', 3:'Doubtful', 4:'Unsatisfactory', 'x':'Insufficient Data' };
-
-    /* O(1) lookup by compound name */
-    const compoundMap = new Map(compounds.map(c => [c.name, c]));
-
-    let sort = { key: 'name', dir: 1 };
-    let selectedCompounds = new Set();
-    const escAttr = s => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
-
-    /* ---- undo history ---- */
-    const selHistory = [];
-    function pushHistory() {
-      selHistory.push(new Set(selectedCompounds));
-      if (selHistory.length > 100) selHistory.shift();
-    }
-
-    /* ---- category buttons ---- */
-    function buildCatButtons() {
-      const cats = [...categoryMap.keys()].sort();
-      $('catBar').innerHTML = cats.map(cat => {
-        const n = (categoryMap.get(cat) || []).filter(f => compoundMap.has(f)).length;
-        return `<button class="cat-btn" data-cat="${escAttr(cat)}">${cat}<span class="cat-ct"> (${n})</span></button>`;
-      }).join('');
-      /* single delegated listener on the bar */
-      $('catBar').addEventListener('click', e => {
-        const btn = e.target.closest('.cat-btn');
-        if (!btn) return;
-        const fluids = (categoryMap.get(btn.dataset.cat) || []).filter(f => compoundMap.has(f));
-        const allSel = fluids.length > 0 && fluids.every(f => selectedCompounds.has(f));
-        pushHistory();
-        fluids.forEach(f => allSel ? selectedCompounds.delete(f) : selectedCompounds.add(f));
-        renderRows();
-        renderSelPanel();
-        renderSelTable();
-      });
-    }
-
-    function updateCatButtonStates() {
-      const bar = $('catBar');
-      if (!bar) return;
-      bar.querySelectorAll('.cat-btn').forEach(btn => {
-        const fluids = (categoryMap.get(btn.dataset.cat) || []).filter(f => compoundMap.has(f));
-        const nSel = fluids.filter(f => selectedCompounds.has(f)).length;
-        btn.classList.toggle('active',  nSel > 0 && nSel === fluids.length);
-        btn.classList.toggle('partial', nSel > 0 && nSel <  fluids.length);
-      });
-    }
-
-    /* helper — build a rating-cell row from a compound object */
-    function buildRatingCells(c) {
-      return c.ratings.map((r, i) => {
-        const cls = RATING_CLASS[r] || '';
-        return `<td class="poly-cell ${cls}"` +
-               ` data-fluid="${escAttr(c.name)}"` +
-               ` data-poly="${escAttr(POLY_FULL[i])}"` +
-               ` data-rating="${RATING_LABEL[r] || ''}"` +
-               `>${r === 'x' ? 'X' : r}</td>`;
-      }).join('');
-    }
-
-    /* ---- selected-fluids chip panel ---- */
-    function renderSelPanel() {
-      const count = selectedCompounds.size;
-      $('spCount').textContent = `${count} selected`;
-      if (count === 0) {
-        $('spChips').innerHTML = '<span class="sp-empty">Check fluids in the table below to add them here.</span>';
-        updateCatButtonStates();
-        return;
-      }
-      const sorted = [...selectedCompounds].sort();
-      $('spChips').innerHTML = sorted.map(name =>
-        `<span class="sp-chip">` +
-        `<span class="sp-chip-name" title="${escAttr(name)}">${name}</span>` +
-        `<button class="sp-chip-x" data-name="${escAttr(name)}" aria-label="Remove ${escAttr(name)}">&times;</button>` +
-        `</span>`
-      ).join('');
-      $('spChips').querySelectorAll('.sp-chip-x').forEach(btn => {
-        btn.onclick = () => {
-          pushHistory();
-          const name = btn.dataset.name;
-          selectedCompounds.delete(name);
-          $('rows').querySelectorAll('.row-cb').forEach(cb => {
-            if (cb.dataset.name === name) { cb.checked = false; cb.closest('tr').classList.remove('row-selected'); }
-          });
-          renderSelPanel();
-          renderSelTable();
-          updateHeaderCb();
-        };
-      });
-      updateCatButtonStates();
-    }
-
-    /* ---- selected-fluids mirror table ---- */
-    function renderSelTable() {
-      const wrap = $('selTableWrap');
-      if (selectedCompounds.size === 0) { wrap.style.display = 'none'; return; }
-      wrap.style.display = 'block';
-
-      /* static header — no sort controls */
-      const polyCols = POLY_SHORT.map((s, i) =>
-        `<th class="poly" title="${POLY_FULL[i]}"><div><span>${s}</span></div></th>`
-      ).join('');
-      $('selHead').innerHTML =
-        `<th class="cb-h"></th>` +
-        `<th class="cmpd-h">Fluid</th>` +
-        `<th class="ref-h">Recommended Parker Rubber Compound</th>` +
-        polyCols;
-
-      /* rows — alphabetical order */
-      const selList = [...selectedCompounds].sort().map(n => compoundMap.get(n)).filter(Boolean);
-      $('selRows').innerHTML = selList.map(c =>
-        `<tr class="row-selected">` +
-        `<td class="cb-cell"><input type="checkbox" class="sel-row-cb" data-name="${escAttr(c.name)}" checked></td>` +
-        `<td class="cmpd l" title="${escAttr(c.name)}">${c.name}</td>` +
-        `<td class="ref">${c.ref}</td>` +
-        buildRatingCells(c) + `</tr>`
-      ).join('');
-
-      /* unchecking in the mirror table removes the compound from selection */
-      $('selRows').querySelectorAll('.sel-row-cb').forEach(cb => {
-        cb.addEventListener('change', function () {
-          pushHistory();
-          const name = this.dataset.name;
-          selectedCompounds.delete(name);
-          /* sync main table row if visible */
-          $('rows').querySelectorAll('.row-cb').forEach(mainCb => {
-            if (mainCb.dataset.name === name) {
-              mainCb.checked = false;
-              mainCb.closest('tr').classList.remove('row-selected');
-            }
-          });
-          renderSelTable();
-          renderSelPanel();
-          updateHeaderCb();
-        });
-      });
-    }
-
-    /* ---- letter-group checkboxes ---- */
-    const letters = [...new Set(compounds.map(c => c.name[0].toUpperCase()))].sort();
-    let activeLetters = new Set(letters);
-
-    function buildLetterNav() {
-      const counts = {};
-      letters.forEach(l => { counts[l] = 0; });
-      compounds.forEach(c => { counts[c.name[0].toUpperCase()]++; });
-      $('letterList').innerHTML = letters.map(l => `
-        <button class="std" data-l="${l}" aria-pressed="${activeLetters.has(l)}">
-          <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1206" stroke-width="3.5"><path d="M5 12l5 5 9-11"/></svg></span>
-          <span class="lbl"><span class="nm">${l}</span></span>
-          <span class="ct">${counts[l]}</span>
-        </button>`).join('');
-      $('letterList').querySelectorAll('.std').forEach(b => b.onclick = () => {
-        const l = b.dataset.l;
-        activeLetters.has(l) ? activeLetters.delete(l) : activeLetters.add(l);
-        b.setAttribute('aria-pressed', activeLetters.has(l));
-        syncNavCount();
-        renderRows();
-      });
-      syncNavCount();
-    }
-
-    function syncNavCount() {
-      $('navCount').textContent = `${activeLetters.size}/${letters.length}`;
-      $('letterList').querySelectorAll('.std').forEach(b =>
-        b.setAttribute('aria-pressed', activeLetters.has(b.dataset.l)));
-    }
-
-    /* ---- header checkbox state ---- */
-    function updateHeaderCb() {
-      const cbAll = $('cbAll');
-      if (!cbAll) return;
-      const visible = currentRows();
-      const nSel = visible.filter(c => selectedCompounds.has(c.name)).length;
-      cbAll.checked       = visible.length > 0 && nSel === visible.length;
-      cbAll.indeterminate = nSel > 0 && nSel < visible.length;
-    }
-
-    /* ---- table header ---- */
-    function buildHead() {
-      const arN = sort.key === 'name' ? (sort.dir > 0 ? ' ▲' : ' ▼') : '';
-      const arR = sort.key === 'ref'  ? (sort.dir > 0 ? ' ▲' : ' ▼') : '';
-      const polyCols = POLY_SHORT.map((s, i) => {
-        const isSorted = sort.key === String(i);
-        return `<th class="poly${isSorted ? ' sorted' : ''}" data-k="${i}" title="${POLY_FULL[i]}">` +
-               `<div><span>${s}</span></div></th>`;
-      }).join('');
-      $('head').innerHTML =
-        `<th class="cb-h"><input type="checkbox" id="cbAll" title="Select / deselect all visible rows"></th>` +
-        `<th class="cmpd-h" data-k="name">Fluid${arN}</th>` +
-        `<th class="ref-h" data-k="ref">Recommended Parker<br>Rubber Compound${arR}</th>` +
-        polyCols;
-      $('head').querySelectorAll('th[data-k]').forEach(th => th.onclick = () => {
-        const k = th.dataset.k;
-        sort.key === k ? sort.dir *= -1 : (sort = { key: k, dir: 1 });
-        buildHead();
-        renderRows();
-      });
-      $('cbAll').addEventListener('change', function () {
-        pushHistory();
-        currentRows().forEach(c => {
-          this.checked ? selectedCompounds.add(c.name) : selectedCompounds.delete(c.name);
-        });
-        renderRows();
-        renderSelPanel();
-        renderSelTable();
-      });
-      updateHeaderCb();
-    }
-
-    /* ---- filter + sort ---- */
-    function currentRows() {
-      const q = $('search').value.trim().toLowerCase();
-      let rows = compounds.filter(c => {
-        if (!activeLetters.has(c.name[0].toUpperCase())) return false;
-        if (q && !c.name.toLowerCase().includes(q)) return false;
-        return true;
-      });
-      rows.sort((a, b) => {
-        let av, bv;
-        if (sort.key === 'name') { av = a.name.toLowerCase(); bv = b.name.toLowerCase(); }
-        else if (sort.key === 'ref') { av = a.ref.toLowerCase(); bv = b.ref.toLowerCase(); }
-        else {
-          const i = parseInt(sort.key, 10);
-          const ra = a.ratings[i], rb = b.ratings[i];
-          av = ra === 'x' ? 9 : Number(ra);
-          bv = rb === 'x' ? 9 : Number(rb);
-        }
-        return av < bv ? -sort.dir : av > bv ? sort.dir : 0;
-      });
-      return rows;
-    }
-
-    /* ---- render main rows ---- */
-    function renderRows() {
-      const rows = currentRows();
-      $('rows').innerHTML = rows.map(c => {
-        const sel = selectedCompounds.has(c.name);
-        return `<tr class="${sel ? 'row-selected' : ''}">` +
-               `<td class="cb-cell"><input type="checkbox" class="row-cb" data-name="${escAttr(c.name)}"${sel ? ' checked' : ''}></td>` +
-               `<td class="cmpd l" title="${escAttr(c.name)}">${c.name}</td>` +
-               `<td class="ref">${c.ref}</td>` +
-               buildRatingCells(c) + `</tr>`;
-      }).join('');
-      $('rows').querySelectorAll('.row-cb').forEach(cb => {
-        cb.addEventListener('change', function () {
-          pushHistory();
-          const name = this.dataset.name;
-          this.checked ? selectedCompounds.add(name) : selectedCompounds.delete(name);
-          this.closest('tr').classList.toggle('row-selected', this.checked);
-          renderSelPanel();
-          renderSelTable();
-          updateHeaderCb();
-        });
-      });
-      $('empty').style.display = rows.length ? 'none' : 'block';
-      $('foot').textContent =
-        `${rows.length.toLocaleString()} of ${compounds.length.toLocaleString()} compounds · 18 elastomers ·` +
-        ` Parker O-Ring Chemical Compatibility Guide · ambient temperature ratings; verify against the controlling specification.`;
-      updateHeaderCb();
-    }
-
-    /* ---- init ---- */
-    $('totals').innerHTML = `<b>${compounds.length.toLocaleString()}</b> compounds &middot; <b>18</b> elastomers`;
-    $('search').oninput = renderRows;
-    $('clearf').onclick = () => { $('search').value = ''; renderRows(); };
-    $('allBtn').onclick  = () => { activeLetters = new Set(letters); syncNavCount(); renderRows(); };
-    $('noneBtn').onclick = () => { activeLetters = new Set();         syncNavCount(); renderRows(); };
-
-    let tooltipsEnabled = true;
-    $('tipToggle').onclick = () => {
-      tooltipsEnabled = !tooltipsEnabled;
-      $('tipToggle').setAttribute('aria-pressed', tooltipsEnabled);
-      $('tipToggle').textContent = tooltipsEnabled ? 'Tooltips On' : 'Tooltips Off';
-      if (!tooltipsEnabled) { tip.style.visibility = 'hidden'; tipCell = null; }
-    };
-
-    $('clearSel').onclick = () => {
-      pushHistory();
-      selectedCompounds.clear();
-      renderRows();
-      renderSelPanel();
-      renderSelTable();
-    };
-
-    function generateReport(withColor) {
-      if (selectedCompounds.size === 0) {
-        alert('Please select at least one fluid before generating a report.');
-        return;
-      }
-      var selList = [...selectedCompounds].sort().map(function(n){ return compoundMap.get(n); }).filter(Boolean);
-      var now = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
-
-      var colorCSS = withColor
-        ? '.r1{background:#2a7a45;color:#fff}.r2{background:#c49000;color:#fff}.r3{background:#c06010;color:#fff}.r4{background:#b03030;color:#fff}.rx{background:#8a8a8a;color:#fff}' +
-          '.rl-badge.r1{background:#2a7a45;color:#fff}.rl-badge.r2{background:#c49000;color:#fff}.rl-badge.r3{background:#c06010;color:#fff}.rl-badge.r4{background:#b03030;color:#fff}.rl-badge.rx{background:#7a7a7a;color:#fff}'
-        : '.r1,.r2,.r3,.r4,.rx{background:#fff!important;color:#000!important}' +
-          '.rl-badge{background:#fff!important;color:#000!important;border:1.5px solid #333!important}';
-
-      // B/W only: strip every hardcoded background that colorCSS cannot reach
-      var bwOverride = withColor ? '' :
-        '.fluid-h,.ref-h,.poly-h{background:#fff!important;color:#000!important}' +
-        '.rating-legend{background:#fff!important;border-color:#aaa!important}' +
-        'tbody tr:nth-child(even) td.fluid-cell,' +
-        'tbody tr:nth-child(even) td.ref-cell{background:#fff!important}' +
-        '.section-label,.subtitle{color:#000!important}';
-
-      var C = '\x3C'; // '<' — keeps every literal '</' out of script source
-
-      // Common-name + abbreviation labels for report column headers.
-      // POLY_FULL is preserved as the hover title on each <th>.
-      var REPORT_NAMES = [
-        'Nitrile  NBR',
-        'Hydrogenated Nitrile  HNBR',
-        'Ethylene Propylene  EPDM',
-        'Fluorocarbon  FKM',
-        'Hifluor  FKM',
-        'Perfluoroelastomer  FFKM',
-        'Aflas (TFE/Propylene)  FEPM',
-        'Neoprene/Chloroprene  CR',
-        'Styrene-Butadiene  SBR',
-        'Polyacrylate  ACM',
-        'Polyurethane  AU, EU',
-        'Butyl  IIR',
-        'Butadiene  BR',
-        'Isoprene  IR',
-        'Natural Rubber  NR',
-        'Hypalon  CSM',
-        'Fluorosilicone  FVMQ',
-        'Silicone  MQ, VMQ, PVMQ',
-      ];
-
-      var polyHeaders = REPORT_NAMES.map(function(name, i){
-        return '<th class="poly-h" title="' + POLY_FULL[i] + '"><div><span>' + name + C + '/span>' + C + '/div>' + C + '/th>';
-      }).join('');
-
-      var tableRows = selList.map(function(c) {
-        var cells = c.ratings.map(function(r) {
-          var cls = RATING_CLASS[r] || '';
-          return '<td class="poly-cell ' + cls + '">' + (r === 'x' ? 'X' : r) + C + '/td>';
-        }).join('');
-        return '<tr><td class="fluid-cell">' + c.name + C + '/td><td class="ref-cell">' + c.ref + C + '/td>' + cells + C + '/tr>';
-      }).join('');
-
-      var html = [
-        '<!DOCTYPE html>',
-        '<html lang="en">',
-        '<head>',
-        '<meta charset="UTF-8">',
-        '<title>O-Ring Chemical Compatibility Report' + C + '/title>',
-        '<style>',
-        '*{box-sizing:border-box;margin:0;padding:0' + (withColor ? ';-webkit-print-color-adjust:exact;print-color-adjust:exact' : '') + '}',
-        'body{font-family:Arial,sans-serif;font-size:11px;color:#1a3a40;padding:20px}',
-        'h1{font-size:16px;font-weight:700;margin-bottom:4px}',
-        '.subtitle{font-size:11px;color:#555;margin-bottom:14px}',
-        '.section-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#6a746a;font-weight:700;margin-bottom:6px;margin-top:14px}',
-        '.rating-legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin-bottom:4px;padding:8px 10px;border:1px solid #c0c0c0;border-radius:4px;background:#f8f8f8}',
-        '.rl-item{display:flex;align-items:center;gap:6px;font-size:11px}',
-        '.rl-badge{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;border-radius:3px;font-size:11px;font-weight:700;padding:0 4px}',
-        colorCSS,
-        bwOverride,
-        'table{border-collapse:collapse;width:100%;margin-top:8px}',
-        'th,td{border:1px solid #c0c0c0}',
-        '.fluid-h{text-align:left;padding:6px 8px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:#6a746a;color:#eee;min-width:180px;white-space:nowrap}',
-        '.ref-h{text-align:left;padding:6px 8px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:#6a746a;color:#eee;min-width:160px;white-space:nowrap}',
-        '.poly-h{background:#6a746a;color:#eee;width:34px;min-width:34px;max-width:34px;padding:0;height:160px;vertical-align:bottom;overflow:hidden}',
-        '.poly-h div{display:flex;align-items:flex-end;justify-content:flex-start;height:160px;padding:0 0 6px 7px}',
-        '.poly-h div span{writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;font-size:9px;font-weight:500;letter-spacing:.03em}',
-        '.fluid-cell{padding:4px 8px;font-size:11px;white-space:nowrap;min-width:180px}',
-        '.ref-cell{padding:4px 8px;font-size:10px;color:#4a5a5f;white-space:nowrap;min-width:160px}',
-        '.poly-cell{text-align:center;padding:3px 1px;font-size:10px;font-weight:700;width:34px;min-width:34px;max-width:34px}',
-        'tbody tr:nth-child(even) td.fluid-cell,tbody tr:nth-child(even) td.ref-cell{background:#f5f5f5}',
-        '.footnote{margin-top:12px;font-size:9px;color:#888;font-style:italic}',
-        '@media print{body{padding:6px}@page{margin:1.2cm;size:landscape}}',
-        C + '/style>',
-        C + '/head>',
-        '<body onload="window.print()">',
-        '<h1>O-Ring Chemical Compatibility Report' + C + '/h1>',
-        '<div class="subtitle">Parker O-Ring Chemical Compatibility Guide &middot; Ambient temperature ratings &middot; Generated ' + now + ' &middot; ' + selList.length + ' fluid' + (selList.length !== 1 ? 's' : '') + ' selected' + C + '/div>',
-        '<div class="section-label">Compatibility Rating Scale' + C + '/div>',
-        '<div class="rating-legend">',
-        '  <div class="rl-item"><span class="rl-badge r1">1' + C + '/span>Satisfactory' + C + '/div>',
-        '  <div class="rl-item"><span class="rl-badge r2">2' + C + '/span>Fair (usually OK for static seal)' + C + '/div>',
-        '  <div class="rl-item"><span class="rl-badge r3">3' + C + '/span>Doubtful (sometimes OK for static seal)' + C + '/div>',
-        '  <div class="rl-item"><span class="rl-badge r4">4' + C + '/span>Unsatisfactory' + C + '/div>',
-        '  <div class="rl-item"><span class="rl-badge rx">x' + C + '/span>Insufficient Data' + C + '/div>',
-        C + '/div>',
-        '<div class="section-label">Selected Fluids' + C + '/div>',
-        '<table>',
-        '<thead><tr><th class="fluid-h">Fluid / Chemical' + C + '/th><th class="ref-h">Recommended Parker Rubber Compound' + C + '/th>' + polyHeaders + C + '/tr>' + C + '/thead>',
-        '<tbody>' + tableRows + C + '/tbody>',
-        C + '/table>',
-        '<div class="footnote">Ratings are for ambient temperature. Elevated temperatures generally reduce compatibility. Verify against the controlling specification before use. &mdash; Parker O-Ring Chemical Compatibility Guide.' + C + '/div>',
-        C + '/body>',
-        C + '/html>',
-      ].join('\n');
-
-      var win = window.open('', '_blank');
-      if (!win) { alert('Pop-up was blocked. Please allow pop-ups for this site to generate reports.'); return; }
-      win.document.write(html);
-      win.document.close();
-    }
-
-    $('reportColor').onclick = () => generateReport(true);
-    $('reportBW').onclick    = () => generateReport(false);
-
-    document.addEventListener('keydown', e => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
-        if (e.target.matches('input, textarea, select')) return;
-        if (!selHistory.length) return;
-        e.preventDefault();
-        selectedCompounds = selHistory.pop();
-        renderRows();
-        renderSelPanel();
-        renderSelTable();
-      }
-    });
-
-    buildLetterNav();
-    buildCatButtons();
-    buildHead();
-    renderRows();
-    renderSelPanel();
-    renderSelTable();
-
-    /* ---- custom tooltip ---- */
-    const tip = document.createElement('div');
-    tip.className = 'oring-tip';
-    document.body.appendChild(tip);
-
-    let tipCell = null, tipW = 0, tipH = 0;
-
-    function positionTip(e) {
-      const pad = 14;
-      let x = e.clientX + pad;
-      let y = e.clientY + pad;
-      if (x + tipW > window.innerWidth  - 8) x = e.clientX - tipW - pad;
-      if (y + tipH > window.innerHeight - 8) y = e.clientY - tipH - pad;
-      tip.style.transform = `translate(${x}px,${y}px)`;
-    }
-
-    function wireTooltips(tbody) {
-      tbody.addEventListener('pointermove', e => {
-        if (!tooltipsEnabled) return;
-        const td = e.target.closest('td.poly-cell[data-fluid]');
-        if (!td) { tip.style.visibility = 'hidden'; tipCell = null; return; }
-        if (td !== tipCell) {
-          tip.innerHTML = `${td.dataset.fluid}<br>${td.dataset.poly}<br>${td.dataset.rating}`;
-          tip.style.visibility = 'visible';
-          tipW = tip.offsetWidth;
-          tipH = tip.offsetHeight;
-          tipCell = td;
-        }
-        positionTip(e);
-      });
-      tbody.addEventListener('mouseleave', () => { tip.style.visibility = 'hidden'; tipCell = null; });
-    }
-
-    wireTooltips($('rows'));
-    wireTooltips($('selRows'));
-
-    /* clicking anywhere in a cb-cell (but not directly on the checkbox) fires the checkbox */
-    function wireCellClick(tbody) {
-      tbody.addEventListener('click', e => {
-        const td = e.target.closest('td.cb-cell');
-        if (!td || e.target.type === 'checkbox') return;
-        td.querySelector('input[type="checkbox"]').click();
-      });
-    }
-    wireCellClick($('rows'));
-    wireCellClick($('selRows'));
-
-  })();
-  </script>
+  <!-- PAGE SCRIPT -->
+  <script src="js/Plastics-Chemical-Compatibility.js"></script>
 
   </body>
 </html>
