@@ -154,6 +154,94 @@ CC.autoMapColumns = (columns, records) => {
     }
     col.mappedField = null; col.mappingMode = 'none'; col.mappingConfidence = 0;
   }
+  // Step 1: rescue any email values stranded in the wrong column (@ is unambiguous)
+  CC.rescueEmailCells(columns, records);
+  // Step 2: correct shifted address cluster now that email is already in the right place
+  CC.unscatterAddressCells(columns, records);
+};
+
+// ── Email rescue ──────────────────────────────────────────────────────────────
+// Email addresses are uniquely identifiable by the @ character — no other field
+// type can match. Run this FIRST so a misplaced email is extracted before the
+// address-cluster unscatter runs; otherwise a shifted email could confuse the
+// city/state/zip detection.
+//
+// For each record: if the mapped email column is empty, scan every other mapped
+// column for a value that looks like an email. The first match wins — it is
+// moved into the email column and the source cell is cleared.
+CC.rescueEmailCells = (columns, records) => {
+  const isEmail = v => !!(v && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.trim()));
+  const emailCol = columns.find(c => !c.isDeleted && c.mappedField === 'email');
+  if (!emailCol) return; // no email column mapped — nothing to do
+
+  for (const rec of records) {
+    if (rec._deleted) continue;
+    if (isEmail(rec.cells[emailCol.id])) continue; // already in the right place
+
+    for (const col of columns) {
+      if (col.isDeleted || col.id === emailCol.id) continue;
+      const v = (rec.cells[col.id] || '').trim();
+      if (!isEmail(v)) continue;
+      rec.cells[emailCol.id] = v;
+      rec.cells[col.id]      = '';
+      break; // one email per record — stop after the first match
+    }
+  }
+};
+
+// Correct scattered address values directly in record.cells.
+// When a missing ADDR2 placeholder causes CSV columns to shift left, city lands in
+// the addr2 slot, state lands in the city slot, and zip lands in the state slot.
+// Detects this per-row and rebuilds all four slots from wherever state and zip are found.
+CC.unscatterAddressCells = (columns, records) => {
+  const ZIP_RE  = /^\d{5}(-\d{4})?$/;
+  const isZip   = v => !!(v && ZIP_RE.test(v.trim()));
+  const isState = v => !!(v && (CC.STATE_CODES.has(v.trim().toUpperCase()) ||
+                                !!CC.STATE_MAP[v.trim().toLowerCase()]));
+
+  const clusterKeys = ['address2', 'city', 'state', 'zip'];
+  const cols = clusterKeys.map(f => columns.find(c => !c.isDeleted && c.mappedField === f));
+
+  // Need at least state or zip column mapped to do anything
+  if (!cols[2] && !cols[3]) return;
+
+  for (const rec of records) {
+    if (rec._deleted) continue;
+
+    const vals = cols.map(col => col ? (rec.cells[col.id] || '').trim() : '');
+    const st = vals[2], zp = vals[3];
+
+    // Fast exit: both state and zip are already correct
+    if ((!st || isState(st)) && (!zp || isZip(zp))) continue;
+
+    // Simple swap: state slot has a zip, zip slot has a state
+    if (isZip(st) && isState(zp)) {
+      if (cols[2]) rec.cells[cols[2].id] = CC.coerceState(zp).value || zp;
+      if (cols[3]) rec.cells[cols[3].id] = st;
+      continue;
+    }
+
+    // Find where state and zip actually live in the cluster
+    const stateIdx = vals.findIndex(v => isState(v));
+    const zipIdx   = vals.findIndex(v => isZip(v));
+    if (stateIdx < 0 && zipIdx < 0) continue;
+
+    // Use state as primary anchor; fall back to zip-1 if state not found
+    const effectiveStateIdx = stateIdx >= 0 ? stateIdx : zipIdx - 1;
+    if (effectiveStateIdx === 2) continue; // state is already correct
+
+    // Rebuild all four slots: value immediately before state is city,
+    // value before that is addr2.
+    const stateVal = stateIdx >= 0 ? vals[stateIdx] : '';
+    const zipVal   = zipIdx   >= 0 ? vals[zipIdx]   : '';
+    const cityVal  = effectiveStateIdx > 0 ? vals[effectiveStateIdx - 1] : '';
+    const addr2Val = effectiveStateIdx > 1 ? vals[effectiveStateIdx - 2] : '';
+
+    if (cols[0]) rec.cells[cols[0].id] = addr2Val;
+    if (cols[1]) rec.cells[cols[1].id] = cityVal;
+    if (cols[2]) rec.cells[cols[2].id] = stateVal ? (CC.coerceState(stateVal).value || stateVal) : '';
+    if (cols[3]) rec.cells[cols[3].id] = zipVal;
+  }
 };
 
 // Dropdown groups for Mode 3

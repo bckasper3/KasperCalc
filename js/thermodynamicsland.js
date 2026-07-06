@@ -66,7 +66,7 @@ window.ThermoCalc = (function () {
     255: 'Failed / out-of-range'
   };
 
-  // Background / foreground colours for the outPhase badge.
+  // Background / foreground colors for the outPhase badge.
   // Bootstrap-derived palette so it harmonises with most themes.
   var _PHASE_COLORS = {
     0  : { bg: '#cce5ff', color: '#004085', border: '#b8daff' },  // blue   — subcooled liquid
@@ -580,7 +580,7 @@ window.ThermoCalc = (function () {
   }
 
   /**
-   * Update the #outPhase span with the correct phase name and a colour badge.
+   * Update the #outPhase span with the correct phase name and a color badge.
    *
    * Phase codes (CoolProp 7.2.0):
    *   0  → Liquid (subcooled)
@@ -641,7 +641,7 @@ window.ThermoCalc = (function () {
 
     // ── Bulk thermodynamic properties ──────────────────────────────────────────
     if (props) {
-      // Phase badge — colour-coded, labelled with exact CoolProp description
+      // Phase badge — color-coded, labelled with exact CoolProp description
       _setPhase(props.phase);
 
       // T and P are always valid regardless of phase

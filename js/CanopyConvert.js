@@ -81,6 +81,7 @@ function ccInit() {
   CC._refresh = () => {
     if (CC.dataset.records.length) showWorkspace();
     refreshGrid();
+    refreshEditGrid();
     updateRightPanel();
     updateStatusBar();
     updateUndoButtons();
@@ -323,8 +324,7 @@ function ccInit() {
         editable: true,
         sortable: true,
         resizable: true,
-        flex: 1,
-        minWidth: 150,
+        minWidth: 80,
         headerClass: col.mappedField ? 'col-mapped' : 'col-unmapped',
         cellStyle: { borderRight: `2px solid ${confColor}` },
         ...(isDropdown ? {
@@ -389,6 +389,7 @@ function ccInit() {
       animateRows: false,
       suppressMovableColumns: false,
       domLayout: 'autoHeight',
+      alwaysShowHorizontalScroll: true,
       defaultColDef: { sortable: true, resizable: true, filter: false },
       rowHeight: 28,
       headerHeight: 36,
@@ -414,6 +415,7 @@ function ccInit() {
       rowData: [],
       animateRows: false,
       domLayout: 'autoHeight',
+      alwaysShowHorizontalScroll: true,
       defaultColDef: { sortable: true, resizable: true, filter: false },
       rowHeight: 28,
       headerHeight: 36,
@@ -437,11 +439,13 @@ function ccInit() {
     if (!mainGridApi) return;
     mainGridApi.setColumnDefs(buildColumnDefs(false));
     mainGridApi.setRowData(buildRowData());
+    setTimeout(() => mainGridApi && mainGridApi.autoSizeAllColumns(false), 0);
   }
   function refreshEditGrid() {
     if (!editGridApi) return;
     editGridApi.setColumnDefs(buildColumnDefs(true));
     editGridApi.setRowData(buildRowData());
+    setTimeout(() => editGridApi && editGridApi.autoSizeAllColumns(false), 0);
   }
 
   // ── Right panel ───────────────────────────────────────────────────────────────

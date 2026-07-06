@@ -58,7 +58,7 @@ window.ThermoGraphs = (function () {
   var N_SWEEP       = 11;    // 5 before + current point + 5 after
   var N_SAT_ROWS    = 11;    // 5 before + nearest sat point + 5 after
 
-  // Phase name / badge colour (mirrors thermodynamicsland.js)
+  // Phase name / badge color (mirrors thermodynamicsland.js)
   var _PHASE_NAMES = {
     0: 'Liquid (subcooled)', 1: 'Gas / SC vapor',
     2: 'Two-phase',          3: 'SC liquid',

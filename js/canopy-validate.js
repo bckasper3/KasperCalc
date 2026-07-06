@@ -30,6 +30,14 @@ CC.validateRecord = (record) => {
   if (ein && CC.normalizeEIN(ein).status === 'unmatched')
     flags.push(flag('error','BAD_EIN',`EIN "${ein}" cannot be formatted as xx-xxxxxxx`, gc('ein')));
 
+  // Warn when a TIN-mapped field holds the opposite identifier type (re-routed at export)
+  if (ssn && /^\d{2}-\d{7}$/.test(ssn.trim()))
+    flags.push(flag('warning','TIN_REROUTED',
+      `TIN "${ssn}" looks like an EIN — will be routed to the EIN field on export`, gc('ssn')));
+  if (ein && /^\d{3}-\d{2}-\d{4}$/.test(ein.trim()))
+    flags.push(flag('warning','TIN_REROUTED',
+      `TIN "${ein}" looks like an SSN — will be routed to the SSN field on export`, gc('ein')));
+
   ['dob','spouse_dob','client_since','date_est'].forEach(f => {
     const v = g(f);
     if (v && CC.normalizeDate(v).status === 'unmatched')
@@ -65,6 +73,16 @@ CC.validateRecord = (record) => {
       }
     }
   }
+
+  // Warn if state/zip slots contain wrong-typed values — address may be shifted
+  if (state && /^\d{5}(-\d{4})?$/.test(state.trim()))
+    flags.push(flag('warning','ADDR_SCATTERED',
+      `State field "${state.trim()}" looks like a ZIP code — address fields may be shifted (export will correct)`,
+      gc('state')));
+  if (zip && (CC.STATE_CODES.has(zip.trim().toUpperCase()) || !!CC.STATE_MAP[zip.trim().toLowerCase()]))
+    flags.push(flag('warning','ADDR_SCATTERED',
+      `ZIP field "${zip.trim()}" looks like a state code — address fields may be shifted (export will correct)`,
+      gc('zip')));
 
   const bt = g('business_type');
   if (bt && CC.coerceBizType(bt).status === 'unmatched')

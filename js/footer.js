@@ -128,6 +128,11 @@
           <div class="footerlink"><a href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a></div>
           <div class="footerlink"><a href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a></div>
           <div class="footerlink"><a href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a></div>
+          <div class="footerlink"><a href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a></div>
+          <div class="footerlink"><a href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a></div>
+          <div class="footerlink"><a href="GasFlowSafety.html">Gas Flow Safety Calculator</a></div>
+          <div class="footerlink"><a href="ThreadStressCalculator.html">Thread Stress Calculator</a></div>
+          <div class="footerlink"><a href="RingMagnetSimulation.html">Ring Magnet Simulation</a></div>
         </div>
 
         <div class="footerRow">

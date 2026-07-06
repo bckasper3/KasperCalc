@@ -23,6 +23,78 @@ const downloadBlob = (blob, filename) => {
 
 const todayStr = () => new Date().toISOString().slice(0, 10);
 
+// ── Per-row identifier routing ────────────────────────────────────────────────
+// A TIN column may hold either an SSN or an EIN. Distinguish by dash position:
+// SSN = \d{3}-\d{2}-\d{4}, EIN = \d{2}-\d{7}. When no dashes are present, fall
+// back to record classification as the tiebreaker.
+CC._routeIdentifier = (raw, mappedField, record) => {
+  if (mappedField !== 'ssn' && mappedField !== 'ein') return null;
+  const t = raw.trim();
+  if (!t) return null;
+  const digits = t.replace(/\D/g, '');
+  if (digits.length !== 9) return null;
+
+  const looksSSN = /^\d{3}-\d{2}-\d{4}$/.test(t);
+  const looksEIN = /^\d{2}-\d{7}$/.test(t);
+
+  if (looksSSN && !looksEIN) return { field: 'ssn', coercion: CC.normalizeSSN(t) };
+  if (looksEIN && !looksSSN) return { field: 'ein', coercion: CC.normalizeEIN(t) };
+
+  // No dashes or ambiguous — use classification as tiebreaker
+  const isBiz = record.classification === 'business';
+  return isBiz
+    ? { field: 'ein', coercion: CC.normalizeEIN(t) }
+    : { field: 'ssn', coercion: CC.normalizeSSN(t) };
+};
+
+// ── Per-row address unscatter ─────────────────────────────────────────────────
+// Scans the four-slot address cluster {address2, city, state, zip} for
+// type mismatches and corrects them. Handles both simple swaps and cascade
+// shifts where a missing ADDR2 placeholder causes all subsequent values to
+// shift left (city→addr2, state→city, zip→state). Rebuilds all four slots
+// from whichever position state and zip are actually found in.
+CC._unscatterAddress = (out) => {
+  const ZIP_RE  = /^\d{5}(-\d{4})?$/;
+  const isZip   = v => !!(v && ZIP_RE.test(v.trim()));
+  const isState = v => !!(v && (CC.STATE_CODES.has(v.trim().toUpperCase()) ||
+                                !!CC.STATE_MAP[v.trim().toLowerCase()]));
+
+  const cluster = ['address2', 'city', 'state', 'zip'];
+  const vals    = cluster.map(k => (out[k] || '').trim());
+  const st = vals[2], zp = vals[3];
+
+  // Fast exit: both state and zip are already correctly typed
+  if ((!st || isState(st)) && (!zp || isZip(zp))) return;
+
+  // Simple swap: state slot has a zip, zip slot has a state
+  if (isZip(st) && isState(zp)) {
+    out['state'] = CC.coerceState(zp).value || zp;
+    out['zip']   = st;
+    return;
+  }
+
+  // General: find where state and zip actually live in the cluster
+  const stateIdx = vals.findIndex(v => isState(v));
+  const zipIdx   = vals.findIndex(v => isZip(v));
+  if (stateIdx < 0 && zipIdx < 0) return;
+
+  // Use state position as primary anchor (zip as fallback if state not found)
+  const effectiveStateIdx = stateIdx >= 0 ? stateIdx : zipIdx - 1;
+  if (effectiveStateIdx === 2) return; // state is already correct
+
+  // Rebuild all four slots from the shifted positions.
+  // The value immediately before state is city; the one before that is addr2.
+  const stateVal = stateIdx >= 0 ? vals[stateIdx] : '';
+  const zipVal   = zipIdx   >= 0 ? vals[zipIdx]   : '';
+  const cityVal  = effectiveStateIdx > 0 ? vals[effectiveStateIdx - 1] : '';
+  const addr2Val = effectiveStateIdx > 1 ? vals[effectiveStateIdx - 2] : '';
+
+  out['address2'] = addr2Val;
+  out['city']     = cityVal;
+  out['state']    = stateVal ? (CC.coerceState(stateVal).value || stateVal) : '';
+  out['zip']      = zipVal;
+};
+
 // Coerce a record's cell values for Canopy export
 const coerceForCanopy = (record) => {
   const g = (f) => CC.getCellByField(record, f);
@@ -34,6 +106,16 @@ const coerceForCanopy = (record) => {
     const raw = record.cells[col.id] || '';
     let coerced = raw;
     let coercion = null;
+
+    // Per-row identifier routing: detect SSN vs EIN by value format + classification
+    const routed = CC._routeIdentifier(raw, col.mappedField, record);
+    if (routed) {
+      out[routed.field] = routed.coercion.value;
+      if (routed.coercion.note) coercedFields[routed.field] = routed.coercion.note;
+      if (routed.field !== col.mappedField)
+        coercedFields[col.mappedField + '_src'] = `re-routed to ${routed.field}`;
+      continue;
+    }
 
     switch (col.mappedField) {
       case 'state':         coercion = CC.coerceState(raw);    break;
@@ -49,6 +131,10 @@ const coerceForCanopy = (record) => {
     if (coercion) { coerced = coercion.value; if (coercion.note) coercedFields[col.mappedField] = coercion.note; }
     out[col.mappedField] = coerced;
   }
+
+  // Correct address field scatter (state/zip values in wrong slots)
+  CC._unscatterAddress(out);
+
   out.__coercions = coercedFields;
   return out;
 };
