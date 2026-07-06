@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>KasperCalc: Thread Stress Calculator</title>
+    <link rel="canonical" href="https://kaspercalc.com/ThreadStressCalculator.html" />
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, thread stress calculator, bolt preload, torque preload, AS8879, UNC, UNF, metric thread, margin of safety, fastener, aerospace fastener" />
+    <meta name="description" content="Universal thread stress and bolt preload calculator for AS8879, UNC, UNF, and Metric threads. Computes torque coefficients K1 and K2, preload force, thread tensile stress, and margins of safety." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+        options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+      };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      /* ── Thread Stress Calculator — page-local styles ── */
+      .tsc * { box-sizing: border-box; }
+
+      /* ── Green wrapper token system (matches ORing-All-Sizes-Groove.html) ── */
+      :root {
+        --sq-wrap:     #6a746a;
+        --sq-outline:  rgb(67,67,67);
+        --sq-panel:    #eeeeee;
+        --sq-blue:     #61828A;
+        --sq-ink:      #1C2227;
+        --sq-ink-soft: #5A6168;
+        --sq-ui:       "Roboto", Arial, sans-serif;
+      }
+      .sq-main { max-width: 1500px; margin: 0 auto; padding: 0 20px 60px; }
+      .sq-subtitle { font-family: var(--sq-ui); color: var(--sq-ink-soft); font-size: 15px; line-height: 1.5; max-width: 70ch; margin: 18px auto 22px; text-align: center; }
+      .sq-calc-grid { font-family: var(--sq-ui); display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 20px; align-items: start; background: var(--sq-wrap); border: 3px solid var(--sq-outline); border-radius: 18px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); padding: 20px; }
+      @media (max-width:960px) { .sq-calc-grid { grid-template-columns: 1fr; } }
+      .sq-panel { background: var(--sq-panel); border: 2px solid var(--sq-outline); border-radius: 10px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); overflow: hidden; }
+      .sq-panel-h { padding: 11px 16px; background: #fff; border-bottom: 2px solid var(--sq-outline); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--sq-ink); font-weight: 700; }
+      .sq-panel-b { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+      .sq-sticky { position: sticky; top: 14px; }
+      @media (max-width:960px) { .sq-sticky { position: static; } }
+
+      /* ── Section cards ── */
+      .tsc-section {
+        background: var(--calc-background-color);
+        border: 2px solid var(--calc-outline-color);
+        border-radius: 10px;
+        padding: 11px 13px;
+        box-shadow: 0 2px 5px rgba(0,0,0,.15);
+      }
+
+      /* Section heading */
+      .tsc-h2 {
+        font-family: var(--title-font-family);
+        font-size: 13px;
+        font-weight: var(--font-weight-bold);
+        background: var(--section-title-color);
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 6px;
+        margin-bottom: 10px;
+      }
+
+      /* Form labels */
+      .tsc label {
+        display: block;
+        margin-bottom: 3px;
+        font-size: 12px;
+        color: #444;
+        font-family: var(--body-font-family);
+      }
+
+      /* Inputs & selects */
+      .tsc input[type=number],
+      .tsc select {
+        width: 100%;
+        padding: 5px 7px;
+        border: 1px solid #9aabb0;
+        border-radius: var(--border-radius-small);
+        font-size: 13px;
+        font-family: var(--body-font-family);
+        background: #fff;
+        color: #222;
+      }
+      .tsc input[type=number]:focus,
+      .tsc select:focus { outline: 2px solid var(--section-title-color); }
+      .tsc input[readonly] { background: #ececec !important; }
+
+      /* Grid helpers */
+      .tsc-r2 { display: grid; grid-template-columns: 1fr 1fr;     gap: 8px; }
+      .tsc-r3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+      .tsc-field { margin-bottom: 8px; }
+      .tsc-sep   { border-top: 1px solid #c8d0da; margin: 10px 0; }
+      .tsc-note  { font-size: 11px; color: #666; margin-top: 4px; font-family: var(--body-font-family); }
+
+      /* Thread info box */
+      .tsc-thread-info {
+        background: #eef4fb;
+        border: 1px solid #b0c8e0;
+        border-radius: var(--border-radius-small);
+        padding: 8px;
+        font-size: 12px;
+        margin-bottom: 8px;
+        font-family: var(--body-font-family);
+      }
+      .tsc-thread-info table { width: 100%; }
+      .tsc-thread-info td { padding: 2px 6px; }
+      .tsc-thread-info td:first-child { font-weight: bold; color: #1a3a5c; }
+
+      /* Custom material/thread highlight */
+      #tsc-custom-material-inputs { background: #fffbe6; border: 1px solid #e0c060; border-radius: 6px; padding: 8px; margin-top: 6px; }
+
+      /* Calculate button */
+      .tsc-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 15px;
+        font-weight: var(--font-weight-bold);
+        font-family: var(--title-font-family);
+        background: var(--section-title-color);
+        color: #fff;
+        border: none;
+        border-radius: var(--border-radius-small);
+        cursor: pointer;
+        transition: background .2s;
+        box-shadow: 0 2px 5px rgba(0,0,0,.2);
+      }
+      .tsc-btn:hover { background: #4a6a72; }
+
+      /* Result table */
+      .tsc-result-table { width: 100%; border-collapse: collapse; font-size: 13px; font-family: var(--body-font-family); }
+      .tsc-result-table th { background: var(--section-title-color); color: #fff; padding: 5px 8px; text-align: left; font-size: 12px; }
+      .tsc-result-table td { padding: 5px 8px; border-bottom: 1px solid #dde; }
+      .tsc-result-table tr:nth-child(even) td { background: #f2f4f7; }
+
+      /* Margin of safety colors */
+      .tsc-ms-pos { color: #1a7a1a; font-weight: bold; }
+      .tsc-ms-neg { color: #b00000; font-weight: bold; }
+
+      /* Calc block (monospace intermediate values) */
+      .tsc-calc-block {
+        background: #f8f9fb;
+        border: 1px solid #dde;
+        border-radius: 6px;
+        padding: 10px;
+        font-size: 12px;
+        font-family: 'Courier New', monospace;
+        line-height: 1.8;
+        white-space: pre-wrap;
+      }
+      .tsc-calc-block b { color: #1a3a5c; }
+
+      /* Summary cards */
+      .tsc-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .tsc-summary-card { border: 1px solid #c8d0da; border-radius: 6px; padding: 8px; background: #fff; }
+      .tsc-summary-card .val { font-size: 18px; font-weight: bold; }
+      .tsc-summary-card .lbl { font-size: 11px; color: #666; }
+
+      /* Critical torque cards */
+      .tsc-torque-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+      .tsc-torque-card { border: 2px solid var(--section-title-color); border-radius: 8px; padding: 10px; text-align: center; background: #fff; }
+      .tsc-torque-card.ult { border-color: #a03030; }
+      .tsc-torque-card .t-val { font-size: 22px; font-weight: bold; color: var(--section-title-color); }
+      .tsc-torque-card.ult .t-val { color: #a03030; }
+      .tsc-torque-card .t-lbl { font-size: 11px; color: #666; margin-top: 2px; }
+      .tsc-torque-card .t-sub { font-size: 11px; color: #444; margin-top: 4px; }
+
+      /* Collapsible intermediate header */
+      .tsc-intermed-hdr {
+        display: flex; justify-content: space-between; align-items: center;
+        cursor: pointer; padding: 6px 10px;
+        background: var(--section-title-color);
+        border-radius: 6px 6px 0 0;
+        user-select: none;
+      }
+      .tsc-intermed-hdr span { font-size: 14px; font-weight: bold; color: #fff; font-family: var(--title-font-family); }
+      .tsc-intermed-body { padding: 10px; background: var(--calc-background-color); border: 2px solid var(--calc-outline-color); border-top: none; border-radius: 0 0 6px 6px; }
+
+      /* Parametric sweep highlight */
+      .tsc-sweep-hl { background: #fffbe6 !important; }
+
+      /* Hidden helper */
+      .tsc-hidden { display: none; }
+
+      /* Results area — flex column so gap works between tsc-section cards */
+      #tsc-results-area { display: flex; flex-direction: column; gap: 12px; }
+
+      /* Input panel — 2-column grid */
+      .tsc-input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+      .tsc-input-grid > .tsc-btn { align-self: end; }
+      @media (max-width: 760px) { .tsc-input-grid { grid-template-columns: 1fr; } }
+
+      /* ── Reference card system ──────────────────────────────── */
+      .ref-section-wrap { padding: 1.5rem 0 0.5rem; }
+      .ref-section-title { font-size: 16px; font-weight: 700; color: #6a746a; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; padding-left: 2px; }
+      .ref-wrapper { font-family: "Roboto", Arial, sans-serif; max-width: 58rem; margin: 0 auto; }
+      .ref-card { background: #eee; border: 2px solid rgb(67,67,67); border-radius: 10px; box-shadow: 0 3px 5px rgba(0,0,0,.4); margin: 0 0 1rem; overflow: hidden; }
+      .ref-card-header { background: #6a746a; padding: 8px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+      .ref-card-header h2 { font-size: 13px; font-weight: 700; color: #eee; text-transform: uppercase; letter-spacing: 0.07em; margin: 0; flex: 1; }
+      .ref-card-header .ref-num { font-size: 12px; color: #A3C3CD; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
+      .ref-chevron { width: 14px; height: 14px; flex-shrink: 0; transition: transform 0.2s ease; color: #A3C3CD; }
+      .ref-card.collapsed .ref-chevron { transform: rotate(-90deg); }
+      .ref-card.collapsed .ref-body { display: none; }
+      .ref-body { padding: 14px 16px; display: grid; grid-template-columns: 1fr; gap: 14px; }
+      .ref-body.two-col { grid-template-columns: 1fr 1fr; gap: 14px 24px; }
+      @media (max-width: 640px) { .ref-body.two-col { grid-template-columns: 1fr; } }
+      .ref-sub { font-size: 12px; font-weight: 700; color: #61828A; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #c0c0c0; padding-bottom: 3px; margin-bottom: 6px; }
+      .ref-body p { font-size: 13px; color: #333; line-height: 1.65; margin: 0 0 8px; }
+      .ref-body p:last-child { margin-bottom: 0; }
+      .ref-body ul, .ref-body ol { font-size: 13px; color: #333; line-height: 1.7; padding-left: 18px; margin: 0 0 8px; }
+      .ref-eq-block { background: #d9d9d9; border: 1.5px solid rgb(67,67,67); border-radius: 6px; padding: 10px 16px 8px; margin: 6px 0 10px; overflow-x: auto; }
+      .ref-eq-tag { font-size: 12px; color: #61828A; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; font-family: "Roboto", Arial, sans-serif; display: block; margin-bottom: 4px; }
+      mjx-container { color: #1a3a40 !important; margin: 0; }
+      mjx-container[jax="SVG"][display="true"] { margin: 0.7em 0 !important; }
+      mjx-container[jax="SVG"] { margin: 0 !important; }
+      .ref-callout { background: #e8f0f3; border-left: 3px solid #61828A; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 12px; color: #1a3a40; line-height: 1.55; }
+      .ref-callout strong { color: #3a6270; }
+      .ref-warn { background: #fff8e6; border-left: 3px solid #cc7700; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 12px; color: #5a3a00; line-height: 1.55; }
+      .ref-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin: 6px 0; }
+      .ref-table th { background: #d9d9d9; border: 1px solid #bbb; padding: 4px 8px; font-weight: 600; color: #444; text-align: left; }
+      .ref-table td { border: 1px solid #ccc; padding: 3px 8px; color: #333; vertical-align: top; }
+      .ref-table tr:nth-child(even) td { background: #f5f5f5; }
+      .ref-table tr.grp-hdr td { background: #dce8f0 !important; font-weight: bold; color: #1a3a5c; font-size: 12px; border: 1px solid #bbb; }
+      .full-col { grid-column: 1 / -1; }
+      .ref-body a { font-size: inherit; }
+      /* ── Figure / image ──────────────────────────────────────── */
+      .ref-fig { border: 1.5px solid #c8d0da; border-radius: 6px; background: #f4f6fa; display: flex; flex-direction: column; align-items: center; padding: 10px 12px 8px; margin: 4px 0 10px; text-align: center; }
+      .ref-fig-label { font-size: 11.5px; font-weight: 600; color: #494949; margin-top: 6px; font-style: italic; }
+      .ref-zoomable-svg { cursor: zoom-in; }
+      /* ── Lightbox ────────────────────────────────────────────── */
+      .lightbox-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 99999; align-items: center; justify-content: center; padding: 20px; cursor: zoom-out; }
+      .lightbox-overlay.active { display: flex; }
+      .lightbox-img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 6px; box-shadow: 0 8px 32px rgba(0,0,0,.6); cursor: default; }
+      .lightbox-close { position: fixed; top: 16px; right: 20px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.15); border: 2px solid rgba(255,255,255,.4); color: #fff; font-size: 20px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s; z-index: 100000; }
+      .lightbox-close:hover { background: rgba(255,255,255,.3); }
+      .lightbox-caption { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.8); font-size: 13px; font-family: Roboto, Arial, sans-serif; text-align: center; max-width: 80vw; pointer-events: none; }
+
+      @media (max-width: 760px) {
+        .tsc-torque-grid, .tsc-summary-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.1(steel).html">2.1 (General)</a>
+                  <a class="dropdown-item" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                  <a class="dropdown-item" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                  <a class="dropdown-item" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- BANNER -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              Thread Stress Calculator
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <h1 class="visually-hidden">Universal Thread Stress and Bolt Preload Calculator — AS8879 / UNC / UNF / Metric</h1>
+
+    <!-- ── CALCULATOR ── -->
+    <div class="sq-main">
+
+      <p class="sq-subtitle">Universal Thread Stress Calculator &nbsp;|&nbsp; AS8879 / UNC / UNF / Metric</p>
+
+      <div class="sq-calc-grid">
+
+        <!-- ════════ LEFT PANEL: INPUTS ════════ -->
+        <div class="sq-panel">
+          <div class="sq-panel-h">Inputs</div>
+          <div class="sq-panel-b tsc">
+          <div class="tsc-input-grid">
+
+              <!-- 1. Thread Selection -->
+              <div class="tsc-section">
+                <div class="tsc-h2">1. Thread Selection</div>
+                <div class="tsc-field">
+                  <label>Thread Standard</label>
+                  <select id="tsc-thread-std" onchange="tscOnStdChange()">
+                    <option value="as8879">AS8879 (UNJ/UNJF – Aerospace)</option>
+                    <option value="unc">UNC (Unified Coarse)</option>
+                    <option value="unf">UNF (Unified Fine)</option>
+                    <option value="metric">Metric (ISO)</option>
+                    <option value="custom">Custom (Manual Entry)</option>
+                  </select>
+                </div>
+                <div class="tsc-field" id="tsc-size-select-wrap">
+                  <label>Thread Size</label>
+                  <select id="tsc-thread-size" onchange="tscOnSizeChange()"></select>
+                </div>
+                <div id="tsc-custom-thread-inputs" class="tsc-hidden">
+                  <div class="tsc-r3">
+                    <div class="tsc-field"><label>Major Dia d (in)</label><input type="number" id="tsc-c-major" value="1.0" step="0.001"></div>
+                    <div class="tsc-field"><label>Pitch Dia d_m (in)</label><input type="number" id="tsc-c-pitch" value="0.9459" step="0.001"></div>
+                    <div class="tsc-field"><label>TPI</label><input type="number" id="tsc-c-tpi" value="12" step="0.5"></div>
+                  </div>
+                  <div class="tsc-r2">
+                    <div class="tsc-field"><label>Stress Area (in²)</label><input type="number" id="tsc-c-stress-area" value="0.6630" step="0.0001"></div>
+                    <div class="tsc-field"><label>Thread Half Angle β (°)</label><input type="number" id="tsc-c-beta" value="30" step="0.5"></div>
+                  </div>
+                </div>
+                <div id="tsc-thread-info-box" class="tsc-thread-info" style="display:none;"></div>
+              </div>
+
+              <!-- 2. Friction & Bearing Geometry -->
+              <div class="tsc-section">
+                <div class="tsc-h2">2. Friction &amp; Bearing Geometry</div>
+                <div class="tsc-field">
+                  <label>Friction Coefficient Preset <span style="font-weight:normal;color:#888;">(Src: Engineering Toolbox)</span></label>
+                  <select id="tsc-friction-preset" onchange="tscOnFrictionPreset()">
+                    <optgroup label="── PTFE / Solid Film Lubricants ──">
+                      <option value="0.04">0.04 – PTFE (Teflon) on PTFE, dry or greased</option>
+                      <option value="0.04">0.04 – Cadmium on Cadmium, greased</option>
+                      <option value="0.04">0.04 – Zinc on Zinc, greased</option>
+                      <option value="0.058">0.058 – Steel on Steel, graphite lubricant</option>
+                      <option value="0.10">0.10 – PTFE on Steel, dry (mid-range)</option>
+                    </optgroup>
+                    <optgroup label="── Greased / Well-Lubricated ──">
+                      <option value="0.07">0.07 – Cast Iron on Cast Iron, greased</option>
+                      <option value="0.08">0.08 – Copper on Copper, greased</option>
+                      <option value="0.08">0.08 – Magnesium on Magnesium, greased</option>
+                      <option value="0.08">0.084 – Steel on Steel, lard lubricant</option>
+                      <option value="0.10">0.10 – Brass on Steel, castor oil</option>
+                      <option value="0.11">0.11 – Steel on Steel, lard (static)</option>
+                      <option value="0.12">0.12 – Nickel on Nickel, greased</option>
+                      <option value="0.13">0.13 – Bronze (sintered) on Steel, greased</option>
+                      <option value="0.133">0.133 – Cast Iron on Steel, greased (kinetic)</option>
+                      <option value="0.15">0.15 – Steel on Steel, castor oil</option>
+                      <option value="0.15">0.15 – Iron on Iron, greased (lower)</option>
+                      <option value="0.16">0.16 – Steel on Steel, greased (static) ★ typical SS fastener</option>
+                      <option value="0.16">0.16 – Bronze on Steel, greased</option>
+                      <option value="0.178">0.178 – Nickel on Mild Steel, greased</option>
+                      <option value="0.19">0.19 – Brass on Steel, greased</option>
+                      <option value="0.20">0.20 – Iron on Iron, greased (upper)</option>
+                      <option value="0.21">0.21 – Cast Iron on Steel, greased (static)</option>
+                    </optgroup>
+                    <optgroup label="── Lightly Lubricated / Oiled ──">
+                      <option value="0.15" selected>0.15 – Steel on Steel, mineral oil (light)</option>
+                      <option value="0.18">0.18 – Copper on Steel, oleic acid or light oil</option>
+                      <option value="0.23">0.23 – Steel on Steel, light mineral oil (static)</option>
+                    </optgroup>
+                    <optgroup label="── Dry / Unlubricated ──">
+                      <option value="0.10">0.10 – Graphite on Steel, dry</option>
+                      <option value="0.14">0.14 – Carbon on Steel, dry</option>
+                      <option value="0.16">0.16 – Carbon (hard) on Carbon, dry</option>
+                      <option value="0.22">0.22 – Copper-Lead Alloy on Steel, dry</option>
+                      <option value="0.22">0.22 – Bronze on Cast Iron, dry (kinetic)</option>
+                      <option value="0.23">0.23 – Cast Iron on Steel, dry (kinetic)</option>
+                      <option value="0.35">0.35 – Phosphor-Bronze on Steel, dry</option>
+                      <option value="0.40">0.40 – Cast Iron on Steel, dry (static)</option>
+                      <option value="0.41">0.41 – Chromium on Chromium, dry</option>
+                      <option value="0.42">0.42 – Steel on Steel, dry (kinetic)</option>
+                      <option value="0.44">0.44 – Brass on Steel, dry (kinetic)</option>
+                      <option value="0.45">0.45 – Aluminum-Bronze on Steel, dry</option>
+                      <option value="0.46">0.46 – Cadmium on Mild Steel, dry (kinetic)</option>
+                      <option value="0.47">0.47 – Aluminum on Mild Steel, dry (kinetic)</option>
+                      <option value="0.50">0.50 – Cadmium on Cadmium, dry</option>
+                      <option value="0.50">0.50 – Steel on Steel, dry (static, mid)</option>
+                      <option value="0.53">0.53 – Nickel on Nickel, dry (kinetic)</option>
+                      <option value="0.53">0.53 – Copper on Steel, dry (kinetic)</option>
+                      <option value="0.61">0.61 – Aluminum on Mild Steel, dry (static)</option>
+                      <option value="0.80">0.80 – Steel on Steel, dry (static, upper)</option>
+                      <option value="0.90">0.90 – Nickel on Nickel, dry (static, upper)</option>
+                      <option value="1.0">1.00 – Iron on Iron, dry</option>
+                    </optgroup>
+                    <optgroup label="── Titanium / Specialty ──">
+                      <option value="0.36">0.36 – Copper on Steel, dry (kinetic, ref only)</option>
+                      <option value="0.42">0.42 – Magnesium on Steel, dry (kinetic)</option>
+                    </optgroup>
+                    <optgroup label="── Custom ──">
+                      <option value="custom">Custom value…</option>
+                    </optgroup>
+                  </select>
+                </div>
+                <div class="tsc-field">
+                  <label>Friction Coefficient μ₁</label>
+                  <input type="number" id="tsc-mu1" value="0.15" step="0.001" min="0.01" max="1.0">
+                </div>
+                <div class="tsc-sep"></div>
+                <div class="tsc-r2">
+                  <div class="tsc-field"><label>Collar OD D_H (in)</label><input type="number" id="tsc-DH" value="1.25" step="0.001"></div>
+                  <div class="tsc-field"><label>Collar ID D_h (in)</label><input type="number" id="tsc-Dh" value="1.0" step="0.001"></div>
+                </div>
+                <p class="tsc-note">Collar dims = bearing contact surface under bolt head or nut face.</p>
+              </div>
+
+              <!-- 3. Applied Torque -->
+              <div class="tsc-section">
+                <div class="tsc-h2">3. Applied Torque</div>
+                <div class="tsc-field"><label>Applied Torque T_applied (in-lb)</label><input type="number" id="tsc-T-applied" value="625" step="1"></div>
+                <div class="tsc-field"><label>Prevailing / Run-in Torque T_prevailing (in-lb)</label><input type="number" id="tsc-T-prevailing" value="0" step="1"></div>
+                <div class="tsc-field"><label>O-Ring / Seal Drag Torque T_drag (in-lb)</label><input type="number" id="tsc-T-drag" value="0" step="1"></div>
+                <p class="tsc-note">Net torque available for preload = T_applied − T_prevailing − T_drag</p>
+              </div>
+
+              <!-- 4. Pressure Load -->
+              <div class="tsc-section">
+                <div class="tsc-h2">4. Additional Axial Load (Optional)</div>
+                <div class="tsc-field"><label>Proof Pressure (psig)</label><input type="number" id="tsc-proof-pres" value="0" step="1"></div>
+                <div class="tsc-field"><label>Burst Pressure (psig)</label><input type="number" id="tsc-burst-pres" value="0" step="1"></div>
+                <div class="tsc-field"><label>Pressure Acting Area (in²) – defaults to stress area if 0</label><input type="number" id="tsc-pres-area" value="0" step="0.001"></div>
+                <p class="tsc-note">Leave pressures at 0 for pure torque analysis.</p>
+              </div>
+
+              <!-- 5. Material -->
+              <div class="tsc-section">
+                <div class="tsc-h2">5. Material Properties</div>
+                <div class="tsc-field">
+                  <label>Material Preset</label>
+                  <select id="tsc-material-preset" onchange="tscOnMaterialPreset()">
+                    <option value="303ss">303 CRES Stainless (Ftu=90 ksi, Fty=35 ksi)</option>
+                    <option value="304ss">304 CRES Stainless (Ftu=75 ksi, Fty=30 ksi)</option>
+                    <option value="316ss">316 CRES Stainless (Ftu=79 ksi, Fty=30 ksi)</option>
+                    <option value="17-4ph">17-4 PH SS H900 (Ftu=190 ksi, Fty=170 ksi)</option>
+                    <option value="a286">A-286 (Ftu=145 ksi, Fty=95 ksi)</option>
+                    <option value="al2024t4">Al 2024-T4 (Ftu=68 ksi, Fty=47 ksi)</option>
+                    <option value="al6061t6">Al 6061-T6 (Ftu=42 ksi, Fty=35 ksi)</option>
+                    <option value="al7075t6">Al 7075-T6 (Ftu=83 ksi, Fty=73 ksi)</option>
+                    <option value="ti6al4v">Ti 6Al-4V (Ftu=160 ksi, Fty=150 ksi)</option>
+                    <option value="4130steel">4130 Steel N (Ftu=97 ksi, Fty=75 ksi)</option>
+                    <option value="4340steel">4340 Steel HT (Ftu=180 ksi, Fty=163 ksi)</option>
+                    <option value="custom">Custom Material…</option>
+                  </select>
+                </div>
+                <div id="tsc-custom-material-inputs" class="tsc-hidden">
+                  <div class="tsc-r2">
+                    <div class="tsc-field"><label>F_tu – Ultimate (ksi)</label><input type="number" id="tsc-ftu" value="90" step="0.1"></div>
+                    <div class="tsc-field"><label>F_ty – Yield (ksi)</label><input type="number" id="tsc-fty" value="35" step="0.1"></div>
+                  </div>
+                </div>
+                <div class="tsc-r2" style="margin-top:8px;">
+                  <div class="tsc-field"><label>F_tu (ksi)</label><input type="number" id="tsc-ftu-display" readonly></div>
+                  <div class="tsc-field"><label>F_ty (ksi)</label><input type="number" id="tsc-fty-display" readonly></div>
+                </div>
+              </div>
+
+            <button class="tsc-btn" onclick="tscCalculate()">&#9654; CALCULATE</button>
+
+          </div><!-- end tsc-input-grid -->
+          </div>
+        </div><!-- end left panel -->
+
+        <!-- ════════ RIGHT PANEL: RESULTS ════════ -->
+        <div class="sq-panel sq-sticky">
+          <div class="sq-panel-h">Results</div>
+          <div class="sq-panel-b tsc">
+
+              <div class="tsc-section" id="tsc-results-placeholder">
+                <p style="color:#888;padding:30px;text-align:center;font-family:var(--body-font-family);">Fill in inputs on the left and click Calculate.</p>
+              </div>
+
+              <div id="tsc-results-area" class="tsc-hidden">
+
+                <!-- Summary -->
+                <!-- <div class="tsc-section">
+                  <div class="tsc-h2">Summary</div>
+                  <div class="tsc-summary-grid" id="tsc-summary-grid"></div>
+                </div> -->
+
+                <!-- Margins of Safety -->
+                <div class="tsc-section">
+                  <div class="tsc-h2">Margins of Safety</div>
+                  <table class="tsc-result-table">
+                    <thead>
+                      <tr>
+                        <th>Load Case</th>
+                        <th>Total Axial Force (lb)</th>
+                        <th>Thread Stress σ (psi)</th>
+                        <th>MS Yield</th>
+                        <th>MS Ultimate</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tsc-ms-tbody"></tbody>
+                  </table>
+                </div>
+
+                <!-- Intermediate values (collapsible) -->
+                <div class="tsc-section" style="padding:0;">
+                  <div class="tsc-intermed-hdr" onclick="tscToggleIntermed()">
+                    <span>Intermediate Values</span>
+                    <span id="tsc-intermed-chevron" style="color:#fff;font-size:16px;transition:transform 0.2s;">▶</span>
+                  </div>
+                  <div id="tsc-intermed-body" style="display:none;" class="tsc-intermed-body">
+                    <div class="tsc-calc-block" id="tsc-calc-block"></div>
+                  </div>
+                </div>
+
+                <!-- Parametric sweep -->
+                <div class="tsc-section">
+                  <div class="tsc-h2">Parametric: MS vs Friction Coefficient (at T_applied)</div>
+                  <p class="tsc-note" style="margin-bottom:8px;">Preload and margins swept across μ₁ values. Selected μ₁ highlighted ◀</p>
+                  <table class="tsc-result-table">
+                    <thead>
+                      <tr>
+                        <th>μ₁</th><th>K₁ (in)</th><th>K₂ (in)</th>
+                        <th>F_preload (lb)</th><th>σ_preload (psi)</th>
+                        <th>MS Yield</th><th>MS Ult</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tsc-sweep-tbody"></tbody>
+                  </table>
+                </div>
+
+                <!-- Critical Torque -->
+                <div class="tsc-section">
+                  <div class="tsc-h2">Critical Torque Limits</div>
+                  <p class="tsc-note" style="margin-bottom:8px;">
+                    Maximum torque before yielding or fracture, computed by back-solving from the allowable thread stress.
+                    Includes T_prevailing and T_drag. Additional pressure load is <em>not</em> included here.
+                  </p>
+                  <div class="tsc-torque-grid" id="tsc-torque-grid"></div>
+                </div>
+
+              </div><!-- end tsc-results-area -->
+          </div>
+        </div><!-- end right panel -->
+
+      </div><!-- end sq-calc-grid -->
+
+      <!-- ════════ METHOD & EQUATIONS ════════ -->
+      <div class="ref-section-wrap">
+        <div class="ref-wrapper">
+        <div class="ref-section-title">Method &amp; Equations</div>
+
+          <!-- Overview -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">01</span>
+              <h2>Overview</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body">
+              <div>
+                <p>When a threaded fastener is torqued, the applied torque is resisted by two mechanisms: friction on the thread faces and friction on the bearing (collar) surface under the nut or bolt head. Only the remaining torque — after overcoming thread helix and both friction components — is converted into axial clamping preload. This calculator implements the standard torque–preload relationship derived from inclined-plane and collar-friction mechanics, consistent with <strong>ASME B1.1</strong>, <strong>Shigley's Mechanical Engineering Design</strong>, and aerospace thread stress practices per <strong>AS8879</strong>.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Torque Balance -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">02</span>
+              <h2>Torque Balance</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body">
+              <div>
+                <p>The total applied torque must be balanced by thread torque, collar torque, and any drag/prevailing torques:</p>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Torque balance</span>
+                  $$T_\text{applied} = T_1 + T_2 + T_\text{prevailing} + T_\text{drag}$$
+                </div>
+                <p>Rearranging for the net torque available to generate preload:</p>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Net torque</span>
+                  $$T_\text{net} = T_\text{applied} - T_\text{prevailing} - T_\text{drag}$$
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- K1 -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">03</span>
+              <h2>Thread Torque Coefficient K&#x2081;</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body">
+              <div>
+                <p>\(T_1 = K_1 \cdot F\), where \(K_1\) is the thread torque nut factor derived from inclined-plane mechanics with Coulomb friction on the thread helix:</p>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Thread torque coefficient K₁</span>
+                  $$K_1 = \frac{d_m}{2} \cdot \frac{\tan\alpha + \mu_1 \sec\beta}{1 - \mu_1 \tan\alpha \sec\beta}$$
+                </div>
+                <p>where:</p>
+                <ul>
+                  <li>\(d_m\) = thread pitch diameter (in)</li>
+                  <li>\(\alpha\) = thread lead angle (helix angle): \(\tan\alpha = \dfrac{1}{\pi \, d_m \cdot \text{TPI}}\)</li>
+                  <li>\(\beta\) = thread half-angle = 30° for 60° unified (UN/UNJ/Metric) threads</li>
+                  <li>\(\mu_1\) = coefficient of friction on thread faces</li>
+                  <li>\(\sec\beta = 1/\cos\beta\) — accounts for the inclined thread flank projecting the normal force</li>
+                </ul>
+                <p>The \(\sec\beta\) term distinguishes a V-thread from a square thread: the inclined flanks increase the normal (and therefore frictional) force compared to a flat-faced square thread with the same lead angle.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- K2 + Preload -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">04</span>
+              <h2>Collar Torque Coefficient K&#x2082; &amp; Preload Force</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body two-col">
+              <div>
+                <p>\(T_2 = K_2 \cdot F\), where \(K_2\) is derived by integrating the friction moment over the contact annulus under the bolt head or nut face:</p>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Collar torque coefficient K₂</span>
+                  $$K_2 = \frac{\mu_1}{3} \cdot \frac{D_H^3 - D_h^3}{D_H^2 - D_h^2}$$
+                </div>
+                <p>where \(D_H\) = outer diameter and \(D_h\) = inner diameter of the collar contact surface.</p>
+                <p>The resulting preload force:</p>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Preload force</span>
+                  $$F_\text{preload} = \frac{T_\text{net}}{K_1 + K_2}$$
+                </div>
+              </div>
+              <div>
+                <div class="ref-fig ref-zoomable-svg" title="Click to enlarge">
+                  <svg viewBox="0 0 310 230" xmlns="http://www.w3.org/2000/svg"
+                       style="width:100%;max-width:340px;display:block;font-family:var(--body-font-family);">
+                    <image href="../img/BoltHeadAnnulus-ThreadStressCalc.png" x="0" y="0" width="310" height="230" preserveAspectRatio="xMidYMid meet"/>
+                    <text x="155" y="16" text-anchor="middle" font-size="10" font-weight="bold" fill="#1a3a5c">Bearing / Collar Contact Geometry</text>
+                    <rect x="138" y="18" width="34" height="212" fill="#b0c4d8" stroke="#5a7fa0" stroke-width="1.2"/>
+                    <rect x="40" y="110" width="230" height="52" rx="2" fill="#d0dae8" stroke="#7a90a8" stroke-width="1"/>
+                    <line x1="40" y1="136" x2="310" y2="136" stroke="#7a90a8" stroke-width="0.8" stroke-dasharray="4,3"/>
+                    <polygon points="110,80 200,80 210,110 100,110" fill="#9ab4cc" stroke="#4a6a8a" stroke-width="1.2"/>
+                    <line x1="155" y1="80" x2="155" y2="110" stroke="#4a6a8a" stroke-width="0.5" stroke-dasharray="2,2"/>
+                    <ellipse cx="155" cy="110" rx="55" ry="6" fill="#f0a830" fill-opacity="0.55" stroke="#c07800" stroke-width="1.2"/>
+                    <ellipse cx="155" cy="110" rx="17" ry="2.5" fill="#b0c4d8" stroke="#5a7fa0" stroke-width="1"/>
+                    <line x1="100" y1="124" x2="40" y2="124" stroke="#c07800" stroke-width="1.2" marker-end="url(#tsc-arr-gold)"/>
+                    <line x1="210" y1="124" x2="270" y2="124" stroke="#c07800" stroke-width="1.2" marker-end="url(#tsc-arr-gold)"/>
+                    <line x1="100" y1="120" x2="100" y2="128" stroke="#c07800" stroke-width="1.2"/>
+                    <line x1="210" y1="120" x2="210" y2="128" stroke="#c07800" stroke-width="1.2"/>
+                    <text x="155" y="122" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#c07800">D</text>
+                    <text x="161" y="125" text-anchor="start" font-size="7" fill="#c07800">H</text>
+                    <text x="155" y="133" text-anchor="middle" font-size="8.5" fill="#7a5000">(Collar OD)</text>
+                    <line x1="147" y1="145" x2="120" y2="145" stroke="#2060b0" stroke-width="1.2" marker-end="url(#tsc-arr-blue)"/>
+                    <line x1="163" y1="145" x2="190" y2="145" stroke="#2060b0" stroke-width="1.2" marker-end="url(#tsc-arr-blue)"/>
+                    <line x1="147" y1="141" x2="147" y2="149" stroke="#2060b0" stroke-width="1.2"/>
+                    <line x1="163" y1="141" x2="163" y2="149" stroke="#2060b0" stroke-width="1.2"/>
+                    <text x="155" y="143" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#2060b0">D</text>
+                    <text x="161" y="146" text-anchor="start" font-size="7" fill="#2060b0">h</text>
+                    <text x="155" y="157" text-anchor="middle" font-size="8.5" fill="#1a4080">(Collar ID)</text>
+                    <text x="155" y="107" text-anchor="middle" font-size="8.5" font-style="italic" fill="#7a4000">μ₁ friction zone</text>
+                    <path d="M138,165 L144,168 L138,171 L144,174 L138,177 L144,180 L138,183 L144,186 L138,189 L144,192 L138,195 L144,198 L138,201 L144,204 L138,207 L144,210 L138,213 L144,216 L138,219 L144,222" stroke="#4a6a8a" stroke-width="1.3" fill="none"/>
+                    <path d="M172,165 L166,168 L172,171 L166,174 L172,177 L166,180 L172,183 L166,186 L172,189 L166,192 L172,195 L166,198 L172,201 L166,204 L172,207 L166,210 L172,213 L166,216 L172,219 L166,222" stroke="#4a6a8a" stroke-width="1.3" fill="none"/>
+                    <line x1="172" y1="193" x2="198" y2="193" stroke="#4a6a8a" stroke-width="0.8"/>
+                    <text x="200" y="196" font-size="8.5" fill="#4a6a8a">Thread</text>
+                    <defs>
+                      <marker id="tsc-arr-gold" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#c07800"/></marker>
+                      <marker id="tsc-arr-blue" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2060b0"/></marker>
+                      <marker id="tsc-arr-red"  markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#b00000"/></marker>
+                    </defs>
+                    <path d="M 130,50 A 26,26 0 0 1 180,50" stroke="#b00000" stroke-width="1.5" fill="none" marker-end="url(#tsc-arr-red)"/>
+                    <text x="155" y="44" text-anchor="middle" font-size="9" font-weight="bold" fill="#b00000">T</text>
+                    <line x1="155" y1="25" x2="155" y2="72" stroke="#b00000" stroke-width="1.5" marker-end="url(#tsc-arr-red)"/>
+                    <text x="170" y="55" font-size="8.5" fill="#b00000">F</text>
+                    <rect x="6" y="168" width="90" height="52" rx="3" fill="#fff" fill-opacity="0.85" stroke="#c8d0da" stroke-width="0.8"/>
+                    <rect x="11" y="174" width="10" height="8" fill="#f0a830" fill-opacity="0.7" stroke="#c07800" stroke-width="0.8"/>
+                    <text x="25" y="181" font-size="8" fill="#333">D_H – Collar OD</text>
+                    <rect x="11" y="186" width="10" height="8" fill="#b0c4d8" stroke="#2060b0" stroke-width="0.8"/>
+                    <text x="25" y="193" font-size="8" fill="#333">D_h – Collar ID</text>
+                    <rect x="11" y="198" width="10" height="8" fill="#f0a830" fill-opacity="0.55" stroke="#c07800" stroke-width="0.8"/>
+                    <text x="25" y="205" font-size="8" fill="#333">Bearing face (annulus)</text>
+                    <text x="25" y="215" font-size="8" fill="#7a4000">μ₁ acts here</text>
+                  </svg>
+                  <span class="ref-fig-label">Fig. 1 — Bearing / Collar Contact Geometry (click to enlarge)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stress & MS -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">05</span>
+              <h2>Thread Tensile Stress &amp; Margin of Safety</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body">
+              <div>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Thread tensile stress</span>
+                  $$\sigma_t = \frac{F_\text{total}}{A_s}$$
+                </div>
+                <p>where \(F_\text{total} = F_\text{preload} + F_\text{pressure}\) and \(A_s\) is the tensile stress area from ASME B1.1 / AS8879 / ISO 898.</p>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Margin of safety</span>
+                  $$MS_\text{yield} = \frac{F_{ty}}{\sigma_t} - 1 \qquad MS_\text{ultimate} = \frac{F_{tu}}{\sigma_t} - 1$$
+                </div>
+                <p>A positive MS indicates adequate design margin. A negative MS indicates failure under the applied load.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Critical Torque -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">06</span>
+              <h2>Critical Torque (Back-Solved)</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body">
+              <div>
+                <p>The maximum torque before yielding or fracture is found by back-solving from the material allowable stress:</p>
+                <div class="ref-eq-block">
+                  <span class="ref-eq-tag">Critical torque — back-solve</span>
+                  $$F_\text{allow} = F_{ty} \text{ (or } F_{tu}\text{)} \cdot A_s$$
+                  $$T_\text{critical} = F_\text{allow} \cdot (K_1 + K_2) + T_\text{prevailing} + T_\text{drag}$$
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AS8879 Note -->
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <span class="ref-num">07</span>
+              <h2>AS8879 Thread Note</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body">
+              <div>
+                <p>AS8879 (formerly MIL-S-8879) specifies UNJ (coarse) and UNJF (fine) aerospace threads. These differ from standard UN threads by having a <strong>controlled radius root</strong> on the external thread, which significantly improves fatigue life by reducing stress concentration at the thread root. AS8879 threads are the preferred aerospace thread form for structural fasteners per NAS and military standards.</p>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end ref-wrapper -->
+      </div><!-- end method & equations -->
+
+      <!-- ════════ FRICTION COEFFICIENT REFERENCE ════════ -->
+      <div class="ref-section-wrap">
+        <div class="ref-wrapper">
+        <div class="ref-section-title">Friction Coefficient Reference</div>
+          <div class="ref-card">
+            <div class="ref-card-header" onclick="this.closest('.ref-card').classList.toggle('collapsed')">
+              <h2>Friction Coefficients for Common Fastener Material Pairs</h2>
+              <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+            <div class="ref-body">
+              <div class="full-col">
+                <p>The friction coefficient \(\mu_1\) has a dominant effect on the torque–preload relationship. Values below are sourced from Engineering Toolbox, Shigley's (Table 8-15), and Bickford's <em>Bolted Joints</em>.</p>
+                <table class="ref-table">
+                  <thead>
+                    <tr><th>Material 1</th><th>Material 2</th><th>Condition / Lubricant</th><th>μ static</th><th>μ kinetic</th><th>Fastener Relevance</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr class="grp-hdr"><td colspan="6">PTFE / Solid Film / Graphite Lubricants</td></tr>
+                    <tr><td>PTFE (Teflon)</td><td>PTFE</td><td>Dry or greased</td><td>0.04</td><td>0.04</td><td>PTFE-coated fasteners; extreme low-friction baseline</td></tr>
+                    <tr><td>Steel</td><td>Steel</td><td>Graphite lubricant</td><td>—</td><td>0.058</td><td>Graphite-lubricated threads (kinetic)</td></tr>
+                    <tr><td>Carbon (hard)</td><td>Carbon</td><td>Dry</td><td>0.16</td><td>—</td><td>Carbon-coated contact surfaces</td></tr>
+                    <tr><td>Graphite</td><td>Steel</td><td>Dry</td><td>0.10</td><td>—</td><td>Graphite-coated steel threads</td></tr>
+                    <tr class="grp-hdr"><td colspan="6">Greased / Well-Lubricated Metal Pairs</td></tr>
+                    <tr><td>Cadmium</td><td>Cadmium</td><td>Greased</td><td>0.05</td><td>—</td><td>Cad-plated fasteners, greased</td></tr>
+                    <tr><td>Copper</td><td>Copper</td><td>Greased</td><td>0.08</td><td>—</td><td>Copper-alloy thread inserts, greased</td></tr>
+                    <tr><td>Steel</td><td>Steel</td><td>Greased ★</td><td>0.16</td><td>—</td><td><strong>Typical value for lubricated steel/SS threaded fasteners</strong></td></tr>
+                    <tr><td>Nickel</td><td>Mild Steel</td><td>Greased</td><td>—</td><td>0.178</td><td>Nickel-alloy into mild steel, greased</td></tr>
+                    <tr class="grp-hdr"><td colspan="6">Lightly Lubricated / Oiled</td></tr>
+                    <tr><td>Steel</td><td>Steel</td><td>Light mineral oil (static)</td><td>0.23</td><td>—</td><td>Lightly oiled threads (use static for install)</td></tr>
+                    <tr><td>Steel</td><td>Steel</td><td>Castor oil (kinetic)</td><td>0.15</td><td>0.081</td><td>Castor-oil lubricated threads</td></tr>
+                    <tr><td>Copper</td><td>Steel</td><td>Oleic acid / light oil</td><td>—</td><td>0.18</td><td>Copper anti-seize / light oil on steel</td></tr>
+                    <tr class="grp-hdr"><td colspan="6">Dry / Unlubricated Metal Pairs</td></tr>
+                    <tr><td>Chromium</td><td>Chromium</td><td>Dry</td><td>0.41</td><td>—</td><td>Chrome-plated fasteners, dry</td></tr>
+                    <tr><td>Brass</td><td>Steel</td><td>Dry (static)</td><td>0.51</td><td>0.44</td><td>Brass nut on steel bolt, dry</td></tr>
+                    <tr><td>Cast Iron</td><td>Steel</td><td>Dry (static)</td><td>0.40</td><td>0.23</td><td>CI nut on steel, dry</td></tr>
+                    <tr><td>Aluminum</td><td>Mild Steel</td><td>Dry (static)</td><td>0.61</td><td>0.47</td><td>Aluminum fastener into mild steel, dry</td></tr>
+                    <tr><td>Steel</td><td>Steel</td><td>Dry (static)</td><td>0.5–0.8</td><td>0.42</td><td>Steel fasteners, unlubricated — large scatter, do not rely on</td></tr>
+                    <tr><td>Nickel</td><td>Nickel</td><td>Dry (static)</td><td>0.7–1.1</td><td>0.53</td><td>Nickel-alloy fasteners, unlubricated — galling risk</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end sq-main -->
+
+    <!-- ════════ REFERENCES & IMPORTANT NOTICES ════════ -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3 mb-3 text-start" style="max-width:860px;">
+
+            <div class="text-center">
+              <div class="custom-heading">References &amp; Important Notices</div>
+            </div>
+
+            <ul class="mt-3" style="font-size:0.9rem;">
+              <li class="mb-2">
+                <strong>ASME B1.1</strong> — <em>Unified Inch Screw Threads</em>. Defines UN, UNC, UNF thread geometry and tensile stress areas.
+              </li>
+              <li class="mb-2">
+                <strong>AS8879 (SAE)</strong> — <em>Screw Threads — UNJ Profile, Inch Controlled Radius Root with Increased Minor Diameter</em>. Aerospace UNJ/UNJF thread standard.
+              </li>
+              <li class="mb-2">
+                <strong>ISO 898-1</strong> — <em>Mechanical Properties of Fasteners Made of Carbon Steel and Alloy Steel</em>. Metric thread stress areas and property classes.
+              </li>
+              <li class="mb-2">
+                Shigley, J.E. &amp; Mischke, C.R. — <em>Mechanical Engineering Design</em>, 10th Ed. McGraw-Hill. Torque-preload equations, Chapter 8.
+              </li>
+              <li class="mb-2">
+                Bickford, J.H. — <em>An Introduction to the Design and Behavior of Bolted Joints</em>, 3rd Ed. Marcel Dekker.
+              </li>
+              <li class="mb-2">
+                <strong>MMPDS-10 / MMPDS-13</strong> — <em>Metallic Materials Properties Development and Standardization</em>. Material properties for aerospace alloys.
+              </li>
+              <li class="mb-2">
+                Engineering Toolbox — <em>Friction Coefficients for various Materials</em>. <a href="https://www.engineeringtoolbox.com/friction-coefficients-d_778.html" target="_blank">engineeringtoolbox.com</a>
+              </li>
+              <li class="mb-2">
+                <strong>NASM8846</strong> — <em>Insert, Screw Thread, Helical Coil</em>. Prevailing torque values for helicoil inserts.
+              </li>
+              <li class="mb-2">
+                <strong>Friction coefficient uncertainty.</strong> The friction coefficient μ₁ has a dominant and highly variable effect on predicted preload. It is sensitive to surface finish, lubricant type and quantity, plating condition, coating wear, and assembly speed. The scatter in dry steel-on-steel values alone spans 0.5–0.8 (static). For flight-critical or pressure-boundary fasteners, torque-tension testing on representative hardware under production assembly conditions is strongly recommended.
+              </li>
+              <li class="mb-2">
+                <strong>Torsional stress not included.</strong> This calculator computes tensile (axial) thread stress only. During installation, the fastener also experiences torsional shear stress from thread and collar friction. The combined von Mises stress is approximately 10–15% higher than the tensile stress shown. Conservative practice per Shigley's applies a proof-strength check on the combined stress; this calculator is appropriate for comparative margin analysis but should not replace a full combined-stress check for critical applications.
+              </li>
+              <li>
+                <strong>For informational use only.</strong> This calculator is provided as an engineering aid. Results must be verified by a qualified engineer before use in any safety-critical or flight application. KasperCalc assumes no liability for design decisions made using these results.
+              </li>
+            </ul>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CITATION -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div id="citation-container" data-page-title="Thread Stress Calculator" data-page-url="https://kaspercalc.com/ThreadStressCalculator.html"></div>
+        </div>
+      </div>
+    </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="tscLightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="tscLightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="tscLightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="tscLightboxCaption"></div>
+  </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+
+<script>
+// ============================================================
+// THREAD DATABASES
+// ============================================================
+const TSC_THREAD_DATA = {
+  as8879: {
+    "#2-56 UNJ":    [0.0860,0.0744,56,0.00370],
+    "#3-48 UNJ":    [0.0990,0.0855,48,0.00487],
+    "#4-40 UNJ":    [0.1120,0.0958,40,0.00604],
+    "#5-40 UNJ":    [0.1250,0.1088,40,0.00796],
+    "#6-32 UNJ":    [0.1380,0.1177,32,0.00909],
+    "#8-32 UNJ":    [0.1640,0.1437,32,0.01400],
+    "#10-32 UNJF":  [0.1900,0.1697,32,0.02000],
+    "#10-24 UNJ":   [0.1900,0.1629,24,0.01750],
+    "1/4-28 UNJF":  [0.2500,0.2268,28,0.03640],
+    "1/4-20 UNJ":   [0.2500,0.2175,20,0.03180],
+    "5/16-24 UNJF": [0.3125,0.2854,24,0.05800],
+    "5/16-18 UNJ":  [0.3125,0.2764,18,0.05240],
+    "3/8-24 UNJF":  [0.3750,0.3479,24,0.08750],
+    "3/8-16 UNJ":   [0.3750,0.3344,16,0.07780],
+    "7/16-20 UNJF": [0.4375,0.4050,20,0.11960],
+    "7/16-14 UNJ":  [0.4375,0.3911,14,0.10630],
+    "1/2-20 UNJF":  [0.5000,0.4675,20,0.15990],
+    "1/2-13 UNJ":   [0.5000,0.4500,13,0.14190],
+    "9/16-18 UNJF": [0.5625,0.5264,18,0.20300],
+    "9/16-12 UNJ":  [0.5625,0.5084,12,0.18200],
+    "5/8-18 UNJF":  [0.6250,0.5889,18,0.25600],
+    "5/8-11 UNJ":   [0.6250,0.5660,11,0.22600],
+    "3/4-16 UNJF":  [0.7500,0.7094,16,0.37300],
+    "3/4-10 UNJ":   [0.7500,0.6850,10,0.33400],
+    "7/8-14 UNJF":  [0.8750,0.8286,14,0.50900],
+    "7/8-9 UNJ":    [0.8750,0.8028,9,0.46200],
+    "1-12 UNJF":    [1.0000,0.9459,12,0.66300],
+    "1-8 UNJ":      [1.0000,0.9188,8,0.60570],
+    "1-1/8-12 UNJF":[1.1250,1.0709,12,0.85600],
+    "1-1/4-12 UNJF":[1.2500,1.1959,12,1.07300],
+    "1-1/4-8 UNJ":  [1.2500,1.1688,8,0.96900],
+    "1-3/8-12 UNJF":[1.3750,1.3209,12,1.31500],
+    "1-1/2-12 UNJF":[1.5000,1.4459,12,1.58100],
+    "1-1/2-8 UNJ":  [1.5000,1.4188,8,1.40500],
+  },
+  unc: {
+    "#1-64":[0.0730,0.0629,64,0.00263],"#2-56":[0.0860,0.0744,56,0.00370],
+    "#3-48":[0.0990,0.0855,48,0.00487],"#4-40":[0.1120,0.0958,40,0.00604],
+    "#5-40":[0.1250,0.1088,40,0.00796],"#6-32":[0.1380,0.1177,32,0.00909],
+    "#8-32":[0.1640,0.1437,32,0.01400],"#10-24":[0.1900,0.1629,24,0.01750],
+    "#12-24":[0.2160,0.1889,24,0.02420],"1/4-20":[0.2500,0.2175,20,0.03180],
+    "5/16-18":[0.3125,0.2764,18,0.05240],"3/8-16":[0.3750,0.3344,16,0.07780],
+    "7/16-14":[0.4375,0.3911,14,0.10630],"1/2-13":[0.5000,0.4500,13,0.14190],
+    "9/16-12":[0.5625,0.5084,12,0.18200],"5/8-11":[0.6250,0.5660,11,0.22600],
+    "3/4-10":[0.7500,0.6850,10,0.33400],"7/8-9":[0.8750,0.8028,9,0.46200],
+    "1-8":[1.0000,0.9188,8,0.60570],"1-1/8-7":[1.1250,1.0322,7,0.76300],
+    "1-1/4-7":[1.2500,1.1572,7,0.96900],"1-3/8-6":[1.3750,1.2667,6,1.15500],
+    "1-1/2-6":[1.5000,1.3917,6,1.40500],
+  },
+  unf: {
+    "#0-80":[0.0600,0.0519,80,0.00180],"#1-72":[0.0730,0.0640,72,0.00278],
+    "#2-64":[0.0860,0.0759,64,0.00394],"#3-56":[0.0990,0.0874,56,0.00523],
+    "#4-48":[0.1120,0.0985,48,0.00661],"#5-44":[0.1250,0.1102,44,0.00830],
+    "#6-40":[0.1380,0.1218,40,0.01015],"#8-36":[0.1640,0.1460,36,0.01474],
+    "#10-32":[0.1900,0.1697,32,0.02000],"#12-28":[0.2160,0.1928,28,0.02780],
+    "1/4-28":[0.2500,0.2268,28,0.03640],"5/16-24":[0.3125,0.2854,24,0.05800],
+    "3/8-24":[0.3750,0.3479,24,0.08750],"7/16-20":[0.4375,0.4050,20,0.11960],
+    "1/2-20":[0.5000,0.4675,20,0.15990],"9/16-18":[0.5625,0.5264,18,0.20300],
+    "5/8-18":[0.6250,0.5889,18,0.25600],"3/4-16":[0.7500,0.7094,16,0.37300],
+    "7/8-14":[0.8750,0.8286,14,0.50900],"1-12":[1.0000,0.9459,12,0.66300],
+    "1-1/8-12":[1.1250,1.0709,12,0.85600],"1-1/4-12":[1.2500,1.1959,12,1.07300],
+    "1-3/8-12":[1.3750,1.3209,12,1.31500],"1-1/2-12":[1.5000,1.4459,12,1.58100],
+  },
+  metric: { // [d_mm, dm_mm, pitch_mm, As_mm²]
+    "M3 × 0.5":[3,2.675,0.5,5.03],"M4 × 0.7":[4,3.545,0.7,8.78],
+    "M5 × 0.8":[5,4.480,0.8,14.2],"M6 × 1.0":[6,5.350,1.0,20.1],
+    "M8 × 1.25":[8,7.188,1.25,36.6],"M8 × 1.0":[8,7.350,1.0,39.2],
+    "M10 × 1.5":[10,9.026,1.5,58.0],"M10 × 1.25":[10,9.188,1.25,61.2],
+    "M12 × 1.75":[12,10.863,1.75,84.3],"M12 × 1.25":[12,11.188,1.25,92.1],
+    "M14 × 2.0":[14,12.701,2.0,115.0],"M16 × 2.0":[16,14.701,2.0,157.0],
+    "M16 × 1.5":[16,15.026,1.5,167.0],"M18 × 2.5":[18,16.376,2.5,192.0],
+    "M20 × 2.5":[20,18.376,2.5,245.0],"M20 × 1.5":[20,19.026,1.5,272.0],
+    "M22 × 2.5":[22,20.376,2.5,303.0],"M24 × 3.0":[24,22.051,3.0,353.0],
+    "M24 × 2.0":[24,22.701,2.0,384.0],"M27 × 3.0":[27,25.051,3.0,459.0],
+    "M30 × 3.5":[30,27.727,3.5,561.0],"M30 × 2.0":[30,28.701,2.0,621.0],
+    "M36 × 4.0":[36,33.402,4.0,817.0],"M42 × 4.5":[42,39.077,4.5,1121.0],
+    "M48 × 5.0":[48,44.752,5.0,1470.0],
+  }
+};
+
+const TSC_MATERIALS = {
+  "303ss":    {ftu:89.9,fty:34.8},"304ss":{ftu:75,fty:30},"316ss":{ftu:79,fty:30},
+  "17-4ph":   {ftu:190,fty:170},"a286":{ftu:145,fty:95},
+  "al2024t4": {ftu:68,fty:47},"al6061t6":{ftu:42,fty:35},"al7075t6":{ftu:83,fty:73},
+  "ti6al4v":  {ftu:160,fty:150},"4130steel":{ftu:97,fty:75},"4340steel":{ftu:180,fty:163},
+};
+
+// ── UI helpers ────────────────────────────────────────────────
+function tscOnStdChange() {
+  var std = document.getElementById('tsc-thread-std').value;
+  var sizeWrap = document.getElementById('tsc-size-select-wrap');
+  var customIn = document.getElementById('tsc-custom-thread-inputs');
+  if (std === 'custom') {
+    sizeWrap.classList.add('tsc-hidden');
+    customIn.classList.remove('tsc-hidden');
+    document.getElementById('tsc-thread-info-box').style.display = 'none';
+  } else {
+    sizeWrap.classList.remove('tsc-hidden');
+    customIn.classList.add('tsc-hidden');
+    tscPopulateSizeList(std);
+  }
+}
+
+function tscPopulateSizeList(std) {
+  var sel = document.getElementById('tsc-thread-size');
+  sel.innerHTML = '';
+  Object.keys(TSC_THREAD_DATA[std]).forEach(function(k) {
+    var o = document.createElement('option'); o.value = k; o.textContent = k; sel.appendChild(o);
+  });
+  tscOnSizeChange();
+}
+
+function tscOnSizeChange() {
+  var std  = document.getElementById('tsc-thread-std').value;
+  var size = document.getElementById('tsc-thread-size').value;
+  var box  = document.getElementById('tsc-thread-info-box');
+  if (!size || std === 'custom') { box.style.display = 'none'; return; }
+  var row = TSC_THREAD_DATA[std][size];
+  var html = '<table>';
+  if (std === 'metric') {
+    var d_mm=row[0],dm_mm=row[1],p_mm=row[2],As_mm2=row[3];
+    html += '<tr><td>Major d</td><td>'+d_mm+' mm ('+( d_mm/25.4).toFixed(4)+'")</td></tr>';
+    html += '<tr><td>Pitch d_m</td><td>'+dm_mm+' mm ('+(dm_mm/25.4).toFixed(4)+'")</td></tr>';
+    html += '<tr><td>Pitch</td><td>'+p_mm+' mm ('+(25.4/p_mm).toFixed(1)+' TPI equiv)</td></tr>';
+    html += '<tr><td>Stress Area</td><td>'+As_mm2+' mm² ('+(As_mm2/645.16).toFixed(5)+' in²)</td></tr>';
+  } else {
+    html += '<tr><td>Major d</td><td>'+row[0].toFixed(4)+'"</td></tr>';
+    html += '<tr><td>Pitch d_m</td><td>'+row[1].toFixed(4)+'"</td></tr>';
+    html += '<tr><td>TPI</td><td>'+row[2]+'</td></tr>';
+    html += '<tr><td>Stress Area</td><td>'+row[3].toFixed(5)+' in²</td></tr>';
+  }
+  html += '</table>';
+  box.innerHTML = html;
+  box.style.display = 'block';
+}
+
+function tscOnFrictionPreset() {
+  var val = document.getElementById('tsc-friction-preset').value;
+  if (val !== 'custom') document.getElementById('tsc-mu1').value = parseFloat(val);
+}
+
+function tscOnMaterialPreset() {
+  var val = document.getElementById('tsc-material-preset').value;
+  var cd  = document.getElementById('tsc-custom-material-inputs');
+  if (val === 'custom') {
+    cd.classList.remove('tsc-hidden');
+  } else {
+    cd.classList.add('tsc-hidden');
+    var mat = TSC_MATERIALS[val];
+    document.getElementById('tsc-ftu-display').value = mat.ftu;
+    document.getElementById('tsc-fty-display').value = mat.fty;
+  }
+}
+
+function tscGetThreadParams() {
+  var std = document.getElementById('tsc-thread-std').value;
+  if (std === 'custom') {
+    return {
+      d:    parseFloat(document.getElementById('tsc-c-major').value),
+      dm:   parseFloat(document.getElementById('tsc-c-pitch').value),
+      tpi:  parseFloat(document.getElementById('tsc-c-tpi').value),
+      As:   parseFloat(document.getElementById('tsc-c-stress-area').value),
+      beta: parseFloat(document.getElementById('tsc-c-beta').value) * Math.PI / 180,
+    };
+  }
+  var size = document.getElementById('tsc-thread-size').value;
+  var row  = TSC_THREAD_DATA[std][size];
+  if (std === 'metric') {
+    return { d:row[0]/25.4, dm:row[1]/25.4, tpi:25.4/row[2], As:row[3]/645.16, beta:30*Math.PI/180 };
+  }
+  return { d:row[0], dm:row[1], tpi:row[2], As:row[3], beta:30*Math.PI/180 };
+}
+
+function tscGetMaterial() {
+  var val = document.getElementById('tsc-material-preset').value;
+  if (val === 'custom') {
+    return {
+      ftu: parseFloat(document.getElementById('tsc-ftu').value) * 1000,
+      fty: parseFloat(document.getElementById('tsc-fty').value) * 1000,
+    };
+  }
+  var m = TSC_MATERIALS[val];
+  return { ftu: m.ftu * 1000, fty: m.fty * 1000 };
+}
+
+// ── Core math ────────────────────────────────────────────────
+function tscK1(dm, tpi, mu1, beta) {
+  var tanA = 1.0 / (Math.PI * dm * tpi);
+  var secB = 1.0 / Math.cos(beta);
+  return (dm / 2.0) * (tanA + mu1 * secB) / (1.0 - mu1 * tanA * secB);
+}
+function tscK2(mu1, DH, Dh) {
+  if (DH === Dh) return 0;
+  return (mu1 / 3.0) * (Math.pow(DH,3) - Math.pow(Dh,3)) / (Math.pow(DH,2) - Math.pow(Dh,2));
+}
+function tscMS(strength, stress) { return (strength / stress) - 1.0; }
+function tscCritT(F_allow, K1, K2, Tp, Td) { return F_allow * (K1 + K2) + Tp + Td; }
+
+// ── Main calculate ────────────────────────────────────────────
+function tscCalculate() {
+  var t   = tscGetThreadParams();
+  var mat = tscGetMaterial();
+  var mu1  = parseFloat(document.getElementById('tsc-mu1').value);
+  var DH   = parseFloat(document.getElementById('tsc-DH').value);
+  var Dh   = parseFloat(document.getElementById('tsc-Dh').value);
+  var Tapp = parseFloat(document.getElementById('tsc-T-applied').value);
+  var Tprev= parseFloat(document.getElementById('tsc-T-prevailing').value);
+  var Tdrag= parseFloat(document.getElementById('tsc-T-drag').value);
+  var ppres= parseFloat(document.getElementById('tsc-proof-pres').value);
+  var bpres= parseFloat(document.getElementById('tsc-burst-pres').value);
+  var parea= parseFloat(document.getElementById('tsc-pres-area').value);
+  if (!parea || parea === 0) parea = t.As;
+
+  var tanA  = 1.0 / (Math.PI * t.dm * t.tpi);
+  var aln   = Math.atan(tanA) * 180 / Math.PI;
+  var K1    = tscK1(t.dm, t.tpi, mu1, t.beta);
+  var K2    = tscK2(mu1, DH, Dh);
+  var Tnet  = Tapp - Tprev - Tdrag;
+  var Fpre  = Tnet / (K1 + K2);
+  var Fproof = ppres * parea;
+  var Fburst = bpres * parea;
+  var FaY   = mat.fty * t.As;
+  var FaU   = mat.ftu * t.As;
+  var TcY   = tscCritT(FaY, K1, K2, Tprev, Tdrag);
+  var TcU   = tscCritT(FaU, K1, K2, Tprev, Tdrag);
+
+  // Intermediate block
+  document.getElementById('tsc-calc-block').innerHTML =
+'<b>Thread Geometry</b>\n' +
+'  d  (major dia)   = '+t.d.toFixed(5)+'"\n'+
+'  dm (pitch dia)   = '+t.dm.toFixed(5)+'"\n'+
+'  TPI              = '+t.tpi.toFixed(2)+'\n'+
+'  As (stress area) = '+t.As.toFixed(5)+' in²\n'+
+'  β  (half angle)  = '+(t.beta*180/Math.PI).toFixed(1)+'°\n'+
+'  tan α            = 1/(π·dm·TPI) = '+tanA.toFixed(6)+'  →  α = '+aln.toFixed(4)+'°\n\n'+
+'<b>Friction / Collar</b>\n'+
+'  μ₁               = '+mu1.toFixed(4)+'\n'+
+'  D_H (collar OD)  = '+DH.toFixed(4)+'"\n'+
+'  D_h (collar ID)  = '+Dh.toFixed(4)+'"\n\n'+
+'<b>Torque Coefficients</b>\n'+
+'  K₁ = (dm/2)·(tanα + μ₁·secβ)/(1 − μ₁·tanα·secβ)\n'+
+'     = '+K1.toFixed(6)+' in\n'+
+'  K₂ = (μ₁/3)·(DH³−Dh³)/(DH²−Dh²)\n'+
+'     = '+K2.toFixed(6)+' in\n'+
+'  K₁+K₂ = '+(K1+K2).toFixed(6)+' in\n\n'+
+'<b>Torque Breakdown</b>\n'+
+'  T_applied    = '+Tapp.toFixed(2)+' in-lb\n'+
+'  T_prevailing = '+Tprev.toFixed(2)+' in-lb\n'+
+'  T_drag       = '+Tdrag.toFixed(2)+' in-lb\n'+
+'  T_net        = '+Tnet.toFixed(2)+' in-lb\n\n'+
+'<b>Preload</b>\n'+
+'  F_preload = T_net / (K₁+K₂) = '+Tnet.toFixed(2)+' / '+(K1+K2).toFixed(6)+'\n'+
+'            = '+Fpre.toFixed(1)+' lb\n'+
+'  σ_preload = F_preload / As = '+Fpre.toFixed(1)+' / '+t.As.toFixed(5)+'\n'+
+'            = '+(Fpre/t.As).toFixed(0)+' psi  ('+(Fpre/t.As/1000).toFixed(2)+' ksi)\n\n'+
+'<b>Pressure Forces</b>\n'+
+'  A_pressure = '+parea.toFixed(5)+' in²\n'+
+'  F_proof    = '+ppres+' psig × '+parea.toFixed(5)+' = '+Fproof.toFixed(1)+' lb\n'+
+'  F_burst    = '+bpres+' psig × '+parea.toFixed(5)+' = '+Fburst.toFixed(1)+' lb\n\n'+
+'<b>Material Allowables</b>\n'+
+'  F_tu = '+(mat.ftu/1000).toFixed(1)+' ksi  →  F_allow(ult)   = Ftu·As = '+FaU.toFixed(0)+' lb\n'+
+'  F_ty = '+(mat.fty/1000).toFixed(1)+' ksi  →  F_allow(yield) = Fty·As = '+FaY.toFixed(0)+' lb\n\n'+
+'<b>Critical Torque (preload-only)</b>\n'+
+'  T_crit(yield) = F_allow(yield)·(K₁+K₂) + T_prev + T_drag = '+TcY.toFixed(1)+' in-lb\n'+
+'  T_crit(ult)   = F_allow(ult)·(K₁+K₂)   + T_prev + T_drag = '+TcU.toFixed(1)+' in-lb';
+
+  // Critical torque cards
+  var yPct = ((Tapp / TcY) * 100).toFixed(0);
+  var uPct = ((Tapp / TcU) * 100).toFixed(0);
+  document.getElementById('tsc-torque-grid').innerHTML =
+    '<div class="tsc-torque-card">' +
+      '<div class="t-lbl">MAX TORQUE TO YIELD</div>' +
+      '<div class="t-val">'+TcY.toFixed(0)+' in-lb</div>' +
+      '<div class="t-sub">At F_ty = '+(mat.fty/1000).toFixed(1)+' ksi &nbsp;|&nbsp; '+yPct+'% utilized at T_applied</div>' +
+      '<div class="t-sub" style="color:'+(parseFloat(yPct)>=100?'#b00000':'#1a7a1a')+';">'+(parseFloat(yPct)>=100?'⚠ T_applied EXCEEDS yield limit':'✓ T_applied within yield limit')+'</div>' +
+    '</div>' +
+    '<div class="tsc-torque-card ult">' +
+      '<div class="t-lbl">MAX TORQUE TO FRACTURE</div>' +
+      '<div class="t-val">'+TcU.toFixed(0)+' in-lb</div>' +
+      '<div class="t-sub">At F_tu = '+(mat.ftu/1000).toFixed(1)+' ksi &nbsp;|&nbsp; '+uPct+'% utilized at T_applied</div>' +
+      '<div class="t-sub" style="color:'+(parseFloat(uPct)>=100?'#b00000':'#1a7a1a')+';">'+(parseFloat(uPct)>=100?'⚠ T_applied EXCEEDS ultimate limit':'✓ T_applied within ultimate limit')+'</div>' +
+    '</div>';
+
+  // Margins table
+  var cases = [
+    {label:'Preload Only', F:Fpre},
+    {label:'Preload + Proof Pres', F:Fpre+Fproof, skip:ppres===0},
+    {label:'Preload + Burst Pres', F:Fpre+Fburst, skip:bpres===0},
+  ];
+  var tbody = document.getElementById('tsc-ms-tbody');
+  tbody.innerHTML = '';
+  cases.forEach(function(c) {
+    if (c.skip) return;
+    var sig = c.F / t.As;
+    var msy = tscMS(mat.fty, sig);
+    var msu = tscMS(mat.ftu, sig);
+    tbody.innerHTML +=
+      '<tr><td>'+c.label+'</td><td>'+c.F.toFixed(1)+'</td><td>'+sig.toFixed(0)+'</td>' +
+      '<td class="'+(msy>=0?'tsc-ms-pos':'tsc-ms-neg')+'">'+msy.toFixed(3)+'</td>' +
+      '<td class="'+(msu>=0?'tsc-ms-pos':'tsc-ms-neg')+'">'+msu.toFixed(3)+'</td></tr>';
+  });
+
+  // Summary cards
+  var sig0 = Fpre / t.As;
+  var msy0 = tscMS(mat.fty, sig0);
+  var msu0 = tscMS(mat.ftu, sig0);
+  // document.getElementById('tsc-summary-grid').innerHTML =
+  //   '<div class="tsc-summary-card"><div class="lbl">Preload Force</div><div class="val">'+Fpre.toFixed(0)+' lb</div></div>' +
+  //   '<div class="tsc-summary-card"><div class="lbl">Thread Stress (preload)</div><div class="val">'+(sig0/1000).toFixed(2)+' ksi</div></div>' +
+  //   '<div class="tsc-summary-card"><div class="lbl">MS Yield (preload)</div><div class="val '+(msy0>=0?'tsc-ms-pos':'tsc-ms-neg')+'">'+msy0.toFixed(3)+'</div></div>' +
+  //   '<div class="tsc-summary-card"><div class="lbl">MS Ultimate (preload)</div><div class="val '+(msu0>=0?'tsc-ms-pos':'tsc-ms-neg')+'">'+msu0.toFixed(3)+'</div></div>';
+
+  // Parametric sweep
+  var sweepMus = [0.04,0.06,0.08,0.10,0.12,0.14,0.16,0.18,0.20,0.25,0.30];
+  var sw = document.getElementById('tsc-sweep-tbody');
+  sw.innerHTML = '';
+  sweepMus.forEach(function(mu) {
+    var k1 = tscK1(t.dm, t.tpi, mu, t.beta);
+    var k2 = tscK2(mu, DH, Dh);
+    var fp = Tnet / (k1 + k2);
+    var sg = fp / t.As;
+    var sy = tscMS(mat.fty, sg);
+    var su = tscMS(mat.ftu, sg);
+    var hl = Math.abs(mu - mu1) < 0.001 ? ' class="tsc-sweep-hl"' : '';
+    sw.innerHTML +=
+      '<tr'+hl+'>' +
+      '<td>'+mu.toFixed(2)+(Math.abs(mu-mu1)<0.001?' ◀':'')+'</td>' +
+      '<td>'+k1.toFixed(5)+'</td><td>'+k2.toFixed(5)+'</td>' +
+      '<td>'+fp.toFixed(0)+'</td><td>'+sg.toFixed(0)+'</td>' +
+      '<td class="'+(sy>=0?'tsc-ms-pos':'tsc-ms-neg')+'">'+sy.toFixed(3)+'</td>' +
+      '<td class="'+(su>=0?'tsc-ms-pos':'tsc-ms-neg')+'">'+su.toFixed(3)+'</td></tr>';
+  });
+
+  document.getElementById('tsc-results-placeholder').classList.add('tsc-hidden');
+  document.getElementById('tsc-results-area').classList.remove('tsc-hidden');
+}
+
+function tscToggleIntermed() {
+  var body = document.getElementById('tsc-intermed-body');
+  var chev = document.getElementById('tsc-intermed-chevron');
+  var open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  chev.style.transform = open ? '' : 'rotate(90deg)';
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  tscPopulateSizeList('as8879');
+  tscOnMaterialPreset();
+  initTscLightbox();
+});
+
+function initTscLightbox() {
+  const overlay  = document.getElementById('tscLightboxOverlay');
+  const img      = document.getElementById('tscLightboxImg');
+  const caption  = document.getElementById('tscLightboxCaption');
+  const closeBtn = document.getElementById('tscLightboxClose');
+  if (!overlay) return;
+
+  function openLightbox(dataUrl, captionText) {
+    img.src             = dataUrl;
+    img.alt             = captionText || '';
+    caption.textContent = captionText || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    img.src = '';
+  }
+
+  document.addEventListener('click', function(e) {
+    const target = e.target.closest('.ref-zoomable-svg');
+    if (!target) return;
+    const svgEl = target.tagName.toLowerCase() === 'svg' ? target : target.querySelector('svg');
+    if (!svgEl) return;
+    const captionEl = target.querySelector('.ref-fig-label');
+    const captionText = captionEl ? captionEl.textContent : '';
+    const xml = new XMLSerializer().serializeToString(svgEl);
+    const dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(xml);
+    openLightbox(dataUrl, captionText);
+  });
+
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) closeLightbox(); });
+  closeBtn.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
+  });
+}
+</script>
+
+  </body>
+</html>
