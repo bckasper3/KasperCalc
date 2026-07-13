@@ -38,6 +38,113 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="KasperCalc" />
     <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <!-- Chart.js + HdbkUtil for interactive figures -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="js/hdbkCharts.js"></script>
+    <script>
+    /* ── HdbkUtil: multi-series chart helper for Chapter 2.7 ───────────────── */
+    window.HdbkUtil = (function () {
+      'use strict';
+      function linInterp(pts, step) {
+        var s = pts.slice().sort(function (a, b) { return a.x - b.x; });
+        var r = [], i = 0;
+        var xA = Math.ceil(s[0].x / step) * step;
+        var xB = Math.floor(s[s.length - 1].x / step) * step;
+        for (var x = xA; x <= xB + 1e-9; x += step) {
+          while (i < s.length - 2 && s[i + 1].x < x) { i++; }
+          var a = s[i].x, b = s[i + 1].x, ya = s[i].y, yb = s[i + 1].y;
+          r.push({ x: x, y: +(ya + (x - a) / (b - a) * (yb - ya)).toFixed(4) });
+        }
+        return r;
+      }
+      function logInterp(pts, ppd) {
+        var s = pts.slice().sort(function (a, b) { return a.x - b.x; });
+        var step = 1 / ppd;
+        var ls = Math.ceil(Math.log10(s[0].x) * ppd) / ppd;
+        var le = Math.floor(Math.log10(s[s.length - 1].x) * ppd) / ppd;
+        var r = [], i = 0;
+        for (var lx = ls; lx <= le + 1e-9; lx += step) {
+          var x = Math.pow(10, lx);
+          while (i < s.length - 2 && s[i + 1].x < x) { i++; }
+          var l0 = Math.log10(s[i].x), l1 = Math.log10(s[i + 1].x);
+          var t = (l1 === l0) ? 0 : (lx - l0) / (l1 - l0);
+          r.push({ x: x, y: +(s[i].y + t * (s[i + 1].y - s[i].y)).toFixed(3) });
+        }
+        return r;
+      }
+      var BG = {
+        id: 'customBg',
+        beforeDraw: function (c) {
+          var ctx = c.ctx; ctx.save();
+          ctx.globalCompositeOperation = 'destination-over';
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, c.width, c.height);
+          ctx.restore();
+        }
+      };
+      var PAL = ['#3a6270','#c87941','#5a9aaa','#b34040','#4a7a4a','#7a5a8a',
+                 '#40a0c0','#a08040','#2a4a55','#c04060','#3a7a5a','#806030'];
+      function makeMultiLine(id, datasets, opts) {
+        opts = opts || {};
+        var el = document.getElementById(id);
+        if (!el) { return null; }
+        var T = (opts.tension !== undefined) ? opts.tension : 0.3;
+        var ds = datasets.map(function (d, i) {
+          var pts;
+          if      (d.interp === 'lin') { pts = linInterp(d.data, d.step || 1); }
+          else if (d.interp === 'log') { pts = logInterp(d.data, d.ppd  || 20); }
+          else                         { pts = d.data; }
+          return {
+            label: d.label || ('S' + (i + 1)), data: pts, fill: false,
+            borderColor: d.color || PAL[i % PAL.length],
+            backgroundColor: d.color || PAL[i % PAL.length],
+            tension: T, pointRadius: 0, pointHoverRadius: 0,
+            borderWidth: d.width || 2, showLine: true
+          };
+        });
+        var xS = {
+          type: opts.xLog ? 'logarithmic' : 'linear',
+          ticks: { maxRotation: 0, font: { size: 14 } },
+          title: { display: true, text: opts.xLabel || 'x', font: { size: 16 } },
+          grid: { color: 'rgba(0,0,0,0.07)' }
+        };
+        if (opts.xMin !== undefined) { xS.min = opts.xMin; }
+        if (opts.xMax !== undefined) { xS.max = opts.xMax; }
+        var yS = {
+          ticks: { font: { size: 14 } },
+          title: { display: true, text: opts.yLabel || 'y', padding: 8, font: { size: 16 } },
+          grid: { color: 'rgba(0,0,0,0.07)' }
+        };
+        if (opts.yMin !== undefined) { yS.min = opts.yMin; }
+        if (opts.yMax !== undefined) { yS.max = opts.yMax; }
+        return new Chart(el.getContext('2d'), {
+          type: 'scatter', data: { datasets: ds },
+          options: {
+            maintainAspectRatio: false, responsive: true, animation: false,
+            layout: { padding: { left: 8, right: 20, top: 5, bottom: 5 } },
+            plugins: {
+              customBg: {},
+              legend: { position: 'top', labels: { boxHeight: 2, font: { size: 14 }, usePointStyle: false, padding: 14 } },
+              tooltip: { enabled: true, mode: 'nearest', intersect: false, axis: 'x' }
+            },
+            scales: { x: xS, y: yS }
+          },
+          plugins: [BG]
+        });
+      }
+      function addToggle(btnId, chart) {
+        var b = document.getElementById(btnId);
+        if (!b || !chart) { return; }
+        b.addEventListener('click', function () {
+          var t = chart.options.plugins.tooltip;
+          t.enabled = !t.enabled; chart.update();
+          b.textContent = t.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+        });
+      }
+      return { linInterp: linInterp, logInterp: logInterp, makeMultiLine: makeMultiLine, addToggle: addToggle };
+    }());
+    </script>
   </head>
 
   <!-- BODY -->
@@ -236,6 +343,7 @@
                   <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
                   <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
                   <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                  <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
                 </div>
               </li>
               <li class="nav-item text-center align-svg-bottom smallsearchbar">
@@ -416,7 +524,7 @@
               </div>
             </div>
             <div class="group">
-              <span class="section-title-TOC">Table of Figures — §2.7.1 AISI 301</span>
+              <span class="section-title-TOC">Table of Figures</span>
               <div>
                 <a href="#fig-2.7.1.0" class="fig-link"><span class="fig-badge">Fig 2.7.1.0</span><span class="fig-title">Effect of temperature on the physical properties of AISI 301 stainless steel</span></a>
                 <a href="#fig-2.7.1.1.1a" class="fig-link"><span class="fig-badge">Fig 2.7.1.1.1(a)</span><span class="fig-title">Effect of temperature on <em>F<sub>ty</sub></em> of AISI 301, 302, 304, 304L, 321, and 347 annealed stainless steel</span></a>
@@ -427,15 +535,15 @@
                 <a href="#fig-2.7.1.3.2" class="fig-link"><span class="fig-badge">Fig 2.7.1.3.2</span><span class="fig-title">Effect of temperature on <em>F<sub>cy</sub></em> and <em>F<sub>su</sub></em> of AISI 301 &#189;-hard stainless steel sheet</span></a>
                 <a href="#fig-2.7.1.3.3" class="fig-link"><span class="fig-badge">Fig 2.7.1.3.3</span><span class="fig-title">Effect of temperature on <em>F<sub>bru</sub></em> and <em>F<sub>bry</sub></em> of AISI 301 &#189;-hard stainless steel sheet</span></a>
                 <a href="#fig-2.7.1.3.4" class="fig-link"><span class="fig-badge">Fig 2.7.1.3.4</span><span class="fig-title">Effect of temperature on <em>E</em> and <em>E<sub>c</sub></em> of AISI 301 &#189;-hard stainless steel sheet</span></a>
-                <a href="#fig-2.7.1.3.6a" class="fig-link"><span class="fig-badge">Fig 2.7.1.3.6(a)</span><span class="fig-title">Typical tensile stress-strain curves at room temperature for AISI 301 &#189;-hard stainless steel sheet</span></a>
-                <a href="#fig-2.7.1.3.6b" class="fig-link"><span class="fig-badge">Fig 2.7.1.3.6(b)</span><span class="fig-title">Typical compressive stress-strain and tangent-modulus curves at room temperature for AISI 301 &#189;-hard stainless steel sheet</span></a>
               </div>
             </div>
           </div>
           <div class="col-half">
             <div class="group">
-              <span class="section-title-TOC">Table of Figures — §2.7.1.4 – §2.7.1.5</span>
+              <span class="section-title-TOC">Table of Figures Cont.</span>
               <div>
+                <a href="#fig-2.7.1.3.6a" class="fig-link"><span class="fig-badge">Fig 2.7.1.3.6(a)</span><span class="fig-title">Typical tensile stress-strain curves at room temperature for AISI 301 &#189;-hard stainless steel sheet</span></a>                
+                <a href="#fig-2.7.1.3.6b" class="fig-link"><span class="fig-badge">Fig 2.7.1.3.6(b)</span><span class="fig-title">Typical compressive stress-strain and tangent-modulus curves at room temperature for AISI 301 &#189;-hard stainless steel sheet</span></a>
                 <a href="#fig-2.7.1.4.6a" class="fig-link"><span class="fig-badge">Fig 2.7.1.4.6(a)</span><span class="fig-title">Typical tensile stress-strain curves at room temperature for AISI 301 &#190;-hard stainless steel sheet</span></a>
                 <a href="#fig-2.7.1.4.6b" class="fig-link"><span class="fig-badge">Fig 2.7.1.4.6(b)</span><span class="fig-title">Typical compressive stress-strain and tangent-modulus curves at room temperature for AISI 301 &#190;-hard stainless steel sheet</span></a>
                 <a href="#fig-2.7.1.5.1" class="fig-link"><span class="fig-badge">Fig 2.7.1.5.1</span><span class="fig-title">Effect of temperature on <em>F<sub>tu</sub></em> and <em>F<sub>ty</sub></em> of AISI 301 full-hard stainless steel sheet</span></a>
@@ -475,7 +583,36 @@
             <p>The austenitic ("18-8") stainless steels were developed as corrosion-resistant alloys. However, they possess excellent oxidation resistance and good creep strength at elevated temperatures, along with good cold formability and other properties in airframe and missile applications. They are used in sheet form for portions of the airframe having ambient temperatures too high for aluminum alloys and, with the development of sandwich structures, are gaining additional uses. These steels are also used extensively at cryogenic temperatures.</p>
             <p>The two alloying elements in the austenitic stainless steels are chromium and nickel. Chromium adds corrosion and oxidation resistance and high-temperature strength, and nickel gives an austenitic structure, with its associated toughness and ductility. The AISI 300 series stainless steels constitute a wide variety of compositions designed for different applications. The basic grade, Type 302, contains 18 percent chromium and 8 percent nickel. Varying one or both of these elements creates special characteristics. Type 301 (17 percent chromium and 7 percent nickel) work hardens to very high strengths. Type 310 (25 percent chromium and 20 percent nickel) has higher elevated temperature strength and greater oxidation resistance than Type 302. Sulfur and selenium additions promote free machining. Low carbon and/or columbium or titanium additions minimize intergranular corrosion for elevated temperature applications and welded construction. The addition of molybdenum improves corrosion resistance in reducing environments and gives improved creep resistance over Type 302. The characteristics of some of the AISI 300 series stainless steels are presented in Table 2.7.0.1.</p>
             <p>These alloys are not hardenable by heat treatment but can achieve high-strength levels through cold working. The strength imparted by cold working is decreased by exposure to temperatures above about 900&deg;F.</p>
-            <span class="table-placeholder" id="table-2.7.0.1">Table 2.7.0.1 ---‚¬-- Characteristics of Some AISI 300 Series Stainless Steels</span>
+            <div class="hdbk-table-wrap" id="table-2.7.0.1">
+              <table class="hdbk-table">
+                <caption>Table 2.7.0.1. Characteristics of Some AISI 300 Series Stainless Steels</caption>
+                <thead>
+                  <tr>
+                    <th>AISI</th>
+                    <th>Characteristics</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>301</td><td class="td-left">High work-hardening rate; applications requiring high strength and ductility.</td></tr>
+                  <tr><td>302</td><td class="td-left">Higher carbon modification of Type 304 for higher strength on cold rolling.</td></tr>
+                  <tr><td>303</td><td class="td-left">Free machining sulfur modification of Type 302.</td></tr>
+                  <tr><td>303Se</td><td class="td-left">Free machining selenium modification of Type 302.</td></tr>
+                  <tr><td>304</td><td class="td-left">General purpose austenitic grade for enhanced corrosion resistance.</td></tr>
+                  <tr><td>304L</td><td class="td-left">Low-carbon modification of Type 304 for welding applications.</td></tr>
+                  <tr><td>305</td><td class="td-left">Low work-hardening rate; spin forming and severe spin drawing operations.</td></tr>
+                  <tr><td>309</td><td class="td-left">High-temperature strength and oxidation resistance.</td></tr>
+                  <tr><td>309S</td><td class="td-left">Low-carbon modification of Type 309 for welded construction.</td></tr>
+                  <tr><td>310</td><td class="td-left">High-temperature strength and oxidation resistance greater than Type 309.</td></tr>
+                  <tr><td>310S</td><td class="td-left">Low-carbon modification of Type 310 for welded construction.</td></tr>
+                  <tr><td>314</td><td class="td-left">Increased oxidation resistance over Type 310.</td></tr>
+                  <tr><td>316</td><td class="td-left">Mo added to improve corrosion resistance in reducing environments; improved creep resistance over Type 302.</td></tr>
+                  <tr><td>316L</td><td class="td-left">Low-carbon modification of Type 316 for welded construction.</td></tr>
+                  <tr><td>317</td><td class="td-left">Increased Mo to improve corrosion resistance over Type 316 in reducing media.</td></tr>
+                  <tr><td>321</td><td class="td-left">Titanium stabilized for service in 800 to 1600&deg;F range and to minimize carbide precipitation when welding for resistance to intergranular corrosion.</td></tr>
+                  <tr><td>347</td><td class="td-left">Columbium stabilized for service in 800 to 1600&deg;F range and to minimize carbide precipitation when welding for resistance to intergranular corrosion.</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div><!-- /2.7.0.1 -->
 
           <!-- 2.7.0.2 -->
@@ -507,12 +644,168 @@
             <p>Type 301 is strengthened by cold working. If cold-worked Type 301 is subjected to temperatures above 900&deg;F, its room-temperature strength is reduced.</p>
             <p>Type 301 should not be used for extended periods at temperatures of 750 to 1650&deg;F and should not be cooled slowly from higher temperatures through this range.</p>
             <p>Material specifications for AISI 301 stainless steel are presented in Table 2.7.1.0(a). The room-temperature mechanical and physical properties for AISI 301 stainless steel are presented in Tables 2.7.1.0(b) and (c). The physical properties of this alloy at room and elevated temperatures are presented in Figure 2.7.1.0. Specifications for related 300 series alloys for which the properties are applicable are footnoted in Table 2.7.1.0(b).</p>
-            <span class="table-placeholder" id="table-2.7.1.0a">Table 2.7.1.0(a) ---‚¬-- Material Specifications for AISI 301 Stainless Steel</span><br>
-            <span class="table-placeholder" id="table-2.7.1.0b">Table 2.7.1.0(b) ---‚¬-- Design Mechanical and Physical Properties of AISI 301 and Related Stainless Steels</span><br>
-            <span class="table-placeholder" id="table-2.7.1.0c">Table 2.7.1.0(c) ---‚¬-- Minimum Elongation Values for AISI 301 Stainless Steel Sheet and Strip</span>
-            <div class="fig-placeholder" id="fig-2.7.1.0">
-              <div class="fig-label">Figure 2.7.1.0</div>
-              <div class="fig-caption">Effect of temperature on the physical properties of AISI 301 stainless steel.</div>
+            <div class="hdbk-table-wrap" id="table-2.7.1.0a">
+              <table class="hdbk-table">
+                <caption>Table 2.7.1.0(a). Material Specifications for AISI 301 Stainless Steel</caption>
+                <thead>
+                  <tr>
+                    <th>Specification</th>
+                    <th>Form</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>AMS 5517</td><td class="td-left">Sheet and strip</td></tr>
+                  <tr><td>AMS 5518</td><td class="td-left">Sheet and strip</td></tr>
+                  <tr><td>AMS 5519</td><td class="td-left">Sheet and strip</td></tr>
+                  <tr><td>AMS 5901</td><td class="td-left">Plate, sheet, and strip</td></tr>
+                  <tr><td>AMS 5902</td><td class="td-left">Sheet and strip</td></tr>
+                </tbody>
+              </table>
+            </div><br>
+            <div class="hdbk-table-wrap" id="table-2.7.1.0b">
+              <table class="hdbk-table">
+                <caption>Table 2.7.1.0(b). Design Mechanical and Physical Properties of AISI 301 and Related<sup>a,b,c</sup> Stainless Steels</caption>
+                <thead>
+                  <tr>
+                    <th class="td-left">Specification</th>
+                    <th>AMS 5901</th><th colspan="2">AMS 5517</th><th colspan="2">AMS 5518</th><th colspan="2">AMS 5902</th><th colspan="2">AMS 5519</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Form</th>
+                    <th colspan="9">Sheet and strip</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Condition</th>
+                    <th>Annealed</th><th colspan="2">&#188; Hard</th><th colspan="2">&#189; Hard</th><th colspan="2">&#190; Hard</th><th colspan="2">Full Hard</th>
+                  </tr>
+                  <tr>
+                    <th class="td-left">Thickness, in.</th>
+                    <th>&le;0.187</th><th colspan="2">&hellip;</th><th colspan="2">&hellip;</th><th colspan="2">&hellip;</th><th colspan="2">&hellip;</th>
+                  </tr>
+                  <tr class="subhead">
+                    <th class="td-left">Basis</th>
+                    <th>S</th><th>A</th><th>B</th><th>A</th><th>B</th><th>A</th><th>B</th><th>A</th><th>B</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="prop-section"><td colspan="10" class="td-left">Mechanical Properties:</td></tr>
+
+                  <tr class="prop-group"><td colspan="10" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>73</td><td>124</td><td>129</td><td>141</td><td>151</td><td>157</td><td>168</td><td>174</td><td>185</td></tr>
+                  <tr><td class="td-indent">LT</td><td>75</td><td>122</td><td>127</td><td>142</td><td>152</td><td>163</td><td>173</td><td>175</td><td>186</td></tr>
+
+                  <tr class="prop-group"><td colspan="10" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>26</td><td>69</td><td>83</td><td>93</td><td>110</td><td>118</td><td>135</td><td>137</td><td>153</td></tr>
+                  <tr><td class="td-indent">LT</td><td>30</td><td>67</td><td>82</td><td>92</td><td>105</td><td>113</td><td>133</td><td>125</td><td>142</td></tr>
+
+                  <tr class="prop-group"><td colspan="10" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">L</td><td>23</td><td>44</td><td>54</td><td>61</td><td>69</td><td>75</td><td>88</td><td>83</td><td>94</td></tr>
+                  <tr><td class="td-indent">LT</td><td>29</td><td>71</td><td>88</td><td>100</td><td>116</td><td>127</td><td>152</td><td>142</td><td>164</td></tr>
+
+                  <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>50</td><td>66</td><td>69</td><td>77</td><td>82</td><td>88</td><td>93</td><td>95</td><td>100</td></tr>
+
+                  <tr class="prop-group"><td colspan="10" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 1.5)</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 2.0)</td><td>162</td><td>262</td><td>273</td><td>292</td><td>310</td><td>327</td><td>342</td><td>346</td><td>361</td></tr>
+
+                  <tr class="prop-group"><td colspan="10" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 1.5)</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr>
+                  <tr><td class="td-indent">(<em>e</em>/D = 2.0)</td><td>55</td><td>123</td><td>149</td><td>167</td><td>189</td><td>202</td><td>234</td><td>222</td><td>249</td></tr>
+
+                  <tr class="prop-group"><td colspan="10" class="td-left"><em>e</em>, percent (S basis):</td></tr>
+                  <tr><td class="td-indent">LT</td><td>40</td><td>25</td><td>&hellip;</td><td><sup>d</sup></td><td>&hellip;</td><td><sup>d</sup></td><td>&hellip;</td><td><sup>d</sup></td><td>&hellip;</td></tr>
+
+                  <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi:</td><td colspan="9"></td></tr>
+                  <tr><td class="td-indent">L</td><td>29.0</td><td colspan="2">27.0</td><td colspan="2">26.0</td><td colspan="2">26.0</td><td colspan="2">26.0</td></tr>
+                  <tr><td class="td-indent">LT</td><td>29.0</td><td colspan="2">28.0</td><td colspan="2">28.0</td><td colspan="2">28.0</td><td colspan="2">28.0</td></tr>
+
+                  <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi:</td><td colspan="9"></td></tr>
+                  <tr><td class="td-indent">L</td><td>28.0</td><td colspan="2">26.0</td><td colspan="2">26.0</td><td colspan="2">26.0</td><td colspan="2">26.0</td></tr>
+                  <tr><td class="td-indent">LT</td><td>28.0</td><td colspan="2">27.0</td><td colspan="2">27.0</td><td colspan="2">27.0</td><td colspan="2">27.0</td></tr>
+
+                  <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td>11.2</td><td colspan="2">10.6</td><td colspan="2">10.5</td><td colspan="2">10.5</td><td colspan="2">10.5</td></tr>
+                  <tr><td class="td-left"><em>&mu;</em></td><td>0.27</td><td colspan="2">0.27</td><td colspan="2">0.27</td><td colspan="2">0.27</td><td colspan="2">0.27</td></tr>
+
+                  <tr class="prop-section"><td colspan="10" class="td-left">Physical Properties:</td></tr>
+                  <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="9">0.286</td></tr>
+                  <tr><td class="td-left"><em>C</em>, <em>K</em>, and <em>&alpha;</em></td><td colspan="9">See Figure 2.7.1.0</td></tr>
+                </tbody>
+                <tfoot>
+                  <tr><td colspan="10">a &nbsp;Properties also applicable to AISI 302 for the following: AMS 5516 for annealed condition, AMS 5903 for 1/4H condition, AMS 5904 for 1/2H condition, AMS 5905 for 3/4H condition, and AMS 5906 for full hard condition.</td></tr>
+                  <tr><td colspan="10">b &nbsp;Properties also applicable to AISI 304 for the following: AMS 5513 for annealed condition, AMS 5910 for 1/4H condition, AMS 5911 for 1/2H condition, AMS 5912 for 3/4H condition, and AMS 5913 for full hard condition.</td></tr>
+                  <tr><td colspan="10">c &nbsp;Properties also applicable to AISI 316 for the following: AMS 5524 for annealed condition and AMS 5907 for 1/4H condition.</td></tr>
+                  <tr><td colspan="10">d &nbsp;See Table 2.7.1.0(c).</td></tr>
+                </tfoot>
+              </table>
+            </div><br>
+            <div class="hdbk-table-wrap" id="table-2.7.1.0c">
+              <table class="hdbk-table">
+                <caption>Table 2.7.1.0(c). Minimum Elongation Values for AISI 301 Stainless Steel Sheet and Strip</caption>
+                <thead>
+                  <tr>
+                    <th>Condition</th>
+                    <th>Thickness, inches</th>
+                    <th>Elongation (LT), percent</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td class="td-left" rowspan="2">&#189; hard</td><td>0.015 and under</td><td>15</td></tr>
+                  <tr><td>0.016 and over</td><td>18</td></tr>
+                  <tr><td class="td-left" rowspan="2">&#190; hard</td><td>0.030 and under</td><td>10</td></tr>
+                  <tr><td>0.031 and over</td><td>12</td></tr>
+                  <tr><td class="td-left" rowspan="2">Full hard</td><td>0.015 and under</td><td>8</td></tr>
+                  <tr><td>0.016 and over</td><td>9</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="hdbk-figure" id="fig-2.7.1.0">
+              <div class="canvasdiv">
+                <button id="toggle-fig2710k">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig2710k');var a=document.createElement('a');a.download='canvas-fig2710k.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig2710k').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig2710k" class="chartcanvas" role="img" aria-label="Figure 2.7.1.0 — K"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">K &mdash; At indicated Temperature.</p>
+              <div class="canvasdiv" style="margin-top:1.25rem;">
+                <button id="toggle-fig2710c">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig2710c');var a=document.createElement('a');a.download='canvas-fig2710c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig2710c').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig2710c" class="chartcanvas" role="img" aria-label="Figure 2.7.1.0 — C"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">C &mdash; At indicated Temperature.</p>
+              <div class="canvasdiv" style="margin-top:1.25rem;">
+                <button id="toggle-fig2710a">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig2710a');var a=document.createElement('a');a.download='canvas-fig2710a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig2710a').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig2710a" class="chartcanvas" role="img" aria-label="Figure 2.7.1.0 — Alpha"></canvas>
+                </div>
+              </div>
+              <p class="chart-note">&alpha; &mdash; Between 70&deg;F and indicated Temperature.</p>
+              <p class="fig-caption"><strong>Figure 2.7.1.0.</strong> Effect of temperature on the physical properties of AISI 301 stainless steel.</p>
+              <script>
+              (function(){
+                var dK=[{x:-216.714,y:5.839},{x:-144.354,y:7.019},{x:-60.819,y:8.075},{x:28.355,y:8.696},{x:156.570,y:9.396},{x:343.349,y:10.186},{x:530.148,y:10.836},{x:728.079,y:11.677},{x:942.742,y:12.541},{x:1210.368,y:13.665},{x:1500.307,y:14.800},{x:1589.519,y:15.150}];
+                var cK=HdbkUtil.makeMultiLine('canvas-fig2710k',[
+                  {label:'K',data:dK,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'K, Btu/[(hr)(ft²)(°F)/ft]'});
+                HdbkUtil.addToggle('toggle-fig2710k',cK);
+                var dC=[{x:-339.577,y:0.06770},{x:-197.552,y:0.08447},{x:-61.079,y:0.09938},{x:136.778,y:0.11304},{x:331.906,y:0.12236},{x:552.156,y:0.13043},{x:794.764,y:0.13540},{x:1090.354,y:0.14161},{x:1399.874,y:0.14907},{x:1595.106,y:0.15093}];
+                var cC=HdbkUtil.makeMultiLine('canvas-fig2710c',[
+                  {label:'C',data:dC,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'C, Btu/[(lb)(°F)]'});
+                HdbkUtil.addToggle('toggle-fig2710c',cC);
+                var dA=[{x:-445.563,y:5.271},{x:-406.713,y:5.776},{x:-348.372,y:6.368},{x:-292.765,y:6.824},{x:-206.510,y:7.366},{x:-128.564,y:7.761},{x:-42.245,y:8.143},{x:63.620,y:8.475},{x:195.832,y:8.871},{x:353.418,y:9.227},{x:500.889,y:9.512},{x:634.692,y:9.734},{x:835.665,y:10.028},{x:1092.162,y:10.349},{x:1287.337,y:10.558},{x:1502.037,y:10.768},{x:1595.583,y:10.831}];
+                var cA=HdbkUtil.makeMultiLine('canvas-fig2710a',[
+                  {label:'α',data:dA,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'α, 10⁻⁶ in./in./°F'});
+                HdbkUtil.addToggle('toggle-fig2710a',cA);
+              })();
+              </script>
             </div>
           </div><!-- /2.7.1.0 -->
 
@@ -520,13 +813,45 @@
           <div class="section lvl-2" id="2.7.1.1">
             <div class="section-heading lvl-2"><span class="section-num">2.7.1.1</span>Annealed Condition</div>
             <p>Elevated temperature curves for tensile yield and ultimate strengths are presented in Figures 2.7.1.1.1(a) and (b).</p>
-            <div class="fig-placeholder" id="fig-2.7.1.1.1a">
-              <div class="fig-label">Figure 2.7.1.1.1(a)</div>
-              <div class="fig-caption">Effect of temperature on the tensile yield strength (F<sub>ty</sub>) of AISI 301, 302, 304, 304L, 321, and 347 annealed stainless steel.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.1.1a">
+              <div class="canvasdiv">
+                <button id="toggle-fig27111a">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27111a');var a=document.createElement('a');a.download='canvas-fig27111a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27111a').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27111a" class="chartcanvas" role="img" aria-label="Figure 2.7.1.1.1(a)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.1.1(a).</strong> Effect of temperature on the tensile yield strength (<em>F<sub>ty</sub></em>) of AISI 301, 302, 304, 304L, 321, and 347 annealed stainless steel.</p>
+              <script>
+              (function(){
+                var dFty=[{x:-461.966,y:129.493},{x:-414.824,y:129.076},{x:-347.470,y:127.811},{x:-251.477,y:124.631},{x:-177.359,y:120.380},{x:-104.919,y:115.703},{x:-40.894,y:110.810},{x:23.139,y:105.063},{x:92.847,y:98.232},{x:184.939,y:87.604},{x:245.619,y:80.577},{x:286.068,y:76.319},{x:338.299,y:72.277},{x:404.007,y:67.365},{x:486.691,y:63.678},{x:567.363,y:62.008},{x:671.747,y:61.391},{x:840.098,y:61.349},{x:919.223,y:61.308},{x:979.838,y:60.467},{x:1047.188,y:59.493},{x:1117.915,y:57.568},{x:1197.072,y:54.540},{x:1269.499,y:51.026},{x:1358.773,y:46.468},{x:1431.210,y:42.004},{x:1495.220,y:38.507}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27111a',[
+                  {label:'Fₜᵧ',data:dFty,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Fₜᵧ',yMin:0});
+                HdbkUtil.addToggle('toggle-fig27111a',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.1.1b">
-              <div class="fig-label">Figure 2.7.1.1.1(b)</div>
-              <div class="fig-caption">Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) of AISI 301, 302, 304, 304L, 321, and 347 annealed stainless steel.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.1.1b">
+              <div class="canvasdiv">
+                <button id="toggle-fig27111b">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27111b');var a=document.createElement('a');a.download='canvas-fig27111b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27111b').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27111b" class="chartcanvas" role="img" aria-label="Figure 2.7.1.1.1(b)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.1.1(b).</strong> Effect of temperature on the tensile ultimate strength (<em>F<sub>tu</sub></em>) of AISI 301, 302, 304, 304L, 321, and 347 annealed stainless steel.</p>
+              <script>
+              (function(){
+                var dFtu=[{x:-458.824,y:243.679},{x:-400.000,y:229.820},{x:-343.048,y:213.979},{x:-297.059,y:200.966},{x:-247.059,y:187.954},{x:-197.059,y:174.943},{x:-156.952,y:163.345},{x:-74.332,y:140.432},{x:-12.032,y:124.025},{x:38.503,y:110.165},{x:82.353,y:100.265},{x:130.749,y:91.216},{x:172.460,y:85.278},{x:231.283,y:78.777},{x:294.118,y:74.412},{x:379.412,y:71.131},{x:455.882,y:70.138},{x:652.941,y:69.214},{x:770.588,y:68.948},{x:832.353,y:68.365},{x:941.176,y:65.601},{x:1047.059,y:61.937},{x:1132.353,y:57.112},{x:1200.000,y:52.670},{x:1291.176,y:45.531},{x:1364.706,y:39.315},{x:1494.118,y:26.983}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27111b',[
+                  {label:'Fₜᵤ',data:dFtu,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Fₜᵤ',yMin:0});
+                HdbkUtil.addToggle('toggle-fig27111b',chart);
+              })();
+              </script>
             </div>
           </div><!-- /2.7.1.1 -->
 
@@ -534,13 +859,65 @@
           <div class="section lvl-2" id="2.7.1.2">
             <div class="section-heading lvl-2"><span class="section-num">2.7.1.2</span>&#188; Hard Condition</div>
             <p>Typical room-temperature stress-strain and tangent-modulus curves are presented in Figures 2.7.1.2.6(a) and (b).</p>
-            <div class="fig-placeholder" id="fig-2.7.1.2.6a">
-              <div class="fig-label">Figure 2.7.1.2.6(a)</div>
-              <div class="fig-caption">Typical tensile stress-strain curves at room temperature for AISI 301 &#188;-hard stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.2.6a">
+              <div class="canvasdiv">
+                <button id="toggle-fig27126a">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27126a');var a=document.createElement('a');a.download='canvas-fig27126a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27126a').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27126a" class="chartcanvas" role="img" aria-label="Figure 2.7.1.2.6(a) — Tensile Stress-Strain"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.2.6(a).</strong> Typical tensile stress-strain curves at room temperature for AISI 301 &#188;-hard stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dS1=[{x:0.036,y:-3.680},{x:1.170,y:20.640},{x:1.675,y:30.720},{x:2.179,y:40.480},{x:2.796,y:51.520},{x:3.268,y:59.040},{x:3.788,y:66.720},{x:4.429,y:74.400},{x:4.933,y:80.800},{x:5.629,y:87.360},{x:6.438,y:95.360},{x:7.438,y:102.880},{x:8.377,y:110.080},{x:9.187,y:114.967}];
+                var dS2=[{x:-0.010,y:0.000},{x:0.472,y:14.346},{x:0.829,y:24.807},{x:1.305,y:37.360},{x:1.675,y:47.223},{x:2.233,y:59.925},{x:2.741,y:68.837},{x:3.146,y:74.869},{x:3.717,y:81.594},{x:4.431,y:88.169},{x:5.062,y:92.788},{x:5.578,y:96.321},{x:6.278,y:100.274},{x:6.887,y:103.412}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27126a',[
+                  {label:'Series 1',data:dS1,interp:'lin',step:0.05},
+                  {label:'Series 2',data:dS2,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27126a',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.2.6b">
-              <div class="fig-label">Figure 2.7.1.2.6(b)</div>
-              <div class="fig-caption">Typical compressive stress-strain and compressive tangent-modulus curves at room temperature for AISI 301 &#188;-hard stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.2.6b">
+              <div class="canvasdiv">
+                <button id="toggle-fig27126b1">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27126b1');var a=document.createElement('a');a.download='canvas-fig27126b1.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27126b1').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27126b1" class="chartcanvas" role="img" aria-label="Figure 2.7.1.2.6(b) — Compressive Stress-Strain"></canvas>
+                </div>
+              </div>
+              <div class="canvasdiv" style="margin-top:1rem;">
+                <button id="toggle-fig27126b2">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27126b2');var a=document.createElement('a');a.download='canvas-fig27126b2.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27126b2').toDataURL())">Open in New Tab</button>
+                <p class="chart-note">Compressive Tangent Modulus</p>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27126b2" class="chartcanvas" role="img" aria-label="Figure 2.7.1.2.6(b) — Compressive Tangent Modulus"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.2.6(b).</strong> Typical compressive stress-strain and compressive tangent-modulus curves at room temperature for AISI 301 &#188;-hard stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dSS1=[{x:-0.013,y:-0.682},{x:0.341,y:9.316},{x:0.707,y:19.315},{x:1.344,y:31.480},{x:1.836,y:39.668},{x:2.397,y:46.611},{x:3.571,y:57.548},{x:4.656,y:65.191},{x:5.426,y:69.418},{x:6.536,y:75.133},{x:7.905,y:80.404}];
+                var dSS2=[{x:0.038,y:0.228},{x:0.442,y:12.157},{x:0.871,y:23.633},{x:1.350,y:36.359},{x:1.905,y:50.223},{x:2.366,y:60.225},{x:2.789,y:68.638},{x:3.243,y:76.143},{x:3.836,y:84.335},{x:4.568,y:92.759},{x:5.438,y:101.189},{x:6.139,y:107.002},{x:7.413,y:115.560},{x:7.868,y:118.073}];
+                var dTM1=[{x:3.754,y:80.616},{x:4.479,y:74.500},{x:5.426,y:68.387},{x:6.751,y:61.826},{x:8.549,y:54.478},{x:10.189,y:49.851},{x:11.861,y:45.451},{x:13.849,y:40.829},{x:15.631,y:36.885},{x:17.508,y:33.169},{x:20.032,y:27.761},{x:22.035,y:23.253},{x:23.533,y:19.077},{x:24.637,y:15.123},{x:25.442,y:11.050},{x:25.804,y:6.971},{x:25.962,y:4.023},{x:25.994,y:0.166}];
+                var dTM2=[{x:4.543,y:125.446},{x:5.347,y:118.991},{x:6.703,y:110.388},{x:7.918,y:104.053},{x:9.211,y:98.059},{x:10.536,y:92.973},{x:11.861,y:87.887},{x:13.596,y:82.127},{x:15.426,y:76.708},{x:17.066,y:71.513},{x:18.139,y:68.580},{x:19.653,y:63.837},{x:21.073,y:59.093},{x:22.177,y:55.252},{x:23.281,y:51.411},{x:24.322,y:46.548},{x:25.379,y:40.096},{x:26.199,y:33.301},{x:26.751,y:23.551},{x:26.972,y:12.208},{x:27.003,y:0.181}];
+                var c1=HdbkUtil.makeMultiLine('canvas-fig27126b1',[
+                  {label:'Series 1',data:dSS1,interp:'lin',step:0.05},
+                  {label:'Series 2',data:dSS2,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27126b1',c1);
+                var c2=HdbkUtil.makeMultiLine('canvas-fig27126b2',[
+                  {label:'Series 1',data:dTM1,interp:'lin',step:0.05},
+                  {label:'Series 2',data:dTM2,interp:'lin',step:0.05}
+                ],{xLabel:'Compressive Tangent Modulus, 10³ ksi',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27126b2',c2);
+              })();
+              </script>
             </div>
           </div><!-- /2.7.1.2 -->
 
@@ -548,29 +925,151 @@
           <div class="section lvl-2" id="2.7.1.3">
             <div class="section-heading lvl-2"><span class="section-num">2.7.1.3</span>&#189; Hard Condition</div>
             <p>Elevated temperature curves for various mechanical properties are presented in Figures 2.7.1.3.1 through 2.7.1.3.4. Typical stress-strain and tangent-modulus curves are presented in Figures 2.7.1.3.6(a) and (b).</p>
-            <div class="fig-placeholder" id="fig-2.7.1.3.1">
-              <div class="fig-label">Figure 2.7.1.3.1</div>
-              <div class="fig-caption">Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of AISI 301 &#189;-hard stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.3.1">
+              <div class="canvasdiv">
+                <button id="toggle-fig27131">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27131');var a=document.createElement('a');a.download='canvas-fig27131.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27131').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27131" class="chartcanvas" role="img" aria-label="Figure 2.7.1.3.1"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.3.1.</strong> Effect of temperature on the tensile ultimate strength (<em>F<sub>tu</sub></em>) and the tensile yield strength (<em>F<sub>ty</sub></em>) of AISI 301 &#189;-hard stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dFtu=[{x:87.565,y:99.256},{x:123.594,y:95.379},{x:163.215,y:91.940},{x:196.829,y:89.377},{x:241.240,y:86.627},{x:283.246,y:84.378},{x:332.448,y:82.129},{x:400.852,y:79.005},{x:472.847,y:76.383},{x:544.840,y:73.948},{x:627.627,y:71.639},{x:690.012,y:70.267},{x:758.399,y:68.520},{x:832.788,y:66.273},{x:878.388,y:64.399},{x:933.595,y:61.525},{x:978.006,y:58.775},{x:1017.618,y:56.087},{x:1098.049,y:50.149},{x:1198.887,y:42.772}];
+                var dFty=[{x:88.766,y:99.131},{x:147.588,y:94.880},{x:200.397,y:91.881},{x:256.796,y:89.632},{x:315.589,y:87.759},{x:373.178,y:86.262},{x:427.164,y:85.202},{x:499.138,y:84.395},{x:590.302,y:83.588},{x:693.463,y:82.532},{x:766.645,y:80.974},{x:845.835,y:78.477},{x:896.235,y:76.416},{x:945.445,y:73.541},{x:981.459,y:70.853},{x:1021.077,y:67.727},{x:1058.298,y:64.413},{x:1102.725,y:60.287},{x:1143.554,y:56.160},{x:1200.003,y:49.781}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27131',[
+                  {label:'Fₜᵤ',data:dFtu,interp:'lin',step:5},
+                  {label:'Fₜᵧ',data:dFty,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature strength',yMin:0});
+                HdbkUtil.addToggle('toggle-fig27131',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.3.2">
-              <div class="fig-label">Figure 2.7.1.3.2</div>
-              <div class="fig-caption">Effect of temperature on the compressive yield strength (F<sub>cy</sub>) and the shear ultimate strength (F<sub>su</sub>) of AISI 301 &#189;-hard stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.3.2">
+              <div class="canvasdiv">
+                <button id="toggle-fig27132">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27132');var a=document.createElement('a');a.download='canvas-fig27132.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27132').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27132" class="chartcanvas" role="img" aria-label="Figure 2.7.1.3.2"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.3.2.</strong> Effect of temperature on the compressive yield strength (<em>F<sub>cy</sub></em>) and the shear ultimate strength (<em>F<sub>su</sub></em>) of AISI 301 &#189;-hard stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dFcy=[{x:80.830,y:98.642},{x:112.605,y:95.468},{x:156.608,y:91.316},{x:210.405,y:86.919},{x:261.755,y:82.644},{x:327.807,y:78.366},{x:391.432,y:75.063},{x:467.314,y:72.000},{x:553.018,y:69.788},{x:610.584,y:69.227},{x:652.232,y:68.974},{x:690.191,y:68.174},{x:755.066,y:65.906},{x:826.056,y:63.149},{x:903.148,y:59.477},{x:980.222,y:55.075},{x:1045.057,y:51.162},{x:1111.097,y:46.397},{x:1211.378,y:39.127}];
+                var dFsu=[{x:82.058,y:98.763},{x:161.643,y:96.796},{x:230.198,y:94.710},{x:293.868,y:93.234},{x:386.940,y:91.751},{x:465.331,y:91.063},{x:548.634,y:90.861},{x:633.136,y:89.624},{x:691.913,y:88.453},{x:777.609,y:85.937},{x:862.079,y:83.360},{x:940.411,y:80.297}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27132',[
+                  {label:'Fᵪᵧ',data:dFcy,interp:'lin',step:5},
+                  {label:'Fₛᵤ',data:dFsu,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature strength',yMin:0});
+                HdbkUtil.addToggle('toggle-fig27132',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.3.3">
-              <div class="fig-label">Figure 2.7.1.3.3</div>
-              <div class="fig-caption">Effect of temperature on the bearing ultimate strength (F<sub>bru</sub>) and the bearing yield strength (F<sub>bry</sub>) of AISI 301 &#189;-hard stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.3.3">
+              <div class="canvasdiv">
+                <button id="toggle-fig27133">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27133');var a=document.createElement('a');a.download='canvas-fig27133.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27133').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27133" class="chartcanvas" role="img" aria-label="Figure 2.7.1.3.3"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.3.3.</strong> Effect of temperature on the bearing ultimate strength (<em>F<sub>bru</sub></em>) and the bearing yield strength (<em>F<sub>bry</sub></em>) of AISI 301 &#189;-hard stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dFbru=[{x:82.694,y:99.366},{x:124.041,y:94.721},{x:160.376,y:90.703},{x:200.470,y:86.433},{x:250.587,y:82.540},{x:280.658,y:80.154},{x:316.993,y:77.892},{x:365.857,y:75.254},{x:412.216,y:73.305},{x:478.622,y:70.853},{x:543.774,y:68.402},{x:606.421,y:66.013},{x:699.139,y:62.555},{x:776.821,y:59.349},{x:893.344,y:55.012},{x:999.843,y:50.988},{x:1198.434,y:43.444}];
+                var dFbry=[{x:87.706,y:99.617},{x:175.411,y:97.853},{x:251.840,y:95.965},{x:335.787,y:93.575},{x:420.987,y:91.059},{x:492.404,y:88.795},{x:551.292,y:86.657},{x:611.433,y:84.519},{x:671.574,y:81.754},{x:730.462,y:78.864},{x:786.844,y:76.099},{x:857.009,y:72.392},{x:918.403,y:68.999},{x:982.302,y:64.791},{x:1111.355,y:56.249},{x:1199.060,y:49.781}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27133',[
+                  {label:'Fᵦᵣᵤ',data:dFbru,interp:'lin',step:5},
+                  {label:'Fᵦᵣᵧ',data:dFbry,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature strength',yMin:0});
+                HdbkUtil.addToggle('toggle-fig27133',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.3.4">
-              <div class="fig-label">Figure 2.7.1.3.4</div>
-              <div class="fig-caption">Effect of temperature on the tensile and compressive moduli (E and E<sub>c</sub>) of AISI 301 &#189;-hard stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.3.4">
+              <div class="canvasdiv">
+                <button id="toggle-fig27134">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27134');var a=document.createElement('a');a.download='canvas-fig27134.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27134').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27134" class="chartcanvas" role="img" aria-label="Figure 2.7.1.3.4"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.3.4.</strong> Effect of temperature on the tensile and compressive moduli (<em>E</em> and <em>E<sub>c</sub></em>) of AISI 301 &#189;-hard stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dE=[{x:95.238,y:99.381},{x:203.175,y:97.240},{x:323.810,y:94.785},{x:453.333,y:92.140},{x:590.476,y:89.497},{x:720.000,y:87.043},{x:829.206,y:84.840},{x:1051.429,y:80.560},{x:1196.825,y:77.601}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27134',[
+                  {label:'E / Eₒ',data:dE,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature modulus',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27134',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.3.6a">
-              <div class="fig-label">Figure 2.7.1.3.6(a)</div>
-              <div class="fig-caption">Typical tensile stress-strain curves at room temperature for AISI 301 &#189;-hard stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.3.6a">
+              <div class="canvasdiv">
+                <button id="toggle-fig27136a">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27136a');var a=document.createElement('a');a.download='canvas-fig27136a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27136a').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27136a" class="chartcanvas" role="img" aria-label="Figure 2.7.1.3.6(a) — Tensile Stress-Strain"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.3.6(a).</strong> Typical tensile stress-strain curves at room temperature for AISI 301 &#189;-hard stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dS1=[{x:0.024,y:-0.497},{x:0.715,y:17.341},{x:1.310,y:32.453},{x:1.763,y:44.593},{x:2.442,y:61.438},{x:2.930,y:71.840},{x:3.525,y:83.726},{x:4.072,y:93.380},{x:4.631,y:102.042},{x:5.712,y:116.265},{x:6.497,y:125.290},{x:7.304,y:133.197},{x:8.112,y:139.988},{x:8.771,y:145.419}];
+                var dS2=[{x:0.024,y:-0.373},{x:1.132,y:31.219},{x:1.633,y:45.591},{x:2.073,y:56.490},{x:2.609,y:69.868},{x:3.097,y:80.766},{x:3.716,y:91.906},{x:4.275,y:99.576},{x:5.558,y:113.666},{x:6.354,y:120.830},{x:6.959,y:124.651},{x:7.909,y:130.443},{x:8.639,y:134.259}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27136a',[
+                  {label:'Series 1',data:dS1,interp:'lin',step:0.05},
+                  {label:'Series 2',data:dS2,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27136a',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.3.6b">
-              <div class="fig-label">Figure 2.7.1.3.6(b)</div>
-              <div class="fig-caption">Typical compressive stress-strain and compressive tangent-modulus curves at room temperature for AISI 301 &#189;-hard stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.3.6b">
+              <div class="canvasdiv">
+                <button id="toggle-fig27136b1">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27136b1');var a=document.createElement('a');a.download='canvas-fig27136b1.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27136b1').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27136b1" class="chartcanvas" role="img" aria-label="Figure 2.7.1.3.6(b) — Compressive Stress-Strain"></canvas>
+                </div>
+              </div>
+              <div class="canvasdiv" style="margin-top:1rem;">
+                <button id="toggle-fig27136b2">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27136b2');var a=document.createElement('a');a.download='canvas-fig27136b2.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27136b2').toDataURL())">Open in New Tab</button>
+                <p class="chart-note">Compressive Tangent Modulus</p>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27136b2" class="chartcanvas" role="img" aria-label="Figure 2.7.1.3.6(b) — Compressive Tangent Modulus"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.3.6(b).</strong> Typical compressive stress-strain and compressive tangent-modulus curves at room temperature for AISI 301 &#189;-hard stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dSS1=[{x:0.038,y:-0.844},{x:1.141,y:27.504},{x:1.994,y:43.738},{x:2.796,y:57.015},{x:3.549,y:66.914},{x:4.414,y:76.257},{x:5.304,y:83.352},{x:6.395,y:91.868},{x:7.661,y:100.114},{x:8.991,y:108.365}];
+                var dSS2=[{x:0.063,y:-0.561},{x:1.041,y:28.481},{x:1.806,y:48.226},{x:2.671,y:68.258},{x:3.649,y:89.705},{x:4.552,y:106.084},{x:5.680,y:123.041},{x:6.533,y:133.228},{x:7.636,y:144.276},{x:9.003,y:156.467}];
+                var dTM1=[{x:5.235,y:107.036},{x:6.614,y:95.823},{x:8.197,y:84.054},{x:9.498,y:75.651},{x:10.878,y:68.658},{x:12.382,y:62.512},{x:14.232,y:56.375},{x:16.144,y:49.678},{x:19.248,y:39.357},{x:21.536,y:32.108},{x:23.448,y:24.708},{x:24.796,y:18.135},{x:25.423,y:13.652},{x:25.752,y:7.192},{x:25.987,y:0.166}];
+                var dTM2=[{x:6.489,y:170.925},{x:7.304,y:163.353},{x:8.401,y:153.820},{x:9.404,y:145.972},{x:10.972,y:135.608},{x:12.696,y:125.249},{x:14.389,y:115.733},{x:16.364,y:106.224},{x:18.464,y:95.594},{x:20.376,y:86.084},{x:22.414,y:75.171},{x:23.903,y:65.649},{x:25.188,y:55.418},{x:26.144,y:44.615},{x:26.583,y:35.626},{x:26.834,y:26.350},{x:27.022,y:15.385},{x:27.053,y:0.477}];
+                var c1=HdbkUtil.makeMultiLine('canvas-fig27136b1',[
+                  {label:'Series 1',data:dSS1,interp:'lin',step:0.05},
+                  {label:'Series 2',data:dSS2,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27136b1',c1);
+                var c2=HdbkUtil.makeMultiLine('canvas-fig27136b2',[
+                  {label:'Series 1',data:dTM1,interp:'lin',step:0.05},
+                  {label:'Series 2',data:dTM2,interp:'lin',step:0.05}
+                ],{xLabel:'Compressive Tangent Modulus, 10³ ksi',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27136b2',c2);
+              })();
+              </script>
             </div>
           </div><!-- /2.7.1.3 -->
 
@@ -578,13 +1077,65 @@
           <div class="section lvl-2" id="2.7.1.4">
             <div class="section-heading lvl-2"><span class="section-num">2.7.1.4</span>&#190; Hard Condition</div>
             <p>Typical room-temperature stress-strain and tangent-modulus curves are presented in Figures 2.7.1.4.6(a) and (b).</p>
-            <div class="fig-placeholder" id="fig-2.7.1.4.6a">
-              <div class="fig-label">Figure 2.7.1.4.6(a)</div>
-              <div class="fig-caption">Typical tensile stress-strain curves at room temperature for AISI 301 &#190;-hard stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.4.6a">
+              <div class="canvasdiv">
+                <button id="toggle-fig27146a">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27146a');var a=document.createElement('a');a.download='canvas-fig27146a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27146a').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27146a" class="chartcanvas" role="img" aria-label="Figure 2.7.1.4.6(a) — Tensile Stress-Strain"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.4.6(a).</strong> Typical tensile stress-strain curves at room temperature for AISI 301 &#190;-hard stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dS1=[{x:0.033,y:-0.001},{x:0.533,y:13.625},{x:1.111,y:27.710},{x:1.895,y:48.302},{x:2.478,y:63.319},{x:3.084,y:77.868},{x:3.634,y:89.937},{x:4.301,y:104.016},{x:4.945,y:115.146},{x:5.712,y:127.664},{x:6.867,y:143.568},{x:7.744,y:154.369},{x:8.766,y:163.917},{x:10.126,y:175.924}];
+                var dS2=[{x:0.033,y:-0.001},{x:0.911,y:25.707},{x:1.567,y:43.358},{x:2.279,y:63.489},{x:2.956,y:81.449},{x:3.512,y:94.139},{x:4.101,y:105.895},{x:4.779,y:118.575},{x:5.478,y:129.079},{x:6.267,y:139.267},{x:6.989,y:147.285},{x:8.355,y:159.136},{x:9.077,y:165.446},{x:10.126,y:172.818}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27146a',[
+                  {label:'Series 1',data:dS1,interp:'lin',step:0.05},
+                  {label:'Series 2',data:dS2,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27146a',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.4.6b">
-              <div class="fig-label">Figure 2.7.1.4.6(b)</div>
-              <div class="fig-caption">Typical compressive stress-strain and compressive tangent-modulus curves at room temperature for AISI 301 &#190;-hard stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.4.6b">
+              <div class="canvasdiv">
+                <button id="toggle-fig27146b1">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27146b1');var a=document.createElement('a');a.download='canvas-fig27146b1.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27146b1').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27146b1" class="chartcanvas" role="img" aria-label="Figure 2.7.1.4.6(b) — Compressive Stress-Strain"></canvas>
+                </div>
+              </div>
+              <div class="canvasdiv" style="margin-top:1rem;">
+                <button id="toggle-fig27146b2">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27146b2');var a=document.createElement('a');a.download='canvas-fig27146b2.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27146b2').toDataURL())">Open in New Tab</button>
+                <p class="chart-note">Compressive Tangent Modulus</p>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27146b2" class="chartcanvas" role="img" aria-label="Figure 2.7.1.4.6(b) — Compressive Tangent Modulus"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.4.6(b).</strong> Typical compressive stress-strain and compressive tangent-modulus curves at room temperature for AISI 301 &#190;-hard stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dSS1=[{x:0.000,y:-0.676},{x:0.771,y:19.954},{x:1.735,y:41.603},{x:2.795,y:62.241},{x:3.855,y:79.163},{x:5.265,y:96.094},{x:6.855,y:111.004},{x:8.470,y:123.887},{x:9.964,y:133.051}];
+                var dSS2=[{x:0.000,y:-1.351},{x:1.277,y:33.482},{x:2.078,y:55.633},{x:3.072,y:81.505},{x:3.952,y:102.476},{x:4.855,y:122.434},{x:5.723,y:138.675},{x:6.904,y:158.302},{x:8.096,y:173.877},{x:8.843,y:182.512},{x:9.687,y:192.165},{x:11.030,y:204.534}];
+                var dTM1=[{x:2.398,y:133.513},{x:2.904,y:121.366},{x:3.434,y:110.401},{x:4.193,y:96.740},{x:5.048,y:84.602},{x:5.904,y:74.153},{x:6.940,y:62.358},{x:7.807,y:53.091},{x:8.530,y:45.173},{x:8.976,y:39.442},{x:9.542,y:31.688},{x:9.928,y:24.773},{x:10.205,y:16.841},{x:10.367,y:9.751},{x:10.398,y:-0.890}];
+                var dTM2=[{x:2.819,y:219.674},{x:3.952,y:194.030},{x:4.723,y:177.836},{x:5.361,y:166.705},{x:6.036,y:156.251},{x:6.892,y:143.099},{x:7.663,y:130.959},{x:8.446,y:117.805},{x:9.157,y:104.988},{x:9.590,y:95.540},{x:10.253,y:75.964},{x:10.560,y:61.784},{x:10.771,y:45.574},{x:10.813,y:34.764},{x:10.801,y:-0.709}];
+                var c1=HdbkUtil.makeMultiLine('canvas-fig27146b1',[
+                  {label:'Series 1',data:dSS1,interp:'lin',step:0.05},
+                  {label:'Series 2',data:dSS2,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27146b1',c1);
+                var c2=HdbkUtil.makeMultiLine('canvas-fig27146b2',[
+                  {label:'Series 1',data:dTM1,interp:'lin',step:0.05},
+                  {label:'Series 2',data:dTM2,interp:'lin',step:0.05}
+                ],{xLabel:'Compressive Tangent Modulus, 10³ ksi',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27146b2',c2);
+              })();
+              </script>
             </div>
           </div><!-- /2.7.1.4 -->
 
@@ -592,41 +1143,265 @@
           <div class="section lvl-2" id="2.7.1.5">
             <div class="section-heading lvl-2"><span class="section-num">2.7.1.5</span>Full-Hard Condition</div>
             <p>The full-hard condition is a standard AISI temper and is developed by cold rolling 40 to 50 percent. Elevated temperature curves for various mechanical properties are presented in Figures 2.7.1.5.1 through 2.7.1.5.4. Tensile and compressive stress-strain as well as tangent-modulus curves at room temperature and several elevated temperatures are presented in Figures 2.7.1.5.6(a) through (d).</p>
-            <div class="fig-placeholder" id="fig-2.7.1.5.1">
-              <div class="fig-label">Figure 2.7.1.5.1</div>
-              <div class="fig-caption">Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of AISI 301 full-hard stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.5.1">
+              <div class="canvasdiv">
+                <button id="toggle-fig27151">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27151');var a=document.createElement('a');a.download='canvas-fig27151.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27151').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27151" class="chartcanvas" role="img" aria-label="Figure 2.7.1.5.1"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.5.1.</strong> Effect of temperature on the tensile ultimate strength (<em>F<sub>tu</sub></em>) and the tensile yield strength (<em>F<sub>ty</sub></em>) of AISI 301 full-hard stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dF=[{x:88.820,y:99.870},{x:144.272,y:97.403},{x:214.527,y:94.934},{x:269.997,y:93.206},{x:334.121,y:92.216},{x:416.740,y:90.855},{x:483.324,y:89.618},{x:542.489,y:87.643},{x:599.179,y:85.348},{x:660.785,y:82.338},{x:711.297,y:79.625},{x:765.494,y:76.296},{x:818.449,y:72.646},{x:881.251,y:68.085},{x:939.845,y:62.957},{x:984.649,y:58.914},{x:1037.561,y:53.541},{x:1073.238,y:49.548},{x:1113.838,y:45.111},{x:1167.950,y:38.334},{x:1201.155,y:34.193}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27151',[
+                  {label:'Fₜᵤ / Fₜᵧ',data:dF,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature strength',yMin:0});
+                HdbkUtil.addToggle('toggle-fig27151',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.5.2a">
-              <div class="fig-label">Figure 2.7.1.5.2(a)</div>
-              <div class="fig-caption">Effect of temperature on the compressive yield strength (F<sub>cy</sub>) of AISI 301 (full-hard) stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.5.2a">
+              <div class="canvasdiv">
+                <button id="toggle-fig27152a">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27152a');var a=document.createElement('a');a.download='canvas-fig27152a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27152a').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27152a" class="chartcanvas" role="img" aria-label="Figure 2.7.1.5.2(a)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.5.2(a).</strong> Effect of temperature on the compressive yield strength (<em>F<sub>cy</sub></em>) of AISI 301 (full-hard) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dS1=[{x:74.663,y:99.744},{x:128.325,y:96.465},{x:216.885,y:91.958},{x:316.623,y:87.850},{x:436.257,y:83.966},{x:544.593,y:82.082},{x:647.909,y:81.074},{x:763.667,y:80.065},{x:817.235,y:78.686},{x:869.602,y:76.432},{x:936.993,y:72.302},{x:995.702,y:67.622}];
+                var dS2=[{x:95.814,y:99.743},{x:206.600,y:98.634},{x:298.720,y:97.602},{x:407.044,y:95.968},{x:487.996,y:94.337},{x:556.506,y:92.707},{x:626.285,y:90.576},{x:708.556,y:87.445},{x:772.190,y:83.815},{x:828.358,y:80.185},{x:892.022,y:75.930},{x:940.731,y:72.177},{x:995.945,y:67.722}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27152a',[
+                  {label:'Series 1',data:dS1,interp:'lin',step:5},
+                  {label:'Series 2',data:dS2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Fᵪᵧ',yMin:0});
+                HdbkUtil.addToggle('toggle-fig27152a',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.5.2b">
-              <div class="fig-label">Figure 2.7.1.5.2(b)</div>
-              <div class="fig-caption">Effect of temperature on the ultimate shear strength (F<sub>su</sub>) of AISI 301 (full-hard) stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.5.2b">
+              <div class="canvasdiv">
+                <button id="toggle-fig27152b">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27152b');var a=document.createElement('a');a.download='canvas-fig27152b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27152b').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27152b" class="chartcanvas" role="img" aria-label="Figure 2.7.1.5.2(b)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.5.2(b).</strong> Effect of temperature on the ultimate shear strength (<em>F<sub>su</sub></em>) of AISI 301 (full-hard) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dFsu=[{x:88.774,y:99.369},{x:134.285,y:96.091},{x:192.447,y:92.055},{x:248.071,y:88.020},{x:307.476,y:83.480},{x:370.680,y:78.815},{x:441.505,y:74.275},{x:502.198,y:70.113},{x:542.679,y:67.718},{x:576.892,y:66.835},{x:626.351,y:66.330},{x:684.702,y:66.028},{x:744.317,y:65.624},{x:791.233,y:65.019},{x:855.838,y:62.926},{x:917.882,y:60.404},{x:1002.645,y:55.485}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27152b',[
+                  {label:'Fₛᵤ',data:dFsu,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Fₛᵤ',yMin:0});
+                HdbkUtil.addToggle('toggle-fig27152b',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.5.3">
-              <div class="fig-label">Figure 2.7.1.5.3</div>
-              <div class="fig-caption">Effect of temperature on the bearing ultimate strength (F<sub>bru</sub>) and the bearing yield strength (F<sub>bry</sub>) of AISI 301 (full-hard) stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.5.3">
+              <div class="canvasdiv">
+                <button id="toggle-fig27153">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27153');var a=document.createElement('a');a.download='canvas-fig27153.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27153').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27153" class="chartcanvas" role="img" aria-label="Figure 2.7.1.5.3"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.5.3.</strong> Effect of temperature on the bearing ultimate strength (<em>F<sub>bru</sub></em>) and the bearing yield strength (<em>F<sub>bry</sub></em>) of AISI 301 (full-hard) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dFbru=[{x:82.939,y:99.621},{x:124.949,y:96.970},{x:172.957,y:93.813},{x:229.377,y:90.530},{x:287.002,y:87.374},{x:339.843,y:85.227},{x:391.489,y:83.359},{x:473.192,y:81.692},{x:550.106,y:80.859},{x:658.254,y:79.116},{x:724.334,y:77.652},{x:795.198,y:75.126},{x:860.038,y:72.096},{x:920.053,y:68.333},{x:999.252,y:62.500}];
+                var dFbry=[{x:104.583,y:99.874},{x:186.268,y:97.475},{x:299.208,y:95.076},{x:407.349,y:93.030},{x:534.722,y:90.985},{x:618.840,y:89.747},{x:664.499,y:88.864},{x:729.361,y:86.742},{x:784.603,y:84.470},{x:833.835,y:82.197},{x:875.839,y:79.293},{x:917.341,y:75.530},{x:997.908,y:66.591}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27153',[
+                  {label:'Fᵦᵣᵤ',data:dFbru,interp:'lin',step:5},
+                  {label:'Fᵦᵣᵧ',data:dFbry,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature strength',yMin:0});
+                HdbkUtil.addToggle('toggle-fig27153',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.5.4">
-              <div class="fig-label">Figure 2.7.1.5.4</div>
-              <div class="fig-caption">Effect of temperature on the tensile and compressive moduli (E and E<sub>c</sub>) of AISI 301 (full-hard) stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.5.4">
+              <div class="canvasdiv">
+                <button id="toggle-fig27154">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27154');var a=document.createElement('a');a.download='canvas-fig27154.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27154').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27154" class="chartcanvas" role="img" aria-label="Figure 2.7.1.5.4"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.5.4.</strong> Effect of temperature on the tensile and compressive moduli (<em>E</em> and <em>E<sub>c</sub></em>) of AISI 301 (full-hard) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dE=[{x:89.965,y:99.668},{x:223.068,y:96.603},{x:366.616,y:93.563},{x:488.809,y:90.951},{x:654.898,y:87.433},{x:794.882,y:84.293},{x:955.042,y:81.027},{x:1083.166,y:78.263},{x:1202.985,y:75.601}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27154',[
+                  {label:'E / Eₒ',data:dE,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature modulus',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27154',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.5.6a">
-              <div class="fig-label">Figure 2.7.1.5.6(a)</div>
-              <div class="fig-caption">Typical tensile stress-strain curves at room and elevated temperatures for AISI 301 (full-hard) stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.5.6a">
+              <div class="canvasdiv">
+                <button id="toggle-fig27156a">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27156a');var a=document.createElement('a');a.download='canvas-fig27156a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27156a').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27156a" class="chartcanvas" role="img" aria-label="Figure 2.7.1.5.6(a)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.5.6(a).</strong> Typical tensile stress-strain curves at room and elevated temperatures for AISI 301 (full-hard) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var d1=[{x:0.000,y:0.613},{x:1.360,y:26.625},{x:2.267,y:44.681},{x:3.037,y:58.145},{x:3.737,y:67.933},{x:4.547,y:77.107},{x:5.550,y:86.766},{x:7.060,y:97.885},{x:8.200,y:105.336},{x:9.771,y:114.370},{x:10.581,y:118.519}];
+                var d2=[{x:0.014,y:0.000},{x:2.405,y:52.031},{x:3.751,y:78.043},{x:4.768,y:93.952},{x:6.210,y:111.997},{x:8.105,y:130.705},{x:9.959,y:145.309},{x:11.250,y:155.391},{x:12.183,y:161.498}];
+                var d3=[{x:0.014,y:0.000},{x:3.133,y:71.010},{x:4.686,y:98.550},{x:6.073,y:119.659},{x:7.213,y:133.972},{x:8.436,y:146.936},{x:9.685,y:158.796},{x:10.921,y:168.266},{x:12.898,y:183.542}];
+                var d4=[{x:0.027,y:0.612},{x:3.348,y:76.153},{x:4.865,y:104.673},{x:5.909,y:121.195},{x:6.925,y:135.878},{x:8.093,y:151.784},{x:9.548,y:168.603},{x:11.251,y:186.764},{x:12.542,y:199.481},{x:13.751,y:211.832}];
+                var d5=[{x:0.014,y:0.429},{x:1.773,y:46.224},{x:2.873,y:72.548},{x:3.876,y:96.116},{x:4.851,y:116.009},{x:6.006,y:136.205},{x:7.599,y:159.148},{x:9.096,y:177.497},{x:10.675,y:193.762},{x:11.939,y:205.009},{x:13.422,y:216.618}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27156a',[
+                  {label:'Series 1',data:d1,interp:'lin',step:0.1},
+                  {label:'Series 2',data:d2,interp:'lin',step:0.1},
+                  {label:'Series 3',data:d3,interp:'lin',step:0.1},
+                  {label:'Series 4',data:d4,interp:'lin',step:0.1},
+                  {label:'Series 5',data:d5,interp:'lin',step:0.1}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27156a',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.5.6b">
-              <div class="fig-label">Figure 2.7.1.5.6(b)</div>
-              <div class="fig-caption">Typical tensile stress-strain curves at room and elevated temperatures for AISI 301 (full-hard) stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.5.6b">
+              <div class="canvasdiv">
+                <button id="toggle-fig27156b">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27156b');var a=document.createElement('a');a.download='canvas-fig27156b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27156b').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27156b" class="chartcanvas" role="img" aria-label="Figure 2.7.1.5.6(b)"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.5.6(b).</strong> Typical tensile stress-strain curves at room and elevated temperatures for AISI 301 (full-hard) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var d1=[{x:0.012,y:0.000},{x:1.036,y:21.446},{x:2.061,y:42.892},{x:2.885,y:57.598},{x:3.874,y:70.159},{x:4.945,y:80.270},{x:6.075,y:89.461},{x:7.393,y:97.855},{x:8.699,y:105.515},{x:9.782,y:110.600}];
+                var d2=[{x:0.000,y:0.000},{x:1.366,y:31.863},{x:2.403,y:55.147},{x:3.380,y:75.980},{x:4.298,y:90.686},{x:4.981,y:99.265},{x:5.746,y:107.843},{x:6.511,y:115.809},{x:7.476,y:123.162},{x:8.571,y:131.127},{x:9.689,y:137.868},{x:11.019,y:144.608}];
+                var d3=[{x:0.035,y:0.613},{x:1.851,y:43.873},{x:2.565,y:61.581},{x:3.498,y:81.495},{x:4.193,y:94.363},{x:4.993,y:106.618},{x:5.653,y:115.870},{x:6.359,y:123.529},{x:7.359,y:135.110},{x:8.383,y:144.914},{x:9.454,y:154.167},{x:10.667,y:163.297},{x:11.808,y:170.343}];
+                var d4=[{x:0.024,y:0.000},{x:1.567,y:40.748},{x:2.273,y:57.598},{x:3.074,y:76.225},{x:4.475,y:104.167},{x:5.606,y:121.630},{x:6.595,y:134.559},{x:7.678,y:147.059},{x:8.702,y:157.169},{x:9.820,y:166.360},{x:10.844,y:175.245},{x:11.973,y:183.395}];
+                var d5=[{x:0.035,y:0.306},{x:1.037,y:28.493},{x:2.026,y:55.147},{x:2.839,y:77.512},{x:3.602,y:96.569},{x:4.476,y:113.971},{x:5.182,y:127.145},{x:6.218,y:141.912},{x:7.313,y:155.637},{x:8.220,y:164.828},{x:9.173,y:173.407},{x:10.314,y:182.782},{x:11.327,y:189.338},{x:11.821,y:192.708}];
+                var chart=HdbkUtil.makeMultiLine('canvas-fig27156b',[
+                  {label:'Series 1',data:d1,interp:'lin',step:0.1},
+                  {label:'Series 2',data:d2,interp:'lin',step:0.1},
+                  {label:'Series 3',data:d3,interp:'lin',step:0.1},
+                  {label:'Series 4',data:d4,interp:'lin',step:0.1},
+                  {label:'Series 5',data:d5,interp:'lin',step:0.1}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27156b',chart);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.5.6c">
-              <div class="fig-label">Figure 2.7.1.5.6(c)</div>
-              <div class="fig-caption">Typical compressive stress-strain and compressive tangent-modulus curves at room and elevated temperatures for AISI 301 (full-hard) stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.5.6c">
+              <div class="canvasdiv">
+                <button id="toggle-fig27156c1">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27156c1');var a=document.createElement('a');a.download='canvas-fig27156c1.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27156c1').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27156c1" class="chartcanvas" role="img" aria-label="Figure 2.7.1.5.6(c) — Compressive Stress-Strain"></canvas>
+                </div>
+              </div>
+              <div class="canvasdiv" style="margin-top:1rem;">
+                <button id="toggle-fig27156c2">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27156c2');var a=document.createElement('a');a.download='canvas-fig27156c2.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27156c2').toDataURL())">Open in New Tab</button>
+                <p class="chart-note">Compressive Tangent Modulus</p>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27156c2" class="chartcanvas" role="img" aria-label="Figure 2.7.1.5.6(c) — Compressive Tangent Modulus"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.5.6(c).</strong> Typical compressive stress-strain and compressive tangent-modulus curves at room and elevated temperatures for AISI 301 (full-hard) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dSS1=[{x:0.012,y:0.340},{x:0.890,y:16.982},{x:1.524,y:30.229},{x:2.085,y:40.757},{x:2.707,y:50.263},{x:3.561,y:59.763},{x:4.341,y:67.224},{x:5.329,y:73.658},{x:6.780,y:81.100},{x:7.890,y:85.287},{x:9.171,y:89.264}];
+                var dSS2=[{x:0.000,y:0.340},{x:1.463,y:31.931},{x:2.341,y:49.662},{x:2.768,y:56.384},{x:3.476,y:66.636},{x:4.195,y:74.031},{x:5.000,y:81.151},{x:5.963,y:87.790},{x:6.951,y:93.681},{x:8.402,y:100.442},{x:9.659,y:105.849}];
+                var dSS3=[{x:0.000,y:0.340},{x:1.756,y:40.767},{x:2.732,y:59.650},{x:3.549,y:71.464},{x:4.512,y:80.484},{x:5.598,y:89.297},{x:6.390,y:94.037},{x:7.549,y:100.806},{x:8.488,y:104.861},{x:9.549,y:109.525}];
+                var dSS4=[{x:0.015,y:0.272},{x:1.317,y:31.595},{x:2.317,y:52.315},{x:3.341,y:67.932},{x:4.561,y:83.204},{x:5.780,y:94.054},{x:7.073,y:104.017},{x:8.195,y:110.312},{x:9.841,y:118.633}];
+                var dSS5=[{x:0.000,y:0.000},{x:1.366,y:35.335},{x:2.210,y:56.672},{x:2.927,y:71.346},{x:3.690,y:83.501},{x:4.317,y:91.850},{x:5.249,y:102.776},{x:6.183,y:110.369},{x:7.478,y:120.332},{x:8.561,y:124.927},{x:9.927,y:131.827}];
+                var c1=HdbkUtil.makeMultiLine('canvas-fig27156c1',[
+                  {label:'Series 1',data:dSS1,interp:'lin',step:0.1},
+                  {label:'Series 2',data:dSS2,interp:'lin',step:0.1},
+                  {label:'Series 3',data:dSS3,interp:'lin',step:0.1},
+                  {label:'Series 4',data:dSS4,interp:'lin',step:0.1},
+                  {label:'Series 5',data:dSS5,interp:'lin',step:0.1}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27156c1',c1);
+                var dTM1=[{x:2.957,y:89.762},{x:4.146,y:81.586},{x:5.488,y:75.108},{x:7.622,y:66.580},{x:10.305,y:58.387},{x:11.951,y:53.606},{x:14.146,y:47.119},{x:16.372,y:40.971},{x:18.415,y:34.485},{x:19.726,y:27.463},{x:20.305,y:22.559},{x:20.585,y:16.433},{x:20.701,y:0.310}];
+                var dTM2=[{x:3.750,y:105.400},{x:4.665,y:97.226},{x:6.311,y:88.364},{x:8.140,y:80.180},{x:10.884,y:70.353},{x:12.805,y:64.345},{x:15.854,y:55.603},{x:17.561,y:49.801},{x:18.994,y:44.342},{x:20.091,y:38.548},{x:20.823,y:33.778},{x:21.402,y:28.329},{x:21.860,y:21.521},{x:21.982,y:12.336},{x:22.000,y:-0.113}];
+                var dTM3=[{x:3.841,y:108.120},{x:5.000,y:99.263},{x:6.250,y:92.106},{x:8.049,y:84.262},{x:10.244,y:76.074},{x:12.713,y:68.223},{x:15.000,y:61.735},{x:17.622,y:53.882},{x:21.189,y:39.216},{x:22.683,y:30.287},{x:23.689,y:20.820},{x:24.146,y:13.332},{x:24.207,y:0.066}];
+                var dTM4=[{x:5.000,y:115.930},{x:6.220,y:105.372},{x:7.927,y:95.148},{x:10.122,y:83.355},{x:12.012,y:74.694},{x:14.329,y:65.892},{x:17.713,y:53.541},{x:20.000,y:44.671},{x:21.799,y:33.766},{x:22.537,y:25.935},{x:22.902,y:17.768},{x:23.012,y:-0.057}];
+                var dTM5=[{x:4.543,y:131.921},{x:5.640,y:123.201},{x:7.622,y:111.818},{x:9.146,y:104.658},{x:10.701,y:97.430},{x:12.348,y:91.016},{x:14.695,y:83.847},{x:16.616,y:77.363},{x:18.902,y:70.194},{x:20.488,y:64.734},{x:22.287,y:56.890},{x:24.146,y:46.665},{x:25.000,y:40.533},{x:25.549,y:34.064},{x:25.854,y:25.557},{x:25.988,y:13.651},{x:26.000,y:-0.295}];
+                var c2=HdbkUtil.makeMultiLine('canvas-fig27156c2',[
+                  {label:'Series 1',data:dTM1,interp:'lin',step:0.1},
+                  {label:'Series 2',data:dTM2,interp:'lin',step:0.1},
+                  {label:'Series 3',data:dTM3,interp:'lin',step:0.1},
+                  {label:'Series 4',data:dTM4,interp:'lin',step:0.1},
+                  {label:'Series 5',data:dTM5,interp:'lin',step:0.1}
+                ],{xLabel:'Compressive Tangent Modulus, 10³ ksi',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27156c2',c2);
+              })();
+              </script>
             </div>
-            <div class="fig-placeholder" id="fig-2.7.1.5.6d">
-              <div class="fig-label">Figure 2.7.1.5.6(d)</div>
-              <div class="fig-caption">Typical compressive stress-strain and compressive tangent-modulus curves at room and elevated temperatures for AISI 301 (full-hard) stainless steel sheet.</div>
+            <div class="hdbk-figure" id="fig-2.7.1.5.6d">
+              <div class="canvasdiv">
+                <button id="toggle-fig27156d1">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27156d1');var a=document.createElement('a');a.download='canvas-fig27156d1.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27156d1').toDataURL())">Open in New Tab</button>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27156d1" class="chartcanvas" role="img" aria-label="Figure 2.7.1.5.6(d) — Compressive Stress-Strain"></canvas>
+                </div>
+              </div>
+              <div class="canvasdiv" style="margin-top:1rem;">
+                <button id="toggle-fig27156d2">Hide Tooltips</button>
+                <button onclick="(function(){var c=document.getElementById('canvas-fig27156d2');var a=document.createElement('a');a.download='canvas-fig27156d2.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                <button onclick="window.open(document.getElementById('canvas-fig27156d2').toDataURL())">Open in New Tab</button>
+                <p class="chart-note">Compressive Tangent Modulus</p>
+                <div class="canvascontainer">
+                  <canvas id="canvas-fig27156d2" class="chartcanvas" role="img" aria-label="Figure 2.7.1.5.6(d) — Compressive Tangent Modulus"></canvas>
+                </div>
+              </div>
+              <p class="fig-caption"><strong>Figure 2.7.1.5.6(d).</strong> Typical compressive stress-strain and compressive tangent-modulus curves at room and elevated temperatures for AISI 301 (full-hard) stainless steel sheet.</p>
+              <script>
+              (function(){
+                var dSS1=[{x:0.000,y:0.685},{x:1.294,y:27.740},{x:1.998,y:42.055},{x:3.666,y:76.370},{x:4.356,y:89.041},{x:5.232,y:100.342},{x:6.253,y:110.753},{x:7.402,y:119.863},{x:8.666,y:127.808},{x:9.973,y:134.247},{x:11.337,y:140.000}];
+                var dSS2=[{x:0.014,y:0.342},{x:1.941,y:43.836},{x:3.019,y:68.493},{x:3.997,y:89.041},{x:4.888,y:105.137},{x:6.066,y:121.918},{x:7.159,y:134.932},{x:8.136,y:145.205},{x:9.687,y:156.507},{x:11.325,y:168.493},{x:12.660,y:175.342}];
+                var dSS3=[{x:0.014,y:0.342},{x:3.252,y:78.014},{x:4.601,y:106.849},{x:5.507,y:123.630},{x:6.369,y:137.329},{x:7.375,y:150.000},{x:8.559,y:162.534},{x:10.127,y:174.247},{x:11.581,y:184.041},{x:12.790,y:190.411}];
+                var dSS4=[{x:-0.014,y:0.342},{x:3.034,y:75.342},{x:4.156,y:102.397},{x:4.932,y:121.233},{x:5.579,y:134.247},{x:6.384,y:147.260},{x:7.088,y:156.164},{x:8.209,y:168.151},{x:9.372,y:177.397},{x:10.651,y:186.301},{x:12.202,y:192.466},{x:12.762,y:194.521}];
+                var dSS5=[{x:0.029,y:0.000},{x:1.553,y:43.151},{x:2.732,y:73.973},{x:3.610,y:96.918},{x:4.357,y:116.438},{x:5.191,y:134.589},{x:6.111,y:150.000},{x:7.143,y:163.973},{x:8.330,y:176.575},{x:9.430,y:185.616},{x:10.726,y:194.452},{x:12.582,y:204.247}];
+                var c1=HdbkUtil.makeMultiLine('canvas-fig27156d1',[
+                  {label:'Series 1',data:dSS1,interp:'lin',step:0.1},
+                  {label:'Series 2',data:dSS2,interp:'lin',step:0.1},
+                  {label:'Series 3',data:dSS3,interp:'lin',step:0.1},
+                  {label:'Series 4',data:dSS4,interp:'lin',step:0.1},
+                  {label:'Series 5',data:dSS5,interp:'lin',step:0.1}
+                ],{xLabel:'Strain, 0.001 in./in.',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27156d1',c1);
+                var dTM1=[{x:4.076,y:139.041},{x:5.324,y:130.068},{x:7.189,y:118.493},{x:9.600,y:108.904},{x:12.471,y:98.151},{x:14.623,y:90.137},{x:16.848,y:81.301},{x:18.498,y:73.288},{x:19.753,y:65.753},{x:20.864,y:53.767},{x:21.437,y:43.836},{x:21.606,y:21.918}];
+                var dTM2=[{x:5.482,y:175.342},{x:7.131,y:160.274},{x:8.888,y:147.603},{x:10.430,y:136.986},{x:12.797,y:124.315},{x:15.272,y:110.616},{x:17.209,y:100.685},{x:18.823,y:90.890},{x:19.863,y:83.562},{x:21.082,y:72.603},{x:21.842,y:61.301},{x:22.336,y:52.055},{x:22.714,y:37.671},{x:22.834,y:24.178},{x:22.867,y:1.027}];
+                var dTM3=[{x:4.515,y:192.123},{x:5.806,y:182.877},{x:7.456,y:174.315},{x:9.285,y:166.781},{x:11.187,y:159.589},{x:13.555,y:151.712},{x:15.923,y:143.151},{x:17.681,y:136.986},{x:19.690,y:128.767},{x:21.305,y:121.575},{x:22.488,y:114.041},{x:23.528,y:105.822},{x:24.316,y:95.890},{x:24.910,y:82.192},{x:25.138,y:65.411},{x:25.135,y:0.342}];
+                var dTM4=[{x:5.304,y:190.068},{x:7.133,y:174.315},{x:9.105,y:161.986},{x:11.437,y:150.000},{x:13.302,y:141.096},{x:15.634,y:130.479},{x:17.614,y:120.479},{x:19.379,y:110.411},{x:21.358,y:96.575},{x:22.233,y:88.014},{x:22.950,y:79.452},{x:23.458,y:67.123},{x:23.837,y:56.164},{x:23.950,y:43.493},{x:23.929,y:0.685}];
+                var dTM5=[{x:5.091,y:202.055},{x:6.704,y:190.411},{x:7.995,y:182.192},{x:9.466,y:174.658},{x:11.224,y:167.466},{x:13.233,y:159.932},{x:15.601,y:150.685},{x:17.861,y:141.096},{x:20.409,y:131.164},{x:22.382,y:121.918},{x:24.103,y:112.329},{x:25.250,y:101.370},{x:25.931,y:91.438},{x:26.504,y:79.110},{x:26.882,y:67.123},{x:26.930,y:0.205}];
+                var c2=HdbkUtil.makeMultiLine('canvas-fig27156d2',[
+                  {label:'Series 1',data:dTM1,interp:'lin',step:0.1},
+                  {label:'Series 2',data:dTM2,interp:'lin',step:0.1},
+                  {label:'Series 3',data:dTM3,interp:'lin',step:0.1},
+                  {label:'Series 4',data:dTM4,interp:'lin',step:0.1},
+                  {label:'Series 5',data:dTM5,interp:'lin',step:0.1}
+                ],{xLabel:'Compressive Tangent Modulus, 10³ ksi',yLabel:'Stress, ksi',xMin:0,yMin:0});
+                HdbkUtil.addToggle('toggle-fig27156d2',c2);
+              })();
+              </script>
             </div>
           </div><!-- /2.7.1.5 -->
 
