@@ -44,7 +44,7 @@ window.ThermoCalc = (function () {
 
   // ── Constants ────────────────────────────────────────────────────────────────
 
-  var GZ_ROOT           = 'coolprop_data_v7.2.0/gz/';
+  var GZ_ROOT           = 'https://data.kaspercalc.com/gz/';
   var GRID_RECORD_BYTES = 45;
   var SAT_RECORD_BYTES  = 57;
 
