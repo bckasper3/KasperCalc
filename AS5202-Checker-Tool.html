@@ -498,6 +498,22 @@
       if (v === null || v === undefined || isNaN(v)) return '—';
       return v.toFixed(dp).replace(/^(-?)0\./, '$1.');
     }
+    /* Average internal minor diameter for a UNJ/UNJF thread spec string, e.g. ".7500-16-UNJF",
+       per the AS8879/ASME B1.1 UNJ profile (controlled root radius, increased minor diameter):
+         D1min = major Ø − 1.125 × P × cos(30°)     (vs. plain UN's 1.0825317547935 × P)
+         T_D1  = 0.25P − 0.4P²                       (internal minor-diameter tolerance)
+       Verified against published Class 3B data: 1/4-28 UNJF → D1min .2152; 3/8-24 UNJF → D1min .3344. */
+    function threadMinorDia(threadSpec) {
+      if (!threadSpec) return null;
+      const m = threadSpec.match(/^(\d*\.\d+)-(\d+(?:\.\d+)?)-/);
+      if (!m) return null;
+      const majorD = parseFloat(m[1]), tpi = parseFloat(m[2]);
+      if (!majorD || !tpi) return null;
+      const p = 1 / tpi;
+      const d1min = majorD - 1.125 * Math.cos(Math.PI / 6) * p;
+      const tD1 = 0.25 * p - 0.4 * p * p;
+      return d1min + tD1 / 2;
+    }
     /* Resolve a dimension's display string for the current mode: nominal (raw, ranges kept),
        limit (tolerances applied), or cad (mean of the limits, 4 dp). */
     function asValueFor(dim, raw, mode) {
@@ -554,8 +570,14 @@
         const vlines = parts
           ? [ (diaStack ? '' : cfg.pre) + parts[0], parts[1] + cfg.suf ]
           : [ cfg.pre + val + cfg.suf ];
-        /* Optional note on its own centered line below the value (e.g. "HEX" on E). */
-        const lines = cfg.below ? vlines.concat([cfg.below]) : vlines;
+        /* Optional note(s) on their own centered line(s) below the value (e.g. "HEX" on E).
+           In CAD mode, the thread callout also gets the average (basic) minor diameter. */
+        const belowLines = cfg.below ? [cfg.below] : [];
+        if (cfg.id === 'ax-T' && pdMode === 'cad') {
+          const minorDia = threadMinorDia(raw);
+          if (minorDia != null) belowLines.push('MINOR DIAMETER Ø' + asFmt(minorDia, 4));
+        }
+        const lines = belowLines.length ? vlines.concat(belowLines) : vlines;
         const n = lines.length;
         const top = -((n - 1) / 2);                        /* em; dominant-baseline:middle → symmetric block */
         lines.forEach((line, i) => addTspan(x, (i === 0 ? top : 1) + 'em', line, 'middle'));
@@ -1135,10 +1157,10 @@
                      Positions are rough starting points stacked over both figures — drag them into place
                      (drag mode is on) and copy the coordinates from the dev panel back into the source. -->
                 <text class="pd-live" id="ax-T" x="126"  y="487" text-anchor="middle">&mdash;</text>
-                <text class="pd-live" id="ax-A" x="415"  y="194" text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-A" x="414"  y="147" text-anchor="middle">&mdash;</text>
                 <text class="pd-live" id="ax-B" x="595"  y="417" text-anchor="middle">&mdash;</text>
                 <text class="pd-live" id="ax-C" x="406"  y="603" text-anchor="middle">&mdash;</text>
-                <text class="pd-live" id="ax-D" x="414"  y="147" text-anchor="middle">&mdash;</text>
+                <text class="pd-live" id="ax-D" x="415"  y="194" text-anchor="middle">&mdash;</text>
                 <text class="pd-live" id="ax-E" x="1141" y="416" text-anchor="middle">&mdash;</text>
                 <text class="pd-live" id="ax-G" x="407"  y="110" text-anchor="middle">&mdash;</text>
                 <text class="pd-live" id="ax-J" x="687"  y="418" text-anchor="middle">&mdash;</text>

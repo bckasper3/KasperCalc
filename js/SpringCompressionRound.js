@@ -67,6 +67,10 @@ let loadedRoundMaterialsByName = {};
 let selectedMaterialRecord = null;
 let _lastSolvedState = null;
 
+// Material fatigue comparison table — how many rows show before "Show all"
+const FATIGUE_TABLE_COLLAPSED_COUNT = 5;
+let _fatigueTableExpanded = false;
+
 // Tracks which field IDs the user has typed into manually.
 // The LM solver treats these as hard-pinned constraints.
 // Serialised into the URL hash on every change and restored on load.
@@ -1245,6 +1249,108 @@ function estimateCycleLife(sc_operating, mts, peened) {
   return N;
 }
 
+// Operating corrected torsional stress — depends only on solved geometry
+// (d, D, loads, preset condition), never on material. Shared by the cycle
+// life field and the cross-material fatigue comparison table so both stay
+// in sync with a single implementation.
+function computeOperatingCorrectedStress(sv) {
+  if (!sv) return null;
+  const hasL1 = userEnteredFieldIds.has('F1') || userEnteredFieldIds.has('L1') || travelEnabledHasL1();
+  const hasL2 = userEnteredFieldIds.has('F2') || userEnteredFieldIds.has('L2') || travelEnabledHasL2();
+  const preset = document.getElementById('condPreset')?.checked ?? false;
+
+  const d = sv.d, D = sv.D, F1 = sv.F1, F2 = sv.F2;
+  if (!d || !D) return null;
+
+  const C  = D / d;
+  const Kw = preset ? calculateWahlStressCorrectionFactorK2(C) : calculateWahlStressCorrectionFactor(C);
+  if (!Kw) return null;
+
+  if (hasL1 && hasL2) {
+    const su2_val = (8 * (F2 || 0) * D) / (Math.PI * Math.pow(d, 3));
+    const su1_val = (8 * (F1 || 0) * D) / (Math.PI * Math.pow(d, 3));
+    return Kw * Math.max(su1_val, su2_val);
+  } else if (hasL2 && F2) {
+    return Kw * (8 * F2 * D) / (Math.PI * Math.pow(d, 3));
+  } else if (hasL1 && F1) {
+    return Kw * (8 * F1 * D) / (Math.PI * Math.pow(d, 3));
+  }
+  return null;
+}
+
+// ============================================================
+// MATERIAL FATIGUE COMPARISON TABLE
+// ============================================================
+// Ranks every loaded material (database + active custom material) by
+// estimated fatigue life at the current wire diameter and operating
+// stress. Geometry (sc_operating) is identical across materials — only
+// MTS varies — so this is cheap to recompute on every solve.
+
+function toggleFatigueTableExpand() {
+  _fatigueTableExpanded = !_fatigueTableExpanded;
+  const sv = _lastSolvedState?.sv || null;
+  const peened = document.getElementById('condPeened')?.checked ?? false;
+  updateMaterialFatigueTable(computeOperatingCorrectedStress(sv), sv?.d ?? null, peened);
+}
+
+function updateMaterialFatigueTable(sc_op, d, peened) {
+  const emptyEl   = document.getElementById('fatigueTableEmpty');
+  const bodyEl    = document.getElementById('fatigueTableBody');
+  const expandBtn = document.getElementById('fatigueExpandBtn');
+  if (!bodyEl) return; // section not present on this page
+
+  if (!sc_op || !d) {
+    bodyEl.innerHTML = '';
+    bodyEl.style.display = 'none';
+    if (emptyEl)   emptyEl.style.display = 'block';
+    if (expandBtn) expandBtn.style.display = 'none';
+    return;
+  }
+  if (emptyEl) emptyEl.style.display = 'none';
+  bodyEl.style.display = '';
+
+  const currentName = document.getElementById('material')?.value || '';
+
+  const rows = Object.values(loadedRoundMaterialsByName)
+    .filter(rec => rec && rec['NAME'])
+    .map(rec => {
+      const mts  = computeMinTensileStrengthPsi(rec, d);
+      const life = (mts && mts > 0) ? estimateCycleLife(sc_op, mts, peened) : null;
+      return { name: rec['NAME'], isCustom: !!rec['_custom'], mts, life };
+    });
+
+  // Highest fatigue life first; materials with no computable life sink to the bottom.
+  rows.sort((a, b) => {
+    const la = (a.life === null || isNaN(a.life)) ? -1 : a.life;
+    const lb = (b.life === null || isNaN(b.life)) ? -1 : b.life;
+    return lb - la;
+  });
+
+  const visibleCount = _fatigueTableExpanded ? rows.length : Math.min(FATIGUE_TABLE_COLLAPSED_COUNT, rows.length);
+
+  bodyEl.innerHTML = rows.slice(0, visibleCount).map(r => {
+    const isSelected = r.name === currentName;
+    const mtsStr  = (r.mts !== null && !isNaN(r.mts)) ? Math.round(r.mts).toLocaleString() + ' psi' : '—';
+    const lifeStr = formatCycleLife(r.life);
+    const lifeCls = (r.life !== null && r.life < 1000) ? 'wire-chip unavail' : 'wire-chip';
+    return `
+      <div class="fatigue-row${isSelected ? ' fatigue-row-selected' : ''}">
+        <div class="fatigue-row-name">${escapeHtml(r.name)}${r.isCustom ? ' <span class="fatigue-custom-tag">custom</span>' : ''}</div>
+        <div class="fatigue-row-mts">${mtsStr}</div>
+        <div class="fatigue-row-life"><span class="${lifeCls}">${lifeStr}</span></div>
+      </div>`;
+  }).join('');
+
+  if (expandBtn) {
+    if (rows.length > FATIGUE_TABLE_COLLAPSED_COUNT) {
+      expandBtn.style.display = 'inline-flex';
+      expandBtn.textContent = _fatigueTableExpanded ? 'Show fewer' : `Show all ${rows.length} materials`;
+    } else {
+      expandBtn.style.display = 'none';
+    }
+  }
+}
+
 
 // ============================================================
 // DOM HELPERS
@@ -1850,6 +1956,9 @@ function blankAllComputedOutputs() {
     const el = document.getElementById(id);
     if (el) { el.textContent = '—'; el.className = 'prop-output'; }
   });
+
+  // Material fatigue comparison table — no spring solved
+  updateMaterialFatigueTable(null, null, false);
 }
 
 function setBuckleNoBuckle() {
@@ -2396,21 +2505,12 @@ function runDeterministicPostPass(sv, result) {
   }
 
   // ── 12. Cycle life ────────────────────────────────────────
+  let sc_op = null;
   {
     const cycleEl    = document.getElementById('cycleLife');
     const cycleMobEl = document.getElementById('cycleLife_mobile');
 
-    let sc_op = null;
-
-    if (hasL1 && hasL2 && Kw && d && D) {
-      const su2_val = (8 * (F2 || 0) * D) / (Math.PI * Math.pow(d, 3));
-      const su1_val = (8 * (F1 || 0) * D) / (Math.PI * Math.pow(d, 3));
-      sc_op = Kw * Math.max(su2_val, su1_val);
-    } else if (hasL2 && Kw && d && D && F2) {
-      sc_op = Kw * (8 * F2 * D) / (Math.PI * Math.pow(d, 3));
-    } else if (hasL1 && Kw && d && D && F1) {
-      sc_op = Kw * (8 * F1 * D) / (Math.PI * Math.pow(d, 3));
-    }
+    sc_op = computeOperatingCorrectedStress(sv);
 
     if (sc_op && mts) {
       const N         = estimateCycleLife(sc_op, mts, peened);
@@ -2429,6 +2529,9 @@ function runDeterministicPostPass(sv, result) {
       if (cycleMobEl) cycleMobEl.textContent  = '—';
     }
   }
+
+  // ── 12b. Material fatigue comparison table ────────────────
+  updateMaterialFatigueTable(sc_op, d, peened);
 
   // ── 13. Geometry warnings ─────────────────────────────────
   if (C) {
@@ -2610,6 +2713,9 @@ function clearAll() {
 
   setDualOutput('wireAvailabilityChip', 'Enter wire diameter to check', 'wire-chip');
   setDualOutput('cycleLife', '—');
+
+  _lastSolvedState = null;
+  updateMaterialFatigueTable(null, null, false);
 
   const dot  = document.getElementById('bottomStatusDot');
   const text = document.getElementById('bottomStatusSummary');

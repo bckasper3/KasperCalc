@@ -116,6 +116,10 @@
         const nav = doc.querySelector('.navbarwrapper');
         if (nav) {
           document.getElementById('site-nav').replaceWith(nav);
+          // navsearch.js runs (via defer) before this fetch resolves, so the
+          // search toggle listeners never got bound the first time — bind
+          // them now that the real nav markup exists.
+          if (window.initNavSearch) window.initNavSearch();
         }
 
         // Inject main content (everything inside <main>)

@@ -6,7 +6,7 @@
 
     <!-- META DATA FOR -->
     <title>KasperCalc: Compression Spring Super Calculator</title>
-    <link rel="canonical" href="https://kaspercalc.com/fuelHead.html" />
+    <link rel="canonical" href="https://kaspercalc.com/SpringCompressionRound.html" />
     <meta name="author" content="bckasper3" />
     <meta name="keywords" content="KasperCalc, bckasper3, Compression Spring Calculator, Coil Spring Calculator Extreme, Smart Spring Calculator, Super Spring Calculator, Advanced Spring Design Calculator" />
     <meta name="description" content="Calculate compression springs with round wire using KasperCalc's precise ad-free calculator." />
@@ -169,6 +169,17 @@
 
 #travelRow{border-bottom: 1px solid silver}
 @media (min-width: 652px){#travelRow{border-bottom: none !important}}
+
+.fatigue-row{display:grid;grid-template-columns:1fr 150px 110px;align-items:center;gap:6px;padding:3px 4px;border-bottom:.5px solid #d0d0d0}
+.fatigue-row:last-child{border-bottom:none}
+.fatigue-row-header{font-size:11px;font-weight:700;color:#61828A;text-transform:uppercase;letter-spacing:0.04em;border-bottom:1.5px solid #b7b7b7}
+.fatigue-row-name{font-size:12px;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fatigue-row-mts{font-size:12px;color:#333;text-align:right}
+.fatigue-row-life{font-size:12px;color:#333;text-align:right}
+.fatigue-row-selected{background:#e8f0f3;border-radius:5px;box-shadow:inset 0 0 0 1.5px #61828A}
+.fatigue-row-selected .fatigue-row-name{font-weight:700;color:#2f4a52}
+.fatigue-custom-tag{font-size:10px;color:#61828A;border:1px solid #61828A;border-radius:3px;padding:0 3px;margin-left:4px;text-transform:uppercase;letter-spacing:0.03em}
+@media (max-width:520px){.fatigue-row{grid-template-columns:1fr 90px 80px;font-size:11px}}
 
 .input-highlight {background:#becbcf !important;border-color:#3a6270 !important;font-weight:600} /*{background-color: #e8f5e8 !important; border-color: #4caf50 !important;} */
 #bottomStatusSummary { white-space: pre-line; }
@@ -1108,6 +1119,46 @@
   </div>
 
   <div style="height:0.5rem"></div>
+
+</div>
+
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="Material fatigue comparison">
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+
+<div class="wrapper">
+
+  <div class="hdr" role="banner">
+    Material Fatigue Comparison
+  </div>
+
+  <div class="grp" role="group" aria-labelledby="fatigueTableTitle">
+    <div class="grp-title" id="fatigueTableTitle">
+      Estimated Fatigue Life by Material — at current wire diameter &amp; load
+    </div>
+
+    <div id="fatigueTableEmpty" style="display:block;font-size:12px;color:#555;padding:10px 4px;text-align:center;">
+      Compute a spring above to compare estimated fatigue life across materials.
+    </div>
+
+    <div class="fatigue-row fatigue-row-header" aria-hidden="true">
+      <div class="fatigue-row-name">Material</div>
+      <div class="fatigue-row-mts">Min. Tensile Strength</div>
+      <div class="fatigue-row-life">Est. Cycle Life</div>
+    </div>
+
+    <div id="fatigueTableBody" role="table" aria-label="Materials ranked by estimated fatigue life" style="display:none;">
+      <!-- rows injected by updateMaterialFatigueTable() -->
+    </div>
+
+    <div style="text-align:center;margin-top:6px;">
+      <button class="tbtn" id="fatigueExpandBtn" onclick="toggleFatigueTableExpand()" style="display:none;margin:0 auto;">Show all materials</button>
+    </div>
+  </div>
 
 </div>
 
@@ -2616,11 +2667,14 @@ document.addEventListener('DOMContentLoaded', initLightbox);  // ← add this li
 
             <!-- P0–P4 fields -->
             <div style="margin-top:4px;padding-top:4px;border-top:1px solid #d0d0d0;">
-              <div style="font-size:12px;font-weight:700;color:#61828A;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">
+              <div id="cm_pFieldsHeader" style="font-size:12px;font-weight:700;color:#61828A;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">
                 Tensile Strength Coefficients
               </div>
               <div id="cm_pFields" style="display:flex;flex-direction:column;gap:4px;">
                 <!-- filled by cmUpdateEquation() -->
+              </div>
+              <div id="cm_tensileNote" style="display:none;font-size:10.5px;line-height:1.4;color:#7a5c00;background:#fff8e1;border:1px solid #e6d28a;border-radius:4px;padding:5px 7px;margin-top:5px;">
+                <!-- filled by cmPopulateFromRecord() when TENSILE NOTE is present -->
               </div>
             </div>
 
@@ -2769,6 +2823,22 @@ function cmPopulateFromRecord(rec) {
   setVal('cm_p2', rec['P2'] ?? '');
   setVal('cm_p3', rec['P3'] ?? '');
   setVal('cm_p4', rec['P4'] ?? '');
+
+  // Flag the polynomial with an asterisk + note when its valid range has been
+  // extended below the originally-tabulated minimum diameter (see TENSILE NOTE)
+  const pHeader   = document.getElementById('cm_pFieldsHeader');
+  const noteBox   = document.getElementById('cm_tensileNote');
+  const tensileNote = rec['TENSILE NOTE'];
+  if (pHeader) pHeader.textContent = 'Tensile Strength Coefficients' + (tensileNote ? ' *' : '');
+  if (noteBox) {
+    if (tensileNote) {
+      noteBox.textContent = tensileNote;
+      noteBox.style.display = 'block';
+    } else {
+      noteBox.textContent = '';
+      noteBox.style.display = 'none';
+    }
+  }
 
   // For database materials with no custom S/N, show the built-in defaults
   const snData  = rec['CUSTOM_SN_DATA'];
