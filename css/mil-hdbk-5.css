@@ -87,6 +87,11 @@
 .hdbk-table .prop-group td { font-style: italic; font-weight: 600; background-color: #eef3f5; border-top: 1px solid #c0cdd2; color: #1a2e38; }
 .hdbk-table td.td-indent { padding-left: 2rem; text-align: left; }
 
+/* site.css sets font-size directly on the bare <a> element (a,p,ul li{font-size:var(--p-font-size)}),
+   which overrides inheritance from whatever cell contains it. Force links inside hdbk tables back
+   to their cell's own font size instead of the site-wide paragraph size. */
+.hdbk-table a { font-size: inherit; }
+
 
 /* Correlative information table (borderless, white background) */
 .corr-info-table { width: 100%; border-collapse: collapse; background: #fff; margin: 0.75rem 0 1.25rem; font-size: 0.92rem; border: 2px solid #000;}

@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KasperCalc: MIL-HDBK-5 4.3 Magnesium Cast Alloys</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, MIL-HDBK-5, magnesium, AM100A Alloy, mechanical properties, MMPDS" />
+    <meta name="description" content="MIL-HDBK-5 Chapter 4 Section 4.3 -- Magnesium Cast Alloys." />
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/mil-hdbk-5.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script>
+(function(){
+  var h = location.hostname;
+  var isLocal = !h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1' || /\.local$/i.test(h) || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+  if (isLocal) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+  gtag('js', new Date());
+  gtag('config', 'G-5XLCN0GJQ0');
+})();
+</script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <!-- Chart.js + HdbkUtil for interactive figures -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="js/hdbkUtil.js"></script>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                  <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+    <!-- MAIN -->
+    <main data-pagefind-body>
+
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">MIL-HDBK-5: Chapter 4.3<br>Magnesium Cast Alloys</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+  <section class="col-11 mx-auto">
+    <div class="csscontainer">
+      <div class="wrapper">
+        <div class="header fs-4">MIL-HDBK-5: Chapter 4.3 &mdash; Magnesium Cast Alloys</div>
+        <div class="row">
+          <div class="col-half" style="flex: 1 1 400px;">
+            <div class="group">
+              <span class="section-title-TOC">Magnesium Alloy Index</span>
+              <div class="list-container">
+                <a href="Chapter4(magnesium).html" class="quick-link"><span class="quick-num">&#8226;</span><span class="quick-title">Magnesium Alloy Index</span></a>
+                <a href="Chapter4.1(general-magnesium).html" class="quick-link"><span class="quick-num">4.1</span><span class="quick-title">General</span></a>
+                <a href="Chapter4.2(magnesium).html" class="quick-link"><span class="quick-num">4.2</span><span class="quick-title">Magnesium-Wrought Alloys</span></a>
+                <a href="Chapter4.2(magnesium).html#4.2.1" class="quick-link quick-sub2"><span class="quick-num">4.2.1</span><span class="quick-title">AZ31B Alloy</span></a>
+                <a href="Chapter4.2(magnesium).html#4.2.2" class="quick-link quick-sub2"><span class="quick-num">4.2.2</span><span class="quick-title">AZ61A Alloy</span></a>
+                <a href="Chapter4.2(magnesium).html#4.2.3" class="quick-link quick-sub2"><span class="quick-num">4.2.3</span><span class="quick-title">ZK60A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html" class="quick-link active-section"><span class="quick-num">4.3</span><span class="quick-title">Magnesium Cast Alloys</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.1" class="quick-link quick-sub2"><span class="quick-num">4.3.1</span><span class="quick-title">AM100A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.2" class="quick-link quick-sub2"><span class="quick-num">4.3.2</span><span class="quick-title">AZ91C/AZ91E Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.3" class="quick-link quick-sub2"><span class="quick-num">4.3.3</span><span class="quick-title">AZ92A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.4" class="quick-link quick-sub2"><span class="quick-num">4.3.4</span><span class="quick-title">EZ33A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.5" class="quick-link quick-sub2"><span class="quick-num">4.3.5</span><span class="quick-title">QE22A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.6" class="quick-link quick-sub2"><span class="quick-num">4.3.6</span><span class="quick-title">ZE41A Alloy</span></a>
+                <a href="Chapter4.4(element-properties-magnesium).html" class="quick-link"><span class="quick-num">4.4</span><span class="quick-title">Element Properties</span></a>
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Chapter 4.3 Contents</span>
+              <div>
+                <a href="#4.3" class="quick-link"><span class="quick-num">4.3</span><span class="quick-title">Magnesium Cast Alloys</span></a>
+                <a href="#4.3.1" class="quick-link quick-sub"><span class="quick-num">4.3.1</span><span class="quick-title">AM100A Alloy</span></a>
+                <a href="#4.3.1.0" class="quick-link quick-sub2"><span class="quick-num">4.3.1.0</span><span class="quick-title">Comments and Properties</span></a>
+              
+                <a href="#4.3.2" class="quick-link quick-sub"><span class="quick-num">4.3.2</span><span class="quick-title">AZ91C/AZ91E Alloy</span></a>
+                <a href="#4.3.2.0" class="quick-link quick-sub2"><span class="quick-num">4.3.2.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#4.3.2.1" class="quick-link quick-sub2"><span class="quick-num">4.3.2.1</span><span class="quick-title">T6 Temper</span></a>
+              
+                <a href="#4.3.3" class="quick-link quick-sub"><span class="quick-num">4.3.3</span><span class="quick-title">AZ92A Alloy</span></a>
+                <a href="#4.3.3.0" class="quick-link quick-sub2"><span class="quick-num">4.3.3.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#4.3.3.1" class="quick-link quick-sub2"><span class="quick-num">4.3.3.1</span><span class="quick-title">T6 Temper</span></a>
+              
+                <a href="#4.3.4" class="quick-link quick-sub"><span class="quick-num">4.3.4</span><span class="quick-title">EZ33A Alloy</span></a>
+                <a href="#4.3.4.0" class="quick-link quick-sub2"><span class="quick-num">4.3.4.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#4.3.4.1" class="quick-link quick-sub2"><span class="quick-num">4.3.4.1</span><span class="quick-title">T5 Temper</span></a>
+              
+                <a href="#4.3.5" class="quick-link quick-sub"><span class="quick-num">4.3.5</span><span class="quick-title">QE22A Alloy</span></a>
+                <a href="#4.3.5.0" class="quick-link quick-sub2"><span class="quick-num">4.3.5.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#4.3.5.1" class="quick-link quick-sub2"><span class="quick-num">4.3.5.1</span><span class="quick-title">T6 Temper</span></a>
+              
+                <a href="#4.3.6" class="quick-link quick-sub"><span class="quick-num">4.3.6</span><span class="quick-title">ZE41A Alloy</span></a>
+                <a href="#4.3.6.0" class="quick-link quick-sub2"><span class="quick-num">4.3.6.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#4.3.6.1" class="quick-link quick-sub2"><span class="quick-num">4.3.6.1</span><span class="quick-title">T5 Temper</span></a>
+              
+              </div>
+            </div>
+          </div>
+          <div class="col-half" style="flex: 1 1 220px;">
+            <div class="group">
+              <span class="section-title-TOC">Navigate to Section</span>
+              <div class="d-flex flex-column gap-2 mt-2">
+                  <a href="Chapter1(general).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 1 &mdash; General
+                  </a>
+                  <a href="Chapter2(steel).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 2 &mdash; Steel
+                  </a>
+                  <a href="Chapter3(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 3 &mdash; Aluminum
+                  </a>
+                  <a href="Chapter4(magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 4 &mdash; Magnesium
+                  </a>
+                  <a href="Chapter4.1(general-magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    4.1 &mdash; General
+                  </a>
+                  <a href="Chapter4.2(magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    4.2 &mdash; Magnesium-Wrought Alloys
+                  </a>
+                  <a href="Chapter4.3(magnesium).html" class="tbtn active-section">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    4.3 &mdash; Magnesium Cast Alloys
+                  </a>
+                  <a href="Chapter4.4(element-properties-magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    4.4 &mdash; Element Properties
+                  </a>
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Disclaimer</span>
+              <div class="disclaimer-bar">
+                <p><strong>For reference use only.</strong> The formulas, graphs, and values herein are provided in good faith for general engineering guidance. Please verify all data against MIL-HDBK-5J or the applicable superseding document (MMPDS).</p>
+              </div>
+              <div style="margin-top: 6px;">
+                <button class="tbtn" onclick="window.open('/downloadable/MIL-HDBK-5J-1.pdf', '_blank')" aria-label="Download MIL-HDBK-5 reference document">
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  MIL-HDBK-5
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-11 mx-auto">
+    <div class="csscontainer">
+      <div class="wrapper">
+        <div class="header fs-4">Figures and Tables</div>
+        <div class="row">
+          <div class="col-half">
+            <div class="group">
+              <span class="section-title-TOC">Table of Tables</span>
+              <div>
+                <a href="#table-4.3.1.0a" class="fig-link"><span class="fig-badge">Table 4.3.1.0(a)</span><span class="fig-title">Material Specifications for AM100A Magnesium Alloy</span></a>
+                <a href="#table-4.3.2.0a" class="fig-link"><span class="fig-badge">Table 4.3.2.0(a)</span><span class="fig-title">Material Specifications for AZ91C/AZ91E Magnesium Alloy</span></a>
+                <a href="#table-4.3.2-temperindex" class="fig-link"><span class="fig-badge">AZ91C/AZ91E Temper Index</span><span class="fig-title"></span></a>
+                <a href="#table-4.3.3.0a" class="fig-link"><span class="fig-badge">Table 4.3.3.0(a)</span><span class="fig-title">Material Specifications for AZ92A Magnesium Alloy</span></a>
+                <a href="#table-4.3.3-temperindex" class="fig-link"><span class="fig-badge">AZ92A Temper Index</span><span class="fig-title"></span></a>
+                <a href="#table-4.3.4.0a" class="fig-link"><span class="fig-badge">Table 4.3.4.0(a)</span><span class="fig-title">Material Specification for EZ33A Magnesium Alloy</span></a>
+                <a href="#table-4.3.4-temperindex" class="fig-link"><span class="fig-badge">EZ33A Temper Index</span><span class="fig-title"></span></a>
+                <a href="#table-4.3.5.0a" class="fig-link"><span class="fig-badge">Table 4.3.5.0(a)</span><span class="fig-title">Material Specifications for QE22A Magnesium Alloy</span></a>
+                <a href="#table-4.3.5-temperindex" class="fig-link"><span class="fig-badge">QE22A Temper Index</span><span class="fig-title"></span></a>
+                <a href="#table-4.3.6.0a" class="fig-link"><span class="fig-badge">Table 4.3.6.0(a)</span><span class="fig-title">Material Specification for ZE41A Magnesium Alloy</span></a>
+                <a href="#table-4.3.6-temperindex" class="fig-link"><span class="fig-badge">ZE41A Temper Index</span><span class="fig-title"></span></a>
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Table of Figures</span>
+              <div>
+                <a href="#fig-4.3.2.1.4" class="fig-link"><span class="fig-badge">Fig 4.3.2.1.4</span><span class="fig-title">Effect of temperature on the tensile and compressive moduli (E and E<sub>c</sub>) of cast AZ91C-T6/AZ91E-T6. Modulus at temperature, exposure up to &frac12; hour.</span></a>
+                <a href="#fig-4.3.2.1.6" class="fig-link"><span class="fig-badge">Fig 4.3.2.1.6</span><span class="fig-title">Typical tensile stress-strain curves for cast AZ91C-T6/AZ91E-T6 at room and elevated temperatures, &frac12;-hour exposure (RT, 300&deg;F, 400&deg;F). Ramberg-Osgood n (RT) = 4.5, n (300&deg;F) = 3.9, n (400&deg;F) = 5.3.</span></a>
+                <a href="#fig-4.3.3.0" class="fig-link"><span class="fig-badge">Fig 4.3.3.0</span><span class="fig-title">Effects of temperature on the physical properties of cast AZ92A-T6.</span></a>
+                <a href="#fig-4.3.3.1.1a" class="fig-link"><span class="fig-badge">Fig 4.3.3.1.1(a)</span><span class="fig-title">Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) of cast AZ92A-T6. Strength at temperature, exposure up to 1000 hours.</span></a>
+                <a href="#fig-4.3.3.1.1b" class="fig-link"><span class="fig-badge">Fig 4.3.3.1.1(b)</span><span class="fig-title">Effect of temperature on the tensile yield strength (F<sub>ty</sub>) of cast AZ92A-T6. Strength at temperature, exposure up to 1000 hours.</span></a>
+                <a href="#fig-4.3.3.1.1c" class="fig-link"><span class="fig-badge">Fig 4.3.3.1.1(c)</span><span class="fig-title">Effect of exposure at elevated temperature on the room-temperature tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of cast AZ92A-T6, exposure up to 1000 hours.</span></a>
+                <a href="#fig-4.3.3.1.4" class="fig-link"><span class="fig-badge">Fig 4.3.3.1.4</span><span class="fig-title">Effect of temperature on the tensile and compressive moduli (E and E<sub>c</sub>) of cast AZ92A-T6. Modulus at temperature, exposure up to &frac12; hour.</span></a>
+                <a href="#fig-4.3.3.1.6a" class="fig-link"><span class="fig-badge">Fig 4.3.3.1.6(a)</span><span class="fig-title">Typical compressive stress-strain and compressive tangent-modulus curves for cast AZ92A-T6 at room temperature.</span></a>
+                <a href="#fig-4.3.3.1.6b" class="fig-link"><span class="fig-badge">Fig 4.3.3.1.6(b)</span><span class="fig-title">Typical tensile stress-strain curves for cast AZ92A-T6 at room and elevated temperatures (RT, 300&deg;F, 400&deg;F), &frac12;-hour exposure.</span></a>
+                <a href="#fig-4.3.4.0" class="fig-link"><span class="fig-badge">Fig 4.3.4.0</span><span class="fig-title">Effect of temperature on the physical properties of cast EZ33A.</span></a>
+                <a href="#fig-4.3.4.1.1a" class="fig-link"><span class="fig-badge">Fig 4.3.4.1.1(a)</span><span class="fig-title">Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) of cast EZ33A-T5.</span></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-half">
+            <div class="group">
+              <span class="section-title-TOC">Table of Figures (cont.)</span>
+              <div>
+                <a href="#fig-4.3.4.1.1b" class="fig-link"><span class="fig-badge">Fig 4.3.4.1.1(b)</span><span class="fig-title">Effect of temperature on the tensile yield strength (F<sub>ty</sub>) of cast EZ33A-T5.</span></a>
+                <a href="#fig-4.3.4.1.1c" class="fig-link"><span class="fig-badge">Fig 4.3.4.1.1(c)</span><span class="fig-title">Effect of exposure at elevated temperatures on the room-temperature tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of cast EZ33A-T5.</span></a>
+                <a href="#fig-4.3.4.1.6" class="fig-link"><span class="fig-badge">Fig 4.3.4.1.6</span><span class="fig-title">Typical tensile stress-strain curve for cast EZ33A-T5 at room temperature. Ramberg-Osgood n (RT) = 15.</span></a>
+                <a href="#fig-4.3.5.1.1" class="fig-link"><span class="fig-badge">Fig 4.3.5.1.1</span><span class="fig-title">Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of cast QE22A-T6.</span></a>
+                <a href="#fig-4.3.5.1.4" class="fig-link"><span class="fig-badge">Fig 4.3.5.1.4</span><span class="fig-title">Effect of temperature on the tensile modulus (E) of cast QE22A-T6.</span></a>
+                <a href="#fig-4.3.5.1.6" class="fig-link"><span class="fig-badge">Fig 4.3.5.1.6</span><span class="fig-title">Typical tensile stress-strain curves for cast QE22A-T6 at room and elevated temperatures (RT, 300&deg;F, 400&deg;F, 500&deg;F, 600&deg;F, 700&deg;F), &frac12;-hour exposure. Ramberg-Osgood n (RT) = 6.5, n (300&deg;F) = 7.9, n (400&deg;F) = 9.0, n (500&deg;F) = 6.3, n (600&deg;F) = 4.8, n (700&deg;F) = 3.9.</span></a>
+                <a href="#fig-4.3.6.0" class="fig-link"><span class="fig-badge">Fig 4.3.6.0</span><span class="fig-title">Effect of temperature on the thermal conductivity (K) of ZE41A-T5 sand casting.</span></a>
+                <a href="#fig-4.3.6.1.1" class="fig-link"><span class="fig-badge">Fig 4.3.6.1.1</span><span class="fig-title">Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) and tensile yield strength (F<sub>ty</sub>) of ZE41A-T5 sand casting.</span></a>
+                <a href="#fig-4.3.6.1.4" class="fig-link"><span class="fig-badge">Fig 4.3.6.1.4</span><span class="fig-title">Effect of temperature on the tensile modulus (E) of ZE41A-T5 sand casting.</span></a>
+                <a href="#fig-4.3.6.1.6a" class="fig-link"><span class="fig-badge">Fig 4.3.6.1.6(a)</span><span class="fig-title">Typical tensile stress-strain curves for ZE41A-T5 sand casting at room and elevated temperatures.</span></a>
+                <a href="#fig-4.3.6.1.6b" class="fig-link"><span class="fig-badge">Fig 4.3.6.1.6(b)</span><span class="fig-title">Typical compressive stress-strain and tangent-modulus curves for ZE41A-T5 sand casting at room temperature. Ramberg-Osgood n (compression) = 3.7.</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-11 col-md-10 col-lg-8 mx-auto">
+    <div class="csscontainer">
+      <div class="section lvl-0" id="4.3">
+        <div class="section-heading lvl-0"><span class="section-num">4.3</span>Magnesium Cast Alloys</div>
+<p>AM100A is a magnesium-base casting alloy in the Section 4.3 Magnesium Cast Alloys group, containing aluminum and a small amount of manganese as the principal alloying elements.</p>
+
+        <div class="section lvl-1" id="4.3.1">
+          <div class="section-heading lvl-1"><span class="section-num">4.3.1</span>AM100A Alloy</div>
+<div class="section lvl-2" id="4.3.1.0">
+          <div class="section-heading lvl-2"><span class="section-num">4.3.1.0</span>Comments and Properties</div>
+          <p>AM100A is a magnesium-base casting alloy containing aluminum and a small amount of manganese. It is primarily used as permanent mold castings. AM100A has about the same characteristics as AZ92A. AM100A has less tendency to microshrinkage and hot shortness than the Mg-Al-Zn alloys. It has good weldability and fair pressure tightness.</p>
+          <p>Material specifications for AM100A are given in Table 4.3.1.0(a). Room-temperature mechanical and physical properties are shown in Table 4.3.1.0(b).</p>
+
+          <div class="hdbk-table-wrap" id="table-4.3.1.0a">
+            <table class="hdbk-table">
+              <caption>Table 4.3.1.0(a). Material Specifications for AM100A Magnesium Alloy</caption>
+              <thead><tr><th>Specification</th><th class="td-left">Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS 4455</td><td class="td-left">Investment casting</td></tr>
+                <tr><td>AMS 4483<sup>a</sup></td><td class="td-left">Permanent mold casting</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="2"><sup>a</sup> Noncurrent specification.</td></tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <p class="table-placeholder">Table 4.3.1.0(b) &mdash; Design Mechanical and Physical Properties of AM100A Magnesium Alloy Casting (AMS 4455 / AMS 4483, T6 temper) &mdash; pending digitization (dense multi-column property table; MIL-HDBK-5J p. 4-28).</p>
+        </div><!-- /4.3.1.0 -->
+        </div><!-- /4.3.1 -->
+
+        <div class="section lvl-1" id="4.3.2">
+          <div class="section-heading lvl-1"><span class="section-num">4.3.2</span>AZ91C/AZ91E Alloy</div>
+<div class="section lvl-2" id="4.3.2.0">
+          <div class="section-heading lvl-2"><span class="section-num">4.3.2.0</span>Comments and Properties</div>
+          <p>AZ91C is a magnesium-base casting alloy containing aluminum and zinc. AZ91E is a version which contains a significantly lower level of impurities resulting in improved corrosion resistance. These alloys have good castability with a good combination of ductility and strength. AZ91C and AZ91E are the most commonly used sand castings for temperatures under 300&deg;F. AZ91C is available as sand and investment castings, while AZ91E is available as a sand casting. AZ91C and AZ91E have fair weldability and pressure tightness.</p>
+          <p>Some material specifications covering AZ91C/AZ91E are presented in Table 4.3.2.0(a). Room-temperature mechanical and physical properties are shown in Tables 4.3.2.0(b) and (c).</p>
+
+          <div class="hdbk-table-wrap" id="table-4.3.2.0a">
+            <table class="hdbk-table">
+              <caption>Table 4.3.2.0(a). Material Specifications for AZ91C/AZ91E Magnesium Alloy</caption>
+              <thead><tr><th>Specification</th><th class="td-left">Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS 4437</td><td class="td-left">Sand casting</td></tr>
+                <tr><td>AMS 4452</td><td class="td-left">Investment casting</td></tr>
+                <tr><td>AMS 4446</td><td class="td-left">Sand casting</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The temper index for AZ91C/AZ91E is as follows:</p>
+          <div class="hdbk-table-wrap" id="table-4.3.2-temperindex">
+            <table class="hdbk-table">
+              <caption>AZ91C/AZ91E Temper Index</caption>
+              <thead><tr><th>Section</th><th>Temper</th></tr></thead>
+              <tbody>
+                <tr><td>4.3.2.1</td><td>T6</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="table-placeholder">Table 4.3.2.0(b) &mdash; Design Mechanical and Physical Properties of AZ91C Magnesium Alloy Casting (AMS 4437 sand casting / AMS 4452 investment casting, T6 temper) &mdash; pending digitization (dense multi-column property table; MIL-HDBK-5J p. 4-30).</p>
+          <p class="table-placeholder">Table 4.3.2.0(c) &mdash; Design Mechanical and Physical Properties of AZ91E Magnesium Alloy Casting (AMS 4446 sand casting, T6 temper) &mdash; pending digitization (dense multi-column property table; MIL-HDBK-5J p. 4-31).</p>
+        </div><!-- /4.3.2.0 -->
+
+        <div class="section lvl-2" id="4.3.2.1">
+          <div class="section-heading lvl-2"><span class="section-num">4.3.2.1</span>AZ91C-T6/AZ91E-T6 Temper</div>
+          <p>Figure 4.3.2.1.4 contains an elevated-temperature curve for tension and compression moduli. Typical tensile stress-strain curves at room temperature and several elevated temperatures are presented in Figure 4.3.2.1.6.</p>
+
+          <div class="hdbk-figure" id="fig-4.3.2.1.4">
+            <div class="canvasdiv">
+              <button id="toggle-43214">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43214');var a=document.createElement('a');a.download='canvas-43214.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43214').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43214" class="chartcanvas" role="img" aria-label="Figure 4.3.2.1.4"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.2.1.4.</strong> Effect of temperature on the tensile and compressive moduli (E and E<sub>c</sub>) of cast AZ91C-T6/AZ91E-T6. Modulus at temperature, exposure up to &frac12; hour.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.3.2.1.6">
+            <div class="canvasdiv">
+              <button id="toggle-43216">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43216');var a=document.createElement('a');a.download='canvas-43216.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43216').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43216" class="chartcanvas" role="img" aria-label="Figure 4.3.2.1.6"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.2.1.6.</strong> Typical tensile stress-strain curves for cast AZ91C-T6/AZ91E-T6 at room and elevated temperatures, &frac12;-hour exposure (RT, 300&deg;F, 400&deg;F). Ramberg-Osgood n (RT) = 4.5, n (300&deg;F) = 3.9, n (400&deg;F) = 5.3.</p>
+          </div>
+        </div><!-- /4.3.2.1 -->
+        </div><!-- /4.3.2 -->
+
+        <div class="section lvl-1" id="4.3.3">
+          <div class="section-heading lvl-1"><span class="section-num">4.3.3</span>AZ92A Alloy</div>
+<div class="section lvl-2" id="4.3.3.0">
+          <div class="section-heading lvl-2"><span class="section-num">4.3.3.0</span>Comments and Properties</div>
+          <p>AZ92A is a magnesium-base casting alloy containing aluminum and zinc. It is slightly stronger and less ductile than AZ91C but is much like it in other characteristics. It is available as sand and permanent-mold casting. AZ92A has fair weldability and pressure tightness.</p>
+          <p>Material specifications for AZ92A are presented in Table 4.3.3.0(a). Room-temperature mechanical and physical properties are shown in Table 4.3.3.0(b). Elevated temperature curves for physical properties are shown in Figure 4.3.3.0.</p>
+
+          <div class="hdbk-table-wrap" id="table-4.3.3.0a">
+            <table class="hdbk-table">
+              <caption>Table 4.3.3.0(a). Material Specifications for AZ92A Magnesium Alloy</caption>
+              <thead><tr><th>Specification</th><th class="td-left">Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS 4434</td><td class="td-left">Sand casting</td></tr>
+                <tr><td>AMS 4484<sup>a</sup></td><td class="td-left">Permanent-mold casting</td></tr>
+                <tr><td>AMS 4453</td><td class="td-left">Investment casting</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="2"><sup>a</sup> Noncurrent specification.</td></tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <p>The temper index for AZ92A is as follows:</p>
+          <div class="hdbk-table-wrap" id="table-4.3.3-temperindex">
+            <table class="hdbk-table">
+              <caption>AZ92A Temper Index</caption>
+              <thead><tr><th>Section</th><th>Temper</th></tr></thead>
+              <tbody>
+                <tr><td>4.3.3.1</td><td>T6</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="table-placeholder">Table 4.3.3.0(b) &mdash; Design Mechanical and Physical Properties of AZ92A Magnesium Alloy Casting (AMS 4484 permanent mold / AMS 4434 sand / AMS 4453 investment casting, T6 temper) &mdash; pending digitization (dense multi-column property table; MIL-HDBK-5J p. 4-34).</p>
+
+          <div class="hdbk-figure" id="fig-4.3.3.0">
+            <div class="canvasdiv">
+              <button id="toggle-4330">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-4330');var a=document.createElement('a');a.download='canvas-4330.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-4330').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-4330" class="chartcanvas" role="img" aria-label="Figure 4.3.3.0"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.3.0.</strong> Effects of temperature on the physical properties of cast AZ92A-T6.</p>
+          </div>
+        </div><!-- /4.3.3.0 -->
+
+        <div class="section lvl-2" id="4.3.3.1">
+          <div class="section-heading lvl-2"><span class="section-num">4.3.3.1</span>AZ92A-T6 Temper</div>
+          <p>Elevated-temperature curves for various mechanical properties are presented in Figures 4.3.3.1.1(a) through (c), and 4.3.3.1.4. Typical stress-strain and tangent-modulus curves at room temperature and several elevated temperatures are shown in Figures 4.3.3.1.6(a) and (b).</p>
+
+          <div class="hdbk-figure" id="fig-4.3.3.1.1a">
+            <div class="canvasdiv">
+              <button id="toggle-43311a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43311a');var a=document.createElement('a');a.download='canvas-43311a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43311a').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43311a" class="chartcanvas" role="img" aria-label="Figure 4.3.3.1.1(a)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.3.1.1(a).</strong> Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) of cast AZ92A-T6. Strength at temperature, exposure up to 1000 hours.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.3.3.1.1b">
+            <div class="canvasdiv">
+              <button id="toggle-43311b">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43311b');var a=document.createElement('a');a.download='canvas-43311b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43311b').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43311b" class="chartcanvas" role="img" aria-label="Figure 4.3.3.1.1(b)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.3.1.1(b).</strong> Effect of temperature on the tensile yield strength (F<sub>ty</sub>) of cast AZ92A-T6. Strength at temperature, exposure up to 1000 hours.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.3.3.1.1c">
+            <div class="canvasdiv">
+              <button id="toggle-43311c">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43311c');var a=document.createElement('a');a.download='canvas-43311c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43311c').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43311c" class="chartcanvas" role="img" aria-label="Figure 4.3.3.1.1(c)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.3.1.1(c).</strong> Effect of exposure at elevated temperature on the room-temperature tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of cast AZ92A-T6, exposure up to 1000 hours.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.3.3.1.4">
+            <div class="canvasdiv">
+              <button id="toggle-43314">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43314');var a=document.createElement('a');a.download='canvas-43314.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43314').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43314" class="chartcanvas" role="img" aria-label="Figure 4.3.3.1.4"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.3.1.4.</strong> Effect of temperature on the tensile and compressive moduli (E and E<sub>c</sub>) of cast AZ92A-T6. Modulus at temperature, exposure up to &frac12; hour.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.3.3.1.6a">
+            <div class="canvasdiv">
+              <button id="toggle-43316a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43316a');var a=document.createElement('a');a.download='canvas-43316a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43316a').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43316a" class="chartcanvas" role="img" aria-label="Figure 4.3.3.1.6(a)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.3.1.6(a).</strong> Typical compressive stress-strain and compressive tangent-modulus curves for cast AZ92A-T6 at room temperature.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.3.3.1.6b">
+            <div class="canvasdiv">
+              <button id="toggle-43316b">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43316b');var a=document.createElement('a');a.download='canvas-43316b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43316b').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43316b" class="chartcanvas" role="img" aria-label="Figure 4.3.3.1.6(b)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.3.1.6(b).</strong> Typical tensile stress-strain curves for cast AZ92A-T6 at room and elevated temperatures (RT, 300&deg;F, 400&deg;F), &frac12;-hour exposure.</p>
+          </div>
+        </div><!-- /4.3.3.1 -->
+        </div><!-- /4.3.3 -->
+
+        <div class="section lvl-1" id="4.3.4">
+          <div class="section-heading lvl-1"><span class="section-num">4.3.4</span>EZ33A Alloy</div>
+<div class="section lvl-2" id="4.3.4.0">
+          <div class="section-heading lvl-2"><span class="section-num">4.3.4.0</span>Comments and Properties</div>
+          <p>EZ33A is a magnesium-base casting alloy containing rare earths, zinc, and zirconium. It is available as sand castings in the artificially aged (T5) temper. EZ33A has lower strength than the Mg-Al-Zn alloys at room temperature but is less affected by increasing temperature. It is generally used for applications at temperatures of 300 to 500&deg;F. EZ33A castings are very sound and are sometimes used for pressure tightness. It has good stability in the T5 temper and excellent weldability. It is sometimes used for applications requiring good damping ability.</p>
+          <p>A material specification for EZ33A is presented in Table 4.3.4.0(a). Room-temperature mechanical and physical properties are shown in Table 4.3.4.0(b). The effect of temperature on physical properties is shown in Figure 4.3.4.0.</p>
+
+          <div class="hdbk-table-wrap" id="table-4.3.4.0a">
+            <table class="hdbk-table">
+              <caption>Table 4.3.4.0(a). Material Specification for EZ33A Magnesium Alloy</caption>
+              <thead><tr><th>Specification</th><th class="td-left">Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS 4442</td><td class="td-left">Sand casting</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The temper index for EZ33A is as follows:</p>
+          <div class="hdbk-table-wrap" id="table-4.3.4-temperindex">
+            <table class="hdbk-table">
+              <caption>EZ33A Temper Index</caption>
+              <thead><tr><th>Section</th><th>Temper</th></tr></thead>
+              <tbody>
+                <tr><td>4.3.4.1</td><td>T5</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="table-placeholder">Table 4.3.4.0(b) &mdash; Design Mechanical and Physical Properties of EZ33A Magnesium Alloy Casting (AMS 4442 sand casting, T5 temper) &mdash; pending digitization (dense multi-column property table; MIL-HDBK-5J p. 4-40).</p>
+
+          <div class="hdbk-figure" id="fig-4.3.4.0">
+            <div class="canvasdiv">
+              <button id="toggle-4340">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-4340');var a=document.createElement('a');a.download='canvas-4340.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-4340').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-4340" class="chartcanvas" role="img" aria-label="Figure 4.3.4.0"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.4.0.</strong> Effect of temperature on the physical properties of cast EZ33A.</p>
+          </div>
+        </div><!-- /4.3.4.0 -->
+
+        <div class="section lvl-2" id="4.3.4.1">
+          <div class="section-heading lvl-2"><span class="section-num">4.3.4.1</span>EZ33A-T5 Temper</div>
+          <p>Elevated-temperature curves for tensile properties are presented in Figures 4.3.4.1.1(a) through (c). A typical tensile stress-strain curve at room temperature is presented in Figure 4.3.4.1.6.</p>
+
+          <div class="hdbk-figure" id="fig-4.3.4.1.1a">
+            <div class="canvasdiv">
+              <button id="toggle-43411a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43411a');var a=document.createElement('a');a.download='canvas-43411a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43411a').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43411a" class="chartcanvas" role="img" aria-label="Figure 4.3.4.1.1(a)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.4.1.1(a).</strong> Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) of cast EZ33A-T5.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.3.4.1.1b">
+            <div class="canvasdiv">
+              <button id="toggle-43411b">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43411b');var a=document.createElement('a');a.download='canvas-43411b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43411b').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43411b" class="chartcanvas" role="img" aria-label="Figure 4.3.4.1.1(b)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.4.1.1(b).</strong> Effect of temperature on the tensile yield strength (F<sub>ty</sub>) of cast EZ33A-T5.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.3.4.1.1c">
+            <div class="canvasdiv">
+              <button id="toggle-43411c">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43411c');var a=document.createElement('a');a.download='canvas-43411c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43411c').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43411c" class="chartcanvas" role="img" aria-label="Figure 4.3.4.1.1(c)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.4.1.1(c).</strong> Effect of exposure at elevated temperatures on the room-temperature tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of cast EZ33A-T5.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.3.4.1.6">
+            <div class="canvasdiv">
+              <button id="toggle-43416">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43416');var a=document.createElement('a');a.download='canvas-43416.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43416').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43416" class="chartcanvas" role="img" aria-label="Figure 4.3.4.1.6"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.4.1.6.</strong> Typical tensile stress-strain curve for cast EZ33A-T5 at room temperature. Ramberg-Osgood n (RT) = 15.</p>
+          </div>
+        </div><!-- /4.3.4.1 -->
+        </div><!-- /4.3.4 -->
+
+        <div class="section lvl-1" id="4.3.5">
+          <div class="section-heading lvl-1"><span class="section-num">4.3.5</span>QE22A Alloy</div>
+<div class="section lvl-2" id="4.3.5.0">
+          <div class="section-heading lvl-2"><span class="section-num">4.3.5.0</span>Comments and Properties</div>
+          <p>QE22A is a magnesium-base alloy containing silver, rare earths in the form of didymium, and zirconium. It is available as sand and permanent-mold castings. It is used in the solution heat-treated and artificially aged (T6) condition where a high yield strength is needed at temperatures up to 600&deg;F. QE22A has good weldability and fair pressure tightness.</p>
+          <p>Material specifications for QE22A are presented in Table 4.3.5.0(a). Room-temperature mechanical and physical properties are shown in Table 4.3.5.0(b).</p>
+
+          <div class="hdbk-table-wrap" id="table-4.3.5.0a">
+            <table class="hdbk-table">
+              <caption>Table 4.3.5.0(a). Material Specifications for QE22A Magnesium Alloy</caption>
+              <thead><tr><th>Specification</th><th class="td-left">Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS 4418</td><td class="td-left">Sand casting</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The temper index for QE22A is as follows:</p>
+          <div class="hdbk-table-wrap" id="table-4.3.5-temperindex">
+            <table class="hdbk-table">
+              <caption>QE22A Temper Index</caption>
+              <thead><tr><th>Section</th><th>Temper</th></tr></thead>
+              <tbody>
+                <tr><td>4.3.5.1</td><td>T6</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="table-placeholder">Table 4.3.5.0(b) &mdash; Design Mechanical and Physical Properties of QE22A Magnesium Alloy Casting (AMS 4418 sand casting, T6 temper) &mdash; pending digitization (dense multi-column property table; MIL-HDBK-5J p. 4-45).</p>
+        </div><!-- /4.3.5.0 -->
+
+        <div class="section lvl-2" id="4.3.5.1">
+          <div class="section-heading lvl-2"><span class="section-num">4.3.5.1</span>QE22A-T6 Temper</div>
+          <p>Elevated-temperature curves for various tensile properties and modulus of elasticity are presented in Figures 4.3.5.1.1 and 4.3.5.1.4. Typical tensile stress-strain curves at various temperatures from room temperature through 700&deg;F are shown in Figure 4.3.5.1.6.</p>
+
+          <div class="hdbk-figure" id="fig-4.3.5.1.1">
+            <div class="canvasdiv">
+              <button id="toggle-43511">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43511');var a=document.createElement('a');a.download='canvas-43511.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43511').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43511" class="chartcanvas" role="img" aria-label="Figure 4.3.5.1.1"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.5.1.1.</strong> Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of cast QE22A-T6.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.3.5.1.4">
+            <div class="canvasdiv">
+              <button id="toggle-43514">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43514');var a=document.createElement('a');a.download='canvas-43514.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43514').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43514" class="chartcanvas" role="img" aria-label="Figure 4.3.5.1.4"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.5.1.4.</strong> Effect of temperature on the tensile modulus (E) of cast QE22A-T6.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.3.5.1.6">
+            <div class="canvasdiv">
+              <button id="toggle-43516">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43516');var a=document.createElement('a');a.download='canvas-43516.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43516').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43516" class="chartcanvas" role="img" aria-label="Figure 4.3.5.1.6"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.5.1.6.</strong> Typical tensile stress-strain curves for cast QE22A-T6 at room and elevated temperatures (RT, 300&deg;F, 400&deg;F, 500&deg;F, 600&deg;F, 700&deg;F), &frac12;-hour exposure. Ramberg-Osgood n (RT) = 6.5, n (300&deg;F) = 7.9, n (400&deg;F) = 9.0, n (500&deg;F) = 6.3, n (600&deg;F) = 4.8, n (700&deg;F) = 3.9.</p>
+          </div>
+        </div><!-- /4.3.5.1 -->
+        </div><!-- /4.3.5 -->
+
+        <div class="section lvl-1" id="4.3.6">
+          <div class="section-heading lvl-1"><span class="section-num">4.3.6</span>ZE41A Alloy</div>
+<div class="section lvl-2" id="4.3.6.0">
+          <div class="section-heading lvl-2"><span class="section-num">4.3.6.0</span>Comments and Properties</div>
+          <p>ZE41A is a magnesium-base casting alloy containing zinc, zirconium, and rare earth elements. It is available as sand or permanent-mold castings in the artificially aged temper (T5). ZE41A has a higher yield strength than the Mg-Al-Zn alloys at room temperature and is more stable at elevated temperatures. It is useful for applications at temperatures up to 320&deg;F. ZE41A castings possess good weldability and are pressure tight.</p>
+          <p>A material specification for ZE41A is presented in Table 4.3.6.0(a). Room-temperature mechanical and physical properties are shown in Table 4.3.6.0(b). The effect of temperature on thermal conductivity is shown in Figure 4.3.6.0.</p>
+
+          <div class="hdbk-table-wrap" id="table-4.3.6.0a">
+            <table class="hdbk-table">
+              <caption>Table 4.3.6.0(a). Material Specification for ZE41A Magnesium Alloy</caption>
+              <thead><tr><th>Specification</th><th class="td-left">Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS 4439</td><td class="td-left">Sand casting</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The temper index for ZE41A is as follows:</p>
+          <div class="hdbk-table-wrap" id="table-4.3.6-temperindex">
+            <table class="hdbk-table">
+              <caption>ZE41A Temper Index</caption>
+              <thead><tr><th>Section</th><th>Temper</th></tr></thead>
+              <tbody>
+                <tr><td>4.3.6.1</td><td>T5</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="table-placeholder">Table 4.3.6.0(b) &mdash; Design Mechanical and Physical Properties of ZE41A Magnesium Alloy Casting (AMS 4439 sand casting, T5 temper) &mdash; pending digitization (dense multi-column property table; MIL-HDBK-5J p. 4-49).</p>
+
+          <div class="hdbk-figure" id="fig-4.3.6.0">
+            <div class="canvasdiv">
+              <button id="toggle-4360">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-4360');var a=document.createElement('a');a.download='canvas-4360.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-4360').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-4360" class="chartcanvas" role="img" aria-label="Figure 4.3.6.0"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.6.0.</strong> Effect of temperature on the thermal conductivity (K) of ZE41A-T5 sand casting.</p>
+          </div>
+        </div><!-- /4.3.6.0 -->
+
+        <div class="section lvl-2" id="4.3.6.1">
+          <div class="section-heading lvl-2"><span class="section-num">4.3.6.1</span>ZE41A-T5 Temper</div>
+          <p>Elevated-temperature curves for tensile yield and ultimate strengths are presented in Figure 4.3.6.1.1. The effect of temperature on the tensile modulus of elasticity is shown in Figure 4.3.6.1.4. Figures 4.3.6.1.6(a) and (b) contain tensile and compressive stress-strain curves as well as a compressive tangent-modulus curve.</p>
+
+          <div class="hdbk-figure" id="fig-4.3.6.1.1">
+            <div class="canvasdiv">
+              <button id="toggle-43611">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43611');var a=document.createElement('a');a.download='canvas-43611.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43611').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43611" class="chartcanvas" role="img" aria-label="Figure 4.3.6.1.1"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.6.1.1.</strong> Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) and tensile yield strength (F<sub>ty</sub>) of ZE41A-T5 sand casting.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.3.6.1.4">
+            <div class="canvasdiv">
+              <button id="toggle-43614">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43614');var a=document.createElement('a');a.download='canvas-43614.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43614').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43614" class="chartcanvas" role="img" aria-label="Figure 4.3.6.1.4"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.6.1.4.</strong> Effect of temperature on the tensile modulus (E) of ZE41A-T5 sand casting.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.3.6.1.6a">
+            <div class="canvasdiv">
+              <button id="toggle-43616a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43616a');var a=document.createElement('a');a.download='canvas-43616a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43616a').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43616a" class="chartcanvas" role="img" aria-label="Figure 4.3.6.1.6(a)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.6.1.6(a).</strong> Typical tensile stress-strain curves for ZE41A-T5 sand casting at room and elevated temperatures.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.3.6.1.6b">
+            <div class="canvasdiv">
+              <button id="toggle-43616b">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-43616b');var a=document.createElement('a');a.download='canvas-43616b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-43616b').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-43616b" class="chartcanvas" role="img" aria-label="Figure 4.3.6.1.6(b)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.3.6.1.6(b).</strong> Typical compressive stress-strain and tangent-modulus curves for ZE41A-T5 sand casting at room temperature. Ramberg-Osgood n (compression) = 3.7.</p>
+          </div>
+        </div><!-- /4.3.6.1 -->
+        </div><!-- /4.3.6 -->
+      </div>
+    </div>
+  </section>
+
+      <section class="mt-3">
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Other MIL-HDBK-5 Chapters</div>
+            </div>
+            <div class="mx-auto mt-3 mb-4 text-center" style="max-width:820px;">
+              <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                <a href="Chapter3(aluminum).html" class="custom-link custom-btn btn d-inline-block">Chapter 3 (Aluminum)</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <section class="mt-5 pt-3">
+      <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+        <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+          <div class="d-flex align-items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+            <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+          </div>          <!-- Citation format tabs -->
+          <style>
+            #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+            #citationTabs li { margin: 0; list-style: none; }
+            #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+            #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+            #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+          </style>
+          <div class="tab-content mt-2 mb-3" id="citationTabContent">
+            <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+              <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+              <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+              <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+              <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+          </div>
+          <ul id="citationTabs" class="nav" role="tablist">
+            <li role="presentation">
+              <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="site-footer"></footer>
+  <script src="js/footer.js"></script>
+
+  <script>
+function initLightbox() {
+  const overlay  = document.getElementById('lightboxOverlay');
+  const img      = document.getElementById('lightboxImg');
+  const caption  = document.getElementById('lightboxCaption');
+  const closeBtn = document.getElementById('lightboxClose');
+
+  if (!overlay) return;
+
+  function openLightbox(src, alt, captionText) {
+    img.src             = src;
+    img.alt             = alt || '';
+    caption.textContent = captionText || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    img.src = '';
+  }
+
+  document.addEventListener('click', e => {
+    const target = e.target.closest('.ref-zoomable');
+    if (!target) return;
+    const figLabel = target.closest('.ref-fig')
+      ?.querySelector('.ref-fig-label')
+      ?.textContent ?? '';
+    openLightbox(target.src, target.alt, figLabel);
+  });
+
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeLightbox();
+  });
+
+  closeBtn.addEventListener('click', closeLightbox);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initLightbox);
+  </script>
+
+  </body>
+</html>

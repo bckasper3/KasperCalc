@@ -587,7 +587,7 @@ nav>.navbar-toggler{
 .logoblock {
   display: inline-block;
   padding: 5px;
-  border: 2px solid black;
+  border: 2px solid #000;
   border-radius: 10px;
   text-align: center;
 }
@@ -595,7 +595,7 @@ nav>.navbar-toggler{
 .footerlogo {
   font-size: clamp(0.75rem, 1.1vw, 1.1rem);
   color: #000 !important;
-  margin: 2px 0 0 0;
+  margin: 2px 0 0;
   font-weight: 700;
   line-height: 1;
 }
@@ -1163,6 +1163,12 @@ nav .nav-link.active {
   align-items: end;
 }
 
+.navbar-brand img {
+  width: clamp(50px, 6vw, 80px);
+  height: auto;
+  aspect-ratio: 355 / 214;
+}
+
 .navbar-nav .nav-item::marker {
   display: none;
   content: '';
@@ -1293,5 +1299,99 @@ cursor: pointer;
 
 #nav-svg-2-link:hover .navbar-svg-icon {
   fill: var(--bs-light);
+}
+
+/*---------------------------------------
+  DROPDOWN SUBMENU (nested MIL-HDBK-5 sections)
+-----------------------------------------*/
+.dropdown-submenu-row {
+  display: flex;
+  align-items: stretch;
+}
+
+.dropdown-submenu-row .dropdown-item {
+  flex: 1 1 auto;
+}
+
+.dropdown-submenu-toggle {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dropdown-submenu-toggle:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-submenu-toggle svg {
+  transition: transform 0.15s ease;
+}
+
+.dropdown-submenu.open > .dropdown-submenu-row .dropdown-submenu-toggle svg {
+  transform: rotate(180deg);
+}
+
+.dropdown-submenu-list {
+  display: none;
+}
+
+.dropdown-submenu.open > .dropdown-submenu-list {
+  display: block;
+}
+
+.dropdown-subitem {
+  padding-left: 2rem;
+  font-size: 0.92rem;
+}
+
+/* SEO reference data tables (temperature/property lookup tables) get very
+   wide on the jet-fuel property pages, so shrink them aggressively on small
+   screens instead of letting the layout blow out. On desktop, keep them from
+   stretching edge-to-edge by capping and centering the container; any table
+   wider than the cap still scrolls horizontally within itself. */
+.seo-data-table {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  overflow-x: auto;
+}
+
+.seo-data-table table {
+  font-size: 0.85rem;
+}
+
+.seo-data-table th,
+.seo-data-table td {
+  padding: 0.35rem 0.5rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .seo-data-table table {
+    font-size: 0.65rem;
+  }
+
+  .seo-data-table th,
+  .seo-data-table td {
+    padding: 0.2rem 0.3rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .seo-data-table table {
+    font-size: 0.55rem;
+  }
+
+  .seo-data-table th,
+  .seo-data-table td {
+    padding: 0.15rem 0.2rem;
+  }
 }
 

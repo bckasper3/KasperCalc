@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KasperCalc: MIL-HDBK-5 4.2 Magnesium-Wrought Alloys</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, MIL-HDBK-5, magnesium, AZ31B Alloy, mechanical properties, MMPDS" />
+    <meta name="description" content="MIL-HDBK-5 Chapter 4 Section 4.2 -- Magnesium-Wrought Alloys." />
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/mil-hdbk-5.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script>
+(function(){
+  var h = location.hostname;
+  var isLocal = !h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1' || /\.local$/i.test(h) || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+  if (isLocal) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+  gtag('js', new Date());
+  gtag('config', 'G-5XLCN0GJQ0');
+})();
+</script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <!-- Chart.js + HdbkUtil for interactive figures -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="js/hdbkUtil.js"></script>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                  <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+    <!-- MAIN -->
+    <main data-pagefind-body>
+
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">MIL-HDBK-5: Chapter 4.2<br>Magnesium-Wrought Alloys</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+  <section class="col-11 mx-auto">
+    <div class="csscontainer">
+      <div class="wrapper">
+        <div class="header fs-4">MIL-HDBK-5: Chapter 4.2 &mdash; Magnesium-Wrought Alloys</div>
+        <div class="row">
+          <div class="col-half" style="flex: 1 1 400px;">
+            <div class="group">
+              <span class="section-title-TOC">Magnesium Alloy Index</span>
+              <div class="list-container">
+                <a href="Chapter4(magnesium).html" class="quick-link"><span class="quick-num">&#8226;</span><span class="quick-title">Magnesium Alloy Index</span></a>
+                <a href="Chapter4.1(general-magnesium).html" class="quick-link"><span class="quick-num">4.1</span><span class="quick-title">General</span></a>
+                <a href="Chapter4.2(magnesium).html" class="quick-link active-section"><span class="quick-num">4.2</span><span class="quick-title">Magnesium-Wrought Alloys</span></a>
+                <a href="Chapter4.2(magnesium).html#4.2.1" class="quick-link quick-sub2"><span class="quick-num">4.2.1</span><span class="quick-title">AZ31B Alloy</span></a>
+                <a href="Chapter4.2(magnesium).html#4.2.2" class="quick-link quick-sub2"><span class="quick-num">4.2.2</span><span class="quick-title">AZ61A Alloy</span></a>
+                <a href="Chapter4.2(magnesium).html#4.2.3" class="quick-link quick-sub2"><span class="quick-num">4.2.3</span><span class="quick-title">ZK60A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html" class="quick-link"><span class="quick-num">4.3</span><span class="quick-title">Magnesium Cast Alloys</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.1" class="quick-link quick-sub2"><span class="quick-num">4.3.1</span><span class="quick-title">AM100A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.2" class="quick-link quick-sub2"><span class="quick-num">4.3.2</span><span class="quick-title">AZ91C/AZ91E Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.3" class="quick-link quick-sub2"><span class="quick-num">4.3.3</span><span class="quick-title">AZ92A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.4" class="quick-link quick-sub2"><span class="quick-num">4.3.4</span><span class="quick-title">EZ33A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.5" class="quick-link quick-sub2"><span class="quick-num">4.3.5</span><span class="quick-title">QE22A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.6" class="quick-link quick-sub2"><span class="quick-num">4.3.6</span><span class="quick-title">ZE41A Alloy</span></a>
+                <a href="Chapter4.4(element-properties-magnesium).html" class="quick-link"><span class="quick-num">4.4</span><span class="quick-title">Element Properties</span></a>
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Chapter 4.2 Contents</span>
+              <div>
+                <a href="#4.2" class="quick-link"><span class="quick-num">4.2</span><span class="quick-title">Magnesium-Wrought Alloys</span></a>
+                <a href="#4.2.1" class="quick-link quick-sub"><span class="quick-num">4.2.1</span><span class="quick-title">AZ31B Alloy</span></a>
+                <a href="#4.2.1.0" class="quick-link quick-sub2"><span class="quick-num">4.2.1.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#4.2.1.1" class="quick-link quick-sub2"><span class="quick-num">4.2.1.1</span><span class="quick-title">O Temper</span></a>
+                <a href="#4.2.1.2" class="quick-link quick-sub2"><span class="quick-num">4.2.1.2</span><span class="quick-title">H24 Temper</span></a>
+                <a href="#4.2.1.3" class="quick-link quick-sub2"><span class="quick-num">4.2.1.3</span><span class="quick-title">H26 Temper</span></a>
+                <a href="#4.2.1.4" class="quick-link quick-sub2"><span class="quick-num">4.2.1.4</span><span class="quick-title">F Temper</span></a>
+              
+                <a href="#4.2.2" class="quick-link quick-sub"><span class="quick-num">4.2.2</span><span class="quick-title">AZ61A Alloy</span></a>
+                <a href="#4.2.2.0" class="quick-link quick-sub2"><span class="quick-num">4.2.2.0</span><span class="quick-title">Comments and Properties</span></a>
+              
+                <a href="#4.2.3" class="quick-link quick-sub"><span class="quick-num">4.2.3</span><span class="quick-title">ZK60A Alloy</span></a>
+                <a href="#4.2.3.0" class="quick-link quick-sub2"><span class="quick-num">4.2.3.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#4.2.3.1" class="quick-link quick-sub2"><span class="quick-num">4.2.3.1</span><span class="quick-title">F Temper</span></a>
+                <a href="#4.2.3.2" class="quick-link quick-sub2"><span class="quick-num">4.2.3.2</span><span class="quick-title">T5 Temper</span></a>
+              
+              </div>
+            </div>
+          </div>
+          <div class="col-half" style="flex: 1 1 220px;">
+            <div class="group">
+              <span class="section-title-TOC">Navigate to Section</span>
+              <div class="d-flex flex-column gap-2 mt-2">
+                  <a href="Chapter1(general).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 1 &mdash; General
+                  </a>
+                  <a href="Chapter2(steel).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 2 &mdash; Steel
+                  </a>
+                  <a href="Chapter3(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 3 &mdash; Aluminum
+                  </a>
+                  <a href="Chapter4(magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 4 &mdash; Magnesium
+                  </a>
+                  <a href="Chapter4.1(general-magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    4.1 &mdash; General
+                  </a>
+                  <a href="Chapter4.2(magnesium).html" class="tbtn active-section">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    4.2 &mdash; Magnesium-Wrought Alloys
+                  </a>
+                  <a href="Chapter4.3(magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    4.3 &mdash; Magnesium Cast Alloys
+                  </a>
+                  <a href="Chapter4.4(element-properties-magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    4.4 &mdash; Element Properties
+                  </a>
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Disclaimer</span>
+              <div class="disclaimer-bar">
+                <p><strong>For reference use only.</strong> The formulas, graphs, and values herein are provided in good faith for general engineering guidance. Please verify all data against MIL-HDBK-5J or the applicable superseding document (MMPDS).</p>
+              </div>
+              <div style="margin-top: 6px;">
+                <button class="tbtn" onclick="window.open('/downloadable/MIL-HDBK-5J-1.pdf', '_blank')" aria-label="Download MIL-HDBK-5 reference document">
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  MIL-HDBK-5
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-11 mx-auto">
+    <div class="csscontainer">
+      <div class="wrapper">
+        <div class="header fs-4">Figures and Tables</div>
+        <div class="row">
+          <div class="col-half">
+            <div class="group">
+              <span class="section-title-TOC">Table of Tables</span>
+              <div>
+                <a href="#table-4.2.1.0a" class="fig-link"><span class="fig-badge">Table 4.2.1.0(a)</span><span class="fig-title">Material Specifications for AZ31B Magnesium Alloy</span></a>
+                <a href="#table-4.2.1-temperindex" class="fig-link"><span class="fig-badge">AZ31B Temper Index</span><span class="fig-title"></span></a>
+                <a href="#table-4.2.2.0a" class="fig-link"><span class="fig-badge">Table 4.2.2.0(a)</span><span class="fig-title">Material Specifications for AZ61A Magnesium Alloy</span></a>
+                <a href="#table-4.2.3.0a" class="fig-link"><span class="fig-badge">Table 4.2.3.0(a)</span><span class="fig-title">Material Specifications for ZK60A Magnesium Alloy</span></a>
+                <a href="#table-4.2.3-temperindex" class="fig-link"><span class="fig-badge">ZK60A Temper Index</span><span class="fig-title"></span></a>
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Table of Figures</span>
+              <div>
+                <a href="#fig-4.2.1.0" class="fig-link"><span class="fig-badge">Fig 4.2.1.0</span><span class="fig-title">Effect of temperature on the physical properties of AZ31B.</span></a>
+                <a href="#fig-4.2.1.1.4" class="fig-link"><span class="fig-badge">Fig 4.2.1.1.4</span><span class="fig-title">Effect of temperature on the tensile modulus (E) of AZ31B-O sheet and plate.</span></a>
+                <a href="#fig-4.2.1.1.6" class="fig-link"><span class="fig-badge">Fig 4.2.1.1.6</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for AZ31B-O sheet and plate at room temperature.</span></a>
+                <a href="#fig-4.2.1.2.1" class="fig-link"><span class="fig-badge">Fig 4.2.1.2.1</span><span class="fig-title">Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of AZ31B-H24 sheet and plate.</span></a>
+                <a href="#fig-4.2.1.2.2" class="fig-link"><span class="fig-badge">Fig 4.2.1.2.2</span><span class="fig-title">Effect of temperature on the compressive yield strength (F<sub>cy</sub>) and the shear ultimate strength (F<sub>su</sub>) of AZ31B-H24 sheet and plate.</span></a>
+                <a href="#fig-4.2.1.2.3" class="fig-link"><span class="fig-badge">Fig 4.2.1.2.3</span><span class="fig-title">Effect of temperature on the bearing ultimate strength (F<sub>bru</sub>) and the bearing yield strength (F<sub>bry</sub>) of AZ31B-H24 sheet and plate.</span></a>
+                <a href="#fig-4.2.1.2.4" class="fig-link"><span class="fig-badge">Fig 4.2.1.2.4</span><span class="fig-title">Effect of temperature on the tensile modulus (E) of AZ31B-H24 sheet and plate.</span></a>
+                <a href="#fig-4.2.1.2.6" class="fig-link"><span class="fig-badge">Fig 4.2.1.2.6</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for AZ31B-H24 sheet at room temperature.</span></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-half">
+            <div class="group">
+              <span class="section-title-TOC">Table of Figures (cont.)</span>
+              <div>
+                <a href="#fig-4.2.1.4.8a" class="fig-link"><span class="fig-badge">Fig 4.2.1.4.8(a)</span><span class="fig-title">Best-fit S/N curves for unnotched AZ31B-F magnesium alloy forged disk, transverse direction. Product form: forged disk, 1 inch thick (T<sub>US</sub> = 38 ksi, T<sub>YS</sub> = 26 ksi, room temperature); unnotched specimen, 0.75-inch gross diameter, 0.30-inch net diameter; axial loading, 1500 cpm, air environment; sample size 194. Reference 4.2.1.1.8.</span></a>
+                <a href="#fig-4.2.1.4.8b" class="fig-link"><span class="fig-badge">Fig 4.2.1.4.8(b)</span><span class="fig-title">Best-fit S/N curves for notched, K<sub>t</sub> = 3.3, AZ31B-F magnesium alloy forged disk, transverse direction. Product form: forged disk, 1 inch thick (T<sub>US</sub> = 38 ksi, T<sub>YS</sub> = 26 ksi, room temperature); notched specimen, K<sub>t</sub> = 3.3, 0.350-inch gross diameter, 0.280-inch net diameter, 0.010-inch root radius, 60&deg; flank angle; axial loading, 1500 cpm, air environment; sample size 34. Reference 4.2.1.1.8.</span></a>
+                <a href="#fig-4.2.3.0" class="fig-link"><span class="fig-badge">Fig 4.2.3.0</span><span class="fig-title">Effect of temperature on the physical properties of ZK60A magnesium alloy.</span></a>
+                <a href="#fig-4.2.3.2.6a" class="fig-link"><span class="fig-badge">Fig 4.2.3.2.6(a)</span><span class="fig-title">Typical tensile stress-strain curve for ZK60A-T5 extrusion at room temperature. Ramberg-Osgood n (RT) = 7.0.</span></a>
+                <a href="#fig-4.2.3.2.6b" class="fig-link"><span class="fig-badge">Fig 4.2.3.2.6(b)</span><span class="fig-title">Typical compressive stress-strain curve for ZK60A-T5 extrusion at room temperature.</span></a>
+                <a href="#fig-4.2.3.2.8a" class="fig-link"><span class="fig-badge">Fig 4.2.3.2.8(a)</span><span class="fig-title">Best-fit S/N curves for unnotched ZK60A-T5 extruded bar, longitudinal direction. Product form: extruded bar, 0.50-inch diameter (T<sub>US</sub> = 47.5 ksi, T<sub>YS</sub> = 40.9 ksi, room temperature, unnotched); unnotched specimen, 0.500-inch gross diameter, 0.400-inch net diameter, 0.750-inch root diameter, 7.500 inches long; axial loading, 3600 cpm, room temperature, air environment; sample size 21. Reference 4.2.3.2.8.</span></a>
+                <a href="#fig-4.2.3.2.8b" class="fig-link"><span class="fig-badge">Fig 4.2.3.2.8(b)</span><span class="fig-title">Best-fit S/N curves for notched, K<sub>t</sub> = 2.4, ZK60A-T5 extruded bar, longitudinal direction. Product form: extruded bar, 0.50-inch diameter (T<sub>US</sub> = 63.7 ksi, T<sub>YS</sub> = 40.9 ksi, room temperature, notched); circumferentially notched specimen, K<sub>t</sub> = 2.4, 0.500-inch gross diameter, 0.400-inch net diameter, 0.032-inch notch radius, 60&deg; flank angle; axial loading, 3600 cpm, room temperature, air environment; sample size 30. Reference 4.2.3.2.8.</span></a>
+                <a href="#fig-4.2.3.2.8c" class="fig-link"><span class="fig-badge">Fig 4.2.3.2.8(c)</span><span class="fig-title">Best-fit S/N curves for notched, K<sub>t</sub> = 3.4, ZK60A-T5 extruded bar, longitudinal direction. Product form: extruded bar, 0.50-inch diameter (T<sub>US</sub> = 58.2 ksi, T<sub>YS</sub> = 40.9 ksi, room temperature, notched); circumferentially notched specimen, K<sub>t</sub> = 3.4, 0.500-inch gross diameter, 0.400-inch net diameter, 0.010-inch notch radius, 60&deg; flank angle; axial loading, 3600 cpm, room temperature, air environment; sample size 36. Reference 4.2.3.2.8.</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-11 col-md-10 col-lg-8 mx-auto">
+    <div class="csscontainer">
+      <div class="section lvl-0" id="4.2">
+        <div class="section-heading lvl-0"><span class="section-num">4.2</span>Magnesium-Wrought Alloys</div>
+<p>AZ31B is a wrought magnesium-base alloy in the Section 4.2 Magnesium-Wrought Alloys group, containing aluminum and zinc as the principal alloying elements.</p>
+
+        <div class="section lvl-1" id="4.2.1">
+          <div class="section-heading lvl-1"><span class="section-num">4.2.1</span>AZ31B Alloy</div>
+<div class="section lvl-2" id="4.2.1.0">
+          <div class="section-heading lvl-2"><span class="section-num">4.2.1.0</span>Comments and Properties</div>
+          <p>AZ31B is a wrought magnesium-base alloy containing aluminum and zinc. It is available in the form of sheet, plate, extruded sections, forgings, and tubes. AZ31B has good room-temperature strength and ductility and is used primarily for applications where the temperature does not exceed 300&deg;F. Increased strength is obtained in the sheet and plate form by strain hardening with a subsequent partial anneal (H24 and H26 temper). No treatments are available for increasing the strength of this alloy after fabrication.</p>
+          <p>Forming of AZ31B must be done at elevated temperatures if small radii or deep draws are required. If the temperatures used are too high or the times too great, H24 and H26 temper material will be softened. This alloy is readily welded but must be stress relieved after welding to prevent stress corrosion cracking.</p>
+          <p>Material specifications covering AZ31B wrought products are given in Table 4.2.1.0(a). Room-temperature mechanical and physical properties are shown in Tables 4.2.1.0(b) through (d). The effect of temperature on physical properties is shown in Figure 4.2.1.0.</p>
+
+          <div class="hdbk-table-wrap" id="table-4.2.1.0a">
+            <table class="hdbk-table">
+              <caption>Table 4.2.1.0(a). Material Specifications for AZ31B Magnesium Alloy</caption>
+              <thead><tr><th>Specification</th><th>Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS 4375</td><td class="td-left">Sheet and plate</td></tr>
+                <tr><td>AMS 4376</td><td class="td-left">Plate</td></tr>
+                <tr><td>AMS 4377</td><td class="td-left">Sheet and plate</td></tr>
+                <tr><td>ASTM B 107</td><td class="td-left">Extrusion</td></tr>
+                <tr><td>ASTM B 91</td><td class="td-left">Forging</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The temper index for AZ31B is as follows:</p>
+          <div class="hdbk-table-wrap" id="table-4.2.1-temperindex">
+            <table class="hdbk-table">
+              <caption>AZ31B Temper Index</caption>
+              <thead><tr><th>Section</th><th>Temper</th></tr></thead>
+              <tbody>
+                <tr><td>4.2.1.1</td><td>O</td></tr>
+                <tr><td>4.2.1.2</td><td>H24</td></tr>
+                <tr><td>4.2.1.3</td><td>H26</td></tr>
+                <tr><td>4.2.1.4</td><td>F</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="table-placeholder">Tables 4.2.1.0(b) through (d) &mdash; design mechanical and physical properties of AZ31B sheet, plate, extrusion, and forging by temper and thickness &mdash; pending digitization (dense multi-column property tables; MIL-HDBK-5J pp. 4-7&ndash;4-9).</p>
+
+          <div class="hdbk-figure" id="fig-4.2.1.0">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 4.2.1.0</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.1.0.</strong> Effect of temperature on the physical properties of AZ31B.</p>
+          </div>
+        </div><!-- /4.2.1.0 -->
+
+        <div class="section lvl-2" id="4.2.1.1">
+          <div class="section-heading lvl-2"><span class="section-num">4.2.1.1</span>AZ31B-O Temper</div>
+          <p>Effect of temperature on the tensile modulus of sheet and plate is presented in Figure 4.2.1.1.4. Typical room-temperature stress-strain and tangent-modulus curves are presented in Figure 4.2.1.1.6.</p>
+          <div class="hdbk-figure" id="fig-4.2.1.1.4">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 4.2.1.1.4</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.1.1.4.</strong> Effect of temperature on the tensile modulus (E) of AZ31B-O sheet and plate.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.2.1.1.6">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 4.2.1.1.6</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.1.1.6.</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for AZ31B-O sheet and plate at room temperature.</p>
+          </div>
+        </div><!-- /4.2.1.1 -->
+
+        <div class="section lvl-2" id="4.2.1.2">
+          <div class="section-heading lvl-2"><span class="section-num">4.2.1.2</span>AZ31B-H24 Temper</div>
+          <p>Effect of temperature on the mechanical properties of sheet and plate is shown in Figures 4.2.1.2.1 through 4.2.1.2.4, and 4.2.1.2.6. Typical room-temperature tension and compression stress-strain and tangent-modulus curves for sheet are shown in Figure 4.2.1.2.6.</p>
+          <div class="hdbk-figure" id="fig-4.2.1.2.1">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 4.2.1.2.1</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.1.2.1.</strong> Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of AZ31B-H24 sheet and plate.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.2.1.2.2">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 4.2.1.2.2</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.1.2.2.</strong> Effect of temperature on the compressive yield strength (F<sub>cy</sub>) and the shear ultimate strength (F<sub>su</sub>) of AZ31B-H24 sheet and plate.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.2.1.2.3">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 4.2.1.2.3</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.1.2.3.</strong> Effect of temperature on the bearing ultimate strength (F<sub>bru</sub>) and the bearing yield strength (F<sub>bry</sub>) of AZ31B-H24 sheet and plate.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.2.1.2.4">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 4.2.1.2.4</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.1.2.4.</strong> Effect of temperature on the tensile modulus (E) of AZ31B-H24 sheet and plate.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.2.1.2.6">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 4.2.1.2.6</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.1.2.6.</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for AZ31B-H24 sheet at room temperature.</p>
+          </div>
+        </div><!-- /4.2.1.2 -->
+
+        <div class="section lvl-2" id="4.2.1.3">
+          <div class="section-heading lvl-2"><span class="section-num">4.2.1.3</span>AZ31B-H26 Temper</div>
+          <p>MIL-HDBK-5J provides no additional narrative for the H26 temper beyond the design property table referenced in Section 4.2.1.0; see Table 4.2.1.0(c) (AZ31B plate, H26 temper).</p>
+        </div><!-- /4.2.1.3 -->
+
+        <div class="section lvl-2" id="4.2.1.4">
+          <div class="section-heading lvl-2"><span class="section-num">4.2.1.4</span>AZ31B-F Temper</div>
+          <p>Figures 4.2.1.4.8(a) and (b) contain fatigue data for forged disk at room temperature.</p>
+          <div class="hdbk-figure" id="fig-4.2.1.4.8a">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 4.2.1.4.8(a)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.1.4.8(a).</strong> Best-fit S/N curves for unnotched AZ31B-F magnesium alloy forged disk, transverse direction. Product form: forged disk, 1 inch thick (T<sub>US</sub> = 38 ksi, T<sub>YS</sub> = 26 ksi, room temperature); unnotched specimen, 0.75-inch gross diameter, 0.30-inch net diameter; axial loading, 1500 cpm, air environment; sample size 194. Reference 4.2.1.1.8.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.2.1.4.8b">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 4.2.1.4.8(b)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.1.4.8(b).</strong> Best-fit S/N curves for notched, K<sub>t</sub> = 3.3, AZ31B-F magnesium alloy forged disk, transverse direction. Product form: forged disk, 1 inch thick (T<sub>US</sub> = 38 ksi, T<sub>YS</sub> = 26 ksi, room temperature); notched specimen, K<sub>t</sub> = 3.3, 0.350-inch gross diameter, 0.280-inch net diameter, 0.010-inch root radius, 60&deg; flank angle; axial loading, 1500 cpm, air environment; sample size 34. Reference 4.2.1.1.8.</p>
+          </div>
+        </div><!-- /4.2.1.4 -->
+        </div><!-- /4.2.1 -->
+
+        <div class="section lvl-1" id="4.2.2">
+          <div class="section-heading lvl-1"><span class="section-num">4.2.2</span>AZ61A Alloy</div>
+<div class="section lvl-2" id="4.2.2.0">
+          <div class="section-heading lvl-2"><span class="section-num">4.2.2.0</span>Comments and Properties</div>
+          <p>AZ61A is a wrought magnesium-base alloy containing aluminum and zinc. It is available in the form of extruded sections, tubes, and forgings in the as-fabricated (F) temper. AZ61A is much like AZ31B in general characteristics. The increased aluminum content increases the strength and decreases the ductility slightly.</p>
+          <p>Severe forming must be done at elevated temperatures. This alloy is readily welded but must be stress relieved after welding to prevent stress corrosion cracking.</p>
+          <p>Material specifications covering AZ61A are given in Table 4.2.2.0(a). Room-temperature mechanical and physical properties are shown in Table 4.2.2.0(b).</p>
+
+          <div class="hdbk-table-wrap" id="table-4.2.2.0a">
+            <table class="hdbk-table">
+              <caption>Table 4.2.2.0(a). Material Specifications for AZ61A Magnesium Alloy</caption>
+              <thead><tr><th>Specification</th><th class="td-left">Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS 4350</td><td class="td-left">Extrusion</td></tr>
+                <tr><td>ASTM B 91</td><td class="td-left">Forging</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="table-placeholder">Table 4.2.2.0(b) &mdash; Design Mechanical and Physical Properties of AZ61A Magnesium Alloy Extrusion and Forging &mdash; pending digitization (dense multi-column property table; MIL-HDBK-5J p. 4-18).</p>
+        </div><!-- /4.2.2.0 -->
+        </div><!-- /4.2.2 -->
+
+        <div class="section lvl-1" id="4.2.3">
+          <div class="section-heading lvl-1"><span class="section-num">4.2.3</span>ZK60A Alloy</div>
+<div class="section lvl-2" id="4.2.3.0">
+          <div class="section-heading lvl-2"><span class="section-num">4.2.3.0</span>Comments and Properties</div>
+          <p>ZK60A is a wrought magnesium-base alloy containing zinc and zirconium. It is available as extruded sections, tubes, and forgings. Increased strength is obtained by artificial aging (T5) from the as-fabricated (F) temper. ZK60A has the best combination of high room-temperature strength and ductility of the wrought magnesium-base alloys. It is used primarily at temperatures below 300&deg;F.</p>
+          <p>ZK60A has good ductility as compared with other high-strength magnesium alloys and can be formed or bent cold into shapes not possible with those alloys having less ductility. It is not considered a weldable alloy.</p>
+          <p>Material specifications for ZK60A are given in Table 4.2.3.0(a). Room-temperature mechanical and physical properties are shown in Tables 4.2.3.0(b) and (c). Elevated temperature curves for physical properties are shown in Figure 4.2.3.0.</p>
+
+          <div class="hdbk-table-wrap" id="table-4.2.3.0a">
+            <table class="hdbk-table">
+              <caption>Table 4.2.3.0(a). Material Specifications for ZK60A Magnesium Alloy</caption>
+              <thead><tr><th>Specification</th><th class="td-left">Form</th></tr></thead>
+              <tbody>
+                <tr><td>ASTM B 107</td><td class="td-left">Extrusion</td></tr>
+                <tr><td>AMS 4352</td><td class="td-left">Extrusion</td></tr>
+                <tr><td>AMS 4362</td><td class="td-left">Die and hand forgings</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The temper index for ZK60A is as follows:</p>
+          <div class="hdbk-table-wrap" id="table-4.2.3-temperindex">
+            <table class="hdbk-table">
+              <caption>ZK60A Temper Index</caption>
+              <thead><tr><th>Section</th><th>Temper</th></tr></thead>
+              <tbody>
+                <tr><td>4.2.3.1</td><td>F</td></tr>
+                <tr><td>4.2.3.2</td><td>T5</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="table-placeholder">Table 4.2.3.0(b) &mdash; Design Mechanical and Physical Properties of ZK60A Magnesium Alloy Extrusion (ASTM B 107) &mdash; pending digitization (dense multi-column property table; MIL-HDBK-5J p. 4-20).</p>
+          <p class="table-placeholder">Table 4.2.3.0(c) &mdash; Design Mechanical and Physical Properties of ZK60A Magnesium Alloy Extrusion and Forging (AMS 4352 / AMS 4362, T5 temper) &mdash; pending digitization (dense multi-column property table; MIL-HDBK-5J p. 4-21).</p>
+
+          <div class="hdbk-figure" id="fig-4.2.3.0">
+            <div class="canvasdiv">
+              <button id="toggle-4230">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-4230');var a=document.createElement('a');a.download='canvas-4230.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-4230').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-4230" class="chartcanvas" role="img" aria-label="Figure 4.2.3.0"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.3.0.</strong> Effect of temperature on the physical properties of ZK60A magnesium alloy.</p>
+          </div>
+        </div><!-- /4.2.3.0 -->
+
+        <div class="section lvl-2" id="4.2.3.1">
+          <div class="section-heading lvl-2"><span class="section-num">4.2.3.1</span>ZK60A-F Temper</div>
+          <p>MIL-HDBK-5J provides no additional narrative or figures for the F temper beyond the design property table referenced in Section 4.2.3.0; see Table 4.2.3.0(b) (ZK60A extrusion, F temper).</p>
+        </div><!-- /4.2.3.1 -->
+
+        <div class="section lvl-2" id="4.2.3.2">
+          <div class="section-heading lvl-2"><span class="section-num">4.2.3.2</span>ZK60A-T5 Temper</div>
+          <p>Typical room-temperature tension and compression stress-strain curves for extrusions are shown in Figures 4.2.3.2.6(a) and (b). Fatigue curves are presented in Figures 4.2.3.2.8(a) through (c).</p>
+
+          <div class="hdbk-figure" id="fig-4.2.3.2.6a">
+            <div class="canvasdiv">
+              <button id="toggle-42326a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-42326a');var a=document.createElement('a');a.download='canvas-42326a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-42326a').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-42326a" class="chartcanvas" role="img" aria-label="Figure 4.2.3.2.6(a)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.3.2.6(a).</strong> Typical tensile stress-strain curve for ZK60A-T5 extrusion at room temperature. Ramberg-Osgood n (RT) = 7.0.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.2.3.2.6b">
+            <div class="canvasdiv">
+              <button id="toggle-42326b">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-42326b');var a=document.createElement('a');a.download='canvas-42326b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-42326b').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-42326b" class="chartcanvas" role="img" aria-label="Figure 4.2.3.2.6(b)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.3.2.6(b).</strong> Typical compressive stress-strain curve for ZK60A-T5 extrusion at room temperature.</p>
+          </div>
+
+          <div class="hdbk-figure" id="fig-4.2.3.2.8a">
+            <div class="canvasdiv">
+              <button id="toggle-42328a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-42328a');var a=document.createElement('a');a.download='canvas-42328a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-42328a').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-42328a" class="chartcanvas" role="img" aria-label="Figure 4.2.3.2.8(a)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.3.2.8(a).</strong> Best-fit S/N curves for unnotched ZK60A-T5 extruded bar, longitudinal direction. Product form: extruded bar, 0.50-inch diameter (T<sub>US</sub> = 47.5 ksi, T<sub>YS</sub> = 40.9 ksi, room temperature, unnotched); unnotched specimen, 0.500-inch gross diameter, 0.400-inch net diameter, 0.750-inch root diameter, 7.500 inches long; axial loading, 3600 cpm, room temperature, air environment; sample size 21. Reference 4.2.3.2.8.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.2.3.2.8b">
+            <div class="canvasdiv">
+              <button id="toggle-42328b">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-42328b');var a=document.createElement('a');a.download='canvas-42328b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-42328b').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-42328b" class="chartcanvas" role="img" aria-label="Figure 4.2.3.2.8(b)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.3.2.8(b).</strong> Best-fit S/N curves for notched, K<sub>t</sub> = 2.4, ZK60A-T5 extruded bar, longitudinal direction. Product form: extruded bar, 0.50-inch diameter (T<sub>US</sub> = 63.7 ksi, T<sub>YS</sub> = 40.9 ksi, room temperature, notched); circumferentially notched specimen, K<sub>t</sub> = 2.4, 0.500-inch gross diameter, 0.400-inch net diameter, 0.032-inch notch radius, 60&deg; flank angle; axial loading, 3600 cpm, room temperature, air environment; sample size 30. Reference 4.2.3.2.8.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-4.2.3.2.8c">
+            <div class="canvasdiv">
+              <button id="toggle-42328c">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-42328c');var a=document.createElement('a');a.download='canvas-42328c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-42328c').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-42328c" class="chartcanvas" role="img" aria-label="Figure 4.2.3.2.8(c)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 4.2.3.2.8(c).</strong> Best-fit S/N curves for notched, K<sub>t</sub> = 3.4, ZK60A-T5 extruded bar, longitudinal direction. Product form: extruded bar, 0.50-inch diameter (T<sub>US</sub> = 58.2 ksi, T<sub>YS</sub> = 40.9 ksi, room temperature, notched); circumferentially notched specimen, K<sub>t</sub> = 3.4, 0.500-inch gross diameter, 0.400-inch net diameter, 0.010-inch notch radius, 60&deg; flank angle; axial loading, 3600 cpm, room temperature, air environment; sample size 36. Reference 4.2.3.2.8.</p>
+          </div>
+        </div><!-- /4.2.3.2 -->
+        </div><!-- /4.2.3 -->
+      </div>
+    </div>
+  </section>
+
+      <section class="mt-3">
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Other MIL-HDBK-5 Chapters</div>
+            </div>
+            <div class="mx-auto mt-3 mb-4 text-center" style="max-width:820px;">
+              <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                <a href="Chapter3(aluminum).html" class="custom-link custom-btn btn d-inline-block">Chapter 3 (Aluminum)</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <section class="mt-5 pt-3">
+      <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+        <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+          <div class="d-flex align-items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+            <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+          </div>          <!-- Citation format tabs -->
+          <style>
+            #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+            #citationTabs li { margin: 0; list-style: none; }
+            #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+            #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+            #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+          </style>
+          <div class="tab-content mt-2 mb-3" id="citationTabContent">
+            <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+              <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+              <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+              <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+              <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+          </div>
+          <ul id="citationTabs" class="nav" role="tablist">
+            <li role="presentation">
+              <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="site-footer"></footer>
+  <script src="js/footer.js"></script>
+
+  <script>
+function initLightbox() {
+  const overlay  = document.getElementById('lightboxOverlay');
+  const img      = document.getElementById('lightboxImg');
+  const caption  = document.getElementById('lightboxCaption');
+  const closeBtn = document.getElementById('lightboxClose');
+
+  if (!overlay) return;
+
+  function openLightbox(src, alt, captionText) {
+    img.src             = src;
+    img.alt             = alt || '';
+    caption.textContent = captionText || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    img.src = '';
+  }
+
+  document.addEventListener('click', e => {
+    const target = e.target.closest('.ref-zoomable');
+    if (!target) return;
+    const figLabel = target.closest('.ref-fig')
+      ?.querySelector('.ref-fig-label')
+      ?.textContent ?? '';
+    openLightbox(target.src, target.alt, figLabel);
+  });
+
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeLightbox();
+  });
+
+  closeBtn.addEventListener('click', closeLightbox);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initLightbox);
+  </script>
+
+  </body>
+</html>

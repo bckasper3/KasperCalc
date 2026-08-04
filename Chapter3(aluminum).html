@@ -3,40 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- META DATA FOR -->
-    <title>KasperCalc: Propylene Glycol Density</title>
+    <title>KasperCalc: MIL-HDBK-5 Chapter 3 - Aluminum</title>
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, bckasper3, Propylene Glycol, Propylene Glycol Density, Propylene Glycol Density Calculator" />
-    <meta name="description" content="Reference the density of propylene glycol solutions at various concentrations and temperatures." />
-
+    <meta name="keywords" content="KasperCalc, MIL-HDBK-5, MIL Spec Material Properties, aluminum properties, MMPDS" />
+    <meta name="description" content="MIL-HDBK-5 Chapter 3 Aluminum -- landing page with alloy index and section navigation." />
     <!-- DEFERRED JAVASCRIPT -->
-    
-    <!-- <script defer type="text/javascript" src="js/bootstrap.min.js"></script> -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script defer src="js/citation.js"></script>
     <script defer src="js/footer.js"></script>
     <script defer src="js/header-active-class.js"></script>
     <script defer src="js/navsearch.js"></script>
-    <script defer type="text/javascript" src="js/pgDensity.js"></script>
 
     <!-- CSS FILES -->
-    <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> --> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
     <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
     <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/mil-hdbk-5.css" />
 
-<!-- Google tag (gtag.js) -->
-<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
-<script>
+    <!-- Google tag (gtag.js) -->
+    <script>
+(function(){
+  var h = location.hostname;
+  var isLocal = !h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1' || /\.local$/i.test(h) || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+  if (isLocal) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0';
+  document.head.appendChild(s);
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
   gtag('js', new Date());
-
   gtag('config', 'G-5XLCN0GJQ0');
-</script> -->
+})();
+</script>
 
     <!-- FAVICON -->
     <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
@@ -46,11 +47,20 @@
     <meta name="apple-mobile-web-app-title" content="KasperCalc" />
     <link rel="manifest" href="/favicon/site.webmanifest" />
 
-
-   </head>
+    <!-- Chart.js + HdbkUtil for interactive figures -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="js/hdbkUtil.js"></script>
+  </head>
 
   <!-- BODY -->
   <body>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
 
   <!-- NAVIGATION -->
   <div class="navbarwrapper">
@@ -84,6 +94,7 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
                 <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
                   <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
                   <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
                   <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
@@ -199,18 +210,62 @@
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">MIL-HDBK-5</a>
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
-                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
-                  <a class="dropdown-item" href="Chapter2.1(steel).html">2.1 (General)</a>
-                  <a class="dropdown-item" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
-                  <a class="dropdown-item" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
-                  <a class="dropdown-item" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
-                  <a class="dropdown-item" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
-                  <a class="dropdown-item" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
-                  <a class="dropdown-item" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
-                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -282,237 +337,183 @@
       </div>
     </div>
   </div>
-
     <!-- MAIN -->
     <main data-pagefind-body>
+
       <!-- BANNER -->
       <section class="banner">
         <div class="cssbannercontainer">
           <div class="col-lg-12 col-12">
             <div class="banner section-title-wrap">
-              <div class="h1 section-title bannertext">
-                Propylene Glycol Density
-              </div>
+              <div class="h1 section-title bannertext">MIL-HDBK-5: Chapter 3 Aluminum</div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- UNDER THE BANNER -->
-      <h1 class="visually-hidden">Propylene Glycol Density Calculator with Mixture Percentages</h1>
+  <section class="col-11 mx-auto">
+    <div class="csscontainer">
+      <div class="wrapper">
+        <div class="header fs-4">MIL-HDBK-5: Chapter 3 &mdash; Aluminum</div>
+        <div class="row">
+          <div class="col-half" style="flex: 1 1 400px;">
+            <div class="group">
+              <span class="section-title-TOC">Aluminum Alloy Index</span>
+              <div class="list-container">
+                <a href="Chapter3.1(general-aluminum).html" class="quick-link"><span class="quick-num">3.1</span><span class="quick-title">General</span></a>
+                <a href="Chapter3.2(aluminum).html" class="quick-link"><span class="quick-num">3.2</span><span class="quick-title">2000 Series Wrought Alloys</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.1" class="quick-link quick-sub2"><span class="quick-num">3.2.1</span><span class="quick-title">2014 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.2" class="quick-link quick-sub2"><span class="quick-num">3.2.2</span><span class="quick-title">2017 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.3" class="quick-link quick-sub2"><span class="quick-num">3.2.3</span><span class="quick-title">2024 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.4" class="quick-link quick-sub2"><span class="quick-num">3.2.4</span><span class="quick-title">2025 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.5" class="quick-link quick-sub2"><span class="quick-num">3.2.5</span><span class="quick-title">2026 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.6" class="quick-link quick-sub2"><span class="quick-num">3.2.6</span><span class="quick-title">2090 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.7" class="quick-link quick-sub2"><span class="quick-num">3.2.7</span><span class="quick-title">2124 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.8" class="quick-link quick-sub2"><span class="quick-num">3.2.8</span><span class="quick-title">2219 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.9" class="quick-link quick-sub2"><span class="quick-num">3.2.9</span><span class="quick-title">2297 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.10" class="quick-link quick-sub2"><span class="quick-num">3.2.10</span><span class="quick-title">2424 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.11" class="quick-link quick-sub2"><span class="quick-num">3.2.11</span><span class="quick-title">2519 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.12" class="quick-link quick-sub2"><span class="quick-num">3.2.12</span><span class="quick-title">2524 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.13" class="quick-link quick-sub2"><span class="quick-num">3.2.13</span><span class="quick-title">2618 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html" class="quick-link"><span class="quick-num">3.5</span><span class="quick-title">5000 Series Wrought Alloys</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.1" class="quick-link quick-sub2"><span class="quick-num">3.5.1</span><span class="quick-title">5052 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.2" class="quick-link quick-sub2"><span class="quick-num">3.5.2</span><span class="quick-title">5083 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.3" class="quick-link quick-sub2"><span class="quick-num">3.5.3</span><span class="quick-title">5086 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.4" class="quick-link quick-sub2"><span class="quick-num">3.5.4</span><span class="quick-title">5454 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.5" class="quick-link quick-sub2"><span class="quick-num">3.5.5</span><span class="quick-title">5456 Alloy</span></a>
+                <a href="Chapter3.6(aluminum).html" class="quick-link"><span class="quick-num">3.6</span><span class="quick-title">6000 Series Wrought Alloys</span></a>
+                <a href="Chapter3.6(aluminum).html#3.6.1" class="quick-link quick-sub2"><span class="quick-num">3.6.1</span><span class="quick-title">6013 Alloy</span></a>
+                <a href="Chapter3.6(aluminum).html#3.6.2" class="quick-link quick-sub2"><span class="quick-num">3.6.2</span><span class="quick-title">6061 Alloy</span></a>
+                <a href="Chapter3.6(aluminum).html#3.6.3" class="quick-link quick-sub2"><span class="quick-num">3.6.3</span><span class="quick-title">6151 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html" class="quick-link"><span class="quick-num">3.7</span><span class="quick-title">7000 Series Wrought Alloys</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.1" class="quick-link quick-sub2"><span class="quick-num">3.7.1</span><span class="quick-title">7010 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.2" class="quick-link quick-sub2"><span class="quick-num">3.7.2</span><span class="quick-title">7040 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.3" class="quick-link quick-sub2"><span class="quick-num">3.7.3</span><span class="quick-title">7049/7149 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.4" class="quick-link quick-sub2"><span class="quick-num">3.7.4</span><span class="quick-title">7050 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.5" class="quick-link quick-sub2"><span class="quick-num">3.7.5</span><span class="quick-title">7055 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.6" class="quick-link quick-sub2"><span class="quick-num">3.7.6</span><span class="quick-title">7075 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.7" class="quick-link quick-sub2"><span class="quick-num">3.7.7</span><span class="quick-title">7150 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.8" class="quick-link quick-sub2"><span class="quick-num">3.7.8</span><span class="quick-title">7175 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.9" class="quick-link quick-sub2"><span class="quick-num">3.7.9</span><span class="quick-title">7249 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.10" class="quick-link quick-sub2"><span class="quick-num">3.7.10</span><span class="quick-title">7475 Alloy</span></a>
+                <a href="Chapter3.8(aluminum).html" class="quick-link"><span class="quick-num">3.8</span><span class="quick-title">200.0 Series Cast Alloys</span></a>
+                <a href="Chapter3.8(aluminum).html#3.8.1" class="quick-link quick-sub2"><span class="quick-num">3.8.1</span><span class="quick-title">A201.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html" class="quick-link"><span class="quick-num">3.9</span><span class="quick-title">300.0 Series Cast Alloys</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.1" class="quick-link quick-sub2"><span class="quick-num">3.9.1</span><span class="quick-title">354.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.2" class="quick-link quick-sub2"><span class="quick-num">3.9.2</span><span class="quick-title">355.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.3" class="quick-link quick-sub2"><span class="quick-num">3.9.3</span><span class="quick-title">C355.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.4" class="quick-link quick-sub2"><span class="quick-num">3.9.4</span><span class="quick-title">356.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.5" class="quick-link quick-sub2"><span class="quick-num">3.9.5</span><span class="quick-title">A356.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.6" class="quick-link quick-sub2"><span class="quick-num">3.9.6</span><span class="quick-title">A357.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.7" class="quick-link quick-sub2"><span class="quick-num">3.9.7</span><span class="quick-title">D357.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.8" class="quick-link quick-sub2"><span class="quick-num">3.9.8</span><span class="quick-title">359.0 Alloy</span></a>
+                <a href="Chapter3.10(element-properties-aluminum).html" class="quick-link"><span class="quick-num">3.10</span><span class="quick-title">Element Properties</span></a>
+              </div>
+            </div>
+          </div>
 
-      <!-- Jet Fuel -->
+          <div class="col-half" style="flex: 1 1 220px;">
+            <div class="group">
+              <span class="section-title-TOC">Navigate to Section</span>
+              <div class="d-flex flex-column gap-2 mt-2">
+                  <a href="Chapter1(general).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 1 &mdash; General
+                  </a>
+                  <a href="Chapter2(steel).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 2 &mdash; Steel
+                  </a>
+                  <a href="Chapter3(aluminum).html" class="tbtn active-section">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 3 &mdash; Aluminum
+                  </a>
+                  <a href="Chapter3.1(general-aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.1 &mdash; General
+                  </a>
+                  <a href="Chapter3.2(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.2 &mdash; 2000 Series Wrought Alloys
+                  </a>
+                  <a href="Chapter3.5(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.5 &mdash; 5000 Series Wrought Alloys
+                  </a>
+                  <a href="Chapter3.6(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.6 &mdash; 6000 Series Wrought Alloys
+                  </a>
+                  <a href="Chapter3.7(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.7 &mdash; 7000 Series Wrought Alloys
+                  </a>
+                  <a href="Chapter3.8(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.8 &mdash; 200.0 Series Cast Alloys
+                  </a>
+                  <a href="Chapter3.9(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.9 &mdash; 300.0 Series Cast Alloys
+                  </a>
+                  <a href="Chapter3.10(element-properties-aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.10 &mdash; Element Properties
+                  </a>
+                  <a href="Chapter4(magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 4 &mdash; Magnesium
+                  </a>
+
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Disclaimer</span>
+              <div class="disclaimer-bar">
+                <p><strong>For reference use only.</strong> The formulas, graphs, and values herein are provided in good faith for general engineering guidance. Please verify all data against MIL-HDBK-5J or the applicable superseding document (MMPDS).</p>
+              </div>
+              <div style="margin-top: 6px;">
+                <button class="tbtn" onclick="window.open('/downloadable/MIL-HDBK-5J-1.pdf', '_blank')" aria-label="Download MIL-HDBK-5 reference document">
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  MIL-HDBK-5
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+      <!-- OTHER CHAPTERS -->
       <section>
         <div class="csscontainer">
           <div class="col-lg-12 col-12">
-
             <div class="section-title-wrap">
-              <div class="h1 section-title">Propylene Glycol Density Chart</div>
+              <div class="h1 section-title">Other MIL-HDBK-5 Chapters</div>
             </div>
-
-            <div class="canvasdiv">
-              <button id="toggleTooltipButton">Hide Tooltips</button>
-              <a style="font-size: medium; text-decoration: none;" href="img/PropyleneGlycolDensityChart(kg_per_m^3_VS_Temperature).png" download="PropyleneGlycolDensityChart(kg_per_m^3_VS_Temperature).png">
-                <button>Download Chart</button>
-              </a>
-              <a style="font-size: medium; text-decoration: none;" href="img/PropyleneGlycolDensityChart(kg_per_m^3_VS_Temperature).png" target="_blank">
-                <button>Open In New Tab</button>
-              </a>
-              <img src="img/PropyleneGlycolDensityChart(kg_per_m^3_VS_Temperature).png" alt="Density of Propylene Glycol vs Temperature Graph" style="position:absolute; width:1px; height:1px; overflow:hidden; opacity:0;">             
-              <div class="canvascontainer">
-
-                    <!-- <script defer type="text/javascript" src="js/chart.min.js"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-                
-
-                <!-- <canvas id="myChart"></canvas> -->
-                <canvas id="myChart" aria-label="Alt Text Here" role="img" class="chartcanvas">
-                <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p></canvas>
-
-
+            <div class="mx-auto mt-3 mb-4 text-center" style="max-width:820px;">
+              <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                <a href="Chapter1(general).html" class="custom-link custom-btn btn d-inline-block">Chapter 1 (General)</a>
+                <a href="Chapter2(steel).html" class="custom-link custom-btn btn d-inline-block">Chapter 2 (Steel)</a>
+                <a href="Chapter4(magnesium).html" class="custom-link custom-btn btn d-inline-block">Chapter 4 (Magnesium)</a>
               </div>
             </div>
-            <p class="text-center">Data from "Propylene Glycol Industrial Grade", <a href="https://www.carpemar.com/images/pdf/FT/Propilenglicol_IND/FT_Propilenglicol_IND_EN.pdf" target="_blank">Carpemar 2016</a></p>
-            <p class="text-center">Toggle data sets by clicking the legend.</p>
           </div>
         </div>
       </section>
 
-
-      <!-- CALCULATOR -->
-      <section>
-        <div class="csscontainer">
-          <div class="col-lg-12 col-12 px-3">
-
-            <div class="wrapper">
-              <div class="header text-center">Propylene Glycol Density Calculator
-              </div>
-
-            <!-- <div class="toggle-container">
-              <label class="toggle-switch">
-                <input type="checkbox" id="fuelheadcalctoggle" class="toggle-input">
-                <span class="slider">
-                  <span class="option left">Inches of Fuel</span>
-                  <span class="option right">PSI</span>
-                </span>
-              </label>
-            </div> -->
-        
-              <div class="group1 d-flex flex-wrap">
-                <label class="dropdownlabel" for="operation">Select Mixture %:</label>
-
-                <span class="output">
-                  <select class="dropdowncalc dropdown-menu-end" id="operation" onchange="calculate()" aria-label="Freeze Curve or percent propylene Glycol concentration dropdown">
-                    <option value="50">50%</option>
-                    <option value="45">45%</option>
-                    <option value="40">40%</option>
-                    <option value="35">35%</option>
-                    <option value="30">30%</option>
-                    <option value="25">25%</option>
-                    <option value="Freeze Curve">Freeze Curve</option>
-                  </select>
-
-                </span>
-              </div>
-        
-              <div class="group">
-                <div class="outputrow">
-                <span class="label">
-                  <span id="nominalDensityOption1">Degrees (°F)</span>
-                </span> 
-                <span class="output inputbox">
-                  <input class= "calcinput" type="number" id="fahrenheit" oninput="convertToCelsius()" value="70" aria-label="Degrees Fahrenheit input box"/>
-                </span>
-                </div>
-        
-                <div class="outputrow">
-                  <span class="label">
-                    <span id="nominalDensityOption2">Degrees (°C)</span>
-                  </span> 
-                  <span class="output inputbox">
-                    <input class= "calcinput" type="number" id="celsius" oninput="convertToFahrenheit()" aria-label="Degrees Celcius input box"/>
-                  </span>
-                </div>
-              </div>
-        
-              <div class="group">
-                <div class="outputrow">
-                  <span class="label">Density (kg/m³):</span>
-                  <span class="output" id="result_density1">&nbsp</span>
-                </div>
-        
-                <div class="outputrow">
-                  <span class="label">Density (lb/in³):</span>
-                  <span class="output" id="result_density2">&nbsp</span>
-                </div>
-
-                <div class="outputrow">
-                  <span class="label">Density (lb/gal):</span>
-                  <span class="output" id="result_density3">&nbsp</span>
-                </div>
-
-                <div class="outputrow">
-                  <span class="label">Density (lb/ft³):</span>
-                  <span class="output" id="result_density7">&nbsp</span>
-                </div>                
-
-                <div class="outputrow">
-                  <span class="label">Specific Gravity*:</span>
-                  <span class="output" id="result_density4">&nbsp</span>
-                </div>
-
-                <div class="outputrow">
-                  <span class="label">Specific Gravity**:</span>
-                  <span class="output" id="result_density5">&nbsp</span>
-                </div>
-
-                <div class="outputrow">
-                  <span class="label">Specific Gravity***:</span>
-                  <span class="output" id="result_density6">&nbsp</span>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <p class="text-center"><a href="SpecificGravityExplanation.html" target="_blank">Specific Gravity is a Contentious Unit</a></p>
-          <p class="text-center">* SG based on static density of water of 1000 (kg/m³) *</p>
-          <p class="text-center">** SG based on static density of water of 998 (kg/m³) **</p>
-          <p class="text-center">*** SG based on temperature dependent density of water ***</p>
-
-        </div>
-        <!-- <p class="text-center">*S.G. based on the density of</br>water at 39.2°F  = 1000kg/m³*
-        </p> -->
-      </section>
-
-      <!-- Button to Other Calculator -->
-      <section>
-        <div class="col-lg-12 col-12">
-          <div class="mx-auto mt-4 text-center">
-            <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
-            <a href="SpecificGravCalculator.html" class="custom-link custom-btn btn d-inline-block">Specific Gravity Calculator</a><br/>
-          </div>
-          <!-- <div class="mx-auto mt-1 text-center">
-            <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;">Also See:&nbsp&nbsp</h2>
-            <a href="universalPPH.html" class="custom-link custom-btn btn d-inline-block">Universal PPH to GPM Calculator</a><br/>
-          </div> -->
-        </div>
-    </section>
-
-      <!-- DENSITY REFERENCE -->
-      <section>
-        <div class="csscontainer">
-          <div class="mx-md-5 mx-3 section-content-wrap">
-
-            <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
-              <div class="custom-heading">Density of Propylene Glycol Solutions</div>
-
-              <div style="text-align: left" class="mt-3">
-                <div class="custom-subheading">What Is Density?</div>
-                <p class="mt-2">
-                  Density (<span style="font-weight:var(--font-weight-medium)">ρ</span>) is mass per unit volume, measured in
-                  <span style="font-weight:var(--font-weight-medium)">kg / m³</span> [SI] or
-                  <span style="font-weight:var(--font-weight-medium)">lb / ft³</span> [Imperial].
-                  Propylene glycol is denser than water, so adding glycol to a system increases the fluid density.
-                  Density decreases as temperature rises, following the relation:
-                </p>
-                <p class="mt-2" style="font-family:monospace; padding-left:1.5rem;">
-                  ρ = m / V
-                </p>
-                <p class="mt-1">
-                  Specific gravity (SG) — the ratio of fluid density to the density of water at a reference temperature —
-                  is commonly measured in the field with a hydrometer or refractometer to verify glycol concentration.
-                </p>
-              </div>
-
-              <div style="text-align: left" class="mt-4">
-                <div class="custom-subheading">Why It Matters for System Design</div>
-                <p class="mt-2">
-                  Density directly affects pump head calculations, pipe pressure drop, and mass flow rate.
-                  A fluid head calculator using water density will underestimate the head produced by a denser
-                  glycol solution. Density also drives buoyancy in stratified tanks and influences the calibration
-                  of flow meters that are not mass-based. When converting between volumetric flow (GPM) and
-                  mass flow (PPH or lb/hr), the actual density at operating temperature must be used.
-                </p>
-              </div>
-
-              <p class="mt-3 text-start"><span style="font-weight:var(--font-weight-normal)">Note:</span> Density varies with both concentration and temperature. Always use the value at the actual operating temperature, not at standard conditions.</p>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <section class="mt-5 pt-3">
-        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
-          <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
-            <div class="d-flex align-items-center mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
-                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
-              </svg>
-              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
-            </div>
-          <!-- Citation format tabs -->
+    <section class="mt-5 pt-3">
+      <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+        <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+          <div class="d-flex align-items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+            <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+          </div>          <!-- Citation format tabs -->
           <style>
             #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
             #citationTabs li { margin: 0; list-style: none; }
@@ -548,27 +549,62 @@
               <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
             </li>
           </ul>
-          </div>
         </div>
-      </section>
+      </div>
+    </section>
 
+  </main>
 
-    </main>   
-    
-    <!-- FOOTER -->
-    <footer id="site-footer"></footer>
-    <script src="js/footer.js"></script>
-    <!-- END FOOTER -->    
+  <footer id="site-footer"></footer>
+  <script src="js/footer.js"></script>
 
+  <script>
+function initLightbox() {
+  const overlay  = document.getElementById('lightboxOverlay');
+  const img      = document.getElementById('lightboxImg');
+  const caption  = document.getElementById('lightboxCaption');
+  const closeBtn = document.getElementById('lightboxClose');
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  if (!overlay) return;
 
-  gtag('config', 'G-5XLCN0GJQ0');
-</script>
+  function openLightbox(src, alt, captionText) {
+    img.src             = src;
+    img.alt             = alt || '';
+    caption.textContent = captionText || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    img.src = '';
+  }
+
+  document.addEventListener('click', e => {
+    const target = e.target.closest('.ref-zoomable');
+    if (!target) return;
+    const figLabel = target.closest('.ref-fig')
+      ?.querySelector('.ref-fig-label')
+      ?.textContent ?? '';
+    openLightbox(target.src, target.alt, figLabel);
+  });
+
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeLightbox();
+  });
+
+  closeBtn.addEventListener('click', closeLightbox);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initLightbox);
+  </script>
 
   </body>
 </html>

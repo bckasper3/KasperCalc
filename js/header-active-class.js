@@ -23,9 +23,27 @@
       // If the link has a hash, require the current URL hash to match exactly.
       if (!hrefHash || hrefHash === currentHash) {
         item.classList.add('active');
+        // Auto-expand the nested submenu (if any) so the active item is visible.
+        const submenu = item.closest('.dropdown-submenu');
+        if (submenu) {
+          submenu.classList.add('open');
+          const toggle = submenu.querySelector('.dropdown-submenu-toggle');
+          if (toggle) toggle.setAttribute('aria-expanded', 'true');
+        }
       } else {
         item.classList.remove('active');
       }
+    });
+
+    // --- Nested submenu expand/collapse (Chapter 2/3/4 sections) ---
+    document.querySelectorAll('.dropdown-submenu-toggle').forEach(function (toggle) {
+      toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const submenu = toggle.closest('.dropdown-submenu');
+        const isOpen = submenu.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
     });
 
     // --- Top-level nav links (Home, About) ---

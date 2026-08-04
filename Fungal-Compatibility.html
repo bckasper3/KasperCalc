@@ -25,13 +25,21 @@
     <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-5XLCN0GJQ0');
-    </script>
+(function(){
+  var h = location.hostname;
+  var isLocal = !h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1' || /\.local$/i.test(h) || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+  if (isLocal) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+  gtag('js', new Date());
+  gtag('config', 'G-5XLCN0GJQ0');
+})();
+</script>
 
     <!-- FAVICON -->
     <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
@@ -73,6 +81,7 @@
       .fungal-finder .rl-res  { background:#2a7a45; color:#fff }
       .fungal-finder .rl-cond { background:#c49000; color:#fff }
       .fungal-finder .rl-susc { background:#b03030; color:#fff }
+      .fungal-finder .rl-unk  { background:#6a746a; color:#fff }
       .fungal-finder .nav-note { margin-top:14px; border-top:1px dashed var(--line); padding-top:10px }
       .fungal-finder .nv { padding:7px 8px; border-radius:6px; color:var(--muted); font-size:11px; line-height:1.6 }
 
@@ -201,6 +210,7 @@
       .fungal-finder .rating-badge.r2 { background:#c49000 }
       .fungal-finder .rating-badge.r3 { background:#c06010 }
       .fungal-finder .rating-badge.r4 { background:#b03030 }
+      .fungal-finder .rating-badge.runk { background:#6a746a }
       .fungal-finder tbody tr:hover td { background:#dfe7e9 }
 
       .fungal-finder .empty { padding:48px; text-align:center; color:var(--faint) }
@@ -213,6 +223,34 @@
       }
       @media (prefers-reduced-motion:reduce) { .fungal-finder * { transition:none!important } }
       .fungal-finder :focus-visible { outline:2px solid var(--brass); outline-offset:1px }
+
+      /* ===== Explicit li / a sizing across content sections ===== */
+      /* Prevents user-agent or stylesheet defaults from resizing list items and
+         links; each explicitly inherits the size set on its container. */
+      .section-content-wrap li,
+      .section-content-wrap a { font-size: inherit; }
+
+      /* ===== MIL-HDBK-454B Table 4-I group panels ===== */
+      .mh-group { border:1px solid var(--line, #434343); border-radius:6px; overflow:hidden; background:#fff; }
+      .mh-group-head { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:10px 14px; color:#fff; }
+      .mh-group-head.inert    { background:#2a7a45; } /* fungus-inert  = green  */
+      .mh-group-head.nutrient { background:#b03030; } /* fungus-nutrient = red  */
+      .mh-group-title { font-size:1rem; font-weight:var(--font-weight-medium, 500); margin:0; line-height:1.2; }
+      .mh-group-sub { font-size:0.75rem; opacity:0.9; margin-top:2px; }
+      .mh-status-badge { font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.55); border-radius:4px; padding:3px 9px; white-space:nowrap; font-weight:var(--font-weight-medium, 500); }
+      .mh-group-body { padding:12px 14px 6px; }
+      .mh-list { list-style:disc; padding-left:1.15rem; margin:0 0 0.5rem; }
+      .mh-list li { font-size:0.85rem; line-height:1.5; margin-bottom:4px; }
+      .mh-list li a { font-size:0.85rem; }
+
+      /* ===== Color-coded status pills (fungus classification / catalog status) ===== */
+      .status-pill { display:inline-block; font-size:0.72rem; font-weight:var(--font-weight-medium, 500); letter-spacing:0.02em; padding:2px 9px; border-radius:10px; color:#fff; white-space:nowrap; line-height:1.7; }
+      .status-pill.pill-green { background:#2a7a45; }
+      .status-pill.pill-red { background:#b03030; }
+      .status-pill.pill-amber { background:#c49000; }
+      .status-pill.pill-gray { background:#6a746a; }
+      .pill-legend { display:flex; flex-wrap:wrap; gap:14px; align-items:center; font-size:0.8rem; color:var(--muted, #4a5a5f); }
+      .pill-legend .status-pill { margin-right:5px; }
     </style>
   </head>
 
@@ -251,6 +289,7 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
                 <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
                   <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
                   <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
                   <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
@@ -366,18 +405,62 @@
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-HDBK-5</a>
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">MIL-HDBK-5</a>
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
-                  <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
-                  <a class="dropdown-item" href="Chapter2.1(steel).html">2.1 (General)</a>
-                  <a class="dropdown-item" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
-                  <a class="dropdown-item" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
-                  <a class="dropdown-item" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
-                  <a class="dropdown-item" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
-                  <a class="dropdown-item" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
-                  <a class="dropdown-item" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
-                  <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -471,24 +554,25 @@
     <section>
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap">
-          <div class="mx-auto d-inline-block mt-3" style="max-width:860px;">
-            <div class="custom-heading">Trade Name → Polymer → Fungal Resistance Lookup</div>
+          <div class="mx-auto d-inline-block mt-3 col-11 col-md-10 col-lg-8 col-xl-6">
+            <div class="custom-heading">Fungal Resistance Lookup</div>
             <div class="mt-3 text-start">
               <p class="mb-3">
-                Cross-reference of 246 plastic and elastomer trade and generic names — spanning fluoropolymers,
-                polyimides, engineering thermoplastics, and common elastomer families — to their base
+                Cross-reference of 247 plastic and elastomer trade and generic names to their base
                 polymer chemistry and typical fungal resistance rating, per
                 <span style="font-weight: var(--font-weight-normal)">MIL-HDBK-454B</span> (Guideline&nbsp;4, Group&nbsp;I / Group&nbsp;II),
                 <span style="font-weight: var(--font-weight-normal)">MIL-STD-810</span> Method&nbsp;508 (28-day fungus exposure), and
                 <span style="font-weight: var(--font-weight-normal)">ASTM&nbsp;G21</span> (0–4 rating scale).
               </p>
+              <p class="mb-3">
+                Fungal resistance is a property of the specific compound a manufacturer sells, not something that transfers automatically from
+                its polymer family. Fluorocarbon (FKM/Viton) is the clearest example. The polymer
+                backbone is a non-nutrient, but individual compounds are formulated with plasticizers,
+                fillers, and process aids that vary widely, and only a handful of specific compounds
+                have ever been publicly documented as tested and passed per MIL-STD-810 Method&nbsp;508.
+              </p>
               <p>
-                Search by trade name, owner, polymer, or abbreviation; filter by material type or
-                resistance category; and click any column header to sort. Ratings are typical for
-                <em>virgin, unfilled</em> material — plasticizers, cellulosic fillers, and some
-                colorants are the actual fungal food source, so a filled or plasticized grade of a
-                "Resistant" material can still support growth. See the legend at left and the
-                footnotes below the table for important caveats.
+                See the legend at left and the footnotes below the table for important caveats.
               </p>
             </div>
           </div>
@@ -503,7 +587,7 @@
         <div class="app">
           <header>
             <div class="brand">FUNGAL RESISTANCE LOOKUP</div>
-            <span class="tagline">246 trade &amp; generic names &middot; plastics &amp; elastomers</span>
+            <span class="tagline">247 trade &amp; generic names &middot; plastics &amp; elastomers</span>
             <span class="totals" id="totals"></span>
           </header>
 
@@ -533,19 +617,36 @@
                 <div class="rl-item"><span class="rl-badge rl-res">R</span>Resistant &mdash; non-nutrient; no/negligible growth (rating 0&ndash;1)</div>
                 <div class="rl-item"><span class="rl-badge rl-cond">C</span>Conditional &mdash; depends on grade/filler/plasticizer (rating ~1&ndash;3)</div>
                 <div class="rl-item"><span class="rl-badge rl-susc">S</span>Susceptible &mdash; supports fungal growth (rating 2&ndash;4)</div>
+                <div class="rl-item"><span class="rl-badge rl-unk">?</span>Rating shows <span style="font-weight:var(--font-weight-medium);">?</span> when no single family number is meaningful &mdash; either nothing has ever been tested, or tested compounds land on both sides of the pass/fail line</div>
               </div>
               <div class="nav-note">
                 <div class="nav-h">Footnotes</div>
                 <div class="nv">
-                  <strong>1</strong> &mdash; Polyamide caveat: may be attacked by selective micro-organisms
+                  <span style="font-weight:var(--font-weight-medium);">1</span> &mdash; Polyamide caveat: may be attacked by selective micro-organisms
                   under certain conditions, but classed Group&nbsp;I for military use.<br>
-                  <strong>2</strong> &mdash; Not named in MIL-HDBK-454 Table&nbsp;4-I (a blend, copolymer,
+                  <span style="font-weight:var(--font-weight-medium);">2</span> &mdash; Not named in MIL-HDBK-454 Table&nbsp;4-I (a blend, copolymer,
                   or later-developed polymer); base resin is a non-nutrient but strictly requires
                   ASTM&nbsp;G21 / MIL-STD-810 Method&nbsp;508 testing.<br>
-                  <strong>3</strong> &mdash; Acrylics conflict: Table&nbsp;4-I lists "Acrylics" in
+                  <span style="font-weight:var(--font-weight-medium);">3</span> &mdash; Acrylics conflict: Table&nbsp;4-I lists "Acrylics" in
                   Group&nbsp;I but "Polymethyl methacrylate" in Group&nbsp;II &mdash; treated here as
                   Group&nbsp;II (nutrient).<br>
-                  <strong>*</strong> &mdash; Not a universally recognized single-owner trademark; used
+                  <span style="font-weight:var(--font-weight-medium);">4</span> &mdash; FKM/fluorocarbon caveat: fungus resistance is a
+                  compound-level, tested property, not an automatic consequence of the polymer
+                  backbone, and fluorocarbon proves it. Of the seven FKM compounds Parker tested to
+                  MIL-STD-810F Method&nbsp;508.5, five passed (VM125-75, VX065-75 and V1289-75 all at
+                  rating&nbsp;0) and two failed (V0747-75 and V0680-70, both rating&nbsp;2). Same
+                  family, opposite results &mdash; so no single number represents it. See
+                  <a href="#parker-verified" style="font-size:12px;">the full pass/fail table</a> below.<br>
+                  <span style="font-weight:var(--font-weight-medium);">5</span> &mdash; FFKM caveat: the perfluoroelastomer backbone is
+                  inherently non-nutrient and two Parker compounds (V3860-75, V8545-75) carry
+                  documented MIL-STD-810B Method&nbsp;508 pass data, but no publicly published
+                  per-compound fungus data was found for other FFKM vendors (Greene Tweed, DuPont,
+                  Trelleborg, Freudenberg, PPE).<br>
+                  <span style="font-weight:var(--font-weight-medium);">6</span> &mdash; TFE/Propylene (Aflas&reg;) caveat: neither of Parker's
+                  fungus-test tables contains a single TFE/P entry, so the "Resistant" rating for
+                  Aflas&reg; is an assumption from non-nutrient polymer chemistry with no test behind
+                  it at all &mdash; a stricter gap than FKM, where at least the data exists.<br>
+                  <span style="font-weight:var(--font-weight-medium);">*</span> &mdash; Not a universally recognized single-owner trademark; used
                   by several manufacturers for similar compounds.
                 </div>
               </div>
@@ -605,81 +706,648 @@
     </section>
 
 
-    <!-- RATING KEY & SOURCES -->
-    <section>
+    <!-- MIL-HDBK-454 TABLE 4-I, VERBATIM -->
+    <section id="mil-hdbk-454-table">
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap">
-          <div class="mx-auto d-inline-block mt-3 mb-3 text-start" style="max-width:900px;">
+          <div class="mx-auto d-inline-block mt-3 mb-3 text-start" style="max-width:1100px;">
             <div class="text-center">
-              <div class="custom-heading">Rating Scale &amp; Sources</div>
+              <div class="custom-heading">Source Table: MIL-HDBK-454B, Table 4-I</div>
             </div>
+            <p class="mt-3">
+              The Group I / Group II classifications cited above originate from Guideline&nbsp;4,
+              "Fungus-Inert Materials," Table&nbsp;4-I (p.&nbsp;4-2), reproduced verbatim below. Item names
+              appear exactly as published. Parenthetical notes under select entries are
+              KasperCalc annotations, added to map the specification's generic polymer-family
+              terminology to the trade names used elsewhere on this page.
+            </p>
+            <p class="mt-2">
+              This same list is codified in MIL-STD-810. Section&nbsp;4.4 of MIL-HDBK-454B directs
+              Group&nbsp;II materials to the fungus test defined in Method&nbsp;508, and
+              MIL-STD-810H reproduces the identical list as
+              <span style="font-weight:var(--font-weight-medium);">Method&nbsp;508.8, Annex&nbsp;B,
+              Table&nbsp;508.8B-I</span> ("Fungi susceptibility of materials"), citing
+              MIL-HDBK-454 as its source. The two documents present a single classification, not
+              independent ones. MIL-STD-810H includes the following caution:
+            </p>
+            <blockquote class="mt-2 mb-3" style="border-left:4px solid var(--section-title-color); padding:0.5rem 1rem; font-size:0.9rem; color:#555; font-style:italic;">
+              "Although the basic (documented) resistance of materials to fungal growth shown below
+              is helpful in the design of new materiel, it is unreliable in determining the fungal
+              susceptibility of complex materials, and the use of testing by analysis is
+              discouraged. &hellip; The below Table is not a comprehensive list and does not
+              necessarily reflect modern day formulations of materials."
+              <footer class="mt-1" style="font-style:normal; font-size:0.8rem;">MIL-STD-810H, Method&nbsp;508.8, Annex&nbsp;B</footer>
+            </blockquote>
+            <p class="mt-2" style="font-size:0.85rem; color:#666;">
+              This caution reflects the same principle underlying this page: a family classification
+              establishes a baseline, not a per-compound guarantee. Compound-level test results
+              follow in the next two sections.
+            </p>
 
-            <div class="row g-4 mt-1">
-              <div class="col-12">
-                <div class="mt-1 mx-auto">
-                  <table class="table table-sm mx-auto" style="font-size: 0.9rem;">
-                    <thead style="background-color: var(--section-title-color); color: #fff;">
-                      <tr><th style="width:120px;">Category</th><th>Meaning</th></tr>
-                    </thead>
-                    <tbody>
-                      <tr><td><strong>Resistant</strong></td><td>Base polymer is a non-nutrient; no/negligible growth. Fungus rating 0&ndash;1 (ASTM&nbsp;G21 / MIL-STD-810).</td></tr>
-                      <tr><td><strong>Conditional</strong></td><td>Depends on grade, filler, plasticizer, or blend phase; verify by test. Typical rating ~1&ndash;3.</td></tr>
-                      <tr><td><strong>Susceptible</strong></td><td>Supports fungal growth (nutrient); MIL-HDBK-454 Group&nbsp;II or nutrient chemistry. Rating 2&ndash;4.</td></tr>
-                    </tbody>
-                  </table>
-                  <p style="font-size:0.8rem; color:#666;" class="mt-2 text-center">
-                    Elastomer rating values are the supplied typical family ratings; plastic rating
-                    values are typical ranges inferred from the resistance category, not per-compound
-                    test data.
-                  </p>
+            <div class="d-flex flex-column gap-4 mt-2">
+
+              <!-- MAIN ROW 1: GROUP I (fungus-inert) -->
+              <div class="mh-group">
+                <div class="mh-group-head inert">
+                  <div>
+                    <div class="mh-group-title">Group I &mdash; Fungus-Inert Materials</div>
+                    <div class="mh-group-sub">Fungus-inert in all modified states and grades</div>
+                  </div>
+                  <span class="mh-status-badge">Does not support fungal growth</span>
+                </div>
+                <div class="mh-group-body">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <ul class="mh-list">
+                        <li>Acrylics <span class="text-muted">(see Group&nbsp;II "Polymethyl methacrylate" conflict, footnote&nbsp;3 above)</span></li>
+                        <li>Acrylonitrile-styrene <span class="text-muted">(SAN)</span></li>
+                        <li>Acrylonitrile-vinyl-chloride copolymer</li>
+                        <li>Asbestos</li>
+                        <li>Ceramics</li>
+                        <li>Chlorinated polyester</li>
+                        <li>Fluorinated ethylenepropylene copolymer (FEP) <span class="text-muted">(Teflon&reg; FEP)</span></li>
+                        <li>Glass</li>
+                        <li>Metals</li>
+                        <li>Mica</li>
+                        <li>Plastic laminates: silicone-glass fiber</li>
+                        <li>Plastic laminates: phenolic-nylon fiber</li>
+                        <li>Diallyl phthalate <span class="text-muted">(DAP)</span></li>
+                        <li>Polyacrylonitrile <span class="text-muted">(PAN)</span></li>
+                        <li>Polyamide<sup>1/</sup> <span class="text-muted">(Nylon, PA; Zytel, Ultramid, Rilsan, Vestamid)</span></li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-6">
+                      <ul class="mh-list">
+                        <li>Polycarbonate <span class="text-muted">(PC; Lexan, Makrolon)</span></li>
+                        <li>Polyester-glass fiber laminates</li>
+                        <li>Polyethylene, high density (above 0.940) <span class="text-muted">(HDPE)</span></li>
+                        <li>Polyethylene terephthalate <span class="text-muted">(PET; Mylar, Melinex, Hostaphan)</span></li>
+                        <li>Polyimide <span class="text-muted">(PI; Kapton, Vespel, Meldin)</span></li>
+                        <li>Polymonochlorotrifluoroethylene <span class="text-muted">(PCTFE; Kel-F, Neoflon, Aclar)</span></li>
+                        <li>Polypropylene <span class="text-muted">(PP)</span></li>
+                        <li>Polystyrene <span class="text-muted">(PS)</span></li>
+                        <li>Polysulfone <span class="text-muted">(PSU; Udel)</span></li>
+                        <li>Polytetrafluoroethylene <span class="text-muted">(PTFE; Teflon&reg;)</span></li>
+                        <li>Polyvinylidene chloride <span class="text-muted">(PVDC; Saran &mdash; distinct from PVDF/Kynar&reg;)</span></li>
+                        <li>Silicone resin <span class="text-muted">(distinct from silicone rubber/VMQ elastomer &mdash; see Caveats)</span></li>
+                        <li>Siloxane-polyolefin polymer</li>
+                        <li>Siloxane polystyrene</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="mt-4">
-              <div class="text-center">
-                <div class="custom-heading">Sources</div>
+              <!-- MAIN ROW 2: GROUP II (fungus-nutrient) -->
+              <div class="mh-group">
+                <div class="mh-group-head nutrient">
+                  <div>
+                    <div class="mh-group-title">Group II &mdash; Fungus-Nutrient Materials</div>
+                    <div class="mh-group-sub">May require treatment to attain fungus resistance</div>
+                  </div>
+                  <span class="mh-status-badge">Can support fungal growth</span>
+                </div>
+                <div class="mh-group-body">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <ul class="mh-list">
+                        <li>ABS (acrylonitrile-butadiene-styrene) <span class="text-muted">(Cycolac, Lustran, Terluran)</span></li>
+                        <li>Acetal resins <span class="text-muted">(POM; Delrin, Celcon, Hostaform)</span></li>
+                        <li>Cellulose acetate <span class="text-muted">(CA)</span></li>
+                        <li>Cellulose acetate butyrate <span class="text-muted">(CAB)</span></li>
+                        <li>Epoxy-glass fiber laminates <span class="text-muted">(G-10, FR-4, Garolite)</span></li>
+                        <li>Epoxy-resin</li>
+                        <li>Lubricants</li>
+                        <li>Melamine-formaldehyde <span class="text-muted">(Melamine)</span></li>
+                        <li>Organic polysulphides <span class="text-muted">(Thiokol-type polysulfide sealants)</span></li>
+                        <li>Phenol-formaldehyde <span class="text-muted">(Phenolic, Bakelite&reg;; Micarta&reg; paper/canvas grades)</span></li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-6">
+                      <ul class="mh-list">
+                        <li>Polydichlorostyrene</li>
+                        <li>Polyethylene, low and medium density (0.940 and below) <span class="text-muted">(LDPE, MDPE)</span></li>
+                        <li>Polymethyl methacrylate <span class="text-muted">(PMMA; Plexiglas&reg;, Lucite&reg;, Acrylite&reg; &mdash; see Group&nbsp;I "Acrylics" conflict)</span></li>
+                        <li>Polyurethane <span class="text-muted">(the ester types are particularly susceptible)</span> <span class="text-muted">(PU, AU/EU; Adiprene, Estane, Pellethane)</span></li>
+                        <li>Polyricinoleates</li>
+                        <li>Polyvinyl chloride <span class="text-muted">(PVC)</span></li>
+                        <li>Polyvinyl chloride-acetate</li>
+                        <li>Polyvinyl fluoride <span class="text-muted">(PVF; Tedlar&reg;)</span></li>
+                        <li>Rubbers, natural and synthetic <span class="text-muted">(NR, SBR, and most general-purpose elastomers &mdash; see the Elastomer rows in the lookup tool above for family-specific ratings)</span></li>
+                        <li>Urea-formaldehyde <span class="text-muted">(UF)</span></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <ul class="mt-3" style="font-size:0.9rem;">
-                <li class="mb-2">MIL-HDBK-454B, Guideline&nbsp;4 (Fungus-Inert Materials), Table&nbsp;4-I &mdash; Group&nbsp;I (fungus-inert) / Group&nbsp;II (fungus-nutrient).</li>
-                <li class="mb-2">MIL-STD-810, Method&nbsp;508 &mdash; fungus test (28-day exposure), Grade&nbsp;0/1 pass criterion.</li>
-                <li class="mb-2">ASTM&nbsp;G21 &mdash; Standard Practice for Determining Resistance of Synthetic Polymeric Materials to Fungi (0&ndash;4 rating).</li>
-                <li class="mb-2">Parker O-Ring Handbook &mdash; customary source for elastomer family fungus ratings.</li>
-                <li>Trade-name ownership per manufacturer/vendor material data (Curbell, Boedeker, Ensinger, R&ouml;chling, and manufacturer datasheets).</li>
-              </ul>
-            </div>
 
+            </div>
+            <p class="mt-3" style="font-size:0.8rem; color:#666;">
+              <sup>1/</sup> Literature shows that under certain conditions polyamides may be
+              attacked by selective micro-organisms. However, for military applications, they are
+              considered group I. <em>(Footnote reproduced verbatim from the source table.)</em>
+            </p>
           </div>
         </div>
       </div>
     </section>
+
+
+    <!-- COMPOUND-LEVEL FUNGUS TEST RESULTS -->
+    <section id="parker-verified">
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3 mb-3 text-start" style="max-width:1100px;">
+            <div class="text-center">
+              <div class="custom-heading">Which Compounds Pass &mdash; and Which Fail</div>
+            </div>
+            <p class="mt-3">
+              Parker's US O-Ring Handbook reports individual fungus ratings for forty-five
+              compounds, tested per <span style="font-weight:var(--font-weight-medium);">MIL-STD-810F,
+              Method&nbsp;508.5</span>. Thirty are non-nutrient; fifteen support fungal growth.
+            </p>
+            <p class="mt-2">
+              A rating of <span style="font-weight:var(--font-weight-medium);">0 or 1</span>
+              indicates the compound is non-nutrient to fungus growth. A rating
+              <span style="font-weight:var(--font-weight-medium);">above 1</span> indicates it
+              supports growth.
+            </p>
+            <p class="mt-2">
+              Results vary within a single polymer family. Among fluorocarbons, VX065-75 and
+              VM125-75 score <span style="font-weight:var(--font-weight-medium);">0</span>, while
+              V0747-75 and V0680-70 score <span style="font-weight:var(--font-weight-medium);">2</span>
+              and support growth. Among nitriles, fifteen of nineteen compounds tested came back
+              non-nutrient despite the family's reputation as a fungal food source. Family
+              classification does not determine compound-level performance.
+            </p>
+            <p class="pill-legend mt-3 mb-2">
+              <span class="status-pill pill-green">PASS</span>&nbsp;rating &le; 1, non-nutrient to fungus growth
+              <span class="status-pill pill-red">FAIL</span>&nbsp;rating &gt; 1, supports fungus growth
+            </p>
+            <div class="table-responsive mt-3">
+              <table class="table table-sm table-bordered align-middle" style="font-size:0.85rem;">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th>Family</th>
+                    <th>Compound</th>
+                    <th style="text-align:center;">Rating</th>
+                    <th>Result</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td rowspan="1">Butyl (IIR)</td><td>B0612-70</td><td style="text-align:center;">2</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+
+                  <tr><td rowspan="7">Ethylene Propylene (EPDM)</td><td>E0515-80</td><td style="text-align:center;">1</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>E0692-75</td><td style="text-align:center;">1</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>E0540-80</td><td style="text-align:center;">2</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+                  <tr><td>E0740-75</td><td style="text-align:center;">2</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+                  <tr><td>E0603-70</td><td style="text-align:center;">3</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+                  <tr><td>E0652-90</td><td style="text-align:center;">3</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+                  <tr><td>E0803-70</td><td style="text-align:center;">3</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+
+                  <tr><td rowspan="7">Fluorocarbon (FKM)</td><td>VM125-75</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>VX065-75</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>V1289-75<sup>*</sup></td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>V0709-90</td><td style="text-align:center;">1</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>V1164-75</td><td style="text-align:center;">1</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>V0680-70</td><td style="text-align:center;">2</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+                  <tr><td>V0747-75</td><td style="text-align:center;">2</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+
+                  <tr><td rowspan="1">Fluorosilicone (FVMQ)</td><td>L1120-70</td><td style="text-align:center;">1</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+
+                  <tr><td rowspan="3">Neoprene (CR)</td><td>C0873-70</td><td style="text-align:center;">2</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+                  <tr><td>C1124-70</td><td style="text-align:center;">2</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+                  <tr><td>C0267-50</td><td style="text-align:center;">3</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+
+                  <tr><td rowspan="19">Nitrile (NBR)</td><td>N0545-40</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>N0299-50</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>N0525-60</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>N0506-65</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>47-071</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>N0103-70</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>N0497-70</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>N0602-70</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>N0507-90</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>N0552-90</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>N0406-60</td><td style="text-align:center;">1</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>N0674-70</td><td style="text-align:center;">1</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>N0818-70</td><td style="text-align:center;">1</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>N0304-75</td><td style="text-align:center;">1</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>N0300-90</td><td style="text-align:center;">1</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>N0750-80</td><td style="text-align:center;">2</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+                  <tr><td>N0951-75</td><td style="text-align:center;">2</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+                  <tr><td>N1069-70</td><td style="text-align:center;">3</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+                  <tr><td>N0756-75</td><td style="text-align:center;">4</td><td><span class="status-pill pill-red">FAIL</span></td></tr>
+
+                  <tr><td rowspan="7">Silicone (VMQ)</td><td>S0595-50</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>S0317-60</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>S0455-70</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>S0604-70</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>S0613-60</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>S0614-80</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                  <tr><td>S0355-75</td><td style="text-align:center;">0</td><td><span class="status-pill pill-green">PASS</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="mt-2" style="font-size:0.8rem; color:#666;">
+              Compound numbers are reproduced exactly as printed, including the legacy nitrile
+              designation "47-071," which predates Parker's current letter-prefix numbering.
+              <sup>*</sup>&nbsp;V1289-75 carries an asterisk in the source table whose footnote text was
+              not included in the excerpt available here; V1289-75 has since been discontinued and
+              replaced by VG130-75.
+            </p>
+
+            <p class="mt-3" style="font-size:0.85rem; color:#666;">
+              <span style="font-weight:var(--font-weight-medium);">Compounds that appear only in the older European list:</span>
+              N0741-75 (NBR), C0557-70 (CR), L0677-70 (FVMQ), V3860-75 and V8545-75 (FFKM). These were
+              recorded as passing under MIL-STD-810B and have no entry in the newer US table. Note that
+              C0557-70 is the only chloroprene ever recorded as passing &mdash; all three neoprenes in
+              the newer table fail.
+            </p>
+            <p class="mt-2" style="font-size:0.85rem; color:#666;">
+              <span style="font-weight:var(--font-weight-medium);">Still no data at all</span> for
+              perfluoroelastomer (FFKM) beyond the two legacy European entries, for TFE/propylene
+              (Aflas&reg;), or for any non-Parker compound &mdash; Chemours Viton&reg;, 3M Dyneon&trade;,
+              Syensqo Tecnoflon&reg;, Daikin Dai-El&trade;, Greene Tweed Chemraz&reg;, DuPont Kalrez&reg;,
+              Trelleborg Isolast&reg;, Freudenberg Simriz&reg; and PPE Perlast&reg; all publish extensive
+              chemical-resistance data but no fungus results.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- MIL/AMS/AS SPECIFICATION CROSS-REFERENCE -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3 mb-3 text-start" style="max-width:1100px;">
+            <div class="text-center">
+              <div class="custom-heading">Military &amp; Aerospace Specification Cross-Reference</div>
+            </div>
+            <p class="mt-3">
+              Compound-to-specification mapping below is sourced directly from Parker's Aerospace
+              Industry Material Reference Guide (ORD&nbsp;5800, rev. 10/20/2025) and Material Offering
+              Guide (ORD&nbsp;5712) &mdash; this is what determines which physical compound gets molded
+              when a drawing calls out an AMS or MIL spec, independent of fungus resistance. It does
+              <span style="font-weight:var(--font-weight-medium);">not</span> mean every listed compound has documented fungus test data; cross-check
+              against the Verified Compounds table above for that.
+            </p>
+            <style>
+              /* Shade whole family groups, not individual rows, so the shading doesn't
+                 fight the rowspan-merged Family cell. */
+              #mil-spec-xref tbody tr.fam-b > td { background-color: rgba(97, 130, 138, 0.09); }
+            </style>
+            <div class="table-responsive mt-3">
+              <table id="mil-spec-xref" class="table table-bordered table-hover table-sm align-middle" style="font-size:0.85rem;">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th>Family</th>
+                    <th>Parker Compound</th>
+                    <th>Governing Spec(s)</th>
+                    <th>Legacy / Predecessor Spec</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="fam-a"><td rowspan="10">NBR (Nitrile)</td><td>NM304-75</td><td>MIL-P-25732</td><td>&mdash;</td></tr>
+                  <tr class="fam-a"><td>NM756-75</td><td>AMS-P-83461</td><td>&mdash;</td></tr>
+                  <tr class="fam-a"><td>N0602-70</td><td>AMS-P-5315</td><td>&mdash;</td></tr>
+                  <tr class="fam-a"><td>NM072-70</td><td>AMS-R-7362</td><td>MIL-R-7362</td></tr>
+                  <tr class="fam-a"><td>N0287-70</td><td>AMS7272</td><td>&mdash;</td></tr>
+                  <tr class="fam-a"><td>N0674-70</td><td>MIL-G-21569 Class 1; MIL-P-82745; drawing 8243413 Rev&nbsp;D</td><td>&mdash;</td></tr>
+                  <tr class="fam-a"><td>NM507-90</td><td>AMS-P-5510</td><td>&mdash;</td></tr>
+                  <tr class="fam-a"><td>NM506-65</td><td>AMS7271</td><td>&mdash;</td></tr>
+                  <tr class="fam-a"><td>N0525-60</td><td>AMS3220</td><td>&mdash;</td></tr>
+                  <tr class="fam-a"><td>Not confirmed</td><td>AMS7274 ("Rings, Sealing, Synthetic Rubber, Oil-Resistant, 65&ndash;75") &mdash; likely NBR by numbering adjacency to AMS7271/AMS7272, not directly confirmed against a Parker compound</td><td>&mdash;</td></tr>
+
+                  <tr class="fam-b"><td rowspan="2">EPDM</td><td>EM163-80</td><td>NAS1613 Rev&nbsp;2 / Rev&nbsp;6</td><td>&mdash;</td></tr>
+                  <tr class="fam-b"><td>E0540-80</td><td>Parker drawing 8243412</td><td>&mdash;</td></tr>
+
+                  <tr class="fam-a"><td rowspan="3">CR (Chloroprene / Neoprene)</td><td>C0267-50</td><td>AMS3208</td><td>&mdash;</td></tr>
+                  <tr class="fam-a"><td>C1124-70</td><td>AMS3209</td><td>&mdash;</td></tr>
+                  <tr class="fam-a"><td>CM260-60</td><td>AMS3241 (molded shapes)</td><td>&mdash;</td></tr>
+
+                  <tr class="fam-b"><td>IIR (Butyl)</td><td>B0318-70</td><td>AMS3238</td><td>&mdash;</td></tr>
+
+                  <tr class="fam-a"><td rowspan="5">FVMQ (Fluorosilicone)</td><td>L1223-60</td><td>AMS3325; AMS-R-25988 Type&nbsp;2/Class&nbsp;1/Grade&nbsp;60</td><td rowspan="5">MIL-R-25988 &rarr; MIL-DTL-25988 &rarr; AMS-R-25988 (current)</td></tr>
+                  <tr class="fam-a"><td>LM100-70</td><td>AMS-R-25988 Type&nbsp;1/Class&nbsp;1/Grade&nbsp;70</td></tr>
+                  <tr class="fam-a"><td>LM256-70</td><td>AMS-R-25988 Type&nbsp;2/Class&nbsp;1/Grade&nbsp;70</td></tr>
+                  <tr class="fam-a"><td>L1077-75</td><td>AMS-R-25988 Type&nbsp;1/Class&nbsp;3/Grade&nbsp;75</td></tr>
+                  <tr class="fam-a"><td>L1218-80</td><td>AMS-R-25988 Type&nbsp;1 &amp; Type&nbsp;2/Class&nbsp;1/Grade&nbsp;80</td></tr>
+
+                  <tr class="fam-b"><td rowspan="6">VMQ (Silicone)</td><td>S0595-50</td><td>AMS3302</td><td rowspan="6">MIL-R-5847 &rarr; ZZ-R-765 (general silicone spec lineage)</td></tr>
+                  <tr class="fam-b"><td>S0613-60</td><td>AMS3303; A-A-59588 Class&nbsp;2b/Grade&nbsp;60</td></tr>
+                  <tr class="fam-b"><td>S0383-70</td><td>AMS3337; AMS3304; AMS3357; A-A-59588 Class&nbsp;1a/Grade&nbsp;70</td></tr>
+                  <tr class="fam-b"><td>S0604-70</td><td>MIL-G-21569 Class 2; A-A-59588 Class&nbsp;2a/2b/Grade&nbsp;70</td></tr>
+                  <tr class="fam-b"><td>SM265-70</td><td>A-A-59588 Class&nbsp;2b/Grade&nbsp;70</td></tr>
+                  <tr class="fam-b"><td>Not confirmed</td><td>AMS3305 ("Elastomer: Silicone Rubber (VMQ), General Purpose, 75&ndash;85 Durometer") &mdash; confirmed real, current (rev.&nbsp;K, 2019), but no specific Parker compound number located</td></tr>
+
+                  <tr class="fam-a"><td rowspan="7">FKM (Fluorocarbon)</td><td>VM125-75</td><td>AMS7287 ("GLT" type); AMS-R-83485</td><td rowspan="7">MIL-R-83248 &rarr; AMS-R-83248</td></tr>
+                  <tr class="fam-a"><td>VM330-75</td><td>AMS7276; AMS7276 &amp; AMS-R-83248 Type&nbsp;1/Class&nbsp;1</td></tr>
+                  <tr class="fam-a"><td>V0747-75</td><td>AMS-R-83248 Type&nbsp;1/Class&nbsp;1 &mdash; <span style="font-weight:var(--font-weight-medium);">Cancelled</span></td></tr>
+                  <tr class="fam-a"><td>VA335-90</td><td>AMS7259; AMS7259 &amp; AMS-R-83248 Type&nbsp;1/Class&nbsp;2 (Cancelled)</td></tr>
+                  <tr class="fam-a"><td>VX065-75</td><td>AMS7410</td></tr>
+                  <tr class="fam-a"><td>Not confirmed</td><td>AMS7277 ("Rings, Sealing, Fluorocarbon") &mdash; confirmed real spec, no Parker compound located</td></tr>
+                  <tr class="fam-a"><td>Not confirmed</td><td>AMS7278 ("Rings, Sealing, Synthetic Rubber, High-Temperature-Fluid-Resistant, Fluorocarbon Type, 70&ndash;80") &mdash; confirmed real spec, no Parker compound located</td></tr>
+
+                  <tr class="fam-b"><td>TFE/P (Aflas&reg;)</td><td>V1006-75</td><td>AMS7255</td><td>&mdash;</td></tr>
+
+                  <tr class="fam-a"><td rowspan="2">FFKM (Perfluoroelastomer)</td><td>FF200-75</td><td>AMS7257</td><td rowspan="2">&mdash;</td></tr>
+                  <tr class="fam-a"><td>V8545-75</td><td>AMS7257</td></tr>
+
+                  <tr class="fam-b"><td rowspan="2">FZ (Phosphonitrilic Fluoroelastomer)</td><td>Not confirmed</td><td>AMS7261/2 ("Rings, Sealing, Phosphonitrilic (FZ) Fluoroelastomer, High-Temperature-Fluid Resistant, 75&ndash;85")</td><td rowspan="2">&mdash;</td></tr>
+                  <tr class="fam-b"><td>Not confirmed</td><td>AMS7261/3 (same family, 85&ndash;95 hardness)</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="mt-3" style="font-size:0.85rem; color:#666;">
+              <span style="font-weight:var(--font-weight-medium);">Corrections to common cross-reference confusion:</span> AMS7270 ("O-Ring,
+              Molded, Butadiene-Acrylonitrile (NBR) Rubber Material," per its SAE title) is a
+              <em>nitrile (NBR)</em> spec, not EPDM &mdash; it does not appear in Parker's current
+              aerospace cross-reference, so no specific Parker compound is confirmed against it here.
+              MIL-R-6130 covers cellular/sponge
+              silicone rubber, not chloroprene. SAE&nbsp;AS8791 specifies PTFE back-up ring
+              (retainer) material, not an elastomer seal compound. MIL-R-6855 (general-purpose Buna-N)
+              was superseded by AMS-R-6855 and is now MIL-PRF-6855. MIL-DTL-5516 ("Packing, Preformed,
+              Petroleum Hydraulic Fluid Resistant, 160&deg;F," current rev.&nbsp;D, 9/30/2025) is itself
+              a preformed-packing dimensional/performance spec &mdash; like AS8791, not a raw elastomer
+              material spec &mdash; that happens to be built from NBR compatible with MIL-PRF-5606
+              hydraulic fluid. MIL-PRF-5606, MIL-PRF-83282, and MIL-PRF-87257 are hydraulic
+              <em>fluid</em> specs, not elastomer material specs &mdash; compound-to-fluid compatibility
+              is covered separately on the
+              <a href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a> page.
+              AMS7261 is <em>not</em> a fluorocarbon spec despite sitting near the FKM AMS72xx block
+              &mdash; it's phosphonitrilic (FZ) fluoroelastomer, a distinct specialty polymer family
+              (see the new FZ row above). "AMS7262" does not appear to exist as a standalone number;
+              it is most likely a mis-citation of <span style="font-weight:var(--font-weight-medium);">AMS7261/2</span>, a sub-part of AMS7261 covering the
+              75&ndash;85 durometer grade of that same FZ family.
+            </p>
+            <p class="mt-2" style="font-size:0.85rem; color:#666;">
+              <span style="font-weight:var(--font-weight-medium);">Genuinely unresolved after this pass:</span> whether a stand-alone "AMS7262"
+              exists separate from AMS7261/2 could not be confirmed either way through public search.
+              Treat any drawing callout to "AMS7262" as needing direct confirmation against SAE's
+              current spec index rather than this table.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FULL ORD-5712 COMPOUND CATALOG -->
+    <section>
+      <div class="csscontainer">
+        <div class="mx-md-5 mx-3 section-content-wrap">
+          <div class="mx-auto d-inline-block mt-3 mb-3 text-start" style="max-width:1100px;">
+            <div class="text-center">
+              <div class="custom-heading">Full ORD-5712 Compound Catalog</div>
+            </div>
+            <p class="mt-3">
+              Full compound listing from Parker's
+              <a href="https://www.parker.com/content/dam/Parker-com/Literature/O-Ring-Division-Literature/ORD-5712-Parker-O-Ring-Material-Offering-Guide.pdf" target="_blank" rel="noopener noreferrer">O-Ring Material Offering Guide (ORD&nbsp;5712)</a>:
+              approximately ninety compounds across thirteen elastomer families, with temperature
+              range, color, and applicable MIL, AMS, NSF, and UL callouts. This table is not
+              filtered for fungus resistance; cross-check against the Verified Compounds table
+              above for that data.
+            </p>
+            <style>
+              /* Family cells use rowspan and are omitted on continuation rows, so columns
+                 are indexed from the right (nth-last-child) to stay correct either way. */
+              #ord5712-catalog th { text-align:center; }
+              #ord5712-catalog td:first-child:nth-last-child(5) { text-align:left; }  /* Family */
+              #ord5712-catalog td:nth-last-child(4) { text-align:center; }             /* Compound */
+              #ord5712-catalog td:nth-last-child(3) { text-align:center; }             /* Temp. Range */
+              #ord5712-catalog td:nth-last-child(2) { text-align:center; }             /* Color */
+              #ord5712-catalog td:last-child { text-align:left; }                      /* Recommended For */
+              /* Shade whole family groups, not individual rows, so the shading doesn't
+                 fight the rowspan-merged Family cell. */
+              #ord5712-catalog tbody tr.fam-b > td { background-color: rgba(97, 130, 138, 0.09); }
+            </style>
+            <div class="table-responsive mt-3">
+              <table id="ord5712-catalog" class="table table-bordered table-hover table-sm align-middle" style="font-size:0.85rem;">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th>Family</th>
+                    <th>Parker Compound</th>
+                    <th style="white-space:nowrap;">Temp. Range (&deg;F)</th>
+                    <th>Color</th>
+                    <th>Recommended For / Spec Callouts</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="fam-a"><td rowspan="2">Polyacrylate (ACM)</td><td>AA150-70</td><td>-5 to 350</td><td>Black</td><td>Engines &amp; Transmission Seals</td></tr>
+                  <tr class="fam-a"><td>AA451-70</td><td>-40 to 325</td><td>Black</td><td>Low Temperature</td></tr>
+
+                  <tr class="fam-b"><td rowspan="2">Ethylene Acrylate (AEM)</td><td>AE152-70</td><td>-40 to 325</td><td>Black</td><td>Transmission Applications</td></tr>
+                  <tr class="fam-b"><td>AE153-75</td><td>-40 to 325</td><td>Black</td><td>Transmission Applications, Internally Lubed</td></tr>
+
+                  <tr class="fam-a"><td>Butyl (IIR)</td><td>B0612-70</td><td>-75 to 250</td><td>Black</td><td>Vacuum, Low Compression Set</td></tr>
+
+                  <tr class="fam-b"><td rowspan="4">Chloroprene / Neoprene&reg; (CR)</td><td>C0267-50</td><td>-60 to 250</td><td>Black</td><td>AMS&nbsp;3208, Low Temperature</td></tr>
+                  <tr class="fam-b"><td>C0557-70</td><td>-35 to 250</td><td>Black</td><td>Drive Belt Applications, General Purpose</td></tr>
+                  <tr class="fam-b"><td>C0873-70</td><td>-35 to 225</td><td>Black</td><td>Refrigerant Gases, Low Extractibles, Low Compression Set</td></tr>
+                  <tr class="fam-b"><td>C1124-70</td><td>-60 to 250</td><td>Black</td><td>AMS&nbsp;3209, Low Temperature</td></tr>
+
+                  <tr class="fam-a"><td rowspan="19">Ethylene Propylene (EPM/EPR/EPDM)</td><td>EJ243-45</td><td>-70 to 250</td><td>Black</td><td>Internally lubricated, USP Class&nbsp;VI, USP&nbsp;&lt;87&gt;, ISO&nbsp;10993</td></tr>
+                  <tr class="fam-a"><td>EA454-50</td><td>-70 to 250</td><td>Black</td><td>General Purpose</td></tr>
+                  <tr class="fam-a"><td>E1157-60</td><td>-70 to 250</td><td>Black</td><td>General Purpose</td></tr>
+                  <tr class="fam-a"><td>E1561-60</td><td>-70 to 250</td><td>Black</td><td>NSF&nbsp;61</td></tr>
+                  <tr class="fam-a"><td>E0751-65</td><td>-70 to 250</td><td>Black</td><td>Drive Belt Applications</td></tr>
+                  <tr class="fam-a"><td>E0603-70</td><td>-70 to 250</td><td>Black</td><td>General Purpose (EPR)</td></tr>
+                  <tr class="fam-a"><td>E0803-70</td><td>-70 to 250</td><td>Black</td><td>General Purpose</td></tr>
+                  <tr class="fam-a"><td>E1244-70</td><td>-70 to 250</td><td>Black</td><td>NSF&nbsp;61, Internally Lubed, USP Class&nbsp;VI</td></tr>
+                  <tr class="fam-a"><td>E1549-70</td><td>-70 to 250</td><td>Black</td><td>NSF&nbsp;61</td></tr>
+                  <tr class="fam-a"><td>E1583-70</td><td>-70 to 250</td><td>Black</td><td>Internally Lubed, NSF&nbsp;51</td></tr>
+                  <tr class="fam-a"><td>E3609-70</td><td>-70 to 250</td><td>Black</td><td>NSF&nbsp;51, NSF&nbsp;61, FDA, USP Class&nbsp;VI, ISO&nbsp;10993</td></tr>
+                  <tr class="fam-a"><td>EB152-70</td><td>-70 to 250</td><td>Black</td><td>UL Listed</td></tr>
+                  <tr class="fam-a"><td>EJ274-70</td><td>-70 to 250</td><td>Black</td><td>Internally lubed, NSF&nbsp;61, Chloramine Resistant</td></tr>
+                  <tr class="fam-a"><td>E0740-75</td><td>-70 to 250</td><td>Black</td><td>Nuclear Applications, USP Class&nbsp;VI, USP&nbsp;&lt;87&gt;, drawing 8243412</td></tr>
+                  <tr class="fam-a"><td>E0540-80</td><td>-70 to 250</td><td>Black</td><td>General Purpose (EPR)</td></tr>
+                  <tr class="fam-a"><td>E0893-80</td><td>-70 to 250</td><td>Purple</td><td>General Purpose, Hydrogen</td></tr>
+                  <tr class="fam-a"><td>EM163-80</td><td>-80 to 250</td><td>Black</td><td>NAS&nbsp;1613 Rev&nbsp;6 &amp; NAS&nbsp;1613 Rev&nbsp;2</td></tr>
+                  <tr class="fam-a"><td>E0652-90</td><td>-60 to 250</td><td>Black</td><td>General Purpose, Back-Up Rings</td></tr>
+                  <tr class="fam-a"><td>E0962-90</td><td>-60 to 250</td><td>Black</td><td>Excellent Steam to 500&deg;F, ISO&nbsp;23936-2 RGD</td></tr>
+
+                  <tr class="fam-b"><td rowspan="2">HiFluor&trade; (high-performance fluoroelastomer)</td><td>HF361-65</td><td>-15 to 400</td><td>Tan</td><td>Semiconductor Grade, Low Metallic Ions</td></tr>
+                  <tr class="fam-b"><td>HF369-80</td><td>-15 to 400</td><td>Off White</td><td>Semiconductor Grade, Low Metallic Ions</td></tr>
+
+                  <tr class="fam-a"><td rowspan="9">Hydrogenated Nitrile (HNBR/HSN)</td><td>N1173-70</td><td>-25 to 300</td><td>Black</td><td>General Purpose</td></tr>
+                  <tr class="fam-a"><td>KA158-70</td><td>-40 to 300</td><td>Black</td><td>Low Temp.</td></tr>
+                  <tr class="fam-a"><td>KA157-70</td><td>-30 to 300</td><td>Black</td><td>General Purpose</td></tr>
+                  <tr class="fam-a"><td>N1231-80</td><td>-25 to 300</td><td>Black</td><td>NACE&nbsp;TM0297 RGD</td></tr>
+                  <tr class="fam-a"><td>KA453-80</td><td>-25 to 300</td><td>Black</td><td>Chemical Resistant, ISO&nbsp;23936-2 H&#8322;S, NACE&nbsp;TM0297 RGD</td></tr>
+                  <tr class="fam-a"><td>KB162-80</td><td>-25 to 300</td><td>Black</td><td>High Temperature Hydraulics</td></tr>
+                  <tr class="fam-a"><td>KA183-85</td><td>-55 to 300</td><td>Black</td><td>Low Temperature, ISO&nbsp;23936-2 RGD &amp; H&#8322;S, API&nbsp;6A</td></tr>
+                  <tr class="fam-a"><td>KB163-90</td><td>-25 to 300</td><td>Black</td><td>Extrusion Resistant, ISO&nbsp;23936-2 RGD &amp; H&#8322;S, API&nbsp;6A</td></tr>
+                  <tr class="fam-a"><td>KB292-95</td><td>-25 to 300</td><td>Black</td><td>Extreme Extrusion Resistant, ISO&nbsp;23936-2 RGD, H&#8322;S</td></tr>
+
+                  <tr class="fam-b"><td rowspan="12">Perfluoroelastomer / ULTRA&trade; (FFKM)</td><td>FF364-65</td><td>5 to 608</td><td>White</td><td>Low Closure Force, Plasma Resistant</td></tr>
+                  <tr class="fam-b"><td>FF156-75</td><td>5 to 525</td><td>Black</td><td>General Purpose, Broad Chemical Resistance, FDA, USP Class&nbsp;VI</td></tr>
+                  <tr class="fam-b"><td>FF252-75</td><td>5 to 525</td><td>Black</td><td>Low Comp Set, AMS&nbsp;7257</td></tr>
+                  <tr class="fam-b"><td>FF362-75</td><td>5 to 608</td><td>White</td><td>Plasma Resistant</td></tr>
+                  <tr class="fam-b"><td>FF366-75</td><td>5 to 608</td><td>Black</td><td>Semiconductor Grade, Plasma Resistant, Low Metallic Ions</td></tr>
+                  <tr class="fam-b"><td>FF380-75</td><td>5 to 608</td><td>White</td><td>Plasma Resistant, High Purity, FDA</td></tr>
+                  <tr class="fam-b"><td>FF580-75</td><td>5 to 525</td><td>Black</td><td>Broad Chemical Resistance, Steam Resistant, Amine/Base Resistant, USP Class&nbsp;VI, ISO&nbsp;23936-2 H&#8322;S</td></tr>
+                  <tr class="fam-b"><td>FF504-80</td><td>5 to 525</td><td>Green</td><td>Broad Chemical Resistance</td></tr>
+                  <tr class="fam-b"><td>V8545-75</td><td>5 to 572</td><td>Black</td><td>AMS&nbsp;7257, FDA</td></tr>
+                  <tr class="fam-b"><td>FF400-85</td><td>-40 to 525</td><td>Black</td><td>Low Temperature, ISO&nbsp;23936-2 RGD &amp; H&#8322;S, NACE&nbsp;TM0187 H&#8322;S</td></tr>
+                  <tr class="fam-b"><td>FF582-90</td><td>5 to 525</td><td>Black</td><td>Steam Resistant, Amine/Base Resistant, ISO&nbsp;23936-2 RGD &amp; H&#8322;S</td></tr>
+                  <tr class="fam-b"><td>V8581-90</td><td>5 to 550</td><td>White</td><td>Plasma Resistant, Low Stiction</td></tr>
+
+                  <tr class="fam-a"><td rowspan="4">Fluorosilicone (FVMQ)</td><td>L1223-60</td><td>-100 to 350</td><td>Blue</td><td>MIL-DTL-25988 Ty&nbsp;1, Cl&nbsp;1, Gr&nbsp;60; AMS&nbsp;3325</td></tr>
+                  <tr class="fam-a"><td>LM100-70</td><td>-100 to 350</td><td>Blue</td><td>MIL-DTL-25988 Ty&nbsp;I, Cl&nbsp;I, Gr&nbsp;70; UL listed</td></tr>
+                  <tr class="fam-a"><td>L1077-75</td><td>-90 to 350</td><td>Blue</td><td>MIL-DTL-25988 Ty&nbsp;I, Cl&nbsp;III, Gr&nbsp;75</td></tr>
+                  <tr class="fam-a"><td>L1218-80</td><td>-90 to 350</td><td>Blue</td><td>MIL-DTL-25988 Ty&nbsp;1, Cl&nbsp;1, Gr&nbsp;80</td></tr>
+
+                  <tr class="fam-b"><td rowspan="27">Acrylonitrile-Butadiene / Buna-N (NBR)</td><td>N0545-40</td><td>-45 to 225</td><td>Black</td><td>General Purpose</td></tr>
+                  <tr class="fam-b"><td>N0299-50</td><td>-55 to 225</td><td>Black</td><td>UL listed</td></tr>
+                  <tr class="fam-b"><td>N0525-60</td><td>-25 to 250</td><td>Black</td><td>AMS&nbsp;3220</td></tr>
+                  <tr class="fam-b"><td>NM506-65</td><td>-70 to 180</td><td>Black</td><td>AMS&nbsp;7271</td></tr>
+                  <tr class="fam-b"><td>N0103-70</td><td>-55 to 225</td><td>Black</td><td>Low Temp.</td></tr>
+                  <tr class="fam-b"><td>N0497-70</td><td>-35 to 212</td><td>Black</td><td>Low Swell, SAE&nbsp;120R1 Cl&nbsp;II, UL Listed</td></tr>
+                  <tr class="fam-b"><td>N0602-70</td><td>-70 to 180</td><td>Black</td><td>General Purpose, AMS-P-5315, Low Temp.</td></tr>
+                  <tr class="fam-b"><td>N0674-70</td><td>-30 to 250</td><td>Black</td><td>General Purpose, MIL-G-21569 Cl&nbsp;I, UL listed</td></tr>
+                  <tr class="fam-b"><td>N0757-70</td><td>-30 to 225</td><td>Black</td><td>NSF&nbsp;61, UL Listed</td></tr>
+                  <tr class="fam-b"><td>N1220-70</td><td>-30 to 225</td><td>Black</td><td>NSF&nbsp;51, FDA</td></tr>
+                  <tr class="fam-b"><td>N1470-70</td><td>-40 to 250</td><td>Black</td><td>General Purpose, X-rings</td></tr>
+                  <tr class="fam-b"><td>N1499-70</td><td>-30 to 250</td><td>Black</td><td>General Purpose, UL Listed</td></tr>
+                  <tr class="fam-b"><td>N1510-70</td><td>-30 to 225</td><td>Black</td><td>NSF&nbsp;61</td></tr>
+                  <tr class="fam-b"><td>NA151-70</td><td>-30 to 250</td><td>Black</td><td>UL Listed</td></tr>
+                  <tr class="fam-b"><td>NM072-70</td><td>-60 to 180</td><td>Black</td><td>AMS-R-7362</td></tr>
+                  <tr class="fam-b"><td>NM756-75</td><td>-65 to 250</td><td>Black</td><td>AMS-P-83461</td></tr>
+                  <tr class="fam-b"><td>N0756-75</td><td>-65 to 250</td><td>Black</td><td>Low Temperature, Low Set</td></tr>
+                  <tr class="fam-b"><td>N0951-75</td><td>-25 to 275</td><td>Black</td><td>High Temp, Low Compression Set</td></tr>
+                  <tr class="fam-b"><td>N1500-75</td><td>-35 to 212</td><td>Black</td><td>Low Swell, UL Listed, Fuel applications</td></tr>
+                  <tr class="fam-b"><td>N1090-85</td><td>-25 to 225</td><td>Black</td><td>Extra Low Friction (ELF) Pneumatic, Carboxylated, Internally Lubed</td></tr>
+                  <tr class="fam-b"><td>N0300-90</td><td>-40 to 180</td><td>Black</td><td>Back-Up Rings Only</td></tr>
+                  <tr class="fam-b"><td>N0507-90</td><td>-65 to 180</td><td>Black</td><td>AMS-P-5510, Low Temp.</td></tr>
+                  <tr class="fam-b"><td>N0552-90</td><td>-30 to 250</td><td>Black</td><td>General Purpose</td></tr>
+                  <tr class="fam-b"><td>N0702-90</td><td>-30 to 275</td><td>Black</td><td>Low Compression Set</td></tr>
+                  <tr class="fam-b"><td>N1059-90</td><td>-30 to 275</td><td>Black</td><td>Low Compression Set</td></tr>
+                  <tr class="fam-b"><td>N1444-90</td><td>-30 to 250</td><td>Black</td><td>Back-Up Rings Only</td></tr>
+                  <tr class="fam-b"><td>N1490-90</td><td>-30 to 250</td><td>Black</td><td>General Purpose</td></tr>
+
+                  <tr class="fam-a"><td rowspan="9">Silicone (VMQ/PVMQ)</td><td>S0469-40</td><td>-75 to 400</td><td>Rust</td><td>USP Class&nbsp;VI, A-A-59588 Cl&nbsp;2a/2b, Gr&nbsp;40</td></tr>
+                  <tr class="fam-a"><td>S0595-50</td><td>-70 to 400</td><td>Rust</td><td>AMS&nbsp;3302</td></tr>
+                  <tr class="fam-a"><td>S0317-60</td><td>-103 to 450</td><td>Rust</td><td>FDA, USP Class&nbsp;VI</td></tr>
+                  <tr class="fam-a"><td>S0613-60</td><td>-60 to 450</td><td>Rust</td><td>A-A-59588 Cl&nbsp;2b, Gr&nbsp;60; AMS&nbsp;3303</td></tr>
+                  <tr class="fam-a"><td>SB739-60</td><td>-65 to 400</td><td>Gray</td><td>UL&nbsp;94 V-0</td></tr>
+                  <tr class="fam-a"><td>S0383-70</td><td>-175 to 400</td><td>Rust</td><td>A-A-59588 Cl&nbsp;1a/1b, Gr&nbsp;70; AMS&nbsp;3337</td></tr>
+                  <tr class="fam-a"><td>S0455-70</td><td>-65 to 450</td><td>Rust</td><td>High Temperature</td></tr>
+                  <tr class="fam-a"><td>S0604-70</td><td>-65 to 450</td><td>Rust</td><td>A-A-59588 Cl&nbsp;2a/2b, Gr&nbsp;70; AMS&nbsp;3304; AMS&nbsp;3357; MIL-G-21569 Class&nbsp;2; UL</td></tr>
+                  <tr class="fam-a"><td>S1138-70</td><td>-75 to 450</td><td>Rust</td><td>FDA, USP Class&nbsp;VI, USP&nbsp;&lt;87&gt;</td></tr>
+
+                  <tr class="fam-b"><td rowspan="35">Fluorocarbon (FKM/FPM)</td><td>V0986-50</td><td>-15 to 400</td><td>Brown</td><td>General Purpose</td></tr>
+                  <tr class="fam-b"><td>V0769-60</td><td>-15 to 400</td><td>Black</td><td>General Purpose</td></tr>
+                  <tr class="fam-b"><td>VG271-60</td><td>-40 to 400</td><td>Black</td><td>Automotive Fuel Applications</td></tr>
+                  <tr class="fam-b"><td>VW901-65</td><td>-15 to 400</td><td>Green</td><td>Low Swell</td></tr>
+                  <tr class="fam-b"><td>VA179-70</td><td>-10 to 437</td><td>Black</td><td>FKM for High Temp. Engines</td></tr>
+                  <tr class="fam-b"><td>VB185-70</td><td>-15 to 400</td><td>Black</td><td>Acid Resistant, Steam, B Type</td></tr>
+                  <tr class="fam-b"><td>V0680-70</td><td>-15 to 400</td><td>Rust</td><td>NSF&nbsp;51, FDA</td></tr>
+                  <tr class="fam-b"><td>V0747-75</td><td>-15 to 400</td><td>Black</td><td>UL Listed</td></tr>
+                  <tr class="fam-b"><td>V0848-75</td><td>-15 to 400</td><td>Black</td><td>PTFE Loaded</td></tr>
+                  <tr class="fam-b"><td>V1163-75</td><td>-35 to 400</td><td>Black</td><td>&ldquo;GFLT&rdquo; Type, UL listed</td></tr>
+                  <tr class="fam-b"><td>V1260-75</td><td>-15 to 400</td><td>Black</td><td>Very Chemically Resistant, &ldquo;Viton&trade; Extreme&rdquo; Type</td></tr>
+                  <tr class="fam-b"><td>V1263-75</td><td>-15 to 400</td><td>Black</td><td>Low Swell, Flex Fuel Blends, UL listed</td></tr>
+                  <tr class="fam-b"><td>V1436-75</td><td>-15 to 400</td><td>Black</td><td>General Purpose, UL Listed</td></tr>
+                  <tr class="fam-b"><td>V1475-75</td><td>-15 to 400</td><td>Black</td><td>General Purpose, X-rings</td></tr>
+                  <tr class="fam-b"><td>V1476-75</td><td>-15 to 400</td><td>Brown</td><td>General Purpose</td></tr>
+                  <tr class="fam-b"><td>VA075-75</td><td>-15 to 400</td><td>Black</td><td>General Purpose, UL Listed</td></tr>
+                  <tr class="fam-b"><td>VG130-75</td><td>-50 to 400</td><td>Black</td><td>General Purpose</td></tr>
+                  <tr class="fam-b"><td>VG323-75</td><td>-40 to 400</td><td>Black</td><td>Engine Coolant, Biodiesel Resistant, &ldquo;GLT&rdquo; Type, Hydrogen</td></tr>
+                  <tr class="fam-b"><td>VM125-75</td><td>-40 to 400</td><td>Black</td><td>&ldquo;GLT&rdquo; Type, AMS-R-83485, AMS&nbsp;7287</td></tr>
+                  <tr class="fam-b"><td>VM330-75</td><td>-15 to 400</td><td>Black</td><td>AMS&nbsp;7276, Low Compression Set</td></tr>
+                  <tr class="fam-b"><td>VW076-75</td><td>-15 to 400</td><td>Brown</td><td>General Purpose, UL Listed</td></tr>
+                  <tr class="fam-b"><td>VW173-75</td><td>-15 to 400</td><td>Green</td><td>Automotive Applications</td></tr>
+                  <tr class="fam-b"><td>VW340-75</td><td>-15 to 400</td><td>Brown</td><td>General Purpose</td></tr>
+                  <tr class="fam-b"><td>VX065-75</td><td>-65 to 400</td><td>Black</td><td>Extreme Low Temperature FKM, Fuel Resistant, AMS&nbsp;7410</td></tr>
+                  <tr class="fam-b"><td>VG286-80</td><td>-50 to 400</td><td>Black</td><td>Low Temperature, Low Compression Set, ISO&nbsp;23936-2 RGD, API&nbsp;6A</td></tr>
+                  <tr class="fam-b"><td>VP309-82</td><td>-10 to 400</td><td>Black</td><td>Base &amp; Amine Resistant, ISO&nbsp;23936-2 RGD, NACE&nbsp;TM0817</td></tr>
+                  <tr class="fam-b"><td>V1411-90</td><td>-15 to 400</td><td>Black</td><td>General Purpose</td></tr>
+                  <tr class="fam-b"><td>V1412-90</td><td>-15 to 400</td><td>Brown</td><td>General Purpose</td></tr>
+                  <tr class="fam-b"><td>VA090-90</td><td>-15 to 400</td><td>Black</td><td>General Purpose</td></tr>
+                  <tr class="fam-b"><td>VA355-90</td><td>-15 to 400</td><td>Black</td><td>General Purpose, AMS&nbsp;7259</td></tr>
+                  <tr class="fam-b"><td>VG109-90</td><td>-50 to 400</td><td>Black</td><td>Low Temperature, Low Compression Set, ISO&nbsp;23936-2 RGD &amp; H&#8322;S, API&nbsp;6A</td></tr>
+                  <tr class="fam-b"><td>VP316-90</td><td>-10 to 400</td><td>Black</td><td>Base &amp; Amine Resistant, ISO&nbsp;23936-2 RGD, NACE&nbsp;TM0817</td></tr>
+                  <tr class="fam-b"><td>VW894-90</td><td>-15 to 400</td><td>Brown</td><td>General Purpose</td></tr>
+                  <tr class="fam-b"><td>VX365-90</td><td>-65 to 400</td><td>Black</td><td>Extreme Low Temperature, ISO&nbsp;23936-2 RGD &amp; H&#8322;S, API&nbsp;6A</td></tr>
+                  <tr class="fam-b"><td>V1238-95</td><td>-15 to 400</td><td>Black</td><td>Extrusion Resistant, ISO&nbsp;23936-2 RGD &amp; H&#8322;S, API&nbsp;6A</td></tr>
+
+                  <tr class="fam-a"><td rowspan="4">TFE/Propylene &mdash; Aflas&reg;</td><td>V1006-75</td><td>25 to 450</td><td>Black</td><td>AMS&nbsp;7255</td></tr>
+                  <tr class="fam-a"><td>VP101-80</td><td>25 to 450</td><td>Black</td><td>General Purpose</td></tr>
+                  <tr class="fam-a"><td>V1041-85</td><td>15 to 450</td><td>Black</td><td>ISO&nbsp;23936-2 RGD &amp; H&#8322;S</td></tr>
+                  <tr class="fam-a"><td>VP103-95</td><td>25 to 450</td><td>Black</td><td>Extrusion Resistant, ISO&nbsp;23936-2 RGD &amp; H&#8322;S</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="mt-2" style="font-size:0.8rem; color:#666;">
+              Reproduced from ORD&nbsp;5712's "Material Offering" section (pp.&nbsp;6&ndash;17 of the guide).
+              Some compound numbers appear in parentheses in the original as legacy Wynn's Precision
+              designations; those are omitted here for brevity and can be found in the source PDF. Not every
+              row carries a MIL/AMS/NSF/UL callout &mdash; where none is printed, Parker's own "Recommended
+              For" application text is reproduced as-is.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
 
     <!-- REFERENCES & IMPORTANT NOTICES -->
     <section>
       <div class="csscontainer">
         <div class="mx-md-5 mx-3 section-content-wrap">
           <div class="mx-auto d-inline-block mt-3 mb-3 text-start" style="max-width:860px;">
+
             <div class="text-center">
-              <div class="custom-heading">Important Notices</div>
+              <div class="custom-heading">References &amp; Important Notices</div>
             </div>
-            <ul class="mt-3" style="font-size:0.9rem;">
+
+            <ul class="mt-3 fs-5" style="font-size:0.9rem;">
               <li class="mb-2">
-                <strong>Family/typical ratings, not per-compound test data.</strong> Ratings reflect the
-                typical resistance of the base polymer family. Fillers, plasticizers, colorants, and
-                specific compounding can shift an individual grade's actual fungal resistance —
-                e.g. NBR compounds have been reported ranging from 0 to 4 depending on formulation.
+                <strong>MIL-HDBK-454B</strong> — <em>General Guidelines for Electronic Equipment</em>, Guideline 4 (Fungus-Inert Materials), Table 4-I. Group I (fungus-inert) and Group II (fungus-nutrient) material classification; reproduced verbatim above.
               </li>
               <li class="mb-2">
-                <strong>Verify before use.</strong> In critical applications, resistance should be
-                confirmed by ASTM&nbsp;G21 or MIL-STD-810 Method&nbsp;508 testing of the specific
-                compound and grade rather than relying on the family rating alone.
+                <strong>MIL-STD-810H</strong> — <em>Environmental Engineering Considerations and Laboratory Tests</em>, Method 508.8 (Fungus). 28-day exposure, Grade 0/1 pass criterion. Annex B (Table 508.8B-I) reproduces the MIL-HDBK-454 material list under MIL-STD-810's own numbering.
+              </li>
+              <li class="mb-2">
+                <strong>ASTM G21</strong> — <em>Standard Practice for Determining Resistance of Synthetic Polymeric Materials to Fungi</em>. Source of the 0–4 rating scale used throughout this page.
+              </li>
+              <li class="mb-2">
+                <strong>Parker O-Ring Handbook (US), "Fungus Tests on Compounds"</strong> — fungus testing per <em>MIL-STD-810F, Method 508.5</em>. Forty-five compounds with individual ratings, split into non-nutrient (rating ≤ 1) and supports-fungus-growth (rating &gt; 1). Primary source for the pass/fail table above, and the only located source that publishes failures as well as passes.
+              </li>
+              <li class="mb-2">
+                <strong>Parker O-Ring Handbook (ORD/PTD 5705)</strong> — O-Ring Division Europe, §7.17 "Fungus-resistant compounds," Table 7.14. An older, pass-only list tested to <em>MIL-STD-810B, Method 508</em>. Superseded by the US table where the two conflict (E0540-80, E0652-90 and V0747-75 pass here but fail under 810F), but retained above as the only source for five compounds absent from the newer table.
+              </li>
+              <li class="mb-2">
+                <strong>Parker Aerospace Industry Material Reference Guide (ORD 5800)</strong> — rev. 10/20/2025. Source for the military and aerospace specification cross-reference table.
+              </li>
+              <li class="mb-2">
+                <strong>Parker O-Ring Material Offering Guide (ORD 5712)</strong> — <a href="https://www.parker.com/content/dam/Parker-com/Literature/O-Ring-Division-Literature/ORD-5712-Parker-O-Ring-Material-Offering-Guide.pdf" target="_blank" rel="noopener noreferrer">full PDF</a>. Source for compound descriptions, hardness, colour, temperature ranges and the full compound catalog table below.
+              </li>
+              <li class="mb-2">
+                Trade-name ownership and polymer identification per manufacturer and distributor material data (Curbell, Boedeker, Ensinger, Röchling, and individual manufacturer datasheets).
+              </li>
+              <li class="mb-2">
+                <strong>Family ratings are not per-compound test data.</strong> Except where a compound is explicitly named in the Table 7.14 list above, every rating on this page reflects the typical behaviour of a base polymer family. Fillers, plasticizers, colorants, and specific compounding can move an individual grade substantially — NBR compounds have been reported anywhere from 0 to 4 depending on formulation. A family rating is a starting point for material selection, not evidence about a part.
+              </li>
+              <li class="mb-2">
+                <strong>A "?" rating is an instruction to look up the compound, not a warning about the material.</strong> For fluorocarbon it means the tested compounds genuinely disagree — VM125-75, VX065-75 and V1289-75 scored a perfect 0 while V0747-75 and V0680-70 failed at 2 — so any single family number would be misleading. For TFE/propylene it means nothing has ever been tested. In neither case does "?" imply the material is likely to support growth.
+              </li>
+              <li class="mb-2">
+                <strong>Absence from the test tables is not a failure.</strong> Parker's European list is explicitly non-exhaustive ("further compounds available on request"), and both tables predate many compounds currently in production. An untested compound is unmeasured, not suspect. Note however that the US table does publish failures, so a compound listed there with a rating above 1 is a genuine documented failure, not an absence of data.
+              </li>
+              <li class="mb-2">
+                <strong>Verify before use.</strong> For critical applications, confirm resistance by ASTM G21 or MIL-STD-810 Method 508 testing of the specific compound and grade being purchased, rather than relying on any family rating — including the ones on this page. Where fungus-nutrient materials are unavoidable, MIL-HDBK-454B §4.3 permits their untreated use inside hermetically sealed enclosures.
+              </li>
+              <li class="mb-2">
+                <strong>Specification status changes.</strong> Several specifications and compounds referenced here have been cancelled, superseded, or discontinued (AMS-R-83248 approvals, V0709-90, V1164-75). Legacy items are retained deliberately because aerospace drawings continue to call them out for years after production ends, but current procurement should be checked against the live specification index.
               </li>
               <li>
-                <strong>No affiliation or endorsement.</strong> Trade names are the property of their
-                respective owners. This lookup tool is an independent compilation for engineering
-                reference and is not endorsed by any of the manufacturers listed.
+                <strong>For informational use only.</strong> This lookup tool is an independent compilation provided as an engineering aid, and is not endorsed by or affiliated with any manufacturer listed. Trade names are the property of their respective owners. Results must be verified by a qualified engineer before use in any safety-critical or flight application. KasperCalc assumes no liability for material selection decisions made using this data.
               </li>
             </ul>
+
           </div>
         </div>
       </div>
@@ -693,7 +1361,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
               <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
             </svg>
-            <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            <h4 style="font-weight: var(--font-weight-medium);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
           </div>
           <style>
             #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }

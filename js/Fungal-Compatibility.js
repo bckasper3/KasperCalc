@@ -33,10 +33,14 @@
     return rows;
   }
 
-  /* ---- Parse a rating string ("0", "0-1", "2-4", …) to its worst-case (max) digit ---- */
-  function parseRatingMax(s) {
-    const digits = (s.match(/\d/g) || []).map(Number);
-    return digits.length ? Math.max(...digits) : 0;
+  /* ---- Parse a rating string ("0", "0-1", "2-4", "?") into display text, badge class and sort key.
+         "?" means no published fungus test data exists — it is not a numeric rating and sorts last. ---- */
+  function parseRating(s) {
+    const raw = (s || '').trim();
+    const digits = (raw.match(/\d/g) || []).map(Number);
+    if (!digits.length) return { display: '?', cls: 'runk', sort: 5 };
+    const max = Math.max(...digits);
+    return { display: String(max), cls: 'r' + max, sort: max };
   }
 
   $('rows').innerHTML = '<tr><td colspan="9" style="text-align:center;padding:40px;color:#6a746a;font-style:italic">Loading fungal resistance data…</td></tr>';
@@ -50,6 +54,7 @@
     materials = dataRows.filter(r => r[0] && r[0].trim()).map((r, idx) => {
       const res    = (r[5] || '').trim();
       const rating = (r[6] || '').trim();
+      const rt     = parseRating(rating);
       return {
         id:         idx,
         trade:      (r[0] || '').trim(),
@@ -59,7 +64,10 @@
         abbrev:     (r[4] || '').trim(),
         res,
         rating,
-        ratingNum:  parseRatingMax(rating),
+        ratingText: rt.display,
+        ratingCls:  rt.cls,
+        ratingNum:  rt.sort,
+        untested:   rt.display === '?',
         basis:      (r[7] || '').trim(),
         notes:      (r[8] || '').trim(),
       };
@@ -135,7 +143,7 @@
     { key: 'type',    label: 'Type' },
     { key: 'polymer', label: 'Polymer / Chemical Name' },
     { key: 'abbrev',  label: 'Abbrev' },
-    { key: 'ratingNum', label: 'Rating (0–4)' },
+    { key: 'ratingNum', label: 'Rating (0–4 / ?)' },
     { key: 'basis',   label: 'Basis / Citation' },
     { key: 'notes',   label: 'Notes' },
   ];
@@ -192,7 +200,7 @@
       <td>${m.type}</td>
       <td>${m.polymer}</td>
       <td>${m.abbrev}</td>
-      <td class="rating-cell"><span class="rating-badge r${m.ratingNum}" data-id="${m.id}">${m.ratingNum}</span></td>
+      <td class="rating-cell"><span class="rating-badge ${m.ratingCls}" data-id="${m.id}">${m.ratingText}</span></td>
       <td class="basis-cell">${m.basis}</td>
       <td class="notes-cell">${noteSup(m.notes)}</td>
     `;
@@ -368,7 +376,10 @@
       if (!badge) { tip.style.visibility = 'hidden'; tipCell = null; return; }
       if (badge !== tipCell) {
         const m = materialsById.get(Number(badge.dataset.id));
-        tip.innerHTML = `${m.trade}<br>${m.res} (typical rating ${m.rating})<br>${m.polymer}`;
+        const line2 = m.untested
+          ? `${m.res} &mdash; no published fungus test data`
+          : `${m.res} (typical rating ${m.rating})`;
+        tip.innerHTML = `${m.trade}<br>${line2}<br>${m.polymer}`;
         tip.style.visibility = 'visible';
         tipW = tip.offsetWidth;
         tipH = tip.offsetHeight;
@@ -392,9 +403,9 @@
     const now = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     const colorCSS = withColor
-      ? '.r0,.r1{background:#2a7a45;color:#fff}.r2{background:#c49000;color:#fff}.r3{background:#c06010;color:#fff}.r4{background:#b03030;color:#fff}' +
-        '.rl-badge.r0,.rl-badge.r1{background:#2a7a45;color:#fff}.rl-badge.r2{background:#c49000;color:#fff}.rl-badge.r3{background:#c06010;color:#fff}.rl-badge.r4{background:#b03030;color:#fff}'
-      : '.r0,.r1,.r2,.r3,.r4{background:#fff!important;color:#000!important;border:1.5px solid #333!important}' +
+      ? '.r0,.r1{background:#2a7a45;color:#fff}.r2{background:#c49000;color:#fff}.r3{background:#c06010;color:#fff}.r4{background:#b03030;color:#fff}.runk{background:#6a746a;color:#fff}' +
+        '.rl-badge.r0,.rl-badge.r1{background:#2a7a45;color:#fff}.rl-badge.r2{background:#c49000;color:#fff}.rl-badge.r3{background:#c06010;color:#fff}.rl-badge.r4{background:#b03030;color:#fff}.rl-badge.runk{background:#6a746a;color:#fff}'
+      : '.r0,.r1,.r2,.r3,.r4,.runk{background:#fff!important;color:#000!important;border:1.5px solid #333!important}' +
         '.rl-badge{background:#fff!important;color:#000!important;border:1.5px solid #333!important}';
 
     const bwOverride = withColor ? '' :
@@ -404,14 +415,14 @@
     const C = '\x3C';
 
     const tableRows = sel.map(m => {
-      const cls = 'r' + m.ratingNum;
+      const cls = m.ratingCls;
       return '<tr>' +
         '<td class="mat-cell">' + m.trade + C + '/td>' +
         '<td class="own-cell">' + m.owner + C + '/td>' +
         '<td class="type-cell">' + m.type + C + '/td>' +
         '<td class="poly-cell-txt">' + m.polymer + C + '/td>' +
         '<td class="abbr-cell">' + m.abbrev + C + '/td>' +
-        '<td class="rating-cell ' + cls + '">' + m.ratingNum + C + '/td>' +
+        '<td class="rating-cell ' + cls + '">' + m.ratingText + C + '/td>' +
         '<td class="basis-cell-txt">' + m.basis + C + '/td>' +
         C + '/tr>';
     }).join('');
@@ -457,6 +468,7 @@
       '  <div class="rl-item"><span class="rl-badge r2">2' + C + '/span>Conditional (grade/filler-dependent)' + C + '/div>',
       '  <div class="rl-item"><span class="rl-badge r3">3' + C + '/span>Conditional / Susceptible' + C + '/div>',
       '  <div class="rl-item"><span class="rl-badge r4">4' + C + '/span>Susceptible (supports fungal growth)' + C + '/div>',
+      '  <div class="rl-item"><span class="rl-badge runk">?' + C + '/span>Not tested (no published fungus data)' + C + '/div>',
       C + '/div>',
       '<div class="section-label">Selected Materials' + C + '/div>',
       '<table>',

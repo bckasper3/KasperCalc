@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KasperCalc: MIL-HDBK-5 4.1 General</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, MIL-HDBK-5, magnesium, General, mechanical properties, MMPDS" />
+    <meta name="description" content="MIL-HDBK-5 Chapter 4 Section 4.1 -- material properties for General." />
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/mil-hdbk-5.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script>
+(function(){
+  var h = location.hostname;
+  var isLocal = !h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1' || /\.local$/i.test(h) || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+  if (isLocal) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+  gtag('js', new Date());
+  gtag('config', 'G-5XLCN0GJQ0');
+})();
+</script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <!-- Chart.js + HdbkUtil for interactive figures -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="js/hdbkUtil.js"></script>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                  <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+    <!-- MAIN -->
+    <main data-pagefind-body>
+
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">MIL-HDBK-5: Chapter 4.1<br>General</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+  <section class="col-11 mx-auto">
+    <div class="csscontainer">
+      <div class="wrapper">
+        <div class="header fs-4">MIL-HDBK-5: Chapter 4.1 &mdash; Magnesium</div>
+        <div class="row">
+          <div class="col-half" style="flex: 1 1 400px;">
+            <div class="group">
+              <span class="section-title-TOC">Magnesium Alloy Index</span>
+              <div class="list-container">
+                <a href="Chapter4(magnesium).html" class="quick-link"><span class="quick-num">&#8226;</span><span class="quick-title">Magnesium Alloy Index</span></a>
+                <a href="Chapter4.1(general-magnesium).html" class="quick-link active-section"><span class="quick-num">4.1</span><span class="quick-title">General</span></a>
+                <a href="Chapter4.2(magnesium).html" class="quick-link"><span class="quick-num">4.2</span><span class="quick-title">Magnesium-Wrought Alloys</span></a>
+                <a href="Chapter4.2(magnesium).html#4.2.1" class="quick-link quick-sub2"><span class="quick-num">4.2.1</span><span class="quick-title">AZ31B Alloy</span></a>
+                <a href="Chapter4.2(magnesium).html#4.2.2" class="quick-link quick-sub2"><span class="quick-num">4.2.2</span><span class="quick-title">AZ61A Alloy</span></a>
+                <a href="Chapter4.2(magnesium).html#4.2.3" class="quick-link quick-sub2"><span class="quick-num">4.2.3</span><span class="quick-title">ZK60A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html" class="quick-link"><span class="quick-num">4.3</span><span class="quick-title">Magnesium Cast Alloys</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.1" class="quick-link quick-sub2"><span class="quick-num">4.3.1</span><span class="quick-title">AM100A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.2" class="quick-link quick-sub2"><span class="quick-num">4.3.2</span><span class="quick-title">AZ91C/AZ91E Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.3" class="quick-link quick-sub2"><span class="quick-num">4.3.3</span><span class="quick-title">AZ92A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.4" class="quick-link quick-sub2"><span class="quick-num">4.3.4</span><span class="quick-title">EZ33A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.5" class="quick-link quick-sub2"><span class="quick-num">4.3.5</span><span class="quick-title">QE22A Alloy</span></a>
+                <a href="Chapter4.3(magnesium).html#4.3.6" class="quick-link quick-sub2"><span class="quick-num">4.3.6</span><span class="quick-title">ZE41A Alloy</span></a>
+                <a href="Chapter4.4(element-properties-magnesium).html" class="quick-link"><span class="quick-num">4.4</span><span class="quick-title">Element Properties</span></a>
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Chapter 4.1 Contents</span>
+              <div>
+                <a href="#4.1" class="quick-link"><span class="quick-num">4.1</span><span class="quick-title">General</span></a>
+                <a href="#4.1.1" class="quick-link quick-sub"><span class="quick-num">4.1.1</span><span class="quick-title">Alloy Index</span></a>
+                <a href="#4.1.2" class="quick-link quick-sub"><span class="quick-num">4.1.2</span><span class="quick-title">Material Properties</span></a>
+                <a href="#4.1.2.1" class="quick-link quick-sub2"><span class="quick-num">4.1.2.1</span><span class="quick-title">Mechanical Properties</span></a>
+                <a href="#4.1.3" class="quick-link quick-sub"><span class="quick-num">4.1.3</span><span class="quick-title">Physical Properties</span></a>
+                <a href="#4.1.4" class="quick-link quick-sub"><span class="quick-num">4.1.4</span><span class="quick-title">Environmental Considerations</span></a>
+                <a href="#4.1.5" class="quick-link quick-sub"><span class="quick-num">4.1.5</span><span class="quick-title">Alloy and Temper Designations</span></a>
+                <a href="#4.1.6" class="quick-link quick-sub"><span class="quick-num">4.1.6</span><span class="quick-title">Joining Methods</span></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-half" style="flex: 1 1 220px;">
+            <div class="group">
+              <span class="section-title-TOC">Navigate to Section</span>
+              <div class="d-flex flex-column gap-2 mt-2">
+                  <a href="Chapter1(general).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 1 &mdash; General
+                  </a>
+                  <a href="Chapter2(steel).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 2 &mdash; Steel
+                  </a>
+                  <a href="Chapter3(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 3 &mdash; Aluminum
+                  </a>
+                  <a href="Chapter4(magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 4 &mdash; Magnesium
+                  </a>
+                  <a href="Chapter4.1(general-magnesium).html" class="tbtn active-section">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    4.1 &mdash; General
+                  </a>
+                  <a href="Chapter4.2(magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    4.2 &mdash; Magnesium-Wrought Alloys
+                  </a>
+                  <a href="Chapter4.3(magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    4.3 &mdash; Magnesium Cast Alloys
+                  </a>
+                  <a href="Chapter4.4(element-properties-magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    4.4 &mdash; Element Properties
+                  </a>
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Disclaimer</span>
+              <div class="disclaimer-bar">
+                <p><strong>For reference use only.</strong> The formulas, graphs, and values herein are provided in good faith for general engineering guidance. Please verify all data against MIL-HDBK-5J or the applicable superseding document (MMPDS).</p>
+              </div>
+              <div style="margin-top: 6px;">
+                <button class="tbtn" onclick="window.open('/downloadable/MIL-HDBK-5J-1.pdf', '_blank')" aria-label="Download MIL-HDBK-5 reference document">
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  MIL-HDBK-5
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-11 mx-auto">
+    <div class="csscontainer">
+      <div class="wrapper">
+        <div class="header fs-4">Figures and Tables</div>
+        <div class="row">
+          <div class="col-half">
+            <div class="group">
+              <span class="section-title-TOC">Table of Tables</span>
+              <div>
+                <a href="#table-4.1" class="fig-link"><span class="fig-badge">Table 4.1</span><span class="fig-title">Magnesium Alloys Index</span></a>
+                <a href="#table-4.1.5" class="fig-link"><span class="fig-badge">Table 4.1.5</span><span class="fig-title">Temper Designation System for Magnesium Alloys [From ASTM B 296-96]</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-11 col-md-10 col-lg-8 mx-auto">
+    <div class="csscontainer">
+      <div class="section lvl-0" id="4.1">
+        <div class="section-heading lvl-0"><span class="section-num">4.1</span>General</div>
+        <p>This chapter contains the engineering properties and characteristics of wrought and cast magnesium alloys used in aircraft and missile applications. Magnesium is a lightweight structural metal that can be strengthened greatly by alloying, and in some cases by heat treatment or cold work or by both.</p>
+
+        <div class="section lvl-1" id="4.1.1">
+          <div class="section-heading lvl-1"><span class="section-num">4.1.1</span>Alloy Index</div>
+          <p>The magnesium alloys in this chapter are listed in alphanumeric sequence in each of two parts, the first one being wrought forms of magnesium and the second cast forms. These sections and the alloys covered under each are shown in Table 4.1.</p>
+
+          <div class="hdbk-table-wrap" id="table-4.1">
+            <table class="hdbk-table">
+              <caption>Table 4.1. Magnesium Alloys Index</caption>
+              <thead><tr><th>Section</th><th class="td-left">Designation</th></tr></thead>
+              <tbody>
+                <tr><td>4.2</td><td class="td-left">Magnesium-Wrought Alloys</td></tr>
+                <tr><td>4.2.1</td><td class="td-left"><a href="Chapter4.2(magnesium).html#4.2.1">AZ31B</a></td></tr>
+                <tr><td>4.2.2</td><td class="td-left"><a href="Chapter4.2(magnesium).html#4.2.2">AZ61A</a></td></tr>
+                <tr><td>4.2.3</td><td class="td-left"><a href="Chapter4.2(magnesium).html#4.2.3">ZK60A</a></td></tr>
+                <tr><td>4.3</td><td class="td-left">Magnesium-Cast Alloys</td></tr>
+                <tr><td>4.3.1</td><td class="td-left"><a href="Chapter4.3(magnesium).html#4.3.1">AM100A</a></td></tr>
+                <tr><td>4.3.2</td><td class="td-left"><a href="Chapter4.3(magnesium).html#4.3.2">AZ91C/AZ91E</a></td></tr>
+                <tr><td>4.3.3</td><td class="td-left"><a href="Chapter4.3(magnesium).html#4.3.3">AZ92A</a></td></tr>
+                <tr><td>4.3.4</td><td class="td-left"><a href="Chapter4.3(magnesium).html#4.3.4">EZ33A</a></td></tr>
+                <tr><td>4.3.5</td><td class="td-left"><a href="Chapter4.3(magnesium).html#4.3.5">QE22A</a></td></tr>
+                <tr><td>4.3.6</td><td class="td-left"><a href="Chapter4.3(magnesium).html#4.3.6">ZE41A</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div><!-- /4.1.1 -->
+
+        <div class="section lvl-1" id="4.1.2">
+          <div class="section-heading lvl-1"><span class="section-num">4.1.2</span>Material Properties</div>
+
+          <div class="section lvl-2" id="4.1.2.1">
+            <div class="section-heading lvl-2"><span class="section-num">4.1.2.1</span>Mechanical Properties</div>
+            <p>The mechanical properties are given either as design values or for information purposes. The tensile strength (F<sub>tu</sub>), tensile yield strength (F<sub>ty</sub>), elongation (e), and sometimes the compressive yield strength (F<sub>cy</sub>) are guaranteed by procurement specifications. The properties obtained reflect the location of sample, type of test specimen and method of testing required by the product specification. The remaining design values are &ldquo;derived&rdquo; values; that is, sufficient tests have been made to ascertain that if a given material meets the requirements of the product specification, the material will have the compression (F<sub>cy</sub>), shear (F<sub>su</sub>) and bearing (F<sub>bru</sub> and F<sub>bry</sub>) strengths listed.</p>
+            <p><strong>4.1.2.1.1 Tension Testing</strong> &mdash; Room-temperature tension tests are made according to ASTM E 8. The yield strength (F<sub>ty</sub>) is obtained by the &ldquo;offset method&rdquo; using an offset of 0.2 percent. The speed of testing for room-temperature tests has a small effect on the strength and elongation values obtained on most magnesium alloys. The rate of stressing generally specified to the yield strength is less than 100,000 psi per minute and the rate of straining from the yield strength to fracture is less than 0.5 in./in./min. It can be expected that the speed of testing used for room-temperature tension tests will approach the maximum permitted.</p>
+            <p>Elevated-temperature tension tests are made according to ASTM E 21. The speed of testing has a considerable effect on the results obtained and no one standard rate of straining is given in ASTM E 21. The strain rates most commonly used on magnesium are 0.005 in./in./min. to the yield and 0.10 in./in./min. from yield to fracture.</p>
+            <p><strong>4.1.2.1.2 Compression Testing</strong> &mdash; Compression test methods used for magnesium are specified in ASTM E 9. The values given for the compressive yield strength (F<sub>cy</sub>) are taken at an offset of 0.2 percent.</p>
+            <p><strong>4.1.2.1.3 Bearing Testing</strong> &mdash; Bearing tests of magnesium alloys are made according to ASTM E 238. The size of pin used has a significant effect on the values obtained, especially the bearing ultimate strength (F<sub>bru</sub>). On tests made to obtain the data on magnesium alloys shown in this document, pin diameters of 0.187 and 0.250 inch were used. For pin diameters significantly larger than 0.250 inch lower values may be obtained. Bearing values in the property tables are considered to be &ldquo;dry pin&rdquo; values in accordance with the discussion in Section 1.4.7.1.</p>
+            <p><strong>4.1.2.1.4 Shear Testing</strong> &mdash; The shear strength values used in this document were obtained by the &ldquo;double shear&rdquo; method using a pin-type specimen, the &ldquo;punch shear&rdquo; method and the &ldquo;tension shear&rdquo; method as applicable. Just as tensile ultimate strength (F<sub>tu</sub>) values vary with location and direction of sample in relation to the method of fabrication, the shear strength (F<sub>su</sub>) may be expected to reflect the effect of orientation, either as a function of the sampling or the maximum stresses imposed by the method of test.</p>
+            <p><strong>4.1.2.1.5 Stress Raisers</strong> &mdash; The effect of notches, holes, and stress raisers on the static properties of magnesium alloys, along with additional strength data, is discussed in the references cited for this section.</p>
+            <p><strong>4.1.2.1.6 Creep</strong> &mdash; Creep data on magnesium alloys are summarized in the references cited for this section.</p>
+            <p><strong>4.1.2.1.7 Fatigue</strong> &mdash; Room-temperature axial load fatigue data for several magnesium alloys are presented in the appropriate alloy sections.</p>
+          </div>
+        </div><!-- /4.1.2 -->
+
+        <div class="section lvl-1" id="4.1.3">
+          <div class="section-heading lvl-1"><span class="section-num">4.1.3</span>Physical Properties</div>
+          <p>Selected experimental data from the literature were used in determining values for physical properties. In other cases, enough information was available to calculate the constants. Estimated values of some of the remaining constants were also included. Estimated values are noted.</p>
+        </div>
+
+        <div class="section lvl-1" id="4.1.4">
+          <div class="section-heading lvl-1"><span class="section-num">4.1.4</span>Environmental Considerations</div>
+          <p>Corrosion protection must be considered for all magnesium applications. Protection can be provided by anodic films, chemical conversion coatings, paint systems, platings, or a combination of these methods. Proper drainage must be provided to prevent entrapment of water or other fluids. Dissimilar metal joints must be properly and completely insulated, including barrier strips and sealants.</p>
+          <p>Strain-hardened or age-hardened alloys may be annealed or overaged by prolonged exposure to elevated temperatures, with a resulting decrease in strength. Maximum recommended temperatures for prolonged service are reported, where available, for specific alloys.</p>
+        </div>
+
+        <div class="section lvl-1" id="4.1.5">
+          <div class="section-heading lvl-1"><span class="section-num">4.1.5</span>Alloy and Temper Designations</div>
+          <p>Standard ASTM nomenclature is used for the alloys listed. Temper designations are given in ASTM B 296. A summary of the temper designations is given in Table 4.1.5.</p>
+
+          <div class="hdbk-table-wrap" id="table-4.1.5">
+            <table class="hdbk-table">
+              <caption>Table 4.1.5. Temper Designation System for Magnesium Alloys [From ASTM B 296-96]</caption>
+              <thead><tr><th>Temper</th><th class="td-left">Description</th></tr></thead>
+              <tbody>
+                <tr><td>F</td><td class="td-left">As fabricated. Applies to products that acquire some temper from shaping processes not having special control over the amount of strain-hardening or thermal treatment.</td></tr>
+                <tr><td>O</td><td class="td-left">Annealed, recrystallized (wrought products only). Applies to the softest temper of wrought products.</td></tr>
+                <tr><td>H</td><td class="td-left">Strain-hardened (wrought products only), with or without supplementary thermal treatments to produce partial softening. Always followed by two or more digits: H1 = strain-hardened only; H2 = strain-hardened and then partially annealed; H3 = strain-hardened and stabilized. The digit following H1/H2/H3 (1&ndash;7, with 4 = half hard, 2 = quarter hard, 6 = three-quarter hard) indicates the final degree of strain-hardening remaining; a third digit, when used, indicates a variation of a two-digit H temper.</td></tr>
+                <tr><td>W</td><td class="td-left">Solution heat-treated. An unstable temper applicable only to alloys that spontaneously age at room temperature after solution heat treatment; specific only when the period of natural aging is stated (e.g., W &ndash; &frac12; hr).</td></tr>
+                <tr><td>T</td><td class="td-left">Thermally treated to produce stable tempers other than F, O, or H, with or without supplementary strain-hardening. Always followed by one or more digits (T1&ndash;T10, see below).</td></tr>
+                <tr><td>T1</td><td class="td-left">Cooled from an elevated-temperature shaping process (e.g., casting or extrusion) and naturally aged to a substantially stable condition.</td></tr>
+                <tr><td>T3</td><td class="td-left">Solution heat-treated and then cold worked.</td></tr>
+                <tr><td>T4</td><td class="td-left">Solution heat-treated and naturally aged to a substantially stable condition.</td></tr>
+                <tr><td>T5</td><td class="td-left">Cooled from an elevated-temperature shaping process and then artificially aged.</td></tr>
+                <tr><td>T6</td><td class="td-left">Solution heat-treated and then artificially aged.</td></tr>
+                <tr><td>T7</td><td class="td-left">Solution heat-treated and then stabilized.</td></tr>
+                <tr><td>T8</td><td class="td-left">Solution heat-treated, cold worked, and then artificially aged.</td></tr>
+                <tr><td>T9</td><td class="td-left">Solution heat-treated, artificially aged, and then cold worked.</td></tr>
+                <tr><td>T10</td><td class="td-left">Cooled from an elevated-temperature shaping process, artificially aged, and then cold worked.</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td>A period of natural aging at room temperature may occur between or after the operations listed for tempers T3 through T10; additional digits may be added to designations T1 through T10 to indicate a variation in treatment that significantly alters the characteristics of the product.</td></tr>
+              </tfoot>
+            </table>
+          </div>
+        </div><!-- /4.1.5 -->
+
+        <div class="section lvl-1" id="4.1.6">
+          <div class="section-heading lvl-1"><span class="section-num">4.1.6</span>Joining Methods</div>
+          <p>Most magnesium alloys may be welded; refer to &ldquo;Comments and Properties&rdquo; in individual alloy sections. Adhesive bonding and brazing may be used to join magnesium to itself or other alloys. All types of mechanical fasteners may be used to join magnesium. Refer to Section 4.1.4 when using mechanical fasteners or joining of dissimilar materials with magnesium alloys.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+      <section class="mt-3">
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Other MIL-HDBK-5 Chapters</div>
+            </div>
+            <div class="mx-auto mt-3 mb-4 text-center" style="max-width:820px;">
+              <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                <a href="Chapter3(aluminum).html" class="custom-link custom-btn btn d-inline-block">Chapter 3 (Aluminum)</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <section class="mt-5 pt-3">
+      <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+        <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+          <div class="d-flex align-items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+            <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+          </div>          <!-- Citation format tabs -->
+          <style>
+            #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+            #citationTabs li { margin: 0; list-style: none; }
+            #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+            #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+            #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+          </style>
+          <div class="tab-content mt-2 mb-3" id="citationTabContent">
+            <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+              <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+              <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+              <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+              <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+          </div>
+          <ul id="citationTabs" class="nav" role="tablist">
+            <li role="presentation">
+              <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="site-footer"></footer>
+  <script src="js/footer.js"></script>
+
+  <script>
+function initLightbox() {
+  const overlay  = document.getElementById('lightboxOverlay');
+  const img      = document.getElementById('lightboxImg');
+  const caption  = document.getElementById('lightboxCaption');
+  const closeBtn = document.getElementById('lightboxClose');
+
+  if (!overlay) return;
+
+  function openLightbox(src, alt, captionText) {
+    img.src             = src;
+    img.alt             = alt || '';
+    caption.textContent = captionText || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    img.src = '';
+  }
+
+  document.addEventListener('click', e => {
+    const target = e.target.closest('.ref-zoomable');
+    if (!target) return;
+    const figLabel = target.closest('.ref-fig')
+      ?.querySelector('.ref-fig-label')
+      ?.textContent ?? '';
+    openLightbox(target.src, target.alt, figLabel);
+  });
+
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeLightbox();
+  });
+
+  closeBtn.addEventListener('click', closeLightbox);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initLightbox);
+  </script>
+
+  </body>
+</html>

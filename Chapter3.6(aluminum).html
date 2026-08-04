@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KasperCalc: MIL-HDBK-5 3.6 6000 Series Wrought Alloys</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, MIL-HDBK-5, aluminum, 6013 Alloy, mechanical properties, MMPDS" />
+    <meta name="description" content="MIL-HDBK-5 Chapter 3 Section 3.6 -- 6000 Series Wrought Alloys." />
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/mil-hdbk-5.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script>
+(function(){
+  var h = location.hostname;
+  var isLocal = !h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1' || /\.local$/i.test(h) || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+  if (isLocal) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+  gtag('js', new Date());
+  gtag('config', 'G-5XLCN0GJQ0');
+})();
+</script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <!-- Chart.js + HdbkUtil for interactive figures -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="js/hdbkUtil.js"></script>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                  <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+    <!-- MAIN -->
+    <main data-pagefind-body>
+
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">MIL-HDBK-5: Chapter 3.6<br>6000 Series Wrought Alloys</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+  <section class="col-11 mx-auto">
+    <div class="csscontainer">
+      <div class="wrapper">
+        <div class="header fs-4">MIL-HDBK-5: Chapter 3.6 &mdash; 6000 Series Wrought Alloys</div>
+        <div class="row">
+          <div class="col-half" style="flex: 1 1 400px;">
+            <div class="group">
+              <span class="section-title-TOC">Aluminum Alloy Index</span>
+              <div class="list-container">
+                <a href="Chapter3(aluminum).html" class="quick-link"><span class="quick-num">&#8226;</span><span class="quick-title">Aluminum Alloy Index</span></a>
+                <a href="Chapter3.1(general-aluminum).html" class="quick-link"><span class="quick-num">3.1</span><span class="quick-title">General</span></a>
+                <a href="Chapter3.2(aluminum).html" class="quick-link"><span class="quick-num">3.2</span><span class="quick-title">2000 Series Wrought Alloys</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.1" class="quick-link quick-sub2"><span class="quick-num">3.2.1</span><span class="quick-title">2014 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.2" class="quick-link quick-sub2"><span class="quick-num">3.2.2</span><span class="quick-title">2017 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.3" class="quick-link quick-sub2"><span class="quick-num">3.2.3</span><span class="quick-title">2024 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.4" class="quick-link quick-sub2"><span class="quick-num">3.2.4</span><span class="quick-title">2025 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.5" class="quick-link quick-sub2"><span class="quick-num">3.2.5</span><span class="quick-title">2026 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.6" class="quick-link quick-sub2"><span class="quick-num">3.2.6</span><span class="quick-title">2090 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.7" class="quick-link quick-sub2"><span class="quick-num">3.2.7</span><span class="quick-title">2124 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.8" class="quick-link quick-sub2"><span class="quick-num">3.2.8</span><span class="quick-title">2219 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.9" class="quick-link quick-sub2"><span class="quick-num">3.2.9</span><span class="quick-title">2297 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.10" class="quick-link quick-sub2"><span class="quick-num">3.2.10</span><span class="quick-title">2424 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.11" class="quick-link quick-sub2"><span class="quick-num">3.2.11</span><span class="quick-title">2519 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.12" class="quick-link quick-sub2"><span class="quick-num">3.2.12</span><span class="quick-title">2524 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.13" class="quick-link quick-sub2"><span class="quick-num">3.2.13</span><span class="quick-title">2618 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html" class="quick-link"><span class="quick-num">3.5</span><span class="quick-title">5000 Series Wrought Alloys</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.1" class="quick-link quick-sub2"><span class="quick-num">3.5.1</span><span class="quick-title">5052 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.2" class="quick-link quick-sub2"><span class="quick-num">3.5.2</span><span class="quick-title">5083 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.3" class="quick-link quick-sub2"><span class="quick-num">3.5.3</span><span class="quick-title">5086 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.4" class="quick-link quick-sub2"><span class="quick-num">3.5.4</span><span class="quick-title">5454 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.5" class="quick-link quick-sub2"><span class="quick-num">3.5.5</span><span class="quick-title">5456 Alloy</span></a>
+                <a href="Chapter3.6(aluminum).html" class="quick-link active-section"><span class="quick-num">3.6</span><span class="quick-title">6000 Series Wrought Alloys</span></a>
+                <a href="Chapter3.6(aluminum).html#3.6.1" class="quick-link quick-sub2"><span class="quick-num">3.6.1</span><span class="quick-title">6013 Alloy</span></a>
+                <a href="Chapter3.6(aluminum).html#3.6.2" class="quick-link quick-sub2"><span class="quick-num">3.6.2</span><span class="quick-title">6061 Alloy</span></a>
+                <a href="Chapter3.6(aluminum).html#3.6.3" class="quick-link quick-sub2"><span class="quick-num">3.6.3</span><span class="quick-title">6151 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html" class="quick-link"><span class="quick-num">3.7</span><span class="quick-title">7000 Series Wrought Alloys</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.1" class="quick-link quick-sub2"><span class="quick-num">3.7.1</span><span class="quick-title">7010 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.2" class="quick-link quick-sub2"><span class="quick-num">3.7.2</span><span class="quick-title">7040 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.3" class="quick-link quick-sub2"><span class="quick-num">3.7.3</span><span class="quick-title">7049/7149 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.4" class="quick-link quick-sub2"><span class="quick-num">3.7.4</span><span class="quick-title">7050 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.5" class="quick-link quick-sub2"><span class="quick-num">3.7.5</span><span class="quick-title">7055 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.6" class="quick-link quick-sub2"><span class="quick-num">3.7.6</span><span class="quick-title">7075 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.7" class="quick-link quick-sub2"><span class="quick-num">3.7.7</span><span class="quick-title">7150 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.8" class="quick-link quick-sub2"><span class="quick-num">3.7.8</span><span class="quick-title">7175 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.9" class="quick-link quick-sub2"><span class="quick-num">3.7.9</span><span class="quick-title">7249 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.10" class="quick-link quick-sub2"><span class="quick-num">3.7.10</span><span class="quick-title">7475 Alloy</span></a>
+                <a href="Chapter3.8(aluminum).html" class="quick-link"><span class="quick-num">3.8</span><span class="quick-title">200.0 Series Cast Alloys</span></a>
+                <a href="Chapter3.8(aluminum).html#3.8.1" class="quick-link quick-sub2"><span class="quick-num">3.8.1</span><span class="quick-title">A201.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html" class="quick-link"><span class="quick-num">3.9</span><span class="quick-title">300.0 Series Cast Alloys</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.1" class="quick-link quick-sub2"><span class="quick-num">3.9.1</span><span class="quick-title">354.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.2" class="quick-link quick-sub2"><span class="quick-num">3.9.2</span><span class="quick-title">355.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.3" class="quick-link quick-sub2"><span class="quick-num">3.9.3</span><span class="quick-title">C355.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.4" class="quick-link quick-sub2"><span class="quick-num">3.9.4</span><span class="quick-title">356.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.5" class="quick-link quick-sub2"><span class="quick-num">3.9.5</span><span class="quick-title">A356.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.6" class="quick-link quick-sub2"><span class="quick-num">3.9.6</span><span class="quick-title">A357.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.7" class="quick-link quick-sub2"><span class="quick-num">3.9.7</span><span class="quick-title">D357.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.8" class="quick-link quick-sub2"><span class="quick-num">3.9.8</span><span class="quick-title">359.0 Alloy</span></a>
+                <a href="Chapter3.10(element-properties-aluminum).html" class="quick-link"><span class="quick-num">3.10</span><span class="quick-title">Element Properties</span></a>
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Chapter 3.6 Contents</span>
+              <div>
+                <a href="#3.6" class="quick-link"><span class="quick-num">3.6</span><span class="quick-title">6000 Series Wrought Alloys</span></a>
+                <a href="#3.6.1" class="quick-link quick-sub"><span class="quick-num">3.6.1</span><span class="quick-title">6013 Alloy</span></a>
+                <a href="#3.6.1.0" class="quick-link quick-sub2"><span class="quick-num">3.6.1.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#3.6.1.1" class="quick-link quick-sub2"><span class="quick-num">3.6.1.1</span><span class="quick-title">T6 Temper</span></a>
+              
+                <a href="#3.6.2" class="quick-link quick-sub"><span class="quick-num">3.6.2</span><span class="quick-title">6061 Alloy</span></a>
+                <a href="#3.6.2.0" class="quick-link quick-sub2"><span class="quick-num">3.6.2.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#3.6.2.1" class="quick-link quick-sub2"><span class="quick-num">3.6.2.1</span><span class="quick-title">T4 Tempers</span></a>
+                <a href="#3.6.2.2" class="quick-link quick-sub2"><span class="quick-num">3.6.2.2</span><span class="quick-title">T6 Tempers</span></a>
+              
+                <a href="#3.6.3" class="quick-link quick-sub"><span class="quick-num">3.6.3</span><span class="quick-title">6151 Alloy</span></a>
+                <a href="#3.6.3.0" class="quick-link quick-sub2"><span class="quick-num">3.6.3.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#3.6.3.1" class="quick-link quick-sub2"><span class="quick-num">3.6.3.1</span><span class="quick-title">T6 Temper</span></a>
+              
+              </div>
+            </div>
+          </div>
+          <div class="col-half" style="flex: 1 1 220px;">
+            <div class="group">
+              <span class="section-title-TOC">Navigate to Section</span>
+              <div class="d-flex flex-column gap-2 mt-2">
+                  <a href="Chapter1(general).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 1 &mdash; General
+                  </a>
+                  <a href="Chapter2(steel).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 2 &mdash; Steel
+                  </a>
+                  <a href="Chapter3(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 3 &mdash; Aluminum
+                  </a>
+                  <a href="Chapter3.1(general-aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.1 &mdash; General
+                  </a>
+                  <a href="Chapter3.2(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.2 &mdash; 2000 Series Wrought Alloys
+                  </a>
+                  <a href="Chapter3.5(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.5 &mdash; 5000 Series Wrought Alloys
+                  </a>
+                  <a href="Chapter3.6(aluminum).html" class="tbtn active-section">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.6 &mdash; 6000 Series Wrought Alloys
+                  </a>
+                  <a href="Chapter3.7(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.7 &mdash; 7000 Series Wrought Alloys
+                  </a>
+                  <a href="Chapter3.8(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.8 &mdash; 200.0 Series Cast Alloys
+                  </a>
+                  <a href="Chapter3.9(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.9 &mdash; 300.0 Series Cast Alloys
+                  </a>
+                  <a href="Chapter3.10(element-properties-aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.10 &mdash; Element Properties
+                  </a>
+                  <a href="Chapter4(magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 4 &mdash; Magnesium
+                  </a>
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Disclaimer</span>
+              <div class="disclaimer-bar">
+                <p><strong>For reference use only.</strong> The formulas, graphs, and values herein are provided in good faith for general engineering guidance. Please verify all data against MIL-HDBK-5J or the applicable superseding document (MMPDS).</p>
+              </div>
+              <div style="margin-top: 6px;">
+                <button class="tbtn" onclick="window.open('/downloadable/MIL-HDBK-5J-1.pdf', '_blank')" aria-label="Download MIL-HDBK-5 reference document">
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  MIL-HDBK-5
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-11 mx-auto">
+    <div class="csscontainer">
+      <div class="wrapper">
+        <div class="header fs-4">Figures and Tables</div>
+        <div class="row">
+          <div class="col-half">
+            <div class="group">
+              <span class="section-title-TOC">Table of Tables</span>
+              <div>
+                <a href="#table-3.6.1.0a" class="fig-link"><span class="fig-badge">Table 3.6.1.0(a)</span><span class="fig-title">Material Specifications for 6013 Aluminum Alloy</span></a>
+                <a href="#table-3.6.1.0b" class="fig-link"><span class="fig-badge">Table 3.6.1.0(b)</span><span class="fig-title">Design Mechanical and Physical Properties of 6013 Aluminum Alloy Sheet</span></a>
+                <a href="#table-3.6.2.0a" class="fig-link"><span class="fig-badge">Table 3.6.2.0(a)</span><span class="fig-title">Material Specifications for 6061 Aluminum Alloy</span></a>
+                <a href="#table-3.6.2.0b1" class="fig-link"><span class="fig-badge">Table 3.6.2.0(b1)</span><span class="fig-title">Design Mechanical and Physical Properties of 6061 Aluminum Alloy Sheet</span></a>
+                <a href="#table-3.6.2.0b2" class="fig-link"><span class="fig-badge">Table 3.6.2.0(b2)</span><span class="fig-title">Design Mechanical and Physical Properties of 6061 Aluminum Alloy Plate</span></a>
+                <a href="#table-3.6.2.0b3" class="fig-link"><span class="fig-badge">Table 3.6.2.0(b3)</span><span class="fig-title">Minimum Elongation Values for 6061 Aluminum Alloy Sheet and Plate</span></a>
+                <a href="#table-3.6.2.0c1" class="fig-link"><span class="fig-badge">Table 3.6.2.0(c1)</span><span class="fig-title">Design Mechanical and Physical Properties of 6061 Aluminum Alloy Tube and Pipe</span></a>
+                <a href="#table-3.6.2.0c2" class="fig-link"><span class="fig-badge">Table 3.6.2.0(c2)</span><span class="fig-title">Minimum Elongation Values for 6061 Aluminum Alloy Tubing</span></a>
+                <a href="#table-3.6.2.0d" class="fig-link"><span class="fig-badge">Table 3.6.2.0(d)</span><span class="fig-title">Design Mechanical and Physical Properties of 6061 Aluminum Alloy Rolled, Drawn, or Cold-Finished Bar, Rod, and Shapes</span></a>
+                <a href="#table-3.6.2.0e" class="fig-link"><span class="fig-badge">Table 3.6.2.0(e)</span><span class="fig-title">Design Mechanical and Physical Properties of 6061 Aluminum Alloy Die Forging</span></a>
+                <a href="#table-3.6.2.0f" class="fig-link"><span class="fig-badge">Table 3.6.2.0(f)</span><span class="fig-title">Design Mechanical and Physical Properties of 6061 Aluminum Alloy Hand Forging</span></a>
+                <a href="#table-3.6.2.0g" class="fig-link"><span class="fig-badge">Table 3.6.2.0(g)</span><span class="fig-title">Design Mechanical and Physical Properties of 6061 Aluminum Alloy Extruded Rod, Bar, and Shapes</span></a>
+                <a href="#table-3.6.3.0a" class="fig-link"><span class="fig-badge">Table 3.6.3.0(a)</span><span class="fig-title">Material Specifications for 6151 Aluminum Alloy</span></a>
+                <a href="#table-3.6.3.0b" class="fig-link"><span class="fig-badge">Table 3.6.3.0(b)</span><span class="fig-title">Design Mechanical and Physical Properties of 6151 Aluminum Alloy Die Forging</span></a>
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Table of Figures</span>
+              <div>
+                <a href="#fig-3.6.1.1.6a" class="fig-link"><span class="fig-badge">Fig 3.6.1.1.6(a)</span><span class="fig-title">Typical tensile stress-strain curves for 6013-T6 aluminum alloy sheet at room temperature. Thickness = 0.010&ndash;0.249 in.</span></a>
+                <a href="#fig-3.6.1.1.6b" class="fig-link"><span class="fig-badge">Fig 3.6.1.1.6(b)</span><span class="fig-title">Typical compressive stress-strain and compressive tangent-modulus curves for 6013-T6 aluminum alloy sheet at room temperature. Thickness = 0.010&ndash;0.249 in.</span></a>
+                <a href="#fig-3.6.2.0" class="fig-link"><span class="fig-badge">Fig 3.6.2.0</span><span class="fig-title">Effect of temperature on the physical properties of 6061 aluminum alloy.</span></a>
+                <a href="#fig-3.6.2.2.1a" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.1(a)</span><span class="fig-title">Effect of temperature on the tensile ultimate strength (Ftu) of 6061-T6 aluminum alloy (all products).</span></a>
+                <a href="#fig-3.6.2.2.1b" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.1(b)</span><span class="fig-title">Effect of temperature on the tensile yield strength (Fty) of 6061-T6 aluminum alloy (all products).</span></a>
+                <a href="#fig-3.6.2.2.1c" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.1(c)</span><span class="fig-title">Effect of exposure at elevated temperatures on the room-temperature tensile ultimate strength (Ftu) of 6061-T6 aluminum alloy (all products).</span></a>
+                <a href="#fig-3.6.2.2.1d" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.1(d)</span><span class="fig-title">Effect of exposure at elevated temperatures on the room-temperature tensile yield strength (Fty) of 6061-T6 aluminum alloy (all products).</span></a>
+                <a href="#fig-3.6.2.2.4" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.4</span><span class="fig-title">Effect of temperature on the tensile and compressive moduli (E and Ec) of 6061 aluminum alloy.</span></a>
+                <a href="#fig-3.6.2.2.5a" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.5(a)</span><span class="fig-title">Effect of temperature on the elongation of 6061-T6 aluminum alloy (all products).</span></a>
+                <a href="#fig-3.6.2.2.5b" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.5(b)</span><span class="fig-title">Effect of exposure at elevated temperatures on the room-temperature elongation of 6061-T6 aluminum alloy (all products).</span></a>
+                <a href="#fig-3.6.2.2.6a" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(a)</span><span class="fig-title">Typical tensile stress-strain curves for 6061-T6 aluminum alloy sheet at room temperature. Thickness = 0.249 in.</span></a>
+                <a href="#fig-3.6.2.2.6b" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(b)</span><span class="fig-title">Typical tensile stress-strain curve for 6061-T6 aluminum alloy sheet at 200&deg;F. Thickness = 0.125 in.</span></a>
+                <a href="#fig-3.6.2.2.6c" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(c)</span><span class="fig-title">Typical tensile stress-strain curves for 6061-T6 aluminum alloy sheet at 300&deg;F. Thickness = 0.125 in.</span></a>
+                <a href="#fig-3.6.2.2.6d" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(d)</span><span class="fig-title">Typical tensile stress-strain curves for 6061-T6 aluminum alloy sheet at 400&deg;F. Thickness = 0.125 in.</span></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-half">
+            <div class="group">
+              <span class="section-title-TOC">Table of Figures (cont.)</span>
+              <div>
+                <a href="#fig-3.6.2.2.6e" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(e)</span><span class="fig-title">Typical tensile stress-strain curves for 6061-T6 aluminum alloy sheet at 500&deg;F. Thickness = 0.125 in.</span></a>
+                <a href="#fig-3.6.2.2.6f" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(f)</span><span class="fig-title">Typical compressive stress-strain and compressive tangent-modulus curves for 6061-T6 aluminum alloy sheet at room temperature. Thickness = 0.249 in.</span></a>
+                <a href="#fig-3.6.2.2.6g" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(g)</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 6061-T6 aluminum alloy sheet at room temperature.</span></a>
+                <a href="#fig-3.6.2.2.6h" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(h)</span><span class="fig-title">Typical tensile stress-strain curves for 6061-T6 aluminum alloy extrusion at room temperature. All thicknesses.</span></a>
+                <a href="#fig-3.6.2.2.6i" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(i)</span><span class="fig-title">Typical compressive stress-strain and compressive tangent-modulus curves for 6061-T6 aluminum alloy extrusion at room temperature. All thicknesses.</span></a>
+                <a href="#fig-3.6.2.2.6j" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(j)</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 6061-T651X aluminum alloy extrusion at room temperature. Thickness = 0.499 in.</span></a>
+                <a href="#fig-3.6.2.2.6k" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(k)</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 6061-T651X aluminum alloy extrusion at room temperature. Thickness = 3.000 in.</span></a>
+                <a href="#fig-3.6.2.2.6l" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(l)</span><span class="fig-title">Typical tensile stress-strain curve (full range) for 6061-T6 aluminum alloy sheet at room temperature.</span></a>
+                <a href="#fig-3.6.2.2.6m" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(m)</span><span class="fig-title">Typical tensile stress-strain curves (full range) for 6061-T62 aluminum alloy extrusion at room temperature. All thicknesses.</span></a>
+                <a href="#fig-3.6.2.2.6n" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(n)</span><span class="fig-title">Typical tensile stress-strain curves (full range) for 6061-T651X aluminum alloy extrusion at room temperature. Thickness &le; 0.499 in.</span></a>
+                <a href="#fig-3.6.2.2.6o" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.6(o)</span><span class="fig-title">Typical tensile stress-strain curves (full range) for 6061-T651X aluminum alloy extrusion at room temperature. Thickness = 3.000 in.</span></a>
+                <a href="#fig-3.6.2.2.8" class="fig-link"><span class="fig-badge">Fig 3.6.2.2.8</span><span class="fig-title">Best-fit S/N curves for unnotched 6061-T6 aluminum alloy, various wrought products, longitudinal direction.</span></a>
+                <a href="#fig-3.6.3.0" class="fig-link"><span class="fig-badge">Fig 3.6.3.0</span><span class="fig-title">Effect of temperature on the thermal expansion of 6151 aluminum alloy.</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-11 col-md-10 col-lg-8 mx-auto">
+    <div class="csscontainer">
+      <div class="section lvl-0" id="3.6">
+        <div class="section-heading lvl-0"><span class="section-num">3.6</span>6000 Series Wrought Alloys</div>
+<p>Alloys of the 6000 series contain magnesium and silicon as their principal alloying elements.</p>
+
+        <div class="section lvl-1" id="3.6.1">
+          <div class="section-heading lvl-1"><span class="section-num">3.6.1</span>6013 Alloy</div>
+<div class="section lvl-2" id="3.6.1.0">
+          <div class="section-heading lvl-2"><span class="section-num">3.6.1.0</span>Comments and Properties</div>
+          <p>6013 is a Mg-Si-Cu-Mn alloy which is weldable. This alloy has 25 percent higher strength in the T6 temper than 6061-T6. It has improved toughness, fatigue strength, and stretch forming characteristics compared to 6061 with equivalent stress corrosion characteristics. Refer to Section 3.1.3.4 for comments regarding weldability of the alloy.</p>
+          <p>Material specifications for 6013 are shown in Table 3.6.1.0(a). Room-temperature mechanical and physical properties are presented in Table 3.6.1.0(b).</p>
+
+          <div class="hdbk-table-wrap" id="table-3.6.1.0a">
+            <table class="hdbk-table">
+              <caption>Table 3.6.1.0(a). Material Specifications for 6013 Aluminum Alloy</caption>
+              <thead><tr><th>Specification</th><th>Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS 4347</td><td class="td-left">Sheet (T4)</td></tr>
+                <tr><td>AMS 4216</td><td class="td-left">Sheet (T6)</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The temper index is as follows:</p>
+          <ul>
+            <li>3.6.1.1 &mdash; T6</li>
+          </ul>
+
+          <div class="hdbk-table-wrap" id="table-3.6.1.0b">
+            <table class="hdbk-table">
+              <caption>Table 3.6.1.0(b). Design Mechanical and Physical Properties of 6013 Aluminum Alloy Sheet</caption>
+              <thead>
+                <tr>
+                  <th style="width:12rem; text-align:left;">Specification</th>
+                  <th colspan="3">AMS 4216 and AMS 4347</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Form</th>
+                  <th colspan="3">Sheet</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Temper</th>
+                  <th colspan="3">T6</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Thickness, in.</th>
+                  <th>0.010-0.062</th><th>0.063-0.125</th><th>0.126-0.249</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Basis</th>
+                  <th>S</th><th>S</th><th>S</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="prop-section"><td colspan="4" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>52</td><td>52</td><td>52</td></tr>
+                <tr><td class="td-indent">LT</td><td>52</td><td>52</td><td>52</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>47</td><td>47</td><td>48</td></tr>
+                <tr><td class="td-indent">LT</td><td>46</td><td>46</td><td>46</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>48</td><td>48</td><td>48</td></tr>
+                <tr><td class="td-indent">LT</td><td>48</td><td>48</td><td>49</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>32</td><td>32</td><td>32</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>bru</sub></em><sup>a</sup>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>85</td><td>85</td><td>85</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>111</td><td>111</td><td>111</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>bry</sub></em><sup>a</sup>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>66</td><td>69</td><td>71</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>76</td><td>80</td><td>82</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>e</em>, percent:</td></tr>
+                <tr><td class="td-indent">LT</td><td>8</td><td>8</td><td>8</td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="3">9.9</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="3">10.1</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="3">3.8</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td colspan="3">0.33</td></tr>
+                <tr class="prop-section"><td colspan="4" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="3">0.098</td></tr>
+                <tr><td class="td-left"><em>C</em>, <em>K</em>, and <em>&alpha;</em></td><td colspan="3">&middot;&middot;&middot;</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="4"><sup>a</sup> Bearing values are &ldquo;dry pin&rdquo; values per Section 1.4.7.1.</td></tr>
+              </tfoot>
+            </table>
+          </div>
+
+        </div><!-- /3.6.1.0 -->
+
+        <div class="section lvl-2" id="3.6.1.1">
+          <div class="section-heading lvl-2"><span class="section-num">3.6.1.1</span>T6 Temper</div>
+          <p>Stress-strain and tangent-modulus curves are presented in Figures 3.6.1.1.6(a) and (b).</p>
+
+          <div class="hdbk-figure" id="fig-3.6.1.1.6a">
+            <div class="canvasdiv">
+              <button id="toggle-36116a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36116a');var a=document.createElement('a');a.download='canvas-36116a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36116a').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36116a" class="chartcanvas" role="img" aria-label="Figure 3.6.1.1.6(a)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.1.1.6(a).</strong> Typical tensile stress-strain curves for 6013-T6 aluminum alloy sheet at room temperature. Thickness = 0.010&ndash;0.249 in.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.1.1.6b">
+            <div class="canvasdiv">
+              <button id="toggle-36116b">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36116b');var a=document.createElement('a');a.download='canvas-36116b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36116b').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36116b" class="chartcanvas" role="img" aria-label="Figure 3.6.1.1.6(b)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.1.1.6(b).</strong> Typical compressive stress-strain and compressive tangent-modulus curves for 6013-T6 aluminum alloy sheet at room temperature. Thickness = 0.010&ndash;0.249 in.</p>
+          </div>
+        </div><!-- /3.6.1.1 -->
+        </div><!-- /3.6.1 -->
+
+        <div class="section lvl-1" id="3.6.2">
+          <div class="section-heading lvl-1"><span class="section-num">3.6.2</span>6061 Alloy</div>
+<div class="section lvl-2" id="3.6.2.0">
+          <div class="section-heading lvl-2"><span class="section-num">3.6.2.0</span>Comments and Properties</div>
+          <p>6061 has been used in a wide range of applications, including cryogenic applications requiring high toughness. Refer to Section 3.1.3.4 for comments regarding the weldability of the alloy.</p>
+          <p>The properties of extrusions should be based upon the thickness at the time of quenching prior to machining. Selection of the mechanical properties based upon its final machined thickness may be unconservative; therefore, the thickness at the time of quenching to achieve properties is an important factor in the selection of the proper thickness column. For extrusions having sections with various thicknesses, consideration should be given to the properties as a function of thickness.</p>
+          <p>Material specifications for 6061 are presented in Table 3.6.2.0(a). Room-temperature mechanical and physical properties are shown in Tables 3.6.2.0(b) through (g). The effect of temperature on the physical properties is shown in Figure 3.6.2.0.</p>
+
+          <div class="hdbk-table-wrap" id="table-3.6.2.0a">
+            <table class="hdbk-table">
+              <caption>Table 3.6.2.0(a). Material Specifications for 6061 Aluminum Alloy</caption>
+              <thead><tr><th>Specification</th><th>Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS 4025</td><td class="td-left">Sheet and plate</td></tr>
+                <tr><td>AMS 4026</td><td class="td-left">Sheet and plate</td></tr>
+                <tr><td>AMS 4027</td><td class="td-left">Sheet and plate</td></tr>
+                <tr><td>AMS-QQ-A-250/11</td><td class="td-left">Sheet and plate</td></tr>
+                <tr><td>AMS 4115</td><td class="td-left">Bar and rod, rolled or cold-finished</td></tr>
+                <tr><td>AMS 4116</td><td class="td-left">Bar and rod, cold-finished</td></tr>
+                <tr><td>AMS 4117</td><td class="td-left">Bar and rod, rolled or cold-finished</td></tr>
+                <tr><td>AMS-QQ-A-225/8</td><td class="td-left">Rolled bar, rod, and shapes</td></tr>
+                <tr><td>AMS 4150</td><td class="td-left">Extruded rod, bar, and shapes</td></tr>
+                <tr><td>AMS 4160</td><td class="td-left">Extrusion</td></tr>
+                <tr><td>AMS 4161</td><td class="td-left">Extrusion</td></tr>
+                <tr><td>AMS 4172</td><td class="td-left">Extrusion</td></tr>
+                <tr><td>AMS 4173</td><td class="td-left">Extruded rod, bar, and shapes</td></tr>
+                <tr><td>AMS-QQ-A-200/8</td><td class="td-left">Extruded rod, bar, shapes, and tubing</td></tr>
+                <tr><td>AMS-A-22771</td><td class="td-left">Forging</td></tr>
+                <tr><td>AMS 4080</td><td class="td-left">Tubing, seamless, drawn</td></tr>
+                <tr><td>AMS 4082</td><td class="td-left">Tubing, seamless, drawn</td></tr>
+                <tr><td>AMS-WW-T-700/6</td><td class="td-left">Seamless drawn tubing</td></tr>
+                <tr><td>AMS 4127</td><td class="td-left">Forging</td></tr>
+                <tr><td>AMS 4248</td><td class="td-left">Hand forging</td></tr>
+                <tr><td>AMS-QQ-A-367</td><td class="td-left">Forging</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The temper index for 6061 is as follows:</p>
+          <ul>
+            <li>3.6.2.1 &mdash; T4, T42, T451, T4510, and T4511</li>
+            <li>3.6.2.2 &mdash; T6, T62, T651, T652, T6510, and T6511</li>
+          </ul>
+
+          <div class="hdbk-table-wrap" id="table-3.6.2.0b1">
+            <table class="hdbk-table">
+              <caption>Table 3.6.2.0(b<sub>1</sub>). Design Mechanical and Physical Properties of 6061 Aluminum Alloy Sheet</caption>
+              <thead>
+                <tr>
+                  <th style="width:12rem; text-align:left;">Specification</th>
+                  <th colspan="2">AMS 4026 and AMS-QQ-A-250/11</th>
+                  <th>AMS-QQ-A-250/11</th>
+                  <th colspan="2">AMS 4025, AMS 4027 and AMS-QQ-A-250/11</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Form</th>
+                  <th colspan="5">Sheet</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Temper</th>
+                  <th colspan="2">T4</th>
+                  <th>T42<sup>a</sup></th>
+                  <th colspan="2">T6 and T62<sup>b</sup></th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Thickness, in.</th>
+                  <th colspan="2">0.010-0.249</th><th>0.010-0.249</th><th colspan="2">0.010-0.249</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Basis</th>
+                  <th>A</th><th>B</th><th>S</th><th>A</th><th>B</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="prop-section"><td colspan="6" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>42</td><td>43</td></tr>
+                <tr><td class="td-indent">LT</td><td>30</td><td>32</td><td>30</td><td>42</td><td>43</td></tr>
+                <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>36</td><td>38</td></tr>
+                <tr><td class="td-indent">LT</td><td>16</td><td>18</td><td>14</td><td>35</td><td>37</td></tr>
+                <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>35</td><td>37</td></tr>
+                <tr><td class="td-indent">LT</td><td>16</td><td>18</td><td>&middot;&middot;&middot;</td><td>36</td><td>38</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>20</td><td>21</td><td>&middot;&middot;&middot;</td><td>27</td><td>28</td></tr>
+                <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>48</td><td>51</td><td>&middot;&middot;&middot;</td><td>67</td><td>69</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>63</td><td>67</td><td>&middot;&middot;&middot;</td><td>88</td><td>90</td></tr>
+                <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>22</td><td>25</td><td>&middot;&middot;&middot;</td><td>50</td><td>53</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>26</td><td>29</td><td>&middot;&middot;&middot;</td><td>58</td><td>61</td></tr>
+                <tr class="prop-group"><td colspan="6" class="td-left"><em>e</em>, percent (S-basis):</td></tr>
+                <tr><td class="td-indent">LT</td><td><sup>c</sup></td><td>&middot;&middot;&middot;</td><td><sup>c</sup></td><td><sup>c</sup></td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="5">9.9</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="5">10.1</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="5">3.8</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td colspan="5">0.33</td></tr>
+                <tr class="prop-section"><td colspan="6" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="5">0.098</td></tr>
+                <tr><td class="td-left"><em>C</em>, <em>K</em>, and <em>&alpha;</em></td><td colspan="5">See Figure 3.6.2.0</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="6"><sup>a</sup> Design allowables were based upon data obtained from testing samples of material, supplied in the O or F temper, which were heat treated to demonstrate response to heat treatment by suppliers. Properties obtained by the user may be lower than those listed if the material has been formed or otherwise cold or hot worked, particularly in the annealed temper, prior to solution heat treatment.</td></tr>
+                <tr><td colspan="6"><sup>b</sup> Design allowables were based upon data obtained from testing T6 sheet and from testing samples of sheet, supplied in the O or F temper, which were heat treated to T62 temper to demonstrate response to heat treatment by suppliers. Properties obtained may be lower than those listed if the material has been formed or otherwise cold worked, particularly in the annealed temper, prior to solution heat treatment.</td></tr>
+                <tr><td colspan="6"><sup>c</sup> See Table 3.6.2.0(b<sub>3</sub>).</td></tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="hdbk-table-wrap" id="table-3.6.2.0b2">
+            <table class="hdbk-table">
+              <caption>Table 3.6.2.0(b<sub>2</sub>). Design Mechanical and Physical Properties of 6061 Aluminum Alloy Plate</caption>
+              <thead>
+                <tr>
+                  <th style="width:12rem; text-align:left;">Specification</th>
+                  <th colspan="4">AMS 4026 and AMS-QQ-A-250/11</th>
+                  <th colspan="2">AMS-QQ-A-250/11</th>
+                  <th colspan="6">AMS 4025, AMS 4027 and AMS-QQ-A-250/11</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Form</th>
+                  <th colspan="12">Plate</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Temper</th>
+                  <th colspan="4">T451</th>
+                  <th colspan="2">T42<sup>a</sup></th>
+                  <th colspan="6">T651 and T62<sup>b</sup></th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Thickness, in.</th>
+                  <th colspan="2">0.250-2.000</th><th colspan="2">2.001-3.000</th>
+                  <th>0.250-1.000</th><th>1.001-3.000</th>
+                  <th colspan="2">0.250-2.000</th><th colspan="2">2.001-3.000</th><th>3.001-4.000</th><th>4.001-6.000<sup>c</sup></th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Basis</th>
+                  <th>A</th><th>B</th><th>A</th><th>B</th><th>S</th><th>S</th><th>A</th><th>B</th><th>A</th><th>B</th><th>S</th><th>S</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="prop-section"><td colspan="13" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="13" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>42</td><td>43</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">LT</td><td>30</td><td>32</td><td>30</td><td>32</td><td>30</td><td>30</td><td>42</td><td>43</td><td>42</td><td>43</td><td>42</td><td>40</td></tr>
+                <tr class="prop-group"><td colspan="13" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>36</td><td>38</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">LT</td><td>16</td><td>18</td><td>16</td><td>18</td><td>14</td><td>14</td><td>35</td><td>37</td><td>35</td><td>37</td><td>35</td><td>35</td></tr>
+                <tr class="prop-group"><td colspan="13" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>35</td><td>37</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">LT</td><td>16</td><td>18</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>36</td><td>38</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>20</td><td>21</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>27</td><td>28</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="13" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>48</td><td>52</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>67</td><td>69</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>63</td><td>67</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>88</td><td>90</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="13" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>22</td><td>25</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>50</td><td>53</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>26</td><td>29</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>58</td><td>61</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="13" class="td-left"><em>e</em>, percent:</td></tr>
+                <tr><td class="td-indent">L</td><td><sup>d</sup></td><td>&middot;&middot;&middot;</td><td>16</td><td>&middot;&middot;&middot;</td><td>18</td><td>16</td><td><sup>d</sup></td><td>&middot;&middot;&middot;</td><td>6</td><td>&middot;&middot;&middot;</td><td>6</td><td>6</td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="12">9.9</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="12">10.1</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="12">3.8</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td colspan="12">0.33</td></tr>
+                <tr class="prop-section"><td colspan="13" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="12">0.098</td></tr>
+                <tr><td class="td-left"><em>C</em>, <em>K</em>, and <em>&alpha;</em></td><td colspan="12">See Figure 3.6.2.0</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="13"><sup>a</sup> Design allowables were based upon data obtained from testing samples of material, supplied in the O temper, which were heat treated to demonstrate response to heat treatment by suppliers. Properties obtained by the user may be lower than those listed if the material has been formed or otherwise cold or hot worked, particularly in the annealed temper, prior to solution heat treatment.</td></tr>
+                <tr><td colspan="13"><sup>b</sup> Design allowables were based upon data obtained from testing T651 plate and from testing samples of plate, supplied in the O temper, which were heat treated to demonstrate response to heat treatment by suppliers. Properties obtained may be lower than those listed if the material has been formed or otherwise cold worked, particularly in the annealed temper, prior to solution heat treatment.</td></tr>
+                <tr><td colspan="13"><sup>c</sup> Properties for this thickness apply only to T651 temper.</td></tr>
+                <tr><td colspan="13"><sup>d</sup> See Table 3.6.2.0(b<sub>3</sub>).</td></tr>
+              </tfoot>
+            </table>
+          </div>
+
+
+          <div class="hdbk-table-wrap" id="table-3.6.2.0b3">
+            <table class="hdbk-table">
+              <caption>Table 3.6.2.0(b3). Minimum Elongation Values for 6061 Aluminum Alloy Sheet and Plate</caption>
+              <thead><tr><th>Temper and Product</th><th>Thickness, in.</th><th>Elongation (LT), percent</th></tr></thead>
+              <tbody>
+                <tr><td class="td-left">T4 or T42 sheet</td><td>0.010&ndash;0.020</td><td>14</td></tr>
+                <tr><td class="td-left">T4 or T42 sheet</td><td>0.021&ndash;0.249</td><td>16</td></tr>
+                <tr><td class="td-left">T451 plate</td><td>0.250&ndash;1.000</td><td>18</td></tr>
+                <tr><td class="td-left">T451 plate</td><td>1.001&ndash;2.000</td><td>16</td></tr>
+                <tr><td class="td-left">T6 or T62 sheet</td><td>0.010&ndash;0.020</td><td>8</td></tr>
+                <tr><td class="td-left">T6 or T62 sheet</td><td>0.021&ndash;0.249</td><td>10</td></tr>
+                <tr><td class="td-left">T651 or T62 plate</td><td>0.250&ndash;0.499</td><td>10</td></tr>
+                <tr><td class="td-left">T651 or T62 plate</td><td>0.500&ndash;1.000</td><td>9</td></tr>
+                <tr><td class="td-left">T651 or T62 plate</td><td>1.001&ndash;2.000</td><td>8</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="hdbk-table-wrap" id="table-3.6.2.0c1">
+            <table class="hdbk-table">
+              <caption>Table 3.6.2.0(c<sub>1</sub>). Design Mechanical and Physical Properties of 6061 Aluminum Alloy Tube and Pipe</caption>
+              <thead>
+                <tr>
+                  <th style="width:12rem; text-align:left;">Specification</th>
+                  <th>AMS-WW-T-700/6</th><th>AMS-WW-T-700/6</th><th>AMS 4080, AMS 4082, and AMS-WW-T-700/6</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Form</th>
+                  <th colspan="3">Drawn tube</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Temper</th>
+                  <th>T4</th><th>T42<sup>a</sup></th><th>T6<sup>b</sup> and T62</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Wall Thickness, in.</th>
+                  <th>0.025-0.500</th><th>0.025-0.500</th><th>0.025-0.500</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Basis</th>
+                  <th>S</th><th>S</th><th>S</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="prop-section"><td colspan="4" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>30</td><td>30</td><td>42</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>16</td><td>14</td><td>35</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>14</td><td>&middot;&middot;&middot;</td><td>34</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>20</td><td>&middot;&middot;&middot;</td><td>27</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>48</td><td>&middot;&middot;&middot;</td><td>67</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>63</td><td>&middot;&middot;&middot;</td><td>88</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>22</td><td>&middot;&middot;&middot;</td><td>49</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>26</td><td>&middot;&middot;&middot;</td><td>56</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>e</em>, percent:</td></tr>
+                <tr><td class="td-indent">L</td><td><sup>c</sup></td><td><sup>c</sup></td><td><sup>c</sup></td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="3">9.9</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="3">10.1</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="3">3.8</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td colspan="3">0.33</td></tr>
+                <tr class="prop-section"><td colspan="4" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="3">0.098</td></tr>
+                <tr><td class="td-left"><em>C</em>, <em>K</em>, and <em>&alpha;</em></td><td colspan="3">See Figure 3.6.2.0</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="4"><sup>a</sup> Design allowables were based upon data obtained from testing samples of material, supplied in the O temper, which were heat treated to demonstrate response to heat treatment by suppliers. Properties obtained by the user may be lower than those listed if the material has been formed or otherwise cold or hot worked, particularly in the annealed temper, prior to solution heat treatment.</td></tr>
+                <tr><td colspan="4"><sup>b</sup> Design allowables were based upon data obtained from testing T6 temper tube and from testing samples of tube, supplied in the O temper, which were heat treated to demonstrate response to heat treatment by suppliers. Properties obtained by the user may be lower than those listed if the material has been formed or otherwise cold worked, particularly in the annealed temper, prior to solution heat treatment.</td></tr>
+                <tr><td colspan="4"><sup>c</sup> See Table 3.6.2.0(c<sub>2</sub>).</td></tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="hdbk-table-wrap" id="table-3.6.2.0c2">
+            <table class="hdbk-table">
+              <caption>Table 3.6.2.0(c2). Minimum Elongation Values for 6061 Aluminum Alloy Tubing</caption>
+              <thead><tr><th>Temper</th><th>Wall Thickness, in.</th><th>Elongation (L), Full-Section Specimen, percent</th><th>Elongation (L), Cut-Out Specimen, percent</th></tr></thead>
+              <tbody>
+                <tr><td>T4 or T42</td><td>0.025&ndash;0.049</td><td>16</td><td>14</td></tr>
+                <tr><td>T4 or T42</td><td>0.050&ndash;0.259</td><td>18</td><td>16</td></tr>
+                <tr><td>T4 or T42</td><td>0.260&ndash;0.500</td><td>20</td><td>18</td></tr>
+                <tr><td>T6 or T62</td><td>0.025&ndash;0.049</td><td>10</td><td>8</td></tr>
+                <tr><td>T6 or T62</td><td>0.050&ndash;0.259</td><td>12</td><td>10</td></tr>
+                <tr><td>T6 or T62</td><td>0.260&ndash;0.500</td><td>14</td><td>12</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="hdbk-table-wrap" id="table-3.6.2.0d">
+            <table class="hdbk-table">
+              <caption>Table 3.6.2.0(d). Design Mechanical and Physical Properties of 6061 Aluminum Alloy Rolled, Drawn, or Cold-Finished Bar, Rod, and Shapes</caption>
+              <thead>
+                <tr>
+                  <th style="width:12rem; text-align:left;">Specification</th>
+                  <th>AMS 4116 &amp; AMS-QQ-A-225/8</th>
+                  <th>AMS 4128 &amp; AMS-QQ-A-225/8</th>
+                  <th>AMS-QQ-A-225/8</th>
+                  <th>AMS 4117 &amp; AMS-QQ-A-225/8</th>
+                  <th>AMS 4128 &amp; AMS-QQ-A-225/8</th>
+                  <th>AMS 4115, AMS 4116, &amp; AMS-QQ-A-225/8</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Form</th>
+                  <th colspan="6">Rolled, drawn, or cold-finished rod and special shapes</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Temper</th>
+                  <th>T4</th><th>T451</th><th>T42<sup>a</sup></th><th>T6</th><th>T651</th><th>T62<sup>a</sup></th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Cross-Sectional Area, in.<sup>2</sup></th>
+                  <th colspan="6">&le;50</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Thickness, in.</th>
+                  <th>&le;8.000</th><th>0.500-8.000</th><th>&le;8.000</th><th>&le;8.000</th><th>0.500-8.000</th><th>&le;8.000</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Basis</th>
+                  <th>S</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="prop-section"><td colspan="7" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="7" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>30</td><td>30</td><td>30</td><td>42</td><td>42</td><td>42</td></tr>
+                <tr class="prop-group"><td colspan="7" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>16</td><td>16</td><td>14</td><td>35</td><td>35</td><td>35</td></tr>
+                <tr class="prop-group"><td colspan="7" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>14</td><td>14</td><td>&middot;&middot;&middot;</td><td>34</td><td>34</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>20</td><td>20</td><td>&middot;&middot;&middot;</td><td>27</td><td>27</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="7" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>48</td><td>48</td><td>&middot;&middot;&middot;</td><td>67</td><td>67</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>63</td><td>63</td><td>&middot;&middot;&middot;</td><td>88</td><td>88</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="7" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>22</td><td>22</td><td>&middot;&middot;&middot;</td><td>49</td><td>49</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>26</td><td>26</td><td>&middot;&middot;&middot;</td><td>56</td><td>56</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="7" class="td-left"><em>e</em>, percent:</td></tr>
+                <tr><td class="td-indent">L</td><td>18</td><td>18</td><td>18</td><td>10</td><td>10</td><td>10</td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="6">9.9</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="6">10.1</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="6">3.8</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td colspan="6">0.33</td></tr>
+                <tr class="prop-section"><td colspan="7" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="6">0.098</td></tr>
+                <tr><td class="td-left"><em>C</em>, <em>K</em>, and <em>&alpha;</em></td><td colspan="6">See Figure 3.6.2.0</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="7"><sup>a</sup> Design allowables were based upon data obtained from testing samples of material, supplied in the O or F temper, which were heat treated to demonstrate response to heat treatment by suppliers.</td></tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="hdbk-table-wrap" id="table-3.6.2.0e">
+            <table class="hdbk-table">
+              <caption>Table 3.6.2.0(e). Design Mechanical and Physical Properties of 6061 Aluminum Alloy Die Forging</caption>
+              <thead>
+                <tr><th style="width:12rem; text-align:left;">Specification</th><th>AMS 4127, MIL-A-22771, and QQ-A-367</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="td-left">Form</td><td>Die forging</td></tr>
+                <tr><td class="td-left">Temper</td><td>T6 and T652</td></tr>
+                <tr><td class="td-left">Thickness, in.</td><td>&le;4.000<sup>a</sup></td></tr>
+                <tr><td class="td-left">Basis</td><td>S</td></tr>
+                <tr class="prop-section"><td colspan="2" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>38</td></tr>
+                <tr><td class="td-indent">T<sup>b</sup></td><td>38</td></tr>
+                <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>35</td></tr>
+                <tr><td class="td-indent">T<sup>b</sup></td><td>35</td></tr>
+                <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>36</td></tr>
+                <tr><td class="td-indent">T<sup>b</sup></td><td>36</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>25</td></tr>
+                <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>61</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>76</td></tr>
+                <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>54</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>61</td></tr>
+                <tr class="prop-group"><td colspan="2" class="td-left"><em>e</em>, percent:</td></tr>
+                <tr><td class="td-indent">L</td><td>7</td></tr>
+                <tr><td class="td-indent">T<sup>b</sup></td><td>5</td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td>9.9</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td>10.1</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td>3.8</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td>0.33</td></tr>
+                <tr class="prop-section"><td colspan="2" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td>0.098</td></tr>
+                <tr><td class="td-left"><em>C</em>, <em>K</em>, and <em>&alpha;</em></td><td>See Figure 3.6.2.0</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="2"><sup>a</sup> Thickness at the time of heat treatment. When die forgings are machined before heat treatment, the mechanical properties are applicable provided the as-forged thickness is not greater than twice the thickness at the time of heat treatment.</td></tr>
+                <tr><td colspan="2"><sup>b</sup> T indicates any grain direction not within &plusmn;15&deg; of being parallel to the forging flow lines. F<sub>cy</sub>(T) values are based upon short transverse (ST) test data.</td></tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="hdbk-table-wrap" id="table-3.6.2.0f">
+            <table class="hdbk-table">
+              <caption>Table 3.6.2.0(f). Design Mechanical and Physical Properties of 6061 Aluminum Alloy Hand Forging</caption>
+              <thead>
+                <tr>
+                  <th style="width:12rem; text-align:left;">Specification</th>
+                  <th colspan="3">AMS 4127, AMS 4248, AMS-A-22771, and AMS-QQ-A-367</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Form</th>
+                  <th colspan="3">Hand forging</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Temper</th>
+                  <th colspan="3">T6<sup>a</sup> and T652</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Cross-Sectional Area, in.<sup>2</sup></th>
+                  <th colspan="3">&le;256</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Thickness, in.</th>
+                  <th>&le;2.000</th><th>2.001-4.000</th><th>4.001-8.000</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Basis</th>
+                  <th>S</th><th>S</th><th>S</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="prop-section"><td colspan="4" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>38</td><td>38</td><td>37</td></tr>
+                <tr><td class="td-indent">LT</td><td>38</td><td>38</td><td>37</td></tr>
+                <tr><td class="td-indent">ST</td><td>&middot;&middot;&middot;</td><td>37</td><td>35</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>35</td><td>35</td><td>34</td></tr>
+                <tr><td class="td-indent">LT</td><td>35</td><td>35</td><td>34</td></tr>
+                <tr><td class="td-indent">ST</td><td>&middot;&middot;&middot;</td><td>33</td><td>32</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>36</td><td>36</td><td>35</td></tr>
+                <tr><td class="td-indent">LT</td><td>36</td><td>36</td><td>35</td></tr>
+                <tr><td class="td-indent">ST</td><td>&middot;&middot;&middot;</td><td>34</td><td>33</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>25</td><td>25</td><td>24</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>61</td><td>61</td><td>59</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>76</td><td>76</td><td>74</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>54</td><td>54</td><td>53</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>61</td><td>61</td><td>59</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>e</em>, percent:</td></tr>
+                <tr><td class="td-indent">L</td><td>10</td><td>10</td><td>8</td></tr>
+                <tr><td class="td-indent">LT</td><td>8</td><td>8</td><td>6</td></tr>
+                <tr><td class="td-indent">ST</td><td>&middot;&middot;&middot;</td><td>5</td><td>4</td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="3">9.9</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="3">10.1</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="3">3.8</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td colspan="3">0.33</td></tr>
+                <tr class="prop-section"><td colspan="4" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="3">0.098</td></tr>
+                <tr><td class="td-left"><em>C</em>, <em>K</em>, and <em>&alpha;</em></td><td colspan="3">See Figure 3.6.2.0</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="4"><sup>a</sup> When hand forgings are machined before heat treatment, the section thickness at time of heat treatment will determine the minimum mechanical properties as long as the original (as-forged) thickness does not exceed the maximum thickness for the alloy as shown in the table.</td></tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="hdbk-table-wrap" id="table-3.6.2.0g">
+            <table class="hdbk-table">
+              <caption>Table 3.6.2.0(g). Design Mechanical and Physical Properties of 6061 Aluminum Alloy Extruded Rod, Bar, and Shapes</caption>
+              <thead>
+                <tr>
+                  <th style="width:12rem; text-align:left;">Specification</th>
+                  <th>AMS 4161, AMS 4172, &amp; AMS-QQ-A-200/8</th>
+                  <th>AMS-QQ-A-200/8</th>
+                  <th>AMS 4160 &amp; AMS-QQ-A-200/8</th>
+                  <th colspan="2">AMS 4150, AMS 4173 &amp; AMS-QQ-A-200/8</th>
+                  <th colspan="2">AMS 4150, AMS 4173 &amp; AMS-QQ-A-200/8</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Form</th>
+                  <th colspan="7">Extruded rod, bar, and shapes</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Temper</th>
+                  <th>T4, T4510, and T4511</th>
+                  <th>T42<sup>a</sup></th>
+                  <th>T62<sup>a</sup></th>
+                  <th colspan="4">T6, T6510, and T6511</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Cross-Sectional Area, in.<sup>2</sup></th>
+                  <th>&middot;&middot;&middot;</th><th>&middot;&middot;&middot;</th><th>&middot;&middot;&middot;</th><th colspan="4">&le;32</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Thickness,<sup>b</sup> in.</th>
+                  <th>&le;3.000</th><th>All</th><th>All</th><th colspan="2">&le;1.000</th><th colspan="2">1.001-6.500</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Basis</th>
+                  <th>S</th><th>S</th><th>S</th><th>A</th><th>B</th><th>A</th><th>B</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="prop-section"><td colspan="8" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="8" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>26</td><td>26</td><td>38</td><td>38</td><td>41</td><td>38</td><td>41</td></tr>
+                <tr><td class="td-indent">LT</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>37</td><td>40</td><td>33</td><td>35</td></tr>
+                <tr class="prop-group"><td colspan="8" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>16</td><td>12</td><td>35</td><td>35</td><td>38</td><td>35</td><td>38</td></tr>
+                <tr><td class="td-indent">LT</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>33</td><td>36</td><td>28</td><td>31</td></tr>
+                <tr class="prop-group"><td colspan="8" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>14</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>34</td><td>37</td><td>34</td><td>37</td></tr>
+                <tr><td class="td-indent">LT</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>35</td><td>38</td><td>30</td><td>33</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>16</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>26</td><td>28</td><td>19</td><td>21</td></tr>
+                <tr class="prop-group"><td colspan="8" class="td-left"><em>F<sub>bru</sub></em><sup>c</sup>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>42</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>64</td><td>69</td><td>52</td><td>57</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>55</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>82</td><td>88</td><td>69</td><td>74</td></tr>
+                <tr class="prop-group"><td colspan="8" class="td-left"><em>F<sub>bry</sub></em><sup>c</sup>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>22</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>54</td><td>58</td><td>42</td><td>46</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>26</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>60</td><td>65</td><td>50</td><td>55</td></tr>
+                <tr class="prop-group"><td colspan="8" class="td-left"><em>e</em>, percent (S-basis):</td></tr>
+                <tr><td class="td-indent">L</td><td>16</td><td>16</td><td>10<sup>d</sup></td><td>10<sup>d</sup></td><td>&middot;&middot;&middot;</td><td>10</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="7">9.9</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="7">10.1</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="7">3.8</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td colspan="7">0.33</td></tr>
+                <tr class="prop-section"><td colspan="8" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="7">0.098</td></tr>
+                <tr><td class="td-left"><em>C</em>, <em>K</em>, and <em>&alpha;</em></td><td colspan="7">See Figure 3.6.2.0</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="8"><sup>a</sup> Design allowables were based upon data obtained from testing samples of material, supplied in the O to F temper which were heat treated to demonstrate response to heat treatment by suppliers. Properties obtained by the user, however, may be lower than those listed if the material has been formed or otherwise cold or hot worked, particularly in the annealed temper, prior to solution heat treatment.</td></tr>
+                <tr><td colspan="8"><sup>b</sup> The mechanical properties are to be based upon the thickness at the time of quench.</td></tr>
+                <tr><td colspan="8"><sup>c</sup> Bearing values are &ldquo;dry pin&rdquo; values per Section 1.4.7.1.</td></tr>
+                <tr><td colspan="8"><sup>d</sup> For thicknesses &le;0.249 inch, <em>e</em> = 8%.</td></tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="hdbk-figure" id="fig-3.6.2.0">
+            <div class="canvasdiv">
+              <button id="toggle-3620">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-3620');var a=document.createElement('a');a.download='canvas-3620.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-3620').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-3620" class="chartcanvas" role="img" aria-label="Figure 3.6.2.0"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.0.</strong> Effect of temperature on the physical properties of 6061 aluminum alloy.</p>
+          </div>
+        </div><!-- /3.6.2.0 -->
+
+        <div class="section lvl-2" id="3.6.2.1">
+          <div class="section-heading lvl-2"><span class="section-num">3.6.2.1</span>T4, T42, T451, T4510, and T4511 Tempers</div>
+          <p>For effect of temperature on modulus values, use Figure 3.6.2.2.4.</p>
+        </div><!-- /3.6.2.1 -->
+
+        <div class="section lvl-2" id="3.6.2.2">
+          <div class="section-heading lvl-2"><span class="section-num">3.6.2.2</span>T6, T62, T651, T652, T6510, and T6511 Tempers</div>
+          <p>Figures 3.6.2.2.1(a) through (d), 3.6.2.2.4, and 3.6.2.2.5(a) and (b) present elevated-temperature curves for various mechanical properties. Figures 3.6.2.2.6(a) through (k) contain tensile and compression stress-strain curves at room temperature and elevated temperatures, and tangent-modulus curves at room temperature for various products and tempers. Figures 3.6.2.2.6(l) through (o) present full-range tensile stress-strain curves at room temperature for various products and tempers. Figure 3.6.2.2.8 contains unnotched fatigue data for various wrought products at room temperature.</p>
+
+          <div class="hdbk-figure" id="fig-3.6.2.2.1a">
+            <div class="canvasdiv">
+              <button id="toggle-36221a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36221a');var a=document.createElement('a');a.download='canvas-36221a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36221a').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36221a" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.1(a)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.1(a).</strong> Effect of temperature on the tensile ultimate strength (Ftu) of 6061-T6 aluminum alloy (all products).</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.1b">
+            <div class="canvasdiv">
+              <button id="toggle-36221b">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36221b');var a=document.createElement('a');a.download='canvas-36221b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36221b').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36221b" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.1(b)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.1(b).</strong> Effect of temperature on the tensile yield strength (Fty) of 6061-T6 aluminum alloy (all products).</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.1c">
+            <div class="canvasdiv">
+              <button id="toggle-36221c">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36221c');var a=document.createElement('a');a.download='canvas-36221c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36221c').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36221c" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.1(c)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.1(c).</strong> Effect of exposure at elevated temperatures on the room-temperature tensile ultimate strength (Ftu) of 6061-T6 aluminum alloy (all products).</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.1d">
+            <div class="canvasdiv">
+              <button id="toggle-36221d">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36221d');var a=document.createElement('a');a.download='canvas-36221d.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36221d').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36221d" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.1(d)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.1(d).</strong> Effect of exposure at elevated temperatures on the room-temperature tensile yield strength (Fty) of 6061-T6 aluminum alloy (all products).</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.4">
+            <div class="canvasdiv">
+              <button id="toggle-36224">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36224');var a=document.createElement('a');a.download='canvas-36224.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36224').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36224" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.4"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.4.</strong> Effect of temperature on the tensile and compressive moduli (E and Ec) of 6061 aluminum alloy.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.5a">
+            <div class="canvasdiv">
+              <button id="toggle-36225a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36225a');var a=document.createElement('a');a.download='canvas-36225a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36225a').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36225a" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.5(a)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.5(a).</strong> Effect of temperature on the elongation of 6061-T6 aluminum alloy (all products).</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.5b">
+            <div class="canvasdiv">
+              <button id="toggle-36225b">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36225b');var a=document.createElement('a');a.download='canvas-36225b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36225b').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36225b" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.5(b)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.5(b).</strong> Effect of exposure at elevated temperatures on the room-temperature elongation of 6061-T6 aluminum alloy (all products).</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6a">
+            <div class="canvasdiv">
+              <button id="toggle-36226a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226a');var a=document.createElement('a');a.download='canvas-36226a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226a').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226a" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(a)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(a).</strong> Typical tensile stress-strain curves for 6061-T6 aluminum alloy sheet at room temperature. Thickness = 0.249 in.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6b">
+            <div class="canvasdiv">
+              <button id="toggle-36226b">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226b');var a=document.createElement('a');a.download='canvas-36226b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226b').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226b" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(b)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(b).</strong> Typical tensile stress-strain curve for 6061-T6 aluminum alloy sheet at 200&deg;F. Thickness = 0.125 in.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6c">
+            <div class="canvasdiv">
+              <button id="toggle-36226c">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226c');var a=document.createElement('a');a.download='canvas-36226c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226c').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226c" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(c)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(c).</strong> Typical tensile stress-strain curves for 6061-T6 aluminum alloy sheet at 300&deg;F. Thickness = 0.125 in.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6d">
+            <div class="canvasdiv">
+              <button id="toggle-36226d">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226d');var a=document.createElement('a');a.download='canvas-36226d.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226d').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226d" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(d)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(d).</strong> Typical tensile stress-strain curves for 6061-T6 aluminum alloy sheet at 400&deg;F. Thickness = 0.125 in.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6e">
+            <div class="canvasdiv">
+              <button id="toggle-36226e">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226e');var a=document.createElement('a');a.download='canvas-36226e.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226e').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226e" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(e)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(e).</strong> Typical tensile stress-strain curves for 6061-T6 aluminum alloy sheet at 500&deg;F. Thickness = 0.125 in.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6f">
+            <div class="canvasdiv">
+              <button id="toggle-36226f">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226f');var a=document.createElement('a');a.download='canvas-36226f.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226f').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226f" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(f)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(f).</strong> Typical compressive stress-strain and compressive tangent-modulus curves for 6061-T6 aluminum alloy sheet at room temperature. Thickness = 0.249 in.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6g">
+            <div class="canvasdiv">
+              <button id="toggle-36226g">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226g');var a=document.createElement('a');a.download='canvas-36226g.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226g').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226g" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(g)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(g).</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 6061-T6 aluminum alloy sheet at room temperature.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6h">
+            <div class="canvasdiv">
+              <button id="toggle-36226h">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226h');var a=document.createElement('a');a.download='canvas-36226h.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226h').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226h" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(h)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(h).</strong> Typical tensile stress-strain curves for 6061-T6 aluminum alloy extrusion at room temperature. All thicknesses.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6i">
+            <div class="canvasdiv">
+              <button id="toggle-36226i">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226i');var a=document.createElement('a');a.download='canvas-36226i.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226i').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226i" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(i)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(i).</strong> Typical compressive stress-strain and compressive tangent-modulus curves for 6061-T6 aluminum alloy extrusion at room temperature. All thicknesses.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6j">
+            <div class="canvasdiv">
+              <button id="toggle-36226j">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226j');var a=document.createElement('a');a.download='canvas-36226j.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226j').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226j" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(j)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(j).</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 6061-T651X aluminum alloy extrusion at room temperature. Thickness = 0.499 in.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6k">
+            <div class="canvasdiv">
+              <button id="toggle-36226k">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226k');var a=document.createElement('a');a.download='canvas-36226k.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226k').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226k" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(k)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(k).</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 6061-T651X aluminum alloy extrusion at room temperature. Thickness = 3.000 in.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6l">
+            <div class="canvasdiv">
+              <button id="toggle-36226l">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226l');var a=document.createElement('a');a.download='canvas-36226l.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226l').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226l" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(l)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(l).</strong> Typical tensile stress-strain curve (full range) for 6061-T6 aluminum alloy sheet at room temperature.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6m">
+            <div class="canvasdiv">
+              <button id="toggle-36226m">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226m');var a=document.createElement('a');a.download='canvas-36226m.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226m').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226m" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(m)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(m).</strong> Typical tensile stress-strain curves (full range) for 6061-T62 aluminum alloy extrusion at room temperature. All thicknesses.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6n">
+            <div class="canvasdiv">
+              <button id="toggle-36226n">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226n');var a=document.createElement('a');a.download='canvas-36226n.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226n').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226n" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(n)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(n).</strong> Typical tensile stress-strain curves (full range) for 6061-T651X aluminum alloy extrusion at room temperature. Thickness &le; 0.499 in.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.6o">
+            <div class="canvasdiv">
+              <button id="toggle-36226o">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36226o');var a=document.createElement('a');a.download='canvas-36226o.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36226o').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36226o" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.6(o)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.6(o).</strong> Typical tensile stress-strain curves (full range) for 6061-T651X aluminum alloy extrusion at room temperature. Thickness = 3.000 in.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.6.2.2.8">
+            <div class="canvasdiv">
+              <button id="toggle-36228">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-36228');var a=document.createElement('a');a.download='canvas-36228.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-36228').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-36228" class="chartcanvas" role="img" aria-label="Figure 3.6.2.2.8"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.2.2.8.</strong> Best-fit S/N curves for unnotched 6061-T6 aluminum alloy, various wrought products, longitudinal direction.</p>
+            <p class="chart-note">Stresses are based on net section.</p>
+
+            <table class="corr-info-table">
+              <tbody>
+                <tr>
+                  <td colspan="2" class="corr-title">Correlative Information for Figure 3.6.2.2.8</td>
+                </tr>
+                <tr>
+                  <td style="width:50%;">
+                    <p><span class="corr-label">Product Form:</span> Drawn rod, 0.75 inch diameter; rolled bar, 1 x 7.5 inch</p>
+                    <p>
+                      <span class="corr-label">Properties:</span>
+                      <table style="display:inline-table; border:none; background:transparent; margin:2px 0 6px 1rem; font-size:inherit;">
+                        <tbody>
+                          <tr>
+                            <td style="border:none;background:transparent;padding:0 16px 0 0;text-decoration:underline;">TUS, ksi</td>
+                            <td style="border:none;background:transparent;padding:0 16px 0 0;text-decoration:underline;">TYS, ksi</td>
+                            <td style="border:none;background:transparent;padding:0;text-decoration:underline;">Temp., &deg;F</td>
+                          </tr>
+                          <tr>
+                            <td style="border:none;background:transparent;padding:0 16px 0 0;text-align:center;">45</td>
+                            <td style="border:none;background:transparent;padding:0 16px 0 0;text-align:center;">40</td>
+                            <td style="border:none;background:transparent;padding:0;text-align:center;">RT</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </p>
+                    <p>
+                      <span class="corr-label">Specimen Details:</span> Unnotched<br>
+                      <span class="corr-indent">0.200 inch net diameter</span>
+                    </p>
+                    <p><span class="corr-label">Surface Condition:</span> Not specified</p>
+                    <p><span class="corr-label">Reference:</span> 3.2.1.1.8(a)</p>
+                    <p>[Caution: The equivalent stress model may provide unrealistic life predictions for stress ratios beyond those represented above.]</p>
+                  </td>
+                  <td style="width:50%;">
+                    <p>
+                      <span class="corr-label">Test Parameters:</span><br>
+                      Loading - Axial<br>
+                      Frequency - 2000 cpm<br>
+                      Temperature - RT<br>
+                      Environment - Air
+                    </p>
+                    <p><span class="corr-label">No. of Heats/Lots:</span> Not specified</p>
+                    <p>
+                      <span class="corr-label">Equivalent Stress Equation:</span><br>
+                      Log N<sub>f</sub> = 20.68&minus;9.84 log (S<sub>eq</sub>)<br>
+                      S<sub>eq</sub> = S<sub>max</sub> (1&minus;R)<sup>0.63</sup><br>
+                      Std. Error of Estimate, Log (Life) = 0.48<br>
+                      Standard Deviation, Log (Life) = 1.18<br>
+                      R<sup>2</sup> = 83%
+                    </p>
+                    <p><span class="corr-label">Sample Size</span> = 55</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div><!-- /3.6.2.2 -->
+        </div><!-- /3.6.2 -->
+
+        <div class="section lvl-1" id="3.6.3">
+          <div class="section-heading lvl-1"><span class="section-num">3.6.3</span>6151 Alloy</div>
+<div class="section lvl-2" id="3.6.3.0">
+          <div class="section-heading lvl-2"><span class="section-num">3.6.3.0</span>Comments and Properties</div>
+          <p>6151 is an Al-Mg-Si alloy whose use has been restricted primarily to die forgings. It provides higher strengths than attainable with 6061, and has high resistance to corrosion. Refer to Section 3.1.3.4 for comments regarding the weldability of the alloy.</p>
+          <p>Material specifications for 6151 aluminum alloy are presented in Table 3.6.3.0(a). Room-temperature mechanical and physical properties are shown in Table 3.6.3.0(b). The effect of temperature on thermal expansion is shown in Figure 3.6.3.0.</p>
+
+          <div class="hdbk-table-wrap" id="table-3.6.3.0a">
+            <table class="hdbk-table">
+              <caption>Table 3.6.3.0(a). Material Specifications for 6151 Aluminum Alloy</caption>
+              <thead><tr><th>Specification</th><th>Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS 4125</td><td class="td-left">Die forging</td></tr>
+                <tr><td>AMS-A-22771</td><td class="td-left">Forging</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The temper index for 6151 is as follows:</p>
+          <ul>
+            <li>3.6.3.1 &mdash; T6</li>
+          </ul>
+
+          <div class="hdbk-table-wrap" id="table-3.6.3.0b">
+            <table class="hdbk-table">
+              <caption>Table 3.6.3.0(b). Design Mechanical and Physical Properties of 6151 Aluminum Alloy Die Forging</caption>
+              <thead>
+                <tr><th style="width:12rem; text-align:left;">Specification</th><th>AMS 4125 and AMS-A-22771</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="td-left">Form</td><td>Die forging</td></tr>
+                <tr><td class="td-left">Temper</td><td>T6</td></tr>
+                <tr><td class="td-left">Thickness<sup>a</sup>, in.</td><td>&le;4.000</td></tr>
+                <tr><td class="td-left">Basis</td><td>S</td></tr>
+                <tr class="prop-section"><td colspan="2" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>44</td></tr>
+                <tr><td class="td-indent">T<sup>b</sup></td><td>44</td></tr>
+                <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>37</td></tr>
+                <tr><td class="td-indent">T<sup>b</sup></td><td>37</td></tr>
+                <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>39</td></tr>
+                <tr><td class="td-indent">T<sup>b</sup></td><td>35</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>28</td></tr>
+                <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="2" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="2" class="td-left"><em>e</em>, percent:</td></tr>
+                <tr><td class="td-indent">L</td><td>10</td></tr>
+                <tr><td class="td-indent">T<sup>b</sup></td><td>6</td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td>10.1</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td>10.3</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td>3.85</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td>0.33</td></tr>
+                <tr class="prop-section"><td colspan="2" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td>0.098</td></tr>
+                <tr><td class="td-left"><em>C</em>, Btu/(lb)(&deg;F)</td><td>0.23 (at 212&deg;F)</td></tr>
+                <tr><td class="td-left"><em>K</em>, Btu/[(hr)(ft<sup>2</sup>)(&deg;F)/ft]</td><td>100 (at 77&deg;F)</td></tr>
+                <tr><td class="td-left"><em>&alpha;</em>, 10<sup>-6</sup> in./in./&deg;F</td><td>See Figure 3.6.3.0</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="2"><sup>a</sup> Thickness at the time of heat treatment. When die forgings are machined before heat treatment, the mechanical properties are applicable provided the as-forged thickness is not greater than twice the thickness at the time of heat treatment.</td></tr>
+                <tr><td colspan="2"><sup>b</sup> T indicates any grain direction not within &plusmn;15&deg; of being parallel to the forging flow lines.</td></tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="hdbk-figure" id="fig-3.6.3.0">
+            <div class="canvasdiv">
+              <button id="toggle-3630">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-3630');var a=document.createElement('a');a.download='canvas-3630.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-3630').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-3630" class="chartcanvas" role="img" aria-label="Figure 3.6.3.0"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.6.3.0.</strong> Effect of temperature on the thermal expansion of 6151 aluminum alloy.</p>
+          </div>
+        </div><!-- /3.6.3.0 -->
+
+        <div class="section lvl-2" id="3.6.3.1">
+          <div class="section-heading lvl-2"><span class="section-num">3.6.3.1</span>T6 Temper</div>
+          <p>Elevated-temperature modulus data from Figure 3.6.2.2.4 (6061 alloy) may be used for this alloy.</p>
+        </div><!-- /3.6.3.1 -->
+        </div><!-- /3.6.3 -->
+      </div>
+    </div>
+  </section>
+
+      <section class="mt-3">
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Other MIL-HDBK-5 Chapters</div>
+            </div>
+            <div class="mx-auto mt-3 mb-4 text-center" style="max-width:820px;">
+              <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                <a href="Chapter2(steel).html" class="custom-link custom-btn btn d-inline-block">Chapter 2 (Steel)</a>
+                <a href="Chapter4(magnesium).html" class="custom-link custom-btn btn d-inline-block">Chapter 4 (Magnesium)</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <section class="mt-5 pt-3">
+      <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+        <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+          <div class="d-flex align-items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+            <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+          </div>          <!-- Citation format tabs -->
+          <style>
+            #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+            #citationTabs li { margin: 0; list-style: none; }
+            #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+            #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+            #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+          </style>
+          <div class="tab-content mt-2 mb-3" id="citationTabContent">
+            <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+              <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+              <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+              <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+              <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+          </div>
+          <ul id="citationTabs" class="nav" role="tablist">
+            <li role="presentation">
+              <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="site-footer"></footer>
+  <script src="js/footer.js"></script>
+
+  <script>
+function initLightbox() {
+  const overlay  = document.getElementById('lightboxOverlay');
+  const img      = document.getElementById('lightboxImg');
+  const caption  = document.getElementById('lightboxCaption');
+  const closeBtn = document.getElementById('lightboxClose');
+
+  if (!overlay) return;
+
+  function openLightbox(src, alt, captionText) {
+    img.src             = src;
+    img.alt             = alt || '';
+    caption.textContent = captionText || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    img.src = '';
+  }
+
+  document.addEventListener('click', e => {
+    const target = e.target.closest('.ref-zoomable');
+    if (!target) return;
+    const figLabel = target.closest('.ref-fig')
+      ?.querySelector('.ref-fig-label')
+      ?.textContent ?? '';
+    openLightbox(target.src, target.alt, figLabel);
+  });
+
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeLightbox();
+  });
+
+  closeBtn.addEventListener('click', closeLightbox);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initLightbox);
+  </script>
+
+  </body>
+</html>

@@ -32,6 +32,7 @@
 
         <div class="footerRow">
           <h4 class="FooterRowTitle"><span class="footerflexbox">Jet Fuel</span></h4>
+          <div class="footerlink"><a href="JetFuelPropertiesGeneral.html">General Properties</a></div>
           <div class="footerlink"><a href="nominalDensity.html">Nominal Density</a></div>
           <div class="footerlink"><a href="minmaxDensity.html">Min/Max Density</a></div>
           <div class="footerlink"><a href="kinematicViscosity.html">Viscosity</a></div>
@@ -146,7 +147,21 @@
           <div class="footerlink"><a href="Chapter2.5(steel).html" class="ms-4">2.5 (High Alloy Steels)</a></div>
           <div class="footerlink"><a href="Chapter2.6(steel).html" class="ms-4">2.6 (Precipitation Hardening Stainless Steel)</a></div>
           <div class="footerlink"><a href="Chapter2.7(steel).html" class="ms-4">2.7 (Austenitic Stainless Steels)</a></div>
+          <div class="footerlink"><a href="Chapter2.8(steel).html" class="ms-4">2.8 (Element Properties)</a></div>
           <div class="footerlink"><a href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a></div>
+          <div class="footerlink"><a href="Chapter3.1(general-aluminum).html" class="ms-4">3.1 (General)</a></div>
+          <div class="footerlink"><a href="Chapter3.2(aluminum).html" class="ms-4">3.2 (2000 Series Wrought Alloys)</a></div>
+          <div class="footerlink"><a href="Chapter3.5(aluminum).html" class="ms-4">3.5 (5000 Series Wrought Alloys)</a></div>
+          <div class="footerlink"><a href="Chapter3.6(aluminum).html" class="ms-4">3.6 (6000 Series Wrought Alloys)</a></div>
+          <div class="footerlink"><a href="Chapter3.7(aluminum).html" class="ms-4">3.7 (7000 Series Wrought Alloys)</a></div>
+          <div class="footerlink"><a href="Chapter3.8(aluminum).html" class="ms-4">3.8 (200.0 Series Cast Alloys)</a></div>
+          <div class="footerlink"><a href="Chapter3.9(aluminum).html" class="ms-4">3.9 (300.0 Series Cast Alloys)</a></div>
+          <div class="footerlink"><a href="Chapter3.10(element-properties-aluminum).html" class="ms-4">3.10 (Element Properties)</a></div>
+          <div class="footerlink"><a href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a></div>
+          <div class="footerlink"><a href="Chapter4.1(general-magnesium).html" class="ms-4">4.1 (General)</a></div>
+          <div class="footerlink"><a href="Chapter4.2(magnesium).html" class="ms-4">4.2 (Magnesium-Wrought Alloys)</a></div>
+          <div class="footerlink"><a href="Chapter4.3(magnesium).html" class="ms-4">4.3 (Magnesium Cast Alloys)</a></div>
+          <div class="footerlink"><a href="Chapter4.4(element-properties-magnesium).html" class="ms-4">4.4 (Element Properties)</a></div>
         </div>
 
         <div class="footerRow">

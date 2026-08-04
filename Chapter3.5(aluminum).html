@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KasperCalc: MIL-HDBK-5 3.5 5000 Series Wrought Alloys</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, MIL-HDBK-5, aluminum, 5052 Alloy, mechanical properties, MMPDS" />
+    <meta name="description" content="MIL-HDBK-5 Chapter 3 Section 3.5 -- 5000 Series Wrought Alloys." />
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/mil-hdbk-5.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script>
+(function(){
+  var h = location.hostname;
+  var isLocal = !h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1' || /\.local$/i.test(h) || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+  if (isLocal) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+  gtag('js', new Date());
+  gtag('config', 'G-5XLCN0GJQ0');
+})();
+</script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <!-- Chart.js + HdbkUtil for interactive figures -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="js/hdbkUtil.js"></script>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandltNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                  <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+    <!-- MAIN -->
+    <main data-pagefind-body>
+
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">MIL-HDBK-5: Chapter 3.5<br>5000 Series Wrought Alloys</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+  <section class="col-11 mx-auto">
+    <div class="csscontainer">
+      <div class="wrapper">
+        <div class="header fs-4">MIL-HDBK-5: Chapter 3.5 &mdash; 5000 Series Wrought Alloys</div>
+        <div class="row">
+          <div class="col-half" style="flex: 1 1 400px;">
+            <div class="group">
+              <span class="section-title-TOC">Aluminum Alloy Index</span>
+              <div class="list-container">
+                <a href="Chapter3(aluminum).html" class="quick-link"><span class="quick-num">&#8226;</span><span class="quick-title">Aluminum Alloy Index</span></a>
+                <a href="Chapter3.1(general-aluminum).html" class="quick-link"><span class="quick-num">3.1</span><span class="quick-title">General</span></a>
+                <a href="Chapter3.2(aluminum).html" class="quick-link"><span class="quick-num">3.2</span><span class="quick-title">2000 Series Wrought Alloys</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.1" class="quick-link quick-sub2"><span class="quick-num">3.2.1</span><span class="quick-title">2014 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.2" class="quick-link quick-sub2"><span class="quick-num">3.2.2</span><span class="quick-title">2017 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.3" class="quick-link quick-sub2"><span class="quick-num">3.2.3</span><span class="quick-title">2024 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.4" class="quick-link quick-sub2"><span class="quick-num">3.2.4</span><span class="quick-title">2025 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.5" class="quick-link quick-sub2"><span class="quick-num">3.2.5</span><span class="quick-title">2026 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.6" class="quick-link quick-sub2"><span class="quick-num">3.2.6</span><span class="quick-title">2090 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.7" class="quick-link quick-sub2"><span class="quick-num">3.2.7</span><span class="quick-title">2124 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.8" class="quick-link quick-sub2"><span class="quick-num">3.2.8</span><span class="quick-title">2219 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.9" class="quick-link quick-sub2"><span class="quick-num">3.2.9</span><span class="quick-title">2297 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.10" class="quick-link quick-sub2"><span class="quick-num">3.2.10</span><span class="quick-title">2424 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.11" class="quick-link quick-sub2"><span class="quick-num">3.2.11</span><span class="quick-title">2519 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.12" class="quick-link quick-sub2"><span class="quick-num">3.2.12</span><span class="quick-title">2524 Alloy</span></a>
+                <a href="Chapter3.2(aluminum).html#3.2.13" class="quick-link quick-sub2"><span class="quick-num">3.2.13</span><span class="quick-title">2618 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html" class="quick-link active-section"><span class="quick-num">3.5</span><span class="quick-title">5000 Series Wrought Alloys</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.1" class="quick-link quick-sub2"><span class="quick-num">3.5.1</span><span class="quick-title">5052 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.2" class="quick-link quick-sub2"><span class="quick-num">3.5.2</span><span class="quick-title">5083 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.3" class="quick-link quick-sub2"><span class="quick-num">3.5.3</span><span class="quick-title">5086 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.4" class="quick-link quick-sub2"><span class="quick-num">3.5.4</span><span class="quick-title">5454 Alloy</span></a>
+                <a href="Chapter3.5(aluminum).html#3.5.5" class="quick-link quick-sub2"><span class="quick-num">3.5.5</span><span class="quick-title">5456 Alloy</span></a>
+                <a href="Chapter3.6(aluminum).html" class="quick-link"><span class="quick-num">3.6</span><span class="quick-title">6000 Series Wrought Alloys</span></a>
+                <a href="Chapter3.6(aluminum).html#3.6.1" class="quick-link quick-sub2"><span class="quick-num">3.6.1</span><span class="quick-title">6013 Alloy</span></a>
+                <a href="Chapter3.6(aluminum).html#3.6.2" class="quick-link quick-sub2"><span class="quick-num">3.6.2</span><span class="quick-title">6061 Alloy</span></a>
+                <a href="Chapter3.6(aluminum).html#3.6.3" class="quick-link quick-sub2"><span class="quick-num">3.6.3</span><span class="quick-title">6151 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html" class="quick-link"><span class="quick-num">3.7</span><span class="quick-title">7000 Series Wrought Alloys</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.1" class="quick-link quick-sub2"><span class="quick-num">3.7.1</span><span class="quick-title">7010 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.2" class="quick-link quick-sub2"><span class="quick-num">3.7.2</span><span class="quick-title">7040 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.3" class="quick-link quick-sub2"><span class="quick-num">3.7.3</span><span class="quick-title">7049/7149 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.4" class="quick-link quick-sub2"><span class="quick-num">3.7.4</span><span class="quick-title">7050 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.5" class="quick-link quick-sub2"><span class="quick-num">3.7.5</span><span class="quick-title">7055 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.6" class="quick-link quick-sub2"><span class="quick-num">3.7.6</span><span class="quick-title">7075 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.7" class="quick-link quick-sub2"><span class="quick-num">3.7.7</span><span class="quick-title">7150 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.8" class="quick-link quick-sub2"><span class="quick-num">3.7.8</span><span class="quick-title">7175 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.9" class="quick-link quick-sub2"><span class="quick-num">3.7.9</span><span class="quick-title">7249 Alloy</span></a>
+                <a href="Chapter3.7(aluminum).html#3.7.10" class="quick-link quick-sub2"><span class="quick-num">3.7.10</span><span class="quick-title">7475 Alloy</span></a>
+                <a href="Chapter3.8(aluminum).html" class="quick-link"><span class="quick-num">3.8</span><span class="quick-title">200.0 Series Cast Alloys</span></a>
+                <a href="Chapter3.8(aluminum).html#3.8.1" class="quick-link quick-sub2"><span class="quick-num">3.8.1</span><span class="quick-title">A201.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html" class="quick-link"><span class="quick-num">3.9</span><span class="quick-title">300.0 Series Cast Alloys</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.1" class="quick-link quick-sub2"><span class="quick-num">3.9.1</span><span class="quick-title">354.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.2" class="quick-link quick-sub2"><span class="quick-num">3.9.2</span><span class="quick-title">355.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.3" class="quick-link quick-sub2"><span class="quick-num">3.9.3</span><span class="quick-title">C355.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.4" class="quick-link quick-sub2"><span class="quick-num">3.9.4</span><span class="quick-title">356.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.5" class="quick-link quick-sub2"><span class="quick-num">3.9.5</span><span class="quick-title">A356.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.6" class="quick-link quick-sub2"><span class="quick-num">3.9.6</span><span class="quick-title">A357.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.7" class="quick-link quick-sub2"><span class="quick-num">3.9.7</span><span class="quick-title">D357.0 Alloy</span></a>
+                <a href="Chapter3.9(aluminum).html#3.9.8" class="quick-link quick-sub2"><span class="quick-num">3.9.8</span><span class="quick-title">359.0 Alloy</span></a>
+                <a href="Chapter3.10(element-properties-aluminum).html" class="quick-link"><span class="quick-num">3.10</span><span class="quick-title">Element Properties</span></a>
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Chapter 3.5 Contents</span>
+              <div>
+                <a href="#3.5" class="quick-link"><span class="quick-num">3.5</span><span class="quick-title">5000 Series Wrought Alloys</span></a>
+                <a href="#3.5.1" class="quick-link quick-sub"><span class="quick-num">3.5.1</span><span class="quick-title">5052 Alloy</span></a>
+                <a href="#3.5.1.0" class="quick-link quick-sub2"><span class="quick-num">3.5.1.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#3.5.1.1" class="quick-link quick-sub2"><span class="quick-num">3.5.1.1</span><span class="quick-title">O Temper</span></a>
+                <a href="#3.5.1.2" class="quick-link quick-sub2"><span class="quick-num">3.5.1.2</span><span class="quick-title">H32 Temper</span></a>
+                <a href="#3.5.1.3" class="quick-link quick-sub2"><span class="quick-num">3.5.1.3</span><span class="quick-title">H34 Temper</span></a>
+                <a href="#3.5.1.4" class="quick-link quick-sub2"><span class="quick-num">3.5.1.4</span><span class="quick-title">H36 Temper</span></a>
+                <a href="#3.5.1.5" class="quick-link quick-sub2"><span class="quick-num">3.5.1.5</span><span class="quick-title">H38 Temper</span></a>
+              
+                <a href="#3.5.2" class="quick-link quick-sub"><span class="quick-num">3.5.2</span><span class="quick-title">5083 Alloy</span></a>
+                <a href="#3.5.2.0" class="quick-link quick-sub2"><span class="quick-num">3.5.2.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#3.5.2.1" class="quick-link quick-sub2"><span class="quick-num">3.5.2.1</span><span class="quick-title">O Temper</span></a>
+              
+                <a href="#3.5.3" class="quick-link quick-sub"><span class="quick-num">3.5.3</span><span class="quick-title">5086 Alloy</span></a>
+                <a href="#3.5.3.0" class="quick-link quick-sub2"><span class="quick-num">3.5.3.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#3.5.3.1" class="quick-link quick-sub2"><span class="quick-num">3.5.3.1</span><span class="quick-title">O Temper</span></a>
+                <a href="#3.5.3.2" class="quick-link quick-sub2"><span class="quick-num">3.5.3.2</span><span class="quick-title">H32 Temper</span></a>
+                <a href="#3.5.3.3" class="quick-link quick-sub2"><span class="quick-num">3.5.3.3</span><span class="quick-title">H34 Temper</span></a>
+                <a href="#3.5.3.4" class="quick-link quick-sub2"><span class="quick-num">3.5.3.4</span><span class="quick-title">H36 Temper</span></a>
+                <a href="#3.5.3.5" class="quick-link quick-sub2"><span class="quick-num">3.5.3.5</span><span class="quick-title">H38 Temper</span></a>
+                <a href="#3.5.3.6" class="quick-link quick-sub2"><span class="quick-num">3.5.3.6</span><span class="quick-title">H111 Temper</span></a>
+                <a href="#3.5.3.7" class="quick-link quick-sub2"><span class="quick-num">3.5.3.7</span><span class="quick-title">H112 Temper</span></a>
+              
+                <a href="#3.5.4" class="quick-link quick-sub"><span class="quick-num">3.5.4</span><span class="quick-title">5454 Alloy</span></a>
+                <a href="#3.5.4.0" class="quick-link quick-sub2"><span class="quick-num">3.5.4.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#3.5.4.1" class="quick-link quick-sub2"><span class="quick-num">3.5.4.1</span><span class="quick-title">O Temper</span></a>
+                <a href="#3.5.4.2" class="quick-link quick-sub2"><span class="quick-num">3.5.4.2</span><span class="quick-title">H32 Temper</span></a>
+                <a href="#3.5.4.3" class="quick-link quick-sub2"><span class="quick-num">3.5.4.3</span><span class="quick-title">H34 Temper</span></a>
+              
+                <a href="#3.5.5" class="quick-link quick-sub"><span class="quick-num">3.5.5</span><span class="quick-title">5456 Alloy</span></a>
+                <a href="#3.5.5.0" class="quick-link quick-sub2"><span class="quick-num">3.5.5.0</span><span class="quick-title">Comments and Properties</span></a>
+                <a href="#3.5.5.1" class="quick-link quick-sub2"><span class="quick-num">3.5.5.1</span><span class="quick-title">O Temper</span></a>
+                <a href="#3.5.5.2" class="quick-link quick-sub2"><span class="quick-num">3.5.5.2</span><span class="quick-title">H111 Temper</span></a>
+                <a href="#3.5.5.3" class="quick-link quick-sub2"><span class="quick-num">3.5.5.3</span><span class="quick-title">H112 Temper</span></a>
+                <a href="#3.5.5.4" class="quick-link quick-sub2"><span class="quick-num">3.5.5.4</span><span class="quick-title">H321 Temper</span></a>
+              
+              </div>
+            </div>
+          </div>
+          <div class="col-half" style="flex: 1 1 220px;">
+            <div class="group">
+              <span class="section-title-TOC">Navigate to Section</span>
+              <div class="d-flex flex-column gap-2 mt-2">
+                  <a href="Chapter1(general).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 1 &mdash; General
+                  </a>
+                  <a href="Chapter2(steel).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 2 &mdash; Steel
+                  </a>
+                  <a href="Chapter3(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 3 &mdash; Aluminum
+                  </a>
+                  <a href="Chapter3.1(general-aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.1 &mdash; General
+                  </a>
+                  <a href="Chapter3.2(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.2 &mdash; 2000 Series Wrought Alloys
+                  </a>
+                  <a href="Chapter3.5(aluminum).html" class="tbtn active-section">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.5 &mdash; 5000 Series Wrought Alloys
+                  </a>
+                  <a href="Chapter3.6(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.6 &mdash; 6000 Series Wrought Alloys
+                  </a>
+                  <a href="Chapter3.7(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.7 &mdash; 7000 Series Wrought Alloys
+                  </a>
+                  <a href="Chapter3.8(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.8 &mdash; 200.0 Series Cast Alloys
+                  </a>
+                  <a href="Chapter3.9(aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.9 &mdash; 300.0 Series Cast Alloys
+                  </a>
+                  <a href="Chapter3.10(element-properties-aluminum).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    3.10 &mdash; Element Properties
+                  </a>
+                  <a href="Chapter4(magnesium).html" class="tbtn">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Chapter 4 &mdash; Magnesium
+                  </a>
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Disclaimer</span>
+              <div class="disclaimer-bar">
+                <p><strong>For reference use only.</strong> The formulas, graphs, and values herein are provided in good faith for general engineering guidance. Please verify all data against MIL-HDBK-5J or the applicable superseding document (MMPDS).</p>
+              </div>
+              <div style="margin-top: 6px;">
+                <button class="tbtn" onclick="window.open('/downloadable/MIL-HDBK-5J-1.pdf', '_blank')" aria-label="Download MIL-HDBK-5 reference document">
+                  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  MIL-HDBK-5
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-11 mx-auto">
+    <div class="csscontainer">
+      <div class="wrapper">
+        <div class="header fs-4">Figures and Tables</div>
+        <div class="row">
+          <div class="col-half">
+            <div class="group">
+              <span class="section-title-TOC">Table of Tables</span>
+              <div>
+                <a href="#table-3.5.1.0a" class="fig-link"><span class="fig-badge">Table 3.5.1.0(a)</span><span class="fig-title">Material Specifications for 5052 Aluminum Alloy</span></a>
+                <a href="#table-3.5.1.0b1" class="fig-link"><span class="fig-badge">Table 3.5.1.0(b1)</span><span class="fig-title">Design Mechanical and Physical Properties of 5052 Aluminum Alloy Sheet and Plate</span></a>
+                <a href="#table-3.5.1.0b2" class="fig-link"><span class="fig-badge">Table 3.5.1.0(b2)</span><span class="fig-title">Minimum Elongation Values for 5052 Aluminum Alloy Sheet and Plate</span></a>
+                <a href="#table-3.5.2.0a" class="fig-link"><span class="fig-badge">Table 3.5.2.0(a)</span><span class="fig-title">Material Specifications for 5083 Aluminum Alloy</span></a>
+                <a href="#table-3.5.2.0b" class="fig-link"><span class="fig-badge">Table 3.5.2.0(b)</span><span class="fig-title">Design Mechanical and Physical Properties of 5083 Aluminum Alloy Sheet and Plate</span></a>
+                <a href="#table-3.5.2.0c" class="fig-link"><span class="fig-badge">Table 3.5.2.0(c)</span><span class="fig-title">Design Mechanical and Physical Properties of 5083 Aluminum Alloy Extrusion</span></a>
+                <a href="#table-3.5.3.0a" class="fig-link"><span class="fig-badge">Table 3.5.3.0(a)</span><span class="fig-title">Material Specifications for 5086 Aluminum Alloy</span></a>
+                <a href="#table-3.5.3.0b" class="fig-link"><span class="fig-badge">Table 3.5.3.0(b)</span><span class="fig-title">Design Mechanical and Physical Properties of 5086 Aluminum Alloy Sheet, Plate, and Extrusion</span></a>
+                <a href="#table-3.5.3.0c" class="fig-link"><span class="fig-badge">Table 3.5.3.0(c)</span><span class="fig-title">Minimum Elongation Values for 5086 Aluminum Alloy Sheet and Plate</span></a>
+                <a href="#table-3.5.4.0a" class="fig-link"><span class="fig-badge">Table 3.5.4.0(a)</span><span class="fig-title">Material Specifications for 5454 Aluminum Alloy</span></a>
+                <a href="#table-3.5.4.0b" class="fig-link"><span class="fig-badge">Table 3.5.4.0(b)</span><span class="fig-title">Design Mechanical and Physical Properties of 5454 Aluminum Alloy Sheet, Plate, and Extrusion</span></a>
+                <a href="#table-3.5.4.0c" class="fig-link"><span class="fig-badge">Table 3.5.4.0(c)</span><span class="fig-title">Minimum Elongation Values for 5454 Aluminum Alloy Sheet and Plate</span></a>
+                <a href="#table-3.5.5.0a" class="fig-link"><span class="fig-badge">Table 3.5.5.0(a)</span><span class="fig-title">Material Specifications for 5456 Aluminum Alloy</span></a>
+                <a href="#table-3.5.5.0b" class="fig-link"><span class="fig-badge">Table 3.5.5.0(b)</span><span class="fig-title">Design Mechanical and Physical Properties of 5456 Aluminum Alloy Sheet and Plate</span></a>
+                <a href="#table-3.5.5.0c" class="fig-link"><span class="fig-badge">Table 3.5.5.0(c)</span><span class="fig-title">Design Mechanical and Physical Properties of 5456 Aluminum Alloy Extrusion</span></a>
+              </div>
+            </div>
+            <div class="group">
+              <span class="section-title-TOC">Table of Figures</span>
+              <div>
+                <a href="#fig-3.5.1.0" class="fig-link"><span class="fig-badge">Fig 3.5.1.0</span><span class="fig-title">Effect of temperature on the physical properties of 5052 aluminum alloy.</span></a>
+                <a href="#fig-3.5.1.1.1" class="fig-link"><span class="fig-badge">Fig 3.5.1.1.1</span><span class="fig-title">Effect of temperature on the tensile ultimate strength (Ftu) and the tensile yield strength (Fty) of 5052-O aluminum alloy (all products).</span></a>
+                <a href="#fig-3.5.1.1.4" class="fig-link"><span class="fig-badge">Fig 3.5.1.1.4</span><span class="fig-title">Effect of temperature on the tensile and compressive moduli (E and Ec) of 5052-O aluminum alloy (all products).</span></a>
+                <a href="#fig-3.5.1.1.5" class="fig-link"><span class="fig-badge">Fig 3.5.1.1.5</span><span class="fig-title">Effect of temperature on the elongation of 5052-O aluminum alloy (all products).</span></a>
+                <a href="#fig-3.5.1.3.1a" class="fig-link"><span class="fig-badge">Fig 3.5.1.3.1(a)</span><span class="fig-title">Effect of temperature on the tensile ultimate strength (Ftu) of 5052-H34 aluminum alloy sheet and plate.</span></a>
+                <a href="#fig-3.5.1.3.1b" class="fig-link"><span class="fig-badge">Fig 3.5.1.3.1(b)</span><span class="fig-title">Effect of temperature on the tensile yield strength (Fty) of 5052-H34 aluminum alloy sheet and plate.</span></a>
+                <a href="#fig-3.5.1.3.1c" class="fig-link"><span class="fig-badge">Fig 3.5.1.3.1(c)</span><span class="fig-title">Effect of exposure at elevated temperatures on the room-temperature tensile ultimate strength (Ftu) of 5052-H34 aluminum alloy sheet and plate.</span></a>
+                <a href="#fig-3.5.1.3.1d" class="fig-link"><span class="fig-badge">Fig 3.5.1.3.1(d)</span><span class="fig-title">Effect of exposure at elevated temperatures on the room-temperature tensile yield strength (Fty) of 5052-H34 aluminum alloy sheet and plate.</span></a>
+                <a href="#fig-3.5.1.3.5a" class="fig-link"><span class="fig-badge">Fig 3.5.1.3.5(a)</span><span class="fig-title">Effect of temperature on the elongation (e) of 5052-H34 aluminum alloy sheet and plate.</span></a>
+                <a href="#fig-3.5.1.3.5b" class="fig-link"><span class="fig-badge">Fig 3.5.1.3.5(b)</span><span class="fig-title">Effect of exposure at elevated temperatures on the room-temperature elongation (e) of 5052-H34 aluminum alloy sheet and plate.</span></a>
+                <a href="#fig-3.5.1.5.1a" class="fig-link"><span class="fig-badge">Fig 3.5.1.5.1(a)</span><span class="fig-title">Effect of temperature on the tensile ultimate strength (Ftu) of 5052-H38 aluminum alloy (all products).</span></a>
+                <a href="#fig-3.5.1.5.1b" class="fig-link"><span class="fig-badge">Fig 3.5.1.5.1(b)</span><span class="fig-title">Effect of temperature on the tensile yield strength (Fty) of 5052-H38 aluminum alloy (all products).</span></a>
+                <a href="#fig-3.5.1.5.1c" class="fig-link"><span class="fig-badge">Fig 3.5.1.5.1(c)</span><span class="fig-title">Effect of exposure at elevated temperatures on the room-temperature tensile ultimate strength (Ftu) of 5052-H38 aluminum alloy (all products).</span></a>
+                <a href="#fig-3.5.1.5.1d" class="fig-link"><span class="fig-badge">Fig 3.5.1.5.1(d)</span><span class="fig-title">Effect of exposure at elevated temperatures on the room-temperature tensile yield strength (Fty) of 5052-H38 aluminum alloy (all products).</span></a>
+                <a href="#fig-3.5.1.5.5a" class="fig-link"><span class="fig-badge">Fig 3.5.1.5.5(a)</span><span class="fig-title">Effect of temperature on the elongation of 5052-H38 aluminum alloy (all products).</span></a>
+                <a href="#fig-3.5.1.5.5b" class="fig-link"><span class="fig-badge">Fig 3.5.1.5.5(b)</span><span class="fig-title">Effect of exposure at elevated temperatures on the room-temperature elongation of 5052-H38 aluminum alloy (all products).</span></a>
+                <a href="#fig-3.5.2.0" class="fig-link"><span class="fig-badge">Fig 3.5.2.0</span><span class="fig-title">Effect of temperature on the thermal expansion of 5083 aluminum alloy.</span></a>
+                <a href="#fig-3.5.2.1.6a" class="fig-link"><span class="fig-badge">Fig 3.5.2.1.6(a)</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5083-O aluminum alloy sheet at room temperature.</span></a>
+                <a href="#fig-3.5.2.1.6b" class="fig-link"><span class="fig-badge">Fig 3.5.2.1.6(b)</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5083-O aluminum alloy plate at room temperature.</span></a>
+                <a href="#fig-3.5.2.1.6c" class="fig-link"><span class="fig-badge">Fig 3.5.2.1.6(c)</span><span class="fig-title">Typical tensile stress-strain curve (full range) for 5083-O aluminum alloy plate at room temperature.</span></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-half">
+            <div class="group">
+              <span class="section-title-TOC">Table of Figures (cont.)</span>
+              <div>
+                <a href="#fig-3.5.3.1.6a" class="fig-link"><span class="fig-badge">Fig 3.5.3.1.6(a)</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5086-O aluminum alloy sheet at room temperature.</span></a>
+                <a href="#fig-3.5.3.1.6b" class="fig-link"><span class="fig-badge">Fig 3.5.3.1.6(b)</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5086-O aluminum alloy plate and extrusion at room temperature.</span></a>
+                <a href="#fig-3.5.3.1.6c" class="fig-link"><span class="fig-badge">Fig 3.5.3.1.6(c)</span><span class="fig-title">Typical tensile stress-strain curve (full range) for 5086-O aluminum alloy sheet at room temperature.</span></a>
+                <a href="#fig-3.5.3.2.6a" class="fig-link"><span class="fig-badge">Fig 3.5.3.2.6(a)</span><span class="fig-title">Typical tensile stress-strain curves for 5086-H32 aluminum alloy sheet at room temperature.</span></a>
+                <a href="#fig-3.5.3.2.6b" class="fig-link"><span class="fig-badge">Fig 3.5.3.2.6(b)</span><span class="fig-title">Typical compressive stress-strain and compressive tangent-modulus curves for 5086-H32 aluminum alloy sheet at room temperature.</span></a>
+                <a href="#fig-3.5.3.2.6c" class="fig-link"><span class="fig-badge">Fig 3.5.3.2.6(c)</span><span class="fig-title">Typical tensile stress-strain curves (full range) for 5086-H32 aluminum alloy sheet at room temperature.</span></a>
+                <a href="#fig-3.5.3.3.6a" class="fig-link"><span class="fig-badge">Fig 3.5.3.3.6(a)</span><span class="fig-title">Typical tensile stress-strain curves for 5086-H34 aluminum alloy sheet at room temperature.</span></a>
+                <a href="#fig-3.5.3.3.6b" class="fig-link"><span class="fig-badge">Fig 3.5.3.3.6(b)</span><span class="fig-title">Typical compressive stress-strain and compressive tangent-modulus curves for 5086-H34 aluminum alloy sheet at room temperature.</span></a>
+                <a href="#fig-3.5.3.3.6c" class="fig-link"><span class="fig-badge">Fig 3.5.3.3.6(c)</span><span class="fig-title">Typical tensile stress-strain curve (full range) for 5086-H34 aluminum alloy sheet at room temperature.</span></a>
+                <a href="#fig-3.5.3.4.6" class="fig-link"><span class="fig-badge">Fig 3.5.3.4.6</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5086-H36 aluminum alloy sheet at room temperature.</span></a>
+                <a href="#fig-3.5.3.7.6" class="fig-link"><span class="fig-badge">Fig 3.5.3.7.6</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5086-H112 aluminum alloy plate at room temperature.</span></a>
+                <a href="#fig-3.5.4.1.6" class="fig-link"><span class="fig-badge">Fig 3.5.4.1.6</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5454-O aluminum alloy sheet, plate, extrusion at room temperature.</span></a>
+                <a href="#fig-3.5.4.2.6" class="fig-link"><span class="fig-badge">Fig 3.5.4.2.6</span><span class="fig-title">Typical tensile stress-strain curves for 5454-H32 aluminum alloy plate at room temperature.</span></a>
+                <a href="#fig-3.5.4.3.6a" class="fig-link"><span class="fig-badge">Fig 3.5.4.3.6(a)</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5454-H34 aluminum alloy sheet at room temperature.</span></a>
+                <a href="#fig-3.5.4.3.6b" class="fig-link"><span class="fig-badge">Fig 3.5.4.3.6(b)</span><span class="fig-title">Typical tensile stress-strain curve for 5454-H34 aluminum alloy plate at room temperature.</span></a>
+                <a href="#fig-3.5.5.0" class="fig-link"><span class="fig-badge">Fig 3.5.5.0</span><span class="fig-title">Effect of temperature on the physical properties of 5456 aluminum alloy.</span></a>
+                <a href="#fig-3.5.5.1.6a" class="fig-link"><span class="fig-badge">Fig 3.5.5.1.6(a)</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5456-O aluminum alloy sheet and plate at room temperature.</span></a>
+                <a href="#fig-3.5.5.1.6b" class="fig-link"><span class="fig-badge">Fig 3.5.5.1.6(b)</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5456-O aluminum alloy extrusion at room temperature.</span></a>
+                <a href="#fig-3.5.5.2.6" class="fig-link"><span class="fig-badge">Fig 3.5.5.2.6</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5456-H111 aluminum alloy extrusion at room temperature.</span></a>
+                <a href="#fig-3.5.5.4.6" class="fig-link"><span class="fig-badge">Fig 3.5.5.4.6</span><span class="fig-title">Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5456-H321 aluminum alloy plate at room temperature. Thickness = 0.625&ndash;1.250 in.</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-11 col-md-10 col-lg-8 mx-auto">
+    <div class="csscontainer">
+      <div class="section lvl-0" id="3.5">
+        <div class="section-heading lvl-0"><span class="section-num">3.5</span>5000 Series Wrought Alloys</div>
+<p>Alloys of the 5000 series contain magnesium as the principal alloying element and are strengthened by cold work. Because of their high toughness at temperatures down to &minus;452&deg;F, they are widely used in cryogenic applications.</p>
+        <p>Magnesium in excess of that in solid solution forms a constituent that is anodic to the aluminum-magnesium matrix. This constituent may form a network of precipitates at grain boundaries or along slip planes. The formation of this continuous grain-boundary precipitate, which is accelerated by prior cold work and by exposure to elevated temperatures, causes stress-corrosion cracking susceptibility. Therefore, it is recommended that the strain-hardened tempers of 5000 series alloys containing more than 3 percent magnesium not be used at temperatures above 150&deg;F because susceptibility to SCC may result.</p>
+
+        <div class="section lvl-1" id="3.5.1">
+          <div class="section-heading lvl-1"><span class="section-num">3.5.1</span>5052 Alloy</div>
+<div class="section lvl-2" id="3.5.1.0">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.1.0</span>Comments and Properties</div>
+          <p>5052 is a low-strength Al-Mg alloy but extremely tough at low temperatures as well as at room temperature. It is highly resistant to corrosion; refer to Section 3.1.2.3 for comments regarding the resistance of the alloy to stress-corrosion cracking. Refer to Section 3.1.3.4 for comments regarding the weldability of the alloy.</p>
+          <p>Material specifications for 5052 aluminum alloy are presented in Table 3.5.1.0(a). Room-temperature mechanical and physical properties are shown in Tables 3.5.1.0(b1) and (b2). The effect of temperature on physical properties is shown in Figure 3.5.1.0.</p>
+
+          <div class="hdbk-table-wrap" id="table-3.5.1.0a">
+            <table class="hdbk-table">
+              <caption>Table 3.5.1.0(a). Material Specifications for 5052 Aluminum Alloy</caption>
+              <thead><tr><th>Specification</th><th>Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS 4015</td><td class="td-left">Sheet and plate</td></tr>
+                <tr><td>AMS 4016</td><td class="td-left">Sheet and plate</td></tr>
+                <tr><td>AMS 4017</td><td class="td-left">Sheet and plate</td></tr>
+                <tr><td>AMS-QQ-A-250/8</td><td class="td-left">Sheet and plate</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The temper index for 5052 is as follows:</p>
+          <ul>
+            <li>3.5.1.1 &mdash; O</li>
+            <li>3.5.1.2 &mdash; H32</li>
+            <li>3.5.1.3 &mdash; H34</li>
+            <li>3.5.1.4 &mdash; H36</li>
+            <li>3.5.1.5 &mdash; H38</li>
+          </ul>
+
+          <div class="hdbk-table-wrap" id="table-3.5.1.0b1">
+            <table class="hdbk-table">
+              <caption>Table 3.5.1.0(b<sub>1</sub>). Design Mechanical and Physical Properties of 5052 Aluminum Alloy Sheet and Plate</caption>
+              <thead>
+                <tr>
+                  <th style="width:12rem; text-align:left;">Specification</th>
+                  <th>AMS 4015</th><th>AMS 4016</th><th>AMS 4017</th><th>AMS-QQ-A-250/8</th><th>AMS-QQ-A-250/8</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Form</th>
+                  <th colspan="3">Sheet and plate</th><th colspan="2">Sheet</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Condition</th>
+                  <th>O</th><th>H32</th><th>H34</th><th>H36</th><th>H38</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Thickness, in.</th>
+                  <th>0.006-3.000</th><th>0.017-2.000</th><th>0.009-1.000</th><th>0.006-0.162</th><th>0.006-0.128</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Basis</th>
+                  <th>S</th><th>S</th><th>S</th><th>S</th><th>S</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="prop-section"><td colspan="6" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>25</td><td>31</td><td>34</td><td>37</td><td>39</td></tr>
+                <tr><td class="td-indent">LT</td><td>&middot;&middot;&middot;</td><td>31</td><td>34</td><td>37</td><td>39</td></tr>
+                <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>9.5</td><td>23</td><td>26</td><td>29<sup>a</sup></td><td>32<sup>a</sup></td></tr>
+                <tr><td class="td-indent">LT</td><td>&middot;&middot;&middot;</td><td>22</td><td>25</td><td>29</td><td>32</td></tr>
+                <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>&middot;&middot;&middot;</td><td>22</td><td>25</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">LT</td><td>&middot;&middot;&middot;</td><td>23</td><td>26</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>16</td><td>19</td><td>20</td><td>22</td><td>23</td></tr>
+                <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>&middot;&middot;&middot;</td><td>50</td><td>54</td><td>59</td><td>62</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>&middot;&middot;&middot;</td><td>65</td><td>71</td><td>78</td><td>82</td></tr>
+                <tr class="prop-group"><td colspan="6" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>&middot;&middot;&middot;</td><td>32</td><td>37</td><td>41</td><td>44</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>&middot;&middot;&middot;</td><td>37</td><td>41</td><td>46</td><td>51</td></tr>
+                <tr class="prop-group"><td colspan="6" class="td-left"><em>e</em>, percent:</td></tr>
+                <tr><td class="td-indent">L</td><td><sup>b</sup></td><td><sup>b</sup></td><td><sup>b</sup></td><td><sup>b</sup></td><td><sup>b</sup></td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="5">10.1</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="5">10.2</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="5">3.85</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td colspan="5">0.33</td></tr>
+                <tr class="prop-section"><td colspan="6" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="5">0.097</td></tr>
+                <tr><td class="td-left"><em>C</em>, Btu/(lb)(&deg;F)</td><td colspan="5">0.23 (at 212&deg;F)</td></tr>
+                <tr><td class="td-left"><em>K</em> and <em>&alpha;</em></td><td colspan="5">See Figure 3.5.1.0</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="6"><sup>a</sup> From &ldquo;Aluminum Standards and Data&rdquo; dated 1982.</td></tr>
+                <tr><td colspan="6"><sup>b</sup> See Table 3.5.1.0(b<sub>2</sub>).</td></tr>
+              </tfoot>
+            </table>
+          </div>
+
+
+          <div class="hdbk-table-wrap" id="table-3.5.1.0b2">
+            <table class="hdbk-table">
+              <caption>Table 3.5.1.0(b2). Minimum Elongation Values for 5052 Aluminum Alloy Sheet and Plate</caption>
+              <thead><tr><th>Temper</th><th>Thickness Range, in.</th><th>Elongation (L), percent</th></tr></thead>
+              <tbody>
+                <tr><td>O</td><td>0.006&ndash;0.007</td><td>&mdash;</td></tr>
+                <tr><td>O</td><td>0.008&ndash;0.012</td><td>14</td></tr>
+                <tr><td>O</td><td>0.013&ndash;0.019</td><td>15</td></tr>
+                <tr><td>O</td><td>0.020&ndash;0.031</td><td>16</td></tr>
+                <tr><td>O</td><td>0.032&ndash;0.050</td><td>18</td></tr>
+                <tr><td>O</td><td>0.051&ndash;0.113</td><td>19</td></tr>
+                <tr><td>O</td><td>0.114&ndash;0.249</td><td>20</td></tr>
+                <tr><td>O</td><td>0.250&ndash;3.000</td><td>18</td></tr>
+                <tr><td>H32</td><td>0.017&ndash;0.019</td><td>4</td></tr>
+                <tr><td>H32</td><td>0.020&ndash;0.050</td><td>5</td></tr>
+                <tr><td>H32</td><td>0.051&ndash;0.113</td><td>7</td></tr>
+                <tr><td>H32</td><td>0.114&ndash;0.249</td><td>9</td></tr>
+                <tr><td>H32</td><td>0.250&ndash;0.499</td><td>11</td></tr>
+                <tr><td>H32</td><td>0.500&ndash;2.000</td><td>12</td></tr>
+                <tr><td>H34</td><td>0.009&ndash;0.019</td><td>3</td></tr>
+                <tr><td>H34</td><td>0.020&ndash;0.050</td><td>4</td></tr>
+                <tr><td>H34</td><td>0.051&ndash;0.113</td><td>6</td></tr>
+                <tr><td>H34</td><td>0.114&ndash;0.249</td><td>7</td></tr>
+                <tr><td>H34</td><td>0.250&ndash;1.000</td><td>10</td></tr>
+                <tr><td>H36</td><td>0.006&ndash;0.007</td><td>2</td></tr>
+                <tr><td>H36</td><td>0.008&ndash;0.031</td><td>3</td></tr>
+                <tr><td>H36</td><td>0.032&ndash;0.162</td><td>4</td></tr>
+                <tr><td>H38</td><td>0.006&ndash;0.007</td><td>2</td></tr>
+                <tr><td>H38</td><td>0.008&ndash;0.031</td><td>3</td></tr>
+                <tr><td>H38</td><td>0.032&ndash;0.128</td><td>4</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="hdbk-figure" id="fig-3.5.1.0">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.0</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.0.</strong> Effect of temperature on the physical properties of 5052 aluminum alloy.</p>
+          </div>
+        </div><!-- /3.5.1.0 -->
+
+        <div class="section lvl-2" id="3.5.1.1">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.1.1</span>O Temper</div>
+          <p>Elevated-temperature curves for this temper for various mechanical properties are presented in Figures 3.5.1.1.1, 3.5.1.1.4, and 3.5.1.1.5.</p>
+
+          <div class="hdbk-figure" id="fig-3.5.1.1.1">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.1.1</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.1.1.</strong> Effect of temperature on the tensile ultimate strength (Ftu) and the tensile yield strength (Fty) of 5052-O aluminum alloy (all products).</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.1.1.4">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.1.4</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.1.4.</strong> Effect of temperature on the tensile and compressive moduli (E and Ec) of 5052-O aluminum alloy (all products).</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.1.1.5">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.1.5</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.1.5.</strong> Effect of temperature on the elongation of 5052-O aluminum alloy (all products).</p>
+          </div>
+        </div><!-- /3.5.1.1 -->
+
+        <div class="section lvl-2" id="3.5.1.2">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.1.2</span>H32 Temper</div>
+          <p>Figure 3.5.1.1.4 may be used for the elevated-temperature curve for modulus of elasticity.</p>
+        </div><!-- /3.5.1.2 -->
+
+        <div class="section lvl-2" id="3.5.1.3">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.1.3</span>H34 Temper</div>
+          <p>Elevated-temperature curves for various mechanical properties are presented in Figures 3.5.1.3.1(a) through (d), and 3.5.1.3.5(a) and (b). Use Figure 3.5.1.1.4 for modulus values.</p>
+
+          <div class="hdbk-figure" id="fig-3.5.1.3.1a">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.3.1(a)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.3.1(a).</strong> Effect of temperature on the tensile ultimate strength (Ftu) of 5052-H34 aluminum alloy sheet and plate.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.1.3.1b">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.3.1(b)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.3.1(b).</strong> Effect of temperature on the tensile yield strength (Fty) of 5052-H34 aluminum alloy sheet and plate.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.1.3.1c">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.3.1(c)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.3.1(c).</strong> Effect of exposure at elevated temperatures on the room-temperature tensile ultimate strength (Ftu) of 5052-H34 aluminum alloy sheet and plate.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.1.3.1d">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.3.1(d)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.3.1(d).</strong> Effect of exposure at elevated temperatures on the room-temperature tensile yield strength (Fty) of 5052-H34 aluminum alloy sheet and plate.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.1.3.5a">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.3.5(a)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.3.5(a).</strong> Effect of temperature on the elongation (e) of 5052-H34 aluminum alloy sheet and plate.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.1.3.5b">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.3.5(b)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.3.5(b).</strong> Effect of exposure at elevated temperatures on the room-temperature elongation (e) of 5052-H34 aluminum alloy sheet and plate.</p>
+          </div>
+        </div><!-- /3.5.1.3 -->
+
+        <div class="section lvl-2" id="3.5.1.4">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.1.4</span>H36 Temper</div>
+          <p>Figure 3.5.1.1.4 may be used for the elevated-temperature curve for modulus of elasticity.</p>
+        </div><!-- /3.5.1.4 -->
+
+        <div class="section lvl-2" id="3.5.1.5">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.1.5</span>H38 Temper</div>
+          <p>Elevated-temperature curves for this temper for various mechanical properties are presented in Figures 3.5.1.5.1(a) through (d), and 3.5.1.5.5(a) and (b). Use Figure 3.5.1.1.4 for modulus values.</p>
+
+          <div class="hdbk-figure" id="fig-3.5.1.5.1a">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.5.1(a)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.5.1(a).</strong> Effect of temperature on the tensile ultimate strength (Ftu) of 5052-H38 aluminum alloy (all products).</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.1.5.1b">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.5.1(b)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.5.1(b).</strong> Effect of temperature on the tensile yield strength (Fty) of 5052-H38 aluminum alloy (all products).</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.1.5.1c">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.5.1(c)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.5.1(c).</strong> Effect of exposure at elevated temperatures on the room-temperature tensile ultimate strength (Ftu) of 5052-H38 aluminum alloy (all products).</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.1.5.1d">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.5.1(d)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.5.1(d).</strong> Effect of exposure at elevated temperatures on the room-temperature tensile yield strength (Fty) of 5052-H38 aluminum alloy (all products).</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.1.5.5a">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.5.5(a)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.5.5(a).</strong> Effect of temperature on the elongation of 5052-H38 aluminum alloy (all products).</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.1.5.5b">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.1.5.5(b)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.1.5.5(b).</strong> Effect of exposure at elevated temperatures on the room-temperature elongation of 5052-H38 aluminum alloy (all products).</p>
+          </div>
+        </div><!-- /3.5.1.5 -->
+        </div><!-- /3.5.1 -->
+
+        <div class="section lvl-1" id="3.5.2">
+          <div class="section-heading lvl-1"><span class="section-num">3.5.2</span>5083 Alloy</div>
+<div class="section lvl-2" id="3.5.2.0">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.2.0</span>Comments and Properties</div>
+          <p>5083 is a high-strength Al-Mg alloy which has been widely used in cryogenic applications, because of its excellent combination of strength and toughness. It has high resistance to corrosion, but strain-hardened tempers should not be used at temperatures above 150&deg;F because of possible sensitization to stress-corrosion cracking. Refer to Section 3.1.2.3 for comments regarding the resistance of the alloy to stress-corrosion cracking, and to Section 3.1.3.4 for comments regarding the weldability of the alloy.</p>
+          <p>Material specifications for 5083 aluminum alloy are presented in Table 3.5.2.0(a). Room-temperature mechanical and physical properties are shown in Tables 3.5.2.0(b) and (c). The effect of temperature on thermal expansion is shown in Figure 3.5.2.0.</p>
+
+          <div class="hdbk-table-wrap" id="table-3.5.2.0a">
+            <table class="hdbk-table">
+              <caption>Table 3.5.2.0(a). Material Specifications for 5083 Aluminum Alloy</caption>
+              <thead><tr><th>Specification</th><th>Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS 4056</td><td class="td-left">Bare sheet and plate</td></tr>
+                <tr><td>AMS-QQ-A-250/6</td><td class="td-left">Bare sheet and plate</td></tr>
+                <tr><td>AMS-QQ-A-200/4</td><td class="td-left">Extruded bar, rod, and shapes</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The temper index for 5083 is as follows:</p>
+          <ul>
+            <li>3.5.2.1 &mdash; O</li>
+            <li>3.5.2.2 &mdash; H111</li>
+            <li>3.5.2.3 &mdash; H112</li>
+            <li>3.5.2.4 &mdash; H321</li>
+            <li>3.5.2.5 &mdash; H323</li>
+            <li>3.5.2.6 &mdash; H343</li>
+          </ul>
+
+          <div class="hdbk-table-wrap" id="table-3.5.2.0b">
+            <table class="hdbk-table">
+              <caption>Table 3.5.2.0(b). Design Mechanical and Physical Properties of 5083 Aluminum Alloy Sheet and Plate</caption>
+              <thead>
+                <tr>
+                  <th style="width:12rem; text-align:left;">Specification</th>
+                  <th colspan="7">AMS 4056 and AMS-QQ-A-250/6</th>
+                  <th colspan="10">AMS-QQ-A-250/6</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Form</th>
+                  <th colspan="17">Sheet and plate</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Temper</th>
+                  <th colspan="7">O</th><th colspan="2">H112</th><th colspan="3">H321</th><th colspan="3">H323</th><th colspan="2">H343</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Thickness, in.</th>
+                  <th colspan="2">0.051-1.500</th><th>1.501-3.000</th><th>3.001-4.000</th><th>4.001-5.000</th><th>5.001-7.000</th><th>7.001-8.000</th>
+                  <th>0.250-1.500</th><th>1.501-3.000</th>
+                  <th colspan="2">0.188-1.500</th><th>1.501-3.000</th>
+                  <th colspan="2">0.051-0.125</th><th>0.126-0.249</th>
+                  <th>0.051-0.125</th><th>0.126-0.249</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Basis</th>
+                  <th>A</th><th>B</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th>
+                  <th>S</th><th>S</th>
+                  <th>A</th><th>B</th><th>S</th>
+                  <th>A</th><th>B</th><th>S</th>
+                  <th>S</th><th>S</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="prop-section"><td colspan="18" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="18" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>40</td><td>41</td><td>39</td><td>38</td><td>38</td><td>37</td><td>36</td><td>40</td><td>39</td><td>44</td><td>46</td><td>41</td><td>45</td><td>47</td><td>45</td><td>50</td><td>50</td></tr>
+                <tr><td class="td-indent">LT</td><td>40</td><td>41</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>44</td><td>46</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="18" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>18</td><td>19</td><td>17</td><td>16</td><td>16</td><td>15</td><td>14</td><td>18</td><td>17</td><td>31</td><td>32</td><td>29</td><td>34</td><td>36</td><td>34</td><td>39</td><td>39</td></tr>
+                <tr><td class="td-indent">LT</td><td>18</td><td>19</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>28</td><td>28</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="18" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>18</td><td>19</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">LT</td><td>18</td><td>19</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>25</td><td>26</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="18" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>60</td><td>62</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>76</td><td>78</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="18" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>32</td><td>34</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>38</td><td>40</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="18" class="td-left"><em>e</em>, percent (S-basis):</td></tr>
+                <tr><td class="td-indent">L</td><td>16</td><td>&middot;&middot;&middot;</td><td>16</td><td>16</td><td>14</td><td>14</td><td>12</td><td>12</td><td>12</td><td>12</td><td>&middot;&middot;&middot;</td><td>12</td><td>8</td><td>&middot;&middot;&middot;</td><td>10</td><td>6</td><td>8</td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="17">10.2</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="17">10.4</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="17">3.85</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td colspan="17">0.33</td></tr>
+                <tr class="prop-section"><td colspan="18" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="17">0.096</td></tr>
+                <tr><td class="td-left"><em>C</em>, Btu/(lb)(&deg;F)</td><td colspan="17">0.23 (at 212&deg;F)</td></tr>
+                <tr><td class="td-left"><em>K</em>, Btu/[(hr)(ft<sup>2</sup>)(&deg;F)/ft]</td><td colspan="17">68 (at 77&deg;F)</td></tr>
+                <tr><td class="td-left"><em>&alpha;</em>, 10<sup>-6</sup> in./in./&deg;F</td><td colspan="17">See Figure 3.5.2.0</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="hdbk-table-wrap" id="table-3.5.2.0c">
+            <table class="hdbk-table">
+              <caption>Table 3.5.2.0(c). Design Mechanical and Physical Properties of 5083 Aluminum Alloy Extrusion</caption>
+              <thead>
+                <tr>
+                  <th style="width:12rem; text-align:left;">Specification</th>
+                  <th colspan="4">AMS-QQ-A-200/4</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Form</th>
+                  <th colspan="4">Extrusion</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Temper</th>
+                  <th>O</th><th colspan="2">H111</th><th>H112</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Thickness, in.</th>
+                  <th>&le;5.000<sup>a</sup></th><th>&lt;0.500<sup>a</sup></th><th>0.501-5.000<sup>a</sup></th><th>&le;5.000<sup>a</sup></th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Basis</th>
+                  <th>S</th><th>S</th><th>S</th><th>S</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="prop-section"><td colspan="5" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="5" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>39</td><td>40</td><td>40</td><td>39</td></tr>
+                <tr><td class="td-indent">LT</td><td>&middot;&middot;&middot;</td><td>40</td><td>32</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="5" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>16</td><td>24</td><td>24</td><td>16</td></tr>
+                <tr><td class="td-indent">LT</td><td>&middot;&middot;&middot;</td><td>24</td><td>19</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="5" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">LT</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="5" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="5" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="5" class="td-left"><em>e</em>, percent:</td></tr>
+                <tr><td class="td-indent">L</td><td>14</td><td>12</td><td>12</td><td>12</td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="4">10.2</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="4">10.4</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="4">3.35</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td colspan="4">0.33</td></tr>
+                <tr class="prop-section"><td colspan="5" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="4">0.096</td></tr>
+                <tr><td class="td-left"><em>C</em>, Btu/(lb)(&deg;F)</td><td colspan="4">0.23 (at 212&deg;F)</td></tr>
+                <tr><td class="td-left"><em>K</em>, Btu/[(hr)(ft<sup>2</sup>)(&deg;F)/ft]</td><td colspan="4">68 (at 77&deg;F)</td></tr>
+                <tr><td class="td-left"><em>&alpha;</em>, 10<sup>-6</sup> in./in./&deg;F</td><td colspan="4">See Figure 3.5.2.0</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="5"><sup>a</sup> Cross-sectional area &le;32 in.<sup>2</sup>.</td></tr>
+              </tfoot>
+            </table>
+          </div>
+
+
+          <div class="hdbk-figure" id="fig-3.5.2.0">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.2.0</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.2.0.</strong> Effect of temperature on the thermal expansion of 5083 aluminum alloy.</p>
+          </div>
+        </div><!-- /3.5.2.0 -->
+
+        <div class="section lvl-2" id="3.5.2.1">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.2.1</span>O Temper</div>
+          <p>Tensile and compressive stress-strain and tangent-modulus curves at room temperature are presented in Figures 3.5.2.1.6(a) and (b). A full-range tensile stress-strain curve is shown in Figure 3.5.2.1.6(c) at room temperature.</p>
+
+          <div class="hdbk-figure" id="fig-3.5.2.1.6a">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.2.1.6(a)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.2.1.6(a).</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5083-O aluminum alloy sheet at room temperature.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.2.1.6b">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.2.1.6(b)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.2.1.6(b).</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5083-O aluminum alloy plate at room temperature.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.2.1.6c">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.2.1.6(c)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.2.1.6(c).</strong> Typical tensile stress-strain curve (full range) for 5083-O aluminum alloy plate at room temperature.</p>
+          </div>
+        </div><!-- /3.5.2.1 -->
+        </div><!-- /3.5.2 -->
+
+        <div class="section lvl-1" id="3.5.3">
+          <div class="section-heading lvl-1"><span class="section-num">3.5.3</span>5086 Alloy</div>
+<div class="section lvl-2" id="3.5.3.0">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.3.0</span>Comments and Properties</div>
+          <p>5086 is a tough, medium-strength Al-Mg alloy suitable for application over the range of temperatures from &minus;452 to 150&deg;F. Refer to Section 3.1.2.3 for comments regarding resistance of the alloy to stress-corrosion cracking, and to Section 3.1.3.4 for comments regarding the weldability of the alloy.</p>
+          <p>Material specifications for 5086 aluminum alloy are presented in Table 3.5.3.0(a). Room-temperature mechanical and physical properties are shown in Tables 3.5.3.0(b) and (c).</p>
+
+          <div class="hdbk-table-wrap" id="table-3.5.3.0a">
+            <table class="hdbk-table">
+              <caption>Table 3.5.3.0(a). Material Specifications for 5086 Aluminum Alloy</caption>
+              <thead><tr><th>Specification</th><th>Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS-QQ-A-250/7</td><td class="td-left">Sheet and plate</td></tr>
+                <tr><td>AMS-QQ-A-200/5</td><td class="td-left">Extruded bar, rod, and shapes</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The temper index for 5086 is as follows:</p>
+          <ul>
+            <li>3.5.3.1 &mdash; O</li>
+            <li>3.5.3.2 &mdash; H32</li>
+            <li>3.5.3.3 &mdash; H34</li>
+            <li>3.5.3.4 &mdash; H36</li>
+            <li>3.5.3.5 &mdash; H38</li>
+            <li>3.5.3.6 &mdash; H111</li>
+            <li>3.5.3.7 &mdash; H112</li>
+          </ul>
+
+          <div class="hdbk-table-wrap" id="table-3.5.3.0b">
+            <table class="hdbk-table">
+              <caption>Table 3.5.3.0(b). Design Mechanical and Physical Properties of 5086 Aluminum Alloy Sheet, Plate, and Extrusion</caption>
+              <thead>
+                <tr>
+                  <th style="width:12rem; text-align:left;">Specification</th>
+                  <th colspan="11">AMS-QQ-A-250/7</th>
+                  <th colspan="3">AMS-QQ-A-200/5</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Form</th>
+                  <th colspan="11">Sheet and plate</th>
+                  <th colspan="3">Extrusion</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Condition</th>
+                  <th colspan="2">O</th><th colspan="2">H32</th><th>H34</th><th>H36</th><th>H38</th><th colspan="4">H112</th>
+                  <th>O</th><th>H111</th><th>H112</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Thickness, in.</th>
+                  <th colspan="2">0.020-2.000</th><th colspan="2">0.020-2.000</th><th>0.009-1.000</th><th>0.006-0.162</th><th>0.006-0.020</th>
+                  <th>0.188-0.499</th><th>0.500-1.00</th><th>1.001-2.000</th><th>2.001-3.000</th>
+                  <th>&le;5.000<sup>a</sup></th><th>&le;5.000<sup>a</sup></th><th>&le;5.000<sup>a</sup></th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Basis</th>
+                  <th>A</th><th>B</th><th>A</th><th>B</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="prop-section"><td colspan="15" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="15" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>35</td><td>36</td><td>40</td><td>41</td><td>44</td><td>47</td><td>50</td><td>36</td><td>35</td><td>35</td><td>34</td><td>35</td><td>36</td><td>35</td></tr>
+                <tr><td class="td-indent">LT</td><td>35</td><td>36</td><td>40</td><td>41</td><td>44</td><td>47</td><td>&middot;&middot;&middot;</td><td>36</td><td>35</td><td>35</td><td>34</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="15" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>14</td><td>15</td><td>28</td><td>30</td><td>34</td><td>38</td><td>41</td><td>18</td><td>16</td><td>14</td><td>14</td><td>14</td><td>21</td><td>14</td></tr>
+                <tr><td class="td-indent">LT</td><td>14</td><td>15</td><td>26</td><td>28</td><td>33</td><td>37</td><td>&middot;&middot;&middot;</td><td>17</td><td>16</td><td>14</td><td>14</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="15" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>14</td><td>15</td><td>26</td><td>28</td><td>32</td><td>35</td><td>&middot;&middot;&middot;</td><td>17</td><td>15</td><td>14</td><td>14</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">LT</td><td>14</td><td>15</td><td>28</td><td>30</td><td>34</td><td>38</td><td>&middot;&middot;&middot;</td><td>18</td><td>16</td><td>14</td><td>14</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>21</td><td>22</td><td>24</td><td>25</td><td>26</td><td>27</td><td>&middot;&middot;&middot;</td><td>22</td><td>21</td><td>21</td><td>20</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="15" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>52</td><td>53</td><td>58</td><td>61</td><td>64</td><td>68</td><td>&middot;&middot;&middot;</td><td>54</td><td>52</td><td>52</td><td>51</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>70</td><td>72</td><td>80</td><td>82</td><td>88</td><td>94</td><td>&middot;&middot;&middot;</td><td>72</td><td>70</td><td>70</td><td>68</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="15" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>24</td><td>26</td><td>39</td><td>42</td><td>48</td><td>53</td><td>&middot;&middot;&middot;</td><td>25</td><td>24</td><td>24</td><td>24</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>28</td><td>30</td><td>48</td><td>51</td><td>58</td><td>65</td><td>&middot;&middot;&middot;</td><td>31</td><td>28</td><td>28</td><td>28</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="15" class="td-left"><em>e</em>, percent (S basis):</td></tr>
+                <tr><td class="td-indent">L</td><td><sup>b</sup></td><td>&middot;&middot;&middot;</td><td><sup>b</sup></td><td>&middot;&middot;&middot;</td><td><sup>b</sup></td><td><sup>b</sup></td><td>3</td><td>8</td><td>10</td><td>14</td><td>14</td><td>14</td><td>12</td><td>12</td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="14">10.2</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="14">10.4</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="14">3.85</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td colspan="14">0.33</td></tr>
+                <tr class="prop-section"><td colspan="15" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="14">0.096</td></tr>
+                <tr><td class="td-left"><em>C</em>, Btu/(lb)(&deg;F)</td><td colspan="14">0.23 (at 212&deg;F)</td></tr>
+                <tr><td class="td-left"><em>K</em>, Btu/[(hr)(ft<sup>2</sup>)(&deg;F)/ft]</td><td colspan="14">72 (at 77&deg;F)</td></tr>
+                <tr><td class="td-left"><em>&alpha;</em>, 10<sup>-6</sup> in./in./&deg;F</td><td colspan="14">13.2 (68 to 212&deg;F)</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="15"><sup>a</sup> Cross-sectional area &le;32.</td></tr>
+                <tr><td colspan="15"><sup>b</sup> See Table 3.5.3.0(c).</td></tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="hdbk-table-wrap" id="table-3.5.3.0c">
+            <table class="hdbk-table">
+              <caption>Table 3.5.3.0(c). Minimum Elongation Values for 5086 Aluminum Alloy Sheet and Plate</caption>
+              <thead><tr><th>Temper</th><th>Thickness Range, in.</th><th>Elongation (L), percent</th></tr></thead>
+              <tbody>
+                <tr><td>O</td><td>0.020&ndash;0.050</td><td>15</td></tr>
+                <tr><td>O</td><td>0.051&ndash;0.249</td><td>18</td></tr>
+                <tr><td>O</td><td>0.250&ndash;2.000</td><td>16</td></tr>
+                <tr><td>H32</td><td>0.020&ndash;0.050</td><td>6</td></tr>
+                <tr><td>H32</td><td>0.051&ndash;0.249</td><td>8</td></tr>
+                <tr><td>H32</td><td>0.250&ndash;2.000</td><td>12</td></tr>
+                <tr><td>H34</td><td>0.009&ndash;0.019</td><td>4</td></tr>
+                <tr><td>H34</td><td>0.020&ndash;0.050</td><td>5</td></tr>
+                <tr><td>H34</td><td>0.051&ndash;0.249</td><td>6</td></tr>
+                <tr><td>H34</td><td>0.250&ndash;1.000</td><td>10</td></tr>
+                <tr><td>H36</td><td>0.006&ndash;0.019</td><td>3</td></tr>
+                <tr><td>H36</td><td>0.020&ndash;0.050</td><td>4</td></tr>
+                <tr><td>H36</td><td>0.051&ndash;0.162</td><td>6</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div><!-- /3.5.3.0 -->
+
+        <div class="section lvl-2" id="3.5.3.1">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.3.1</span>O Temper</div>
+          <p>Tensile, compressive stress-strain and tangent-modulus curves at room temperature are shown in Figures 3.5.3.1.6(a) and (b) for products with this temper. Figure 3.5.3.1.6(c) is a full-range tensile stress-strain curve.</p>
+
+          <div class="hdbk-figure" id="fig-3.5.3.1.6a">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.3.1.6(a)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.3.1.6(a).</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5086-O aluminum alloy sheet at room temperature.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.3.1.6b">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.3.1.6(b)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.3.1.6(b).</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5086-O aluminum alloy plate and extrusion at room temperature.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.3.1.6c">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.3.1.6(c)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.3.1.6(c).</strong> Typical tensile stress-strain curve (full range) for 5086-O aluminum alloy sheet at room temperature.</p>
+          </div>
+        </div><!-- /3.5.3.1 -->
+
+        <div class="section lvl-2" id="3.5.3.2">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.3.2</span>H32 Temper</div>
+          <p>Figures 3.5.3.2.6(a) and (b) show tensile and compressive stress-strain and tangent-modulus curves at room temperature.</p>
+
+          <div class="hdbk-figure" id="fig-3.5.3.2.6a">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.3.2.6(a)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.3.2.6(a).</strong> Typical tensile stress-strain curves for 5086-H32 aluminum alloy sheet at room temperature.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.3.2.6b">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.3.2.6(b)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.3.2.6(b).</strong> Typical compressive stress-strain and compressive tangent-modulus curves for 5086-H32 aluminum alloy sheet at room temperature.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.3.2.6c">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.3.2.6(c)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.3.2.6(c).</strong> Typical tensile stress-strain curves (full range) for 5086-H32 aluminum alloy sheet at room temperature.</p>
+          </div>
+        </div><!-- /3.5.3.2 -->
+
+        <div class="section lvl-2" id="3.5.3.3">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.3.3</span>H34 Temper</div>
+          <p>Figures 3.5.3.3.6(a) and (b) show tensile, compressive stress-strain, and tangent-modulus curves for this temper. A full-range tensile stress-strain curve is shown in Figure 3.5.3.3.6(c).</p>
+
+          <div class="hdbk-figure" id="fig-3.5.3.3.6a">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.3.3.6(a)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.3.3.6(a).</strong> Typical tensile stress-strain curves for 5086-H34 aluminum alloy sheet at room temperature.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.3.3.6b">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.3.3.6(b)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.3.3.6(b).</strong> Typical compressive stress-strain and compressive tangent-modulus curves for 5086-H34 aluminum alloy sheet at room temperature.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.3.3.6c">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.3.3.6(c)</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.3.3.6(c).</strong> Typical tensile stress-strain curve (full range) for 5086-H34 aluminum alloy sheet at room temperature.</p>
+          </div>
+        </div><!-- /3.5.3.3 -->
+
+        <div class="section lvl-2" id="3.5.3.4">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.3.4</span>H36 Temper</div>
+          <p>Figure 3.5.3.4.6 shows tensile, compressive stress-strain and tangent-modulus curves at room temperature.</p>
+
+          <div class="hdbk-figure" id="fig-3.5.3.4.6">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.3.4.6</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.3.4.6.</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5086-H36 aluminum alloy sheet at room temperature.</p>
+          </div>
+        </div><!-- /3.5.3.4 -->
+
+        <div class="section lvl-2" id="3.5.3.5">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.3.5</span>H38 Temper</div>
+          <p>Mechanical and physical properties for this temper are given in Table 3.5.3.0(b); no additional figures are provided for the H38 temper.</p>
+        </div><!-- /3.5.3.5 -->
+
+        <div class="section lvl-2" id="3.5.3.6">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.3.6</span>H111 Temper</div>
+          <p>Mechanical and physical properties for this temper are given in Table 3.5.3.0(b); no additional figures are provided for the H111 temper.</p>
+        </div><!-- /3.5.3.6 -->
+
+        <div class="section lvl-2" id="3.5.3.7">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.3.7</span>H112 Temper</div>
+          <p>Figure 3.5.3.7.6 shows tensile, compressive stress-strain and tangent-modulus curves at room temperature.</p>
+
+          <div class="hdbk-figure" id="fig-3.5.3.7.6">
+            <div class="fig-placeholder">
+              <span class="fig-label">Figure 3.5.3.7.6</span>
+              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.3.7.6.</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5086-H112 aluminum alloy plate at room temperature.</p>
+          </div>
+        </div><!-- /3.5.3.7 -->
+        </div><!-- /3.5.3 -->
+
+        <div class="section lvl-1" id="3.5.4">
+          <div class="section-heading lvl-1"><span class="section-num">3.5.4</span>5454 Alloy</div>
+<div class="section lvl-2" id="3.5.4.0">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.4.0</span>Comments and Properties</div>
+          <p>5454 is a tough medium-strength Al-Mg alloy. It is the highest strength alloy of the 5000 series which may be used at elevated temperatures without concern about resensitization to stress-corrosion cracking. Refer to Section 3.1.2.3 for comments regarding the resistance of the alloy to stress-corrosion cracking, and to Section 3.1.3.4 for comments regarding the weldability of the alloy.</p>
+          <p>Material specifications for 5454 aluminum alloy are presented in Table 3.5.4.0(a). Room-temperature physical properties are shown in Tables 3.5.4.0(b) and (c).</p>
+
+          <div class="hdbk-table-wrap" id="table-3.5.4.0a">
+            <table class="hdbk-table">
+              <caption>Table 3.5.4.0(a). Material Specifications for 5454 Aluminum Alloy</caption>
+              <thead><tr><th>Specification</th><th>Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS-QQ-A-250/10</td><td class="td-left">Sheet and plate</td></tr>
+                <tr><td>AMS-QQ-A-200/6</td><td class="td-left">Extruded bar, rod, and shapes</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The temper index for 5454 is as follows:</p>
+          <ul>
+            <li>3.5.4.1 &mdash; O</li>
+            <li>3.5.4.2 &mdash; H32</li>
+            <li>3.5.4.3 &mdash; H34</li>
+          </ul>
+
+          <div class="hdbk-table-wrap" id="table-3.5.4.0b">
+            <table class="hdbk-table">
+              <caption>Table 3.5.4.0(b). Design Mechanical and Physical Properties of 5454 Aluminum Alloy Sheet, Plate, and Extrusion</caption>
+              <thead>
+                <tr>
+                  <th style="width:12rem; text-align:left;">Specification</th>
+                  <th colspan="7">AMS-QQ-A-250/10</th>
+                  <th colspan="3">AMS-QQ-A-200/6</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Form</th>
+                  <th colspan="7">Sheet and plate</th>
+                  <th colspan="3">Extrusion</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Temper</th>
+                  <th colspan="2">O</th><th colspan="2">H32</th><th>H34</th><th colspan="2">H112</th>
+                  <th>O</th><th>H111</th><th>H112</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Thickness, in.</th>
+                  <th colspan="2">0.020-3.000</th><th colspan="2">0.020-2.000</th><th>0.020-1.000</th><th>0.250-0.499</th><th>0.500-3.000</th>
+                  <th>&le;5.000<sup>a</sup></th><th>&le;5.000<sup>a</sup></th><th>&le;5.000<sup>a</sup></th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Basis</th>
+                  <th>A</th><th>B</th><th>A</th><th>B</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="prop-section"><td colspan="11" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="11" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>31</td><td>32</td><td>36</td><td>37</td><td>39</td><td>32</td><td>31</td><td>31</td><td>33</td><td>31</td></tr>
+                <tr><td class="td-indent">LT</td><td>31</td><td>32</td><td>36</td><td>37</td><td>39</td><td>32</td><td>31</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>31</td></tr>
+                <tr class="prop-group"><td colspan="11" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>12</td><td>13</td><td>26</td><td>27</td><td>29</td><td>18</td><td>12</td><td>12</td><td>19</td><td>12</td></tr>
+                <tr><td class="td-indent">LT</td><td>12</td><td>13</td><td>24</td><td>25</td><td>28</td><td>18</td><td>12</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>12</td></tr>
+                <tr class="prop-group"><td colspan="11" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>12</td><td>13</td><td>24</td><td>25</td><td>27</td><td>17</td><td>12</td><td>12</td><td>&middot;&middot;&middot;</td><td>12</td></tr>
+                <tr><td class="td-indent">LT</td><td>12</td><td>13</td><td>26</td><td>27</td><td>29</td><td>18</td><td>12</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>12</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>20</td><td>19</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>19</td></tr>
+                <tr class="prop-group"><td colspan="11" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>46</td><td>48</td><td>52</td><td>54</td><td>57</td><td>48</td><td>46</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>43</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>62</td><td>64</td><td>72</td><td>74</td><td>78</td><td>64</td><td>62</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>56</td></tr>
+                <tr class="prop-group"><td colspan="11" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>20</td><td>22</td><td>36</td><td>38</td><td>41</td><td>25</td><td>20</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>20</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>24</td><td>26</td><td>44</td><td>46</td><td>49</td><td>31</td><td>24</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>24</td></tr>
+                <tr class="prop-group"><td colspan="11" class="td-left"><em>e</em>, percent (S-basis):</td></tr>
+                <tr><td class="td-indent">L</td><td><sup>b</sup></td><td>&middot;&middot;&middot;</td><td><sup>b</sup></td><td>&middot;&middot;&middot;</td><td><sup>b</sup></td><td>8</td><td><sup>b</sup></td><td>14</td><td>12</td><td>12</td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="10">10.2</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="10">10.4</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="10">3.85</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td colspan="10">0.33</td></tr>
+                <tr class="prop-section"><td colspan="11" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="10">0.097</td></tr>
+                <tr><td class="td-left"><em>C</em>, Btu/(lb)(&deg;F)</td><td colspan="10">0.23 (at 212&deg;F)</td></tr>
+                <tr><td class="td-left"><em>K</em>, Btu/[(hr)(ft<sup>3</sup>)(&deg;F)/ft]</td><td colspan="10">78 (at 77&deg;F)</td></tr>
+                <tr><td class="td-left"><em>&alpha;</em>, 10<sup>-6</sup> in./in./&deg;F</td><td colspan="10">13.1 (68 to 212&deg;F)</td></tr>
+              </tbody>
+              <tfoot>
+                <tr><td colspan="11"><sup>a</sup> Cross-sectional area &le;32 in.<sup>2</sup>.</td></tr>
+                <tr><td colspan="11"><sup>b</sup> See Table 3.5.4.0(c).</td></tr>
+              </tfoot>
+            </table>
+          </div>
+
+
+          <div class="hdbk-table-wrap" id="table-3.5.4.0c">
+            <table class="hdbk-table">
+              <caption>Table 3.5.4.0(c). Minimum Elongation Values for 5454 Aluminum Alloy Sheet and Plate</caption>
+              <thead><tr><th>Temper</th><th>Thickness Range, in.</th><th>Elongation (L), percent</th></tr></thead>
+              <tbody>
+                <tr><td>O</td><td>0.020&ndash;0.031</td><td>12</td></tr>
+                <tr><td>O</td><td>0.030&ndash;0.050</td><td>14</td></tr>
+                <tr><td>O</td><td>0.051&ndash;0.113</td><td>16</td></tr>
+                <tr><td>O</td><td>0.114&ndash;3.000</td><td>18</td></tr>
+                <tr><td>H32</td><td>0.020&ndash;0.050</td><td>5</td></tr>
+                <tr><td>H32</td><td>0.051&ndash;0.249</td><td>8</td></tr>
+                <tr><td>H32</td><td>0.250&ndash;2.000</td><td>12</td></tr>
+                <tr><td>H34</td><td>0.020&ndash;0.050</td><td>4</td></tr>
+                <tr><td>H34</td><td>0.051&ndash;0.161</td><td>6</td></tr>
+                <tr><td>H34</td><td>0.162&ndash;0.249</td><td>7</td></tr>
+                <tr><td>H34</td><td>0.250&ndash;1.000</td><td>10</td></tr>
+                <tr><td>H112</td><td>0.500&ndash;2.000</td><td>11</td></tr>
+                <tr><td>H112</td><td>2.001&ndash;3.000</td><td>15</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div><!-- /3.5.4.0 -->
+
+        <div class="section lvl-2" id="3.5.4.1">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.4.1</span>O Temper</div>
+          <p>Figure 3.5.4.1.6 presents tensile and compressive stress-strain and tangent-modulus curves for this temper.</p>
+
+          <div class="hdbk-figure" id="fig-3.5.4.1.6">
+            <div class="canvasdiv">
+              <button id="toggle-35416">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-35416');var a=document.createElement('a');a.download='canvas-35416.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-35416').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-35416" class="chartcanvas" role="img" aria-label="Figure 3.5.4.1.6"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.4.1.6.</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5454-O aluminum alloy sheet, plate, extrusion at room temperature.</p>
+          </div>
+        </div><!-- /3.5.4.1 -->
+
+        <div class="section lvl-2" id="3.5.4.2">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.4.2</span>H32 Temper</div>
+          <p>Figure 3.5.4.2.6 presents room-temperature tensile stress-strain curves for this temper.</p>
+
+          <div class="hdbk-figure" id="fig-3.5.4.2.6">
+            <div class="canvasdiv">
+              <button id="toggle-35426">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-35426');var a=document.createElement('a');a.download='canvas-35426.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-35426').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-35426" class="chartcanvas" role="img" aria-label="Figure 3.5.4.2.6"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.4.2.6.</strong> Typical tensile stress-strain curves for 5454-H32 aluminum alloy plate at room temperature.</p>
+          </div>
+        </div><!-- /3.5.4.2 -->
+
+        <div class="section lvl-2" id="3.5.4.3">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.4.3</span>H34 Temper</div>
+          <p>Figures 3.5.4.3.6(a) and (b) present room-temperature tensile and compressive stress-strain and tangent-modulus curves for this temper.</p>
+
+          <div class="hdbk-figure" id="fig-3.5.4.3.6a">
+            <div class="canvasdiv">
+              <button id="toggle-35436a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-35436a');var a=document.createElement('a');a.download='canvas-35436a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-35436a').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-35436a" class="chartcanvas" role="img" aria-label="Figure 3.5.4.3.6(a)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.4.3.6(a).</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5454-H34 aluminum alloy sheet at room temperature.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.4.3.6b">
+            <div class="canvasdiv">
+              <button id="toggle-35436b">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-35436b');var a=document.createElement('a');a.download='canvas-35436b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-35436b').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-35436b" class="chartcanvas" role="img" aria-label="Figure 3.5.4.3.6(b)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.4.3.6(b).</strong> Typical tensile stress-strain curve for 5454-H34 aluminum alloy plate at room temperature.</p>
+          </div>
+        </div><!-- /3.5.4.3 -->
+        </div><!-- /3.5.4 -->
+
+        <div class="section lvl-1" id="3.5.5">
+          <div class="section-heading lvl-1"><span class="section-num">3.5.5</span>5456 Alloy</div>
+<div class="section lvl-2" id="3.5.5.0">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.5.0</span>Comments and Properties</div>
+          <p>5456 is the highest strength alloy of the Al-Mg group. It has high resistance to corrosion, but should not be used in strain-hardened tempers at temperatures above 150&deg;F because of possible sensitization to stress-corrosion cracking. Refer to Section 3.1.2.3 for comments regarding the resistance of the alloy to stress-corrosion cracking, and to Section 3.1.3.4 for comments regarding the weldability of the alloy.</p>
+          <p>Some material specifications for 5456 aluminum alloy are presented in Table 3.5.5.0(a). Room-temperature mechanical and physical properties are shown in Tables 3.5.5.0(b) and (c). The effect of temperature on physical properties is shown in Figure 3.5.5.0.</p>
+
+          <div class="hdbk-table-wrap" id="table-3.5.5.0a">
+            <table class="hdbk-table">
+              <caption>Table 3.5.5.0(a). Material Specifications for 5456 Aluminum Alloy</caption>
+              <thead><tr><th>Specification</th><th>Form</th></tr></thead>
+              <tbody>
+                <tr><td>AMS-QQ-A-250/9</td><td class="td-left">Sheet and plate</td></tr>
+                <tr><td>AMS-QQ-A-200/7</td><td class="td-left">Extruded bar, rod, and shapes</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The temper index for 5456 is as follows:</p>
+          <ul>
+            <li>3.5.5.1 &mdash; O</li>
+            <li>3.5.5.2 &mdash; H111</li>
+            <li>3.5.5.3 &mdash; H112</li>
+            <li>3.5.5.4 &mdash; H321</li>
+          </ul>
+
+          <div class="hdbk-table-wrap" id="table-3.5.5.0b">
+            <table class="hdbk-table">
+              <caption>Table 3.5.5.0(b). Design Mechanical and Physical Properties of 5456 Aluminum Alloy Sheet and Plate</caption>
+              <thead>
+                <tr>
+                  <th style="width:12rem; text-align:left;">Specification</th>
+                  <th colspan="11">AMS-QQ-A-250/9</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Form</th>
+                  <th colspan="11">Sheet and plate</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Temper</th>
+                  <th colspan="5">O</th><th colspan="2">H112</th><th colspan="4">H321</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Thickness, in.</th>
+                  <th>0.051-1.500</th><th>1.501-3.000</th><th>3.001-5.000</th><th>5.001-7.000</th><th>7.001-8.000</th>
+                  <th>0.250-1.500</th><th>1.501-3.000</th>
+                  <th>0.188-0.624</th><th>0.625-1.250</th><th>1.251-1.500</th><th>1.501-3.000</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Basis</th>
+                  <th>S</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th><th>S</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="prop-section"><td colspan="12" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="12" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>42</td><td>41</td><td>40</td><td>39</td><td>38</td><td>42</td><td>41</td><td>46</td><td>46</td><td>44</td><td>41</td></tr>
+                <tr><td class="td-indent">LT</td><td>42</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>46</td><td>45</td><td>43</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="12" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>19</td><td>18</td><td>17</td><td>16</td><td>15</td><td>19</td><td>18</td><td>33</td><td>33</td><td>31</td><td>29</td></tr>
+                <tr><td class="td-indent">LT</td><td>19</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>30</td><td>29</td><td>28</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="12" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>19</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>27</td><td>26</td><td>24</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">LT</td><td>19</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>33</td><td>31</td><td>29</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>26</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>27</td><td>27</td><td>25</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="12" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>63</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>67</td><td>67</td><td>64</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>84</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>84</td><td>84</td><td>80</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="12" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>32</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>46</td><td>46</td><td>43</td><td>&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>38</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>53</td><td>53</td><td>50</td><td>&middot;&middot;&middot;</td></tr>
+                <tr class="prop-group"><td colspan="12" class="td-left"><em>e</em>, percent:</td></tr>
+                <tr><td class="td-indent">L</td><td>16</td><td>16</td><td>14</td><td>14</td><td>12</td><td>12</td><td>12</td><td>12</td><td>12</td><td>12</td><td>12</td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="11">10.2</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="11">10.4</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="11">3.85</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td colspan="11">0.33</td></tr>
+                <tr class="prop-section"><td colspan="12" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="11">0.096</td></tr>
+                <tr><td class="td-left"><em>C</em>, Btu/(lb)(&deg;F)</td><td colspan="11">0.23 (at 212&deg;F)</td></tr>
+                <tr><td class="td-left"><em>K</em>, Btu/[(hr)(ft<sup>2</sup>)(&deg;F)/ft]</td><td colspan="11">&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-left"><em>&alpha;</em>, 10<sup>-6</sup> in./in./&deg;F</td><td colspan="11">See Figure 3.5.5.0</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="hdbk-table-wrap" id="table-3.5.5.0c">
+            <table class="hdbk-table">
+              <caption>Table 3.5.5.0(c). Design Mechanical and Physical Properties of 5456 Aluminum Alloy Extrusion</caption>
+              <thead>
+                <tr>
+                  <th style="width:12rem; text-align:left;">Specification</th>
+                  <th colspan="3">AMS-QQ-A-200/7</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Form</th>
+                  <th colspan="3">Extruded bar, rod, and shapes</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Temper</th>
+                  <th>O</th><th>H111</th><th>H112</th>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">Cross-Sectional Area, in.<sup>2</sup></th>
+                  <th colspan="3">&le;32</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Thickness or Diameter, in.</th>
+                  <th>&le;5.000</th><th>&le;5.000</th><th>&le;5.000</th>
+                </tr>
+                <tr class="subhead">
+                  <th style="text-align:left;">Basis</th>
+                  <th>S</th><th>S</th><th>S</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="prop-section"><td colspan="4" class="td-left">Mechanical Properties:</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>tu</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>41</td><td>42</td><td>41</td></tr>
+                <tr><td class="td-indent">LT</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>41</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>ty</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>19</td><td>26</td><td>19</td></tr>
+                <tr><td class="td-indent">LT</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>19</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>cy</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">L</td><td>19</td><td>&middot;&middot;&middot;</td><td>19</td></tr>
+                <tr><td class="td-indent">LT</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>19</td></tr>
+                <tr><td class="td-left"><em>F<sub>su</sub></em>, ksi</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>23</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>bru</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>57</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>74</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>F<sub>bry</sub></em>, ksi:</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;1.5)</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>34</td></tr>
+                <tr><td class="td-indent">(e/D&nbsp;=&nbsp;2.0)</td><td>&middot;&middot;&middot;</td><td>&middot;&middot;&middot;</td><td>38</td></tr>
+                <tr class="prop-group"><td colspan="4" class="td-left"><em>e</em>, percent:</td></tr>
+                <tr><td class="td-indent">L</td><td>14</td><td>12</td><td>12</td></tr>
+                <tr><td class="td-left"><em>E</em>, 10<sup>3</sup> ksi</td><td colspan="3">10.2</td></tr>
+                <tr><td class="td-left"><em>E<sub>c</sub></em>, 10<sup>3</sup> ksi</td><td colspan="3">10.4</td></tr>
+                <tr><td class="td-left"><em>G</em>, 10<sup>3</sup> ksi</td><td colspan="3">3.85</td></tr>
+                <tr><td class="td-left"><em>&mu;</em></td><td colspan="3">0.33</td></tr>
+                <tr class="prop-section"><td colspan="4" class="td-left">Physical Properties:</td></tr>
+                <tr><td class="td-left"><em>&omega;</em>, lb/in.<sup>3</sup></td><td colspan="3">0.096</td></tr>
+                <tr><td class="td-left"><em>C</em>, Btu/(lb)(&deg;F)</td><td colspan="3">0.23 (at 212&deg;F)</td></tr>
+                <tr><td class="td-left"><em>K</em>, Btu/[(hr)(ft<sup>2</sup>)(&deg;F)/ft]</td><td colspan="3">&middot;&middot;&middot;</td></tr>
+                <tr><td class="td-left"><em>&alpha;</em>, 10<sup>-6</sup> in./in./&deg;F</td><td colspan="3">See Figure 3.5.5.0</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="hdbk-figure" id="fig-3.5.5.0">
+            <div class="canvasdiv">
+              <button id="toggle-3550">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-3550');var a=document.createElement('a');a.download='canvas-3550.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-3550').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-3550" class="chartcanvas" role="img" aria-label="Figure 3.5.5.0"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.5.0.</strong> Effect of temperature on the physical properties of 5456 aluminum alloy.</p>
+          </div>
+        </div><!-- /3.5.5.0 -->
+
+        <div class="section lvl-2" id="3.5.5.1">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.5.1</span>O Temper</div>
+          <p>Room-temperature tensile and compressive stress-strain and tangent-modulus curves for this temper are presented in Figures 3.5.5.1.6(a) and (b).</p>
+
+          <div class="hdbk-figure" id="fig-3.5.5.1.6a">
+            <div class="canvasdiv">
+              <button id="toggle-35516a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-35516a');var a=document.createElement('a');a.download='canvas-35516a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-35516a').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-35516a" class="chartcanvas" role="img" aria-label="Figure 3.5.5.1.6(a)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.5.1.6(a).</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5456-O aluminum alloy sheet and plate at room temperature.</p>
+          </div>
+          <div class="hdbk-figure" id="fig-3.5.5.1.6b">
+            <div class="canvasdiv">
+              <button id="toggle-35516b">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-35516b');var a=document.createElement('a');a.download='canvas-35516b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-35516b').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-35516b" class="chartcanvas" role="img" aria-label="Figure 3.5.5.1.6(b)"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.5.1.6(b).</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5456-O aluminum alloy extrusion at room temperature.</p>
+          </div>
+        </div><!-- /3.5.5.1 -->
+
+        <div class="section lvl-2" id="3.5.5.2">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.5.2</span>H111 Temper</div>
+          <p>Room-temperature tensile and compressive stress-strain and tangent-modulus curves for this temper are presented in Figure 3.5.5.2.6.</p>
+
+          <div class="hdbk-figure" id="fig-3.5.5.2.6">
+            <div class="canvasdiv">
+              <button id="toggle-35526">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-35526');var a=document.createElement('a');a.download='canvas-35526.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-35526').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-35526" class="chartcanvas" role="img" aria-label="Figure 3.5.5.2.6"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.5.2.6.</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5456-H111 aluminum alloy extrusion at room temperature.</p>
+          </div>
+        </div><!-- /3.5.5.2 -->
+
+        <div class="section lvl-2" id="3.5.5.3">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.5.3</span>H112 Temper</div>
+          <p>Mechanical and physical properties for this temper are given in Tables 3.5.5.0(b) and (c); no additional figures are provided for the H112 temper.</p>
+        </div><!-- /3.5.5.3 -->
+
+        <div class="section lvl-2" id="3.5.5.4">
+          <div class="section-heading lvl-2"><span class="section-num">3.5.5.4</span>H321 Temper</div>
+          <p>Room-temperature tensile and compressive stress-strain and tangent-modulus curves for this temper are presented in Figure 3.5.5.4.6.</p>
+
+          <div class="hdbk-figure" id="fig-3.5.5.4.6">
+            <div class="canvasdiv">
+              <button id="toggle-35546">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-35546');var a=document.createElement('a');a.download='canvas-35546.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-35546').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-35546" class="chartcanvas" role="img" aria-label="Figure 3.5.5.4.6"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.5.5.4.6.</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 5456-H321 aluminum alloy plate at room temperature. Thickness = 0.625&ndash;1.250 in.</p>
+          </div>
+        </div><!-- /3.5.5.4 -->
+        </div><!-- /3.5.5 -->
+      </div>
+    </div>
+  </section>
+
+      <section class="mt-3">
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Other MIL-HDBK-5 Chapters</div>
+            </div>
+            <div class="mx-auto mt-3 mb-4 text-center" style="max-width:820px;">
+              <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                <a href="Chapter2(steel).html" class="custom-link custom-btn btn d-inline-block">Chapter 2 (Steel)</a>
+                <a href="Chapter4(magnesium).html" class="custom-link custom-btn btn d-inline-block">Chapter 4 (Magnesium)</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    <section class="mt-5 pt-3">
+      <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+        <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+          <div class="d-flex align-items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+            <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+          </div>          <!-- Citation format tabs -->
+          <style>
+            #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+            #citationTabs li { margin: 0; list-style: none; }
+            #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+            #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+            #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+          </style>
+          <div class="tab-content mt-2 mb-3" id="citationTabContent">
+            <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+              <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+              <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+              <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+              <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+          </div>
+          <ul id="citationTabs" class="nav" role="tablist">
+            <li role="presentation">
+              <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="site-footer"></footer>
+  <script src="js/footer.js"></script>
+
+  <script>
+function initLightbox() {
+  const overlay  = document.getElementById('lightboxOverlay');
+  const img      = document.getElementById('lightboxImg');
+  const caption  = document.getElementById('lightboxCaption');
+  const closeBtn = document.getElementById('lightboxClose');
+
+  if (!overlay) return;
+
+  function openLightbox(src, alt, captionText) {
+    img.src             = src;
+    img.alt             = alt || '';
+    caption.textContent = captionText || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    img.src = '';
+  }
+
+  document.addEventListener('click', e => {
+    const target = e.target.closest('.ref-zoomable');
+    if (!target) return;
+    const figLabel = target.closest('.ref-fig')
+      ?.querySelector('.ref-fig-label')
+      ?.textContent ?? '';
+    openLightbox(target.src, target.alt, figLabel);
+  });
+
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeLightbox();
+  });
+
+  closeBtn.addEventListener('click', closeLightbox);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initLightbox);
+  </script>
+
+  </body>
+</html>
