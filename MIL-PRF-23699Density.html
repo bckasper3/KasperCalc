@@ -286,6 +286,7 @@
                   <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
                   <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
                   <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                  <a class="dropdown-item" href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a>
                 </div>
               </li>
               <li class="nav-item text-center align-svg-bottom smallsearchbar">
@@ -367,7 +368,8 @@
                 </canvas>
               </div>
             </div>
-            <p class="text-center">Measured values at ambient pressure (~83 kPa): 41&nbsp;°F to 158&nbsp;°F (5&nbsp;°C to 70&nbsp;°C). <br>Extended range −40&nbsp;°F to 527&nbsp;°F (−40&nbsp;°C to 275&nbsp;°C) uses a linear extrapolation with slope matched to NIST data.</p>
+            <p class="text-center">Measured values at ambient pressure (~83 kPa): 41&nbsp;°F to 158&nbsp;°F (5&nbsp;°C to 70&nbsp;°C). <br>Extended range −40&nbsp;°F to 392&nbsp;°F (−40&nbsp;°C to 200&nbsp;°C) uses a linear extrapolation with slope matched to NIST data, capped near MIL-PRF-23699's 204&nbsp;°C corrosion/oxidation stability test ceiling &mdash; typical bulk oil temperatures in service are far below this.</p>
+            <p class="text-center"><em>Dashed lines represent linearly extrapolated data beyond the 41&ndash;158&nbsp;°F measured range (NIST IR 8263 data range limit).</em></p>
             <p class="text-center">Data from: <a href="https://doi.org/10.6028/NIST.IR.8263" target="_blank">NIST IR 8263 — Thermophysical Properties of Polyol Ester Lubricants</a>, Table 23 (measured); extended range extrapolated.</p>
             <p class="text-center">Toggle data sets by clicking the legend.</p>
           </div>
@@ -457,10 +459,12 @@
                   The absolute expanded uncertainty is 1.65–1.66 kg·m⁻³ (relative: 0.12–0.18&nbsp;%).
                 </p>
                 <p class="mt-2">
-                  The range is extended to −40&nbsp;°C (−40&nbsp;°F) and 275&nbsp;°C (527&nbsp;°F) using a linear extrapolation
+                  The range is extended to −40&nbsp;°C (−40&nbsp;°F) and 200&nbsp;°C (392&nbsp;°F) using a linear extrapolation
                   with slope (−3.77 kg·m⁻³·°C⁻¹) matched to the NIST measurements. Maximum deviation from the NIST
                   measured points within the 5–70&nbsp;°C range is 0.09 kg·m⁻³, well within the measurement uncertainty.
-                  Values outside 5–70&nbsp;°C should be treated as estimates only.
+                  The high-temperature end is capped near MIL-PRF-23699's own 204&nbsp;°C corrosion/oxidation stability
+                  test temperature; no published density measurements exist above the NIST 5–70&nbsp;°C range, so all
+                  extended-range values &mdash; including this capped region &mdash; should be treated as rough estimates only.
                 </p>
                 <p class="mt-2">
                   MIL-PRF-23699 is a fully qualified synthetic turbine engine oil based on polyol esters (POE).
@@ -527,9 +531,6 @@
                     <tr><td>150</td><td>302.0</td><td>894.10</td><td>0.89410</td><td>7.459</td><td>55.83</td><td>Extrapolated</td></tr>
                     <tr><td>175</td><td>347.0</td><td>875.25</td><td>0.87525</td><td>7.302</td><td>54.66</td><td>Extrapolated</td></tr>
                     <tr><td>200</td><td>392.0</td><td>856.40</td><td>0.85640</td><td>7.145</td><td>53.48</td><td>Extrapolated</td></tr>
-                    <tr><td>225</td><td>437.0</td><td>837.55</td><td>0.83755</td><td>6.988</td><td>52.30</td><td>Extrapolated</td></tr>
-                    <tr><td>250</td><td>482.0</td><td>818.71</td><td>0.81871</td><td>6.831</td><td>51.13</td><td>Extrapolated</td></tr>
-                    <tr><td>275</td><td>527.0</td><td>799.85</td><td>0.79985</td><td>6.674</td><td>49.96</td><td>Extrapolated</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -597,7 +598,9 @@
 <script>
 // MIL-PRF-23699 Density Data
 // Measured 5–70°C: NIST IR 8263, Table 23 (ambient pressure ~83 kPa).
-// Extended range −40 to 275°C: linear extrapolation matched to NIST slope.
+// Extended range −40 to 200°C: linear extrapolation matched to NIST slope.
+// Capped near MIL-PRF-23699's 204°C corrosion/oxidation stability test ceiling —
+// no published density data exists above the 5–70°C NIST-measured range.
 // Format: [T_C, density_kg_m3]
 const milDensData = [
   [-40, 1037.36],
@@ -649,21 +652,6 @@ const milDensData = [
   [190,  863.94],
   [195,  860.17],
   [200,  856.40],
-  [205,  852.63],
-  [210,  848.86],
-  [215,  845.09],
-  [220,  841.32],
-  [225,  837.55],
-  [230,  833.79],
-  [235,  830.02],
-  [240,  826.25],
-  [245,  822.48],
-  [250,  818.71],
-  [255,  814.94],
-  [260,  811.17],
-  [265,  807.40],
-  [270,  803.63],
-  [275,  799.85],
 ];
 
 function milDensCtoF(c) { return c * 9 / 5 + 32; }
@@ -700,6 +688,15 @@ function milDensBuildFahrenheitPoints(data) {
 
 const milDensFPoints = milDensBuildFahrenheitPoints(milDensData);
 
+// Measured range is 41–158°F (5–70°C, NIST IR 8263 Table 23). Everything
+// outside that is linearly extrapolated — split into separate datasets so
+// the extrapolated portion can be drawn dashed, matching nominalDensity.html.
+const MIL_DENS_MEASURED_MIN_F = 41;
+const MIL_DENS_MEASURED_MAX_F = 158;
+const milDensMeasuredPts = milDensFPoints.filter(p => p.x >= MIL_DENS_MEASURED_MIN_F && p.x <= MIL_DENS_MEASURED_MAX_F);
+const milDensLowExtrapPts = milDensFPoints.filter(p => p.x <= MIL_DENS_MEASURED_MIN_F);
+const milDensHighExtrapPts = milDensFPoints.filter(p => p.x >= MIL_DENS_MEASURED_MAX_F);
+
 // Build chart
 const customBg = {
   id: 'customCanvasBackgroundColor',
@@ -717,13 +714,33 @@ const ctx = document.getElementById('myChart').getContext('2d');
 const milDensChart = new Chart(ctx, {
   type: 'line',
   data: {
-    datasets: [{
-      label: 'MIL-PRF-23699',
-      data: milDensFPoints,
-      fill: false,
-      borderColor: 'rgb(68,119,170)',
-      tension: 0.1,
-    }]
+    datasets: [
+      {
+        label: 'MIL-PRF-23699',
+        data: milDensMeasuredPts,
+        fill: false,
+        borderColor: 'rgb(68,119,170)',
+        tension: 0.1,
+      },
+      {
+        label: 'MIL-PRF-23699',
+        data: milDensLowExtrapPts,
+        fill: false,
+        borderColor: 'rgb(68,119,170)',
+        borderDash: [6, 4],
+        tension: 0,
+        isExtrapolation: true,
+      },
+      {
+        label: 'MIL-PRF-23699',
+        data: milDensHighExtrapPts,
+        fill: false,
+        borderColor: 'rgb(68,119,170)',
+        borderDash: [6, 4],
+        tension: 0,
+        isExtrapolation: true,
+      },
+    ]
   },
   plugins: [customBg],
   options: {
@@ -734,7 +751,23 @@ const milDensChart = new Chart(ctx, {
     responsive: true,
     plugins: {
       legend: {
-        labels: { align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 } },
+        labels: {
+          align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 },
+          filter: (legendItem, chartData) => !chartData.datasets[legendItem.datasetIndex].isExtrapolation,
+        },
+        onClick(e, legendItem, legend) {
+          const datasetIndex = legendItem.datasetIndex;
+          const ci = legend.chart;
+          const meta = ci.getDatasetMeta(datasetIndex);
+          meta.hidden = meta.hidden === null ? !ci.data.datasets[datasetIndex].hidden : null;
+          ci.data.datasets.forEach((ds, i) => {
+            if (i !== datasetIndex && ds.isExtrapolation) {
+              const extrapMeta = ci.getDatasetMeta(i);
+              extrapMeta.hidden = meta.hidden;
+            }
+          });
+          ci.update();
+        },
       },
       tooltip: { enabled: true, mode: 'nearest', intersect: false, axis: 'x' },
       customCanvasBackgroundColor: { color: 'white' }
@@ -743,7 +776,7 @@ const milDensChart = new Chart(ctx, {
       x: {
         type: 'linear',
         min: -40,
-        max: 530,
+        max: 400,
         ticks: { maxRotation: 0, font: { size: 16 } },
         title: { display: true, text: 'Temperature °F', font: { size: 20 } }
       },

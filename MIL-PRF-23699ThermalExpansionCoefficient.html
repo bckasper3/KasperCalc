@@ -8,7 +8,7 @@
     <title>KasperCalc: MIL-PRF-23699 Thermal Expansion Coefficient</title>
     <meta name="author" content="bckasper3" />
     <meta name="keywords" content="KasperCalc, MIL-PRF-23699, turbine engine oil, thermal expansion coefficient, volumetric expansion, polyol ester, lubricant expansion calculator" />
-    <meta name="description" content="Volumetric thermal expansion coefficient and percent volume change of MIL-PRF-23699 turbine engine oil across −40°F to 527°F, derived from NIST IR 8263 density data." />
+    <meta name="description" content="Volumetric thermal expansion coefficient and percent volume change of MIL-PRF-23699 turbine engine oil across −40°F to 392°F, derived from NIST IR 8263 density data." />
 
     <!-- DEFERRED JAVASCRIPT -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -286,6 +286,7 @@
                   <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
                   <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
                   <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                  <a class="dropdown-item" href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a>
                 </div>
               </li>
               <li class="nav-item text-center align-svg-bottom smallsearchbar">
@@ -375,6 +376,7 @@
             </div>
           </div>
           <p class="text-center">β = −(1/ρ)(dρ/dT) derived from NIST IR 8263 density data. Measured range: 41–158&nbsp;°F (5–70&nbsp;°C); outside this range values are from linear extrapolation.</p>
+          <p class="text-center"><em>Dashed lines represent linearly extrapolated data beyond the 41&ndash;158&nbsp;°F measured range (NIST IR 8263 data range limit).</em></p>
           <p class="text-center">Toggle data sets by clicking the legend.</p>
         </div>
       </div>
@@ -405,6 +407,8 @@
           </div>
           <p class="text-center">ΔV/V₀ = (ρ₀ − ρ) / ρ × 100%, referenced to 68&nbsp;°F (20&nbsp;°C) where ρ₀ = 992.12&nbsp;kg/m³. Negative values mean the oil is denser (contracted) relative to room temperature.</p>
           <p class="text-center">Measured range: 41–158&nbsp;°F (5–70&nbsp;°C); outside this range values are from linear extrapolation.</p>
+          <p class="text-center"><em>Dashed lines represent linearly extrapolated data beyond the 41&ndash;158&nbsp;°F measured range (NIST IR 8263 data range limit).</em></p>
+          <p class="text-center">Toggle data sets by clicking the legend.</p>
         </div>
       </div>
     </section>
@@ -485,8 +489,8 @@
               <p class="mt-2">
                 Because MIL-PRF-23699 density decreases linearly with temperature (slope −0.754&nbsp;kg·m⁻³·K⁻¹
                 from NIST IR 8263), β increases slowly with temperature as density decreases. At room temperature
-                (68&nbsp;°F / 20&nbsp;°C) β ≈ 7.60 × 10⁻⁴&nbsp;1/K, rising to about 9.43 × 10⁻⁴&nbsp;1/K at
-                527&nbsp;°F (275&nbsp;°C). This is typical for polyol ester (POE) synthetic lubricants.
+                (68&nbsp;°F / 20&nbsp;°C) β ≈ 7.60 × 10⁻⁴&nbsp;1/K, rising to about 8.80 × 10⁻⁴&nbsp;1/K at
+                392&nbsp;°F (200&nbsp;°C). This is typical for polyol ester (POE) synthetic lubricants.
               </p>
             </div>
 
@@ -501,8 +505,8 @@
               </p>
               <p class="mt-2">
                 Negative values indicate that the oil is denser than at room temperature (volume contracted).
-                At −40&nbsp;°F the oil occupies about 4.4% less volume than at room temperature; at 527&nbsp;°F
-                it occupies about 24% more. These values are important for sizing oil tanks, reservoirs, and
+                At −40&nbsp;°F the oil occupies about 4.4% less volume than at room temperature; at 392&nbsp;°F
+                it occupies about 15.8% more. These values are important for sizing oil tanks, reservoirs, and
                 expansion chambers in turbine engine lubrication systems.
               </p>
             </div>
@@ -512,7 +516,10 @@
               <p class="mt-2">
                 β and ΔV/V₀ are derived from the NIST IR 8263 density dataset (Table 23), which covers
                 5–70&nbsp;°C (41–158&nbsp;°F) at ambient pressure (~83&nbsp;kPa). Values outside this range
-                are extrapolated using the linear density slope and should be treated as estimates only.
+                are extrapolated using the linear density slope. The high-temperature end is capped at
+                200&nbsp;°C (392&nbsp;°F), near MIL-PRF-23699's own 204&nbsp;°C corrosion/oxidation stability
+                test temperature; no published density measurements exist above the NIST-measured range, so
+                all extrapolated values should be treated as rough estimates only.
               </p>
             </div>
           </div>
@@ -561,9 +568,6 @@
                   <tr><td>150</td><td>302.0</td><td>894.10</td><td>8.433</td><td>10.97</td><td>Extrapolated</td></tr>
                   <tr><td>175</td><td>347.0</td><td>875.25</td><td>8.615</td><td>13.35</td><td>Extrapolated</td></tr>
                   <tr><td>200</td><td>392.0</td><td>856.40</td><td>8.804</td><td>15.84</td><td>Extrapolated</td></tr>
-                  <tr><td>225</td><td>437.0</td><td>837.55</td><td>9.002</td><td>18.45</td><td>Extrapolated</td></tr>
-                  <tr><td>250</td><td>482.0</td><td>818.71</td><td>9.209</td><td>21.17</td><td>Extrapolated</td></tr>
-                  <tr><td>275</td><td>527.0</td><td>799.85</td><td>9.427</td><td>24.04</td><td>Extrapolated</td></tr>
                 </tbody>
               </table>
             </div>
@@ -647,10 +651,7 @@ const milTeData = [
   [140,  901.64], [145,  897.87], [150,  894.10], [155,  890.33],
   [160,  886.56], [165,  882.79], [170,  879.02], [175,  875.25],
   [180,  871.48], [185,  867.71], [190,  863.94], [195,  860.17],
-  [200,  856.40], [205,  852.63], [210,  848.86], [215,  845.09],
-  [220,  841.32], [225,  837.55], [230,  833.79], [235,  830.02],
-  [240,  826.25], [245,  822.48], [250,  818.71], [255,  814.94],
-  [260,  811.17], [265,  807.40], [270,  803.63], [275,  799.85],
+  [200,  856.40],
 ];
 
 // Reference density at 68°F (20°C)
@@ -700,6 +701,43 @@ const volPctFn = rho => (milTeRho0 - rho) / rho * 100;
 const milTeBetaFPoints  = milTeBuildFPoints(betaFn);
 const milTeVolPctFPoints = milTeBuildFPoints(volPctFn);
 
+// Measured range is 41–158°F (5–70°C, NIST IR 8263 Table 23). Everything
+// outside that is linearly extrapolated — split into separate datasets so
+// the extrapolated portion can be drawn dashed, matching nominalDensity.html.
+const MIL_TE_MEASURED_MIN_F = 41;
+const MIL_TE_MEASURED_MAX_F = 158;
+function milTeSplitByMeasuredRange(pts) {
+  return {
+    measured:    pts.filter(p => p.x >= MIL_TE_MEASURED_MIN_F && p.x <= MIL_TE_MEASURED_MAX_F),
+    lowExtrap:   pts.filter(p => p.x <= MIL_TE_MEASURED_MIN_F),
+    highExtrap:  pts.filter(p => p.x >= MIL_TE_MEASURED_MAX_F),
+  };
+}
+const milTeBetaSplit  = milTeSplitByMeasuredRange(milTeBetaFPoints);
+const milTeVolSplit   = milTeSplitByMeasuredRange(milTeVolPctFPoints);
+
+function milTeExtrapDatasets(label, split, color) {
+  return [
+    { label, data: split.measured,   fill: false, borderColor: color, tension: 0 },
+    { label, data: split.lowExtrap,  fill: false, borderColor: color, borderDash: [6, 4], tension: 0, isExtrapolation: true },
+    { label, data: split.highExtrap, fill: false, borderColor: color, borderDash: [6, 4], tension: 0, isExtrapolation: true },
+  ];
+}
+
+function milTeExtrapLegendOnClick(e, legendItem, legend) {
+  const datasetIndex = legendItem.datasetIndex;
+  const ci = legend.chart;
+  const meta = ci.getDatasetMeta(datasetIndex);
+  meta.hidden = meta.hidden === null ? !ci.data.datasets[datasetIndex].hidden : null;
+  ci.data.datasets.forEach((ds, i) => {
+    if (i !== datasetIndex && ds.isExtrapolation) {
+      const extrapMeta = ci.getDatasetMeta(i);
+      extrapMeta.hidden = meta.hidden;
+    }
+  });
+  ci.update();
+}
+
 // ---------------------------------------------------------------------------
 // White-background plugin
 // ---------------------------------------------------------------------------
@@ -728,7 +766,11 @@ window.addEventListener('DOMContentLoaded', function () {
     responsive: true,
     plugins: {
       legend: {
-        labels: { align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 } }
+        labels: {
+          align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 },
+          filter: (legendItem, chartData) => !chartData.datasets[legendItem.datasetIndex].isExtrapolation,
+        },
+        onClick: milTeExtrapLegendOnClick,
       },
       tooltip: {
         enabled: true, mode: 'nearest', intersect: false, axis: 'x',
@@ -740,7 +782,7 @@ window.addEventListener('DOMContentLoaded', function () {
     },
     scales: {
       x: {
-        type: 'linear', min: -40, max: 530,
+        type: 'linear', min: -40, max: 400,
         ticks: { maxRotation: 0, font: { size: 16 } },
         title: { display: true, text: 'Temperature (°F)', font: { size: 20 } }
       },
@@ -755,13 +797,7 @@ window.addEventListener('DOMContentLoaded', function () {
   const betaChartObj = new Chart(betaCtx, {
     type: 'line',
     data: {
-      datasets: [{
-        label: 'MIL-PRF-23699',
-        data: milTeBetaFPoints,
-        fill: false,
-        borderColor: 'rgb(68,119,170)',
-        tension: 0
-      }]
+      datasets: milTeExtrapDatasets('MIL-PRF-23699', milTeBetaSplit, 'rgb(68,119,170)')
     },
     plugins: [milTeCustomBg],
     options: sharedChartOpts('β × 10⁻⁴ (1/K)', ' ×10⁻⁴ 1/K')
@@ -771,13 +807,7 @@ window.addEventListener('DOMContentLoaded', function () {
   const volChartObj = new Chart(volCtx, {
     type: 'line',
     data: {
-      datasets: [{
-        label: 'MIL-PRF-23699 vs 68 °F',
-        data: milTeVolPctFPoints,
-        fill: false,
-        borderColor: 'rgb(34,136,51)',
-        tension: 0
-      }]
+      datasets: milTeExtrapDatasets('MIL-PRF-23699 vs 68 °F', milTeVolSplit, 'rgb(34,136,51)')
     },
     plugins: [milTeCustomBg],
     options: sharedChartOpts('Volume Change (%)', ' %')

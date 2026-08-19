@@ -147,6 +147,11 @@
       .sq-fieldrow { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
       .sq-fieldrow label { font-size: 12px; color: var(--sq-ink-soft); display: block; margin-bottom: 2px; }
       .sq-fieldrow input { font: 13px var(--sq-mono); border: 1px solid var(--sq-line); border-radius: 3px; padding: 5px 7px; width: 100px; color: var(--sq-ink); }
+      /* ── Checkbox rows (reset the boxed .sq-fieldrow input styling —
+         a checkbox shouldn't inherit the 100px bordered/padded text-box look) ── */
+      .sq-check-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; text-align: left; }
+      .sq-check-row input[type="checkbox"] { width: 15px; height: 15px; margin: 0; padding: 0; border: none; flex: 0 0 auto; }
+      .sq-check-row label { font-size: 12px; color: var(--sq-ink-soft); display: inline; margin: 0; }
       /* ── Optional details sections ──────────────────────────── */
       details.sq-adv { margin-top: 14px; border-top: 1px dashed var(--sq-line); padding-top: 10px; }
       details.sq-adv summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--sq-blue); user-select: none; }
@@ -474,6 +479,7 @@
                   <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
                   <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
                   <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                  <a class="dropdown-item" href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a>
                 </div>
               </li>
               <li class="nav-item text-center align-svg-bottom smallsearchbar">
@@ -677,6 +683,30 @@
                   <input type="number" id="sq-runout" step="0.0005" min="0" value="0.002" aria-label="Runout total indicator reading diametral">
                 </div>
               </div>
+
+              <!-- EXTERNALLY-CENTERED OVERRIDE -->
+              <div class="sq-check-row" id="sq-ignore-clr-row">
+                <input type="checkbox" id="sq-ignore-clr">
+                <label for="sq-ignore-clr">
+                  Assembly is externally centered &mdash; ignore bore/piston (or bore/rod) running clearance
+                </label>
+                <span class="tooltip-wrap">
+                    <span class="tooltip-icon" tabindex="0" role="button" aria-label="What does this override do?">i</span>
+                    <span class="tooltip-box">
+                      By default, &ldquo;eccentric worst&rdquo; squeeze includes decentering from the running clearance
+                      between the bore and the piston (or rod) &mdash; i.e. half the difference between their nominal
+                      diameters &mdash; on top of runout. That clearance lets the seal shift off-center even at
+                      <strong>zero</strong> dimensional tolerance, because it's a real design gap, not a manufacturing
+                      variation.<br><br>
+                      Check this if some other feature (a pilot, register, or separate close-tolerance guide) is what
+                      actually keeps the piston/rod centered, so this particular bore/piston or bore/rod fit never
+                      turns into real decentering. With it checked, eccentric squeeze reflects only the Runout TIR
+                      above &mdash; set Runout to 0 as well to see pure concentric-equivalent squeeze.<br><br>
+                      This does not change the direct squeeze calculation (cross section vs. groove/gland fit) &mdash;
+                      only the extra allowance for the seal shifting off-center.
+                    </span>
+                  </span>
+              </div>
             </div><!-- end Dimensions chunk -->
 
             <!-- THERMAL (optional) -->
@@ -747,8 +777,8 @@
             <div class="sq-diagram-wrap">
               <div class="sq-dg-toolbar">
                 <div class="sq-seg" role="group" aria-label="Tolerance case shown in schematic" id="sq-dg-case">
-                  <button type="button" data-sqcase="nominal" aria-pressed="false">Nominal</button>
                   <button type="button" data-sqcase="min" aria-pressed="false">Min&#8209;squeeze</button>
+                  <button type="button" data-sqcase="nominal" aria-pressed="false">Nominal</button>                  
                   <button type="button" data-sqcase="max" aria-pressed="false">Max&#8209;squeeze</button>
                 </div>
                 <span class="tooltip-wrap">
@@ -758,7 +788,8 @@
                     <strong>Nominal</strong> &mdash; mid-tolerance geometry (average of the min/max endpoints).<br>
                     <strong>Min&#8209;squeeze</strong> &mdash; the worst-case combination that produces the least squeeze (largest gland, smallest O-ring).<br>
                     <strong>Max&#8209;squeeze</strong> &mdash; the worst-case combination that produces the most squeeze (tightest gland, largest O-ring).<br><br>
-                    The <strong>Min&harr;Max</strong> slider interpolates the drawing between those two worst cases so you can see the ring compress or relax as tolerances stack up.
+                    The <strong>Min&harr;Max</strong> slider interpolates the drawing between those two worst cases so you can see the ring compress or relax as tolerances stack up.<br><br>
+                    <strong>Why Min and Max still differ at zero tolerance:</strong> the &ldquo;eccentric worst&rdquo; squeeze used here also accounts for the piston (or rod) shifting off-center inside its bore clearance &mdash; half the difference between the bore's and piston's/rod's <em>nominal</em> diameters, plus half the Runout TIR. That's a real design gap, not a manufacturing variation, so it doesn't go away when you zero out the tolerance fields. If your assembly is centered some other way (a pilot, register, or separate close-tolerance guide) and this particular clearance can't actually turn into decentering, check &ldquo;Assembly is externally centered&rdquo; below the Runout field to remove it from the eccentric calculation.
                   </span>
                 </span>
                 <label class="sq-dg-scrub" for="sq-dg-scrub" title="Interpolate between the min-squeeze and max-squeeze cases">
@@ -1744,32 +1775,41 @@
   }
 
   function pistonGeometry(d, which) {
+    /* cf = 0 skips the bore/piston running-clearance contribution to shift —
+       for assemblies where something other than this fit (a pilot, register,
+       or separate close-tolerance guide) is what actually keeps the piston
+       centered, so the clearance modeled here never turns into decentering. */
+    var cf = d.ignoreClearanceShift ? 0 : 1;
     if (which === 'min') {
       return {
         seat:  d.groove.min,
         space: (d.bore.max - d.groove.min) / 2,
-        shift: (d.bore.max - d.piston.min) / 2 + d.runout / 2,
+        shift: cf * (d.bore.max - d.piston.min) / 2 + d.runout / 2,
       };
     }
     return {
       seat:  d.groove.max,
       space: (d.bore.min - d.groove.max) / 2,
-      shift: (d.bore.min - d.piston.min) / 2 + d.runout / 2,
+      shift: cf * (d.bore.min - d.piston.min) / 2 + d.runout / 2,
     };
   }
 
   function rodGeometry(d, which) {
+    /* cf = 0 skips the guide-bore/rod running-clearance contribution to
+       shift — see pistonGeometry note above; the gland/rod direct-squeeze
+       term (space, below) is unaffected either way. */
+    var cf = d.ignoreClearanceShift ? 0 : 1;
     if (which === 'min') {
       return {
         seat:  d.rod.min,
         space: (d.gland.max - d.rod.min) / 2,
-        shift: (d.bore.max  - d.rod.min) / 2 + d.runout / 2,
+        shift: cf * (d.bore.max  - d.rod.min) / 2 + d.runout / 2,
       };
     }
     return {
       seat:  d.rod.max,
       space: (d.gland.min - d.rod.max) / 2,
-      shift: (d.bore.min  - d.rod.max) / 2 + d.runout / 2,
+      shift: cf * (d.bore.min  - d.rod.max) / 2 + d.runout / 2,
     };
   }
 
@@ -1802,6 +1842,15 @@
     if (!errors.length) {
       if (inp.type === 'piston' && inp.groove.max >= inp.bore.min)
         errors.push('Piston groove Ø must be smaller than the bore Ø.');
+      if (inp.type === 'piston' && inp.piston.max >= inp.bore.min)
+        errors.push('Piston Ø must be smaller than the bore Ø (worst-case piston max ≥ bore min) — the piston will not fit in the bore.');
+      if (inp.type === 'piston') {
+        var boreNom = (inp.bore.min + inp.bore.max) / 2;
+        var pistonNom = (inp.piston.min + inp.piston.max) / 2;
+        var grooveNom = (inp.groove.min + inp.groove.max) / 2;
+        if (!(boreNom > pistonNom && pistonNom > grooveNom))
+          errors.push('Dimensions appear to be entered in the wrong fields — expected bore Ø (B) > piston Ø (P) > groove root Ø (G), got B=' + boreNom.toFixed(4) + ', P=' + pistonNom.toFixed(4) + ', G=' + grooveNom.toFixed(4) + '.');
+      }
       if (inp.type === 'rod' && inp.rod.max >= inp.gland.min)
         errors.push('Rod Ø must be smaller than the gland (groove) Ø.');
       if (inp.runout != null && (!isNum(inp.runout) || inp.runout < 0))
@@ -1820,14 +1869,15 @@
     var g = Object.assign({}, GUIDANCE, inp.guidance || {});
     var runout = inp.runout || 0;
     var type = inp.type;
+    var ignoreClearanceShift = !!inp.ignoreClearanceShift;
 
     var geoMin, geoMax;
     if (type === 'piston') {
-      var dp = { bore: inp.bore, groove: inp.groove, piston: inp.piston, runout: runout };
+      var dp = { bore: inp.bore, groove: inp.groove, piston: inp.piston, runout: runout, ignoreClearanceShift: ignoreClearanceShift };
       geoMin = pistonGeometry(dp, 'min');
       geoMax = pistonGeometry(dp, 'max');
     } else if (type === 'rod') {
-      var dr = { gland: inp.gland, rod: inp.rod, bore: inp.bore, runout: runout };
+      var dr = { gland: inp.gland, rod: inp.rod, bore: inp.bore, runout: runout, ignoreClearanceShift: ignoreClearanceShift };
       geoMin = rodGeometry(dr, 'min');
       geoMax = rodGeometry(dr, 'max');
     } else {
@@ -1862,6 +1912,7 @@
           groove: { min: s(inp.groove.min,  cteGland), max: s(inp.groove.max, cteGland) },
           piston: { min: s(inp.piston.min,  cteGland), max: s(inp.piston.max, cteGland) },
           runout: runout,
+          ignoreClearanceShift: ignoreClearanceShift,
         };
         tGeoMin = pistonGeometry(td, 'min');
         tGeoMax = pistonGeometry(td, 'max');
@@ -1871,6 +1922,7 @@
           rod:   { min: s(inp.rod.min,   cteMate),  max: s(inp.rod.max,   cteMate)  },
           bore:  { min: s(inp.bore.min,  cteGland), max: s(inp.bore.max,  cteGland) },
           runout: runout,
+          ignoreClearanceShift: ignoreClearanceShift,
         };
         tGeoMin = rodGeometry(tdr, 'min');
         tGeoMax = rodGeometry(tdr, 'max');
@@ -3691,6 +3743,10 @@
       var roRow = document.getElementById('sq-runout-row');
       if (ro)    ro.disabled = type === 'face';
       if (roRow) roRow.style.opacity = type === 'face' ? '0.4' : '1';
+      var icChk = document.getElementById('sq-ignore-clr');
+      var icRow = document.getElementById('sq-ignore-clr-row');
+      if (icChk) icChk.disabled = type === 'face';
+      if (icRow) icRow.style.opacity = type === 'face' ? '0.4' : '1';
       var mateInp = document.getElementById('sq-cte-mate');
       var mateSel = document.getElementById('sq-cte-mate-sel');
       var mateRow = document.getElementById('sq-cte-mate-row');
@@ -3745,6 +3801,8 @@
       var type = state.type;
       var inp = { type: type };
       inp.runout = parseFloat(document.getElementById('sq-runout').value) || 0;
+      var icChk = document.getElementById('sq-ignore-clr');
+      inp.ignoreClearanceShift = !!(icChk && icChk.checked);
 
       var fields = ['oringCS'];
       if (type !== 'face') fields.push('oringID');

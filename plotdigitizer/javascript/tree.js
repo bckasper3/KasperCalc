@@ -109,17 +109,17 @@ wpd.TreeWidget = class {
     }
 
     _onclick(e) {
-        const isItem = e.target.classList.contains("tree-item");
-        const isFolder = e.target.classList.contains("tree-folder");
-        if (isItem || isFolder) {
-            this._unselectAll();
-            e.target.classList.add("tree-selected");
-            if (this.itemSelectionCallback != null) {
-                let itemId = parseInt(e.target.id.replace("tree-item-id-", ""), 10);
-                if (!isNaN(itemId)) {
-                    this.selectedPath = this.idmap[itemId];
-                    this.itemSelectionCallback(e.target, this.idmap[itemId], false);
-                }
+        const $target = e.target.closest(".tree-item, .tree-folder");
+        if ($target == null) {
+            return;
+        }
+        this._unselectAll();
+        $target.classList.add("tree-selected");
+        if (this.itemSelectionCallback != null) {
+            let itemId = parseInt($target.id.replace("tree-item-id-", ""), 10);
+            if (!isNaN(itemId)) {
+                this.selectedPath = this.idmap[itemId];
+                this.itemSelectionCallback($target, this.idmap[itemId], false);
             }
         }
     }

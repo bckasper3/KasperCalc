@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MIL-HDBK-5 Digitizer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+  <header>
+    <h1>MIL-HDBK-5 Digitizer</h1>
+    <div class="spacer"></div>
+    <div class="header-actions" id="header-editor-actions" style="display:none;">
+      <button id="save-figure-btn">Save</button>
+      <span class="tooltip-wrap"><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">Saves caption, axes, datasets, and notes to disk. Does NOT recompute calibrated points — use "Calibrate + Preview" for that.</span></span>
+      <button id="calibrate-btn" class="primary">Calibrate + Preview</button>
+      <span class="tooltip-wrap"><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">Saves the figure, then recomputes every dataset's calibrated (real-value) points from its raw pixel points using the current axis calibration, and refreshes the Live Preview panel.</span></span>
+      <button id="approve-next-btn" class="primary">Approve &amp; Next</button>
+      <span class="tooltip-wrap"><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">Marks this figure's internal QC status as approved and jumps to the next unreviewed figure. This is separate from the catalog's manual "Done" checkbox — you still check that yourself when you're satisfied.</span></span>
+      <button id="flag-btn">Flag</button>
+      <span class="tooltip-wrap"><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">Marks this figure's QC status as flagged for later review (e.g. ambiguous curves, unclear axis) without advancing to the next figure.</span></span>
+    </div>
+    <span id="progress-counter">–</span>
+    <button id="back-to-catalog-btn" style="display:none;" title="Return to the figure catalog">Back to catalog</button>
+    <button id="quit-btn" title="Stop the server and close this tab">Quit</button>
+  </header>
+
+  <!-- ===================== Catalog view (landing page) ===================== -->
+  <div class="catalog-layout" id="catalog-view">
+    <div class="catalog-inner">
+      <div class="panel" id="instructions-panel">
+        <div class="instructions-header">
+          <h2 style="margin:0;">How to use this tool</h2>
+          <button class="small-btn" id="toggle-instructions-btn">Show</button>
+        </div>
+        <div id="instructions-body" style="display:none;">
+          <p><strong>First-time setup:</strong> Click "Build catalog" below — this scans the whole handbook PDF once (~1700 pages, takes under a minute) and lists every figure it can find along with its page number. You only need to do this once; the list is saved.</p>
+          <p><strong>Finding a figure:</strong> Use the two search boxes — search by page number if you know roughly where to look, or search by figure number (e.g. "3.2.1.1.6") if you know which figure you need. Click any row's "Open" button to load it into the editor.</p>
+          <p><strong>In the editor:</strong></p>
+          <ol>
+            <li>Click "Calibrate" next to an axis, then click two known points on the chart's gridlines and type in their real values (repeat for each axis — charts can have more than one Y axis).</li>
+            <li>Click on a curve in the image to select it, type a label for it (e.g. "Tension"), assign it to the right X/Y axes, and click "Create dataset from selected paths".</li>
+            <li>Repeat for every curve on the chart.</li>
+            <li>Check the Live Preview panel — it should visually match the original chart. If it looks wrong, your axis calibration is the most likely culprit.</li>
+            <li>Add any notes, then click Save.</li>
+          </ol>
+          <p><strong>Marking it done:</strong> Go back to the catalog list (there's a "Back to catalog" button in the editor) and check the checkbox next to that figure's row. This checkbox is yours to track your own progress — it's separate from the Approve/Flag buttons in the editor, which are optional QC status.</p>
+        </div>
+      </div>
+
+      <div class="panel" id="catalog-panel">
+        <div class="catalog-toolbar">
+          <button class="primary" id="build-catalog-btn">Build catalog</button>
+          <span id="catalog-build-status" class="hint"></span>
+          <div class="spacer"></div>
+          <span id="catalog-summary" class="hint">–</span>
+        </div>
+
+        <div class="catalog-search-row">
+          <div>
+            <label>Search by page number</label>
+            <input type="number" id="catalog-page-search" placeholder="e.g. 137" />
+          </div>
+          <div>
+            <label>Search by figure number</label>
+            <input type="text" id="catalog-label-search" placeholder="e.g. 3.2.1.1.6" />
+          </div>
+          <div class="catalog-toggle-col">
+            <label><input type="checkbox" id="catalog-incomplete-only" checked /> Show only incomplete</label>
+          </div>
+        </div>
+
+        <table id="catalog-table">
+          <thead>
+            <tr>
+              <th>Done</th>
+              <th>Figure</th>
+              <th>Page</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="catalog-rows"></tbody>
+        </table>
+        <p id="catalog-empty-hint" class="hint" style="display:none;">No catalog entries yet — click "Build catalog" above.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== Editor view ===================== -->
+  <div class="layout" id="editor-view" style="display:none;">
+    <!-- Center: page viewer -->
+    <div class="panel" id="viewer-panel">
+      <div id="viewer-toolbar">
+        <strong id="figure-title">No figure open</strong>
+        <div class="spacer"></div>
+        <span class="hint">Click a curve path to select it — click more segments to add them too (useful for a curve with a break/interruption), they'll all become one dataset. Click "Calibrate" on an axis, then click the page to place calibration points.</span>
+      </div>
+      <div id="viewer-scroll">
+        <div id="viewer-stage">
+          <img id="page-image" alt="Page render" />
+          <svg id="overlay-svg"></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: figure detail (axes, datasets, notes, preview) -->
+    <div class="panel" id="detail-panel">
+      <p id="no-figure-hint" class="hint">Select or create a figure to begin.</p>
+      <div id="figure-detail" style="display:none;">
+        <label>Caption <span class="tooltip-wrap"><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">The figure's printed title/caption from the PDF (e.g. "Typical tensile and compressive stress-strain curves for 2014-T6..."). Documentation only — copied into the exported data so it's self-describing, but doesn't feed any calculation.</span></span></label>
+        <textarea id="figure-caption" rows="2"></textarea>
+
+        <h2>Axes <span class="tooltip-wrap"><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">Every figure starts with one X and one Y axis (x1/y1) — calibrate those first. Add more only if this chart has a second Y axis (e.g. stress and tangent modulus sharing one X axis). Calibration converts raw pixel coordinates on the page into real data values — every dataset depends on the calibration of the axes it's assigned to.</span></span></h2>
+        <div class="field-row">
+          <button id="add-x-axis-btn">+ X axis</button>
+          <button id="add-y-axis-btn">+ Y axis</button>
+        </div>
+        <div id="axes-list"></div>
+
+        <h2>Datasets <span class="tooltip-wrap"><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">A dataset is one curve: a label, the X/Y axes it's measured against, and the pixel points that make it up. If a curve has a break or interruption, click every one of its segments in the viewer (they all stay highlighted) before clicking "Create dataset" — all selected segments merge into a single curve. Clicking "Calibrate + Preview" converts each dataset's raw pixel points into real values using its assigned axes' calibration.</span></span></h2>
+        <p class="hint"><span id="selected-paths-count">0</span> path(s) selected in viewer</p>
+        <button class="small-btn" id="clear-path-selection-btn">Clear selection</button>
+
+        <div id="dataset-edit-banner" style="display:none;">
+          <p class="hint">Editing <strong id="dataset-edit-label"></strong> — click segments in the viewer to add or remove them from this dataset, then Apply.</p>
+          <div class="field-row">
+            <button id="dataset-edit-apply-btn" class="primary">Apply changes</button>
+            <button class="small-btn" id="dataset-edit-cancel-btn">Cancel</button>
+          </div>
+        </div>
+
+        <div id="new-dataset-form">
+          <label>New dataset label <span class="tooltip-wrap"><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">The curve's name (e.g. "Tension", "L-T grain direction"). Becomes the series name in the Live Preview chart and in the exported Chart.js dataset.</span></span></label>
+          <input type="text" id="new-dataset-label" placeholder="e.g. Tension, T" />
+          <div class="field-row">
+            <div>
+              <label>X axis <span class="tooltip-wrap"><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">Which calibrated X axis this curve's points are measured against. Wrong axis assignment is a common cause of a Live Preview that looks stretched or mirrored.</span></span></label>
+              <select id="new-dataset-axis-x"></select>
+            </div>
+            <div>
+              <label>Y axis <span class="tooltip-wrap"><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">Which calibrated Y axis this curve's points are measured against. Charts with two Y axes (e.g. stress and tangent modulus) need each curve assigned to the correct one.</span></span></label>
+              <select id="new-dataset-axis-y"></select>
+            </div>
+          </div>
+          <button id="create-dataset-btn" style="margin-top:6px;">Create dataset from selected paths</button>
+        </div>
+        <div id="datasets-list" style="margin-top:8px;"></div>
+
+        <h2>Notes <span class="tooltip-wrap"><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">Your own QC remarks — anything worth flagging for yourself or a reviewer (calibration uncertainty, overlapping curves, "see Table 3.x", etc). Saved with the figure but not included in the exported Chart.js data.</span></span></h2>
+        <textarea id="figure-notes" rows="3" placeholder="QC notes..."></textarea>
+
+        <h2>Live Preview <span class="tooltip-wrap"><span class="tooltip-icon" tabindex="0">i</span><span class="tooltip-box">A Chart.js rendering of your calibrated dataset points, grouped by Y axis. Use it to visually sanity-check your calibration against the original chart before trusting the exported numbers — a wrong calibration still produces a plausible-looking but incorrect curve.</span></span></h2>
+        <div id="chart-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/tooltips.js"></script>
+  <script src="js/axisPresets.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/viewer.js"></script>
+  <script src="js/curves.js"></script>
+  <script src="js/calibration.js"></script>
+  <script src="js/preview.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

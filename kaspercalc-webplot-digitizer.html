@@ -1261,6 +1261,104 @@ input[type="checkbox"].kc-styled-checkbox,
         .ribbon-group.help-group {
             /* min-width: 110px; */
         }
+        /* Image Controls, Cursor Settings and Measurements each collapse
+           into a single launcher button below their own breakpoint - not
+           all three at once, since they're not equally wide and collapsing
+           them together either wastes space (narrowest group giving up its
+           inline spot as soon as the widest one runs out of room) or still
+           overflows (widest group staying inline too long). Measurements
+           (few, narrow buttons) collapses last/latest at 1900px, Image
+           Controls (a wider button grid) at 1500px, Cursor Settings
+           (narrowest content) collapses first/soonest at 1250px - i.e. each
+           group leaves the ribbon roughly in the order it stops fitting.
+           Each of the three now has its own plain .popup wrapper - a real
+           standalone dialog with an ordinary .popupheading first child, no
+           different from e.g. #export-all-data-popup - with the actual
+           ribbon buttons living in a nested .ribbon-content flex row inside
+           it. Keeping .popup and .ribbon-content on two different elements
+           (rather than one div wearing both classes) matters: .popup's
+           default position:absolute/visibility:hidden/padding/border is
+           left completely untouched below the breakpoint, so it renders
+           exactly like every other popup in the app with zero overrides
+           needed here - no risk of it fighting .ribbon-content's own
+           display:flex the way a combined div did. Above the breakpoint,
+           the .popup wrapper is switched back to a plain static inline
+           block (border/background/padding stripped) so the nested
+           .ribbon-content reads exactly like the other (non-collapsible)
+           ribbon groups' content; below it, only the launcher button's
+           and popupheading's visibility need toggling. Kept as three
+           separate rule sets (rather than one shared selector with a
+           --breakpoint custom property) since each group's inline-mode
+           reset only needs to apply within its own media query anyway. */
+        .kc-ribbon-collapse-btn {
+            display: none;
+        }
+        @media (max-width: 1899px) {
+            .measurement-group .kc-ribbon-collapse-btn {
+                display: inline-flex;
+            }
+            .measurement-group .popup .popupheading {
+                display: block;
+            }
+        }
+        @media (min-width: 1900px) {
+            .measurement-group .popup {
+                position: static !important;
+                visibility: visible !important;
+                border: none;
+                background: transparent;
+                padding: 0;
+                margin: 0;
+                z-index: auto;
+            }
+            .measurement-group .popup .popupheading {
+                display: none;
+            }
+        }
+        @media (max-width: 1499px) {
+            .image-group .kc-ribbon-collapse-btn {
+                display: inline-flex;
+            }
+            .image-group .popup .popupheading {
+                display: block;
+            }
+        }
+        @media (min-width: 1500px) {
+            .image-group .popup {
+                position: static !important;
+                visibility: visible !important;
+                border: none;
+                background: transparent;
+                padding: 0;
+                margin: 0;
+                z-index: auto;
+            }
+            .image-group .popup .popupheading {
+                display: none;
+            }
+        }
+        @media (max-width: 1249px) {
+            .cursor-group .kc-ribbon-collapse-btn {
+                display: inline-flex;
+            }
+            .cursor-group .popup .popupheading {
+                display: block;
+            }
+        }
+        @media (min-width: 1250px) {
+            .cursor-group .popup {
+                position: static !important;
+                visibility: visible !important;
+                border: none;
+                background: transparent;
+                padding: 0;
+                margin: 0;
+                z-index: auto;
+            }
+            .cursor-group .popup .popupheading {
+                display: none;
+            }
+        }
         .kc-magnifier-field {
             display: flex;
             flex-direction: column;
@@ -1406,6 +1504,22 @@ input[type="checkbox"].kc-styled-checkbox,
         .kc-ribbon-btn:has(> #extended-crosshair-btn.pressed-button) {
             background: var(--kc-section-title-color);
             color: #fff;
+        }
+
+        /* Swaps #image-editing-sidebar's "start a crop" controls (Undo/Redo/
+           Crop) for its "finish this crop" controls (Apply/Cancel) purely
+           off wpd.CropTool's own onAttach/onRemove, which already toggles
+           'pressed-button' on #image-editing-crop while a crop is in
+           progress (same tool-state signal wpd.min.js uses to visually
+           press the button) - no extra JS state needed to track this. */
+        #image-editing-crop-active-controls {
+            display: none;
+        }
+        #image-editing-sidebar:has(#image-editing-crop.pressed-button) #image-editing-idle-controls {
+            display: none;
+        }
+        #image-editing-sidebar:has(#image-editing-crop.pressed-button) #image-editing-crop-active-controls {
+            display: block;
         }
 
         /* Hides the "Image" root item from the left tree (its own root-level
@@ -1798,6 +1912,9 @@ input[type="checkbox"].kc-styled-checkbox,
         <button onclick="wpd.calibrateAxesDialog.open();" class="toolbar-button kc-ribbon-btn">
             <i class="bi-plus-square"></i> <span class="toolbar-button-label">Add Calibration</span>
         </button>
+        <button onclick="wpd.gridDetection.start();" class="toolbar-button kc-ribbon-btn">
+            <i class="bi bi-grid-3x3"></i> <span class="toolbar-button-label">Remove<br>Grid</span>
+        </button>
         <button onclick="wpd.dataSeriesManagement.showAddDataset();" class="toolbar-button kc-ribbon-btn">
             <i class="bi-database-add"></i> <span class="toolbar-button-label">Add Dataset</span>
         </button>
@@ -1807,8 +1924,11 @@ input[type="checkbox"].kc-styled-checkbox,
         <button onclick="kcClearImage();" class="toolbar-button kc-ribbon-btn">
             <i class="bi bi-x-circle"></i> <span class="toolbar-button-label">Clear<br>Image</span>
         </button>
-        <button onclick="kcOpenExportAllData();" class="toolbar-button kc-ribbon-btn">
+        <button onclick="wpd.dataTable.showTable();" class="toolbar-button kc-ribbon-btn">
             <i id="kc-export-all-data-btn" class="bi bi-box-arrow-up"></i> <span class="toolbar-button-label">Export<br>All Data</span>
+        </button>
+        <button onclick="kcOpenExportAllData();" class="toolbar-button kc-ribbon-btn">
+            <i class="bi bi-box-arrow-up-right"></i> <span class="toolbar-button-label">Quick<br>Export</span>
         </button>
     </p>
 </div>
@@ -1822,30 +1942,37 @@ input[type="checkbox"].kc-styled-checkbox,
                     <div class="kc-ribbon-divider"></div>
 
                     <!-- Image Controls -->
-                    <div class="ribbon-group image-group">
-                        <div class="ribbon-content">
-                            <div class="toolbar-zoom-controls kc-image-controls-grid">
-                                <button type="button" onclick="wpd.graphicsWidget.rotateCounterClockwise();" class="toolbar-button has-tooltip" data-tooltip="Rotate 90° counter-clockwise">
-                                    <i class="bi bi-arrow-counterclockwise"></i>
-                                </button>
-                                <button type="button" onclick="wpd.graphicsWidget.rotateClockwise();" class="toolbar-button has-tooltip" data-tooltip="Rotate 90° clockwise">
-                                    <i class="bi bi-arrow-clockwise"></i>
-                                </button>
-                                <button type="button" onclick="wpd.graphicsWidget.zoomIn();" class="toolbar-button has-tooltip" data-tooltip="Zoom In">+</button>
-                                <button type="button" onclick="wpd.graphicsWidget.zoomOut();" class="toolbar-button has-tooltip" data-tooltip="Zoom Out">-</button>
-                                <button type="button" onclick="wpd.graphicsWidget.zoom100perc();" class="toolbar-button has-tooltip" data-tooltip="View actual size">100%</button>
-                                <button type="button" onclick="wpd.graphicsWidget.zoomFit();" class="toolbar-button has-tooltip" data-tooltip="Fit image to screen">Fit</button>
-                                <button type="button" onclick="wpd.imageEditing.startImageCrop();" class="toolbar-button has-tooltip" data-tooltip="Crop image: drag to select the region, Enter to apply, Esc to cancel">
-                                    <i class="bi bi-crop"></i>
-                                </button>
-                                <button type="button" onclick="wpd.imageEditing.undo();" class="toolbar-button has-tooltip" data-tooltip="Undo (e.g. crop)">
-                                    <i class="bi bi-arrow-90deg-left"></i>
+                    <div class="ribbon-group image-group kc-collapsible-group">
+                        <button type="button" class="toolbar-button kc-ribbon-btn kc-ribbon-collapse-btn" onclick="wpd.popup.show('kc-image-controls-popup');">
+                            <i class="bi bi-sliders"></i>
+                            <span class="toolbar-button-label">Image<br>Controls</span>
+                        </button>
+                        <div class="popup" id="kc-image-controls-popup">
+                            <div class="popupheading">Image Controls</div>
+                            <div class="ribbon-content">
+                                <div class="toolbar-zoom-controls kc-image-controls-grid">
+                                    <button type="button" onclick="wpd.graphicsWidget.rotateCounterClockwise();" class="toolbar-button has-tooltip" data-tooltip="Rotate 90° counter-clockwise">
+                                        <i class="bi bi-arrow-counterclockwise"></i>
+                                    </button>
+                                    <button type="button" onclick="wpd.graphicsWidget.rotateClockwise();" class="toolbar-button has-tooltip" data-tooltip="Rotate 90° clockwise">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                    </button>
+                                    <button type="button" onclick="wpd.graphicsWidget.zoomIn();" class="toolbar-button has-tooltip" data-tooltip="Zoom In">+</button>
+                                    <button type="button" onclick="wpd.graphicsWidget.zoomOut();" class="toolbar-button has-tooltip" data-tooltip="Zoom Out">-</button>
+                                    <button type="button" onclick="wpd.graphicsWidget.zoom100perc();" class="toolbar-button has-tooltip" data-tooltip="View actual size">100%</button>
+                                    <button type="button" onclick="wpd.graphicsWidget.zoomFit();" class="toolbar-button has-tooltip" data-tooltip="Fit image to screen">Fit</button>
+                                    <button type="button" onclick="wpd.imageEditing.startImageCrop();" class="toolbar-button has-tooltip" data-tooltip="Crop image: drag to select the region, Enter to apply, Esc to cancel">
+                                        <i class="bi bi-crop"></i>
+                                    </button>
+                                    <button type="button" onclick="wpd.imageEditing.undo();" class="toolbar-button has-tooltip" data-tooltip="Undo (e.g. crop)">
+                                        <i class="bi bi-arrow-90deg-left"></i>
+                                    </button>
+                                </div>
+                                <button type="button" class="toolbar-button kc-ribbon-btn kc-image-info-btn has-tooltip" data-tooltip="Show image info" onclick="wpd.imageEditing.showImageInfo();">
+                                    <i class="bi bi-info-circle"></i>
+                                    <span class="toolbar-button-label">Image Info</span>
                                 </button>
                             </div>
-                            <button type="button" class="toolbar-button kc-ribbon-btn kc-image-info-btn has-tooltip" data-tooltip="Show image info" onclick="wpd.imageEditing.showImageInfo();">
-                                <i class="bi bi-info-circle"></i>
-                                <span class="toolbar-button-label">Image Info</span>
-                            </button>
                         </div>
                         <div class="ribbon-label">Image Controls</div>
                     </div>
@@ -1853,20 +1980,27 @@ input[type="checkbox"].kc-styled-checkbox,
                     <div class="kc-ribbon-divider"></div>
 
                     <!-- Cursor -->
-                    <div class="ribbon-group cursor-group">
-                        <div class="ribbon-content">
-                            <button onclick="wpd.graphicsWidget.toggleExtendedCrosshairBtn();" class="toolbar-button kc-ribbon-btn">
-                                <i id="extended-crosshair-btn" class="bi bi-crosshair2"></i>
-                                <span class="toolbar-button-label">Extended Crosshairs</span>
-                            </button>
-                            <button type="button" id="kc-cursor-dot-btn" onclick="kcToggleCursorDot();" class="toolbar-button kc-ribbon-btn">
-                                <i class="bi bi-circle"></i>
-                                <span class="toolbar-button-label">Cursor<br>Dot</span>
-                            </button>
-                            <button type="button" id="kc-default-crosshair-btn" onclick="kcToggleDefaultCrosshair();" class="toolbar-button kc-ribbon-btn pressed-button">
-                                <i class="bi bi-crosshair"></i>
-                                <span class="toolbar-button-label">Default<br>Crosshair</span>
-                            </button>
+                    <div class="ribbon-group cursor-group kc-collapsible-group">
+                        <button type="button" class="toolbar-button kc-ribbon-btn kc-ribbon-collapse-btn" onclick="wpd.popup.show('kc-cursor-settings-popup');">
+                            <i class="bi bi-cursor"></i>
+                            <span class="toolbar-button-label">Cursor<br>Settings</span>
+                        </button>
+                        <div class="popup" id="kc-cursor-settings-popup">
+                            <div class="popupheading">Cursor Settings</div>
+                            <div class="ribbon-content">
+                                <button onclick="wpd.graphicsWidget.toggleExtendedCrosshairBtn();" class="toolbar-button kc-ribbon-btn">
+                                    <i id="extended-crosshair-btn" class="bi bi-crosshair2"></i>
+                                    <span class="toolbar-button-label">Extended Crosshairs</span>
+                                </button>
+                                <button type="button" id="kc-cursor-dot-btn" onclick="kcToggleCursorDot();" class="toolbar-button kc-ribbon-btn">
+                                    <i class="bi bi-circle"></i>
+                                    <span class="toolbar-button-label">Cursor<br>Dot</span>
+                                </button>
+                                <button type="button" id="kc-default-crosshair-btn" onclick="kcToggleDefaultCrosshair();" class="toolbar-button kc-ribbon-btn pressed-button">
+                                    <i class="bi bi-crosshair"></i>
+                                    <span class="toolbar-button-label">Default<br>Crosshair</span>
+                                </button>
+                            </div>
                         </div>
                         <div class="ribbon-label">Cursor Settings</div>
                     </div>
@@ -1922,24 +2056,31 @@ input[type="checkbox"].kc-styled-checkbox,
                     <div class="kc-ribbon-divider"></div>
 
                     <!-- Measurements -->
-                    <div class="ribbon-group measurement-group">
-                        <div class="ribbon-content">
-                            <button type="button" onclick="wpd.tree.addMeasurement(wpd.measurementModes.distance);" class="toolbar-button kc-ribbon-btn">
-                                <i class="bi bi-rulers"></i>
-                                <span class="toolbar-button-label">Distance</span>
-                            </button>
-                            <button type="button" onclick="wpd.tree.addMeasurement(wpd.measurementModes.angle);" class="toolbar-button kc-ribbon-btn">
-                                <i class="bi bi-triangle"></i>
-                                <span class="toolbar-button-label">Angle</span>
-                            </button>
-                            <button type="button" onclick="wpd.tree.addMeasurement(wpd.measurementModes.area);" class="toolbar-button kc-ribbon-btn">
-                                <i class="bi bi-bounding-box"></i>
-                                <span class="toolbar-button-label">Area/<br>Perimeter</span>
-                            </button>
-                            <button type="button" onclick="kcOpenCurveFit();" class="toolbar-button kc-ribbon-btn has-tooltip" data-tooltip="Fit a curve (polynomial, exponential, power, log, or smoothing spline) to the active dataset">
-                                <i class="bi bi-graph-up-arrow"></i>
-                                <span class="toolbar-button-label">Curve<br>Fit</span>
-                            </button>
+                    <div class="ribbon-group measurement-group kc-collapsible-group">
+                        <button type="button" class="toolbar-button kc-ribbon-btn kc-ribbon-collapse-btn" onclick="wpd.popup.show('kc-measurements-popup');">
+                            <i class="bi bi-rulers"></i>
+                            <span class="toolbar-button-label">Measurements</span>
+                        </button>
+                        <div class="popup" id="kc-measurements-popup">
+                            <div class="popupheading">Measurements</div>
+                            <div class="ribbon-content">
+                                <button type="button" onclick="wpd.tree.addMeasurement(wpd.measurementModes.distance);" class="toolbar-button kc-ribbon-btn">
+                                    <i class="bi bi-rulers"></i>
+                                    <span class="toolbar-button-label">Distance</span>
+                                </button>
+                                <button type="button" onclick="wpd.tree.addMeasurement(wpd.measurementModes.angle);" class="toolbar-button kc-ribbon-btn">
+                                    <i class="bi bi-triangle"></i>
+                                    <span class="toolbar-button-label">Angle</span>
+                                </button>
+                                <button type="button" onclick="wpd.tree.addMeasurement(wpd.measurementModes.area);" class="toolbar-button kc-ribbon-btn">
+                                    <i class="bi bi-bounding-box"></i>
+                                    <span class="toolbar-button-label">Area/<br>Perimeter</span>
+                                </button>
+                                <button type="button" onclick="kcOpenCurveFit();" class="toolbar-button kc-ribbon-btn has-tooltip" data-tooltip="Fit a curve (polynomial, exponential, power, log, or smoothing spline) to the active dataset">
+                                    <i class="bi bi-graph-up-arrow"></i>
+                                    <span class="toolbar-button-label">Curve<br>Fit</span>
+                                </button>
+                            </div>
                         </div>
                         <div class="ribbon-label">Measurements</div>
                     </div>
@@ -2176,10 +2317,17 @@ input[type="checkbox"].kc-styled-checkbox,
         </span>
     </p>
     <p>
-        <label><input type="checkbox" id="kc-smart-cursor" class="kc-styled-checkbox"> Smart Cursor</label>
+        <label><input type="checkbox" id="kc-smart-cursor" class="kc-styled-checkbox"> Smart Cursor 1</label>
         <span class="tooltip-wrap">
             <span class="tooltip-icon" tabindex="0">i</span>
-            <span class="tooltip-box">When placing a point with Add Point, nudges it (up to a few pixels) toward the nearest spot that best matches the curve's ink. No color needs to be picked ahead of time - it learns the ink color automatically from a running average of the actual pixel colors at the last few points you've placed in this dataset (the very first point bootstraps from the color right at your click), and only acts when that color is clearly different from the Background color (Automatic Extraction below). It never moves the point unless it finds a clearly better, unambiguously ink-like match within that small radius - if nothing nearby is confident, the point stays exactly where you clicked. Hold Shift while clicking to place a point exactly where you click, bypassing the nudge for that one point - useful in tricky, cluttered parts of a chart.</span>
+            <span class="tooltip-box">When placing a point with Add Point, nudges it (up to a few pixels) toward the nearest spot that best matches the curve's ink. No color needs to be picked ahead of time - it learns the ink color automatically from a running average of the actual pixel colors at the last few points you've placed in this dataset (the very first point bootstraps from the color right at your click), and only acts when that color is clearly different from the Background color (Automatic Extraction below). Picks whichever nearby pixel is the single closest color match, regardless of how far it is within the search radius - it never moves the point unless that match is clearly better and unambiguously ink-like. Hold Shift while clicking to place a point exactly where you click, bypassing the nudge for that one point - useful in tricky, cluttered parts of a chart. Turning this on turns off Smart Cursor 2.</span>
+        </span>
+    </p>
+    <p>
+        <label><input type="checkbox" id="kc-smart-cursor-2" class="kc-styled-checkbox"> Smart Cursor 2</label>
+        <span class="tooltip-wrap">
+            <span class="tooltip-icon" tabindex="0">i</span>
+            <span class="tooltip-box">Same ink-color learning as Smart Cursor 1, but scores candidates differently: instead of just picking the closest color match anywhere in the search radius, it penalizes how far a candidate is from your click, so a small move that's a modest color improvement wins over a large move that's only a slightly better match. It also favors pixels that continue the direction of the last few points you placed in this dataset, which helps it stay on the curve instead of jumping onto a same-colored gridline nearby. Better suited to charts with gridlines close to the curve. Hold Shift to bypass for one click. Turning this on turns off Smart Cursor 1.</span>
         </span>
     </p>
 
@@ -2394,22 +2542,46 @@ input[type="checkbox"].kc-styled-checkbox,
     <p class="sidebar-title">Image Editing</p>
     <br />
     <center>
-        <p align="center">
-            <input type="button" value="Undo" style="width: 120px;" onclick="wpd.imageEditing.undo()" id="image-editing-undo" />
-            <input type="button" value="Redo" style="width: 120px;" onclick="wpd.imageEditing.redo()" id="image-editing-redo" />
-        </p>
-        <br />
-        <p align="center">
-            <input type="button" value="Crop" style="width: 120px;" onclick="wpd.imageEditing.startImageCrop()" id="image-editing-crop" />
-            <!-- <input type="button" value="Fix Perspective" style="width: 120px;" onclick="wpd.imageEditing.startPerspective()" id="image-editing-perspective" /> -->
-        </p>
-        <!--
-        <p align="center">
-            <input type="button" value="Rotate" style="width: 120px;" onclick="" id="image-editing-rotate" />
-            <input type="button" value="?" style="width: 120px;" onclick="" id="image-editing-misc" />
-        </p>
-        -->
-        <p><span id="image-editing-crop-info">Click and drag to mark the crop region. Press Enter to complete cropping, Esc to cancel</span></p>
+        <!-- Shown until Crop is clicked - #image-editing-crop.pressed-button
+             (added by wpd.CropTool.onAttach/onRemove) is what actually
+             drives the swap to #image-editing-crop-active-controls below,
+             see the CSS rule near .kc-ribbon-btn:has(...) for the same
+             pattern used elsewhere on this page. -->
+        <div id="image-editing-idle-controls">
+            <p align="center">
+                <input type="button" value="Undo" style="width: 120px;" onclick="wpd.imageEditing.undo()" id="image-editing-undo" />
+                <input type="button" value="Redo" style="width: 120px;" onclick="wpd.imageEditing.redo()" id="image-editing-redo" />
+            </p>
+            <br />
+            <p align="center">
+                <input type="button" value="Crop" style="width: 120px;" onclick="wpd.imageEditing.startImageCrop()" id="image-editing-crop" />
+                <!-- <input type="button" value="Fix Perspective" style="width: 120px;" onclick="wpd.imageEditing.startPerspective()" id="image-editing-perspective" /> -->
+            </p>
+            <!--
+            <p align="center">
+                <input type="button" value="Rotate" style="width: 120px;" onclick="" id="image-editing-rotate" />
+                <input type="button" value="?" style="width: 120px;" onclick="" id="image-editing-misc" />
+            </p>
+            -->
+            <p>Click Crop, then drag on the image to mark the region to keep.</p>
+        </div>
+        <!-- Shown only while actively cropping. These two buttons don't
+             call wpd.imageEditing.* - they call kcSendCropKey() (see the
+             page's own script), which feeds a synthetic Enter/Esc key
+             straight to the active wpd.CropTool. A real dispatched keydown
+             event won't do this: wpd.graphicsWidget only forwards keydown
+             to the active tool while its own isCanvasInFocus flag is set
+             (true only after a mousedown lands on the canvas itself), so a
+             click on a sidebar button never reaches CropTool.onKeyDown the
+             normal way. -->
+        <div id="image-editing-crop-active-controls">
+            <p align="center">
+                <input type="button" value="Apply Crop (Enter)" style="width: 150px;" onclick="kcSendCropKey(13);" />
+                <input type="button" value="Cancel Crop (Esc)" style="width: 150px;" onclick="kcSendCropKey(27);" />
+            </p>
+            <p>Drag on the image to mark the region to keep, then click Apply Crop.</p>
+            <p>After applying, this panel is replaced by the dataset panel. To undo the crop, click "Image" in the tree on the left to bring this panel back, then press Undo - or press Ctrl+Z.</p>
+        </div>
     </center>
 </div>
 
@@ -2424,6 +2596,7 @@ input[type="checkbox"].kc-styled-checkbox,
                     <option value="linear">Linear</option>
                     <option value="log">Log (any base)</option>
                     <option value="date">Date/Time</option>
+                    <option value="log-rankine-f">Log (°F, as Absolute/Rankine)</option>
                 </select>
             </td>
         </tr>
@@ -2446,6 +2619,7 @@ input[type="checkbox"].kc-styled-checkbox,
                     <option value="linear">Linear</option>
                     <option value="log">Log (any base)</option>
                     <option value="date">Date/Time</option>
+                    <option value="astm-loglog">Log-Log (ASTM D341 Viscosity)</option>
                 </select>
             </td>
         </tr>
@@ -2464,11 +2638,12 @@ input[type="checkbox"].kc-styled-checkbox,
         </tr>
     </table>
     <p align="center">
-        <button id="xy-axes-calibrate" onclick="wpd.alignAxes.align();">Calibrate</button>
+        <button id="xy-axes-calibrate" onclick="kcCalibrateXYAxes();">Calibrate</button>
     </p>
     <p>&nbsp;</p>
     <hr>
     <p class="footnote">Refer to the expected <a href="/docs/digitize/#input-format-for-calibration-values" target="_blank">input format for calibration values</a>, especially for dates and exponentials.</p>
+    <p class="footnote">"Log-Log (ASTM D341 Viscosity)" and "Log (°F, as Absolute/Rankine)" are KasperCalc additions for viscosity-temperature charts built to the ASTM D341 standard (e.g. the Lee Company chart), where Y is log&#8321;&#8320;(log&#8321;&#8320;(&nu;+0.7)) and X is log&#8321;&#8320; of absolute temperature. Enter real cSt/°F values in the boxes as usual &mdash; the conversion happens automatically. Digitized points come back out as real cSt/°F.</p>
 </div>
 
 <div id="bar-axes-sidebar" class="sidebar">
@@ -2787,7 +2962,7 @@ input[type="checkbox"].kc-styled-checkbox,
 
 <!-- View Data -->
 <div id="csvWindow" class="popup" style="width: 800px; height: 480px;">
-    <div class="popupheading">Acquired Data</div>
+    <div class="popupheading">Export All Data</div>
     <table style="width:780px;">
         <tr>
             <td>
@@ -2971,7 +3146,7 @@ input[type="checkbox"].kc-styled-checkbox,
 
 <!-- Export all data dialog -->
 <div id="export-all-data-popup" class="popup" style="width:600px;">
-    <div class="popupheading">Export All Datasets</div>
+    <div class="popupheading">Quick Export</div>
     <p>Export data from all datasets. Pick a format and how the datasets should be arranged.</p>
     <div class="kc-export-grid">
         <div></div>
@@ -3110,6 +3285,21 @@ input[type="checkbox"].kc-styled-checkbox,
         <br />
         <p>Dimensions: <span id="image-info-dimensions"></span> pixels</p>
         <p class="paged" hidden>Pages: <span id="image-info-pages"></span> pages</p>
+        <!-- Populated by kcShowFileMetadata (see the page's own script) from
+             the File object the currently-loaded image came from - wpd.min.js
+             itself only ever keeps the decoded pixel dimensions around, not
+             the original file's own name/size/type, so this is captured
+             separately at load time and would otherwise be unavailable here.
+             Hidden entirely (not just left blank) when there's nothing
+             captured to show, e.g. a project resumed before this page's own
+             capture logic ran. -->
+        <div id="image-info-file-metadata" hidden>
+            <hr style="width: 100%;" />
+            <p>File Name: <span id="image-info-file-name"></span></p>
+            <p>File Size: <span id="image-info-file-size"></span></p>
+            <p>File Type: <span id="image-info-file-type"></span></p>
+            <p class="kc-image-info-file-modified" hidden>Last Modified: <span id="image-info-file-modified"></span></p>
+        </div>
         <br />
         <p><input type="button" value="OK" onclick="wpd.popup.close('image-info-popup');" /></p>
     </center>
@@ -3504,6 +3694,100 @@ input[type="checkbox"].kc-styled-checkbox,
             .then(() => wpd.busyNote.close());
     }
 
+    // Captures the uploaded File's own metadata (name/size/type/last-
+    // modified) for the Image Info popup. wpd.imageManager (wpd.min.js)
+    // only ever keeps the decoded pixel dimensions around in its
+    // _imageInfo - the File object itself is read via FileReader and then
+    // discarded, so this has to be grabbed separately, at the moment it's
+    // still available, rather than pulled from wpd.imageManager later.
+    //
+    // Deliberately NOT cleared on crop: the file's own name/size/type
+    // describe what was uploaded, not the current in-canvas pixel state
+    // (that's what the existing Dimensions field already tracks live via
+    // wpd.imageManager.getImageInfo()), so a crop doesn't make this stale.
+    let kcLoadedFileMetadata = null;
+
+    function kcCaptureFileMetadata(imageFile) {
+        kcLoadedFileMetadata = (imageFile == null) ? null : {
+            name: imageFile.name || null,
+            size: typeof imageFile.size === 'number' ? imageFile.size : null,
+            type: imageFile.type || null,
+            lastModified: typeof imageFile.lastModified === 'number' ? imageFile.lastModified : null
+        };
+    }
+
+    // wpd.imageManager.loadFromFile() catches every load path EXCEPT the
+    // plain file picker: drag/drop, clipboard paste (wpd.graphicsWidget's
+    // pasteHandler), "Load Sample Image" (kcLoadSampleImage above, which
+    // builds one via `new File(...)` from a fetched blob), and resumed
+    // .tar projects (each image inside is unpacked into a File-like Blob
+    // with .name set) all call wpd.imageManager.loadFromFile(file)
+    // through the exported property, so patching it here catches them.
+    const originalLoadFromFile = wpd.imageManager.loadFromFile;
+    wpd.imageManager.loadFromFile = function(imageFile, resumedProject) {
+        kcCaptureFileMetadata(imageFile);
+        return originalLoadFromFile.call(wpd.imageManager, imageFile, resumedProject);
+    };
+
+    // The file picker ("Load Image", #fileLoadBox's onchange) is the one
+    // path that DOESN'T go through the patch above: wpd.imageManager's own
+    // internal load() (wpd.min.js) calls its private closure-scoped
+    // loadFromFile(...) directly by name rather than through
+    // wpd.imageManager.loadFromFile(...), so reassigning that exported
+    // property never intercepts this call - it only affects callers that
+    // go through wpd.imageManager as an object. Patching the exported
+    // load() itself instead, and re-reading #fileLoadBox.files[0] the same
+    // way its own internal load() does, is the only way to observe this
+    // path from outside.
+    const originalLoad = wpd.imageManager.load;
+    wpd.imageManager.load = function() {
+        const $input = document.getElementById('fileLoadBox');
+        if ($input != null && $input.files.length > 0) {
+            kcCaptureFileMetadata($input.files[0]);
+        }
+        return originalLoad.call(wpd.imageManager);
+    };
+
+    function kcFormatFileSize(bytes) {
+        if (bytes < 1024) {
+            return bytes + ' B';
+        }
+        const units = ['KB', 'MB', 'GB'];
+        let value = bytes / 1024;
+        let unitIndex = 0;
+        while (value >= 1024 && unitIndex < units.length - 1) {
+            value /= 1024;
+            unitIndex++;
+        }
+        return value.toFixed(value < 10 ? 2 : 1) + ' ' + units[unitIndex];
+    }
+
+    // Extends wpd.imageEditing.showImageInfo (wpd.min.js) with the file
+    // metadata captured above, rather than duplicating its own dimensions/
+    // pages logic or the wpd.popup.show() call here.
+    const originalShowImageInfo = wpd.imageEditing.showImageInfo;
+    wpd.imageEditing.showImageInfo = function() {
+        originalShowImageInfo.call(wpd.imageEditing);
+        const $section = document.getElementById('image-info-file-metadata');
+        if (kcLoadedFileMetadata == null) {
+            $section.hidden = true;
+            return;
+        }
+        document.getElementById('image-info-file-name').textContent = kcLoadedFileMetadata.name || 'Unknown';
+        document.getElementById('image-info-file-size').textContent = kcLoadedFileMetadata.size == null ?
+            'Unknown' : kcFormatFileSize(kcLoadedFileMetadata.size);
+        document.getElementById('image-info-file-type').textContent = kcLoadedFileMetadata.type || 'Unknown';
+        const $modifiedRow = document.querySelector('.kc-image-info-file-modified');
+        if (kcLoadedFileMetadata.lastModified != null) {
+            document.getElementById('image-info-file-modified').textContent =
+                new Date(kcLoadedFileMetadata.lastModified).toLocaleString();
+            $modifiedRow.hidden = false;
+        } else {
+            $modifiedRow.hidden = true;
+        }
+        $section.hidden = false;
+    };
+
     // "Clear Image" removes the loaded image along with any calibration,
     // datasets, and measurements built on top of it - there's no supported
     // way to unload just the image and leave that other state behind, since
@@ -3600,9 +3884,15 @@ input[type="checkbox"].kc-styled-checkbox,
     // the pixel coordinates already stored for the point that was just
     // placed (Dataset.setPixelAt), after wpd.min.js's own click handling
     // has fully run.
-    (function() {
-        const SMART_CURSOR_RADIUS_PX = 15;
-        const MIN_IMPROVEMENT = 3;
+    // Helpers shared by both Smart Cursor variants below - ink-color
+    // sampling/learning is identical between them, only the candidate
+    // scoring/selection differs. Each variant gets its own instance (own
+    // per-dataset ink history) via this factory, since only one variant is
+    // ever active at a time (see the mutual-exclusion checkbox wiring
+    // further down) but keeping the state separate avoids the two
+    // algorithms silently influencing each other's learned ink color if a
+    // user switches between them mid-dataset.
+    function kcCreateSmartCursorHelpers() {
         const MIN_INK_BACKGROUND_SEPARATION = 40;
         const MAX_INK_COLOR_HISTORY = 8;
 
@@ -3695,6 +3985,23 @@ input[type="checkbox"].kc-styled-checkbox,
             return wpd.dist3d(c[0], c[1], c[2], refColor[0], refColor[1], refColor[2]);
         }
 
+        return {
+            MIN_INK_BACKGROUND_SEPARATION,
+            sampleColorAt,
+            recordInkColor,
+            getExpectedInkColor,
+            colorDistanceAt
+        };
+    }
+
+    // Smart Cursor 1: picks whichever pixel within the search radius is
+    // the single closest color match to the inferred ink color, with no
+    // regard for how far that pixel is from the click.
+    (function() {
+        const SMART_CURSOR_RADIUS_PX = 15;
+        const MIN_IMPROVEMENT = 3;
+        const helpers = kcCreateSmartCursorHelpers();
+
         window.kcSnapSmartCursorPoint = function(dataset, index, ev) {
             const $checkbox = document.getElementById('kc-smart-cursor');
             if (!$checkbox || !$checkbox.checked) {
@@ -3719,19 +4026,19 @@ input[type="checkbox"].kc-styled-checkbox,
             }
             const imageData = ctx.oriImageCtx.getImageData(0, 0, imageSize.width, imageSize.height);
             const bgColor = autoDetector.bgColor;
-            const inkColor = getExpectedInkColor(dataset, imageData, imageSize.width, imageSize.height, pt.x, pt.y, SMART_CURSOR_RADIUS_PX, bgColor);
+            const inkColor = helpers.getExpectedInkColor(dataset, imageData, imageSize.width, imageSize.height, pt.x, pt.y, SMART_CURSOR_RADIUS_PX, bgColor);
 
             if (inkColor == null) {
                 return;
             }
-            if (wpd.dist3d(inkColor[0], inkColor[1], inkColor[2], bgColor[0], bgColor[1], bgColor[2]) < MIN_INK_BACKGROUND_SEPARATION) {
+            if (wpd.dist3d(inkColor[0], inkColor[1], inkColor[2], bgColor[0], bgColor[1], bgColor[2]) < helpers.MIN_INK_BACKGROUND_SEPARATION) {
                 // whatever we sampled isn't clearly different from the
                 // background - not confident enough to snap toward it.
-                recordInkColor(dataset, sampleColorAt(imageData, imageSize.width, imageSize.height, pt.x, pt.y));
+                helpers.recordInkColor(dataset, helpers.sampleColorAt(imageData, imageSize.width, imageSize.height, pt.x, pt.y));
                 return;
             }
 
-            const clickDist = colorDistanceAt(imageData, imageSize.width, imageSize.height, pt.x, pt.y, inkColor);
+            const clickDist = helpers.colorDistanceAt(imageData, imageSize.width, imageSize.height, pt.x, pt.y, inkColor);
             const cx = Math.round(pt.x),
                 cy = Math.round(pt.y);
             let bestDist = clickDist,
@@ -3744,7 +4051,7 @@ input[type="checkbox"].kc-styled-checkbox,
                     }
                     const xi = cx + dx,
                         yi = cy + dy;
-                    const d = colorDistanceAt(imageData, imageSize.width, imageSize.height, xi, yi, inkColor);
+                    const d = helpers.colorDistanceAt(imageData, imageSize.width, imageSize.height, xi, yi, inkColor);
                     if (d < bestDist) {
                         bestDist = d;
                         bestX = xi;
@@ -3776,7 +4083,7 @@ input[type="checkbox"].kc-styled-checkbox,
                 for (let dx = -SMART_CURSOR_RADIUS_PX; dx <= SMART_CURSOR_RADIUS_PX; dx++) {
                     const xi = cx + dx,
                         yi = cy + dy;
-                    const d = colorDistanceAt(imageData, imageSize.width, imageSize.height, xi, yi, inkColor);
+                    const d = helpers.colorDistanceAt(imageData, imageSize.width, imageSize.height, xi, yi, inkColor);
                     if (d <= bestDist + TIE_TOLERANCE) {
                         sumX += xi;
                         sumY += yi;
@@ -3794,17 +4101,341 @@ input[type="checkbox"].kc-styled-checkbox,
             // than to the background (i.e. unambiguously ink-like, not
             // just "less bad"), and a meaningful improvement over the
             // exact click.
-            const bestDistToBg = colorDistanceAt(imageData, imageSize.width, imageSize.height, bestX, bestY, bgColor);
+            const bestDistToBg = helpers.colorDistanceAt(imageData, imageSize.width, imageSize.height, bestX, bestY, bgColor);
             const isConfidentMatch = bestDist < bestDistToBg;
             const isMeaningfullyBetter = (clickDist - bestDist) >= MIN_IMPROVEMENT;
             if (isConfidentMatch && isMeaningfullyBetter) {
                 dataset.setPixelAt(index, bestX, bestY);
                 wpd.graphicsWidget.forceHandlerRepaint();
-                recordInkColor(dataset, sampleColorAt(imageData, imageSize.width, imageSize.height, bestX, bestY));
+                helpers.recordInkColor(dataset, helpers.sampleColorAt(imageData, imageSize.width, imageSize.height, bestX, bestY));
             } else {
-                recordInkColor(dataset, sampleColorAt(imageData, imageSize.width, imageSize.height, pt.x, pt.y));
+                helpers.recordInkColor(dataset, helpers.sampleColorAt(imageData, imageSize.width, imageSize.height, pt.x, pt.y));
             }
         };
+    })();
+
+    // Smart Cursor 2: same ink-color learning as Smart Cursor 1, but
+    // candidates are ranked by a distance-penalized cost
+    // (colorDistance + DISTANCE_PENALTY_PER_PX * pixelsFromClick) instead
+    // of raw color distance, so a small move only needs a small color
+    // improvement to win while a large move needs a much bigger one. Also
+    // adds a continuity bias toward whichever candidate best extends the
+    // direction of the dataset's last two points, penalizing pixels that
+    // deviate sideways from that direction - this is what keeps it from
+    // jumping onto a same-colored gridline crossing near the curve, which
+    // Smart Cursor 1 has no defense against (a crisp black gridline often
+    // *beats* anti-aliased curve ink on color match alone).
+    (function() {
+        const SMART_CURSOR_RADIUS_PX = 15;
+        const MIN_IMPROVEMENT = 3;
+        const DISTANCE_PENALTY_PER_PX = 2.5;
+        const CONTINUITY_WEIGHT = 1.5;
+        const TIE_TOLERANCE = 8;
+        const helpers = kcCreateSmartCursorHelpers();
+
+        // Unit direction of travel implied by the dataset's last two
+        // already-placed points (not counting the one just placed at
+        // `index`), or null if there aren't at least two prior points to
+        // infer a direction from.
+        function getContinuityDirection(dataset, index) {
+            if (index < 2) {
+                return null;
+            }
+            const p1 = dataset.getPixel(index - 2);
+            const p2 = dataset.getPixel(index - 1);
+            if (p1 == null || p2 == null) {
+                return null;
+            }
+            const dx = p2.x - p1.x,
+                dy = p2.y - p1.y;
+            const len = Math.sqrt(dx * dx + dy * dy);
+            if (len < 1e-6) {
+                return null;
+            }
+            return {
+                x: dx / len,
+                y: dy / len,
+                anchor: p2
+            };
+        }
+
+        // Perpendicular distance of (x, y) from the line through
+        // direction.anchor running along direction - zero for a candidate
+        // exactly on the expected line of travel, growing for candidates
+        // that stray sideways from it.
+        function perpendicularDeviation(direction, x, y) {
+            if (direction == null) {
+                return 0;
+            }
+            const vx = x - direction.anchor.x,
+                vy = y - direction.anchor.y;
+            const along = vx * direction.x + vy * direction.y;
+            const perpX = vx - along * direction.x,
+                perpY = vy - along * direction.y;
+            return Math.sqrt(perpX * perpX + perpY * perpY);
+        }
+
+        window.kcSnapSmartCursorPoint2 = function(dataset, index, ev) {
+            const $checkbox = document.getElementById('kc-smart-cursor-2');
+            if (!$checkbox || !$checkbox.checked) {
+                return;
+            }
+            if (ev && ev.shiftKey) {
+                // hold Shift to place this one point exactly where clicked
+                return;
+            }
+            const autoDetector = wpd.appData.getPlotData().getAutoDetectionDataForDataset(dataset);
+            if (autoDetector == null) {
+                return;
+            }
+            const ctx = wpd.graphicsWidget.getAllContexts();
+            const imageSize = wpd.graphicsWidget.getImageSize();
+            if (ctx.oriImageCtx == null || !imageSize.width || !imageSize.height) {
+                return;
+            }
+            const pt = dataset.getPixel(index);
+            if (pt == null) {
+                return;
+            }
+            const imageData = ctx.oriImageCtx.getImageData(0, 0, imageSize.width, imageSize.height);
+            const bgColor = autoDetector.bgColor;
+            const inkColor = helpers.getExpectedInkColor(dataset, imageData, imageSize.width, imageSize.height, pt.x, pt.y, SMART_CURSOR_RADIUS_PX, bgColor);
+
+            if (inkColor == null) {
+                return;
+            }
+            if (wpd.dist3d(inkColor[0], inkColor[1], inkColor[2], bgColor[0], bgColor[1], bgColor[2]) < helpers.MIN_INK_BACKGROUND_SEPARATION) {
+                helpers.recordInkColor(dataset, helpers.sampleColorAt(imageData, imageSize.width, imageSize.height, pt.x, pt.y));
+                return;
+            }
+
+            const direction = getContinuityDirection(dataset, index);
+            const clickDist = helpers.colorDistanceAt(imageData, imageSize.width, imageSize.height, pt.x, pt.y, inkColor);
+            const clickCost = clickDist + CONTINUITY_WEIGHT * perpendicularDeviation(direction, pt.x, pt.y);
+            const cx = Math.round(pt.x),
+                cy = Math.round(pt.y);
+
+            let bestCost = clickCost,
+                bestColorDist = clickDist,
+                bestX = pt.x,
+                bestY = pt.y;
+            for (let dy = -SMART_CURSOR_RADIUS_PX; dy <= SMART_CURSOR_RADIUS_PX; dy++) {
+                for (let dx = -SMART_CURSOR_RADIUS_PX; dx <= SMART_CURSOR_RADIUS_PX; dx++) {
+                    if (dx === 0 && dy === 0) {
+                        continue;
+                    }
+                    const xi = cx + dx,
+                        yi = cy + dy;
+                    const colorDist = helpers.colorDistanceAt(imageData, imageSize.width, imageSize.height, xi, yi, inkColor);
+                    if (colorDist === Infinity) {
+                        continue;
+                    }
+                    const distFromClick = Math.sqrt(dx * dx + dy * dy);
+                    const cost = colorDist + DISTANCE_PENALTY_PER_PX * distFromClick + CONTINUITY_WEIGHT * perpendicularDeviation(direction, xi, yi);
+                    if (cost < bestCost) {
+                        bestCost = cost;
+                        bestColorDist = colorDist;
+                        bestX = xi;
+                        bestY = yi;
+                    }
+                }
+            }
+
+            // Same centerline correction as Smart Cursor 1 (see its own
+            // comment above) - re-averages every pixel within tolerance of
+            // the winning candidate's own color distance (not its cost, so
+            // the distance/continuity penalties that picked *which* point
+            // on the line to land near don't also skew *where across the
+            // line's width* it lands).
+            let sumX = 0,
+                sumY = 0,
+                tieCount = 0;
+            for (let dy = -SMART_CURSOR_RADIUS_PX; dy <= SMART_CURSOR_RADIUS_PX; dy++) {
+                for (let dx = -SMART_CURSOR_RADIUS_PX; dx <= SMART_CURSOR_RADIUS_PX; dx++) {
+                    const xi = cx + dx,
+                        yi = cy + dy;
+                    const colorDist = helpers.colorDistanceAt(imageData, imageSize.width, imageSize.height, xi, yi, inkColor);
+                    if (colorDist <= bestColorDist + TIE_TOLERANCE) {
+                        sumX += xi;
+                        sumY += yi;
+                        tieCount++;
+                    }
+                }
+            }
+            if (tieCount > 0) {
+                bestX = sumX / tieCount;
+                bestY = sumY / tieCount;
+            }
+
+            const bestDistToBg = helpers.colorDistanceAt(imageData, imageSize.width, imageSize.height, bestX, bestY, bgColor);
+            const isConfidentMatch = bestColorDist < bestDistToBg;
+            const isMeaningfullyBetter = (clickDist - bestColorDist) >= MIN_IMPROVEMENT || bestCost < clickCost - MIN_IMPROVEMENT;
+            if (isConfidentMatch && isMeaningfullyBetter) {
+                dataset.setPixelAt(index, bestX, bestY);
+                wpd.graphicsWidget.forceHandlerRepaint();
+                helpers.recordInkColor(dataset, helpers.sampleColorAt(imageData, imageSize.width, imageSize.height, bestX, bestY));
+            } else {
+                helpers.recordInkColor(dataset, helpers.sampleColorAt(imageData, imageSize.width, imageSize.height, pt.x, pt.y));
+            }
+        };
+    })();
+
+    // Smart Cursor 1 and 2 are mutually exclusive - checking one unchecks
+    // the other, since running both would just mean the second call
+    // silently no-ops on whatever the first one already did to the point.
+    (function() {
+        const $cursor1 = document.getElementById('kc-smart-cursor');
+        const $cursor2 = document.getElementById('kc-smart-cursor-2');
+        if ($cursor1 && $cursor2) {
+            $cursor1.addEventListener('change', function() {
+                if ($cursor1.checked) {
+                    $cursor2.checked = false;
+                }
+            });
+            $cursor2.addEventListener('change', function() {
+                if ($cursor2.checked) {
+                    $cursor1.checked = false;
+                }
+            });
+        }
+    })();
+
+    // Image Controls / Cursor Settings / Measurements each collapse into a
+    // launcher + popup below their own breakpoint (see the three rule sets
+    // above - 1900px/1500px/1250px respectively). If one of those popups is
+    // left open when the window is resized back past its own breakpoint -
+    // the panel becomes inline again, but wpd.popup.show() also dims the
+    // whole page via #shadow, and that only ever gets undone by
+    // wpd.popup.close() - never by the CSS media query alone. Without this,
+    // growing the window (or rotating a tablet) with one of these open
+    // would leave the page stuck dimmed even though the popup content is
+    // now sitting inline in the ribbon. Only closes the three collapsible
+    // ones, not unrelated popups the user may have open (e.g. Export All
+    // Data) - those aren't tied to any of these breakpoints and should
+    // behave exactly as they always have.
+    (function() {
+        const COLLAPSIBLE_POPUPS = [{
+            id: 'kc-measurements-popup',
+            breakpoint: 1900
+        }, {
+            id: 'kc-image-controls-popup',
+            breakpoint: 1500
+        }, {
+            id: 'kc-cursor-settings-popup',
+            breakpoint: 1250
+        }];
+
+        function closeOpenCollapsiblePopupsPastBreakpoint() {
+            for (const {
+                    id,
+                    breakpoint
+                } of COLLAPSIBLE_POPUPS) {
+                if (window.innerWidth < breakpoint) {
+                    continue;
+                }
+                const $popup = document.getElementById(id);
+                // getComputedStyle().visibility isn't a reliable "is this
+                // popup actually open" check here: above its breakpoint the
+                // CSS itself forces visibility:visible on it (that's what
+                // makes it read inline), so this only checks
+                // wpd.popup.show()'s own inline style - the same thing
+                // wpd.popup.close() clears - not the CSS-driven value.
+                if ($popup != null && $popup.style.visibility === 'visible') {
+                    wpd.popup.close(id);
+                }
+            }
+        }
+
+        // Both wired up (belt-and-suspenders): matchMedia's "change" is the
+        // precise signal for actually crossing a breakpoint, but a plain
+        // "resize" listener is added too since some embedding contexts
+        // (e.g. automated/headless resizing) don't reliably dispatch media
+        // query change events the way an interactive browser resize does.
+        for (const {
+                breakpoint
+            } of COLLAPSIBLE_POPUPS) {
+            window.matchMedia('(min-width: ' + breakpoint + 'px)').addEventListener('change', function(ev) {
+                if (ev.matches) {
+                    closeOpenCollapsiblePopupsPastBreakpoint();
+                }
+            });
+        }
+        window.addEventListener('resize', closeOpenCollapsiblePopupsPastBreakpoint);
+    })();
+
+    // Closes Image Controls / Cursor Settings / Measurements as soon as one
+    // of their buttons is clicked while collapsed into a popup (see
+    // .kc-collapsible-group above) - picking a zoom level, a cursor style,
+    // or a measurement tool is a single, complete action, so there's
+    // nothing left to do in the popup afterward. Delegated on each popup's
+    // own container rather than bound per-button, so it stays correct if
+    // buttons are ever added/removed inside them. Every control in these
+    // three popups happens to be a real <button> (no <input type="button">
+    // like some other sidebars use), so closest('button') alone is enough
+    // to catch all of them, including the auto-added "x" close button
+    // itself (calling wpd.popup.close() on an already-closing popup is a
+    // harmless no-op). wpd.popup.close() no-ops safely above a group's own
+    // breakpoint too (that's when it's already inline, not a popup, and
+    // .popup's visibility:visible there is forced by !important - see the
+    // min-width media queries above - so this never fights the desktop
+    // ribbon look).
+    (function() {
+        ['kc-measurements-popup', 'kc-image-controls-popup', 'kc-cursor-settings-popup'].forEach(function(id) {
+            const $popup = document.getElementById(id);
+            if ($popup == null) {
+                return;
+            }
+            $popup.addEventListener('click', function(ev) {
+                if (ev.target.closest('button') != null) {
+                    wpd.popup.close(id);
+                }
+            });
+        });
+    })();
+
+    // wpd.min.js's renderParameters() (Automatic Extraction's algorithm
+    // param panel) always lays out one param per table row, since it's
+    // shared by every algorithm and some have parameters too long to pair
+    // up. For the two-param algorithms whose params are both just a pixel
+    // step (ΔX/ΔY - AveragingWindowWithStepSizeAlgo's "X Step" mode and
+    // AveragingWindowAlgo's window-size mode both render this way), that
+    // wastes vertical space stacking two short rows instead of one wide
+    // one. Rather than forking the shared minified renderer, this
+    // re-flows the DOM after each render: watches #algo-parameter-container
+    // for the table wpd.min.js just wrote in, and whenever it finds both
+    // #algo-param-xStep and #algo-param-yStep still attached to that same
+    // table (i.e. this run's algorithm is one of the ΔX/ΔY ones), moves
+    // the yStep row's three <td>s onto the end of the xStep row and drops
+    // the now-empty row. Moves the actual <input> elements rather than
+    // rebuilding them, so their id/class/value survive untouched - nothing
+    // else needs to change since run() above already reads params by
+    // querying .algo-params elements wherever they live in the DOM.
+    (function() {
+        const $container = document.getElementById('algo-parameter-container');
+        if ($container == null) {
+            return;
+        }
+        function mergeXYStepRows() {
+            const $xInput = document.getElementById('algo-param-xStep');
+            const $yInput = document.getElementById('algo-param-yStep');
+            if ($xInput == null || $yInput == null) {
+                return;
+            }
+            const $xRow = $xInput.closest('tr');
+            const $yRow = $yInput.closest('tr');
+            if ($xRow == null || $yRow == null || $xRow === $yRow || $xRow.children.length !== 3 || $yRow.children.length !== 3) {
+                return;
+            }
+            while ($yRow.firstChild) {
+                $xRow.appendChild($yRow.firstChild);
+            }
+            $yRow.remove();
+        }
+        new MutationObserver(mergeXYStepRows).observe($container, {
+            childList: true,
+            subtree: true
+        });
+        mergeXYStepRows();
     })();
 
     // Ctrl+Z to remove the last manually-placed point: wpd.appData's own
@@ -3826,6 +4457,276 @@ input[type="checkbox"].kc-styled-checkbox,
     // tool) and kcAddOriginPoint - not the Automatic Extraction Run
     // button, which can place hundreds of points and would be a poor fit
     // for an undo stack meant for a handful of misplaced clicks.
+    // wpd.TreeWidget._onclick (wpd.min.js) only selects a tree item/folder
+    // when the click's e.target is literally the .tree-item/.tree-folder
+    // span itself - it checks e.target.classList directly instead of
+    // walking up the DOM. Clicking the dataset's name text lands on the
+    // nested .kc-tree-item-content span instead (see kcRenderTree/the
+    // tree's own markup), which doesn't carry either class, so the click
+    // was silently ignored - only clicking the item's padding (outside the
+    // text) worked. Monkey-patches the prototype method instead of editing
+    // the vendor file directly (consistent with the other wpd.min.js
+    // patches on this page) so it survives a wpd.min.js update. The
+    // listener that calls this was bound as `e => this._onclick(e)` in the
+    // constructor, which re-reads `this._onclick` off the prototype on
+    // every click rather than capturing it once - so overwriting the
+    // prototype method here is enough to fix every already-constructed
+    // tree widget too, with no need to know which instances exist.
+    wpd.TreeWidget.prototype._onclick = function(e) {
+        const $target = e.target.closest(".tree-item, .tree-folder");
+        if ($target == null) {
+            return;
+        }
+        this._unselectAll();
+        $target.classList.add("tree-selected");
+        if (this.itemSelectionCallback != null) {
+            const itemId = parseInt($target.id.replace("tree-item-id-", ""), 10);
+            if (!isNaN(itemId)) {
+                this.selectedPath = this.idmap[itemId];
+                this.itemSelectionCallback($target, this.idmap[itemId], false);
+            }
+        }
+    };
+
+    // KasperCalc: adds two calibration modes wpd.min.js has no concept of,
+    // for viscosity-temperature charts built to the ASTM D341 standard
+    // (e.g. the Lee Company chart used on Multi-Fluid-Properties.html):
+    //   - Y "Log-Log (ASTM D341 Viscosity)": Y is actually
+    //     log10(log10(Z)) where Z = nu + 0.7 (Wright's low-viscosity term
+    //     added below ~2 cSt), not a plain log10(value) like wpd's native
+    //     "Log" option assumes. Plotting real petroleum viscosities this
+    //     way is the whole point of the ASTM construction - it's what
+    //     makes them straight lines on the chart.
+    //   - X "Log (°F, as Absolute/Rankine)": the true X axis on these
+    //     charts is log10 of absolute temperature (Rankine = °F+459.67),
+    //     not log10(°F) - °F alone can be negative/zero, which a log axis
+    //     can't represent, and isn't what the chart is actually built on.
+    //
+    // wpd's own "Log" option can represent EITHER of these correctly if
+    // fed the right pre-transformed numbers instead of the real value:
+    // entering log10(Z) as the calibration value under "Log" mode makes
+    // wpd's own internal log10() of that produce log10(log10(Z)) - exactly
+    // the double-log spacing the chart uses. Same idea for Rankine on X.
+    // So instead of reimplementing axis calibration, kcCalibrateXYAxes()
+    // below temporarily substitutes transformed numbers into the X1/X2/
+    // Y1/Y2 boxes and switches the dropdown to plain "log" right before
+    // calling wpd's real calibration, then restores the boxes/dropdown
+    // afterward so the UI still shows what was actually typed in.
+    //
+    // That gets the CALIBRATION math right, but wpd.XYAxes.pixelToData()
+    // would then hand back log10(Z) / Rankine for every digitized point,
+    // not real cSt/°F - so every wpd.XYAxes instance's pixelToData (and
+    // calibrate, to know when to activate) is wrapped here to convert
+    // back to real units transparently. This has to wrap the instance
+    // methods themselves rather than wpd.XYAxes.prototype, because
+    // wpd.min.js defines pixelToData/calibrate as own-properties inside
+    // the constructor closure (`this.pixelToData = function(){...}`), not
+    // on the shared prototype - there's nothing on the prototype to patch.
+    // wpd.XYAxes is instead replaced with a wrapper constructor that
+    // builds a real instance, patches that instance, and returns it -
+    // wpd.XYAxes.prototype is kept pointing at the original prototype so
+    // `instanceof wpd.XYAxes` (used throughout wpd.min.js and this file)
+    // keeps working.
+    //
+    // Known limitation: re-opening an existing ASTM-calibrated axes for
+    // editing (wpd's "Change Axes Type" / reloading a saved project) will
+    // show the dropdown as plain "Log", not "Log-Log (ASTM D341
+    // Viscosity)", since wpd.XYAxesCalibrator.pickCorners() only knows
+    // about axes.isLogY(), not this addition - the underlying math is
+    // still correct either way, this only affects what the dropdown shows.
+    (function() {
+        const OriginalXYAxes = wpd.XYAxes;
+
+        function kcWrightZ(nu) {
+            // ASTM D341 Z = nu + 0.7, with a low-viscosity correction term
+            // below ~2 cSt (the plain nu+0.7 approximation breaks down there).
+            if (nu >= 2) {
+                return nu + 0.7;
+            }
+            return nu + 0.7 + Math.exp(-1.47 - 1.84 * nu - 0.51 * nu * nu);
+        }
+
+        function kcInvertWrightZ(Z) {
+            const nuGuess = Z - 0.7;
+            if (nuGuess >= 2) {
+                return nuGuess;
+            }
+            // Wright's term makes this implicit below 2 cSt - bisection instead
+            // of a closed-form solve.
+            let lo = 0.001,
+                hi = 3.5;
+
+            function f(nu) {
+                return nu + 0.7 + Math.exp(-1.47 - 1.84 * nu - 0.51 * nu * nu) - Z;
+            }
+            if (f(lo) > 0) {
+                return lo;
+            }
+            for (let i = 0; i < 80; i++) {
+                const mid = (lo + hi) / 2;
+                if (f(mid) > 0) {
+                    hi = mid;
+                } else {
+                    lo = mid;
+                }
+            }
+            return (lo + hi) / 2;
+        }
+
+        const KC_RANKINE_OFFSET = 459.67;
+
+        wpd.XYAxes = function() {
+            const instance = new OriginalXYAxes();
+            const originalCalibrate = instance.calibrate;
+            const originalPixelToData = instance.pixelToData;
+
+            instance.calibrate = function(calib, isLogX, isLogY, noRotationCorrection) {
+                // Captures whatever kcCalibrateXYAxes() requested for THIS
+                // calibration action, so only axes actually calibrated in
+                // one of these special modes get the extra conversion -
+                // every other axes object (normal linear/log/date, past or
+                // future) is untouched.
+                instance._kcAstmLogLogY = !!window.kcPendingAstmLogLogY;
+                instance._kcRankineX = !!window.kcPendingRankineX;
+                return originalCalibrate.call(this, calib, isLogX, isLogY, noRotationCorrection);
+            };
+
+            instance.pixelToData = function(pxi, pyi) {
+                const data = originalPixelToData.call(this, pxi, pyi);
+                if (instance._kcRankineX && data && isFinite(data[0])) {
+                    data[0] = data[0] - KC_RANKINE_OFFSET;
+                }
+                if (instance._kcAstmLogLogY && data && isFinite(data[1])) {
+                    const Z = Math.pow(10, data[1]);
+                    data[1] = kcInvertWrightZ(Z);
+                }
+                return data;
+            };
+
+            return instance;
+        };
+        wpd.XYAxes.prototype = OriginalXYAxes.prototype;
+
+        window.kcWrightZ = kcWrightZ;
+    })();
+
+    function kcCalibrateXYAxes() {
+        const $xscale = document.getElementById('xy-axes-xscale');
+        const $yscale = document.getElementById('xy-axes-yscale');
+        const $x1 = document.getElementById('xy-axes-x1');
+        const $x2 = document.getElementById('xy-axes-x2');
+        const $y1 = document.getElementById('xy-axes-y1');
+        const $y2 = document.getElementById('xy-axes-y2');
+
+        const isAstmY = $yscale.value === 'astm-loglog';
+        const isRankineX = $xscale.value === 'log-rankine-f';
+
+        const originalX1 = $x1.value,
+            originalX2 = $x2.value,
+            originalY1 = $y1.value,
+            originalY2 = $y2.value;
+
+        window.kcPendingAstmLogLogY = isAstmY;
+        window.kcPendingRankineX = isRankineX;
+
+        try {
+            if (isRankineX) {
+                const x1f = parseFloat(originalX1),
+                    x2f = parseFloat(originalX2);
+                $x1.value = String(x1f + 459.67);
+                $x2.value = String(x2f + 459.67);
+                $xscale.value = 'log';
+            }
+            if (isAstmY) {
+                const y1f = parseFloat(originalY1),
+                    y2f = parseFloat(originalY2);
+                $y1.value = String(Math.log10(window.kcWrightZ(y1f)));
+                $y2.value = String(Math.log10(window.kcWrightZ(y2f)));
+                $yscale.value = 'log';
+            }
+            wpd.alignAxes.align();
+        } finally {
+            // Restore the boxes/dropdown to what was actually typed in -
+            // purely cosmetic, the axes object above is already calibrated
+            // using the substituted values regardless of what's shown here.
+            if (isRankineX) {
+                $x1.value = originalX1;
+                $x2.value = originalX2;
+                $xscale.value = 'log-rankine-f';
+            }
+            if (isAstmY) {
+                $y1.value = originalY1;
+                $y2.value = originalY2;
+                $yscale.value = 'astm-loglog';
+            }
+        }
+    }
+
+    // wpd.imageEditing.startImageCrop() (called by the ribbon's Crop icon
+    // under Image Controls) only sets the crop tool - it never shows
+    // #image-editing-sidebar, the panel with the Enter/Esc instructions and
+    // the Undo/Redo/Crop buttons. That sidebar only ever appears via a
+    // completely separate path: clicking "Image" in the left tree
+    // (wpd.tree's onImageSelection, wpd.min.js) explicitly calls
+    // wpd.sidebar.show('image-editing-sidebar'). So starting a crop from
+    // the ribbon (skipping the tree click) left whatever sidebar was
+    // already showing - e.g. a dataset's Manual Extraction panel - visible
+    // underneath the crop tool, with no instructions for it anywhere.
+    // Wrapped rather than calling wpd.sidebar.show() directly here because
+    // that alone would leave the tree's own selection highlight
+    // pointing at the previously-selected dataset/axes while a totally
+    // different sidebar is showing; routing through wpd.tree.selectPath()
+    // instead runs the exact same onImageSelection() a manual "Image"
+    // click would (resets the active tool/repainter, updates the tree
+    // highlight, shows the sidebar), so a ribbon-triggered crop ends up
+    // indistinguishable from a manually-selected one - then the crop tool
+    // is set immediately after, same as the original function did.
+    const originalStartImageCrop = wpd.imageEditing.startImageCrop;
+    wpd.imageEditing.startImageCrop = function() {
+        wpd.tree.selectPath('/' + wpd.gettext('image'));
+        originalStartImageCrop.call(wpd.imageEditing);
+    };
+
+    // Backs the "Apply Crop (Enter)"/"Cancel Crop (Esc)" buttons in
+    // #image-editing-crop-active-controls (see that markup's own comment).
+    // wpd.graphicsWidget only forwards a real keydown to the active tool
+    // while its private isCanvasInFocus flag is set (true only right after
+    // a mousedown lands on the canvas itself - wpd.min.js, not exposed),
+    // so a click on a sidebar button can't reach wpd.CropTool.onKeyDown the
+    // normal way; a dispatched synthetic keydown event would hit that same
+    // gate and silently do nothing. Feeding CropTool.onKeyDown a fake
+    // event object directly sidesteps the gate entirely - it only reads
+    // .keyCode and calls .preventDefault(), both of which a plain object
+    // can provide just as well as a real KeyboardEvent.
+    //
+    // Tracking which CropTool instance is "active" is done by patching the
+    // prototype's onAttach/onRemove (same approach as the TreeWidget patch
+    // above) rather than capturing the instance where it's constructed
+    // (wpd.imageEditing.startImageCrop, wrapped just above) - onAttach/
+    // onRemove fire for every CropTool regardless of who constructs it, so
+    // this can't drift out of sync with whichever path started the crop.
+    let kcActiveCropTool = null;
+    const originalCropOnAttach = wpd.CropTool.prototype.onAttach;
+    wpd.CropTool.prototype.onAttach = function() {
+        originalCropOnAttach.call(this);
+        kcActiveCropTool = this;
+    };
+    const originalCropOnRemove = wpd.CropTool.prototype.onRemove;
+    wpd.CropTool.prototype.onRemove = function() {
+        originalCropOnRemove.call(this);
+        if (kcActiveCropTool === this) {
+            kcActiveCropTool = null;
+        }
+    };
+    window.kcSendCropKey = function(keyCode) {
+        if (kcActiveCropTool != null) {
+            kcActiveCropTool.onKeyDown({
+                keyCode: keyCode,
+                preventDefault: function() {}
+            });
+        }
+    };
+
     (function() {
         const undoStack = [];
 
@@ -3898,6 +4799,7 @@ input[type="checkbox"].kc-styled-checkbox,
                             wpd.graphicsWidget.forceHandlerRepaint();
                         }
                         window.kcSnapSmartCursorPoint(dataset, index, ev);
+                        window.kcSnapSmartCursorPoint2(dataset, index, ev);
                         window.kcPushPointUndo(dataset);
                     }
                 };
@@ -3918,6 +4820,16 @@ input[type="checkbox"].kc-styled-checkbox,
         // a reflex people reach for without having clicked the image
         // first. Skips editable fields so it doesn't hijack a text input's
         // own native undo.
+        //
+        // Falls through to wpd.appData.getUndoManager() (wpd.min.js's own
+        // undo stack for image edits - crop, multipage actions; see
+        // kcPushPointUndo's own comment above) whenever there's no manually-
+        // placed point left to undo first, so Ctrl+Z undoes a crop too -
+        // point placement takes priority since it's the far more common
+        // "undo my last click" case, and the two stacks are otherwise
+        // unrelated (undoing a point never touches the image, undoing a
+        // crop never touches dataset points) so there's no ordering
+        // ambiguity to get wrong between them.
         document.addEventListener('keydown', function(ev) {
             const isUndoCombo = (ev.ctrlKey || ev.metaKey) && !ev.shiftKey && !ev.altKey &&
                 (ev.key === 'z' || ev.key === 'Z');
@@ -3925,6 +4837,12 @@ input[type="checkbox"].kc-styled-checkbox,
                 return;
             }
             if (undoLastPoint()) {
+                ev.preventDefault();
+                return;
+            }
+            const imageUndoManager = wpd.appData.getUndoManager();
+            if (imageUndoManager.canUndo()) {
+                imageUndoManager.undo();
                 ev.preventDefault();
             }
         }, true);

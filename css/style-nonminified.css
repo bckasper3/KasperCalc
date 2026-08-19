@@ -670,8 +670,6 @@ nav>.navbar-toggler{
   background-color: #6a746a;
   border-radius: 20px;
   border: 3px solid var(--calc-outline-color);
-  font-size: var(--h2-font-size);
-  font-family: "Roboto", Arial, sans-serif;
 }
 
 .wrapperlg{
@@ -682,8 +680,11 @@ nav>.navbar-toggler{
   background-color: #6a746a;
   border-radius: 20px;
   border: 3px solid var(--calc-outline-color);
-  font-size: var(--h2-font-size);
-  font-family: "Roboto", Arial, sans-serif;
+}
+
+.wrapper, .wrapperlg {
+  font-size: var(--h4-font-size);
+  font-family: Roboto, Arial, sans-serif;
 }
 
 
@@ -707,7 +708,7 @@ nav>.navbar-toggler{
 
 .calcinput{
   Width: 8rem;
-  font-size: var(--h2-font-size);
+  font-size: var(--h4-font-size);
   padding: 0.4rem 0.4rem 0.2rem 0.4rem;
   text-align: center;
   border: 1px solid #000;
@@ -719,7 +720,7 @@ nav>.navbar-toggler{
 
 .calcinput1{
   Width: 8rem;
-  font-size: var(--h2-font-size);
+  font-size: var(--h4-font-size);
   padding: 0.2rem 0.4rem 0.2rem 0.4rem;
   text-align: center;
   border: 1px solid #000;
@@ -735,10 +736,10 @@ nav>.navbar-toggler{
   }
 
 .dropdowncalc{
-  font-size: var(--h2-font-size);
+  font-size: var(--h4-font-size);
   cursor: pointer;
   border: 1px solid #000;
-  border-radius: 5px;  
+  border-radius: 5px;
   color: var(--calc-p-color);
   padding: .4rem 0em .4rem 0.4em;
   background-color: var(--calc-dropdown-color);
@@ -1353,17 +1354,25 @@ cursor: pointer;
 
 /* SEO reference data tables (temperature/property lookup tables) get very
    wide on the jet-fuel property pages, so shrink them aggressively on small
-   screens instead of letting the layout blow out. On desktop, keep them from
-   stretching edge-to-edge by capping and centering the container; any table
-   wider than the cap still scrolls horizontally within itself. */
+   screens instead of letting the layout blow out. On desktop, they should
+   never touch the page edges (the outer wrap always keeps at least a
+   px-3/px-md-5 gutter) and should hug their own content rather than
+   stretching to fill the column — .seo-data-table-wrap centers via
+   text-align, and .seo-data-table shrink-wraps via d-inline-block, capped
+   to the available width with a scrollbar as the fallback. */
+.seo-data-table-wrap {
+  text-align: center;
+}
+
 .seo-data-table {
-  max-width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 100%;
   overflow-x: auto;
 }
 
 .seo-data-table table {
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
   font-size: 0.85rem;
 }
 
@@ -1392,6 +1401,76 @@ cursor: pointer;
   .seo-data-table th,
   .seo-data-table td {
     padding: 0.15rem 0.2rem;
+  }
+}
+
+/* Multi-Fluid Properties charts — bigger canvas, tighter side padding than
+   the default .canvasdiv (8rem) so a wide 1500x800 chart has room to breathe. */
+.mfp-canvasdiv {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.mfp-canvascontainer {
+  max-width: 1500px;
+  height: 800px;
+}
+
+.mfp-canvascontainer .chartcanvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Chart action buttons: a plain left-aligned flex row. It shares the
+   canvas container's max-width and auto side margins so its left edge
+   always matches the chart's left edge, at any viewport width. */
+.mfp-chart-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 1500px;
+  margin: 0 auto 0 auto;
+}
+
+/* Same treatment the other chart pages (e.g. nominalDensity.html) apply
+   inline to these links: without it the link-wrapped buttons inherit the
+   20px anchor font-size while the bare toggle button inherits 16px from
+   the body, leaving the row with mismatched button sizes. Buttons are
+   otherwise left at the browser default, matching the rest of the site. */
+.mfp-chart-buttons a {
+  text-decoration: none;
+  font-size: medium;
+}
+
+/* Same row, placed under a chart instead of above it. */
+.mfp-chart-buttons-below {
+  margin-top: 0.35rem;
+}
+
+/* Category filter row: same left-aligned row as the action buttons above it.
+   The buttons are left at the browser default so they match, apart from the
+   darker pressed shade that shows which categories are toggled on. */
+.mfp-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 1500px;
+  margin: 0.35rem auto 0.35rem auto;
+}
+
+.mfp-filter-buttons button[aria-pressed="true"] {
+  background-color: #6d7679;
+  color: var(--white-color);
+  border-style: inset;
+}
+
+@media (max-width: 900px) {
+  .mfp-canvascontainer {
+    height: 500px;
   }
 }
 

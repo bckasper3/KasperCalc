@@ -134,6 +134,7 @@
           <div class="footerlink"><a href="GasFlowSafety.html">Gas Flow Safety Calculator</a></div>
           <div class="footerlink"><a href="ThreadStressCalculator.html">Thread Stress Calculator</a></div>
           <div class="footerlink"><a href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a></div>
+          <div class="footerlink"><a href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a></div>
         </div>
 
         <div class="footerRow">

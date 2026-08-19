@@ -1,0 +1,482 @@
+/* Palette/typography lifted from the main KasperCalc site (css/style.css's
+ * :root vars) and kaspercalc-webplot-digitizer.html's ribbon toolbar, so
+ * this tool reads as part of the same site instead of a separate app. */
+:root {
+  --white-color: #fff;
+  --primary-color: #444444;
+  --secondary-color: #000000;
+  --section-bg-color: #fbfbfb;
+  --custom-btn-bg-color: #699dad;
+  --custom-btn-hover-color: #55808e;
+  --dark-color: #333333;
+  --border-color: #e9eaeb;
+  --section-title-color: #61828a;
+  --icon-color: #a9cccf;
+  --banner-color: #a3c3cd;
+  --calc-background-color: #eeeeee;
+  --calc-result-color: #cfcfcf;
+  --calc-outline-color: rgb(67, 67, 67);
+  --calc-hover-color: #cfcfcf;
+  --calc-dropdown-color: #d9d9d9;
+  --good: #3a8a5c;
+  --warn: #b8862f;
+  --bad: #b5382c;
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--section-bg-color);
+  color: var(--secondary-color);
+  height: 100vh;
+  overflow: hidden;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: var(--banner-color);
+  border-bottom: 1px solid #7a9aa3;
+}
+
+header h1 {
+  font-size: 17px;
+  margin: 0;
+  font-weight: 600;
+  color: var(--secondary-color);
+}
+
+header .spacer { flex: 1; }
+
+/* The editor's action buttons (Save, Calibrate + Preview, Approve & Next,
+ * Flag) live in the ribbon rather than a dedicated side panel — that panel
+ * was too narrow for the button labels, which kept wrapping onto two
+ * lines. The ribbon has room to lay them out on one line. */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+.header-actions button {
+  font-size: 13px;
+  padding: 6px 12px;
+  white-space: nowrap;
+}
+
+#progress-counter {
+  font-size: 13px;
+  color: var(--dark-color);
+  white-space: nowrap;
+}
+
+#quit-btn {
+  font-size: 13px;
+  padding: 6px 14px;
+  border: 2px solid var(--bad);
+  background: var(--white-color);
+  color: var(--bad);
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#quit-btn:hover {
+  background: var(--bad);
+  color: #fff;
+}
+
+#back-to-catalog-btn {
+  font-size: 13px;
+  padding: 6px 14px;
+  border: 2px solid var(--section-title-color);
+  background: var(--white-color);
+  color: var(--section-title-color);
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+}
+#back-to-catalog-btn:hover { background: var(--section-title-color); color: #fff; }
+
+/* ---------- Catalog landing view ---------- */
+
+.catalog-layout {
+  height: calc(100vh - 52px);
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.catalog-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#instructions-panel, #catalog-panel {
+  border-right: none;
+}
+
+.instructions-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#instructions-body p { font-size: 13px; line-height: 1.5; margin: 8px 0; color: var(--dark-color); }
+#instructions-body ol { font-size: 13px; line-height: 1.6; margin: 8px 0; padding-left: 20px; color: var(--dark-color); }
+
+.catalog-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.catalog-search-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 12px;
+}
+.catalog-search-row > div { flex: 1; }
+.catalog-toggle-col { display: flex; align-items: center; padding-bottom: 8px; }
+.catalog-toggle-col label { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px; color: var(--secondary-color); }
+
+#catalog-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+#catalog-table th {
+  text-align: left;
+  color: var(--dark-color);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 6px 8px;
+  border-bottom: 2px solid var(--border-color);
+}
+#catalog-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+#catalog-table tr:hover td { background: var(--calc-hover-color); }
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 650px;
+  height: calc(100vh - 52px);
+}
+
+.panel {
+  overflow-y: auto;
+  padding: 14px;
+  background: var(--section-bg-color);
+  border-right: 1px solid var(--border-color);
+}
+
+.panel:last-child { border-right: none; }
+
+.panel h2 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--white-color);
+  background: var(--section-title-color);
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin: 16px 0 8px;
+}
+.panel h2:first-child { margin-top: 0; }
+
+#viewer-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: relative;
+  background: #d7dade;
+}
+
+#viewer-toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--calc-background-color);
+  border-bottom: 1px solid var(--border-color);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#viewer-scroll {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  /* Centers the page horizontally when it's narrower than the viewer
+     (the common case, since pages are now cropped to just the content).
+     flex-shrink:0 on the stage below keeps this a reliable pattern for
+     staying scrollable on pages wide enough to still overflow. */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#viewer-stage {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+#page-image {
+  display: block;
+  max-width: none;
+}
+
+#overlay-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.overlay-path {
+  fill: none;
+  cursor: pointer;
+  pointer-events: stroke;
+}
+.overlay-path.gridline { stroke: #888; stroke-width: 1; opacity: 0.35; }
+.overlay-path.axis { stroke: #b8862f; stroke-width: 2; opacity: 0.75; }
+.overlay-path.data_curve { stroke: #2f6f8f; stroke-width: 2; opacity: 0.9; }
+.overlay-path.unknown { stroke: #999; stroke-width: 1; opacity: 0.3; stroke-dasharray: 2 2; }
+.overlay-path.selected { stroke: #3a8a5c !important; stroke-width: 3 !important; opacity: 1 !important; }
+.overlay-path.assigned { stroke-width: 3; opacity: 1; }
+
+.calib-point {
+  fill: #3a8a5c;
+  stroke: #fff;
+  stroke-width: 1.5;
+}
+
+button, select, input[type=text], input[type=number], textarea {
+  background: var(--white-color);
+  color: var(--secondary-color);
+  border: 1px solid var(--calc-outline-color);
+  border-radius: 5px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+/* Hide the up/down spinner on number inputs (calibration point values,
+   etc.) - they're not useful for typing an arbitrary calibration value
+   and just add visual clutter. */
+input[type=number] { -moz-appearance: textfield; }
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+button {
+  cursor: pointer;
+  background: var(--custom-btn-bg-color);
+  color: var(--white-color);
+  border-color: var(--custom-btn-bg-color);
+  font-weight: 600;
+}
+button:hover { background: var(--custom-btn-hover-color); border-color: var(--custom-btn-hover-color); }
+button.primary { background: var(--section-title-color); color: #fff; border-color: var(--section-title-color); }
+button.primary:hover { background: #4d6b72; border-color: #4d6b72; }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+textarea { width: 100%; min-height: 70px; resize: vertical; font-family: inherit; background: var(--white-color); }
+
+label { display: block; font-size: 12px; color: var(--dark-color); margin: 5px 0 3px; font-weight: 500; }
+label:first-child { margin-top: 0; }
+
+/* Same tooltip pattern used across the KasperCalc calculator pages (e.g.
+ * SpringCompressionRound.html): a small "i" badge that reveals a dark
+ * popover box. Unlike the site's version (which uses a plain CSS
+ * hover/focus + adjacent-sibling selector), this tool's tooltip-boxes are
+ * positioned with JS (js/tooltips.js) as position:fixed instead of
+ * position:absolute. The editor's side panels scroll (overflow-y:auto),
+ * and any ancestor with overflow other than visible clips absolutely
+ * positioned children that extend past its edge — that's what was cutting
+ * the boxes off. Fixed positioning is computed relative to the viewport
+ * and escapes that clipping entirely. */
+.tooltip-wrap { position: relative; display: inline-flex; align-items: center; gap: 4px; }
+.tooltip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #61828a;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  font-style: normal;
+  cursor: default;
+  flex-shrink: 0;
+  line-height: 1;
+  user-select: none;
+}
+.tooltip-box {
+  display: none;
+  position: fixed;
+  width: 220px;
+  background: #1a3a40;
+  color: #eee;
+  font-size: 12px;
+  line-height: 1.55;
+  padding: 7px 10px;
+  border-radius: 6px;
+  border: 1px solid #3a6270;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .4);
+  z-index: 1000;
+  pointer-events: none;
+  font-weight: 400;
+  font-family: Roboto, Arial, sans-serif;
+  white-space: normal;
+  word-wrap: break-word;
+}
+.tooltip-box.visible { display: block; }
+.tooltip-box::after {
+  content: '';
+  position: absolute;
+  border: 5px solid transparent;
+}
+.tooltip-box.arrow-down::after { top: 100%; left: 12px; border-top-color: #1a3a40; }
+.tooltip-box.arrow-up::after { bottom: 100%; left: 12px; border-bottom-color: #1a3a40; }
+/* h2 section headers render as pill badges (see .panel h2 above); the
+ * tooltip-icon needs to read against that background instead of blending
+ * into it, so give it a white ring there. */
+h2 .tooltip-wrap { color: inherit; }
+h2 .tooltip-icon { background: #fff; color: var(--section-title-color); }
+
+.field-row { display: flex; gap: 6px; align-items: flex-start; }
+.field-row > * { flex: 1; min-width: 0; }
+.field-row > .flex-2 { flex: 2; }
+.field-row > .flex-shrink { flex: 0 0 auto; }
+.field-row > .flex-shrink input[type=color] { width: 40px; padding: 2px; height: 30px; }
+.field-row > .flex-shrink input[type=number] { width: 60px; }
+.dataset-point-count { flex: 1; text-align: right; line-height: 1.3; margin: 0; align-self: center; }
+
+.axis-card, .dataset-card {
+  background: var(--calc-background-color);
+  border: 2px solid var(--calc-outline-color);
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .25);
+}
+.axis-card .title, .dataset-card .title { font-weight: 600; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+.axis-card .swatch, .dataset-card .swatch {
+  display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px;
+}
+.dataset-card.editing { border-color: var(--section-title-color); box-shadow: 0 0 0 2px var(--icon-color); }
+.dataset-card [data-action="edit-selection"] { width: 100%; margin-top: 6px; }
+.small-btn {
+  font-size: 11px;
+  padding: 3px 8px;
+  background: var(--calc-dropdown-color);
+  color: var(--secondary-color);
+  border-color: var(--calc-outline-color);
+  /* Buttons side by side in a .field-row already get equal flex-basis, but
+     without this, a longer label (e.g. "Edit selection") wraps onto two
+     lines while a shorter one next to it ("Hide line") stays on one -
+     same width, different heights. Keep every small-btn one line tall. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.small-btn:hover { background: var(--calc-hover-color); }
+
+#dataset-edit-banner {
+  background: var(--icon-color);
+  border: 2px solid var(--section-title-color);
+  border-radius: 8px;
+  padding: 8px;
+  margin: 6px 0;
+}
+#dataset-edit-banner .hint { color: var(--secondary-color); }
+#dataset-edit-banner .field-row { margin-top: 6px; }
+
+.cal-points-list { margin: 4px 0 8px; }
+.cal-point-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.cal-point-label {
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--section-title-color);
+  min-width: 20px;
+}
+.cal-point-pixel {
+  font-size: 11px;
+  color: var(--dark-color);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cal-point-row input[type=number] {
+  width: 80px;
+  padding: 3px 6px;
+}
+.cal-point-row .small-btn { padding: 2px 6px; }
+.cal-point-row-empty {
+  padding: 3px 0;
+  border-bottom: 1px dashed var(--calc-outline-color);
+}
+.cal-point-row-empty .cal-point-label { color: var(--dark-color); opacity: 0.6; }
+
+.preset-chips {
+  max-height: 140px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 6px;
+  background: var(--white-color);
+  margin-bottom: 4px;
+}
+.preset-chip-group-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--dark-color);
+  opacity: 0.7;
+  margin: 4px 0 3px;
+}
+.preset-chip-group-label:first-child { margin-top: 0; }
+.preset-chip-row { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 2px; }
+.preset-chip {
+  font-size: 11px;
+  font-weight: 400;
+  padding: 3px 8px;
+  background: var(--calc-dropdown-color);
+  color: var(--secondary-color);
+  border: 1px solid var(--calc-outline-color);
+  border-radius: 100px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.preset-chip:hover { background: var(--icon-color); border-color: var(--section-title-color); }
+
+#chart-container canvas { max-width: 100%; background: #fff; border-radius: 6px; }
+
+.hint { font-size: 12px; color: var(--dark-color); line-height: 1.4; }
+
+.tab-row { display: flex; gap: 4px; margin-bottom: 8px; }
+.tab-row button { flex: 1; }
+.tab-row button.active { background: var(--section-title-color); border-color: var(--section-title-color); color: #fff; }
