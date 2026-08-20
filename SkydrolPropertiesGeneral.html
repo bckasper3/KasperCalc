@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: Skydrol General Properties</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, Skydrol, Skydrol LD-4, Skydrol 500B-4, Skydrol PE-5, Skydrol 5, phosphate ester, aviation hydraulic fluid, Type IV, Type V, flash point, pour point, bulk modulus, Eastman" />
+    <meta name="description" content="Skydrol phosphate ester aviation hydraulic fluid general properties for LD-4, 500B-4, PE-5, and Skydrol 5 — density, viscosity, flash and fire point, autoignition, pour point, bulk modulus, and surface tension." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script>
+(function(){
+  var h = location.hostname;
+  var isLocal = !h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1' || /\.local$/i.test(h) || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+  if (isLocal) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+  gtag('js', new Date());
+  gtag('config', 'G-5XLCN0GJQ0');
+})();
+</script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Skydrol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SkydrolPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="SkydrolDensity.html">Density</a>
+                  <a class="dropdown-item" href="SkydrolSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="SkydrolThermalConductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="SkydrolViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="SkydrolPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="SkydrolThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="SkydrolThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                  <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                  <a class="dropdown-item" href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-11 col-12 mx-auto">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                Skydrol General Properties
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- OVERVIEW -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-2 col-11 col-md-10 col-lg-8 col-xl-7">
+
+              <div class="custom-heading">Skydrol as an Aviation Hydraulic Fluid</div>
+              <p class="mt-3 text-start">
+                Skydrol is Eastman's family of fire-resistant, phosphate ester&ndash;base aviation hydraulic fluids,
+                first introduced in 1948 and now among the most widely used hydraulic fluids in commercial
+                aviation. Unlike petroleum-base (MIL-PRF-5606) or polyalphaolefin fluids, phosphate esters do
+                not sustain combustion under normal hydraulic system fault conditions: they will not
+                propagate flame from a hot manifold drip or a high-pressure spray, which is why they are
+                qualified as SAE&thinsp;AS1241 Type&thinsp;IV (fire-resistant, low volatility) and
+                Type&thinsp;V (fire-resistant, low volatility, low viscosity) hydraulic fluids for use in
+                transport-category aircraft. Skydrol is not compatible with unprotected aluminum, ordinary
+                paints/finishes, or many elastomers used in petroleum-base hydraulic systems; consult the
+                aircraft maintenance manual and elastomer/coating compatibility data before use, and never
+                mix fluid types in a single system. The Concorde is a notable exception among large commercial
+                aircraft, having used a mineral-base hydraulic fluid rather than a phosphate ester.
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- GRADE LINEUP -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 mx-auto">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Skydrol Grade Lineup</div>
+            </div>
+
+            <div class="mx-auto" style="max-width:1100px; overflow-x:auto;">
+              <table class="table table-striped table-bordered table-hover table-sm">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th style="min-width:150px;">Grade</th>
+                    <th>Type</th>
+                    <th>Introduced</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span style="font-weight:var(--font-weight-normal)">Skydrol LD-4</span></td>
+                    <td class="text-center">AS1241 Type&thinsp;IV</td>
+                    <td class="text-center">1977</td>
+                    <td class="text-start">Lower-density ("LD") counterpart to Skydrol 500B-4; reduces aircraft
+                      hydraulic fluid weight while retaining Type&thinsp;IV fire-resistance and elastomer/system
+                      compatibility. Eastman describes it as the world's best-selling Type&thinsp;IV aviation
+                      hydraulic fluid.</td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:var(--font-weight-normal)">Skydrol 500B-4</span></td>
+                    <td class="text-center">AS1241 Type&thinsp;IV</td>
+                    <td class="text-center">1952 (500)<br />1977 (500B-4)</td>
+                    <td class="text-start">Longest service history of any phosphate ester product. Skydrol 500 was
+                      introduced in 1952; successive reformulations led in 1977 to the current 500B-4, which carries
+                      the same anti-erosion additive and acid scavenger as LD-4. Highest density and viscosity of the
+                      four grades compared here, and the only standard-density aviation hydraulic fluid still sold.</td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:var(--font-weight-normal)">Skydrol PE-5</span></td>
+                    <td class="text-center">AS1241 Type&thinsp;V</td>
+                    <td class="text-center">2010</td>
+                    <td class="text-start">Phosphate ester Type&thinsp;V fluid developed to exceed Type&thinsp;V
+                      requirements, combining low density with low low-temperature viscosity. Eastman claims the
+                      longest fluid life of any commercially available phosphate ester, and describes it as the
+                      world's best-selling Type&thinsp;V fluid.</td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:var(--font-weight-normal)">Skydrol 5</span></td>
+                    <td class="text-center">AS1241 Type&thinsp;V</td>
+                    <td class="text-center">1996</td>
+                    <td class="text-start">The first Type&thinsp;V fluid qualified under Boeing BMS&nbsp;3-11. Lowest
+                      density of the four grades and the first aviation hydraulic fluid to show erosion resistance at
+                      higher temperatures. Skydrol 5 does not hold universal airframe-manufacturer approval &mdash;
+                      consult Eastman for application-specific approvals.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-center mt-2" style="font-size: 0.85em;">Type designations per SAE AS1241 (Aerospace Standard, cited by number).</p>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- GRADE COMPARISON: PHYSICAL PROPERTIES -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 mx-auto">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Grade Comparison &mdash; Typical Physical Properties</div>
+            </div>
+
+            <div class="mx-auto" style="max-width:1150px; overflow-x:auto;">
+              <table class="table table-striped table-bordered table-hover table-sm text-center">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th class="text-start">Property</th>
+                    <th>Units</th>
+                    <th>PE-5</th>
+                    <th>Skydrol&nbsp;5</th>
+                    <th>LD-4</th>
+                    <th>500B-4</th>
+                    <th>Test Method</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-start">Kinematic viscosity @ &minus;54&thinsp;&deg;C (&minus;65&thinsp;&deg;F)</td>
+                    <td>cSt</td>
+                    <td>1068</td>
+                    <td>2085</td>
+                    <td>1164</td>
+                    <td>2678</td>
+                    <td>ASTM D445</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Kinematic viscosity @ 38&thinsp;&deg;C (100&thinsp;&deg;F)</td>
+                    <td>cSt</td>
+                    <td>9.75</td>
+                    <td>9.23</td>
+                    <td>11.10</td>
+                    <td>11.67</td>
+                    <td>ASTM D445</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Kinematic viscosity @ 99&thinsp;&deg;C (210&thinsp;&deg;F)</td>
+                    <td>cSt</td>
+                    <td>3.38</td>
+                    <td>3.13</td>
+                    <td>3.91</td>
+                    <td>3.84</td>
+                    <td>ASTM D445</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Pour point</td>
+                    <td>&deg;C (&deg;F)</td>
+                    <td>&lt;&minus;62 (&lt;&minus;80)</td>
+                    <td>&lt;&minus;62 (&lt;&minus;80)</td>
+                    <td>&lt;&minus;62 (&lt;&minus;80)</td>
+                    <td>&lt;&minus;62 (&lt;&minus;80)</td>
+                    <td>ASTM D97</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Specific gravity @ 25&thinsp;&deg;C</td>
+                    <td>&mdash;</td>
+                    <td>0.996</td>
+                    <td>0.977</td>
+                    <td>1.011</td>
+                    <td>1.056</td>
+                    <td>Eastman 116-B</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Density @ 25&thinsp;&deg;C</td>
+                    <td>g/cc (lb/gal)</td>
+                    <td>0.9927 (8.284)</td>
+                    <td>0.9737 (8.126)</td>
+                    <td>1.0080 (8.412)</td>
+                    <td>1.0532 (8.789)</td>
+                    <td>Eastman 116-B</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Acid number</td>
+                    <td>mg&thinsp;KOH/g</td>
+                    <td>0.03</td>
+                    <td>0.03</td>
+                    <td>0.03</td>
+                    <td>0.03</td>
+                    <td>ASTM D974</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Moisture content</td>
+                    <td>%w/w</td>
+                    <td>0.07</td>
+                    <td>0.07</td>
+                    <td>0.07</td>
+                    <td>0.07</td>
+                    <td>ASTM D1744</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Particle count</td>
+                    <td>&mdash;</td>
+                    <td colspan="5">AS4059 Class&nbsp;7 or better</td>
+                    <td>SAE ARP598</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Specific heat @ 38&thinsp;&deg;C</td>
+                    <td>cal/(g&middot;&deg;C)</td>
+                    <td>0.453</td>
+                    <td>0.402</td>
+                    <td>0.437</td>
+                    <td>0.418</td>
+                    <td>ASTM D2766</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Specific heat @ 93&thinsp;&deg;C</td>
+                    <td>cal/(g&middot;&deg;C)</td>
+                    <td>&mdash;</td>
+                    <td>0.437</td>
+                    <td>0.472</td>
+                    <td>0.453</td>
+                    <td>ASTM D2766</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Specific heat @ 120&thinsp;&deg;C</td>
+                    <td>cal/(g&middot;&deg;C)</td>
+                    <td>0.461</td>
+                    <td>&mdash;</td>
+                    <td>&mdash;</td>
+                    <td>&mdash;</td>
+                    <td>ASTM D2766</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Specific heat @ 149&thinsp;&deg;C</td>
+                    <td>cal/(g&middot;&deg;C)</td>
+                    <td>&mdash;</td>
+                    <td>0.472</td>
+                    <td>0.507</td>
+                    <td>0.487</td>
+                    <td>ASTM D2766</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Thermal conductivity @ 100&thinsp;&deg;F (38&thinsp;&deg;C)</td>
+                    <td>cal/(sec&middot;cm&middot;&deg;C)</td>
+                    <td>0.000344</td>
+                    <td>0.000283</td>
+                    <td>0.000326</td>
+                    <td>0.000315</td>
+                    <td>ASTM D2717</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Thermal conductivity @ 200&thinsp;&deg;F (93&thinsp;&deg;C)</td>
+                    <td>cal/(sec&middot;cm&middot;&deg;C)</td>
+                    <td>0.000289</td>
+                    <td>0.000259</td>
+                    <td>0.000298</td>
+                    <td>0.000299</td>
+                    <td>ASTM D2717</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Thermal conductivity @ 300&thinsp;&deg;F (149&thinsp;&deg;C)</td>
+                    <td>cal/(sec&middot;cm&middot;&deg;C)</td>
+                    <td>0.000263</td>
+                    <td>0.000246</td>
+                    <td>0.000277</td>
+                    <td>0.000278</td>
+                    <td>ASTM D2717</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Surface tension @ 25&thinsp;&deg;C</td>
+                    <td>dynes/cm</td>
+                    <td>29.4</td>
+                    <td>&mdash;</td>
+                    <td>28.2</td>
+                    <td>26.7</td>
+                    <td>Du No&uuml;y balance</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Heat of combustion</td>
+                    <td>BTU/lb</td>
+                    <td>13,291</td>
+                    <td>13,100</td>
+                    <td>13,700</td>
+                    <td>13,400</td>
+                    <td>ASTM D240</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Bulk modulus</td>
+                    <td>psi</td>
+                    <td>235,000</td>
+                    <td>210,000</td>
+                    <td>231,000</td>
+                    <td>242,000</td>
+                    <td>BMS3-11</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Four-ball wear scar &mdash; 4&thinsp;kg</td>
+                    <td>mm</td>
+                    <td>0.30</td>
+                    <td>0.20</td>
+                    <td>0.33</td>
+                    <td>0.36</td>
+                    <td>ASTM D4172</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Four-ball wear scar &mdash; 10&thinsp;kg</td>
+                    <td>mm</td>
+                    <td>0.41</td>
+                    <td>0.46</td>
+                    <td>0.43</td>
+                    <td>0.45</td>
+                    <td>ASTM D4172</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Four-ball wear scar &mdash; 40&thinsp;kg</td>
+                    <td>mm</td>
+                    <td>0.65</td>
+                    <td>0.77</td>
+                    <td>0.69</td>
+                    <td>0.68</td>
+                    <td>ASTM D4172</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-center mt-2 col-xl-7 col-md-10 col-sm-11 mx-auto" style="font-size: 0.85em;">
+              Typical values, not specification limits, from Eastman's Skydrol product comparison brochure
+              (Eastman Publication&nbsp;EASAF7870). Individual sample results are not guaranteed; see the
+              applicable technical data sheet for qualified specification limits.
+            </p>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- FIRE RESISTANCE COMPARISON -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 mx-auto">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Grade Comparison &mdash; Fire-Resistance Properties</div>
+            </div>
+
+            <div class="mx-auto" style="max-width:1100px; overflow-x:auto;">
+              <table class="table table-striped table-bordered table-hover table-sm text-center">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th class="text-start">Property</th>
+                    <th>PE-5</th>
+                    <th>Skydrol&nbsp;5</th>
+                    <th>LD-4</th>
+                    <th>500B-4</th>
+                    <th>Test Method</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-start">Flash point</td>
+                    <td>171&thinsp;&deg;C (339&thinsp;&deg;F)</td>
+                    <td>166&thinsp;&deg;C (331&thinsp;&deg;F)</td>
+                    <td>174&thinsp;&deg;C (346&thinsp;&deg;F)</td>
+                    <td>186&thinsp;&deg;C (366&thinsp;&deg;F)</td>
+                    <td>ASTM D92</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Fire point</td>
+                    <td>191&thinsp;&deg;C (376&thinsp;&deg;F)</td>
+                    <td>183&thinsp;&deg;C (362&thinsp;&deg;F)</td>
+                    <td>182&thinsp;&deg;C (360&thinsp;&deg;F)</td>
+                    <td>210&thinsp;&deg;C (410&thinsp;&deg;F)</td>
+                    <td>ASTM D92</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Autoignition temperature (AIT)</td>
+                    <td>424&thinsp;&deg;C (796&thinsp;&deg;F)</td>
+                    <td>466&thinsp;&deg;C (871&thinsp;&deg;F)</td>
+                    <td>469&thinsp;&deg;C (877&thinsp;&deg;F)</td>
+                    <td>514&thinsp;&deg;C (957&thinsp;&deg;F)</td>
+                    <td>ASTM D2155</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Hot manifold drip</td>
+                    <td colspan="4">Does not burn in tray</td>
+                    <td>AMS&thinsp;3150C</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">High-pressure spray</td>
+                    <td colspan="4">Will not ignite</td>
+                    <td>AMS&thinsp;3150C</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Low-pressure spray (flame propagation)</td>
+                    <td colspan="4">No increase</td>
+                    <td>AMS&thinsp;3150C</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Wick flammability</td>
+                    <td colspan="4">&gt;40 cycles</td>
+                    <td>AMS&thinsp;3150C</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-center mt-2 col-xl-7 col-md-10 col-sm-11 mx-auto" style="font-size: 0.85em;">
+              Source: Eastman Publication&nbsp;EASAF7870. Fire-resistance behavior is a characteristic of
+              phosphate ester chemistry and does not imply the fluid is non-combustible under all conditions;
+              always follow airframe manufacturer fire-safety guidance.
+            </p>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- SPEC LIMIT SNAPSHOT PER GRADE -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 mx-auto">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Qualified Specification Limits (Technical Data Sheets)</div>
+            </div>
+
+            <div class="text-center mt-2 col-xl-7 col-md-10 col-sm-11 mx-auto mb-3">
+              <p class="text-start" style="font-size:0.95em;">
+                The comparison tables above report Eastman's <em>typical</em> laboratory values, useful for
+                interpolating property curves. The individual product technical data sheets instead publish
+                <em>qualified specification limits</em> &mdash; the bounds a production batch must meet, not
+                its typical value. These limits can vary between technical data sheet revisions; where the
+                brochure and a data sheet disagree, the brochure typical values are used for the temperature
+                curves on the other Skydrol calculator pages, and the ranges below are cited from the
+                currently posted data sheets.
+              </p>
+            </div>
+
+            <div class="mx-auto" style="max-width:1100px; overflow-x:auto;">
+              <table class="table table-striped table-bordered table-hover table-sm text-center">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr>
+                    <th class="text-start">Property (spec limit)</th>
+                    <th>PE-5</th>
+                    <th>Skydrol&nbsp;5</th>
+                    <th>LD-4</th>
+                    <th>500B-4</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-start">Type per SAE AS1241</td>
+                    <td>Type&thinsp;V</td>
+                    <td>Type&thinsp;V</td>
+                    <td>Type&thinsp;IV</td>
+                    <td>Type&thinsp;IV</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Flash point (COC), min</td>
+                    <td>160&thinsp;&deg;C (320&thinsp;&deg;F)</td>
+                    <td>154&thinsp;&deg;C (310&thinsp;&deg;F)</td>
+                    <td>160&thinsp;&deg;C (320&thinsp;&deg;F)</td>
+                    <td>177&thinsp;&deg;C (350&thinsp;&deg;F)</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Autoignition temperature, min</td>
+                    <td>400&thinsp;&deg;C (752&thinsp;&deg;F)</td>
+                    <td>399&thinsp;&deg;C (750&thinsp;&deg;F)</td>
+                    <td>400&thinsp;&deg;C (752&thinsp;&deg;F)</td>
+                    <td>460&thinsp;&deg;C (860&thinsp;&deg;F)</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Pour point, max</td>
+                    <td>&minus;62&thinsp;&deg;C (&minus;80&thinsp;&deg;F)</td>
+                    <td>&minus;62&thinsp;&deg;C (&minus;80&thinsp;&deg;F)</td>
+                    <td>&minus;62&thinsp;&deg;C (&minus;80&thinsp;&deg;F)</td>
+                    <td>&minus;62&thinsp;&deg;C (&minus;80&thinsp;&deg;F)</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Acid number, max</td>
+                    <td>0.10&thinsp;mg&thinsp;KOH/g</td>
+                    <td>0.10&thinsp;mg&thinsp;KOH/g</td>
+                    <td>0.10&thinsp;mg&thinsp;KOH/g</td>
+                    <td>0.10&thinsp;mg&thinsp;KOH/g</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Moisture content, max</td>
+                    <td>0.20&thinsp;%w/w</td>
+                    <td>0.20&thinsp;%w/w</td>
+                    <td>0.20&thinsp;%w/w</td>
+                    <td>0.20&thinsp;%w/w</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Cleanliness (particle count)</td>
+                    <td colspan="4">NAS&thinsp;1638 / AS4059 &mdash; per applicable revision, report or Class&nbsp;7 or better</td>
+                  </tr>
+                  <tr>
+                    <td class="text-start">Elemental content (Fe, Cr, Ni, etc.)</td>
+                    <td colspan="4">Report/trace, per revision (spectrometric analysis)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-center mt-2 col-xl-7 col-md-10 col-sm-11 mx-auto" style="font-size: 0.85em;">
+              Sources: Skydrol&nbsp;LD-4, Skydrol&nbsp;500B-4, Skydrol&nbsp;PE-5, and Skydrol&nbsp;5 technical
+              data sheets (Eastman). Viscosity spec limits are intentionally omitted here because published
+              revisions disagree &mdash; e.g., the Skydrol&nbsp;500B-4 data sheet lists 2900&nbsp;cSt max
+              @&minus;54&thinsp;&deg;C while an older technical bulletin lists 4200&nbsp;cSt max and the
+              brochure's typical value is 2678&nbsp;cSt; always confirm against the current data sheet
+              revision for acceptance testing.
+            </p>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- HISTORY / CONTEXT -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 mx-auto">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Background</div>
+            </div>
+
+            <div class="mx-md-5 mx-3 section-content-wrap">
+              <div class="mx-auto d-inline-block mt-2 col-11 col-md-10 col-lg-8 col-xl-7">
+                <p class="text-start">
+                  Phosphate ester hydraulic fluids were developed following a series of in-flight fires traced to
+                  petroleum-base hydraulic fluid leaking onto hot engine and brake components. Eastman (originally
+                  Monsanto/Solutia) introduced the first Skydrol fluid in 1948, and Skydrol has since become the
+                  predominant fire-resistant hydraulic fluid for commercial transport aircraft, used across the
+                  Boeing, Airbus, and most other major commercial airframe families. Skydrol fluids are
+                  traditionally dyed purple to visually distinguish them from petroleum-base (red) and
+                  polyalphaolefin/synthetic hydrocarbon (also often red or clear) hydraulic fluids, reducing the
+                  risk of accidental system cross-contamination during servicing.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <!-- LINKS TO OTHER SKYDROL PAGES -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 mx-auto">
+
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Skydrol Property Calculators</div>
+            </div>
+
+            <div class="mx-auto mt-3 mb-4 text-center col-11 col-md-10 col-lg-9 col-xl-7">
+              <p>Explore the full set of Skydrol property calculators on KasperCalc:</p>
+              <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                <a href="SkydrolDensity.html" class="custom-link custom-btn btn d-inline-block">Density</a>
+                <a href="SkydrolSpecificHeatCapacity.html" class="custom-link custom-btn btn d-inline-block">Specific Heat Capacity</a>
+                <a href="SkydrolThermalConductivity.html" class="custom-link custom-btn btn d-inline-block">Thermal Conductivity</a>
+                <a href="SkydrolViscosity.html" class="custom-link custom-btn btn d-inline-block">Viscosity</a>
+                <a href="SkydrolPrandtlNumber.html" class="custom-link custom-btn btn d-inline-block">Prandtl Number</a>
+                <a href="SkydrolThermalExpansionCoefficient.html" class="custom-link custom-btn btn d-inline-block">Thermal Expansion Coefficient</a>
+                <a href="SkydrolThermalDiffusivity.html" class="custom-link custom-btn btn d-inline-block">Thermal Diffusivity</a>
+                <a href="Multi-Fluid-Properties.html" class="custom-link custom-btn btn d-inline-block">Multi-Fluid Property Charts</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+          <!-- Citation format tabs -->
+          <style>
+            #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+            #citationTabs li { margin: 0; list-style: none; }
+            #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+            #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+            #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+          </style>
+          <div class="tab-content mt-2 mb-3" id="citationTabContent">
+            <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+              <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+              <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+              <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+              <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+          </div>
+          <ul id="citationTabs" class="nav" role="tablist">
+            <li role="presentation">
+              <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+            </li>
+          </ul>
+          </div>
+        </div>
+      </section>
+
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->
+
+
+  </body>
+</html>

@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA -->
+    <title>KasperCalc: Skydrol Prandtl Number</title>
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, Skydrol, Skydrol LD-4, Skydrol 500B-4, Skydrol PE-5, Skydrol 5, phosphate ester, aviation hydraulic fluid, Prandtl number" />
+    <meta name="description" content="Prandtl number of Skydrol LD-4, 500B-4, PE-5, and Skydrol 5 aviation hydraulic fluid from 100°F to 210°F (38°C to 99°C). Computed from Eastman viscosity, specific heat, thermal conductivity, and density data." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <!-- chart and calculator JS embedded below -->
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script>
+(function(){
+  var h = location.hostname;
+  var isLocal = !h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1' || /\.local$/i.test(h) || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+  if (isLocal) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+  gtag('js', new Date());
+  gtag('config', 'G-5XLCN0GJQ0');
+})();
+</script>
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Skydrol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SkydrolPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="SkydrolDensity.html">Density</a>
+                  <a class="dropdown-item" href="SkydrolSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="SkydrolThermalConductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="SkydrolViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="SkydrolPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="SkydrolThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="SkydrolThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                  <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                  <a class="dropdown-item" href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                Skydrol Prandtl Number
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHART -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12">
+            <div class="section-title-wrap">
+              <div class="h1 section-title">Skydrol Prandtl Number Chart</div>
+            </div>
+            <div class="canvasdiv">
+              <button id="toggleTooltipButton">Hide Tooltips</button>
+              <a style="font-size: medium; text-decoration: none;" href="img/SkydrolPrandtlNumberChart(DegreesF).png" download="SkydrolPrandtlNumberChart(DegreesF).png">
+                <button>Download Chart</button>
+              </a>
+              <a style="font-size: medium; text-decoration: none;" href="img/SkydrolPrandtlNumberChart(DegreesF).png" target="_blank">
+                <button>Open In New Tab</button>
+              </a>
+              <div class="canvascontainer">
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+                <canvas id="myChart" aria-label="Skydrol Prandtl Number vs Temperature °F" width="400" height="600" role="img" class="chartcanvas">
+                  <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
+                </canvas>
+              </div>
+            </div>
+            <p class="text-center">Computed as Pr = &mu; &middot; c<sub>p</sub> / &lambda;. Data range: &minus;65&nbsp;&deg;F to 210&nbsp;&deg;F (&minus;54&nbsp;&deg;C to 99&nbsp;&deg;C), capped by kinematic viscosity's own range. Below 100.4&nbsp;&deg;F (dashed), specific heat, thermal conductivity, and/or density are linearly extrapolated rather than directly published &mdash; see the description below.</p>
+            <p class="text-center">Sources: Eastman Skydrol brochure (EASAF7870) for viscosity, specific heat, and thermal conductivity; density from the Skydrol density page (LD-4/500B-4 curves digitized from The Lee Company; PE-5 and Skydrol&nbsp;5 scale the LD-4 curve shape to their own 25&nbsp;&deg;C density &mdash; see caveat below).</p>
+            <p class="text-center">Toggle data sets by clicking the legend.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CALCULATOR -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+            <div class="wrapper" style="max-width:33rem;">
+              <div class="header text-center">Skydrol Prandtl Number Calculator</div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Grade:</span>
+                  <span class="output inputbox">
+                    <select class="dropdowncalc" id="skyPrGrade" onchange="skyPrCalculate()" aria-label="Skydrol grade selection">
+                      <option value="500B-4">Skydrol 500B-4</option>
+                      <option value="LD-4">Skydrol LD-4</option>
+                      <option value="PE-5">Skydrol PE-5</option>
+                      <option value="Skydrol5">Skydrol 5</option>
+                    </select>
+                  </span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Degrees (&deg;F):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="skyPrFahrenheit" oninput="skyPrConvertToCelsius()" value="100" aria-label="Input box for degrees Fahrenheit" />
+                  </span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Degrees (&deg;C):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="skyPrCelsius" oninput="skyPrConvertToFahrenheit()" aria-label="Input for degrees Celsius" />
+                  </span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Prandtl Number (Pr):</span>
+                  <span class="output" id="skyPr_pr">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">&mu; (mPa&middot;s):</span>
+                  <span class="output" id="skyPr_mu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">c<sub>p</sub> (kJ/kg&middot;K):</span>
+                  <span class="output" id="skyPr_cp">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">&lambda; (W/m&middot;K):</span>
+                  <span class="output" id="skyPr_lambda">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">&rho; (kg/m&#179;):</span>
+                  <span class="output" id="skyPr_rho">&nbsp;</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DESCRIPTION -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-4 col-11 col-md-10 col-lg-8 col-xl-6">
+              <div class="custom-heading">Prandtl Number of Skydrol Phosphate Ester Hydraulic Fluid</div>
+              <div style="text-align: left" class="mt-3">
+                <div class="custom-subheading">About This Data</div>
+                <p class="mt-2">
+                  The Prandtl number (Pr) is a dimensionless quantity that characterizes the relative importance
+                  of momentum diffusion (viscosity) to thermal diffusion (thermal conductivity) in a fluid. It is
+                  defined as <strong>Pr = &mu; &middot; c<sub>p</sub> / &lambda;</strong>, where &mu; is dynamic
+                  viscosity [mPa&middot;s], c<sub>p</sub> is isobaric specific heat capacity [kJ/(kg&middot;K)],
+                  and &lambda; is thermal conductivity [W/(m&middot;K)]. Dynamic viscosity itself is computed from
+                  Eastman's published kinematic viscosity (&nu;, ASTM D445) and density (&rho;) as &mu; = &nu; &times; &rho;.
+                </p>
+                <p class="mt-2">
+                  Because Eastman's kinematic viscosity, specific heat, and thermal conductivity datasets each cover
+                  a different temperature span, this calculator is limited to the range where all three overlap for
+                  every grade: 100&nbsp;&deg;F to 210&nbsp;&deg;F (38&nbsp;&deg;C to 99&nbsp;&deg;C). Inputs outside
+                  that range return "Out of Range."
+                </p>
+                <p class="mt-2">
+                  Density is the weakest link in this calculation. Skydrol&nbsp;LD-4 and 500B-4 have full
+                  density-vs-temperature curves (digitized from The Lee Company, cross-checked against Eastman's
+                  25&nbsp;&deg;C values to within 0.5% &mdash; see the <a href="SkydrolDensity.html">Density page</a>).
+                  Skydrol&nbsp;PE-5 and Skydrol&nbsp;5 have no published curve at all &mdash; only a single
+                  25&nbsp;&deg;C density each. For those two, this page scales the <em>shape</em> of the LD-4 curve
+                  to the grade's own Eastman 25&nbsp;&deg;C density (PE-5 0.9927&nbsp;g/cc, Skydrol&nbsp;5
+                  0.9737&nbsp;g/cc), which is exact at 25&nbsp;&deg;C and assumes each expands like LD-4
+                  (&beta;&nbsp;&asymp;&nbsp;8.5&times;10&#8315;&#8308;&nbsp;K&#8315;&sup1;). Measured &beta; across the
+                  grades that do have curves spans roughly 7.0&ndash;8.5&times;10&#8315;&#8308;&nbsp;K&#8315;&sup1;, so
+                  treat PE-5 and Skydrol&nbsp;5 density as carrying about &plusmn;1% over this range, and their
+                  Prandtl numbers as correspondingly less certain than LD-4's and 500B-4's.
+                </p>
+                <p class="mt-2">
+                  One clarification, because the names invite it: <strong>Skydrol&nbsp;5 is not Skydrol&nbsp;7000</strong>.
+                  Skydrol&nbsp;7000 is the obsolete 1948 original, a much denser fluid at roughly
+                  1.083&nbsp;g/cc at 25&nbsp;&deg;C. Using its curve for Skydrol&nbsp;5 &mdash; the lightest grade
+                  Eastman sells, at 0.9737&nbsp;g/cc &mdash; would make it about 11% too dense and push its Prandtl
+                  numbers 11% high.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DATA TABLE -->
+      <section>
+        <div class="csscontainer">
+          <div class="mx-md-5 mx-3 section-content-wrap">
+            <div class="mx-auto d-inline-block mt-4">
+              <div class="custom-heading">Skydrol &mdash; Prandtl Number vs. Temperature</div>
+
+              <style>
+                #skyPrTable th, #skyPrTable td { padding: 0.55rem 0.9rem; }
+              </style>
+              <div class="table-responsive mt-3 mb-3">
+                <table id="skyPrTable" class="table table-striped table-bordered table-hover text-center" style="width:auto; margin-left:auto; margin-right:auto;">
+                  <thead style="background-color: var(--section-title-color); color: #fff;">
+                    <tr>
+                      <th rowspan="2" class="align-middle">Temp<br>(&deg;F)</th>
+                      <th rowspan="2" class="align-middle">Temp<br>(&deg;C)</th>
+                      <th>500B-4</th>
+                      <th>LD-4</th>
+                      <th>PE-5*</th>
+                      <th>Skydrol&nbsp;5**</th>
+                    </tr>
+                    <tr>
+                      <th colspan="4">Prandtl number (Pr)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="skyPrTableBody">
+                  </tbody>
+                </table>
+              </div>
+              <p class="text-start small col-11 col-md-10 col-lg-8 col-xl-6 mx-auto">Computed: Pr = &mu;&nbsp;[mPa&middot;s] &times; c<sub>p</sub>&nbsp;[kJ/(kg&middot;K)] / &lambda;&nbsp;[W/(m&middot;K)], with &mu; = &nu; &times; &rho;. Sources: Eastman Skydrol brochure (EASAF7870) for &nu;, c<sub>p</sub>, &lambda;. *PE-5 and **Skydrol&nbsp;5 have no published density curve; each uses the LD-4 curve shape scaled to its own Eastman 25&nbsp;&deg;C density (0.9927 and 0.9737&nbsp;g/cc respectively). &dagger;Values below 100.4&nbsp;&deg;F use extrapolated c<sub>p</sub>, &lambda;, and/or &rho; (linearly extrapolated on their own pages, per each property's nearest two published points) rather than directly published values; kinematic viscosity itself is never extrapolated and caps this page's range at &minus;65&nbsp;&deg;F.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>          <!-- Citation format tabs -->
+          <style>
+            #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+            #citationTabs li { margin: 0; list-style: none; }
+            #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+            #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+            #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+          </style>
+          <div class="tab-content mt-2 mb-3" id="citationTabContent">
+            <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+              <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+              <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+              <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+              <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+          </div>
+          <ul id="citationTabs" class="nav" role="tablist">
+            <li role="presentation">
+              <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+            </li>
+          </ul>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->
+
+<script>
+// Skydrol Prandtl Number — computed from Eastman Skydrol brochure (EASAF7870)
+// viscosity, specific heat, and thermal conductivity, plus density from the
+// Skydrol density page. Pr = mu[mPa·s] * cp[kJ/(kg·K)] / lambda[W/(m·K)],
+// mu = nu[cSt] * rho[kg/m3] / 1000.
+
+// Kinematic viscosity [T_F, nu_cSt] — ASTM D445, same source as SkydrolViscosity.html
+const skyPrNuData = {
+  '500B-4':   [[-65, 2678], [100, 11.67], [210, 3.84]],
+  'LD-4':     [[-65, 1164], [100, 11.10], [210, 3.91]],
+  'PE-5':     [[-65, 1068], [100, 9.75],  [210, 3.38]],
+  'Skydrol5': [[-65, 2085], [100, 9.23],  [210, 3.13]],
+};
+
+// Specific heat [T_C, cp_kJ_per_kgK] — ASTM D2766, same source as SkydrolSpecificHeatCapacity.html
+const skyPrCpData = {
+  '500B-4':   [[38, 1.749], [93, 1.895], [149, 2.038]],
+  'LD-4':     [[38, 1.828], [93, 1.975], [149, 2.121]],
+  'PE-5':     [[38, 1.895], [120, 1.929]],
+  'Skydrol5': [[38, 1.682], [93, 1.828], [149, 1.975]],
+};
+
+// Thermal conductivity [T_F, lambda_W_per_mK] — ASTM D2717, same source as SkydrolThermalConductivity.html
+const skyPrLambdaData = {
+  '500B-4':   [[100, 0.131796], [200, 0.125102], [300, 0.116315]],
+  'LD-4':     [[100, 0.136398], [200, 0.124683], [300, 0.115897]],
+  'PE-5':     [[100, 0.143930], [200, 0.120918], [300, 0.110037]],
+  'Skydrol5': [[100, 0.118407], [200, 0.108364], [300, 0.102926]],
+};
+
+// Density [T_F, rho_kg_per_m3].
+// 500B-4 and LD-4 are digitized from The Lee Company chart (see SkydrolDensity.html).
+// PE-5 and Skydrol 5 have no published density-vs-temperature curve anywhere. Rather
+// than invent one or hold density flat, each reuses the SHAPE of the LD-4 curve scaled
+// to that grade's own Eastman 25 C density (PE-5 0.9927 g/cc, Skydrol 5 0.9737 g/cc):
+//   rho_grade(T) = rho_LD4(T) * (rho_grade_25C / rho_LD4_25C)
+// This is exact at 25 C and assumes the grade expands like LD-4 (beta ~8.5e-4 /K).
+// Across the four grades that have real curves, beta spans ~7.0-8.5e-4 /K, so treat
+// PE-5 and Skydrol 5 density as +/-10% on beta, i.e. ~1% on rho over this range.
+// NOTE: Skydrol 5 is NOT Skydrol 7000. 7000 is the obsolete 1948 original and is a
+// much denser fluid (~1.083 g/cc at 25 C); using its curve here would put Skydrol 5
+// about 11% too dense.
+const skyPrRhoData = {
+  '500B-4':   [[-79.97, 1120.49], [-7.55, 1088.52], [53.89, 1061.45], [115.32, 1034.77], [194.22, 1001.31], [245.95, 978.33], [320.32, 945.76]],
+  'LD-4':     [[-79.65, 1077.73], [-29.86, 1053.76], [31.25, 1024.58], [100.45, 991.72], [170.61, 958.45], [225.26, 932.98], [274.08, 909.60], [319.99, 887.42]],
+  'PE-5':     [[-79.65, 1066.82], [-29.86, 1043.09], [31.25, 1014.20], [100.45, 981.68], [170.61, 948.74], [225.26, 923.53], [274.08, 900.39], [319.99, 878.43]],
+  'Skydrol5': [[-79.65, 1046.40], [-29.86, 1023.12], [31.25, 994.79], [100.45, 962.89], [170.61, 930.59], [225.26, 905.86], [274.08, 883.16], [319.99, 861.62]],
+};
+
+const skyPrLabels = { '500B-4': 'Skydrol 500B-4', 'LD-4': 'Skydrol LD-4', 'PE-5': 'Skydrol PE-5', 'Skydrol5': 'Skydrol 5' };
+const skyPrColors = { '500B-4': 'rgb(68,119,170)', 'LD-4': 'rgb(204,102,119)', 'PE-5': 'rgb(102,153,102)', 'Skydrol5': 'rgb(221,170,51)' };
+
+function skyPrCtoF(c) { return c * 9 / 5 + 32; }
+function skyPrFtoC(f) { return (f - 32) * 5 / 9; }
+
+function skyPrLinInterp(x, data) {
+  // Clamp small overshoot (e.g. °F→°C rounding at a shared boundary) rather
+  // than reporting NaN for what is physically an in-range point.
+  const CLAMP = 0.5;
+  if (x < data[0][0] - CLAMP || x > data[data.length - 1][0] + CLAMP) return NaN;
+  if (x < data[0][0]) x = data[0][0];
+  if (x > data[data.length - 1][0]) x = data[data.length - 1][0];
+  for (let i = 0; i < data.length - 1; i++) {
+    if (x >= data[i][0] && x <= data[i + 1][0]) {
+      const t = (x - data[i][0]) / (data[i + 1][0] - data[i][0]);
+      return data[i][1] + t * (data[i + 1][1] - data[i][1]);
+    }
+  }
+  return NaN;
+}
+
+// Interpolate within a dataset's own range, or linearly extrapolate beyond it
+// using the slope of the nearest two anchor points — same approach used on
+// SkydrolSpecificHeatCapacity.html, SkydrolThermalConductivity.html, and
+// SkydrolDensity.html to extend those properties down to -40°F (Cp, λ) or
+// -80°F (density).
+function skyPrLinInterpExtrap(x, data) {
+  if (x < data[0][0]) {
+    const [x0, y0] = data[0], [x1, y1] = data[1];
+    return y0 + (x - x0) * (y1 - y0) / (x1 - x0);
+  }
+  if (x > data[data.length - 1][0]) {
+    const [x0, y0] = data[data.length - 2], [x1, y1] = data[data.length - 1];
+    return y1 + (x - x1) * (y1 - y0) / (x1 - x0);
+  }
+  return skyPrLinInterp(x, data);
+}
+
+// ASTM D341 double-log interpolation for viscosity — same math as SkydrolViscosity.html
+const SKY_PR_D341_CUTOFF = 8;
+function skyPrD341Z(nu) {
+  let z = nu + 0.7;
+  if (nu >= 0.21 && nu < SKY_PR_D341_CUTOFF) {
+    z += Math.exp(-1.14883 - 2.65868 * nu)
+       - Math.exp(-0.0038138 - 12.5645 * nu)
+       + Math.exp(5.46491 - 37.6289 * nu)
+       - Math.exp(13.0458 - 74.6851 * nu)
+       + Math.exp(37.4619 - 192.643 * nu)
+       - Math.exp(80.4945 - 400.468 * nu);
+  }
+  return z;
+}
+function skyPrViscToAxis(nu) { const z = skyPrD341Z(nu); return z > 1 ? Math.log10(Math.log10(z)) : NaN; }
+function skyPrAxisToVisc(w) {
+  const z = Math.pow(10, Math.pow(10, w));
+  const nu = z - 0.7;
+  if (nu >= SKY_PR_D341_CUTOFF) return nu;
+  let lo = 0.21, hi = SKY_PR_D341_CUTOFF;
+  for (let k = 0; k < 60; k++) {
+    const mid = (lo + hi) / 2;
+    if (skyPrD341Z(mid) < z) lo = mid; else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+function skyPrViscInterp(tF, data) {
+  if (tF < data[0][0] || tF > data[data.length - 1][0]) return NaN;
+  for (let i = 0; i < data.length - 1; i++) {
+    if (tF >= data[i][0] && tF <= data[i + 1][0]) {
+      const t = (tF - data[i][0]) / (data[i + 1][0] - data[i][0]);
+      const w0 = skyPrViscToAxis(data[i][1]);
+      const w1 = skyPrViscToAxis(data[i + 1][1]);
+      return skyPrAxisToVisc(w0 + t * (w1 - w0));
+    }
+  }
+  return NaN;
+}
+
+// Kinematic viscosity (via ASTM D341) is the tightest hard boundary: it has
+// no extrapolated data, so the overall range is capped at its own
+// -65 to 210°F span. Cp, thermal conductivity, and density are all now
+// extrapolated (to -40°F for Cp/λ, -80°F for density) on their own pages,
+// so this page reuses that extrapolation rather than being limited by them.
+const SKY_PR_MIN_F = -65, SKY_PR_MAX_F = 210;
+// Below this temperature, at least one of Cp/λ/ρ is extrapolated rather than
+// a directly published value — used to flag chart/table cells.
+const SKY_PR_NATIVE_MIN_F = 100.4;
+
+function skyPrCompute(grade, tF) {
+  const tC = skyPrFtoC(tF);
+  const nu = skyPrViscInterp(tF, skyPrNuData[grade]);
+  const cp = skyPrLinInterpExtrap(tC, skyPrCpData[grade]);
+  const lambda = skyPrLinInterpExtrap(tF, skyPrLambdaData[grade]);
+  const rho = skyPrLinInterpExtrap(tF, skyPrRhoData[grade]);
+  const mu = nu * rho / 1000;
+  return { mu, cp, lambda, rho, pr: (mu * cp) / lambda };
+}
+
+// Build 1°F-step chart data, split into a solid segment (all inputs
+// natively published) and a dashed segment (below 100.4°F, where Cp/λ/ρ
+// are extrapolated).
+function skyPrBuildFahrenheitPoints(grade, extrapolated) {
+  const result = [];
+  const lo = extrapolated ? SKY_PR_MIN_F : Math.ceil(SKY_PR_NATIVE_MIN_F);
+  const hi = extrapolated ? Math.floor(SKY_PR_NATIVE_MIN_F) : SKY_PR_MAX_F;
+  for (let f = lo; f <= hi; f++) {
+    const { pr } = skyPrCompute(grade, f);
+    if (isNaN(pr)) continue;
+    result.push({ x: f, y: parseFloat(pr.toFixed(3)) });
+  }
+  return result;
+}
+
+const customBg = {
+  id: 'customCanvasBackgroundColor',
+  beforeDraw(chart) {
+    const { ctx } = chart;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, chart.width, chart.height);
+    ctx.restore();
+  }
+};
+
+const ctx = document.getElementById('myChart').getContext('2d');
+const skyPrChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    datasets: [
+      ...Object.keys(skyPrNuData).map(grade => ({
+        label: skyPrLabels[grade],
+        data: skyPrBuildFahrenheitPoints(grade, false),
+        fill: false,
+        borderColor: skyPrColors[grade],
+        borderDash: grade === 'PE-5' || grade === 'Skydrol5' ? [6, 4] : undefined,
+        tension: 0.1,
+      })),
+      ...Object.keys(skyPrNuData).map(grade => ({
+        label: skyPrLabels[grade] + ' (extrapolated)',
+        data: skyPrBuildFahrenheitPoints(grade, true),
+        fill: false,
+        borderColor: skyPrColors[grade],
+        borderDash: [6, 4],
+        tension: 0.1,
+        isExtrapolation: true,
+      })),
+    ],
+  },
+  plugins: [customBg],
+  options: {
+    maintainAspectRatio: false,
+    layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
+    interaction: { mode: 'nearest', axis: 'x' },
+    elements: { point: { radius: 0 } },
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: {
+          align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 },
+          filter: (legendItem, chartData) => !chartData.datasets[legendItem.datasetIndex].isExtrapolation,
+        },
+        onClick(e, legendItem, legend) {
+          const datasetIndex = legendItem.datasetIndex;
+          const ci = legend.chart;
+          const meta = ci.getDatasetMeta(datasetIndex);
+          meta.hidden = meta.hidden === null ? !ci.data.datasets[datasetIndex].hidden : null;
+          const grade = Object.keys(skyPrNuData).find(g => ci.data.datasets[datasetIndex].label === skyPrLabels[g]);
+          ci.data.datasets.forEach((ds, i) => {
+            if (i !== datasetIndex && ds.isExtrapolation && ds.label.startsWith(skyPrLabels[grade])) {
+              const extrapMeta = ci.getDatasetMeta(i);
+              extrapMeta.hidden = meta.hidden;
+            }
+          });
+          ci.update();
+        },
+      },
+      tooltip: { enabled: true, mode: 'nearest', intersect: false, axis: 'x' },
+      customCanvasBackgroundColor: { color: 'white' }
+    },
+    scales: {
+      x: {
+        type: 'linear',
+        min: SKY_PR_MIN_F,
+        max: SKY_PR_MAX_F,
+        ticks: { maxRotation: 0, font: { size: 16 } },
+        title: { display: true, text: 'Temperature °F', font: { size: 20 } }
+      },
+      y: {
+        ticks: { font: { size: 16 } },
+        title: { display: true, text: 'Prandtl Number (Pr)', padding: 10, font: { size: 20 } }
+      }
+    }
+  }
+});
+
+document.getElementById('toggleTooltipButton').addEventListener('click', function () {
+  skyPrChart.options.plugins.tooltip.enabled = !skyPrChart.options.plugins.tooltip.enabled;
+  skyPrChart.update();
+  this.textContent = skyPrChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
+});
+
+function skyPrConvertToFahrenheit() {
+  const c = parseFloat(document.getElementById('skyPrCelsius').value);
+  document.getElementById('skyPrFahrenheit').value = skyPrCtoF(c).toFixed(2);
+  skyPrCalculate();
+}
+
+function skyPrConvertToCelsius() {
+  const f = parseFloat(document.getElementById('skyPrFahrenheit').value);
+  document.getElementById('skyPrCelsius').value = skyPrFtoC(f).toFixed(2);
+  skyPrCalculate();
+}
+
+function skyPrCalculate() {
+  const f = parseFloat(document.getElementById('skyPrFahrenheit').value);
+  const grade = document.getElementById('skyPrGrade').value;
+  const ids = ['skyPr_pr','skyPr_mu','skyPr_cp','skyPr_lambda','skyPr_rho'];
+
+  if (isNaN(f) || f < SKY_PR_MIN_F || f > SKY_PR_MAX_F) {
+    ids.forEach(id => { document.getElementById(id).textContent = 'Out of Range'; });
+    return;
+  }
+
+  const { mu, cp, lambda, rho, pr } = skyPrCompute(grade, f);
+  document.getElementById('skyPr_pr').textContent     = pr.toFixed(3);
+  document.getElementById('skyPr_mu').textContent     = mu.toFixed(4);
+  document.getElementById('skyPr_cp').textContent     = cp.toFixed(4);
+  document.getElementById('skyPr_lambda').textContent = lambda.toFixed(4);
+  document.getElementById('skyPr_rho').textContent    = rho.toFixed(2);
+}
+
+// Build the data table at even 20°F steps from -60°F up to 210°F. Rows
+// below 100.4°F (where Cp/λ/ρ are extrapolated rather than published) are
+// marked with an asterisk.
+function skyPrBuildTable() {
+  const tbody = document.getElementById('skyPrTableBody');
+  let rows = '';
+  const temps = [];
+  for (let f = -60; f < 100; f += 20) temps.push(f);
+  temps.push(100, 150, 200, 210);
+  temps.forEach(f => {
+    const c = Math.round(skyPrFtoC(f));
+    const extrapolated = f < SKY_PR_NATIVE_MIN_F;
+    const cells = ['500B-4', 'LD-4', 'PE-5', 'Skydrol5'].map(grade => {
+      const { pr } = skyPrCompute(grade, f);
+      if (isNaN(pr)) return '<td></td>';
+      return `<td>${pr.toFixed(2)}${extrapolated ? '&dagger;' : ''}</td>`;
+    }).join('');
+    rows += `<tr><td>${f}</td><td>${c}</td>${cells}</tr>`;
+  });
+  tbody.innerHTML = rows;
+}
+
+skyPrBuildTable();
+skyPrConvertToCelsius();
+</script>
+
+  </body>
+</html>

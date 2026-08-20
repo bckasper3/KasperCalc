@@ -546,7 +546,17 @@ function mfpMakeChart(canvasId, dataArrays, yLabel, yType, yUnit, yFloor) {
       responsive: true,
       plugins: {
         legend: {
-          labels: { align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 12 } },
+          labels: {
+            align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 12 },
+            // Category filter buttons hide datasets via meta.hidden; rather than
+            // showing those as struck-through legend entries (clutter when a
+            // filter narrows to one or two fluids), drop them from the legend
+            // entirely. They reappear once a category filter makes them visible again.
+            generateLabels: function (chart) {
+              return Chart.defaults.plugins.legend.labels.generateLabels(chart)
+                .filter(function (item) { return !chart.getDatasetMeta(item.datasetIndex).hidden; });
+            }
+          },
           onClick(e, legendItem, legend) {
             const i = legendItem.datasetIndex;
             const ci = legend.chart;

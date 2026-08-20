@@ -50,7 +50,7 @@
           <div class="footerlink"><a href="PGheatcapacity.html">Specific Heat Capacity</a></div>
           <div class="footerlink"><a href="PGthermalconductivity.html">Thermal Conductivity</a></div>
           <div class="footerlink"><a href="PGviscosity.html">Viscosity</a></div>
-          <div class="footerlink"><a href="PGPrandltNumber.html">Prandtl Number</a></div>
+          <div class="footerlink"><a href="PGPrandtlNumber.html">Prandtl Number</a></div>
           <div class="footerlink"><a href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a></div>
           <div class="footerlink"><a href="PGBoilingPoint.html">Boiling Point</a></div>
         </div>
@@ -63,7 +63,7 @@
           <div class="footerlink"><a href="EGheatcapacity.html">Specific Heat Capacity</a></div>
           <div class="footerlink"><a href="EGthermalconductivity.html">Thermal Conductivity</a></div>
           <div class="footerlink"><a href="EGviscosity.html">Viscosity</a></div>
-          <div class="footerlink"><a href="EGPrandltNumber.html">Prandtl Number</a></div>
+          <div class="footerlink"><a href="EGPrandtlNumber.html">Prandtl Number</a></div>
           <div class="footerlink"><a href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a></div>
           <div class="footerlink"><a href="EGBoilingPoint.html">Boiling Point</a></div>
         </div>
@@ -75,9 +75,21 @@
           <div class="footerlink"><a href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a></div>
           <div class="footerlink"><a href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a></div>
           <div class="footerlink"><a href="MIL-PRF-23699viscosity.html">Viscosity</a></div>
-          <div class="footerlink"><a href="MIL-PRF-23699PrandltNumber.html">Prandtl Number</a></div>
+          <div class="footerlink"><a href="MIL-PRF-23699PrandtlNumber.html">Prandtl Number</a></div>
           <div class="footerlink"><a href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a></div>
           <div class="footerlink"><a href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a></div>
+        </div>
+
+        <div class="footerRow">
+          <h4 class="FooterRowTitle"><span class="footerflexbox">Skydrol</span></h4>
+          <div class="footerlink"><a href="SkydrolPropertiesGeneral.html">General Properties</a></div>
+          <div class="footerlink"><a href="SkydrolDensity.html">Density</a></div>
+          <div class="footerlink"><a href="SkydrolSpecificHeatCapacity.html">Specific Heat Capacity</a></div>
+          <div class="footerlink"><a href="SkydrolThermalConductivity.html">Thermal Conductivity</a></div>
+          <div class="footerlink"><a href="SkydrolViscosity.html">Viscosity</a></div>
+          <div class="footerlink"><a href="SkydrolPrandtlNumber.html">Prandtl Number</a></div>
+          <div class="footerlink"><a href="SkydrolThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a></div>
+          <div class="footerlink"><a href="SkydrolThermalDiffusivity.html">Thermal Diffusivity</a></div>
         </div>
 
         <div class="footerRow">
@@ -88,7 +100,7 @@
           <div class="footerlink"><a href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a></div>
           <div class="footerlink"><a href="Waterthermalconductivity.html">Thermal Conductivity</a></div>
           <div class="footerlink"><a href="WaterViscosity.html">Viscosity</a></div>
-          <div class="footerlink"><a href="WaterPrandltNumber.html">Prandtl Number</a></div>
+          <div class="footerlink"><a href="WaterPrandtlNumber.html">Prandtl Number</a></div>
           <div class="footerlink"><a href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a></div>
           <div class="footerlink"><a href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a></div>
           <div class="footerlink"><a href="WaterHeatVaporization.html">Heat of Vaporization</a></div>
