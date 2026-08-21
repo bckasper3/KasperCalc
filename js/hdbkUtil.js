@@ -52,15 +52,24 @@ window.HdbkUtil = (function () {
     if (!el) { return null; }
     var T = (opts.tension !== undefined) ? opts.tension : 0.3;
     var ds = datasets.map(function (d, i) {
-      var pts;
-      if      (d.interp === 'lin') { pts = linInterp(d.data, d.step || 1); }
-      else if (d.interp === 'log') { pts = logInterp(d.data, d.ppd  || 20); }
+      var pts, interpolated = false;
+      if      (d.interp === 'lin') { pts = linInterp(d.data, d.step || 1); interpolated = true; }
+      else if (d.interp === 'log') { pts = logInterp(d.data, d.ppd  || 20); interpolated = true; }
       else                         { pts = d.data; }
+      // Data already densified via linInterp/logInterp is piecewise-linear
+      // (or piecewise-log) between the original raw points. Applying a
+      // spline tension on top of that dense, already-interpolated line
+      // causes visible overshoot/ringing ("jitter") at each original
+      // breakpoint, since Chart.js's Catmull-Rom smoothing has no way to
+      // know those breakpoints aren't real curvature. Force tension to 0
+      // for interpolated datasets; only apply the requested tension to
+      // genuinely sparse, un-densified data.
+      var tension = interpolated ? 0 : T;
       return {
         label: d.label || ('S' + (i + 1)), data: pts, fill: false,
         borderColor: d.color || PAL[i % PAL.length],
         backgroundColor: d.color || PAL[i % PAL.length],
-        tension: T, pointRadius: 0, pointHoverRadius: 0,
+        tension: tension, pointRadius: 0, pointHoverRadius: 0,
         borderWidth: d.width || 2, showLine: true
       };
     });

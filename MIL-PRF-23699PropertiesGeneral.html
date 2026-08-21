@@ -80,6 +80,7 @@
                   <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
                   <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
                   <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -379,6 +380,158 @@
               </p>
 
             </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- COMBINED CALCULATOR -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+            <div class="wrapper" style="max-width:45rem;">
+              <div class="header text-center">MIL-PRF-23699 All-Properties Calculator</div>
+
+              <div class="group1 d-flex flex-wrap">
+                <label class="dropdownlabel" for="milAllGrade">Oil:</label>
+                <span class="output">
+                  <select class="dropdowncalc dropdown-menu-end fs-5" id="milAllGrade" onchange="milAllCalculate()" aria-label="Oil grade selection">
+                    <option value="0">AeroShell 750 (MIL-PRF-6081 Gr. 1010)</option>
+                    <option value="1">AeroShell Ascender (MIL-PRF-23699 HTS)</option>
+                    <option value="2" selected>AeroShell 500 / 555 / 560 (MIL-PRF-23699 STD / HTS)</option>
+                    <option value="3">AeroShell 3 (DEF STAN 91-99)</option>
+                    <option value="4">AeroShell 308 (MIL-PRF-5606)</option>
+                    <option value="5">AeroShell 390 (DEF STAN 91-94)</option>
+                  </select>
+                </span>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Degrees (&deg;F):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="milAllFahrenheit" oninput="milAllConvertToCelsius()" value="100" aria-label="Input box for degrees Fahrenheit" />
+                  </span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Degrees (&deg;C):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="milAllCelsius" oninput="milAllConvertToFahrenheit()" aria-label="Input for degrees Celsius" />
+                  </span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Density</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (kg/m&#179;):</span>
+                  <span class="output" id="milAll_rho">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (lb/gal):</span>
+                  <span class="output" id="milAll_rho_lbgal">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (lb/ft&#179;):</span>
+                  <span class="output" id="milAll_rho_lbft3">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Gravity:*</span>
+                  <span class="output" id="milAll_sg">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Viscosity</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Kinematic Viscosity (mm&#178;/s):</span>
+                  <span class="output" id="milAll_kinvisc">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Kinematic Viscosity (SSU):</span>
+                  <span class="output" id="milAll_kinvisc_ssu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Dynamic Viscosity (mPa&middot;s):</span>
+                  <span class="output" id="milAll_dynvisc">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Dynamic Viscosity (lb/(ft&middot;s)):</span>
+                  <span class="output" id="milAll_dynvisc_lbfts">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Thermal Properties</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Heat (kJ/kg&middot;K):</span>
+                  <span class="output" id="milAll_cp">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Heat (BTU/(lb&middot;&deg;F)):</span>
+                  <span class="output" id="milAll_cp_btu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (W/m&middot;K):</span>
+                  <span class="output" id="milAll_lambda">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (BTU/(hr&middot;ft&middot;&deg;F)):</span>
+                  <span class="output" id="milAll_lambda_btu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (BTU&middot;in/(hr&middot;ft&#178;&middot;&deg;F)):</span>
+                  <span class="output" id="milAll_lambda_btuin">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Diffusivity (&times;10&#8315;&#8312; m&#178;/s):</span>
+                  <span class="output" id="milAll_alpha">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Prandtl Number:</span>
+                  <span class="output" id="milAll_pr">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Thermal Expansion</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">&beta; &times; 10&#8315;&#8308; (1/K):</span>
+                  <span class="output" id="milAll_beta">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">% Vol. Change from 20&deg;C:</span>
+                  <span class="output" id="milAll_volpct">&nbsp;</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-center mt-2 col-11 col-md-10 col-lg-8 col-xl-6 mx-auto" style="font-size:0.75em;">
+              *Specific gravity is referenced to a static water density of 998&nbsp;kg/m&#179; (water at
+              60&nbsp;&deg;F) rather than to water at the fluid's own temperature.
+            </p>
+
+            <p class="text-center mt-3 col-11 col-md-10 col-lg-8 col-xl-6 mx-auto" style="font-size:0.85em;">
+              Combines the <a style="font-size:inherit;" href="MIL-PRF-23699Density.html">Density</a>, <a style="font-size:inherit;" href="MIL-PRF-23699viscosity.html">Viscosity</a>,
+              <a style="font-size:inherit;" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat</a>,
+              <a style="font-size:inherit;" href="MIL-PRF-23699ThermalConductivity.html">Thermal Conductivity</a>,
+              <a style="font-size:inherit;" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>,
+              <a style="font-size:inherit;" href="MIL-PRF-23699PrandtlNumber.html">Prandtl Number</a>, and
+              <a style="font-size:inherit;" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion</a> calculators into one
+              oil + temperature lookup. Density, specific heat, thermal conductivity, and thermal expansion are
+              shared across all six oils (all qualify to the same base-fluid spec); only kinematic viscosity is
+              oil-specific, per NIST IR&nbsp;8263. Dynamic viscosity and Prandtl number use a separately measured
+              generic MIL-PRF-23699 dataset (Table&nbsp;B4, valid 62&ndash;260&nbsp;&deg;F / 17&ndash;127&nbsp;&deg;C),
+              independent of the oil selector.
+            </p>
           </div>
         </div>
       </section>
@@ -870,8 +1023,147 @@
     <!-- FOOTER -->
     <footer id="site-footer"></footer>
     <script src="js/footer.js"></script>
-    <!-- END FOOTER -->    
+    <!-- END FOOTER -->
 
+    <script>
+      // ---- MIL-PRF-23699 All-Properties Calculator ----
+      // Density: NIST IR 8263 Table 23, perfectly linear -40 to 200C.
+      const milAllRho0 = 992.12;      // kg/m3 at 20C
+      const milAllDrhoDT = -0.754;    // kg/(m3.C)
+      const MIL_ALL_DENS_MIN_C = -40, MIL_ALL_DENS_MAX_C = 200;
+      function milAllRhoAt(tC){
+        if(tC < MIL_ALL_DENS_MIN_C || tC > MIL_ALL_DENS_MAX_C) return null;
+        return milAllRho0 + milAllDrhoDT * (tC - 20);
+      }
+      function milAllBetaAt(tC){
+        if(tC < MIL_ALL_DENS_MIN_C || tC > MIL_ALL_DENS_MAX_C) return null;
+        const dRhodK = milAllDrhoDT * 9/5;
+        return -dRhodK / milAllRhoAt(tC) * 1e4;
+      }
+
+      // Specific heat - NIST IR 8263 Table 14 (DSC), sampled every 20C, 0-219C.
+      const milAllCpData = [[0,1.737],[20,1.785],[40,1.840],[60,1.896],[80,1.953],[100,2.010],[120,2.067],[140,2.125],[160,2.181],[180,2.237],[200,2.291],[219,2.343]];
+
+      // Thermal conductivity - NIST IR 8263 Table A4, 28.4-226.3C.
+      const milAllLambdaData = [[28.4,0.1451],[93.6,0.1358],[126.8,0.1307],[159.9,0.1250],[192.7,0.1193],[226.3,0.1139]];
+
+      // Dynamic viscosity / Prandtl input - NIST IR 8263 Table B4, generic to spec, 16.89-126.85C.
+      const milAllMuData = [[16.89,71.13],[21.91,57.81],[26.86,44.20],[36.94,28.13],[46.94,19.48],[56.91,13.92],[66.81,9.846],[76.84,7.893],[106.91,3.856],[116.88,3.223],[126.85,2.709]];
+
+      // Kinematic viscosity - NIST IR 8263, per-oil (six AeroShell products).
+      const milAllViscLabels = [
+        'AeroShell 750 (MIL-PRF-6081 Gr. 1010)',
+        'AeroShell Ascender (MIL-PRF-23699 HTS)',
+        'AeroShell 500 / 555 / 560 (MIL-PRF-23699 STD / HTS)',
+        'AeroShell 3 (DEF STAN 91-99)',
+        'AeroShell 308 (MIL-PRF-5606)',
+        'AeroShell 390 (DEF STAN 91-94)',
+      ];
+      const milAllViscDataC = [
+        [{xC:-33.672231335842255,y:9986.172890733058},{xC:-15.408536781498285,y:9004.448132780084},{xC:14.767023706133998,y:7372.849239280776},{xC:35.41374762777831,y:6252.853388658369},{xC:56.85991829907684,y:5022.240663900416},{xC:80.28502042523078,y:3763.9737206085765},{xC:99.34597446042008,y:2699.286307053943},{xC:130.31879442889766,y:984.7247579529749}],
+        [{xC:-37.23037087072598,y:9986.172890733058},{xC:-2.6753514104667317,y:7967.414937759337},{xC:20.36315095371353,y:6598.531120331951},{xC:46.58084853163497,y:5022.240663900416},{xC:85.11341632088521,y:2699.286307053943},{xC:106.1620508861655,y:1496.3278008298767},{xC:130.78960404001413,y:30.654218533887843}],
+        [{xC:-39.20602142236804,y:9972.345781466114},{xC:-17.760944385473962,y:8755.560165975105},{xC:2.0972691305606475,y:7607.91009681881},{xC:41.016436681784555,y:5395.572614107884},{xC:80.33751487664446,y:3100.2724757952983},{xC:106.15111454212101,y:1634.5988934993097},{xC:130.77538679275628,y:210.40663900415052}],
+        [{xC:-39.60355752838625,y:10000},{xC:5.325677892502171,y:6778.283540802213},{xC:56.62205281610858,y:3031.136929460582}],
+        [{xC:-39.12727974524751,y:8976.793914246196},{xC:29.598346682106197,y:4801.006915629323},{xC:78.86110843063463,y:1772.8699861687428}],
+        [{xC:-39.11087522918074,y:8769.387275242047},{xC:-13.296181929299756,y:7289.886583679116},{xC:15.694425681109074,y:5644.460580912863},{xC:60.168162372543335,y:3183.235131396958},{xC:93.52838624593906,y:1275.094052558784}],
+      ];
+
+      function milAllLinInterp(tC, data){
+        if(!data || data.length < 2) return null;
+        if(tC < data[0][0] || tC > data[data.length-1][0]) return null;
+        for(let i=0;i<data.length-1;i++){
+          const [x0,y0]=data[i],[x1,y1]=data[i+1];
+          if(tC>=x0 && tC<=x1) return y0+(tC-x0)*(y1-y0)/(x1-x0);
+        }
+        return null;
+      }
+
+      function milAllViscInterp(gradeIdx, tC){
+        const raw = milAllViscDataC[gradeIdx];
+        if(!raw || raw.length < 2) return null;
+        const pts = raw.map(p => ({x:p.xC, y:p.y})).sort((a,b)=>a.x-b.x);
+        if(tC < pts[0].x || tC > pts[pts.length-1].x) return null;
+        for(let i=0;i<pts.length-1;i++){
+          if(tC>=pts[i].x && tC<=pts[i+1].x){
+            const t=(tC-pts[i].x)/(pts[i+1].x-pts[i].x);
+            return pts[i].y + t*(pts[i+1].y-pts[i].y);
+          }
+        }
+        return null;
+      }
+
+      function milAllConvertToCelsius(){
+        const f = parseFloat(document.getElementById('milAllFahrenheit').value);
+        if(!isNaN(f)) document.getElementById('milAllCelsius').value = ((f-32)*5/9).toFixed(2);
+        milAllCalculate();
+      }
+      function milAllConvertToFahrenheit(){
+        const c = parseFloat(document.getElementById('milAllCelsius').value);
+        if(!isNaN(c)) document.getElementById('milAllFahrenheit').value = (c*9/5+32).toFixed(2);
+        milAllCalculate();
+      }
+      function milAllSetOut(id, val, digits){
+        document.getElementById(id).textContent = (val===null || val===undefined || isNaN(val)) ? 'Out of Range' : val.toFixed(digits);
+      }
+
+      // ASTM D2161 kinematic viscosity (cSt) -> Saybolt Universal Seconds
+      function milAllCstToSSU(cst){
+        if(cst===null || isNaN(cst) || cst<=0) return null;
+        return 4.6324*cst + (1.0+0.03264*cst) /
+          ((3930.2+262.7*cst+23.97*cst*cst+1.646*cst*cst*cst)*1e-5);
+      }
+
+      function milAllCalculate(){
+        const gradeIdx = parseInt(document.getElementById('milAllGrade').value, 10);
+        const tF = parseFloat(document.getElementById('milAllFahrenheit').value);
+        if(isNaN(tF)) return;
+        const tC = (tF-32)*5/9;
+
+        const rho = milAllRhoAt(tC);
+        milAllSetOut('milAll_rho', rho, 2);
+        milAllSetOut('milAll_rho_lbgal', rho===null?null:rho*0.0083454063545262, 4);
+        milAllSetOut('milAll_rho_lbft3', rho===null?null:rho*0.0624279606, 3);
+        milAllSetOut('milAll_sg', rho===null?null:rho/998, 4);
+
+        const nu = milAllViscInterp(gradeIdx, tC);
+        milAllSetOut('milAll_kinvisc', nu, 3);
+        milAllSetOut('milAll_kinvisc_ssu', milAllCstToSSU(nu), 2);
+
+        const mu = milAllLinInterp(tC, milAllMuData);
+        milAllSetOut('milAll_dynvisc', mu, 3);
+        milAllSetOut('milAll_dynvisc_lbfts', mu===null?null:mu*0.0006719689751, 6);
+
+        const cp = milAllLinInterp(tC, milAllCpData);
+        milAllSetOut('milAll_cp', cp, 4);
+        milAllSetOut('milAll_cp_btu', cp===null?null:cp*0.238845896, 4);
+
+        const lambda = milAllLinInterp(tC, milAllLambdaData);
+        milAllSetOut('milAll_lambda', lambda, 4);
+        milAllSetOut('milAll_lambda_btu', lambda===null?null:lambda*0.5777893, 5);
+        milAllSetOut('milAll_lambda_btuin', lambda===null?null:lambda*6.933471, 4);
+
+        let alpha = null;
+        if(rho!==null && cp!==null && lambda!==null){
+          alpha = lambda / (rho * (cp*1000));
+        }
+        milAllSetOut('milAll_alpha', alpha===null?null:alpha*1e8, 3);
+
+        let pr = null;
+        if(mu!==null && cp!==null && lambda!==null){
+          pr = (mu/1000) * (cp*1000) / lambda;
+        }
+        milAllSetOut('milAll_pr', pr, 3);
+
+        const beta = milAllBetaAt(tC);
+        milAllSetOut('milAll_beta', beta, 4);
+        const volPct = rho===null ? null : (milAllRho0 - rho) / rho * 100;
+        milAllSetOut('milAll_volpct', volPct, 3);
+      }
+
+      document.addEventListener('DOMContentLoaded', function(){
+        milAllConvertToCelsius();
+      });
+    </script>
 
   </body>
 </html>

@@ -80,6 +80,7 @@
                   <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
                   <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
                   <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -426,6 +427,156 @@
               </ul>
 
             </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- COMBINED CALCULATOR -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+            <div class="wrapper" style="max-width:45rem;">
+              <div class="header text-center">Propylene Glycol All-Properties Calculator</div>
+
+              <div class="group1 d-flex flex-wrap">
+                <label class="dropdownlabel" for="pgAllConc">Concentration (% V/V):</label>
+                <span class="output">
+                  <select class="dropdowncalc dropdown-menu-end fs-5" id="pgAllConc" onchange="pgAllCalculate()" aria-label="Propylene glycol concentration selection">
+                    <option value="25">25%</option>
+                    <option value="30">30%</option>
+                    <option value="35">35%</option>
+                    <option value="40" selected>40%</option>
+                    <option value="45">45%</option>
+                    <option value="50">50%</option>
+                  </select>
+                </span>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Degrees (&deg;F):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="pgAllFahrenheit" oninput="pgAllConvertToCelsius()" value="70" aria-label="Input box for degrees Fahrenheit" />
+                  </span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Degrees (&deg;C):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="pgAllCelsius" oninput="pgAllConvertToFahrenheit()" aria-label="Input for degrees Celsius" />
+                  </span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Freeze Protection</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Freezing Point (&deg;F):</span>
+                  <span class="output" id="pgAll_freeze_f">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Freezing Point (&deg;C):</span>
+                  <span class="output" id="pgAll_freeze_c">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Density</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (kg/m&#179;):</span>
+                  <span class="output" id="pgAll_rho">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (lb/gal):</span>
+                  <span class="output" id="pgAll_rho_lbgal">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (lb/ft&#179;):</span>
+                  <span class="output" id="pgAll_rho_lbft3">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Gravity:*</span>
+                  <span class="output" id="pgAll_sg">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Viscosity</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Kinematic Viscosity (cSt):</span>
+                  <span class="output" id="pgAll_kinvisc">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Kinematic Viscosity (SSU):</span>
+                  <span class="output" id="pgAll_kinvisc_ssu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Dynamic Viscosity (mPa&middot;s):</span>
+                  <span class="output" id="pgAll_dynvisc">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Dynamic Viscosity (lb/(ft&middot;s)):</span>
+                  <span class="output" id="pgAll_dynvisc_lbfts">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Thermal Properties</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Heat (kJ/kg&middot;K):</span>
+                  <span class="output" id="pgAll_cp">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Heat (BTU/(lb&middot;&deg;F)):</span>
+                  <span class="output" id="pgAll_cp_btu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (W/m&middot;K):</span>
+                  <span class="output" id="pgAll_lambda">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (BTU/(hr&middot;ft&middot;&deg;F)):</span>
+                  <span class="output" id="pgAll_lambda_btu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (BTU&middot;in/(hr&middot;ft&#178;&middot;&deg;F)):</span>
+                  <span class="output" id="pgAll_lambda_btuin">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Prandtl Number:</span>
+                  <span class="output" id="pgAll_pr">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">&beta; &times; 10&#8315;&#8308; (1/K):</span>
+                  <span class="output" id="pgAll_beta">&nbsp;</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-center mt-2 col-11 col-md-10 col-lg-8 col-xl-6 mx-auto" style="font-size:0.75em;">
+              *Specific gravity is referenced to a static water density of 998&nbsp;kg/m&#179; (water at
+              60&nbsp;&deg;F) rather than to water at the fluid's own temperature.
+            </p>
+
+            <p class="text-center mt-3 col-11 col-md-10 col-lg-8 col-xl-6 mx-auto" style="font-size:0.85em;">
+              Combines the <a style="font-size:inherit;" href="PGFrostProtection.html">Frost Protection</a>, <a style="font-size:inherit;" href="PGdensity.html">Density</a>,
+              <a style="font-size:inherit;" href="PGviscosity.html">Viscosity</a>, <a style="font-size:inherit;" href="PGheatcapacity.html">Heat Capacity</a>,
+              <a style="font-size:inherit;" href="PGthermalconductivity.html">Thermal Conductivity</a>, <a style="font-size:inherit;" href="PGPrandtlNumber.html">Prandtl
+              Number</a>, and <a style="font-size:inherit;" href="PGThermalExpansionCoefficient.html">Thermal Expansion</a> calculators into
+              one concentration + temperature lookup. Density, viscosity, heat capacity, and thermal conductivity
+              are fetched live from the same digitized data (25&ndash;50%&nbsp;V/V) used on their individual pages;
+              this requires the page to be served over HTTP (not opened directly as a local file). Prandtl number
+              and thermal expansion use separately tabulated data at the same concentrations. Freezing point does
+              not depend on the temperature field above &mdash; it is a function of concentration only.
+            </p>
           </div>
         </div>
       </section>
@@ -784,8 +935,150 @@
     <!-- FOOTER -->
     <footer id="site-footer"></footer>
     <script src="js/footer.js"></script>
-    <!-- END FOOTER -->    
+    <!-- END FOOTER -->
 
+    <script>
+      // ---- Propylene Glycol All-Properties Calculator ----
+      const pgAllDensFiles = [1,2,3,4,5,6,7].map(n => `csvData/propyleneglycol/pg-${n}.csv`);
+      const pgAllCpFiles   = [8,9,10,11,12,13,14].map(n => `csvData/propyleneglycol/pg-${n}.csv`);
+      const pgAllLambdaFiles = [15,16,17,18,19,20,21].map(n => `csvData/propyleneglycol/pg-${n}.csv`);
+      const pgAllViscFiles = [22,23,24,25,26,27,28].map(n => `csvData/propyleneglycol/pg-${n}.csv`);
+
+      // Concentration -> CSV array index. Density file order: Freeze,25,30,35,40,45,50.
+      const pgAllDensIdx = { 25:1, 30:2, 35:3, 40:4, 45:5, 50:6 };
+      // Cp / thermal conductivity / viscosity file order: Freeze,50,45,40,35,30,25.
+      const pgAllRevIdx  = { 50:1, 45:2, 40:3, 35:4, 30:5, 25:6 };
+
+      const pgAllFrostData = {
+        concentrations: [0,5,10,15,20,25,30,35,40,45,50],
+        freezingPoint:  [0,-1.7,-3,-5,-7.2,-9.8,-12.5,-16,-20,-25.5,-32]
+      };
+
+      const pgAllPrandtlData = {
+        25: { tempsC: [-10,  0, 10, 20, 30,  40,  50,  60,  70,  80, 90,  100], values: [80,  50,  30,  20, 15,  11,   8.5,  7,   5.5, 4.7, 4.2,   3.8] },
+        30: { tempsC: [-14,-10,  0, 10, 20,  30,  40,  50,  60,  70, 80,  90, 100], values: [150,115, 70,  40, 25,  18,  13,  10,   8, 6.5, 5.3, 4.7, 4.2] },
+        35: { tempsC: [-17,-10,  0, 10, 20,  30,  40,  50,  60,  70, 80,  90, 100], values: [230,150, 85,  50, 31.5,  22,  16.5,  11.9, 9, 7.5, 6.1, 5.2, 4.5] },
+        40: { tempsC: [-22,-20,-10,  0, 10,  20,  30,  40,  50,  60, 70,  80, 90, 100], values: [480,395,200,110, 63,  40,  28,  20,  14.5, 10.5,8.5, 7,   5.8, 4.9] },
+        45: { tempsC: [-28,-20,-10,  0, 10,  20,  30,  40,  50,  60, 70,  80, 90, 100], values: [1100,570,280,150,80,  50,  32,  23,  17,  13,  10,  8,   6.5, 5.4] },
+        50: { tempsC: [-33,-30,-20,-10,  0,  10,  20,  30,  40,  50, 60,  70, 80,  90, 100], values: [2800,1800,780,350,180,100, 62,  40,  28,  20,  15,  12,  8.9, 7.3, 6] }
+      };
+      const pgAllTeData = {
+        25: { tempsC: [-10,  0, 10,   20,  30,  40,  50,  60,  70,  80,  90,  100], values: [22,   33,  41.5, 48,  54,  58.5, 62,  64.5, 67,  68.5, 69,  69.5] },
+        30: { tempsC: [-13,-10,  0,   10,  20,  30,  40,  50,  60,  70,  80,  90, 100], values: [22.5, 27,  38,   46,  53,  58,   63,  65,  67.5, 69.5, 70.5, 72,  72.5] },
+        35: { tempsC: [-18,-10,  0,   10,  20,  30,  40,  50,  60,  70,  80,  90, 100], values: [21.8, 32,  43,   50.5, 57, 62,   66,  68,  71.5, 73,  73.5, 74,  74.9] },
+        40: { tempsC: [-23,-20,-10,    0,  10,  20,  30,  40,  50,  60,  70,  80,  90, 100], values: [19,  23,  37,   46,  54.5, 60, 65,  69,  71.5,  74,  75,  76.2, 76.6, 77] },
+        45: { tempsC: [-28,-20,-10,    0,  10,  20,  30,  40,  50,  60,  70,  80,  90, 100], values: [16,  28,  43,   52,  59,  65,  69,  73,  75,  77,  78,  79,  80,  81.5] },
+        50: { tempsC: [-34,-30,-20,  -10,   0,  10,  20,  30,  40,  50,  60,  70,  80,  90, 100], values: [12,  20,  34,   47.5, 56.5,64,  69,  73,  77,  78.5, 80.9,82,  82.7, 83.2, 83.5] }
+      };
+
+      let pgAllDensData=null, pgAllCpData=null, pgAllLambdaData=null, pgAllViscData=null, pgAllReady=false;
+
+      function pgAllParseCSV(text){
+        const parsed = [];
+        text.trim().split('\n').forEach(row => {
+          const cols = row.split(',');
+          if(cols.length >= 2){
+            const x = parseFloat(cols[0].trim()), y = parseFloat(cols[1].trim());
+            if(!isNaN(x) && !isNaN(y)) parsed.push([x,y]);
+          }
+        });
+        return parsed;
+      }
+      async function pgAllLoadFiles(files){
+        return Promise.all(files.map(f => fetch(f).then(r => r.text()).then(pgAllParseCSV)));
+      }
+
+      function pgAllLinInterp(x, data){
+        if(!data || data.length < 2) return null;
+        if(x < data[0][0] || x > data[data.length-1][0]) return null;
+        for(let i=0;i<data.length-1;i++){
+          const [x0,y0]=data[i],[x1,y1]=data[i+1];
+          if(x>=x0 && x<=x1) return y0+(x-x0)*(y1-y0)/(x1-x0);
+        }
+        return null;
+      }
+      function pgAllLogLinInterp(x, xs, ys){
+        if(x < xs[0] || x > xs[xs.length-1]) return null;
+        for(let i=0;i<xs.length-1;i++){
+          if(x>=xs[i] && x<=xs[i+1]){
+            const t=(x-xs[i])/(xs[i+1]-xs[i]);
+            return Math.exp(Math.log(ys[i]) + t*(Math.log(ys[i+1])-Math.log(ys[i])));
+          }
+        }
+        return null;
+      }
+
+      function pgAllConvertToCelsius(){
+        const f = parseFloat(document.getElementById('pgAllFahrenheit').value);
+        if(!isNaN(f)) document.getElementById('pgAllCelsius').value = ((f-32)*5/9).toFixed(2);
+        pgAllCalculate();
+      }
+      function pgAllConvertToFahrenheit(){
+        const c = parseFloat(document.getElementById('pgAllCelsius').value);
+        if(!isNaN(c)) document.getElementById('pgAllFahrenheit').value = (c*9/5+32).toFixed(2);
+        pgAllCalculate();
+      }
+      function pgAllSetOut(id, val, digits){
+        document.getElementById(id).textContent = (val===null || val===undefined || isNaN(val)) ? 'Out of Range' : val.toFixed(digits);
+      }
+
+      // ASTM D2161 kinematic viscosity (cSt) -> Saybolt Universal Seconds
+      function pgAllCstToSSU(cst){
+        if(cst===null || isNaN(cst) || cst<=0) return null;
+        return 4.6324*cst + (1.0+0.03264*cst) /
+          ((3930.2+262.7*cst+23.97*cst*cst+1.646*cst*cst*cst)*1e-5);
+      }
+
+      function pgAllCalculate(){
+        if(!pgAllReady) return;
+        const conc = parseInt(document.getElementById('pgAllConc').value, 10);
+        const tF = parseFloat(document.getElementById('pgAllFahrenheit').value);
+        if(isNaN(tF)) return;
+        const tC = (tF-32)*5/9;
+
+        const freezeC = pgAllLinInterp(conc, pgAllFrostData.concentrations.map((c,i)=>[c, pgAllFrostData.freezingPoint[i]]));
+        pgAllSetOut('pgAll_freeze_c', freezeC, 1);
+        pgAllSetOut('pgAll_freeze_f', freezeC===null?null:freezeC*9/5+32, 1);
+
+        const rho = pgAllLinInterp(tF, pgAllDensData[pgAllDensIdx[conc]]);
+        pgAllSetOut('pgAll_rho', rho, 2);
+        pgAllSetOut('pgAll_rho_lbgal', rho===null?null:rho*0.0083454063545262, 4);
+        pgAllSetOut('pgAll_rho_lbft3', rho===null?null:rho*0.0624279606, 3);
+        pgAllSetOut('pgAll_sg', rho===null?null:rho/998, 4);
+
+        const cp = pgAllLinInterp(tF, pgAllCpData[pgAllRevIdx[conc]]);
+        pgAllSetOut('pgAll_cp', cp, 4);
+        pgAllSetOut('pgAll_cp_btu', cp===null?null:cp*0.238845896, 4);
+
+        const lambda = pgAllLinInterp(tF, pgAllLambdaData[pgAllRevIdx[conc]]);
+        pgAllSetOut('pgAll_lambda', lambda, 4);
+        pgAllSetOut('pgAll_lambda_btu', lambda===null?null:lambda*0.5777893, 5);
+        pgAllSetOut('pgAll_lambda_btuin', lambda===null?null:lambda*6.933471, 4);
+
+        const mu = pgAllLinInterp(tF, pgAllViscData[pgAllRevIdx[conc]]);
+        pgAllSetOut('pgAll_dynvisc', mu, 3);
+        pgAllSetOut('pgAll_dynvisc_lbfts', mu===null?null:mu*0.0006719689751, 6);
+        const nu = (mu!==null && rho!==null) ? mu*1000/rho : null;
+        pgAllSetOut('pgAll_kinvisc', nu, 4);
+        pgAllSetOut('pgAll_kinvisc_ssu', pgAllCstToSSU(nu), 2);
+
+        const prTable = pgAllPrandtlData[conc];
+        const pr = pgAllLogLinInterp(tC, prTable.tempsC, prTable.values);
+        pgAllSetOut('pgAll_pr', pr, 2);
+
+        const teTable = pgAllTeData[conc];
+        const beta = pgAllLinInterp(tC, teTable.tempsC.map((t,i)=>[t, teTable.values[i]]));
+        pgAllSetOut('pgAll_beta', beta===null?null:beta/10, 3);
+      }
+
+      pgAllLoadFiles(pgAllDensFiles).then(d => { pgAllDensData = d;
+        return pgAllLoadFiles(pgAllCpFiles); }).then(d => { pgAllCpData = d;
+        return pgAllLoadFiles(pgAllLambdaFiles); }).then(d => { pgAllLambdaData = d;
+        return pgAllLoadFiles(pgAllViscFiles); }).then(d => { pgAllViscData = d;
+        pgAllReady = true;
+        pgAllConvertToCelsius();
+      }).catch(err => console.error('PG combined calculator data load failed:', err));
+    </script>
 
   </body>
 </html>

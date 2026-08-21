@@ -80,6 +80,7 @@
                   <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
                   <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
                   <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -385,6 +386,139 @@
         </div>
       </section>
 
+
+      <!-- COMBINED CALCULATOR -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+            <div class="wrapper" style="max-width:45rem;">
+              <div class="header text-center">Jet Fuel All-Properties Calculator</div>
+
+              <div class="group1 d-flex flex-wrap">
+                <label class="dropdownlabel" for="jfAllGrade">Fuel:</label>
+                <span class="output">
+                  <select class="dropdowncalc dropdown-menu-end fs-5" id="jfAllGrade" onchange="jfAllCalculate()" aria-label="Jet fuel type selection">
+                    <option value="JP-8, Jet A, Jet A-1">JP-8, Jet A, Jet A-1</option>
+                    <option value="Av. Gas">Av. Gas</option>
+                    <option value="JP-4, Jet B">JP-4, Jet B</option>
+                    <option value="JP-7">JP-7</option>
+                    <option value="TS">TS</option>
+                    <option value="JP-5">JP-5</option>
+                    <option value="RJ-4">RJ-4</option>
+                    <option value="JP-10">JP-10</option>
+                    <option value="JP-9">JP-9</option>
+                    <option value="RJ-6">RJ-6</option>
+                    <option value="RJ-5">RJ-5</option>
+                  </select>
+                </span>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Degrees (&deg;F):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="jfAllFahrenheit" oninput="jfAllConvertToCelsius()" value="59" aria-label="Input box for degrees Fahrenheit" />
+                  </span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Degrees (&deg;C):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="jfAllCelsius" oninput="jfAllConvertToFahrenheit()" aria-label="Input for degrees Celsius" />
+                  </span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Density</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (kg/m&#179;):</span>
+                  <span class="output" id="jfAll_rho_kgm3">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (lb/gal):</span>
+                  <span class="output" id="jfAll_rho_lbgal">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (lb/ft&#179;):</span>
+                  <span class="output" id="jfAll_rho_lbft3">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Gravity:*</span>
+                  <span class="output" id="jfAll_sg">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Viscosity</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Kinematic Viscosity (cSt):</span>
+                  <span class="output" id="jfAll_kinvisc">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Kinematic Viscosity (SSU):</span>
+                  <span class="output" id="jfAll_kinvisc_ssu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Dynamic Viscosity (cP):</span>
+                  <span class="output" id="jfAll_dynvisc">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Dynamic Viscosity (lb/(ft&middot;s)):</span>
+                  <span class="output" id="jfAll_dynvisc_lbfts">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Surface Tension</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Surface Tension (mN/m):</span>
+                  <span class="output" id="jfAll_surf">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Vapor Pressure</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Vapor Pressure (kPa):</span>
+                  <span class="output" id="jfAll_vapor_kpa">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Vapor Pressure (psi):</span>
+                  <span class="output" id="jfAll_vapor_psi">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Vapor Pressure (inHg):</span>
+                  <span class="output" id="jfAll_vapor_inhg">&nbsp;</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-center mt-2 col-11 col-md-10 col-lg-8 col-xl-6 mx-auto" style="font-size:0.75em;">
+              *Specific gravity is referenced to a static water density of 998&nbsp;kg/m&#179; (water at
+              60&nbsp;&deg;F), matching the reference used on the individual
+              <a style="font-size:inherit;" href="nominalDensity.html">Density</a> page.
+            </p>
+
+            <p class="text-center mt-3 col-11 col-md-10 col-lg-8 col-xl-6 mx-auto" style="font-size:0.85em;">
+              A prototype combining the site's separate <a style="font-size:inherit;" href="nominalDensity.html">Density</a>,
+              <a style="font-size:inherit;" href="kinematicViscosity.html">Viscosity</a>, <a style="font-size:inherit;" href="surfaceTension.html">Surface Tension</a>,
+              and <a style="font-size:inherit;" href="vaporPressure.html">Vapor Pressure</a> calculators into one fuel + temperature lookup.
+              Same underlying digitized data and linear interpolation as those pages &mdash; some grade groupings
+              differ slightly between properties (e.g. JP-7 and TS share a density curve but have separate
+              viscosity curves), which this calculator accounts for per property. Values outside a curve's
+              digitized range show "Out of Range."
+            </p>
+          </div>
+        </div>
+      </section>
 
       <!-- SPECIFICATIONS -->
       <section>
@@ -727,6 +861,179 @@
     <script src="js/footer.js"></script>
     <!-- END FOOTER -->
 
+<script>
+// ---------------------------------------------------------------------------
+// Jet Fuel All-Properties Calculator — combines the CSV-driven data already
+// used by nominalDensity.html, kinematicViscosity.html, surfaceTension.html,
+// and vaporPressure.html into a single fuel + temperature lookup. Reuses the
+// exact same source CSVs and linear-interpolation approach as those pages;
+// see the per-property switchIndex tables in their own js/*.js files.
+// ---------------------------------------------------------------------------
+
+// Density: csvData/1.csv..10.csv — order matches nominalDensity.js fixedLabels
+const jfAllDensityFiles = [1,2,3,4,5,6,7,8,9,10].map(n => `csvData/${n}.csv`);
+// [Av.Gas, JP-4/JetB, JP-7/TS, JP-8/JetA/JetA-1, JP-5, RJ-4, JP-10, JP-9, RJ-6, RJ-5]
+
+// Kinematic viscosity: order matches kinematicViscosity.js fixedLabels
+const jfAllViscFiles = [55,48,49,50,51,52,53,54,47].map(n => `csvData/${n}.csv`);
+// [RJ-5, JP-4/JetB, TS, JP-5/JetA/JetA-1/JP-8, JP-7, JP-9/JP-10, RJ-4, RJ-6, Av.Gas]
+
+// Surface tension: order matches surfaceTension.js fixedLabels
+const jfAllSurfFiles = [56,57,58,59,60,61,62,63,64,65,66].map(n => `csvData/${n}.csv`);
+// [Av.Gas, JP-4/JetB, TS, JP-7, JP-8/JetA/JetA-1, JP-5, RJ-4, JP-10, JP-9, RJ-6, RJ-5]
+
+// Vapor pressure: order matches vaporPressure.js fixedLabels
+const jfAllVaporFiles = [81,75,76,77,78,79,80,74,82,83].map(n => `csvData/${n}.csv`);
+// [RJ-4, JP-4/JetB, TS, JP-8/JetA/JetA-1, JP-5/JP-7, JP-9, JP-10, Av.Gas, RJ-6, RJ-5]
+
+// Canonical fuel -> {density, visc, surf, vapor} dataset index, per the
+// property-specific orderings above. Some fuels share a curve with another
+// grade for one property but not another (e.g. JP-7/TS share density but
+// have separate viscosity curves) — that's intentional, matching the source
+// pages exactly, not an error.
+const jfAllFluidMap = {
+  'Av. Gas':               { density: 0, visc: 8, surf: 0,  vapor: 7 },
+  'JP-4, Jet B':            { density: 1, visc: 1, surf: 1,  vapor: 1 },
+  'JP-5':                   { density: 4, visc: 3, surf: 5,  vapor: 4 },
+  'JP-7':                   { density: 2, visc: 4, surf: 3,  vapor: 4 },
+  'TS':                     { density: 2, visc: 2, surf: 2,  vapor: 2 },
+  'JP-8, Jet A, Jet A-1':   { density: 3, visc: 3, surf: 4,  vapor: 3 },
+  'JP-9':                   { density: 7, visc: 5, surf: 8,  vapor: 5 },
+  'JP-10':                  { density: 6, visc: 5, surf: 7,  vapor: 6 },
+  'RJ-4':                   { density: 5, visc: 6, surf: 6,  vapor: 0 },
+  'RJ-5':                   { density: 9, visc: 0, surf: 10, vapor: 9 },
+  'RJ-6':                   { density: 8, visc: 7, surf: 9,  vapor: 8 },
+};
+
+function jfAllParseCSV(text) {
+  const rows = text.trim().split('\n');
+  const parsed = [];
+  rows.forEach(row => {
+    const cols = row.split(',');
+    if (cols.length >= 2) {
+      const x = parseFloat(cols[0].trim());
+      const y = parseFloat(cols[1].trim());
+      if (!isNaN(x) && !isNaN(y)) parsed.push({ x, y });
+    }
+  });
+  return parsed;
+}
+
+async function jfAllLoadFiles(paths) {
+  const results = await Promise.all(paths.map(p =>
+    fetch(p).then(r => r.text()).then(jfAllParseCSV).catch(() => [])
+  ));
+  return results;
+}
+
+function jfAllLinInterp(xTarget, data) {
+  if (!data || data.length === 0) return NaN;
+  const minX = data[0].x, maxX = data[data.length - 1].x;
+  if (xTarget < minX || xTarget > maxX) return NaN;
+  for (let i = 0; i < data.length - 1; i++) {
+    if (xTarget >= data[i].x && xTarget <= data[i + 1].x) {
+      return data[i].y + (xTarget - data[i].x) * (data[i + 1].y - data[i].y) / (data[i + 1].x - data[i].x);
+    }
+  }
+  return data[data.length - 1].y;
+}
+
+let jfAllDensityData = null, jfAllViscData = null, jfAllSurfData = null, jfAllVaporData = null;
+
+Promise.all([
+  jfAllLoadFiles(jfAllDensityFiles),
+  jfAllLoadFiles(jfAllViscFiles),
+  jfAllLoadFiles(jfAllSurfFiles),
+  jfAllLoadFiles(jfAllVaporFiles),
+]).then(([densityData, viscData, surfData, vaporData]) => {
+  jfAllDensityData = densityData;
+  jfAllViscData = viscData;
+  jfAllSurfData = surfData;
+  jfAllVaporData = vaporData;
+  jfAllConvertToCelsius();
+}).catch(err => console.error('Jet Fuel All-Properties Calculator: error loading data', err));
+
+function jfAllConvertToFahrenheit() {
+  const c = parseFloat(document.getElementById('jfAllCelsius').value);
+  document.getElementById('jfAllFahrenheit').value = ((c * 9 / 5) + 32).toFixed(2);
+  jfAllCalculate();
+}
+
+function jfAllConvertToCelsius() {
+  const f = parseFloat(document.getElementById('jfAllFahrenheit').value);
+  document.getElementById('jfAllCelsius').value = ((f - 32) * 5 / 9).toFixed(2);
+  jfAllCalculate();
+}
+
+// ASTM D2161 kinematic viscosity (cSt) -> Saybolt Universal Seconds
+function jfAllCstToSSU(cst) {
+  if (cst <= 0 || isNaN(cst)) return NaN;
+  return 4.6324 * cst + (1.0 + 0.03264 * cst) /
+    ((3930.2 + 262.7 * cst + 23.97 * cst * cst + 1.646 * cst * cst * cst) * 1e-5);
+}
+
+function jfAllCalculate() {
+  const ids = ['jfAll_rho_kgm3','jfAll_rho_lbgal','jfAll_rho_lbft3','jfAll_sg','jfAll_kinvisc','jfAll_kinvisc_ssu','jfAll_dynvisc','jfAll_dynvisc_lbfts','jfAll_surf','jfAll_vapor_kpa','jfAll_vapor_psi','jfAll_vapor_inhg'];
+  if (!jfAllDensityData || !jfAllViscData || !jfAllSurfData || !jfAllVaporData) {
+    ids.forEach(id => { document.getElementById(id).textContent = 'Loading…'; });
+    return;
+  }
+
+  const grade = document.getElementById('jfAllGrade').value;
+  const map = jfAllFluidMap[grade];
+  const f = parseFloat(document.getElementById('jfAllFahrenheit').value);
+
+  if (isNaN(f) || !map) {
+    ids.forEach(id => { document.getElementById(id).textContent = 'Out of Range'; });
+    return;
+  }
+
+  const rho = jfAllLinInterp(f, jfAllDensityData[map.density]);
+  if (isNaN(rho)) {
+    document.getElementById('jfAll_rho_kgm3').textContent = 'Out of Range';
+    document.getElementById('jfAll_rho_lbgal').textContent = 'Out of Range';
+    document.getElementById('jfAll_rho_lbft3').textContent = 'Out of Range';
+    document.getElementById('jfAll_sg').textContent = 'Out of Range';
+  } else {
+    document.getElementById('jfAll_rho_kgm3').textContent = rho.toFixed(2);
+    document.getElementById('jfAll_rho_lbgal').textContent = (rho * 0.0083454063545262).toFixed(4);
+    document.getElementById('jfAll_rho_lbft3').textContent = (rho * 0.0624279606).toFixed(4);
+    document.getElementById('jfAll_sg').textContent = (rho / 998).toFixed(5);
+  }
+
+  const nu = jfAllLinInterp(f, jfAllViscData[map.visc]);
+  if (isNaN(nu)) {
+    document.getElementById('jfAll_kinvisc').textContent = 'Out of Range';
+    document.getElementById('jfAll_kinvisc_ssu').textContent = 'Out of Range';
+  } else {
+    document.getElementById('jfAll_kinvisc').textContent = nu.toFixed(4);
+    document.getElementById('jfAll_kinvisc_ssu').textContent = jfAllCstToSSU(nu).toFixed(2);
+  }
+
+  if (isNaN(nu) || isNaN(rho)) {
+    document.getElementById('jfAll_dynvisc').textContent = 'Out of Range';
+    document.getElementById('jfAll_dynvisc_lbfts').textContent = 'Out of Range';
+  } else {
+    const mu = nu * rho / 1000;
+    document.getElementById('jfAll_dynvisc').textContent = mu.toFixed(4);
+    document.getElementById('jfAll_dynvisc_lbfts').textContent = (mu * 0.0006719689751).toFixed(6);
+  }
+
+  const st = jfAllLinInterp(f, jfAllSurfData[map.surf]);
+  document.getElementById('jfAll_surf').textContent = isNaN(st) ? 'Out of Range' : st.toFixed(3);
+
+  const vp = jfAllLinInterp(f, jfAllVaporData[map.vapor]);
+  if (isNaN(vp)) {
+    document.getElementById('jfAll_vapor_kpa').textContent = 'Out of Range';
+    document.getElementById('jfAll_vapor_psi').textContent = 'Out of Range';
+    document.getElementById('jfAll_vapor_inhg').textContent = 'Out of Range';
+  } else {
+    document.getElementById('jfAll_vapor_kpa').textContent = vp.toFixed(4);
+    document.getElementById('jfAll_vapor_psi').textContent = (vp * 0.1450377377).toFixed(5);
+    document.getElementById('jfAll_vapor_inhg').textContent = (vp * 0.2953007).toFixed(5);
+  }
+}
+</script>
 
   </body>
 </html>

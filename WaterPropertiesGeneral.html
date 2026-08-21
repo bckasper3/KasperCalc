@@ -80,6 +80,7 @@
                   <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
                   <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
                   <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -384,6 +385,158 @@
       </section>
 
 
+      <!-- COMBINED CALCULATOR -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+            <div class="wrapper" style="max-width:45rem;">
+              <div class="header text-center">Water All-Properties Calculator</div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Degrees (&deg;F):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="waterAllFahrenheit" oninput="waterAllConvertToCelsius()" value="70" aria-label="Input box for degrees Fahrenheit" />
+                  </span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Degrees (&deg;C):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="waterAllCelsius" oninput="waterAllConvertToFahrenheit()" aria-label="Input for degrees Celsius" />
+                  </span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Density</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (kg/m&#179;):</span>
+                  <span class="output" id="waterAll_rho">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (lb/gal):</span>
+                  <span class="output" id="waterAll_rho_lbgal">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (lb/ft&#179;):</span>
+                  <span class="output" id="waterAll_rho_lbft3">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Gravity:*</span>
+                  <span class="output" id="waterAll_sg">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Viscosity (liquid, 32&ndash;212&deg;F)</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Dynamic Viscosity (cP):</span>
+                  <span class="output" id="waterAll_dynvisc">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Dynamic Viscosity (lb/(ft&middot;s)):</span>
+                  <span class="output" id="waterAll_dynvisc_lbfts">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Kinematic Viscosity (cSt):</span>
+                  <span class="output" id="waterAll_kinvisc">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Kinematic Viscosity (SSU):</span>
+                  <span class="output" id="waterAll_kinvisc_ssu">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Thermal Properties</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Heat, Cp (kJ/kg&middot;K):</span>
+                  <span class="output" id="waterAll_cp">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Heat, Cp (BTU/(lb&middot;&deg;F)):</span>
+                  <span class="output" id="waterAll_cp_btu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity, liquid (W/m&middot;K):</span>
+                  <span class="output" id="waterAll_lambda">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity, liquid (BTU/(hr&middot;ft&middot;&deg;F)):</span>
+                  <span class="output" id="waterAll_lambda_btu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity, liquid (BTU&middot;in/(hr&middot;ft&#178;&middot;&deg;F)):</span>
+                  <span class="output" id="waterAll_lambda_btuin">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Diffusivity, liquid (&times;10&#8315;&#8312; m&#178;/s):</span>
+                  <span class="output" id="waterAll_alpha">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Prandtl Number (liquid):</span>
+                  <span class="output" id="waterAll_pr">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">&beta; &times; 10&#8315;&#8308; (1/K):</span>
+                  <span class="output" id="waterAll_beta">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Phase-Change Properties</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Saturation Pressure (kPa):</span>
+                  <span class="output" id="waterAll_psat">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Saturation Pressure (psi):</span>
+                  <span class="output" id="waterAll_psat_psi">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Saturation Pressure (inHg):</span>
+                  <span class="output" id="waterAll_psat_inhg">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Heat of Vaporization (kJ/kg):</span>
+                  <span class="output" id="waterAll_hvap">&nbsp;</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-center mt-2 col-11 col-md-10 col-lg-8 col-xl-6 mx-auto" style="font-size:0.75em;">
+              *Specific gravity is referenced to a static water density of 998&nbsp;kg/m&#179; (water at
+              60&nbsp;&deg;F), not to water at the entered temperature &mdash; this is why the value moves away
+              from 1.0 as the temperature moves away from 60&nbsp;&deg;F.
+            </p>
+
+            <p class="text-center mt-3 col-11 col-md-10 col-lg-8 col-xl-6 mx-auto" style="font-size:0.85em;">
+              Combines the <a style="font-size:inherit;" href="densityWater.html">Density</a>, <a style="font-size:inherit;" href="WaterViscosity.html">Viscosity</a>,
+              <a style="font-size:inherit;" href="WaterSpecificHeatCapacity.html">Specific Heat</a>,
+              <a style="font-size:inherit;" href="Waterthermalconductivity.html">Thermal Conductivity</a>,
+              <a style="font-size:inherit;" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>,
+              <a style="font-size:inherit;" href="WaterPrandtlNumber.html">Prandtl Number</a>,
+              <a style="font-size:inherit;" href="WaterThermalExpansionCoefficient.html">Thermal Expansion</a>,
+              <a style="font-size:inherit;" href="WaterSaturationPressure.html">Saturation Pressure</a>, and
+              <a style="font-size:inherit;" href="WaterHeatVaporization.html">Heat of Vaporization</a> calculators into one temperature
+              lookup. Viscosity, thermal conductivity, thermal diffusivity, and Prandtl number are liquid-phase
+              only (their individual pages cover the steam/gas phase separately, above roughly 212&nbsp;&deg;F).
+              Saturation pressure and heat of vaporization remain valid up to the critical point (373.946&nbsp;&deg;C)
+              and are independent of whether water is actually boiling at the entered temperature.
+            </p>
+          </div>
+        </div>
+      </section>
+
+
       <!-- GENERAL THERMODYNAMIC PROPERTIES -->
       <section>
         <div class="csscontainer">
@@ -644,8 +797,158 @@
     <!-- FOOTER -->
     <footer id="site-footer"></footer>
     <script src="js/footer.js"></script>
-    <!-- END FOOTER -->    
+    <!-- END FOOTER -->
 
+    <script>
+      // ---- Water All-Properties Calculator ----
+      // Density [T_F, kg/m3], NIST-derived, liquid 32.2-212F
+      const waterAllDensData = [
+        [32.2,999.9],[34,999.9],[39.2,1000],[40,1000],[50,999.7],[60,999],[70,998],[80,996.6],
+        [90,995],[100,993.1],[110,990.9],[120,988.6],[130,986],[140,983.2],[150,980.2],[160,977.1],
+        [170,973.8],[180,970.4],[190,966.8],[200,963],[212,958.4]
+      ];
+      // Dynamic viscosity [T_F, cP], liquid 32.02-212F
+      const waterAllMuData = [
+        [32.02,1.7914],[34,1.7259],[39.2,1.5705],[40,1.5484],[50,1.3060],[60,1.1206],[70,0.9737],
+        [80,0.8565],[90,0.7611],[100,0.6820],[110,0.6151],[120,0.5579],[130,0.5085],[140,0.4660],
+        [150,0.4285],[160,0.3964],[170,0.3686],[180,0.3444],[190,0.3230],[200,0.3016],[212,0.2816]
+      ];
+      // Specific heat Cp [T_C, kJ/kg.K], 0.01-360C
+      const waterAllCpData = [
+        [0.01,4.2199],[10,4.1955],[20,4.1844],[25,4.1816],[30,4.1801],[40,4.1796],[50,4.1815],
+        [60,4.1851],[70,4.1902],[80,4.1969],[90,4.2053],[100,4.2157],[110,4.2283],[120,4.2435],
+        [140,4.2826],[160,4.3354],[180,4.4050],[200,4.4958],[220,4.6146],[240,4.7719],[260,4.9856],
+        [280,5.2889],[300,5.7504],[320,6.5373],[340,8.2080],[360,15.004]
+      ];
+      // Liquid thermal conductivity [T_C, mW/m.K], 0.01-99.6C
+      const waterAllLambdaData = [
+        [0.01,555.75],[10,578.64],[20,598.03],[30,614.50],[40,628.56],[50,640.60],[60,650.91],
+        [70,659.69],[80,667.02],[90,672.88],[99.6,677.03]
+      ];
+      // Liquid thermal diffusivity [T_F, alpha x1e-6 m2/s], 32.02-211.3F
+      const waterAllAlphaData = [
+        [32.02,0.1317],[44.3,0.1362],[80.3,0.1463],[116,0.1540],[152,0.1602],[188,0.1651],[211.3,0.1676]
+      ];
+      // Saturation pressure [T_C, kPa], 0.01-370C
+      const waterAllSatData = [
+        [0.01,0.61165],[2,0.70599],[4,0.81355],[10,1.2282],[14,1.5990],[18,2.0647],[20,2.3393],
+        [25,3.1699],[30,4.2470],[34,5.3251],[40,7.3849],[44,9.1124],[50,12.352],[54,15.022],
+        [60,19.946],[70,31.201],[80,47.414],[90,70.182],[96,87.771],[100,101.42],[110,143.38],
+        [120,198.67],[130,270.28],[140,361.54],[150,475.72],[160,617.66],[170,791.67],[180,1002.8],
+        [200,1554.9],[220,2319.6],[240,3346.9],[260,4692.3],[280,6416.6],[300,8587.9],[320,11284],
+        [340,14601],[360,18666],[370,21044]
+      ];
+      // Heat of vaporization [T_C, kJ/kg], 0.01-373.946C
+      const waterAllHvapData = [
+        [0.01,2500.9],[2,2496.2],[4,2491.4],[10,2477.2],[14,2467.7],[18,2458.3],[20,2453.5],
+        [25,2441.7],[30,2429.8],[34,2420.3],[40,2406.0],[44,2396.4],[50,2381.9],[54,2372.3],
+        [60,2357.7],[70,2333.0],[80,2308.0],[100,2256.5],[120,2202.6],[140,2144.3],[160,2081.3],
+        [180,2013.6],[200,1940.7],[220,1858.5],[240,1766.5],[260,1661.6],[280,1543.0],[300,1404.6],
+        [320,1238.4],[340,1027.3],[360,719.8],[373.946,0]
+      ];
+      // Thermal expansion beta x1e-6 (1/C) [T_F, beta]
+      const waterAllBetaData = [
+        [32.2,0],[34,-26],[39.2,0],[40,50],[50,90],[60,153],[70,216],[80,271],[90,317],[100,372],
+        [110,409],[120,446],[130,493],[140,531],[150,560],[160,590],[170,619],[180,649],[190,689],
+        [200,714],[212,733]
+      ];
+
+      function waterAllLinInterp(x, data){
+        if(!data || data.length < 2) return null;
+        if(x < data[0][0] || x > data[data.length-1][0]) return null;
+        for(let i=0;i<data.length-1;i++){
+          const [x0,y0]=data[i],[x1,y1]=data[i+1];
+          if(x>=x0 && x<=x1) return y0+(x-x0)*(y1-y0)/(x1-x0);
+        }
+        return null;
+      }
+      function waterAllLogLinInterp(x, data){
+        if(!data || data.length < 2) return null;
+        if(x < data[0][0] || x > data[data.length-1][0]) return null;
+        for(let i=0;i<data.length-1;i++){
+          const [x0,y0]=data[i],[x1,y1]=data[i+1];
+          if(x>=x0 && x<=x1){
+            const t=(x-x0)/(x1-x0);
+            return Math.exp(Math.log(y0) + t*(Math.log(y1)-Math.log(y0)));
+          }
+        }
+        return null;
+      }
+
+      function waterAllConvertToCelsius(){
+        const f = parseFloat(document.getElementById('waterAllFahrenheit').value);
+        if(!isNaN(f)) document.getElementById('waterAllCelsius').value = ((f-32)*5/9).toFixed(2);
+        waterAllCalculate();
+      }
+      function waterAllConvertToFahrenheit(){
+        const c = parseFloat(document.getElementById('waterAllCelsius').value);
+        if(!isNaN(c)) document.getElementById('waterAllFahrenheit').value = (c*9/5+32).toFixed(2);
+        waterAllCalculate();
+      }
+      function waterAllSetOut(id, val, digits){
+        document.getElementById(id).textContent = (val===null || val===undefined || isNaN(val)) ? 'Out of Range' : val.toFixed(digits);
+      }
+
+      // ASTM D2161 kinematic viscosity (cSt) -> Saybolt Universal Seconds
+      function waterAllCstToSSU(cst){
+        if(cst===null || isNaN(cst) || cst<=0) return null;
+        return 4.6324*cst + (1.0+0.03264*cst) /
+          ((3930.2+262.7*cst+23.97*cst*cst+1.646*cst*cst*cst)*1e-5);
+      }
+
+      function waterAllCalculate(){
+        const tF = parseFloat(document.getElementById('waterAllFahrenheit').value);
+        if(isNaN(tF)) return;
+        const tC = (tF-32)*5/9;
+
+        const rho = waterAllLinInterp(tF, waterAllDensData);
+        waterAllSetOut('waterAll_rho', rho, 2);
+        waterAllSetOut('waterAll_rho_lbgal', rho===null?null:rho*0.0083454063545262, 4);
+        waterAllSetOut('waterAll_rho_lbft3', rho===null?null:rho*0.0624279606, 3);
+        waterAllSetOut('waterAll_sg', rho===null?null:rho/998, 4);
+
+        const mu = waterAllLinInterp(tF, waterAllMuData);
+        waterAllSetOut('waterAll_dynvisc', mu, 4);
+        waterAllSetOut('waterAll_dynvisc_lbfts', mu===null?null:mu*0.0006719689751, 6);
+        const nu = (mu!==null && rho!==null) ? mu*1000/rho : null;
+        waterAllSetOut('waterAll_kinvisc', nu, 4);
+        waterAllSetOut('waterAll_kinvisc_ssu', waterAllCstToSSU(nu), 2);
+
+        const cp = waterAllLinInterp(tC, waterAllCpData);
+        waterAllSetOut('waterAll_cp', cp, 4);
+        waterAllSetOut('waterAll_cp_btu', cp===null?null:cp*0.238845896, 4);
+
+        const lambdaMw = waterAllLinInterp(tC, waterAllLambdaData);
+        const lambda = lambdaMw===null ? null : lambdaMw/1000;
+        waterAllSetOut('waterAll_lambda', lambda, 4);
+        waterAllSetOut('waterAll_lambda_btu', lambda===null?null:lambda*0.5777893, 5);
+        waterAllSetOut('waterAll_lambda_btuin', lambda===null?null:lambda*6.933471, 4);
+
+        const alpha = waterAllLinInterp(tF, waterAllAlphaData);
+        waterAllSetOut('waterAll_alpha', alpha, 4);
+
+        let pr = null;
+        if(mu!==null && cp!==null && lambda!==null){
+          pr = (mu/1000) * (cp*1000) / lambda;
+        }
+        waterAllSetOut('waterAll_pr', pr, 3);
+
+        const betaRaw = waterAllLinInterp(tF, waterAllBetaData);
+        waterAllSetOut('waterAll_beta', betaRaw===null?null:betaRaw/100, 4);
+
+        const psat = waterAllLogLinInterp(tC, waterAllSatData);
+        waterAllSetOut('waterAll_psat', psat, 3);
+        waterAllSetOut('waterAll_psat_psi', psat===null?null:psat*0.1450377377, 4);
+        waterAllSetOut('waterAll_psat_inhg', psat===null?null:psat*0.2953007, 4);
+
+        const hvap = waterAllLinInterp(tC, waterAllHvapData);
+        waterAllSetOut('waterAll_hvap', hvap, 1);
+      }
+
+      document.addEventListener('DOMContentLoaded', function(){
+        waterAllConvertToCelsius();
+      });
+    </script>
 
   </body>
 </html>

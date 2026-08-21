@@ -80,6 +80,7 @@
                   <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
                   <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
                   <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -383,6 +384,156 @@
               </p>
 
             </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- COMBINED CALCULATOR -->
+      <section>
+        <div class="csscontainer">
+          <div class="col-lg-12 col-12 px-3">
+            <div class="wrapper" style="max-width:45rem;">
+              <div class="header text-center">Skydrol All-Properties Calculator</div>
+
+              <div class="group1 d-flex flex-wrap">
+                <label class="dropdownlabel" for="skyAllGrade">Grade:</label>
+                <span class="output">
+                  <select class="dropdowncalc dropdown-menu-end fs-5" id="skyAllGrade" onchange="skyAllCalculate()" aria-label="Skydrol grade selection">
+                    <option value="500B-4">Skydrol 500B-4</option>
+                    <option value="LD-4">Skydrol LD-4</option>
+                    <option value="PE-5">Skydrol PE-5</option>
+                    <option value="Skydrol5">Skydrol 5</option>
+                  </select>
+                </span>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label">Degrees (&deg;F):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="skyAllFahrenheit" oninput="skyAllConvertToCelsius()" value="100" aria-label="Input box for degrees Fahrenheit" />
+                  </span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Degrees (&deg;C):</span>
+                  <span class="output inputbox">
+                    <input class="calcinput" type="number" id="skyAllCelsius" oninput="skyAllConvertToFahrenheit()" aria-label="Input for degrees Celsius" />
+                  </span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Density</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (kg/m&#179;):</span>
+                  <span class="output" id="skyAll_rho">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (lb/gal):</span>
+                  <span class="output" id="skyAll_rho_lbgal">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Density (lb/ft&#179;):</span>
+                  <span class="output" id="skyAll_rho_lbft3">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Gravity:*</span>
+                  <span class="output" id="skyAll_sg">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Viscosity</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Kinematic Viscosity (cSt):</span>
+                  <span class="output" id="skyAll_kinvisc">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Kinematic Viscosity (SSU):</span>
+                  <span class="output" id="skyAll_kinvisc_ssu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Dynamic Viscosity (cP):</span>
+                  <span class="output" id="skyAll_dynvisc">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Dynamic Viscosity (lb/(ft&middot;s)):</span>
+                  <span class="output" id="skyAll_dynvisc_lbfts">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Thermal Properties</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Heat (kJ/kg&middot;K):</span>
+                  <span class="output" id="skyAll_cp">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Specific Heat (BTU/(lb&middot;&deg;F)):</span>
+                  <span class="output" id="skyAll_cp_btu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (W/m&middot;K):</span>
+                  <span class="output" id="skyAll_lambda">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (BTU/(hr&middot;ft&middot;&deg;F)):</span>
+                  <span class="output" id="skyAll_lambda_btu">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Conductivity (BTU&middot;in/(hr&middot;ft&#178;&middot;&deg;F)):</span>
+                  <span class="output" id="skyAll_lambda_btuin">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Thermal Diffusivity (&times;10&#8315;&#8312; m&#178;/s):</span>
+                  <span class="output" id="skyAll_alpha">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">Prandtl Number:</span>
+                  <span class="output" id="skyAll_pr">&nbsp;</span>
+                </div>
+              </div>
+
+              <div class="group">
+                <div class="outputrow">
+                  <span class="label" style="font-weight:var(--font-weight-bold);color:var(--section-title-color);">Thermal Expansion</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">&beta; &times; 10&#8315;&#8308; (1/K):</span>
+                  <span class="output" id="skyAll_beta">&nbsp;</span>
+                </div>
+                <div class="outputrow">
+                  <span class="label">% Vol. Change from 77&deg;F:</span>
+                  <span class="output" id="skyAll_volpct">&nbsp;</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-center mt-2 col-11 col-md-10 col-lg-8 col-xl-6 mx-auto" style="font-size:0.75em;">
+              *Specific gravity is referenced to a static water density of 998&nbsp;kg/m&#179; (water at
+              60&nbsp;&deg;F) rather than to water at the fluid's own temperature.
+            </p>
+
+            <p class="text-center mt-3 col-11 col-md-10 col-lg-8 col-xl-6 mx-auto" style="font-size:0.85em;">
+              Combines the <a style="font-size:inherit;" href="SkydrolDensity.html">Density</a>, <a style="font-size:inherit;" href="SkydrolViscosity.html">Viscosity</a>,
+              <a style="font-size:inherit;" href="SkydrolSpecificHeatCapacity.html">Specific Heat</a>,
+              <a style="font-size:inherit;" href="SkydrolThermalConductivity.html">Thermal Conductivity</a>,
+              <a style="font-size:inherit;" href="SkydrolThermalDiffusivity.html">Thermal Diffusivity</a>,
+              <a style="font-size:inherit;" href="SkydrolPrandtlNumber.html">Prandtl Number</a>, and
+              <a style="font-size:inherit;" href="SkydrolThermalExpansionCoefficient.html">Thermal Expansion</a> calculators into one grade +
+              temperature lookup. Each property keeps its own valid range from its source page (e.g. viscosity is
+              only published from &minus;65&nbsp;&deg;F to 210&nbsp;&deg;F, narrower than density's
+              &minus;80&nbsp;&deg;F to 320&nbsp;&deg;F), so some fields may show "Out of Range" while others compute
+              normally at the same temperature. Thermal expansion is omitted for Skydrol&nbsp;PE-5, which has no
+              published density curve to derive a slope from.
+            </p>
           </div>
         </div>
       </section>
@@ -979,6 +1130,203 @@
     <footer id="site-footer"></footer>
     <script src="js/footer.js"></script>
     <!-- END FOOTER -->
+
+    <script>
+      // ---- Skydrol All-Properties Calculator ----
+      const skyAllDensData = {
+        '500B-4': [
+          [-79.97, 1120.49], [-7.55, 1088.52], [53.89, 1061.45], [115.32, 1034.77],
+          [194.22, 1001.31], [245.95, 978.33], [320.32, 945.76],
+        ],
+        'LD-4': [
+          [-79.65, 1077.73], [-29.86, 1053.76], [31.25, 1024.58], [100.45, 991.72],
+          [170.61, 958.45], [225.26, 932.98], [274.08, 909.60], [319.99, 887.42],
+        ],
+        'PE-5': [[-65, 992.7], [210, 992.7]],
+        'Skydrol5': [
+          [7.65, 1111.10], [54.53, 1091.92], [108.86, 1067.94], [155.42, 1049.56],
+          [221.70, 1019.99], [273.76, 999.21], [320.32, 978.73],
+        ],
+      };
+      // Least-squares linear fit per grade for density-derived slope (thermal
+      // expansion). Local point-to-point slopes amplify digitizer noise into a
+      // sawtooth beta curve; the fitted line removes that artifact. PE-5 is
+      // excluded (constant density, no slope to derive). See
+      // SkydrolThermalExpansionCoefficient.html for the full rationale.
+      const skyAllRhoFit = {};
+      ['500B-4', 'LD-4', 'Skydrol5'].forEach(grade => {
+        const d = skyAllDensData[grade], n = d.length;
+        let sx = 0, sy = 0, sxx = 0, sxy = 0;
+        d.forEach(([x, y]) => { sx += x; sy += y; sxx += x * x; sxy += x * y; });
+        const m = (n * sxy - sx * sy) / (n * sxx - sx * sx);
+        skyAllRhoFit[grade] = { m: m, b: (sy - m * sx) / n };
+      });
+      function skyAllRhoFitAt(grade, tF) {
+        const fit = skyAllRhoFit[grade];
+        return fit.b + fit.m * tF;
+      }
+      function skyAllBetaAt(grade, tF) {
+        const slopeK = skyAllRhoFit[grade].m * 9 / 5;
+        return -slopeK / skyAllRhoFitAt(grade, tF) * 1e4;
+      }
+      const skyAllCpDataC = { // [tempC, Cp cal/g°C]
+        '500B-4':[[38,0.418],[93,0.453],[149,0.487]],
+        'LD-4':[[38,0.437],[93,0.472],[149,0.507]],
+        'PE-5':[[38,0.453],[120,0.461]],
+        'Skydrol5':[[38,0.402],[93,0.437],[149,0.472]]
+      };
+      const skyAllLambdaDataF = { // [tempF, lambda cal/(sec.cm.C)]
+        '500B-4':[[100,0.000315],[200,0.000299],[300,0.000278]],
+        'LD-4':[[100,0.000326],[200,0.000298],[300,0.000277]],
+        'PE-5':[[100,0.000344],[200,0.000289],[300,0.000263]],
+        'Skydrol5':[[100,0.000283],[200,0.000259],[300,0.000246]]
+      };
+      const skyAllViscData = { // [tempF, cSt] - ASTM D445 3-point
+        '500B-4':[[-65,2678],[100,11.67],[210,3.84]],
+        'LD-4':[[-65,1164],[100,11.10],[210,3.91]],
+        'PE-5':[[-65,1068],[100,9.75],[210,3.38]],
+        'Skydrol5':[[-65,2085],[100,9.23],[210,3.13]]
+      };
+      const CAL_TO_KJ = 4.184, CAL_TO_W = 418.4;
+
+      function skyAllLinInterpExtrap(tX, data){
+        if(!data || data.length < 2) return null;
+        const CLAMP = 0.5;
+        if(tX < data[0][0] - CLAMP || tX > data[data.length-1][0] + CLAMP) return null;
+        if(tX <= data[0][0]){
+          const [x0,y0]=data[0],[x1,y1]=data[1];
+          return y0+(tX-x0)*(y1-y0)/(x1-x0);
+        }
+        if(tX >= data[data.length-1][0]){
+          const [x0,y0]=data[data.length-2],[x1,y1]=data[data.length-1];
+          return y0+(tX-x0)*(y1-y0)/(x1-x0);
+        }
+        for(let i=0;i<data.length-1;i++){
+          const [x0,y0]=data[i],[x1,y1]=data[i+1];
+          if(tX>=x0 && tX<=x1) return y0+(tX-x0)*(y1-y0)/(x1-x0);
+        }
+        return null;
+      }
+
+      function skyAllD341Z(nu){ return Math.log10(Math.log10(nu + 0.7)); }
+      function skyAllViscToAxis(nu){ return skyAllD341Z(nu); }
+      function skyAllAxisToVisc(z){ return Math.pow(10, Math.pow(10,z)) - 0.7; }
+
+      function skyAllViscInterp(grade, tF){
+        const data = skyAllViscData[grade];
+        if(!data) return null;
+        const CLAMP = 0.5;
+        if(tF < data[0][0]-CLAMP || tF > data[data.length-1][0]+CLAMP) return null;
+        const tC = tF; // D341 works in any consistent temp unit for the log-log slope; use Rankine for correctness
+        const tR = (tF+459.67);
+        const pts = data.map(([f,nu]) => [Math.log10(f+459.67), skyAllViscToAxis(nu)]);
+        const xq = Math.log10(tR);
+        if(xq <= pts[0][0]){
+          const [x0,y0]=pts[0],[x1,y1]=pts[1];
+          return skyAllAxisToVisc(y0+(xq-x0)*(y1-y0)/(x1-x0));
+        }
+        if(xq >= pts[pts.length-1][0]){
+          const [x0,y0]=pts[pts.length-2],[x1,y1]=pts[pts.length-1];
+          return skyAllAxisToVisc(y0+(xq-x0)*(y1-y0)/(x1-x0));
+        }
+        for(let i=0;i<pts.length-1;i++){
+          const [x0,y0]=pts[i],[x1,y1]=pts[i+1];
+          if(xq>=x0 && xq<=x1) return skyAllAxisToVisc(y0+(xq-x0)*(y1-y0)/(x1-x0));
+        }
+        return null;
+      }
+
+      function skyAllConvertToCelsius(){
+        const f = parseFloat(document.getElementById('skyAllFahrenheit').value);
+        if(!isNaN(f)) document.getElementById('skyAllCelsius').value = ((f-32)*5/9).toFixed(2);
+        skyAllCalculate();
+      }
+      function skyAllConvertToFahrenheit(){
+        const c = parseFloat(document.getElementById('skyAllCelsius').value);
+        if(!isNaN(c)) document.getElementById('skyAllFahrenheit').value = (c*9/5+32).toFixed(2);
+        skyAllCalculate();
+      }
+
+      function skyAllSetOut(id, val, digits){
+        document.getElementById(id).textContent = (val===null || val===undefined || isNaN(val)) ? 'Out of Range' : val.toFixed(digits);
+      }
+
+      // ASTM D2161 kinematic viscosity (cSt) -> Saybolt Universal Seconds
+      function skyAllCstToSSU(cst){
+        if(cst===null || isNaN(cst) || cst<=0) return null;
+        return 4.6324*cst + (1.0+0.03264*cst) /
+          ((3930.2+262.7*cst+23.97*cst*cst+1.646*cst*cst*cst)*1e-5);
+      }
+
+      function skyAllCalculate(){
+        const grade = document.getElementById('skyAllGrade').value;
+        const tF = parseFloat(document.getElementById('skyAllFahrenheit').value);
+        if(isNaN(tF)) return;
+        const tC = (tF-32)*5/9;
+
+        // Density
+        const rho = skyAllLinInterpExtrap(tF, skyAllDensData[grade]);
+        skyAllSetOut('skyAll_rho', rho, 2);
+        skyAllSetOut('skyAll_rho_lbgal', rho===null?null:rho*0.0083454, 3);
+        skyAllSetOut('skyAll_rho_lbft3', rho===null?null:rho*0.0624279606, 3);
+        skyAllSetOut('skyAll_sg', rho===null?null:rho/998, 4);
+
+        // Viscosity
+        const nu = skyAllViscInterp(grade, tF);
+        skyAllSetOut('skyAll_kinvisc', nu, 3);
+        skyAllSetOut('skyAll_kinvisc_ssu', skyAllCstToSSU(nu), 2);
+        const mu = (nu!==null && rho!==null) ? (nu*rho/1000) : null;
+        skyAllSetOut('skyAll_dynvisc', mu, 3);
+        skyAllSetOut('skyAll_dynvisc_lbfts', mu===null?null:mu*0.0006719689751, 6);
+
+        // Specific heat (data keyed in C)
+        const cpCal = skyAllLinInterpExtrap(tC, skyAllCpDataC[grade]);
+        const cpKJ = cpCal===null ? null : cpCal*CAL_TO_KJ;
+        skyAllSetOut('skyAll_cp', cpKJ, 4);
+        skyAllSetOut('skyAll_cp_btu', cpKJ===null?null:cpKJ*0.238845896, 4);
+
+        // Thermal conductivity (data keyed in F)
+        const lamCal = skyAllLinInterpExtrap(tF, skyAllLambdaDataF[grade]);
+        const lamW = lamCal===null ? null : lamCal*CAL_TO_W;
+        skyAllSetOut('skyAll_lambda', lamW, 4);
+        skyAllSetOut('skyAll_lambda_btu', lamW===null?null:lamW*0.5777893, 5);
+        skyAllSetOut('skyAll_lambda_btuin', lamW===null?null:lamW*6.933471, 4);
+
+        // Thermal diffusivity alpha = lambda / (rho*cp)  [m2/s]
+        let alpha = null;
+        if(rho!==null && cpKJ!==null && lamW!==null){
+          alpha = lamW / (rho * (cpKJ*1000));
+        }
+        skyAllSetOut('skyAll_alpha', alpha===null?null:alpha*1e8, 3);
+
+        // Prandtl number Pr = mu*cp/lambda (mu in Pa.s)
+        let pr = null;
+        if(mu!==null && cpKJ!==null && lamW!==null){
+          pr = (mu/1000) * (cpKJ*1000) / lamW;
+        }
+        skyAllSetOut('skyAll_pr', pr, 3);
+
+        // Thermal expansion (fitted-line slope; not available for PE-5)
+        if(grade === 'PE-5'){
+          document.getElementById('skyAll_beta').textContent = 'N/A';
+          document.getElementById('skyAll_volpct').textContent = 'N/A';
+        } else if(tF < -80 || tF > 320){
+          document.getElementById('skyAll_beta').textContent = 'Out of Range';
+          document.getElementById('skyAll_volpct').textContent = 'Out of Range';
+        } else {
+          const beta = skyAllBetaAt(grade, tF);
+          skyAllSetOut('skyAll_beta', beta, 4);
+          const rhoFit = skyAllRhoFitAt(grade, tF);
+          const rho0Fit = skyAllRhoFitAt(grade, 77);
+          const volPct = (rho0Fit - rhoFit) / rhoFit * 100;
+          skyAllSetOut('skyAll_volpct', volPct, 3);
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function(){
+        skyAllConvertToCelsius();
+      });
+    </script>
 
 
   </body>

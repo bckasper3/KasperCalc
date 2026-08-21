@@ -4,43 +4,40 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- META DATA -->
-    <title>KasperCalc: Skydrol Thermal Conductivity</title>
+    <!-- META DATA FOR -->
+    <title>KasperCalc: Fluid Velocity in Pipe</title>
+    <link rel="canonical" href="https://kaspercalc.com/PipeVelocity.html" />
     <meta name="author" content="bckasper3" />
-    <meta name="keywords" content="KasperCalc, Skydrol, Skydrol LD-4, Skydrol 500B-4, Skydrol PE-5, Skydrol 5, phosphate ester, aviation hydraulic fluid, thermal conductivity, ASTM D2717" />
-    <meta name="description" content="Thermal conductivity of Skydrol LD-4, 500B-4, PE-5, and Skydrol 5 aviation hydraulic fluid from 100°F to 300°F (38°C to 149°C). Data from Eastman, ASTM D2717." />
+    <meta name="keywords" content="KasperCalc, bckasper3, Fluid Velocity in Pipe, Pipe Velocity Calculator, Flow Velocity, Volumetric Flow Rate, Pipe Inside Diameter, Pipe Sizing, Flow Rate to Velocity" />
+    <meta name="description" content="Calculate fluid velocity in a pipe from flow rate and pipe inside diameter, or solve backwards for the pipe inside diameter, with many selectable units." />
 
     <!-- DEFERRED JAVASCRIPT -->
+
+        <!-- <script defer type="text/javascript" src="js/bootstrap.min.js"></script> -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script defer src="js/citation.js"></script>
     <script defer src="js/footer.js"></script>
     <script defer src="js/header-active-class.js"></script>
     <script defer src="js/navsearch.js"></script>
-    <!-- chart and calculator JS embedded below -->
+    <script defer type="text/javascript" src="js/PipeVelocity.js"></script>
 
     <!-- CSS FILES -->
+    <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
     <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
     <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
 
-    <!-- Google tag (gtag.js) -->
-    <script>
-(function(){
-  var h = location.hostname;
-  var isLocal = !h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1' || /\.local$/i.test(h) || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
-  if (isLocal) return;
-  var s = document.createElement('script');
-  s.async = true;
-  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0';
-  document.head.appendChild(s);
+<!-- Google tag (gtag.js) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script>
   window.dataLayer = window.dataLayer || [];
-  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+  function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
+
   gtag('config', 'G-5XLCN0GJQ0');
-})();
-</script>
+</script> -->
 
     <!-- FAVICON -->
     <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
@@ -49,10 +46,20 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="KasperCalc" />
     <link rel="manifest" href="/favicon/site.webmanifest" />
-  </head>
+
+    <style>
+      .dropdowncalc {
+        font-size: var(--h4-font-size);
+        cursor: pointer;
+      }
+    </style>
+
+   </head>
 
   <!-- BODY -->
   <body>
+
+
 
   <!-- NAVIGATION -->
   <div class="navbarwrapper">
@@ -353,180 +360,315 @@
           <div class="col-lg-12 col-12">
             <div class="banner section-title-wrap">
               <div class="h1 section-title bannertext">
-                Skydrol Thermal Conductivity
+                Fluid Velocity in Pipe
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- CHART -->
-      <section>
-        <div class="csscontainer">
-          <div class="col-lg-12 col-12">
-            <div class="section-title-wrap">
-              <div class="h1 section-title">Skydrol Thermal Conductivity Chart</div>
-            </div>
-            <div class="canvasdiv">
-              <button id="toggleTooltipButton">Hide Tooltips</button>
-              <a style="font-size: medium; text-decoration: none;" href="img/SkydrolThermalConductivity(DegreesF).png" download="SkydrolThermalConductivity(DegreesF).png">
-                <button>Download Chart</button>
-              </a>
-              <a style="font-size: medium; text-decoration: none;" href="img/SkydrolThermalConductivity(DegreesF).png" target="_blank">
-                <button>Open In New Tab</button>
-              </a>
-              <div class="canvascontainer">
-                <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-                <canvas id="myChart" aria-label="Skydrol Thermal Conductivity vs Temperature °F" width="400" height="600" role="img" class="chartcanvas">
-                  <p>Canvas Element Not Working, Please Check Browser Settings or Contact KasperCalc to fix the issue.</p>
-                </canvas>
+      <!-- UNDER THE BANNER -->
+      <h1 class="visually-hidden">Fluid Velocity in Pipe Calculator &mdash; Flow Rate and Pipe Diameter to Velocity</h1>
+
+          <!-- CALCULATOR -->
+          <section>
+            <div class="csscontainer">
+              <div class="col-lg-12 col-12 px-3">
+
+                <div class="wrapper" style="max-width:45rem;">
+                  <div class="header text-center">Fluid Velocity in Pipe Calculator</div>
+
+                  <div class="toggle-container">
+                    <label class="pv-toggle-switch">
+                      <input type="checkbox" id="pipeVelSolveCheck" class="pv-toggle-input" aria-label="Solve for Velocity or Pipe Inside Diameter Selector Checkbox">
+                      <span class="pv-slider">
+                        <span class="option left">Solve Velocity</span>
+                        <span class="option right">Solve Pipe ID</span>
+                      </span>
+                    </label>
+                  </div>
+
+                  <!-- FLOW RATE (always a known input) -->
+                  <div class="group2">
+                    <span class="label">Flow Rate:</span>
+                    <span class="output inputbox">
+                      <input class="calcinput1" type="number" id="pvFlowInput" oninput="pvCalculate()" value="100" aria-label="Flow rate input box"/>
+                      <select class="dropdowncalc dropdown-menu-end" id="pvFlowUnit" onchange="pvCalculate()" aria-label="Flow rate units selector dropdown">
+                        <option value="gpm" selected>US gal/min (GPM)</option>
+                        <option value="gps">US gal/sec</option>
+                        <option value="gph">US gal/hr</option>
+                        <option value="ukgpm">UK (Imperial) gal/min</option>
+                        <option value="ft3s">ft&#179;/sec (CFS)</option>
+                        <option value="ft3min">ft&#179;/min (CFM)</option>
+                        <option value="ft3hr">ft&#179;/hr</option>
+                        <option value="in3s">in&#179;/sec</option>
+                        <option value="in3min">in&#179;/min</option>
+                        <option value="m3s">m&#179;/sec</option>
+                        <option value="m3min">m&#179;/min</option>
+                        <option value="m3hr">m&#179;/hr</option>
+                        <option value="Ls">L/sec</option>
+                        <option value="Lmin">L/min</option>
+                        <option value="Lhr">L/hr</option>
+                        <option value="mLmin">mL/min</option>
+                        <option value="bblday">bbl/day (42-gal oil barrel)</option>
+                        <option value="mgd">MGD (million US gal/day)</option>
+                      </select>
+                    </span>
+                  </div>
+
+                  <!-- PIPE INSIDE DIAMETER (known when solving for velocity) -->
+                  <div class="group2" id="HideablePipeID">
+                    <span class="label">Pipe Inside Diameter:</span>
+                    <span class="output inputbox">
+                      <input class="calcinput1" type="number" id="pvDiamInput" oninput="pvCalculate()" value="4" aria-label="Pipe inside diameter input box"/>
+                      <select class="dropdowncalc dropdown-menu-end" id="pvDiamInputUnit" onchange="pvCalculate()" aria-label="Pipe inside diameter units selector dropdown">
+                        <option value="in" selected>in</option>
+                        <option value="ft">ft</option>
+                        <option value="mm">mm</option>
+                        <option value="cm">cm</option>
+                        <option value="m">m</option>
+                      </select>
+                    </span>
+                  </div>
+
+                  <!-- VELOCITY (known when solving for pipe ID) -->
+                  <div class="group2" id="HideableVelocity" style="display:none;">
+                    <span class="label">Velocity:</span>
+                    <span class="output inputbox">
+                      <input class="calcinput1" type="number" id="pvVelInput" oninput="pvCalculate()" value="10" aria-label="Velocity input box"/>
+                      <select class="dropdowncalc dropdown-menu-end" id="pvVelInputUnit" onchange="pvCalculate()" aria-label="Velocity units selector dropdown">
+                        <option value="fts" selected>ft/sec</option>
+                        <option value="ms">m/sec</option>
+                        <option value="ins">in/sec</option>
+                        <option value="cms">cm/sec</option>
+                        <option value="mms">mm/sec</option>
+                        <option value="ftmin">ft/min</option>
+                        <option value="mmin">m/min</option>
+                        <option value="mph">mph</option>
+                        <option value="kmh">km/hr</option>
+                        <option value="knot">knots</option>
+                      </select>
+                    </span>
+                  </div>
+
+                  <!-- RESULT: VELOCITY -->
+                  <div class="group1 flex-wrap" id="VelUnitRow">
+                    <label class="dropdownlabel" for="pvResultVelUnit">Display Velocity In:</label>
+                    <span class="output">
+                      <select class="dropdowncalc dropdown-menu-end" id="pvResultVelUnit" onchange="pvCalculate()" aria-label="Result velocity units selector dropdown">
+                        <option value="fts" selected>ft/sec</option>
+                        <option value="ms">m/sec</option>
+                        <option value="ins">in/sec</option>
+                        <option value="cms">cm/sec</option>
+                        <option value="mms">mm/sec</option>
+                        <option value="ftmin">ft/min</option>
+                        <option value="mmin">m/min</option>
+                        <option value="mph">mph</option>
+                        <option value="kmh">km/hr</option>
+                        <option value="knot">knots</option>
+                      </select>
+                    </span>
+                  </div>
+                  <div class="group result" id="ResultVelocityRow">
+                    <span class="label">Result &mdash; Velocity:</span>
+                    <span class="output result" id="pvResultVel">&nbsp;</span>
+                  </div>
+
+                  <!-- RESULT: PIPE ID -->
+                  <div class="group1 flex-wrap" id="DiamUnitRow" style="display:none;">
+                    <label class="dropdownlabel" for="pvResultDiamUnit">Display Pipe ID In:</label>
+                    <span class="output">
+                      <select class="dropdowncalc dropdown-menu-end" id="pvResultDiamUnit" onchange="pvCalculate()" aria-label="Result pipe inside diameter units selector dropdown">
+                        <option value="in" selected>in</option>
+                        <option value="ft">ft</option>
+                        <option value="mm">mm</option>
+                        <option value="cm">cm</option>
+                        <option value="m">m</option>
+                      </select>
+                    </span>
+                  </div>
+                  <div class="group result" id="ResultDiamRow" style="display:none;">
+                    <span class="label">Result &mdash; Pipe Inside Diameter:</span>
+                    <span class="output result" id="pvResultDiam">&nbsp;</span>
+                  </div>
+
+                  <div class="group" style="background-color: var(--calc-result-color); font-weight: normal;">
+                    <div class="outputrow">
+                      <span class="label">Velocity (ft/sec):</span>
+                      <span class="output" style="background-color: var(--calc-result-color);" id="pvAlt_fts">&nbsp;</span>
+                    </div>
+                    <div class="outputrow">
+                      <span class="label">Velocity (m/sec):</span>
+                      <span class="output" style="background-color: var(--calc-result-color);" id="pvAlt_ms">&nbsp;</span>
+                    </div>
+                    <div class="outputrow">
+                      <span class="label">Pipe Cross-Sectional Area (in&#178;):</span>
+                      <span class="output" style="background-color: var(--calc-result-color);" id="pvArea_in2">&nbsp;</span>
+                    </div>
+                    <div class="outputrow">
+                      <span class="label">Pipe Cross-Sectional Area (ft&#178;):</span>
+                      <span class="output" style="background-color: var(--calc-result-color);" id="pvArea_ft2">&nbsp;</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <p class="text-center">Data range: 100&nbsp;&deg;F to 300&nbsp;&deg;F (38&nbsp;&deg;C to 149&nbsp;&deg;C), all four grades.</p>
-            <p class="text-center">Data from: Eastman Skydrol product comparison brochure (Publication EASAF7870), per ASTM D2717.</p>
-            <p class="text-center">Toggle data sets by clicking the legend.</p>
-          </div>
-        </div>
-      </section>
+            <p class="text-center">*Velocity = Flow Rate &divide; Pipe Cross-Sectional Area. Assumes the pipe is flowing full (no dead air space).*</p>
+          </section>
 
-      <!-- CALCULATOR -->
-      <section>
-        <div class="csscontainer">
-          <div class="col-lg-12 col-12 px-3">
-            <div class="wrapper" style="max-width:33rem;">
-              <div class="header text-center">Skydrol Thermal Conductivity Calculator</div>
-
-              <div class="group">
-                <div class="outputrow">
-                  <span class="label">Grade:</span>
-                  <span class="output inputbox">
-                    <select class="dropdowncalc" id="skyLambdaGrade" onchange="skyLambdaCalculate()" aria-label="Skydrol grade selection">
-                      <option value="500B-4">Skydrol 500B-4</option>
-                      <option value="LD-4">Skydrol LD-4</option>
-                      <option value="PE-5">Skydrol PE-5</option>
-                      <option value="Skydrol5">Skydrol 5</option>
-                    </select>
-                  </span>
-                </div>
-                <div class="outputrow">
-                  <span class="label">Degrees (&deg;F):</span>
-                  <span class="output inputbox">
-                    <input class="calcinput" type="number" id="skyLambdaFahrenheit" oninput="skyLambdaConvertToCelsius()" value="200" aria-label="Input box for degrees Fahrenheit" />
-                  </span>
-                </div>
-                <div class="outputrow">
-                  <span class="label">Degrees (&deg;C):</span>
-                  <span class="output inputbox">
-                    <input class="calcinput" type="number" id="skyLambdaCelsius" oninput="skyLambdaConvertToFahrenheit()" aria-label="Input for degrees Celsius" />
-                  </span>
-                </div>
+          <!-- Button to Other Calculator -->
+          <section>
+            <div class="col-lg-12 col-12">
+              <div class="mx-auto mt-4 text-center">
+                <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
+                <a href="equivalentFlows.html" class="custom-link custom-btn btn d-inline-block">Density Dependent Flow Rate Calculator</a><br/>
               </div>
-
-              <div class="group">
-                <div class="outputrow">
-                  <span class="label">W / (m&middot;K):</span>
-                  <span class="output" id="skyLambda_WmK">&nbsp;</span>
-                </div>
-                <div class="outputrow">
-                  <span class="label">mW / (m&middot;K):</span>
-                  <span class="output" id="skyLambda_mWmK">&nbsp;</span>
-                </div>
-                <div class="outputrow">
-                  <span class="label">BTU / (h&middot;ft&middot;&deg;F):</span>
-                  <span class="output" id="skyLambda_BTUhftF">&nbsp;</span>
-                </div>
-                <div class="outputrow">
-                  <span class="label">BTU&middot;in / (h&middot;ft&sup2;&middot;&deg;F):</span>
-                  <span class="output" id="skyLambda_BTUinhft2F">&nbsp;</span>
-                </div>
-                <div class="outputrow">
-                  <span class="label">W / (cm&middot;K):</span>
-                  <span class="output" id="skyLambda_WcmK">&nbsp;</span>
-                </div>
+              <div class="mx-auto mt-1 text-center">
+                <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
+                <a href="MassFlowConverter.html" class="custom-link custom-btn btn d-inline-block">Mass Flow Rate Calculator</a><br/>
+              </div>
+              <div class="mx-auto mt-1 text-center">
+                <h2 style="display: inline-block; margin-top:0rem; margin-bottom:0rem;" >Also See:&nbsp&nbsp</h2>
+                <a href="PPH.html" class="custom-link custom-btn btn d-inline-block">Jet Fuel PPH to GPM Calculator</a><br/>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      <!-- DESCRIPTION -->
-      <section>
-        <div class="csscontainer">
-          <div class="mx-md-5 mx-3 section-content-wrap">
-            <div class="mx-auto d-inline-block mt-4 col-11 col-md-10 col-lg-8 col-xl-6">
-              <div class="custom-heading">Thermal Conductivity of Skydrol Phosphate Ester Hydraulic Fluid</div>
-              <div style="text-align: left" class="mt-3">
-                <div class="custom-subheading">About This Data</div>
-                <p class="mt-2">
-                  Thermal conductivity values for all four Skydrol grades are published in Eastman's Skydrol product
-                  comparison brochure (Publication EASAF7870), tested per ASTM D2717 at 100&nbsp;&deg;F, 200&nbsp;&deg;F,
-                  and 300&nbsp;&deg;F. Unlike the specific heat data on the companion page, thermal conductivity is
-                  reported at all three temperatures for every grade, so the calculator here linearly interpolates
-                  between three well-populated anchor points for each grade. No extrapolation is performed: inputs
-                  outside 100&ndash;300&nbsp;&deg;F return "Out of Range."
-                </p>
-                <p class="mt-2">
-                  Thermal conductivity decreases with increasing temperature for all four grades, typical of liquid
-                  hydraulic fluids. Skydrol&nbsp;PE-5 has the highest thermal conductivity of the four grades at a
-                  given temperature; Skydrol&nbsp;5 has the lowest.
-                </p>
+
+          <!-- TEXT UNDER THE CALCULATOR -->
+          <section>
+            <div class="csscontainer">
+              <div class="mx-md-5 mx-3 section-content-wrap">
+
+                <div class="mx-auto d-inline-block mt-1" style="max-width:800px;">
+                  <div class="custom-heading">Flow Velocity in a Pipe</div>
+                  <div style="text-align: left" class="mt-1">
+                    <div class="custom-subheading">Flow Rate &amp; Diameter &#10132; Velocity</div><br>
+                    <img style="max-width: 100%;" class="my-1" alt="Velocity equals flow rate divided by pipe cross sectional area" src="https://latex.codecogs.com/svg.image?\large&space;v=\frac{Q}{A}=\frac{Q}{\frac{\pi}{4}D^{2}}" /></br>
+                    <span style="font-size:14px;"><b>Plain Text Formula:</b> v = Q / A = Q / ((&#960;/4) &times; D&#178;)</span></br>
+                    <span style="font-size:14px;"><b>CodeCogs/LaTex:</b>\[v=\frac{Q}{A}=\frac{Q}{\frac{\pi}{4}D^{2}}\]</span></br>
+                  </div>
+
+                  <div style="text-align: left" class="mt-4">
+                    <div class="custom-subheading">Flow Rate &amp; Velocity &#10132; Diameter</div><br>
+                    <img style="max-width: 100%;" class="my-1" alt="Diameter equals square root of four times flow rate over pi times velocity" src="https://latex.codecogs.com/svg.image?\large&space;D=\sqrt{\frac{4Q}{\pi&space;v}}" /></br>
+                    <span style="font-size:14px;"><b>Plain Text Formula:</b> D = SQRT( (4 &times; Q) / (&#960; &times; v) )</span></br>
+                    <span style="font-size:14px;"><b>CodeCogs/LaTex:</b>\[D=\sqrt{\frac{4Q}{\pi v}}\]</span></br>
+                  </div>
+                </div></br>
+
+                <div class="mx-auto d-inline-block mt-4" style="max-width:800px;">
+                  <div class="custom-heading">Where</div>
+                  <div style="text-align: left" class="mt-1">
+                    <span style="font-size:14px;"><b>v</b> = mean fluid velocity in the pipe</span></br>
+                    <span style="font-size:14px;"><b>Q</b> = volumetric flow rate</span></br>
+                    <span style="font-size:14px;"><b>A</b> = pipe cross-sectional (internal flow) area</span></br>
+                    <span style="font-size:14px;"><b>D</b> = pipe inside diameter (ID)</span></br>
+                  </div>
+                </div>
+
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      <!-- DATA TABLE -->
-      <section>
-        <div class="csscontainer">
-          <div class="mx-md-5 mx-3 section-content-wrap">
-            <div class="mx-auto d-inline-block mt-4">
-              <div class="custom-heading">Skydrol &mdash; Thermal Conductivity vs. Temperature</div>
+          <!-- REAL-WORLD VELOCITY EXAMPLES -->
+          <section>
+            <div class="csscontainer">
+              <div class="mx-md-5 mx-3 section-content-wrap">
 
-              <style>
-                #skyLambdaTable th, #skyLambdaTable td { padding: 0.55rem 0.9rem; }
-              </style>
-              <div class="table-responsive mt-3 mb-3">
-                <table id="skyLambdaTable" class="table table-striped table-bordered table-hover text-center" style="width:auto; margin-left:auto; margin-right:auto;">
-                  <thead style="background-color: var(--section-title-color); color: #fff;">
-                    <tr>
-                      <th rowspan="2" class="align-middle">Temp<br>(&deg;F)</th>
-                      <th rowspan="2" class="align-middle">Temp<br>(&deg;C)</th>
-                      <th colspan="2">500B-4</th>
-                      <th colspan="2">LD-4</th>
-                      <th colspan="2">PE-5</th>
-                      <th colspan="2">Skydrol&nbsp;5</th>
-                    </tr>
-                    <tr>
-                      <th>cal/(sec&middot;cm&middot;&deg;C)</th>
-                      <th>W/(m&middot;K)</th>
-                      <th>cal/(sec&middot;cm&middot;&deg;C)</th>
-                      <th>W/(m&middot;K)</th>
-                      <th>cal/(sec&middot;cm&middot;&deg;C)</th>
-                      <th>W/(m&middot;K)</th>
-                      <th>cal/(sec&middot;cm&middot;&deg;C)</th>
-                      <th>W/(m&middot;K)</th>
-                    </tr>
-                  </thead>
-                  <tbody id="skyLambdaTableBody">
-                  </tbody>
-                </table>
+                <div class="mx-auto d-inline-block mt-1" style="max-width:820px;">
+                  <div class="custom-heading">What Does a Given Velocity Feel Like?</div>
+                  <p class="mt-3 text-start" style="font-size:14px;">
+                    A velocity by itself (2&nbsp;ft/sec, 20&nbsp;ft/sec) is hard to picture. The table below lines
+                    up this calculator's default unit, feet per second, against everyday and industrial examples
+                    so a result can be sanity-checked at a glance. These are typical/rule-of-thumb design ranges,
+                    not hard limits &mdash; actual velocity depends on pipe size, pressure, and system design.
+                  </p>
+
+                  <div class="mx-auto" style="max-width:820px; overflow-x:auto;">
+                    <table class="table table-striped table-bordered table-hover table-sm text-center">
+                      <thead style="background-color: var(--section-title-color); color: #fff;">
+                        <tr>
+                          <th>Example</th>
+                          <th>Typical Velocity (ft/sec)</th>
+                          <th>Notes</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="text-start">Municipal water main</td>
+                          <td>2 &ndash; 5</td>
+                          <td class="text-start">Typical distribution-system design velocity to limit head loss and water hammer</td>
+                        </tr>
+                        <tr>
+                          <td class="text-start">Household faucet / kitchen tap</td>
+                          <td>3 &ndash; 6</td>
+                          <td class="text-start">Ordinary indoor plumbing fixture flow</td>
+                        </tr>
+                        <tr>
+                          <td class="text-start">Garden hose (5/8&Prime; hose, spigot flow)</td>
+                          <td>5 &ndash; 8</td>
+                          <td class="text-start">Typical residential outdoor spigot at full flow, no nozzle</td>
+                        </tr>
+                        <tr>
+                          <td class="text-start">Human walking pace <i>(for scale, not a fluid)</i></td>
+                          <td>~4.5</td>
+                          <td class="text-start">A brisk walk is about 3 mph &mdash; useful as a gut-check reference speed</td>
+                        </tr>
+                        <tr>
+                          <td class="text-start">Household copper/PEX supply piping</td>
+                          <td>5 &ndash; 8</td>
+                          <td class="text-start">Common plumbing-code design ceiling to limit erosion and noise</td>
+                        </tr>
+                        <tr>
+                          <td class="text-start">Crude oil transmission pipeline</td>
+                          <td>3 &ndash; 8</td>
+                          <td class="text-start">Long-haul liquid pipelines, balancing pump energy against pipe size</td>
+                        </tr>
+                        <tr>
+                          <td class="text-start">Aircraft jet fuel transfer/feed line</td>
+                          <td>3 &ndash; 10</td>
+                          <td class="text-start">Kept moderate in part to limit electrostatic charge generation in the fuel</td>
+                        </tr>
+                        <tr>
+                          <td class="text-start">Storm sewer / gravity drain pipe</td>
+                          <td>2 &ndash; 15</td>
+                          <td class="text-start">Minimum end is the "self-cleansing" velocity that keeps solids from settling</td>
+                        </tr>
+                        <tr>
+                          <td class="text-start">Fire hose attack line (nozzle discharge)</td>
+                          <td>15 &ndash; 30</td>
+                          <td class="text-start">High velocity is needed to project an effective fire stream</td>
+                        </tr>
+                        <tr>
+                          <td class="text-start">Natural gas transmission pipeline</td>
+                          <td>20 &ndash; 40</td>
+                          <td class="text-start">Compressible gas can run much faster than liquids for the same pipe</td>
+                        </tr>
+                        <tr>
+                          <td class="text-start">Ultra-high-pressure waterjet cutting stream</td>
+                          <td>~2,500 &ndash; 3,000</td>
+                          <td class="text-start">~60,000 psi water jet exiting the nozzle &mdash; roughly Mach&nbsp;2&ndash;3</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
               </div>
-              <p class="text-start small col-11 col-md-10 col-lg-8 col-xl-6 mx-auto">Source: Eastman Skydrol product comparison brochure (Publication EASAF7870), ASTM D2717. Values marked with an asterisk (*) are linearly extrapolated below each grade's lowest published temperature (100&nbsp;&deg;F&thinsp;/&thinsp;38&nbsp;&deg;C), down to &minus;40&nbsp;&deg;F, using the slope between that grade's two lowest published points. 1&nbsp;cal/(sec&middot;cm&middot;&deg;C) = 418.4&nbsp;W/(m&middot;K).</p>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
       <section class="mt-5 pt-3">
         <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
-          <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem; border-bottom-right-radius: .25rem;">
+          <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
             <div class="d-flex align-items-center mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style="color: var(--section-title-color);" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
                 <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
               </svg>
               <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
-            </div>          <!-- Citation format tabs -->
+            </div>
+          <!-- Citation format tabs -->
           <style>
             #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
             #citationTabs li { margin: 0; list-style: none; }
@@ -566,6 +708,7 @@
         </div>
       </section>
 
+
     </main>
 
     <!-- FOOTER -->
@@ -574,241 +717,19 @@
     <!-- END FOOTER -->
 
 <script>
-// Skydrol Thermal Conductivity Data
-// Source: Eastman Skydrol product comparison brochure (Publication EASAF7870), ASTM D2717.
-// Original units: cal/(sec·cm·°C). Converted to W/(m·K) via ×418.4.
-// Format: [T_F, lambda_W_per_mK]
-const skyLambdaDataOrig = {
-  '500B-4':   [[100, 0.000315], [200, 0.000299], [300, 0.000278]],
-  'LD-4':     [[100, 0.000326], [200, 0.000298], [300, 0.000277]],
-  'PE-5':     [[100, 0.000344], [200, 0.000289], [300, 0.000263]],
-  'Skydrol5': [[100, 0.000283], [200, 0.000259], [300, 0.000246]],
-};
-const CAL_TO_W = 418.4;
-const skyLambdaData = {};
-Object.keys(skyLambdaDataOrig).forEach(grade => {
-  skyLambdaData[grade] = skyLambdaDataOrig[grade].map(d => [d[0], parseFloat((d[1] * CAL_TO_W).toFixed(6))]);
-});
-
-const skyLambdaLabels = { '500B-4': 'Skydrol 500B-4', 'LD-4': 'Skydrol LD-4', 'PE-5': 'Skydrol PE-5', 'Skydrol5': 'Skydrol 5' };
-const skyLambdaColors = { '500B-4': 'rgb(68,119,170)', 'LD-4': 'rgb(204,102,119)', 'PE-5': 'rgb(102,153,102)', 'Skydrol5': 'rgb(221,170,51)' };
-
-function skyLambdaCtoF(c) { return c * 9 / 5 + 32; }
-function skyLambdaFtoC(f) { return (f - 32) * 5 / 9; }
-
-function skyLambdaLinInterp(tF, data) {
-  if (tF < data[0][0] || tF > data[data.length - 1][0]) return NaN;
-  for (let i = 0; i < data.length - 1; i++) {
-    if (tF >= data[i][0] && tF <= data[i + 1][0]) {
-      const t = (tF - data[i][0]) / (data[i + 1][0] - data[i][0]);
-      return data[i][1] + t * (data[i + 1][1] - data[i][1]);
-    }
-  }
-  return NaN;
-}
-
-// Pre-interpolate to 1°F steps for a smooth plotted line — the published
-// anchor points themselves are not plotted.
-function skyLambdaBuildFahrenheitPoints(data) {
-  const result = [];
-  for (let i = 0; i < data.length - 1; i++) {
-    const x0 = data[i][0], y0 = data[i][1], x1 = data[i + 1][0], y1 = data[i + 1][1];
-    result.push({ x: parseFloat(x0.toFixed(2)), y: parseFloat(y0.toFixed(5)) });
-    const first = Math.ceil(x0 + 0.01), last = Math.floor(x1 - 0.01);
-    for (let f = first; f <= last; f++) {
-      const t = (f - x0) / (x1 - x0);
-      result.push({ x: f, y: parseFloat((y0 + t * (y1 - y0)).toFixed(5)) });
-    }
-  }
-  const lastPt = data[data.length - 1];
-  result.push({ x: parseFloat(lastPt[0].toFixed(2)), y: parseFloat(lastPt[1].toFixed(5)) });
-  return result;
-}
-
-const skyLambdaFPoints = {};
-Object.keys(skyLambdaData).forEach(grade => {
-  skyLambdaFPoints[grade] = skyLambdaBuildFahrenheitPoints(skyLambdaData[grade]);
-});
-
-// Extrapolate each grade's low-temperature end down to -40°F using the slope
-// between its two lowest published points (100°F and 200°F).
-const SKY_LAMBDA_EXTRAP_MIN_F = -40;
-
-function skyLambdaExtrapValue(grade, tF) {
-  const data = skyLambdaData[grade];
-  const [x0, y0] = data[0], [x1, y1] = data[1];
-  const t = (tF - x0) / (x1 - x0);
-  return y0 + t * (y1 - y0);
-}
-
-function skyLambdaBuildExtrapPoints(grade) {
-  const x0 = skyLambdaData[grade][0][0];
-  const result = [];
-  for (let f = SKY_LAMBDA_EXTRAP_MIN_F; f <= Math.floor(x0); f++) {
-    result.push({ x: f, y: parseFloat(skyLambdaExtrapValue(grade, f).toFixed(5)) });
-  }
-  return result;
-}
-
-const skyLambdaExtrapPoints = {};
-Object.keys(skyLambdaData).forEach(grade => {
-  skyLambdaExtrapPoints[grade] = skyLambdaBuildExtrapPoints(grade);
-});
-
-const customBg = {
-  id: 'customCanvasBackgroundColor',
-  beforeDraw(chart) {
-    const { ctx } = chart;
-    ctx.save();
-    ctx.globalCompositeOperation = 'destination-over';
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, chart.width, chart.height);
-    ctx.restore();
-  }
-};
-
-const ctx = document.getElementById('myChart').getContext('2d');
-const skyLambdaChart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    datasets: [
-      ...Object.keys(skyLambdaData).map(grade => ({
-        label: skyLambdaLabels[grade],
-        data: skyLambdaFPoints[grade],
-        fill: false,
-        borderColor: skyLambdaColors[grade],
-        tension: 0.1,
-      })),
-      ...Object.keys(skyLambdaData).map(grade => ({
-        label: skyLambdaLabels[grade] + ' (extrapolated)',
-        data: skyLambdaExtrapPoints[grade],
-        fill: false,
-        borderColor: skyLambdaColors[grade],
-        borderDash: [6, 4],
-        tension: 0.1,
-        isExtrapolation: true,
-      })),
-    ],
-  },
-  plugins: [customBg],
-  options: {
-    maintainAspectRatio: false,
-    layout: { padding: { left: 10, right: 25, top: 5, bottom: 5 } },
-    interaction: { mode: 'nearest', axis: 'x' },
-    elements: { point: { radius: 0 } },
-    responsive: true,
-    plugins: {
-      legend: {
-        labels: {
-          align: 'top', padding: 20, usePointStyle: false, boxHeight: 2, font: { size: 18 },
-          filter: (legendItem, chartData) => !chartData.datasets[legendItem.datasetIndex].isExtrapolation,
-        },
-        onClick(e, legendItem, legend) {
-          const datasetIndex = legendItem.datasetIndex;
-          const ci = legend.chart;
-          const meta = ci.getDatasetMeta(datasetIndex);
-          meta.hidden = meta.hidden === null ? !ci.data.datasets[datasetIndex].hidden : null;
-          const grade = Object.keys(skyLambdaData).find(g => ci.data.datasets[datasetIndex].label.startsWith(skyLambdaLabels[g]));
-          ci.data.datasets.forEach((ds, i) => {
-            if (i !== datasetIndex && ds.isExtrapolation && ds.label.startsWith(skyLambdaLabels[grade])) {
-              const extrapMeta = ci.getDatasetMeta(i);
-              extrapMeta.hidden = meta.hidden;
-            }
-          });
-          ci.update();
-        },
-      },
-      tooltip: { enabled: true, mode: 'nearest', intersect: false, axis: 'x' },
-      customCanvasBackgroundColor: { color: 'white' }
-    },
-    scales: {
-      x: {
-        type: 'linear',
-        min: -40,
-        max: 305,
-        ticks: { maxRotation: 0, font: { size: 16 } },
-        title: { display: true, text: 'Temperature °F', font: { size: 20 } }
-      },
-      y: {
-        ticks: { font: { size: 16 } },
-        title: { display: true, text: 'Thermal Conductivity (W/m·K)', padding: 10, font: { size: 20 } }
-      }
-    }
-  }
-});
-
-document.getElementById('toggleTooltipButton').addEventListener('click', function () {
-  skyLambdaChart.options.plugins.tooltip.enabled = !skyLambdaChart.options.plugins.tooltip.enabled;
-  skyLambdaChart.update();
-  this.textContent = skyLambdaChart.options.plugins.tooltip.enabled ? 'Hide Tooltips' : 'Show Tooltips';
-});
-
-function skyLambdaConvertToFahrenheit() {
-  const c = parseFloat(document.getElementById('skyLambdaCelsius').value);
-  document.getElementById('skyLambdaFahrenheit').value = skyLambdaCtoF(c).toFixed(2);
-  skyLambdaCalculate();
-}
-
-function skyLambdaConvertToCelsius() {
-  const f = parseFloat(document.getElementById('skyLambdaFahrenheit').value);
-  document.getElementById('skyLambdaCelsius').value = skyLambdaFtoC(f).toFixed(2);
-  skyLambdaCalculate();
-}
-
-function skyLambdaCalculate() {
-  const f = parseFloat(document.getElementById('skyLambdaFahrenheit').value);
-  const grade = document.getElementById('skyLambdaGrade').value;
-  const data = skyLambdaData[grade];
-  const ids = ['skyLambda_WmK','skyLambda_mWmK','skyLambda_BTUhftF','skyLambda_BTUinhft2F','skyLambda_WcmK'];
-
-  const lambda = skyLambdaLinInterp(f, data);
-  if (isNaN(f) || isNaN(lambda)) {
-    ids.forEach(id => { document.getElementById(id).textContent = 'Out of Range'; });
-    return;
-  }
-
-  document.getElementById('skyLambda_WmK').textContent        = lambda.toFixed(4);
-  document.getElementById('skyLambda_mWmK').textContent       = (lambda * 1000).toFixed(2);
-  document.getElementById('skyLambda_BTUhftF').textContent    = (lambda * 0.57782).toFixed(5);
-  document.getElementById('skyLambda_BTUinhft2F').textContent = (lambda * 6.9335).toFixed(4);
-  document.getElementById('skyLambda_WcmK').textContent       = (lambda / 100).toFixed(6);
-}
-
-// Build the data table directly from the published anchor points (100/200/300°F),
-// showing cal/(sec·cm·°C) and W/(m·K) for all four grades.
-function skyLambdaBuildTable() {
-  const tbody = document.getElementById('skyLambdaTableBody');
-  let rows = '';
-
-  // Extrapolated rows at even 20°F steps from -40°F up to (not including)
-  // the lowest published temperature (100°F for all four grades).
-  for (let f = SKY_LAMBDA_EXTRAP_MIN_F; f < 100; f += 20) {
-    const c = Math.round(skyLambdaFtoC(f));
-    const cells = ['500B-4', 'LD-4', 'PE-5', 'Skydrol5'].map(grade => {
-      const w = skyLambdaExtrapValue(grade, f);
-      const cal = w / CAL_TO_W;
-      return `<td>${cal.toFixed(6)}*</td><td>${w.toFixed(4)}*</td>`;
-    }).join('');
-    rows += `<tr><td>${f}</td><td>${c}</td>${cells}</tr>`;
-  }
-
-  // Published anchor rows (exact values, no asterisk).
-  const temps = [100, 200, 300];
-  temps.forEach(f => {
-    const c = Math.round(skyLambdaFtoC(f));
-    const cells = ['500B-4', 'LD-4', 'PE-5', 'Skydrol5'].map(grade => {
-      const orig = skyLambdaDataOrig[grade].find(d => d[0] === f);
-      const converted = skyLambdaData[grade].find(d => d[0] === f);
-      return `<td>${orig[1].toFixed(6)}</td><td>${converted[1].toFixed(4)}</td>`;
-    }).join('');
-    rows += `<tr><td>${f}</td><td>${c}</td>${cells}</tr>`;
-  });
-
-  tbody.innerHTML = rows;
-}
-
-skyLambdaBuildTable();
-skyLambdaConvertToCelsius();
+(function(){
+  var h = location.hostname;
+  var isLocal = !h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1' || /\.local$/i.test(h) || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+  if (isLocal) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+  gtag('js', new Date());
+  gtag('config', 'G-5XLCN0GJQ0');
+})();
 </script>
 
   </body>
