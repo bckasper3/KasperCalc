@@ -28,6 +28,7 @@
           <div class="footerlink"><a href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a></div>
           <div class="footerlink"><a href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a></div>
           <div class="footerlink"><a href="MassFlowConverter.html">Mass Flow Rate Calculator</a></div>
+          <div class="footerlink"><a href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a></div>
         </div>
 
         <div class="footerRow">

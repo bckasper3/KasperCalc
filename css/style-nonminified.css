@@ -37,13 +37,14 @@
   --slider-toggle-post-translate1: 72px;
   --slider-toggle-post-translate2: 63px;
 
-  /* Pipe Velocity "Solve Velocity" / "Solve Pipe ID" toggle -- both
-     option labels are comparable length, unlike the other sliders above
-     which pair one long label with one short one. */
-  --pv-slider-background-bar: 340px;
-  --pv-slider-pill-width: 178px;
-  --pv-slider-pill-width-checked: 162px;
-  --pv-slider-translate: 168px;
+  /* Pipe Velocity "Solve Velocity" / "Solve Pipe ID" toggle -- both option
+     labels are comparable length, unlike the other sliders above which pair
+     one long label with one short one, so the two halves are simply equal.
+     This bar width is the ONLY number to tune; the pill width and its travel
+     are derived from it in the SLIDER-CSS 3 block below.
+     Sizing rule: bar >= 2 * (widest label + ~30px) + 15px.
+     "Solve Velocity" is ~121px at the 20px --h4-font-size, so 320px fits. */
+  --pv-slider-background-bar: 320px;
 
   --body-font-family: "Roboto", Arial, sans-serif;
   --title-font-family: "Roboto", Arial, sans-serif;
@@ -438,10 +439,8 @@ strong {
     --slider-toggle-post-translate1: 58px;
     --slider-toggle-post-translate2: 53px;
 
-    --pv-slider-background-bar: 292px;
-    --pv-slider-pill-width: 152px;
-    --pv-slider-pill-width-checked: 138px;
-    --pv-slider-translate: 144px;
+    /* --h4-font-size is unchanged at this breakpoint, so the pipe-velocity
+       toggle keeps its :root width. */
      }
     }
 
@@ -478,10 +477,8 @@ strong {
     --slider-toggle-post-translate1: 58px;
     --slider-toggle-post-translate2: 48px;
 
-    --pv-slider-background-bar: 292px;
-    --pv-slider-pill-width: 152px;
-    --pv-slider-pill-width-checked: 138px;
-    --pv-slider-translate: 144px;
+    /* "Solve Velocity" is ~97px at the 16px --h4-font-size here. */
+    --pv-slider-background-bar: 260px;
      }
     }
    
@@ -1097,11 +1094,25 @@ nav>.navbar-toggler{
 /*---------------------------------------
   SLIDER-CSS 3 (dedicated toggle for two comparably-long option labels,
   e.g. Fluid Velocity in Pipe's "Solve Velocity" / "Solve Pipe ID")
+
+  Unlike SLIDER-CSS 1 and 2, nothing here is hand-tuned per breakpoint. The
+  bar is split into two equal halves and every other number falls out of it:
+
+    W = --pv-slider-background-bar        (border-box width of the bar)
+    P = W - 4px                           (padding box; 2px border each side)
+                                          -- percentages below resolve against P
+    5px gutter around the outside and 5px between the two halves, so
+    H = (P - 15px) / 2 = 50% - 7.5px      (pill width, and half-label width)
+    T = H + 5px = 100% + 5px              (pill travel, as % of the pill)
+
+  Left pill spans  5 .. 5+H ; right pill spans  P-5-H .. P-5.  To resize the
+  control, change --pv-slider-background-bar and nothing else.
 -----------------------------------------*/
 
 .pv-toggle-switch {
   position: relative;
   width: var(--pv-slider-background-bar);
+  max-width: 100%;
   height: 60px;
 }
 
@@ -1121,12 +1132,7 @@ nav>.navbar-toggler{
   background-color: var(--calc-background-color);
   transition: 0.4s;
   border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 10px;
   color: var(--primary-color);
-  font-size: 16px;
   font-weight: normal;
   z-index: 1;
   border: 2px solid var(--calc-outline-color);
@@ -1138,12 +1144,43 @@ nav>.navbar-toggler{
   background-color: var(--calc-hover-color);
 }
 
+/* Each label fills its own half and centres itself in it, so the text always
+   sits in the middle of the pill. Font matches the rest of the calculator
+   (.wrapper / .calcinput1 / .dropdowncalc all use --h4-font-size). */
+.pv-slider .option {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: calc(50% - 7.5px);
+  transform: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--h4-font-size);
+  line-height: 1;
+  white-space: nowrap;
+  transition: 0.4s;
+}
+
+.pv-slider .left {
+  left: 5px;
+  right: auto;
+}
+
+.pv-slider .right {
+  right: 5px;
+  left: auto;
+}
+
+/* The moving pill: same width as one half, parked over the left one. */
 .pv-slider:before {
   content: "";
-  height: 45px;
-  width: var(--pv-slider-pill-width);
-  transition: 0.4s;
+  position: absolute;
+  left: 5px;
   top: 5px;
+  bottom: 5px;
+  width: calc(50% - 7.5px);
+  transition: 0.4s;
   z-index: 2;
   box-sizing: border-box;
   border-style: solid;
@@ -1152,9 +1189,9 @@ nav>.navbar-toggler{
   border-radius: 10px;
 }
 
+/* Slide it exactly one half plus the 5px centre gutter. */
 .pv-toggle-input:checked + .pv-slider:before {
-  transform: translateX(var(--pv-slider-translate));
-  width: var(--pv-slider-pill-width-checked);
+  transform: translateX(calc(100% + 5px));
 }
 
 .pv-toggle-input:checked + .pv-slider .left {
