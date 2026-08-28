@@ -1248,16 +1248,34 @@ canvas:not(#main-canvas):not(#sim-canvas) {
 }
 
 .canvasdiv{
-  margin-left: 8rem;
-  margin-right: 8rem;
+  margin-top: 1rem;
+  /* Center as one unit with the chart below it (.canvascontainer uses the
+     same --hdbk-chart-width cap) so the button row stays aligned with the
+     canvas instead of stretching to the full page width. */
+  max-width: var(--hdbk-chart-width, 1000px);
+  margin-left: auto;
+  margin-right: auto;
+  /* Lay the chart-action buttons and the "Open this page of MIL-HDBK-5"
+     source link out on one row instead of the source link sitting on its
+     own line above with a big empty gap. The canvas itself still needs
+     its own full-width row below, so it gets flex-basis:100% to force
+     the wrap. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  /* `gap` on a wrapping flex container applies to BOTH axes — row-gap as
+     well as column-gap. Since .canvascontainer below wraps onto its own
+     line (flex-basis:100%), a plain `gap` here silently inserts vertical
+     space between the button row and the canvas that doesn't show up as
+     margin or padding on either element, making it invisible to normal
+     box-model inspection. Split it: column-gap spaces the buttons apart
+     horizontally; row-gap stays 0 so .canvascontainer's own margin-top
+     (set explicitly below) is the ONE place controlling that vertical gap. */
+  row-gap: 0;
+  column-gap: 0.5rem;
 }
-
-@media (max-width: 1200px) { /*this is the breakpoint for the medium size for bootstrap*/
-   .canvasdiv{
-    margin-left: 1rem;
-    margin-right: 1rem;
-  }
-}
+.canvasdiv > .canvascontainer { flex-basis: 100%; margin-top: 0.0rem; }
+.canvasdiv > .hdbk-source-link { margin-left: auto; }
 
 .visually-hidden {
   position: absolute;

@@ -29,9 +29,9 @@
 .section-heading.lvl-0 { font-size: 1.2rem; font-weight: bold; text-transform: uppercase; margin: 0 0 0.75rem; }
 .section.lvl-1 { margin: 1.25rem 0; }
 .section-heading.lvl-1 { font-size: 1.05rem; font-weight: bold; text-transform: uppercase; margin: 0 0 0.5rem; }
-.section.lvl-2 { margin: 1rem 0 1rem 1.5rem; }
+.section.lvl-2 { margin: 1rem 0; }
 .section-heading.lvl-2 { font-size: 1rem; font-weight: bold; margin: 0 0 0.5rem; }
-.section.lvl-3 { margin: 0.75rem 0 0.75rem 3rem; }
+.section.lvl-3 { margin: 0.75rem 0; }
 .section-heading.lvl-3 { font-size: 0.95rem; font-weight: bold; margin: 0 0 0.4rem; }
 .section-num { margin-right: 0.6em; }
 .section p { margin: 0 0 0.75rem; font-size: 0.97rem; }
@@ -50,8 +50,27 @@
 .fig-placeholder .fig-label { font-size: 0.88rem; font-weight: bold; color: #555; margin-bottom: 4px; }
 .fig-placeholder .fig-caption { font-size: 0.85rem; color: #777; font-style: italic; text-align: center; }
 
+/* "Open this page of MIL-HDBK-5" source link — small, right-aligned button
+   sitting above a table or figure, deep-linking to the exact PDF page. */
+.hdbk-source-link-row { text-align: right; margin: 0 0 0 0rem; }
+/* .hdbk-table-wrap normally carries its own 1.5rem top margin for spacing
+   from ordinary preceding content (a paragraph, a heading, etc), and the
+   link row above has its own 0.3rem bottom margin for the same reason.
+   Adjacent block margins collapse to the LARGER of the two, not zero, so
+   trimming only one side still leaves a visible gap. Zero both sides in
+   this one case (row directly followed by a table) so the button sits
+   flush against the table with no gap at all. */
+.hdbk-source-link-row:has(+ .hdbk-table-wrap) { margin-bottom: 0; }
+.hdbk-source-link-row + .hdbk-table-wrap { margin-top: 0; }
+.hdbk-source-link {
+  display: inline-block; font-size: 0.72rem; font-weight: 600; line-height: 1.3;
+  padding: 3px 9px; border: 1px solid #1a2e38; border-radius: 4px;
+  background: #f5f9fa; color: #1a2e38; text-decoration: none;
+}
+.hdbk-source-link:hover { background: #1a2e38; color: #fff; }
+
 /* Chart figures */
-.hdbk-figure { margin: 1.25rem 0; }
+.hdbk-figure { margin: 1.75rem 0; }
 .chart-note { font-size: 0.85rem; color: #444; margin: 0.25rem 0 0.75rem; font-style: italic; text-align: center; }
 .hdbk-chart-wrap { position: relative; width: 100%; border: 2px solid #3a6270; border-radius: 6px; background: #fff; padding: 0.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
 .hdbk-figure .fig-caption { font-size: 0.85rem; color: #444; margin: 0.4rem 0 0; line-height: 1.4; }
@@ -116,3 +135,5 @@
 .eq-block.eq-template { border-style: dashed; border-color: #bbb; background: #fafaf5; }
 .eq-num { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 0.82rem; color: #777; font-style: italic; white-space: nowrap; }
 
+
+.hdbk-table td.formula-cell { text-align: center; padding: 14px 10px; font-size: 0.95rem; }

@@ -120,6 +120,7 @@
         <div class="footerRow">
           <h4 class="FooterRowTitle"><span class="footerflexbox">Spring Calculators</span></h4>
           <div class="footerlink"><a href="SpringCompressionRound.html">Compression Spring Calculator</a></div>
+          <div class="footerlink"><a href="SpringTorsionRound.html">Torsion Spring Calculator</a></div>
         </div>
 
         <div class="footerRow">

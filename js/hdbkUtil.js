@@ -82,6 +82,7 @@ window.HdbkUtil = (function () {
     if (opts.xMin !== undefined) { xS.min = opts.xMin; }
     if (opts.xMax !== undefined) { xS.max = opts.xMax; }
     var yS = {
+      type: opts.yLog ? 'logarithmic' : 'linear',
       ticks: { font: { size: 14 } },
       title: { display: true, text: opts.yLabel || 'y', padding: 8, font: { size: 16 } },
       grid: { color: 'rgba(0,0,0,0.07)' }
