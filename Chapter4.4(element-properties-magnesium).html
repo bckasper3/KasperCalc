@@ -210,6 +210,7 @@
                   <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
                   <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
                   <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                  <a class="dropdown-item" href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -586,6 +587,19 @@
                 </div>
               </div>
               <p class="fig-caption"><strong>Figure 4.4.2.3(a).</strong> Allowable column stresses for magnesium-alloy columns.</p>
+            <script>
+            (function(){
+                var d1=[{x:0.2154,y:9.9166},{x:29.845,y:9.9166},{x:46.6688,y:8.5257},{x:65.5128,y:7.1349},{x:80.8579,y:6.0918},{x:97.0099,y:4.9096},{x:118.9538,y:3.7969},{x:140.0932,y:3.1293},{x:159.7557,y:3.032}];
+                var d2=[{x:0.0831,y:26.8846},{x:43.3155,y:26.8846},{x:47.2767,y:23.7552},{x:52.9568,y:20.0},{x:63.2923,y:15.6885},{x:75.1116,y:11.6551},{x:90.1682,y:8.2476},{x:106.9779,y:5.1182},{x:129.1861,y:3.3797},{x:159.7546,y:2.8929}];
+                var d3=[{x:39.9217,y:40.2364},{x:44.3138,y:33.7691},{x:50.1841,y:26.8846},{x:58.4776,y:19.8609},{x:68.4511,y:14.089},{x:83.7148,y:9.6384},{x:101.4628,y:5.9527},{x:119.8966,y:3.7969},{x:139.7969,y:3.1293},{x:159.6202,y:2.9346}];
+                var chart=HdbkUtil.makeMultiLine('canvas-4423a',[
+                  {label:'Fcy',data:d1,interp:'lin',step:5},
+                  {label:'.96 Fcy',data:d2,interp:'lin',step:5},
+                  {label:'Euler Curve',data:d3,interp:'lin',step:5}
+                ],{xLabel:'Slenderness Ratio, L′/ρ',yLabel:'Allowable Column Stress, Fc, ksi'});
+                HdbkUtil.addToggle('toggle-4423a',chart);
+            })();
+            </script>
             </div>
             <div class="hdbk-figure" id="fig-4.4.2.3b">
               <div class="canvasdiv">
@@ -598,6 +612,15 @@
                 </div>
               </div>
               <p class="fig-caption"><strong>Figure 4.4.2.3(b).</strong> Allowable column stresses for AZ31B-H24 magnesium-alloy sheet.</p>
+            <script>
+            (function(){
+                var d1=[{x:0.1543,y:23.9202},{x:10.2505,y:23.9459},{x:19.93,y:24.0408},{x:29.9342,y:22.7254},{x:39.9291,y:20.8599},{x:49.7773,y:18.5474},{x:59.6888,y:15.8566},{x:70.0803,y:12.7184},{x:80.131,y:10.0275}];
+                var chart=HdbkUtil.makeMultiLine('canvas-4423b',[
+                  {label:'Fc',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Slenderness Ratio, L′/ρ',yLabel:'Allowable Column Stress, Fc, ksi'});
+                HdbkUtil.addToggle('toggle-4423b',chart);
+            })();
+            </script>
             </div>
           </div><!-- /4.4.2.3 -->
         </div><!-- /4.4.2 -->
@@ -625,6 +648,15 @@
                 </div>
               </div>
               <p class="fig-caption"><strong>Figure 4.4.3.2.</strong> Torsional modulus of rupture for AZ61A-F magnesium-alloy round tubing.</p>
+            <script>
+            (function(){
+                var d1=[{x:0.0581,y:22.9769},{x:5.0004,y:23.0576},{x:9.9757,y:23.1044},{x:12.6546,y:21.1698},{x:15.1368,y:19.8138},{x:18.3155,y:18.4731},{x:22.2576,y:17.2434},{x:27.2953,y:16.3026},{x:33.0643,y:15.7724},{x:40.0619,y:15.5859}];
+                var chart=HdbkUtil.makeMultiLine('canvas-4432',[
+                  {label:'Fsu′',data:d1,interp:'lin',step:5}
+                ],{xLabel:'D/t Ratio',yLabel:'Torsional Modulus of Rupture, F′su, ksi'});
+                HdbkUtil.addToggle('toggle-4432',chart);
+            })();
+            </script>
             </div>
           </div><!-- /4.4.3.2 -->
         </div><!-- /4.4.3 -->

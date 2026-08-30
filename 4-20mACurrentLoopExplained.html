@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- META DATA FOR -->
+    <title>KasperCalc: 4-20mA Current Loop Explained</title>
+    <link rel="canonical" href="https://kaspercalc.com/4-20mACurrentLoopExplained.html" />
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, bckasper3, 4-20mA, 4-20mA current loop, 2-wire transmitter, 3-wire transmitter, 4-wire transmitter, loop powered, sourcing sinking, XTR116, current loop driver, live zero" />
+    <meta name="description" content="A visual explanation of the 4-20mA current loop: 2-wire, 3-wire (high/low side), and 4-wire transmitter wiring, plus how to build your own loop driver." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+
+    <!-- <script defer type="text/javascript" src="js/bootstrap.min.js"></script> -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+
+    <!-- CSS FILES -->
+    <!--  <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" /> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+<!-- Google tag (gtag.js) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5XLCN0GJQ0');
+</script> -->
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']],
+      tags: 'none'
+    },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+    startup: { typeset: true }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<style>
+.ref-zoomable{cursor:zoom-in;transition:opacity .15s}
+.ref-zoomable:hover{opacity:.85}
+.lightbox-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+.lightbox-overlay.active{display:flex}
+.lightbox-img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:6px;box-shadow:0 8px 32px rgba(0,0,0,.6);cursor:default;touch-action: pinch-zoom;}
+.lightbox-svg-wrap{display:none;width:min(92vw,1000px);max-height:88vh;background:#fff;border-radius:6px;box-shadow:0 8px 32px rgba(0,0,0,.6);cursor:default;padding:24px;box-sizing:border-box;}
+.lightbox-svg-wrap.active{display:block;}
+.lightbox-svg-wrap svg{width:100%;height:auto;max-height:calc(88vh - 48px);display:block;}
+.lightbox-close{position:fixed;top:16px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);color:#fff;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;z-index:100000}
+.lightbox-close:hover{background:rgba(255,255,255,.3)}
+.lightbox-caption{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.8);font-size:13px;font-family:Roboto,Arial,sans-serif;text-align:center;max-width:80vw;pointer-events:none}
+
+/* ── Reference section shell ───────────────────────────── */
+.ref-wrapper {
+  margin: 0 auto;
+  max-width: 70rem;
+  font-family: "Roboto", Arial, sans-serif;
+}
+.ref-card {
+  background: #eee;
+  border: 2px solid rgb(67,67,67);
+  border-radius: 10px;
+  box-shadow: 0 3px 5px rgba(0,0,0,.4);
+  margin: 0 0 1.25rem;
+  overflow: hidden;
+}
+.ref-card-header {
+  background: #6a746a;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+.ref-card-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #eee;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 0;
+  flex: 1;
+}
+.ref-card-header .ref-num {
+  font-size: 14px;
+  color: #A3C3CD;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.ref-chevron {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  color: #A3C3CD;
+}
+.ref-card.collapsed .ref-chevron { transform: rotate(-90deg); }
+.ref-card.collapsed .ref-body    { display: none; }
+
+.ref-body {
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.ref-body.two-col {
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 28px;
+}
+@media (max-width: 640px) {
+  .ref-body.two-col { grid-template-columns: 1fr; }
+}
+
+.ref-sub {
+  font-size: 14px;
+  font-weight: 700;
+  color: #61828A;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid #c0c0c0;
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+}
+
+.ref-body p {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.65;
+  margin: 0 0 10px;
+}
+.ref-body p:last-child { margin-bottom: 0; }
+.ref-body ul,
+.ref-body li {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.7;
+}
+.ref-body ul {
+  padding-left: 20px;
+  margin: 0 0 10px;
+}
+
+.ref-eq-block {
+  background: #d9d9d9;
+  border: 1.5px solid rgb(67,67,67);
+  border-radius: 6px;
+  padding: 12px 18px 10px;
+  margin: 8px 0 12px;
+  overflow-x: auto;
+}
+.ref-eq-tag {
+  font-size: 14px;
+  color: #61828A;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  font-family: "Roboto", Arial, sans-serif;
+  display: block;
+  margin-bottom: 5px;
+}
+mjx-container { color: #1a3a40 !important; margin: 0;}
+mjx-container[jax="SVG"][display="true"] {
+  margin: 0.7em 0 !important;
+}
+mjx-container[jax="SVG"] {
+  margin: 0 !important;
+}
+
+.ref-fig {
+  border: 1.5px solid #999;
+  border-radius: 6px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 12px 10px;
+  text-align: center;
+  margin: 4px 0;
+}
+.ref-fig-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #494949;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.ref-fig-caption {
+  font-size: 14px;
+  color: #5f5f5f;
+  max-width: 500px;
+}
+.ref-fig svg { max-width: 100%; height: auto; }
+
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 8px 0;
+}
+.ref-table th {
+  background: #d9d9d9;
+  border: 1px solid #bbb;
+  padding: 6px 10px;
+  font-weight: 600;
+  color: #444;
+  text-align: left;
+}
+.ref-table td {
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  color: #333;
+  vertical-align: top;
+}
+.ref-table tr:nth-child(even) td { background: #f5f5f5; }
+.ref-table-caption {
+  font-size: 14px;
+  color: #888;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.ref-callout {
+  background: #e8f0f3;
+  border-left: 3px solid #61828A;
+  border-radius: 0 6px 6px 0;
+  padding: 10px 14px;
+  font-size: 14.5px;
+  color: #1a3a40;
+  line-height: 1.55;
+}
+.ref-callout strong { color: #3a6270; }
+.ref-warn {
+  background: #fff8e6;
+  border-left: 3px solid #cc7700;
+  border-radius: 0 6px 6px 0;
+  padding: 10px 14px;
+  font-size: 14.5px;
+  color: #5a3a00;
+  line-height: 1.55;
+}
+
+.ref-section-wrap {
+  padding: 1rem 0.5rem 0.5rem;
+}
+.ref-section-title {
+  font-size: 19px;
+  font-weight: 700;
+  color: #6a746a;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+  padding-left: 2px;
+}
+.full-col { grid-column: 1 / -1; }
+</style>
+
+   </head>
+
+  <!-- BODY -->
+  <body>
+
+ <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-svg-wrap" id="lightboxSvgWrap"></div>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Skydrol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SkydrolPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="SkydrolDensity.html">Density</a>
+                  <a class="dropdown-item" href="SkydrolSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="SkydrolThermalConductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="SkydrolViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="SkydrolPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="SkydrolThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="SkydrolThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                  <a class="dropdown-item" href="SpringTorsionRound.html">Torsion Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                  <a class="dropdown-item" href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">MIL-HDBK-5</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                  <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                  <a class="dropdown-item" href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    <!-- MAIN -->
+    <main data-pagefind-body>
+      <!-- BANNER -->
+      <section class="banner">
+        <div class="cssbannercontainer">
+          <div class="col-lg-12 col-12">
+            <div class="banner section-title-wrap">
+              <div class="h1 section-title bannertext">
+                4-20mA Current Loop Explained
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- UNDER THE BANNER -->
+      <h1 class="visually-hidden">4-20mA Current Loop Explained: 2-Wire, 3-Wire, 4-Wire, and Driving Your Own Loop</h1>
+
+      <!-- REFERENCE SECTION -->
+      <section aria-label="4-20mA current loop reference guide">
+      <div class="csscontainer">
+      <div class="col-lg-12 col-12 px-3">
+      <div class="ref-wrapper">
+      <div class="ref-section-wrap">
+
+        <div class="ref-section-title">Reference Guide: The 4-20mA Current Loop</div>
+
+        <!-- ══════════════════════════════════════════════════════
+             1. WHAT IS A 4-20mA CURRENT LOOP
+             ══════════════════════════════════════════════════════ -->
+        <div class="ref-card" id="refCard1">
+          <div class="ref-card-header" onclick="toggleRefCard('refCard1')" role="button" tabindex="0" aria-expanded="true">
+            <span class="ref-num">01</span>
+            <h2>What Is a 4-20mA Current Loop?</h2>
+            <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="ref-body two-col">
+            <div>
+              <p>A 4-20mA current loop is a way of sending an analog measurement (pressure, level, temperature, flow) as an electrical <strong>current</strong> instead of a voltage. A transmitter (the field sensor) regulates how much current flows around a closed loop of wire, and a receiver (a PLC, DAQ, or indicator) reads that current and converts it back into an engineering value.</p>
+              <p>0% of the measured range is represented by 4mA, and 100% is represented by 20mA. A pressure transmitter scaled 0&ndash;100 psi, for example, outputs 4mA at 0 psi, 12mA at 50 psi, and 20mA at 100 psi. A straight linear relationship.</p>
+              <div class="ref-eq-block">
+                <span class="ref-eq-tag">Scaling a reading</span>
+                \[ I_{loop} = 4\text{mA} + \left(\frac{PV - PV_{min}}{PV_{max}-PV_{min}}\right)\times 16\text{mA} \]
+              </div>
+            </div>
+            <div>
+              <div class="ref-sub">Why Current, Not Voltage?</div>
+              <p>Current is identical everywhere in a series loop, no matter how long the wire run is or how much resistance the wire itself adds. A voltage signal droops over long cable runs; a current signal doesn't. The receiver sees the same milliamps whether the transmitter is 10 feet away or 2 miles away.</p>
+              <div class="ref-sub" style="margin-top:12px;">Why Start At 4mA, Not 0mA?</div>
+              <p>Starting the "zero" of the scale at 4mA instead of 0mA is called <strong>live zero</strong>. It means a dead loop (0mA) is instantly distinguishable from a valid reading of the minimum value. A broken wire, disconnected sensor, or dead power supply reads as 0mA, an obvious fault, rather than looking like a legitimate "zero" measurement.</p>
+              <div class="ref-callout"><strong>Live zero is a built-in fault detector.</strong> Anything below about 3.8mA or above about 20.5mA is normally treated as an out-of-range/fault condition by the receiver, not a real reading.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════
+             2. TWO-WIRE (LOOP-POWERED / PASSIVE)
+             ══════════════════════════════════════════════════════ -->
+        <div class="ref-card" id="refCard2">
+          <div class="ref-card-header" onclick="toggleRefCard('refCard2')" role="button" tabindex="0" aria-expanded="true">
+            <span class="ref-num">02</span>
+            <h2>2-Wire (Loop-Powered / Passive)</h2>
+            <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="ref-body two-col">
+            <div>
+              <div class="ref-fig">
+                <svg viewBox="0 0 620 210" xmlns="http://www.w3.org/2000/svg" class="ref-zoomable" role="img" aria-label="Two wire current loop diagram">
+                  <rect x="20" y="65" width="130" height="80" rx="6" fill="#e8f0f3" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="85" y="100" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1a3a40">Loop Supply</text>
+                  <text x="85" y="118" text-anchor="middle" font-size="14.5" fill="#1a3a40">(e.g. 24V DC)</text>
+                  <text x="35" y="80" font-size="15.5" font-weight="700" fill="#61828A">+</text>
+                  <text x="35" y="138" font-size="15.5" font-weight="700" fill="#61828A">&minus;</text>
+
+                  <rect x="245" y="30" width="150" height="70" rx="6" fill="#fff" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="320" y="58" text-anchor="middle" font-size="15" font-weight="700" fill="#1a3a40">2-Wire</text>
+                  <text x="320" y="75" text-anchor="middle" font-size="15" font-weight="700" fill="#1a3a40">Transmitter</text>
+                  <text x="320" y="90" text-anchor="middle" font-size="13.5" fill="#61828A">4&ndash;20mA</text>
+
+                  <rect x="490" y="65" width="90" height="80" rx="6" fill="#fff" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="535" y="100" text-anchor="middle" font-size="15" font-weight="700" fill="#1a3a40">Receiver</text>
+                  <text x="535" y="118" text-anchor="middle" font-size="14.5" fill="#61828A">R &#8776; 250&#8486;</text>
+
+                  <path d="M150 80 H 245" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow1)"/>
+                  <path d="M320 100 V 130 H 490" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <path d="M535 145 V 165 H 85 V 145" fill="none" stroke="#1a3a40" stroke-width="2"/>
+
+                  <defs>
+                    <marker id="arrow1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                      <path d="M0,0 L6,3 L0,6 Z" fill="#1a3a40"/>
+                    </marker>
+                  </defs>
+                  <text x="197" y="72" text-anchor="middle" font-size="13.5" fill="#61828A">I</text>
+                </svg>
+                <span class="ref-fig-label">2-Wire Loop-Powered Transmitter</span>
+                <span class="ref-fig-caption">Only two wires total. The same pair carries power into the transmitter and the 4-20mA signal back out.</span>
+              </div>
+            </div>
+            <div>
+              <p>The transmitter is powered entirely by the loop current itself. The same two wires that carry the 4-20mA signal are the <em>only</em> connection to the device. This is the classic field-instrument pattern: a PLC or DCS supplies loop power (often 24V), and the 2-wire sensor modulates its own current draw between 4 and 20mA.</p>
+              <p>The catch is a strict power budget. Whatever the transmitter's internal electronics (amplifier, reference, sensor excitation) consume has to come out of the same current that represents the signal. Since the signal floor is 4mA, the transmitter's own quiescent draw must stay comfortably below that.</p>
+              <div class="ref-callout"><strong>Design rule of thumb:</strong> a 2-wire transmitter's own electronics should draw &le; ~3.6mA quiescent, leaving headroom so a true 4mA reading is never accidentally eaten into by the transmitter's own power consumption. This is why 2-wire transmitter ICs (TI XTR11x family, ADI AD693, etc.) are built around ultra-low-power design.</div>
+              <p>Also called <strong>passive</strong>, because from the loop's perspective the transmitter behaves like a variable resistor. It doesn't supply its own loop voltage, it just controls how much of an externally-supplied current gets through.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════
+             3. THREE-WIRE, COMMON NEGATIVE (LOW SIDE)
+             ══════════════════════════════════════════════════════ -->
+        <div class="ref-card" id="refCard3">
+          <div class="ref-card-header" onclick="toggleRefCard('refCard3')" role="button" tabindex="0" aria-expanded="true">
+            <span class="ref-num">03</span>
+            <h2>3-Wire, Common Negative (Low Side)</h2>
+            <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="ref-body two-col">
+            <div>
+              <div class="ref-fig">
+                <svg viewBox="0 0 620 230" xmlns="http://www.w3.org/2000/svg" class="ref-zoomable" role="img" aria-label="Three wire common negative low side current loop diagram">
+                  <rect x="20" y="45" width="120" height="100" rx="6" fill="#e8f0f3" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="80" y="90" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1a3a40">Power</text>
+                  <text x="80" y="107" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1a3a40">Supply</text>
+                  <text x="30" y="65" font-size="14.5" font-weight="700" fill="#61828A">V+</text>
+                  <text x="30" y="135" font-size="14.5" font-weight="700" fill="#61828A">COM</text>
+
+                  <rect x="250" y="30" width="130" height="90" rx="6" fill="#fff" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="315" y="58" text-anchor="middle" font-size="15" font-weight="700" fill="#1a3a40">Transmitter</text>
+                  <text x="315" y="75" text-anchor="middle" font-size="13.5" fill="#61828A">PWR+  OUT  COM</text>
+
+                  <rect x="470" y="120" width="90" height="55" rx="6" fill="#fff" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="515" y="143" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1a3a40">Receiver</text>
+                  <text x="515" y="160" text-anchor="middle" font-size="13.5" fill="#61828A">R</text>
+
+                  <path d="M140 60 H 250" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="195" y="52" text-anchor="middle" font-size="12.5" fill="#61828A">dedicated power</text>
+
+                  <path d="M380 60 H 515 V 120" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="450" y="52" text-anchor="middle" font-size="12.5" fill="#61828A">signal OUT</text>
+
+                  <path d="M515 175 V 205 H 80 V 145" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <path d="M315 120 V 205" fill="none" stroke="#1a3a40" stroke-width="2" stroke-dasharray="4,3"/>
+                  <text x="220" y="218" text-anchor="middle" font-size="12.5" fill="#61828A">shared negative / common return (low side)</text>
+                </svg>
+                <span class="ref-fig-label">3-Wire, Common Negative</span>
+                <span class="ref-fig-caption">Power and signal each get a dedicated wire; the negative/common return is shared between them. The receiver's resistor sits between OUT and that shared COM line, hence "low side."</span>
+              </div>
+            </div>
+            <div>
+              <p>The transmitter now has its own dedicated power supply wires, so its internal electronics are no longer squeezed into the 4mA floor. It can draw as much current as it needs. The 4-20mA output becomes an <strong>active</strong> signal that the transmitter generates independently, rather than a current it merely limits.</p>
+              <p>Only three wires are needed because the power supply's negative rail and the signal loop's return share a single common wire. The receiver's load resistor sits between the transmitter's OUT terminal and that shared common, the low (negative) side of the circuit, which is where "low side" gets its name.</p>
+              <div class="ref-warn"><strong>Watch for:</strong> any other device sharing that same common rail can inject noise or a small offset into the measurement, since the "common" wire is doing double duty as both power return and signal reference.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════
+             4. THREE-WIRE, COMMON POSITIVE (HIGH SIDE)
+             ══════════════════════════════════════════════════════ -->
+        <div class="ref-card" id="refCard4">
+          <div class="ref-card-header" onclick="toggleRefCard('refCard4')" role="button" tabindex="0" aria-expanded="true">
+            <span class="ref-num">04</span>
+            <h2>3-Wire, Common Positive (High Side)</h2>
+            <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="ref-body two-col">
+            <div>
+              <div class="ref-fig">
+                <svg viewBox="0 0 620 300" xmlns="http://www.w3.org/2000/svg" class="ref-zoomable" role="img" aria-label="Three wire common positive high side current loop diagram">
+                  <rect x="20" y="30" width="140" height="100" rx="6" fill="#e8f0f3" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="35" y="55" font-size="14.5" font-weight="700" fill="#61828A">V+</text>
+                  <text x="90" y="82" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1a3a40">Power</text>
+                  <text x="90" y="104" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1a3a40">Supply</text>
+                  <text x="35" y="120" font-size="14.5" font-weight="700" fill="#61828A">V&minus;</text>
+
+                  <rect x="460" y="30" width="140" height="100" rx="6" fill="#fff" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="530" y="78" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1a3a40">Receiver</text>
+                  <text x="530" y="100" text-anchor="middle" font-size="14.5" fill="#61828A">R</text>
+
+                  <rect x="245" y="200" width="150" height="90" rx="6" fill="#fff" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="320" y="238" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1a3a40">Transmitter</text>
+                  <text x="320" y="260" text-anchor="middle" font-size="13.5" fill="#61828A">RTN   OUT (sink)</text>
+
+                  <path d="M160 80 H 460 M320 80 V 200" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="310" y="70" text-anchor="middle" font-size="13.5" fill="#61828A">shared positive rail (high side)</text>
+
+                  <path d="M245 245 H 90 V 130" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="165" y="232" text-anchor="middle" font-size="13.5" fill="#61828A">dedicated return</text>
+
+                  <path d="M530 130 V 245 H 395" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="462" y="232" text-anchor="middle" font-size="13.5" fill="#61828A">sinks current</text>
+                </svg>
+                <span class="ref-fig-label">3-Wire, Common Positive</span>
+                <span class="ref-fig-caption">The shared rail is V+ instead of common. The transmitter's OUT terminal sinks current pulled through the receiver's resistor from that shared positive line, then returns it via its own dedicated wire.</span>
+              </div>
+            </div>
+            <div>
+              <p>Mirror image of common-negative: here the <em>positive</em> supply rail is shared between the power circuit and the signal circuit instead of the negative rail. The transmitter's power-positive terminal and the top of the receiver's load resistor both connect to the same V+ line.</p>
+              <p>The transmitter's output terminal doesn't push current out. It <strong>sinks</strong> current, pulling it down through the receiver's resistor from the shared V+ rail, then returning it to the supply through its own dedicated return wire.</p>
+              <p>Functionally equivalent to common-negative from a measurement standpoint; the choice usually comes down to which noise/grounding scheme suits the rest of the system, or what a particular device model was built to expect.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════
+             5. FOUR-WIRE (SELF-POWERED)
+             ══════════════════════════════════════════════════════ -->
+        <div class="ref-card" id="refCard5">
+          <div class="ref-card-header" onclick="toggleRefCard('refCard5')" role="button" tabindex="0" aria-expanded="true">
+            <span class="ref-num">05</span>
+            <h2>4-Wire (Self-Powered / Active)</h2>
+            <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="ref-body two-col">
+            <div>
+              <div class="ref-fig">
+                <svg viewBox="0 0 620 320" xmlns="http://www.w3.org/2000/svg" class="ref-zoomable" role="img" aria-label="Four wire self powered current loop diagram">
+                  <rect x="20" y="25" width="140" height="110" rx="6" fill="#e8f0f3" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="90" y="72" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1a3a40">Power</text>
+                  <text x="90" y="94" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1a3a40">Supply</text>
+
+                  <rect x="250" y="25" width="170" height="110" rx="6" fill="#fff" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="335" y="60" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1a3a40">Transmitter</text>
+                  <text x="335" y="83" text-anchor="middle" font-size="13" fill="#61828A">PWR+ / PWR&minus;</text>
+                  <text x="335" y="101" text-anchor="middle" font-size="13" fill="#61828A">IOUT+ / IOUT&minus;</text>
+
+                  <path d="M140 45 H 250" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <path d="M140 115 H 250" fill="none" stroke="#1a3a40" stroke-width="2"/>
+
+                  <rect x="490" y="210" width="120" height="90" rx="6" fill="#fff" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="550" y="248" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1a3a40">Receiver</text>
+                  <text x="550" y="270" text-anchor="middle" font-size="14.5" fill="#61828A">R</text>
+
+                  <path d="M420 45 H 550 V 210" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <path d="M420 115 H 460 V 310 H 550 V 300" fill="none" stroke="#1a3a40" stroke-width="2" stroke-dasharray="7,5"/>
+                  <text x="470" y="185" text-anchor="middle" font-size="13.5" fill="#61828A">isolated 2-wire signal loop</text>
+
+                  <circle cx="140" cy="45" r="3.5" fill="#1a3a40"/>
+                  <circle cx="140" cy="115" r="3.5" fill="#1a3a40"/>
+                  <circle cx="250" cy="45" r="3.5" fill="#1a3a40"/>
+                  <circle cx="250" cy="115" r="3.5" fill="#1a3a40"/>
+                  <circle cx="420" cy="45" r="3.5" fill="#1a3a40"/>
+                  <circle cx="420" cy="115" r="3.5" fill="#1a3a40"/>
+                  <circle cx="550" cy="210" r="3.5" fill="#1a3a40"/>
+                  <circle cx="550" cy="300" r="3.5" fill="#1a3a40"/>
+                </svg>
+                <span class="ref-fig-label">4-Wire Self-Powered Transmitter</span>
+                <span class="ref-fig-caption">Power and signal are two completely separate circuits with no shared wire. Two wires deliver power to the transmitter, and a fully independent two-wire loop carries the 4-20mA signal out.</span>
+              </div>
+            </div>
+            <div>
+              <p>Full separation: two wires for power (e.g. your own local 24V) and two wires for the 4-20mA signal loop, with no wire shared between the two circuits. There is no power-budget constraint at all. The transmitter's electronics draw whatever they need from the dedicated power input, completely independent of what current happens to be flowing in the signal loop.</p>
+              <p>This is the architecture you get when you build your own driver circuit (see the next card): your local supply, the regulating element, and the receiver's resistor form one series loop, while your control/logic electronics are powered separately and just tell that loop how much current to carry.</p>
+              <div class="ref-callout">Also called <strong>active</strong> or <strong>self-powered</strong>, since the transmitter supplies its own loop voltage rather than relying on the receiver end to provide it.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════
+             6. BUILDING YOUR OWN LOOP DRIVER
+             ══════════════════════════════════════════════════════ -->
+        <div class="ref-card" id="refCard6">
+          <div class="ref-card-header" onclick="toggleRefCard('refCard6')" role="button" tabindex="0" aria-expanded="true">
+            <span class="ref-num">06</span>
+            <h2>Building Your Own Loop Driver</h2>
+            <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="ref-body two-col">
+            <div>
+              <p>Say you're supplied with 12&ndash;24V and need to <em>generate</em> a 4-20mA signal for a downstream transducer or indicator to read. You're creating the loop, not living on someone else's bus. This is exactly the 4-wire / self-powered case above: your supply, your regulating circuit, and the receiver's input resistance form one series loop.</p>
+              <div class="ref-sub">Step 1: Assume a Load Resistance</div>
+              <p>You're not measuring anything with that current, you're only driving it. What matters is whether your circuit has enough voltage headroom to push 20mA through whatever resistance sits on the receiving end. If you don't know the actual device, <strong>250&#8486; is the standard default</strong> (it's what turns a 4-20mA signal into a 1-5V reading inside many PLC/DAQ analog inputs). Add any wire resistance, which is usually negligible unless the run is very long or the wire gauge is small.</p>
+              <div class="ref-sub" style="margin-top:12px;">Step 2: Check Compliance Voltage</div>
+              <div class="ref-eq-block">
+                <span class="ref-eq-tag">Minimum supply voltage</span>
+                \[ V_{supply} \ge (I_{loop}\times R_{load}) + V_{dropout} \]
+              </div>
+              <p>At 20mA into 250&#8486;, that's already 5V dropped across the load alone. With a 12&ndash;24V supply there is plenty of margin, even for a fairly sloppy driver circuit. The constraint only starts to bite with high load resistances on a low supply voltage.</p>
+            </div>
+            <div>
+              <div class="ref-fig">
+                <svg viewBox="0 -30 680 330" xmlns="http://www.w3.org/2000/svg" class="ref-zoomable" role="img" aria-label="XTR116 based 4-20mA driver schematic">
+                  <rect x="20" y="-25" width="410" height="290" rx="4" fill="none" stroke="#1a3a40" stroke-width="1.5" stroke-dasharray="3,3"/>
+                  <text x="225" y="250" text-anchor="middle" font-size="12.5" font-weight="700" fill="#61828A">YOUR ENCLOSURE</text>
+
+                  <rect x="45" y="-15" width="110" height="70" rx="6" fill="#e8f0f3" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="60" y="5" font-size="13" font-weight="700" fill="#61828A">+</text>
+                  <text x="100" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1a3a40" y="20">24V</text>
+                  <text x="100" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1a3a40" y="38">Supply</text>
+                  <text x="60" y="49" font-size="13" font-weight="700" fill="#61828A">&minus;</text>
+
+                  <rect x="210" y="60" width="130" height="110" rx="6" fill="#fff" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="275" y="85" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1a3a40">XTR116</text>
+                  <text font-size="12.5" fill="#61828A" x="218" y="108">V+ (7)</text>
+                  <text y="150" font-size="12.5" fill="#61828A" x="218">IIN (2)</text>
+                  <text font-size="12.5" fill="#61828A" x="305" y="155">IO (4)</text>
+                  <text y="165" font-size="12.5" fill="#61828A" x="260">GND</text>
+
+                  <path d="M155 5 H 185 V 105 H 210" fill="none" stroke="#1a3a40" stroke-width="2"/>
+
+                  <text x="55" y="154" font-size="11.5" fill="#61828A">V&#8305;&#8345; (setpoint)</text>
+                  <circle cx="118" cy="150" r="3" fill="#1a3a40"/>
+                  <path d="M118 150 H 130" fill="none" stroke="#1a3a40" stroke-width="1.5"/>
+                  <rect x="130" y="140" width="40" height="20" rx="2" fill="#fff" stroke="#1a3a40" stroke-width="1.5"/>
+                  <text x="150" y="154" text-anchor="middle" font-size="11.5" fill="#1a3a40">Rin</text>
+                  <path d="M170 150 H 210" fill="none" stroke="#1a3a40" stroke-width="1.5"/>
+
+                  <circle cx="380" cy="150" r="22" fill="#fff" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="380" y="145" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a3a40">Q1</text>
+                  <text x="380" y="158" text-anchor="middle" font-size="10.5" fill="#61828A">NPN</text>
+                  <path d="M340 150 H 358" fill="none" stroke="#1a3a40" stroke-width="2"/>
+
+                  <path fill="none" stroke="#1a3a40" stroke-width="2" d="M380 80 V 128"/>
+                  <path fill="none" stroke="#1a3a40" stroke-width="2" d="M340 80 H 380"/>
+
+                  <path fill="none" stroke="#1a3a40" stroke-width="2" d="M100 55 V 230 M270 170 V 230"/>
+                  <text x="150" y="220" text-anchor="middle" font-size="11" fill="#61828A">common / return</text>
+
+                  <rect x="550" y="60" width="90" height="55" rx="6" fill="#fff" stroke="#1a3a40" stroke-width="2"/>
+                  <text x="595" y="83" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1a3a40">Receiver</text>
+                  <text x="595" y="100" text-anchor="middle" font-size="13.5" fill="#61828A">R &#8776; 250&#8486;</text>
+
+                  <path fill="none" stroke="#1a3a40" stroke-width="2" d="M100 230 H 620 V 115"/>
+                  <path fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow2)" d="M380 172 V 200 H 580V 115"/>
+
+                  <defs>
+                    <marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                      <path d="M0,0 L6,3 L0,6 Z" fill="#1a3a40"/>
+                    </marker>
+                  </defs>
+                  <text x="320" y="290" text-anchor="middle" font-size="12" fill="#61828A">only 2 wires leave the enclosure</text>
+                </svg>
+                <span class="ref-fig-label">Self-Powered XTR116 Driver</span>
+                <span class="ref-fig-caption">Your 24V supply, the XTR116, and Q1 all live together in your enclosure. Only two wires go out to the receiver. Current flows from the supply through Q1 (its collector tied to V+, base driven by IO) out to the receiver, through R, and back to the supply's negative terminal, one series loop. A small setpoint voltage through Rin into IIN sets how much of that loop current flows; GND shares the same return as the supply's negative terminal.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════
+             7. CIRCUIT OPTIONS
+             ══════════════════════════════════════════════════════ -->
+        <div class="ref-card" id="refCard7">
+          <div class="ref-card-header" onclick="toggleRefCard('refCard7')" role="button" tabindex="0" aria-expanded="true">
+            <span class="ref-num">07</span>
+            <h2>Circuit Options for Driving the Loop</h2>
+            <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="ref-body two-col">
+            <div>
+              <div class="ref-sub">Discrete Op-Amp + Transistor</div>
+              <p>An op-amp drives a BJT or MOSFET, with a precision sense resistor in the loop path feeding back to the op-amp's inverting input. The op-amp forces the voltage across the sense resistor, and therefore the loop current, to track a control voltage, regardless of load resistance changes within compliance. Works fine with a decent precision resistor and an appropriately-biased op-amp; fine for a one-off or hobby project.</p>
+              <div class="ref-sub" style="margin-top:12px;">Simplest Possible Version</div>
+              <p>A crude constant-current source built from a MOSFET, a resistor, and a Zener or reference diode can produce a rough 4-20mA signal. Good enough when precision doesn't matter; not something to trust for a calibrated measurement.</p>
+            </div>
+            <div>
+              <div class="ref-sub">Dedicated Loop-Driver ICs</div>
+              <p>Purpose-built chips exist because doing this <em>right</em> (accuracy, temperature stability, protection against loop faults and reverse polarity) is fussier than the basic topology suggests. They split into two families that map directly onto the wiring taxonomy above:</p>
+              <ul>
+                <li><strong>Self-powered / 4-wire drivers</strong> (TI XTR111/XTR116/XTR200, ADI AD5410/AD5412/AD5420/AD5422): these need their own supply rail, exactly the "build your own driver" case shown in the XTR116 schematic above. They set the loop current directly; there's no power budget to worry about.</li>
+                <li><strong>Loop-powered / 2-wire DACs</strong> (ADI AD5421, TI DAC161S997/DAC161P997): these live entirely inside the 2-wire transmitter and must run all of their own electronics, plus whatever sensor front-end they're driving, off the same current they're outputting. This is the harder design problem, and it's the category that HART-compatible smart transmitters are built from.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="ref-body two-col">
+            <div class="full-col">
+              <div class="ref-sub">Self-Powered / 4-Wire Drivers (Analog Setpoint Input)</div>
+              <p>These take an analog voltage setpoint, commonly driven from a microcontroller's DAC or a PWM output filtered into a clean DC level through an RC filter, since none of them decode digital PWM directly. Rin in the schematic above is exactly this kind of analog input.</p>
+              <div class="ref-table-wrap" style="overflow-x:auto;">
+              <table class="ref-table">
+                <tr><th>Part</th><th>Input</th><th>Package / Pins</th><th>Supply Voltage</th><th>Quiescent Current</th><th>Temp. Range</th><th>Status</th><th>Typical Use</th></tr>
+                <tr><td><strong>TI XTR111</strong></td><td>Analog voltage (0&ndash;2.5V typ.)</td><td>10-pin VSSOP / VSON</td><td>7.5&ndash;44V</td><td>&asymp;1mA (ext. Q1 required)</td><td>&minus;40&deg;C to +125&deg;C</td><td>Active</td><td>General-purpose driver; needs an external pass transistor like Q1 above for currents beyond the chip's internal handling</td></tr>
+                <tr><td><strong>TI XTR116</strong> (XTR115)</td><td>Analog voltage</td><td>8-pin SOIC</td><td>7.5&ndash;36V</td><td>&asymp;120&ndash;200&micro;A</td><td>&minus;40&deg;C to +85&deg;C</td><td>Active</td><td>Lower-power sibling of the XTR111 family, used in the schematic above; same external-transistor topology</td></tr>
+                <tr><td><strong>TI XTR200</strong></td><td>Analog voltage</td><td>10-pin WSON</td><td>8&ndash;60V</td><td>&asymp;1mA</td><td>&minus;40&deg;C to +125&deg;C</td><td>Active (newer)</td><td>Newer, higher-voltage evolution of the XTR111 with an <em>integrated</em> output transistor, current <em>or</em> voltage output, no external Q1 needed</td></tr>
+                <tr><td><strong>ADI AD5410 / AD5420</strong></td><td>SPI (12-bit / 16-bit DAC)</td><td>24-TSSOP, 40-LFCSP</td><td>10.8&ndash;60V</td><td>&asymp;1.5&ndash;3mA</td><td>&minus;40&deg;C to +85&deg;C</td><td>Active</td><td>Digitally-programmable current-out only version; setpoint comes over SPI instead of an analog pin</td></tr>
+                <tr><td><strong>ADI AD5412 / AD5422</strong></td><td>SPI (12-bit / 16-bit DAC)</td><td>24-TSSOP, 40-LFCSP</td><td>10.8&ndash;40V</td><td>&asymp;1.5&ndash;3mA</td><td>&minus;40&deg;C to +105&deg;C</td><td>Active</td><td>Same family plus a voltage-output mode and a HART coupling pin on the LFCSP package</td></tr>
+                <tr><td>TI XTR110, ADI AD693 / AD694 (legacy)</td><td>Analog voltage/current</td><td>Various DIP/SOIC (16&ndash;28 pin)</td><td>4.5&ndash;36V (part-dependent)</td><td>&asymp;1&ndash;2mA</td><td>Industrial (&minus;40&deg;C to +85&deg;C typ.)</td><td>Active, legacy design</td><td>Older analog-era self-powered drivers; still in production and still specified into designs, but superseded in new designs by the XTR/AD5410 families</td></tr>
+              </table>
+              </div>
+            </div>
+            <div class="full-col" style="margin-top:14px;">
+              <div class="ref-sub">Loop-Powered / 2-Wire DACs (Digital Setpoint Input)</div>
+              <p>These sit inside a true 2-wire, loop-powered transmitter and set the loop current digitally, typically driven by a microcontroller that also runs the sensor and, in HART-capable designs, superimposes a digital communication signal on top of the 4-20mA current.</p>
+              <div class="ref-table-wrap" style="overflow-x:auto;">
+              <table class="ref-table">
+                <tr><th>Part</th><th>Input</th><th>Package / Pins</th><th>Loop Voltage</th><th>Quiescent Current</th><th>Temp. Range</th><th>Status</th><th>Typical Use</th></tr>
+                <tr><td><strong>ADI AD5421</strong></td><td>SPI (16-bit, up to 30MHz)</td><td>28-TSSOP, 32-LFCSP</td><td>5.5&ndash;52V (loop-powered)</td><td>&le;300&micro;A</td><td>&minus;40&deg;C to +105&deg;C</td><td>Active</td><td>HART-compatible 2-wire smart transmitter DAC; the whole chip runs on current stolen from the loop</td></tr>
+                <tr><td><strong>TI DAC161S997</strong></td><td>SPI (16-bit)</td><td>16-pin WQFN</td><td>Loop-powered</td><td>&lt;200&micro;A class</td><td>&minus;40&deg;C to +105&deg;C</td><td>Active</td><td>HART-ready loop-powered DAC; SPI setpoint plus built-in diagnostics (open-loop, short-circuit)</td></tr>
+                <tr><td><strong>TI DAC161P997</strong></td><td>Single-Wire Interface (SWIF)</td><td>16-pin WQFN</td><td>Loop-powered</td><td>&lt;190&micro;A</td><td>&minus;40&deg;C to +105&deg;C</td><td>Active</td><td>Same family as the S997 but with a simplified one-wire digital protocol instead of full SPI, easier to isolate</td></tr>
+              </table>
+              </div>
+              <p style="margin-top:8px;"><strong>Correction / clarification:</strong> the TI <strong>DAC8740H</strong> is <em>not</em> a current-loop driver at all; it's a HART/FOUNDATION&nbsp;Fieldbus/PROFIBUS&nbsp;PA physical-layer modem chip, meant to sit alongside a separate current-output DAC (like the ones above) rather than replace it. It doesn't belong in this comparison and any earlier reference to it as a "loop-driver IC" was a mistake.</p>
+            </div>
+            <div class="full-col" style="margin-top:14px;">
+              <div class="ref-sub">PWM vs. SPI vs. Single-Wire: What "Digital Input" Actually Means Here</div>
+              <ul>
+                <li><strong>Analog voltage input</strong> (XTR111/XTR116/XTR200, XTR110, AD693/AD694): the chip just reads a DC voltage on a pin. A microcontroller can drive this with a genuine PWM output run through a simple RC low-pass filter to turn it into a clean DC level, hence "PWM-compatible," but the chip itself never sees or decodes a PWM waveform.</li>
+                <li><strong>SPI input</strong> (AD5410/AD5412/AD5420/AD5422, AD5421, DAC161S997): a true digital serial interface. The setpoint is written as a binary word, giving full digital resolution (12- or 16-bit) with no analog filtering stage and no drift from an external RC network.</li>
+                <li><strong>Single-Wire Interface, SWIF</strong> (DAC161P997): a simplified one-line digital protocol, less flexible than SPI but easier to route through an isolation barrier since it's a single signal instead of SPI's clock/data/chip-select bundle.</li>
+              </ul>
+            </div>
+            <div class="full-col" style="margin-top:14px;">
+              <div class="ref-callout"><strong>On obsolescence:</strong> analog and mixed-signal ICs like these tend to stay in production for decades once designed into industrial equipment, so outright discontinuations are rare in this space. The more common pattern is generational overlap rather than obsolescence. For example, the XTR200 is a newer, higher-voltage, higher-integration alternative to the XTR111 (it drops the external pass transistor entirely), and the AD5412/AD5422 extend the AD5410/AD5420 family with a voltage-output mode, but the older parts remain active and orderable rather than replaced outright. Always check the manufacturer's current status page before finalizing a design. Even long-lived analog parts occasionally do get marked NRND (Not Recommended for New Designs) or obsoleted.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════
+             8. TERMINOLOGY: ACTIVE VS PASSIVE, SOURCING VS SINKING
+             ══════════════════════════════════════════════════════ -->
+        <div class="ref-card" id="refCard8">
+          <div class="ref-card-header" onclick="toggleRefCard('refCard8')" role="button" tabindex="0" aria-expanded="true">
+            <span class="ref-num">08</span>
+            <h2>Active vs. Passive, Sourcing vs. Sinking</h2>
+            <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="ref-body two-col">
+            <div>
+              <div class="ref-sub">Wire Count vs. Power Source: Two Different Axes</div>
+              <p>"2-wire," "3-wire," and "4-wire" describe how many conductors run to the device. <strong>Active/passive</strong> and <strong>sourcing/sinking</strong> describe something different: which end of the loop actually supplies the voltage. These two axes usually line up but aren't strictly the same thing.</p>
+              <ul>
+                <li><strong>Passive (sink) transmitter:</strong> relies on an external loop power supply, often at the receiver/PLC end, and just modulates how much of that externally-supplied current it lets through, like a variable resistor in series. This is the standard 2-wire, loop-powered pattern.</li>
+                <li><strong>Active (source) transmitter:</strong> has its own power and pushes current out onto the loop itself. 3-wire and 4-wire transmitters are active by nature, since they carry their own supply.</li>
+              </ul>
+            </div>
+            <div>
+              <div class="ref-sub">The Asterisk: A Self-Powered "2-Wire-Looking" Device</div>
+              <p>A circuit like the XTR116 driver above is electrically a 2-wire connection from the receiver's point of view (only two wires arrive at the receiver), but it's <em>sourcing</em> the loop voltage locally rather than relying on the receiver end to provide it. That makes it functionally a self-powered/active device wearing a 2-wire disguise, not the passive, loop-powered pattern that dominates commercial 2-wire transmitters.</p>
+              <div class="ref-warn"><strong>Why this matters:</strong> an "active" analog input on a PLC already supplies its own loop power and expects to drive a passive 2-wire transmitter directly. Connecting a self-powered source like this to one of those inputs puts two supplies in series on the same loop, fighting each other, a real risk of overvoltage or damage. If this circuit ever gets wired into an existing PLC loop, the receiving analog input must be a <strong>passive</strong> input (no built-in loop excitation).</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════
+             9. QUICK REFERENCE TABLE
+             ══════════════════════════════════════════════════════ -->
+        <div class="ref-card" id="refCard9">
+          <div class="ref-card-header" onclick="toggleRefCard('refCard9')" role="button" tabindex="0" aria-expanded="true">
+            <span class="ref-num">09</span>
+            <h2>Quick Reference</h2>
+            <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="ref-body">
+            <div class="full-col" style="overflow-x:auto;">
+              <table class="ref-table">
+                <thead>
+                  <tr>
+                    <th>Configuration</th>
+                    <th>Wires</th>
+                    <th>Power Source for Transmitter</th>
+                    <th>Where the Load Resistor Sits</th>
+                    <th>Key Constraint</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>2-wire (loop-powered / passive)</td>
+                    <td>2</td>
+                    <td>Comes from the loop itself</td>
+                    <td>In series, on the same 2 wires</td>
+                    <td>Transmitter electronics must draw &le; ~3.6mA</td>
+                  </tr>
+                  <tr>
+                    <td>3-wire, common negative (low side)</td>
+                    <td>3</td>
+                    <td>Dedicated power wires</td>
+                    <td>Between OUT and the shared COM</td>
+                    <td>Shares its negative return with the power supply</td>
+                  </tr>
+                  <tr>
+                    <td>3-wire, common positive (high side)</td>
+                    <td>3</td>
+                    <td>Dedicated power wires</td>
+                    <td>Between the shared V+ and OUT</td>
+                    <td>Shares its positive feed with the power supply</td>
+                  </tr>
+                  <tr>
+                    <td>4-wire (self-powered)</td>
+                    <td>4</td>
+                    <td>Fully separate supply</td>
+                    <td>Fully separate 2-wire output loop</td>
+                    <td>No power-budget constraint at all. This is the DIY driver case</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="ref-table-caption">All four configurations carry the same 4-20mA signal convention. They differ only in how the transmitter gets its power and how many wires that takes.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </section>
+
+<script>
+/* ── Collapse / expand reference cards ─────────────────── */
+function toggleRefCard(id) {
+  const card = document.getElementById(id);
+  if (!card) return;
+  const isCollapsed = card.classList.contains('collapsed');
+  card.classList.toggle('collapsed', !isCollapsed);
+  const header = card.querySelector('.ref-card-header');
+  if (header) header.setAttribute('aria-expanded', isCollapsed ? 'true' : 'false');
+  if (isCollapsed && window.MathJax) {
+    MathJax.typesetPromise([card]).catch(err => console.warn('MathJax:', err));
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.ref-card-header').forEach(header => {
+    header.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        header.click();
+      }
+    });
+  });
+});
+</script>
+
+      <section class="mt-5 pt-3">
+        <div class="col-11 col-md-8 col-lg-5 mx-auto mt-5 bg-light">
+          <div class="citation-block bg-body-tertiary pt-4 px-4 pb-2 shadow-sm" style ="border-left: 4px solid; border-color: var(--section-title-color); border-top-right-radius: .25rem;  border-bottom-right-radius: .25rem;">
+            <div class="d-flex align-items-center mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark-fill me-2" style ="color: var(--section-title-color);" viewBox="0 0 16 16">
+                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+              </svg>
+              <h4 style="font-weight: var(--font-weight-bold);" class="fs-5 m-0 text-dark uppercase tracking-wider">Cite This Work</h4>
+            </div>
+          <!-- Citation format tabs -->
+          <style>
+            #citationTabs { list-style: none; padding: 0; margin: 0; display: flex; border-top: 2px solid var(--section-title-color); border-bottom: none; }
+            #citationTabs li { margin: 0; list-style: none; }
+            #citationTabs .cit-tab { background: transparent !important; border: 1px solid transparent !important; border-top: none !important; border-radius: 0 0 var(--border-radius-small) var(--border-radius-small) !important; color: var(--section-title-color) !important; padding: 0.35rem 0.85rem; font-size: 0.8rem; font-weight: var(--font-weight-medium); cursor: pointer; transition: background 0.15s; }
+            #citationTabs .cit-tab:hover:not(.active) { background: var(--section-bg-color) !important; }
+            #citationTabs .cit-tab.active { background: var(--section-title-color) !important; color: var(--white-color) !important; border-color: var(--section-title-color) !important; }
+          </style>
+          <div class="tab-content mt-2 mb-3" id="citationTabContent">
+            <div class="tab-pane fade show active" id="cite-ieee" role="tabpanel" aria-labelledby="tab-ieee">
+              <div id="citationIEEE" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-apa" role="tabpanel" aria-labelledby="tab-apa">
+              <div id="citationAPA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-mla" role="tabpanel" aria-labelledby="tab-mla">
+              <div id="citationMLA" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+            <div class="tab-pane fade" id="cite-harvard" role="tabpanel" aria-labelledby="tab-harvard">
+              <div id="citationHarvard" class="font-monospace text-dark-emphasis small"></div>
+            </div>
+          </div>
+          <ul id="citationTabs" class="nav" role="tablist">
+            <li role="presentation">
+              <button class="nav-link cit-tab active" id="tab-ieee" data-bs-toggle="tab" data-bs-target="#cite-ieee" type="button" role="tab" aria-controls="cite-ieee" aria-selected="true">IEEE</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-apa" data-bs-toggle="tab" data-bs-target="#cite-apa" type="button" role="tab" aria-controls="cite-apa" aria-selected="false">APA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-mla" data-bs-toggle="tab" data-bs-target="#cite-mla" type="button" role="tab" aria-controls="cite-mla" aria-selected="false">MLA</button>
+            </li>
+            <li role="presentation">
+              <button class="nav-link cit-tab" id="tab-harvard" data-bs-toggle="tab" data-bs-target="#cite-harvard" type="button" role="tab" aria-controls="cite-harvard" aria-selected="false">Harvard</button>
+            </li>
+          </ul>
+          </div>
+        </div>
+      </section>
+
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="site-footer"></footer>
+    <script src="js/footer.js"></script>
+    <!-- END FOOTER -->
+
+<script>
+(function(){
+  var h = location.hostname;
+  var isLocal = !h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1' || /\.local$/i.test(h) || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+  if (isLocal) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+  gtag('js', new Date());
+  gtag('config', 'G-5XLCN0GJQ0');
+})();
+</script>
+
+<script>
+function initLightbox() {
+  const overlay  = document.getElementById('lightboxOverlay');
+  const img      = document.getElementById('lightboxImg');
+  const svgWrap  = document.getElementById('lightboxSvgWrap');
+  const caption  = document.getElementById('lightboxCaption');
+  const closeBtn = document.getElementById('lightboxClose');
+
+  if (!overlay) return;
+
+  function openLightbox(src, alt, captionText) {
+    svgWrap.classList.remove('active');
+    svgWrap.innerHTML = '';
+    img.style.display  = '';
+    img.src             = src;
+    img.alt             = alt || '';
+    caption.textContent = captionText || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openLightboxSvg(svgEl, captionText) {
+    img.style.display = 'none';
+    img.src = '';
+    svgWrap.innerHTML = '';
+    svgWrap.appendChild(svgEl.cloneNode(true));
+    svgWrap.classList.add('active');
+    caption.textContent = captionText || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    img.src = '';
+    img.style.display = '';
+    svgWrap.classList.remove('active');
+    svgWrap.innerHTML = '';
+  }
+
+  document.addEventListener('click', e => {
+    const target = e.target.closest('.ref-zoomable');
+    if (!target) return;
+    const figLabel = target.closest('.ref-fig')
+      ?.querySelector('.ref-fig-label')
+      ?.textContent ?? '';
+    if (target.tagName && target.tagName.toLowerCase() === 'svg') {
+      openLightboxSvg(target, figLabel);
+    } else {
+      openLightbox(target.src, target.alt, figLabel);
+    }
+  });
+
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeLightbox();
+  });
+
+  closeBtn.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
+  });
+}
+document.addEventListener('DOMContentLoaded', initLightbox);
+</script>
+
+  </body>
+</html>

@@ -210,6 +210,7 @@
                   <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
                   <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
                   <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                  <a class="dropdown-item" href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -713,12 +714,63 @@
           </div>
 
           <div class="hdbk-figure" id="fig-4.2.1.0">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=844" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 4.2.1.0</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-4210k">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-4210k');var a=document.createElement('a');a.download='canvas-4210k.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-4210k').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=844" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-4210k" class="chartcanvas" role="img" aria-label="Figure 4.2.1.0 — K"></canvas>
+              </div>
             </div>
-            <p class="fig-caption"><strong>Figure 4.2.1.0.</strong> Effect of temperature on the physical properties of AZ31B.</p>
+            <script>
+            (function(){
+                var d1=[{x:-161.4831,y:31.6686},{x:-12.3726,y:39.8261},{x:236.1911,y:50.8967},{x:480.4398,y:58.7357},{x:714.3437,y:64.2026},{x:894.7058,y:67.5571}];
+                var chart=HdbkUtil.makeMultiLine('canvas-4210k',[
+                  {label:'K',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'K, Btu/[(hr)(ft²)(°F)/ft]'});
+                HdbkUtil.addToggle('toggle-4210k',chart);
+            })();
+            </script>
+            <p class="chart-note">C</p>
+            <div class="canvasdiv">
+              <button id="toggle-4210c">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-4210c');var a=document.createElement('a');a.download='canvas-4210c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-4210c').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=844" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-4210c" class="chartcanvas" role="img" aria-label="Figure 4.2.1.0 — K — C"></canvas>
+              </div>
+            </div>
+            <script>
+            (function(){
+                var d1=[{x:-24.2965,y:0.2256},{x:121.9881,y:0.2424},{x:260.5976,y:0.2581},{x:476.9978,y:0.2821},{x:709.8346,y:0.3081},{x:907.0646,y:0.3303},{x:1002.9367,y:0.3409}];
+                var chart=HdbkUtil.makeMultiLine('canvas-4210c',[
+                  {label:'C',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'C, Btu/(lb)(°F)'});
+                HdbkUtil.addToggle('toggle-4210c',chart);
+            })();
+            </script>
+            <p class="chart-note">α</p>
+            <div class="canvasdiv">
+              <button id="toggle-4210a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-4210a');var a=document.createElement('a');a.download='canvas-4210a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-4210a').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=844" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-4210a" class="chartcanvas" role="img" aria-label="Figure 4.2.1.0 — K — α"></canvas>
+              </div>
+            </div>
+            <script>
+            (function(){
+                var d1=[{x:-334.5366,y:11.8607},{x:-193.1972,y:12.7521},{x:-16.2828,y:13.6028},{x:154.2491,y:14.2578},{x:392.5088,y:14.987},{x:659.8101,y:15.6454},{x:981.676,y:16.4235}];
+                var chart=HdbkUtil.makeMultiLine('canvas-4210a',[
+                  {label:'α',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'α, 10⁻⁶ in./in./°F'});
+                HdbkUtil.addToggle('toggle-4210a',chart);
+            })();
+            </script>
+<p class="fig-caption"><strong>Figure 4.2.1.0.</strong> Effect of temperature on the physical properties of AZ31B.</p>
           </div>
         </div><!-- /4.2.1.0 -->
 
@@ -726,20 +778,50 @@
           <div class="section-heading lvl-2"><span class="section-num">4.2.1.1</span>AZ31B-O Temper</div>
           <p>Effect of temperature on the tensile modulus of sheet and plate is presented in Figure 4.2.1.1.4. Typical room-temperature stress-strain and tangent-modulus curves are presented in Figure 4.2.1.1.6.</p>
           <div class="hdbk-figure" id="fig-4.2.1.1.4">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=845" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 4.2.1.1.4</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-42114">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-42114');var a=document.createElement('a');a.download='canvas-42114.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-42114').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=845" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-42114" class="chartcanvas" role="img" aria-label="Figure 4.2.1.1.4"></canvas>
+              </div>
             </div>
-            <p class="fig-caption"><strong>Figure 4.2.1.1.4.</strong> Effect of temperature on the tensile modulus (E) of AZ31B-O sheet and plate.</p>
+            <script>
+            (function(){
+                var d1=[{x:81.0214,y:100.2982},{x:128.4449,y:99.0432},{x:181.9694,y:97.7568},{x:252.4139,y:95.3992},{x:287.613,y:93.3644},{x:313.9795,y:90.6291},{x:351.1306,y:85.5767},{x:430.8351,y:74.6801},{x:601.325,y:51.4937}];
+                var chart=HdbkUtil.makeMultiLine('canvas-42114',[
+                  {label:'E',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature E'});
+                HdbkUtil.addToggle('toggle-42114',chart);
+            })();
+            </script>
+<p class="fig-caption"><strong>Figure 4.2.1.1.4.</strong> Effect of temperature on the tensile modulus (E) of AZ31B-O sheet and plate.</p>
           </div>
           <div class="hdbk-figure" id="fig-4.2.1.1.6">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=845" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 4.2.1.1.6</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-42116">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-42116');var a=document.createElement('a');a.download='canvas-42116.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-42116').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=845" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-42116" class="chartcanvas" role="img" aria-label="Figure 4.2.1.1.6"></canvas>
+              </div>
             </div>
-            <p class="fig-caption"><strong>Figure 4.2.1.1.6.</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for AZ31B-O sheet and plate at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:0.0},{x:1.3294,y:8.6115},{x:1.9614,y:12.723},{x:2.3107,y:14.9529},{x:2.5128,y:15.8906},{x:2.7389,y:16.5271},{x:3.1081,y:16.9967},{x:3.8348,y:17.5208},{x:4.8356,y:17.8582},{x:5.9723,y:18.0756}];
+                var d2=[{x:0,y:0.0},{x:1.0182,y:6.5424},{x:1.7879,y:11.6382},{x:2.4295,y:15.6561},{x:2.6505,y:16.9418},{x:2.924,y:18.2478},{x:3.2214,y:19.3999},{x:3.5474,y:20.3781},{x:3.9879,y:21.2829},{x:4.5714,y:22.1547},{x:5.2741,y:22.9799},{x:6.0365,y:23.5979},{x:7.2325,y:24.3375}];
+                var d3=[{x:0.188,y:18.0595},{x:0.4386,y:17.5247},{x:0.975,y:17.0242},{x:1.6664,y:16.6245},{x:2.4173,y:16.3254},{x:3.3231,y:15.9999},{x:4.2289,y:15.6611},{x:5.099,y:15.3155},{x:5.5162,y:15.1292},{x:5.9573,y:14.7288},{x:6.2792,y:14.2947},{x:6.4368,y:13.6592},{x:6.4825,y:12.8896},{x:6.5053,y:0.0583}];
+                var chart=HdbkUtil.makeMultiLine('canvas-42116',[
+                  {label:'Tension',data:d1,interp:'lin',step:0.05},
+                  {label:'Compression',data:d2,interp:'lin',step:0.05},
+                  {label:'Tension — Tangent Modulus',data:d3}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi',tension:0});
+                HdbkUtil.addToggle('toggle-42116',chart);
+            })();
+            </script>
+<p class="fig-caption"><strong>Figure 4.2.1.1.6.</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for AZ31B-O sheet and plate at room temperature.</p>
           </div>
         </div><!-- /4.2.1.1 -->
 
@@ -747,44 +829,119 @@
           <div class="section-heading lvl-2"><span class="section-num">4.2.1.2</span>AZ31B-H24 Temper</div>
           <p>Effect of temperature on the mechanical properties of sheet and plate is shown in Figures 4.2.1.2.1 through 4.2.1.2.4, and 4.2.1.2.6. Typical room-temperature tension and compression stress-strain and tangent-modulus curves for sheet are shown in Figure 4.2.1.2.6.</p>
           <div class="hdbk-figure" id="fig-4.2.1.2.1">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=846" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 4.2.1.2.1</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-42121">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-42121');var a=document.createElement('a');a.download='canvas-42121.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-42121').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=846" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-42121" class="chartcanvas" role="img" aria-label="Figure 4.2.1.2.1"></canvas>
+              </div>
             </div>
-            <p class="fig-caption"><strong>Figure 4.2.1.2.1.</strong> Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of AZ31B-H24 sheet and plate.</p>
+            <script>
+            (function(){
+                var d1=[{x:79.7919,y:99.7526},{x:101.0904,y:96.024},{x:132.557,y:90.4728},{x:164.9775,y:83.6004},{x:207.9689,y:73.4746},{x:237.769,y:65.6687},{x:264.5402,y:57.5347},{x:289.1049,y:48.632},{x:313.9469,y:40.0317},{x:329.0489,y:35.4821},{x:351.1658,y:30.7351},{x:391.4294,y:24.0499},{x:428.682,y:19.6501},{x:478.1792,y:15.297},{x:520.8046,y:11.9664},{x:561.3717,y:9.4076},{x:599.0522,y:7.2084}];
+                var d2=[{x:82.5415,y:99.4756},{x:118.9714,y:95.4615},{x:145.7719,y:91.5916},{x:177.3791,y:86.4805},{x:208.2898,y:80.1318},{x:235.7584,y:73.3729},{x:265.282,y:65.3746},{x:291.3663,y:57.3787},{x:315.3946,y:50.4846},{x:344.37,y:42.7893},{x:377.886,y:35.1734},{x:406.7388,y:29.6515},{x:439.7217,y:24.5394},{x:473.2641,y:20.7749},{x:515.2026,y:17.5824},{x:555.2202,y:15.134},{x:598.5401,y:12.7658}];
+                var chart=HdbkUtil.makeMultiLine('canvas-42121',[
+                  {label:'Fty',data:d1,interp:'lin',step:5},
+                  {label:'Ftu',data:d2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Ftu, Fty'});
+                HdbkUtil.addToggle('toggle-42121',chart);
+            })();
+            </script>
+<p class="fig-caption"><strong>Figure 4.2.1.2.1.</strong> Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of AZ31B-H24 sheet and plate.</p>
           </div>
           <div class="hdbk-figure" id="fig-4.2.1.2.2">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=847" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 4.2.1.2.2</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-42122">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-42122');var a=document.createElement('a');a.download='canvas-42122.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-42122').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=847" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-42122" class="chartcanvas" role="img" aria-label="Figure 4.2.1.2.2"></canvas>
+              </div>
             </div>
-            <p class="fig-caption"><strong>Figure 4.2.1.2.2.</strong> Effect of temperature on the compressive yield strength (F<sub>cy</sub>) and the shear ultimate strength (F<sub>su</sub>) of AZ31B-H24 sheet and plate.</p>
+            <script>
+            (function(){
+                var d1=[{x:81.8402,y:99.9616},{x:123.3483,y:95.9469},{x:164.1646,y:91.5159},{x:207.7482,y:86.6692},{x:250.6399,y:80.5738},{x:292.8398,y:73.7846},{x:328.8136,y:65.8842},{x:360.6365,y:57.0118},{x:392.7361,y:47.1128},{x:419.4396,y:40.0984},{x:447.1117,y:33.1674},{x:481.01,y:26.3765},{x:512.8329,y:21.2499},{x:551.5738,y:16.9572},{x:600,y:13.4712}];
+                var d2=[{x:85.2992,y:99.6293},{x:128.1909,y:96.2254},{x:197.5095,y:90.302},{x:244.4137,y:84.7346},{x:277.6202,y:79.747},{x:308.0595,y:74.0652},{x:337.807,y:67.2734},{x:359.2529,y:60.3412},{x:382.7741,y:53.1318},{x:406.2954,y:46.6162},{x:436.7347,y:40.657},{x:473.4002,y:34.699},{x:514.2165,y:29.2691},{x:550.6053,y:25.0869},{x:599.7233,y:19.7974}];
+                var chart=HdbkUtil.makeMultiLine('canvas-42122',[
+                  {label:'Fcy',data:d1,interp:'lin',step:5},
+                  {label:'Fsu',data:d2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Fcy, Fsu'});
+                HdbkUtil.addToggle('toggle-42122',chart);
+            })();
+            </script>
+<p class="fig-caption"><strong>Figure 4.2.1.2.2.</strong> Effect of temperature on the compressive yield strength (F<sub>cy</sub>) and the shear ultimate strength (F<sub>su</sub>) of AZ31B-H24 sheet and plate.</p>
           </div>
           <div class="hdbk-figure" id="fig-4.2.1.2.3">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=847" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 4.2.1.2.3</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-42123">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-42123');var a=document.createElement('a');a.download='canvas-42123.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-42123').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=847" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-42123" class="chartcanvas" role="img" aria-label="Figure 4.2.1.2.3"></canvas>
+              </div>
             </div>
-            <p class="fig-caption"><strong>Figure 4.2.1.2.3.</strong> Effect of temperature on the bearing ultimate strength (F<sub>bru</sub>) and the bearing yield strength (F<sub>bry</sub>) of AZ31B-H24 sheet and plate.</p>
+            <script>
+            (function(){
+                var d1=[{x:85.1724,y:99.4086},{x:137.5862,y:97.1862},{x:176.8966,y:94.5759},{x:217.5862,y:90.3405},{x:255.5172,y:84.4242},{x:286.5517,y:77.4047},{x:310.6897,y:69.0067},{x:329.7241,y:59.5058},{x:347.2414,y:49.1782},{x:360.2069,y:42.0179},{x:377.5862,y:36.3736},{x:401.0345,y:31.8321},{x:436.2069,y:27.2927},{x:481.0345,y:22.755},{x:538.2759,y:18.6326},{x:598.8276,y:15.0067}];
+                var d2=[{x:127.2414,y:99.2781},{x:171.3793,y:97.7706},{x:197.5862,y:96.5354},{x:230.0,y:94.0616},{x:269.3103,y:89.3852},{x:298.2759,y:83.7428},{x:317.5862,y:76.8591},{x:328.6207,y:70.6626},{x:338.2759,y:62.8131},{x:349.3103,y:53.8618},{x:367.931,y:46.9779},{x:394.1379,y:41.3351},{x:425.8621,y:35.8309},{x:466.5517,y:30.7415},{x:513.4483,y:25.5154},{x:598.2759,y:18.2297}];
+                var chart=HdbkUtil.makeMultiLine('canvas-42123',[
+                  {label:'Fbry',data:d1,interp:'lin',step:5},
+                  {label:'Fbru',data:d2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Fbru, Fbry'});
+                HdbkUtil.addToggle('toggle-42123',chart);
+            })();
+            </script>
+<p class="fig-caption"><strong>Figure 4.2.1.2.3.</strong> Effect of temperature on the bearing ultimate strength (F<sub>bru</sub>) and the bearing yield strength (F<sub>bry</sub>) of AZ31B-H24 sheet and plate.</p>
           </div>
           <div class="hdbk-figure" id="fig-4.2.1.2.4">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=848" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 4.2.1.2.4</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-42124">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-42124');var a=document.createElement('a');a.download='canvas-42124.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-42124').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=848" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-42124" class="chartcanvas" role="img" aria-label="Figure 4.2.1.2.4"></canvas>
+              </div>
             </div>
-            <p class="fig-caption"><strong>Figure 4.2.1.2.4.</strong> Effect of temperature on the tensile modulus (E) of AZ31B-H24 sheet and plate.</p>
+            <script>
+            (function(){
+                var d1=[{x:82.8844,y:99.949},{x:123.4665,y:97.3601},{x:169.1619,y:94.0498},{x:225.6258,y:89.0005},{x:274.0386,y:83.8055},{x:325.1477,y:77.9397},{x:368.1962,y:72.4677},{x:403.1771,y:67.794},{x:444.8857,y:62.1853},{x:483.9074,y:56.7079},{x:535.0377,y:49.6282},{x:599.6328,y:40.1389}];
+                var chart=HdbkUtil.makeMultiLine('canvas-42124',[
+                  {label:'E',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature E'});
+                HdbkUtil.addToggle('toggle-42124',chart);
+            })();
+            </script>
+<p class="fig-caption"><strong>Figure 4.2.1.2.4.</strong> Effect of temperature on the tensile modulus (E) of AZ31B-H24 sheet and plate.</p>
           </div>
           <div class="hdbk-figure" id="fig-4.2.1.2.6">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=848" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 4.2.1.2.6</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-42126">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-42126');var a=document.createElement('a');a.download='canvas-42126.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-42126').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=848" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-42126" class="chartcanvas" role="img" aria-label="Figure 4.2.1.2.6"></canvas>
+              </div>
             </div>
-            <p class="fig-caption"><strong>Figure 4.2.1.2.6.</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for AZ31B-H24 sheet at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0.0,y:0.0},{x:1.7088,y:11.1244},{x:2.361,y:15.0462},{x:2.9212,y:18.1749},{x:3.3893,y:20.6518},{x:3.9613,y:23.3026},{x:4.6714,y:26.3444},{x:5.3813,y:28.8973},{x:5.9612,y:30.7442},{x:6.631,y:32.6453},{x:7.7926,y:35.6654}];
+                var d2=[{x:0.0,y:0.0},{x:1.3106,y:8.528},{x:2.231,y:14.503},{x:2.7813,y:18.088},{x:3.3115,y:21.3471},{x:3.7615,y:23.4655},{x:4.3514,y:25.3123},{x:5.0711,y:26.6703},{x:6.0605,y:27.8001},{x:6.9399,y:28.4737},{x:7.6594,y:28.9082}];
+                var d3=[{x:0.5553,y:28.9408},{x:0.735,y:28.1912},{x:1.0546,y:27.4307},{x:1.7338,y:26.2249},{x:2.2532,y:25.4753},{x:2.9724,y:24.6605},{x:3.6617,y:23.9109},{x:4.4509,y:23.031},{x:4.9903,y:22.39},{x:5.29,y:21.9446},{x:5.6595,y:21.2928},{x:5.9591,y:20.5432},{x:6.1728,y:19.7393},{x:6.3724,y:18.4682},{x:6.452,y:16.893},{x:6.4986,y:-0.0}];
+                var chart=HdbkUtil.makeMultiLine('canvas-42126',[
+                  {label:'Tension',data:d1,interp:'lin',step:0.05},
+                  {label:'Compression',data:d2,interp:'lin',step:0.05},
+                  {label:'Compression — Tangent Modulus',data:d3}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi',tension:0});
+                HdbkUtil.addToggle('toggle-42126',chart);
+            })();
+            </script>
+<p class="fig-caption"><strong>Figure 4.2.1.2.6.</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for AZ31B-H24 sheet at room temperature.</p>
           </div>
         </div><!-- /4.2.1.2 -->
 
@@ -797,20 +954,52 @@
           <div class="section-heading lvl-2"><span class="section-num">4.2.1.4</span>AZ31B-F Temper</div>
           <p>Figures 4.2.1.4.8(a) and (b) contain fatigue data for forged disk at room temperature.</p>
           <div class="hdbk-figure" id="fig-4.2.1.4.8a">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=849" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 4.2.1.4.8(a)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-42148a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-42148a');var a=document.createElement('a');a.download='canvas-42148a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-42148a').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=849" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-42148a" class="chartcanvas" role="img" aria-label="Figure 4.2.1.4.8(a)"></canvas>
+              </div>
             </div>
-            <p class="fig-caption"><strong>Figure 4.2.1.4.8(a).</strong> Best-fit S/N curves for unnotched AZ31B-F magnesium alloy forged disk, transverse direction. Product form: forged disk, 1 inch thick (T<sub>US</sub> = 38 ksi, T<sub>YS</sub> = 26 ksi, room temperature); unnotched specimen, 0.75-inch gross diameter, 0.30-inch net diameter; axial loading, 1500 cpm, air environment; sample size 194. Reference 4.2.1.1.8.</p>
+            <script>
+            (function(){
+                var d1=[{x:13090.0644,y:24.7147},{x:18701.3638,y:22.5353},{x:31936.2242,y:19.5314},{x:66029.1707,y:16.233},{x:126486.3901,y:14.5249},{x:698005.812,y:11.356},{x:2284286.8782,y:10.1662},{x:11680659.7043,y:9.5183},{x:36795249.0754,y:9.2238},{x:135071649.7274,y:8.9882}];
+                var d2=[{x:11979.2191,y:29.7212},{x:17554.9426,y:26.8351},{x:31948.5911,y:22.9476},{x:59649.9516,y:19.7081},{x:124920.6559,y:17.1165},{x:424677.1406,y:14.3364},{x:1500172.476,y:12.4987},{x:8175469.1324,y:11.2264},{x:26418512.241,y:10.873},{x:55625032.0452,y:10.7788}];
+                var d3=[{x:31352.8135,y:36.8482},{x:52862.7449,y:33.8442},{x:104124.7692,y:30.4045},{x:245796.6255,y:26.7762},{x:937080.783,y:22.8298},{x:2973887.3966,y:20.5209},{x:11398287.8739,y:18.589},{x:32421405.6736,y:17.5759},{x:100062900.1993,y:16.7984}];
+                var d4=[{x:38779.1437,y:45.0942},{x:60104.3997,y:41.678},{x:113070.4758,y:37.6728},{x:283005.8113,y:33.1021},{x:768644.107,y:29.4738},{x:1963937.3065,y:26.8704},{x:6029406.9012,y:24.4791},{x:18990168.279,y:22.7592},{x:76209339.6283,y:21.4516},{x:236408519.9531,y:20.6505}];
+                var chart=HdbkUtil.makeMultiLine('canvas-42148a',[
+                  {label:'Dataset 1',data:d1,interp:'log',ppd:20},
+                  {label:'Dataset 2',data:d2,interp:'log',ppd:20},
+                  {label:'Dataset 3',data:d3,interp:'log',ppd:20},
+                  {label:'Dataset 4',data:d4,interp:'log',ppd:20}
+                ],{xLabel:'Fatigue Life, Cycles',yLabel:'Maximum Stress, ksi',xLog:true});
+                HdbkUtil.addToggle('toggle-42148a',chart);
+            })();
+            </script>
+<p class="fig-caption"><strong>Figure 4.2.1.4.8(a).</strong> Best-fit S/N curves for unnotched AZ31B-F magnesium alloy forged disk, transverse direction. Product form: forged disk, 1 inch thick (T<sub>US</sub> = 38 ksi, T<sub>YS</sub> = 26 ksi, room temperature); unnotched specimen, 0.75-inch gross diameter, 0.30-inch net diameter; axial loading, 1500 cpm, air environment; sample size 194. Reference 4.2.1.1.8.</p>
           </div>
           <div class="hdbk-figure" id="fig-4.2.1.4.8b">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=850" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 4.2.1.4.8(b)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-42148b">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-42148b');var a=document.createElement('a');a.download='canvas-42148b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-42148b').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=850" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-42148b" class="chartcanvas" role="img" aria-label="Figure 4.2.1.4.8(b)"></canvas>
+              </div>
             </div>
-            <p class="fig-caption"><strong>Figure 4.2.1.4.8(b).</strong> Best-fit S/N curves for notched, K<sub>t</sub> = 3.3, AZ31B-F magnesium alloy forged disk, transverse direction. Product form: forged disk, 1 inch thick (T<sub>US</sub> = 38 ksi, T<sub>YS</sub> = 26 ksi, room temperature); notched specimen, K<sub>t</sub> = 3.3, 0.350-inch gross diameter, 0.280-inch net diameter, 0.010-inch root radius, 60&deg; flank angle; axial loading, 1500 cpm, air environment; sample size 34. Reference 4.2.1.1.8.</p>
+            <script>
+            (function(){
+                var d1=[{x:1482.9969,y:14.9892},{x:2255.3,y:13.6295},{x:3774.7054,y:12.1029},{x:8421.8159,y:10.1232},{x:16470.5568,y:8.6444},{x:38551.2341,y:7.1181},{x:110611.2798,y:5.5919},{x:423062.4639,y:4.1137},{x:1051341.1271,y:3.3319},{x:3601570.2074,y:2.493}];
+                var chart=HdbkUtil.makeMultiLine('canvas-42148b',[
+                  {label:'Dataset 1',data:d1,interp:'log',ppd:20}
+                ],{xLabel:'Fatigue Life, Cycles',yLabel:'Maximum Stress, ksi',xLog:true});
+                HdbkUtil.addToggle('toggle-42148b',chart);
+            })();
+            </script>
+<p class="fig-caption"><strong>Figure 4.2.1.4.8(b).</strong> Best-fit S/N curves for notched, K<sub>t</sub> = 3.3, AZ31B-F magnesium alloy forged disk, transverse direction. Product form: forged disk, 1 inch thick (T<sub>US</sub> = 38 ksi, T<sub>YS</sub> = 26 ksi, room temperature); notched specimen, K<sub>t</sub> = 3.3, 0.350-inch gross diameter, 0.280-inch net diameter, 0.010-inch root radius, 60&deg; flank angle; axial loading, 1500 cpm, air environment; sample size 34. Reference 4.2.1.1.8.</p>
           </div>
         </div><!-- /4.2.1.4 -->
         </div><!-- /4.2.1 -->
@@ -1021,7 +1210,54 @@
                 <canvas id="canvas-4230" class="chartcanvas" role="img" aria-label="Figure 4.2.3.0"></canvas>
               </div>
             </div>
-            <p class="fig-caption"><strong>Figure 4.2.3.0.</strong> Effect of temperature on the physical properties of ZK60A magnesium alloy.</p>
+                        <script>
+            (function(){
+                var d1=[{x:68.9581,y:71.0868},{x:168.5565,y:72.6132},{x:316.9986,y:74.6758},{x:501.071,y:76.2898}];
+                var chart=HdbkUtil.makeMultiLine('canvas-4230',[
+                  {label:'K',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'K, Btu/[(hr)(ft²)(°F)/ft]'});
+                HdbkUtil.addToggle('toggle-4230',chart);
+            })();
+            </script>
+            <p class="chart-note">C</p>
+            <div class="canvasdiv">
+              <button id="toggle-4230c">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-4230c');var a=document.createElement('a');a.download='canvas-4230c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-4230c').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=856" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-4230c" class="chartcanvas" role="img" aria-label="Figure 4.2.3.0 — C"></canvas>
+              </div>
+            </div>
+            <script>
+            (function(){
+                var d1=[{x:301.267,y:0.2552},{x:485.2182,y:0.2763},{x:652.2759,y:0.2954},{x:815.5795,y:0.3143},{x:990.5209,y:0.3342}];
+                var chart=HdbkUtil.makeMultiLine('canvas-4230c',[
+                  {label:'C',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'C, Btu/(lb)(°F)'});
+                HdbkUtil.addToggle('toggle-4230c',chart);
+            })();
+            </script>
+            <p class="chart-note">alpha</p>
+            <div class="canvasdiv">
+              <button id="toggle-4230alpha">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-4230alpha');var a=document.createElement('a');a.download='canvas-4230alpha.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-4230alpha').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=856" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-4230alpha" class="chartcanvas" role="img" aria-label="Figure 4.2.3.0 — alpha"></canvas>
+              </div>
+            </div>
+            <script>
+            (function(){
+                var d1=[{x:309.9605,y:8.2182},{x:495.0786,y:9.0471},{x:663.1971,y:9.8007},{x:827.5509,y:10.5467},{x:1003.6008,y:11.3341},{x:76.9898,y:13.3981},{x:182.6885,y:13.8127},{x:312.8422,y:14.2652},{x:416.6638,y:14.6798}];
+                var chart=HdbkUtil.makeMultiLine('canvas-4230alpha',[
+                  {label:'α',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'α, 10⁻⁶ in./in./°F'});
+                HdbkUtil.addToggle('toggle-4230alpha',chart);
+            })();
+            </script>
+<p class="fig-caption"><strong>Figure 4.2.3.0.</strong> Effect of temperature on the physical properties of ZK60A magnesium alloy.</p>
           </div>
         </div><!-- /4.2.3.0 -->
 
@@ -1045,6 +1281,15 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.2.3.2.6(a).</strong> Typical tensile stress-strain curve for ZK60A-T5 extrusion at room temperature. Ramberg-Osgood n (RT) = 7.0.</p>
+            <script>
+            (function(){
+                var d1=[{x:-0.0,y:0},{x:1.6397,y:10.6987},{x:2.3862,y:15.4376},{x:3.263,y:21.0127},{x:4.0647,y:25.7254},{x:4.7687,y:29.3102},{x:5.5177,y:32.4973},{x:6.4447,y:35.5529},{x:7.4919,y:38.1714},{x:8.3987,y:40.0066},{x:9.5887,y:42.0822},{x:10.6033,y:43.3875},{x:11.5553,y:44.5334}];
+                var chart=HdbkUtil.makeMultiLine('canvas-42326a',[
+                  {label:'Dataset 1',data:d1,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-42326a',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.2.3.2.6b">
             <div class="canvasdiv">
@@ -1057,6 +1302,15 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.2.3.2.6(b).</strong> Typical compressive stress-strain curve for ZK60A-T5 extrusion at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:-0.0},{x:0.9995,y:6.3957},{x:2.265,y:14.5506},{x:3.0733,y:19.8275},{x:3.8498,y:24.8912},{x:4.5731,y:29.6886},{x:4.9027,y:31.7671},{x:5.1492,y:33.1951},{x:5.4371,y:34.2483},{x:5.8301,y:35.1819},{x:6.2037,y:35.8701},{x:6.5935,y:36.1518},{x:7.0566,y:36.2183},{x:7.4979,y:35.8363},{x:8.0129,y:35.4637},{x:8.4775,y:35.1561},{x:9.212,y:35.1644},{x:9.5932,y:35.3287},{x:9.9618,y:35.5252}];
+                var chart=HdbkUtil.makeMultiLine('canvas-42326b',[
+                  {label:'Dataset 1',data:d1,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-42326b',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-4.2.3.2.8a">
@@ -1070,6 +1324,21 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.2.3.2.8(a).</strong> Best-fit S/N curves for unnotched ZK60A-T5 extruded bar, longitudinal direction. Product form: extruded bar, 0.50-inch diameter (T<sub>US</sub> = 47.5 ksi, T<sub>YS</sub> = 40.9 ksi, room temperature, unnotched); unnotched specimen, 0.500-inch gross diameter, 0.400-inch net diameter, 0.750-inch root diameter, 7.500 inches long; axial loading, 3600 cpm, room temperature, air environment; sample size 21. Reference 4.2.3.2.8.</p>
+            <script>
+            (function(){
+                var d1=[{x:8796.7828,y:33.9004},{x:14156.6496,y:31.3533},{x:33860.8157,y:27.5849},{x:83409.1106,y:24.9193},{x:253924.7168,y:22.5146},{x:766769.0206,y:20.9706},{x:3488083.3465,y:19.6616},{x:8604780.7628,y:19.0705},{x:20933669.1701,y:18.7445}];
+                var d2=[{x:7188.1849,y:49.9043},{x:10795.5344,y:46.5861},{x:18260.2808,y:42.8243},{x:33430.3567,y:39.2817},{x:63664.9489,y:36.4004},{x:128649.4159,y:33.9593},{x:301572.7391,y:31.6257},{x:728119.9357,y:29.9537},{x:1828837.7166,y:28.6119},{x:3998623.6092,y:27.7141},{x:9462464.7435,y:27.1459},{x:18478795.7047,y:26.7579}];
+                var d3=[{x:3515.5577,y:59.9593},{x:5441.4983,y:54.7648},{x:8936.4922,y:50.2311},{x:14968.1016,y:46.1385},{x:29084.8561,y:41.9326},{x:58786.9709,y:38.4985},{x:118802.0916,y:35.7264},{x:301473.9288,y:32.9499},{x:896144.3838,y:30.9649},{x:2142158.6424,y:29.6461},{x:4931064.6501,y:28.7694}];
+                var d4=[{x:12454.5045,y:60.9723},{x:18157.9933,y:57.5224},{x:34942.7086,y:52.5002},{x:82124.1875,y:47.6507},{x:174408.3407,y:44.348},{x:474376.5694,y:41.2391},{x:1396382.4894,y:38.7688},{x:5109533.1137,y:37.1108},{x:21946871.8555,y:35.7587}];
+                var chart=HdbkUtil.makeMultiLine('canvas-42328a',[
+                  {label:'Dataset 1',data:d1,interp:'log',ppd:20},
+                  {label:'Dataset 2',data:d2,interp:'log',ppd:20},
+                  {label:'Dataset 3',data:d3,interp:'log',ppd:20},
+                  {label:'Dataset 4',data:d4,interp:'log',ppd:20}
+                ],{xLabel:'Fatigue Life, Cycles',yLabel:'Maximum Stress, ksi',xLog:true});
+                HdbkUtil.addToggle('toggle-42328a',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.2.3.2.8b">
             <div class="canvasdiv">
@@ -1082,6 +1351,23 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.2.3.2.8(b).</strong> Best-fit S/N curves for notched, K<sub>t</sub> = 2.4, ZK60A-T5 extruded bar, longitudinal direction. Product form: extruded bar, 0.50-inch diameter (T<sub>US</sub> = 63.7 ksi, T<sub>YS</sub> = 40.9 ksi, room temperature, notched); circumferentially notched specimen, K<sub>t</sub> = 2.4, 0.500-inch gross diameter, 0.400-inch net diameter, 0.032-inch notch radius, 60&deg; flank angle; axial loading, 3600 cpm, room temperature, air environment; sample size 30. Reference 4.2.3.2.8.</p>
+            <script>
+            (function(){
+                var d1=[{x:6039.223,y:23.8949},{x:8374.8613,y:21.1445},{x:13744.3411,y:17.6233},{x:29184.0996,y:14.3194},{x:88526.646,y:12.0012},{x:260671.1352,y:10.7821},{x:881764.9667,y:10.2869},{x:3813513.6146,y:10.0532}];
+                var d2=[{x:5153.8794,y:36.9734},{x:6472.9395,y:33.6745},{x:9247.1283,y:29.0557},{x:14299.9865,y:24.9856},{x:24905.7419,y:21.4638},{x:51334.9426,y:18.5119},{x:109002.2484,y:16.6146},{x:253037.0788,y:15.6834},{x:574733.401,y:14.9723}];
+                var d3=[{x:3944.1666,y:43.7891},{x:5103.0676,y:38.9515},{x:7436.0536,y:33.0138},{x:11052.4753,y:28.5045},{x:19059.894,y:24.1037},{x:37018.3045,y:20.5809},{x:77828.0183,y:18.2661},{x:173649.2763,y:16.72},{x:427798.4854,y:15.8543},{x:993088.4978,y:15.4946},{x:1872299.0423,y:15.2468}];
+                var d4=[{x:3332.7713,y:61.9226},{x:4087.3872,y:55.9426},{x:5205.1971,y:50.0502},{x:7290.1533,y:43.4536},{x:11162.5259,y:37.0759},{x:18871.9838,y:31.2467},{x:34197.4021,y:27.0652},{x:75548.7346,y:23.7609},{x:162013.9818,y:21.9075},{x:445093.187,y:20.5572},{x:1033236.3005,y:19.9557},{x:5072821.37,y:19.5449}];
+                var d5=[{x:11613.7957,y:64.8777},{x:14878.0952,y:59.8204},{x:22334.0404,y:53.333},{x:35579.9079,y:47.834},{x:60752.3138,y:43.4993},{x:89408.1145,y:41.3197},{x:148192.4786,y:39.205},{x:365083.6862,y:36.9107},{x:855941.4576,y:35.8037},{x:1535736.4612,y:35.3585},{x:2495514.3345,y:35.0462}];
+                var chart=HdbkUtil.makeMultiLine('canvas-42328b',[
+                  {label:'Dataset 1',data:d1,interp:'log',ppd:20},
+                  {label:'Dataset 2',data:d2,interp:'log',ppd:20},
+                  {label:'Dataset 3',data:d3,interp:'log',ppd:20},
+                  {label:'Dataset 4',data:d4,interp:'log',ppd:20},
+                  {label:'Dataset 5',data:d5,interp:'log',ppd:20}
+                ],{xLabel:'Fatigue Life, Cycles',yLabel:'Maximum Stress, ksi',xLog:true});
+                HdbkUtil.addToggle('toggle-42328b',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.2.3.2.8c">
             <div class="canvasdiv">
@@ -1094,6 +1380,23 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.2.3.2.8(c).</strong> Best-fit S/N curves for notched, K<sub>t</sub> = 3.4, ZK60A-T5 extruded bar, longitudinal direction. Product form: extruded bar, 0.50-inch diameter (T<sub>US</sub> = 58.2 ksi, T<sub>YS</sub> = 40.9 ksi, room temperature, notched); circumferentially notched specimen, K<sub>t</sub> = 3.4, 0.500-inch gross diameter, 0.400-inch net diameter, 0.010-inch notch radius, 60&deg; flank angle; axial loading, 3600 cpm, room temperature, air environment; sample size 36. Reference 4.2.3.2.8.</p>
+            <script>
+            (function(){
+                var d1=[{x:1502.7304,y:25.9696},{x:3128.1795,y:22.3242},{x:9953.912,y:17.7974},{x:29888.9731,y:14.6868},{x:104717.3585,y:11.8433},{x:396274.9132,y:9.731},{x:1766639.4964,y:7.9966},{x:7432782.7575,y:6.7929},{x:21304064.8845,y:6.2054}];
+                var d2=[{x:5521.2869,y:29.9666},{x:10237.3308,y:26.63},{x:18798.6255,y:23.7581},{x:61810.3824,y:19.3424},{x:194019.0485,y:16.1658},{x:611324.4428,y:13.7197},{x:1765960.8871,y:11.9811},{x:5353235.5535,y:10.5308},{x:19792617.2284,y:9.3923}];
+                var d3=[{x:1029.9378,y:43.9627},{x:1757.9035,y:39.4077},{x:3447.4587,y:34.4115},{x:8771.9498,y:28.7536},{x:25593.6973,y:23.6726},{x:63988.037,y:20.2503},{x:213647.6554,y:16.6979},{x:415628.7884,y:15.1991},{x:1059200.03,y:13.4151},{x:3149527.986,y:11.7875},{x:7148740.7293,y:10.8878},{x:17027492.5139,y:10.0107}];
+                var d4=[{x:2247.8077,y:49.8805},{x:4089.0039,y:44.4629},{x:6819.2481,y:40.262},{x:11482.1844,y:36.5038},{x:22342.9475,y:32.415},{x:48341.4885,y:28.3273},{x:112976.0732,y:24.5723},{x:305107.6097,y:21.1507},{x:808195.8068,y:18.3931},{x:1816956.725,y:16.7407},{x:6679870.2222,y:14.4289},{x:16220851.4858,y:13.3306},{x:30359497.7647,y:12.6947}];
+                var d5=[{x:310484.7787,y:39.9666},{x:615910.4275,y:36.2101},{x:1510523.8238,y:32.3227},{x:3963057.869,y:28.923},{x:8457944.4203,y:26.8053},{x:14515240.5228,y:25.5265}];
+                var chart=HdbkUtil.makeMultiLine('canvas-42328c',[
+                  {label:'Dataset 1',data:d1,interp:'log',ppd:20},
+                  {label:'Dataset 2',data:d2,interp:'log',ppd:20},
+                  {label:'Dataset 3',data:d3,interp:'log',ppd:20},
+                  {label:'Dataset 4',data:d4,interp:'log',ppd:20},
+                  {label:'Dataset 5',data:d5,interp:'log',ppd:20}
+                ],{xLabel:'Fatigue Life, Cycles',yLabel:'Maximum Stress, ksi',xLog:true});
+                HdbkUtil.addToggle('toggle-42328c',chart);
+            })();
+            </script>
           </div>
         </div><!-- /4.2.3.2 -->
         </div><!-- /4.2.3 -->

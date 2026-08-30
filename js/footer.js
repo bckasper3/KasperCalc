@@ -131,6 +131,7 @@
           <div class="footerlink"><a href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a></div>
           <div class="footerlink"><a href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a></div>
           <div class="footerlink"><a href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a></div>
+          <div class="footerlink"><a href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a></div>
         </div>
 
         <div class="footerRow">

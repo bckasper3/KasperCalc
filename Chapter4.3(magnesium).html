@@ -210,6 +210,7 @@
                   <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
                   <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
                   <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                  <a class="dropdown-item" href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -751,6 +752,15 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.2.1.4.</strong> Effect of temperature on the tensile and compressive moduli (E and E<sub>c</sub>) of cast AZ91C-T6/AZ91E-T6. Modulus at temperature, exposure up to &frac12; hour.</p>
+            <script>
+            (function(){
+                var d1=[{x:77.1475,y:99.6639},{x:110.2107,y:97.9671},{x:141.329,y:96.4006},{x:178.9303,y:94.3131},{x:212.6418,y:92.227},{x:248.2982,y:89.6473},{x:278.1199,y:87.1474},{x:313.128,y:83.5044},{x:344.8947,y:79.603},{x:371.4749,y:75.5737},{x:394.684,y:71.1822},{x:412.4473,y:67.2854},{x:438.2496,y:63.3601},{x:465.7374,y:59.3823},{x:490.7618,y:55.8203},{x:517.342,y:52.5692},{x:546.1264,y:49.6286},{x:573.7439,y:47.4925},{x:597.0827,y:46.2917}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43214',[
+                  {label:'E and Ec',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature E, Ec'});
+                HdbkUtil.addToggle('toggle-43214',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.3.2.1.6">
             <div class="canvasdiv">
@@ -763,6 +773,19 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.2.1.6.</strong> Typical tensile stress-strain curves for cast AZ91C-T6/AZ91E-T6 at room and elevated temperatures, &frac12;-hour exposure (RT, 300&deg;F, 400&deg;F). Ramberg-Osgood n (RT) = 4.5, n (300&deg;F) = 3.9, n (400&deg;F) = 5.3.</p>
+            <script>
+            (function(){
+                var d1=[{x:0.0,y:0},{x:0.8526,y:3.8744},{x:1.5473,y:6.9925},{x:1.939,y:8.5183},{x:2.3942,y:10.0106},{x:2.9887,y:11.5026},{x:3.6973,y:12.8947},{x:4.6087,y:14.2199},{x:5.3177,y:15.0477},{x:6.1434,y:15.8354},{x:6.926,y:16.5037},{x:7.957,y:17.2178},{x:8.6738,y:17.6937}];
+                var d2=[{x:0.0,y:0},{x:0.9278,y:5.0359},{x:1.6477,y:8.3863},{x:2.1026,y:10.2438},{x:2.6209,y:11.8687},{x:3.2913,y:13.5929},{x:4.0428,y:15.3545},{x:4.8603,y:16.8413},{x:5.7337,y:18.1666},{x:6.8352,y:19.4912},{x:7.8878,y:20.5759},{x:8.7793,y:21.4682}];
+                var d3=[{x:0.0,y:0},{x:0.7,y:4.5719},{x:1.1238,y:7.249},{x:1.4697,y:9.2498},{x:1.9872,y:12.0696},{x:2.5458,y:14.5581},{x:3.0309,y:16.3485},{x:3.7047,y:18.4331},{x:4.2753,y:19.797},{x:5.0331,y:21.4138},{x:5.7729,y:22.7301},{x:6.5507,y:23.8998},{x:7.3255,y:24.9665}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43216',[
+                  {label:'400°F',data:d1,interp:'lin',step:0.05},
+                  {label:'300°F',data:d2,interp:'lin',step:0.05},
+                  {label:'RT',data:d3,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-43216',chart);
+            })();
+            </script>
           </div>
         </div><!-- /4.3.2.1 -->
         </div><!-- /4.3.2 -->
@@ -854,6 +877,34 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.3.0.</strong> Effects of temperature on the physical properties of cast AZ92A-T6.</p>
+            <p class="chart-note">alpha</p>
+            <div class="canvasdiv">
+              <button id="toggle-4330a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-4330a');var a=document.createElement('a');a.download='canvas-4330a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-4330a').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=869" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-4330a" class="chartcanvas" role="img" aria-label="fig-4.3.3.0 — alpha"></canvas>
+              </div>
+            </div>
+            <script>
+            (function(){
+                var d1=[{x:-305.1433,y:10.6485},{x:-272.5359,y:11.1762},{x:-225.4286,y:11.9041},{x:-175.7618,y:12.5702},{x:-111.1769,y:13.1965},{x:-29.4788,y:13.7248},{x:90.4134,y:14.1991},{x:217.599,y:14.5826},{x:374.5911,y:15.0174},{x:515.5866,y:15.4374},{x:699.1075,y:15.9452},{x:866.2706,y:16.4274},{x:995.2785,y:16.7927}];
+                var chart=HdbkUtil.makeMultiLine('canvas-4330a',[
+                  {label:'α',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'α, 10⁻⁶ in./in./°F'});
+                HdbkUtil.addToggle('toggle-4330a',chart);
+            })();
+            </script>
+            <script>
+            (function(){
+                var d1=[{x:76.056,y:32.8345},{x:168.0316,y:37.1034},{x:317.6712,y:43.068},{x:429.3129,y:47.0092},{x:520.3577,y:49.5166}];
+                var chart=HdbkUtil.makeMultiLine('canvas-4330',[
+                  {label:'K',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'K, Btu/[(hr)(ft²)(°F)/ft]'});
+                HdbkUtil.addToggle('toggle-canvas-4330',chart);
+            })();
+            </script>
           </div>
         </div><!-- /4.3.3.0 -->
 
@@ -872,6 +923,17 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.3.1.1(a).</strong> Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) of cast AZ92A-T6. Strength at temperature, exposure up to 1000 hours.</p>
+            <script>
+            (function(){
+                var d1=[{x:79.2958,y:99.403},{x:116.1925,y:99.1313},{x:162.7946,y:99.1162},{x:181.5666,y:98.9802},{x:195.8314,y:97.0275},{x:215.3094,y:92.3459},{x:235.4449,y:86.8848},{x:257.5321,y:80.6439},{x:288.0757,y:71.1534},{x:315.3813,y:61.7939},{x:336.1842,y:54.7742},{x:347.6165,y:51.6276},{x:361.511,y:48.2724},{x:380.3318,y:44.3702},{x:397.2,y:41.2998}];
+                var d2=[{x:79.2958,y:99.403},{x:116.1925,y:99.1313},{x:162.7946,y:99.1162},{x:185.4518,y:98.8491},{x:204.2372,y:97.6742},{x:225.6369,y:94.5503},{x:247.0601,y:89.6083},{x:267.8528,y:83.3678},{x:284.7755,y:76.0896},{x:302.3404,y:69.2007},{x:319.8835,y:64.0002},{x:338.721,y:58.7993},{x:363.3889,y:53.2069},{x:385.451,y:48.914},{x:411.4049,y:43.9705},{x:434.7598,y:39.8071},{x:460.707,y:35.3831},{x:489.2399,y:31.218},{x:526.2055,y:25.6216},{x:558.6051,y:22.7539},{x:599.426,y:19.3381}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43311a',[
+                  {label:'1000 hours',data:d1,interp:'lin',step:5},
+                  {label:'1/2 hour',data:d2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Ftu'});
+                HdbkUtil.addToggle('toggle-43311a',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.3.3.1.1b">
             <div class="canvasdiv">
@@ -884,6 +946,17 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.3.1.1(b).</strong> Effect of temperature on the tensile yield strength (F<sub>ty</sub>) of cast AZ92A-T6. Strength at temperature, exposure up to 1000 hours.</p>
+            <script>
+            (function(){
+                var d1=[{x:94.2889,y:99.4157},{x:106.8355,y:95.5113},{x:123.3503,y:91.3147},{x:145.4199,y:86.587},{x:168.2882,y:82.5498},{x:196.0507,y:78.1673},{x:228.4507,y:74.6082},{x:257.5525,y:72.6162},{x:278.7171,y:71.1288},{x:294.5875,y:69.5352},{x:308.9938,y:66.6932},{x:325.5122,y:63.0279},{x:350.7506,y:57.1846},{x:376.5219,y:51.8725},{x:399.9155,y:47.2244}];
+                var d2=[{x:84.3599,y:98.8845},{x:106.8499,y:97.6892},{x:135.2926,y:96.0956},{x:161.7467,y:93.9708},{x:190.185,y:91.7131},{x:217.292,y:88.2603},{x:245.7181,y:84.1434},{x:276.1178,y:78.3001},{x:299.9092,y:73.7849},{x:324.3571,y:68.4728},{x:353.4317,y:62.3639},{x:384.4878,y:55.7238},{x:416.2057,y:49.0837},{x:449.9113,y:42.842},{x:488.9087,y:36.3347},{x:526.5881,y:30.6242},{x:564.2771,y:26.3745},{x:598.6628,y:22.9216}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43311b',[
+                  {label:'1000 hour',data:d1,interp:'lin',step:5},
+                  {label:'1/2 hour',data:d2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Fty'});
+                HdbkUtil.addToggle('toggle-43311b',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.3.3.1.1c">
             <div class="canvasdiv">
@@ -896,6 +969,17 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.3.1.1(c).</strong> Effect of exposure at elevated temperature on the room-temperature tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of cast AZ92A-T6, exposure up to 1000 hours.</p>
+            <script>
+            (function(){
+                var d1=[{x:83.6648,y:99.0387},{x:109.8775,y:97.3031},{x:148.995,y:95.0067},{x:185.5782,y:93.8051},{x:229.4694,y:93.6716},{x:285.331,y:93.4846},{x:348.5082,y:93.2176},{x:368.1926,y:93.1642},{x:398.3902,y:92.2029}];
+                var d2=[{x:84.4621,y:99.1455},{x:117.0464,y:99.279},{x:158.941,y:99.3858},{x:193.5192,y:99.6796},{x:205.4897,y:99.6262},{x:221.4556,y:98.745},{x:250.7211,y:97.9439},{x:280.6516,y:97.1429},{x:313.9027,y:97.0093},{x:348.4824,y:97.0895},{x:399.0234,y:96.9826}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43311c',[
+                  {label:'Fty',data:d1,interp:'lin',step:5},
+                  {label:'Ftu',data:d2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Ftu, Fty'});
+                HdbkUtil.addToggle('toggle-43311c',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.3.3.1.4">
             <div class="canvasdiv">
@@ -908,6 +992,15 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.3.1.4.</strong> Effect of temperature on the tensile and compressive moduli (E and E<sub>c</sub>) of cast AZ92A-T6. Modulus at temperature, exposure up to &frac12; hour.</p>
+            <script>
+            (function(){
+                var d1=[{x:79.8733,y:99.1214},{x:103.7394,y:98.3227},{x:140.8652,y:96.9649},{x:188.6016,y:94.7284},{x:233.6899,y:92.0394},{x:284.0872,y:88.3387},{x:324.5472,y:83.9457},{x:359.7082,y:79.0202},{x:395.5418,y:72.6305},{x:424.0793,y:67.0394},{x:459.2474,y:61.049},{x:489.768,y:56.2567},{x:516.9657,y:52.7955},{x:548.8024,y:49.4409},{x:582.6258,y:46.3259},{x:598.7987,y:46.246}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43314',[
+                  {label:'E and Ec',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature E, Ec'});
+                HdbkUtil.addToggle('toggle-43314',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.3.3.1.6a">
             <div class="canvasdiv">
@@ -920,6 +1013,17 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.3.1.6(a).</strong> Typical compressive stress-strain and compressive tangent-modulus curves for cast AZ92A-T6 at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:0.0},{x:0.4536,y:3.4942},{x:0.9616,y:6.7289},{x:1.4644,y:9.5551},{x:1.8272,y:11.4348},{x:2.2212,y:13.2365},{x:2.6048,y:14.7401},{x:3.0454,y:16.3601},{x:3.3693,y:17.3969},{x:3.8747,y:18.9519},{x:4.3464,y:20.332},{x:4.8337,y:21.6731},{x:5.5413,y:23.7983}];
+                var d2=[{x:2.5011,y:24.1437},{x:2.7214,y:23.2352},{x:2.8639,y:21.8081},{x:3.0324,y:19.9918},{x:3.1879,y:17.9162},{x:3.3564,y:15.9378},{x:3.5248,y:15.0294},{x:3.7581,y:14.1857},{x:4.0432,y:13.277},{x:4.5356,y:12.2381},{x:4.9892,y:11.4911},{x:5.5464,y:10.8411},{x:6.2073,y:10.4956},{x:6.3499,y:10.1579},{x:6.5054,y:9.8008},{x:6.5676,y:9.1846},{x:6.5624,y:0.0082}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43316a',[
+                  {label:'Dataset 1',data:d1,interp:'lin',step:0.05},
+                  {label:'Dataset 2',data:d2}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi',tension:0});
+                HdbkUtil.addToggle('toggle-43316a',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.3.3.1.6b">
             <div class="canvasdiv">
@@ -932,6 +1036,19 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.3.1.6(b).</strong> Typical tensile stress-strain curves for cast AZ92A-T6 at room and elevated temperatures (RT, 300&deg;F, 400&deg;F), &frac12;-hour exposure.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:0},{x:0.7082,y:3.3531},{x:1.176,y:5.5428},{x:1.5269,y:6.9482},{x:2.0598,y:8.7461},{x:2.6447,y:10.1849},{x:3.2738,y:11.4343},{x:3.7885,y:12.3111},{x:4.5945,y:13.4238},{x:5.4005,y:14.3471},{x:6.3884,y:15.3231}];
+                var d2=[{x:0,y:0},{x:0.7003,y:4.4832},{x:1.1499,y:6.7512},{x:1.5787,y:8.7448},{x:2.0726,y:10.7713},{x:2.647,y:12.4386},{x:3.2969,y:14.1323},{x:4.186,y:16.0161},{x:4.8671,y:17.3114},{x:5.673,y:18.7181},{x:6.557,y:19.9943}];
+                var d3=[{x:0,y:0},{x:0.4871,y:4.0058},{x:0.9081,y:6.7832},{x:1.3394,y:9.2668},{x:1.7345,y:11.3583},{x:2.2179,y:13.45},{x:2.6831,y:15.3457},{x:2.9041,y:16.0649},{x:3.3044,y:16.7257},{x:3.684,y:17.4388},{x:4.1675,y:18.616},{x:4.6068,y:19.9237},{x:5.0357,y:21.362},{x:5.4048,y:22.6891},{x:5.7999,y:24.0163}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43316b',[
+                  {label:'Dataset 1',data:d1,interp:'lin',step:0.05},
+                  {label:'Dataset 2',data:d2,interp:'lin',step:0.05},
+                  {label:'Dataset 3',data:d3,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-43316b',chart);
+            })();
+            </script>
           </div>
         </div><!-- /4.3.3.1 -->
         </div><!-- /4.3.3 -->
@@ -1016,6 +1133,34 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.4.0.</strong> Effect of temperature on the physical properties of cast EZ33A.</p>
+            <p class="chart-note">alpha</p>
+            <div class="canvasdiv">
+              <button id="toggle-4340a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-4340a');var a=document.createElement('a');a.download='canvas-4340a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-4340a').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=875" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-4340a" class="chartcanvas" role="img" aria-label="fig-4.3.4.0 — alpha"></canvas>
+              </div>
+            </div>
+            <script>
+            (function(){
+                var d1=[{x:200.939,y:14.4152},{x:401.5023,y:14.4119}];
+                var chart=HdbkUtil.makeMultiLine('canvas-4340a',[
+                  {label:'α',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'α, 10⁻⁶ in./in./°F'});
+                HdbkUtil.addToggle('toggle-4340a',chart);
+            })();
+            </script>
+            <script>
+            (function(){
+                var d1=[{x:80.0,y:56.0926},{x:134.8357,y:58.3352},{x:203.9437,y:60.7078},{x:272.6009,y:62.9481},{x:351.1737,y:64.657},{x:404.507,y:65.5223},{x:461.5962,y:66.0956},{x:499.1549,y:66.2219}];
+                var chart=HdbkUtil.makeMultiLine('canvas-4340',[
+                  {label:'K',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'K, Btu/[(hr)(ft²)(°F)/ft]'});
+                HdbkUtil.addToggle('toggle-canvas-4340',chart);
+            })();
+            </script>
           </div>
         </div><!-- /4.3.4.0 -->
 
@@ -1034,6 +1179,17 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.4.1.1(a).</strong> Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) of cast EZ33A-T5.</p>
+            <script>
+            (function(){
+                var d1=[{x:80.6544,y:99.7718},{x:129.0396,y:99.0971},{x:177.2913,y:98.718},{x:235.9777,y:98.0754},{x:280.9708,y:97.5603},{x:298.5859,y:96.4936},{x:324.6923,y:93.9524},{x:361.912,y:88.5933},{x:403.0661,y:81.0852},{x:431.8239,y:74.3774},{x:452.7438,y:69.0102},{x:477.5644,y:64.7205},{x:506.9392,y:61.3742},{x:535.6482,y:59.3451},{x:567.6097,y:58.0436},{x:584.7062,y:56.6809},{x:598.2828,y:55.2358}];
+                var d2=[{x:84.0478,y:99.4777},{x:119.9089,y:99.3613},{x:162.294,y:98.8449},{x:208.5898,y:98.4649},{x:265.323,y:97.5524},{x:295.9723,y:97.0301},{x:327.2792,y:95.9703},{x:348.8062,y:94.9056},{x:383.3927,y:91.9653},{x:421.901,y:88.0858},{x:451.2814,y:84.2017},{x:481.3179,y:79.9146},{x:510.0603,y:74.6858},{x:540.1095,y:69.1887},{x:564.2922,y:63.5542},{x:595.6664,y:56.0411}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43411a',[
+                  {label:'1000 hours',data:d1,interp:'lin',step:5},
+                  {label:'1/2 hour',data:d2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Ftu'});
+                HdbkUtil.addToggle('toggle-43411a',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.3.4.1.1b">
             <div class="canvasdiv">
@@ -1046,6 +1202,17 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.4.1.1(b).</strong> Effect of temperature on the tensile yield strength (F<sub>ty</sub>) of cast EZ33A-T5.</p>
+            <script>
+            (function(){
+                var d1=[{x:79.2885,y:100.0667},{x:137.489,y:96.0528},{x:191.1622,y:92.3065},{x:256.472,y:87.4905},{x:296.5599,y:84.2804},{x:337.9285,y:80.0022},{x:368.3025,y:76.3933},{x:401.262,y:72.517},{x:426.4684,y:69.7098},{x:434.8377,y:66.2381},{x:443.8542,y:62.7662},{x:454.8073,y:58.8936},{x:473.5395,y:55.954},{x:496.1569,y:53.1472},{x:521.3754,y:51.2744},{x:551.7805,y:50.068},{x:574.422,y:49.1299},{x:598.3536,y:47.8445}];
+                var d2=[{x:82.5196,y:99.6658},{x:124.5562,y:96.9893},{x:167.2348,y:93.9122},{x:213.1479,y:90.7011},{x:262.9383,y:87.0089},{x:301.731,y:83.7456},{x:358.6093,y:77.5962},{x:405.7858,y:71.9824},{x:437.4512,y:68.133},{x:480.7491,y:62.8935},{x:523.3983,y:57.5474},{x:567.3386,y:51.9341},{x:598.869,y:47.6576}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43411b',[
+                  {label:'1000 hours',data:d1,interp:'lin',step:5},
+                  {label:'1/2 hours',data:d2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Fty'});
+                HdbkUtil.addToggle('toggle-43411b',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.3.4.1.1c">
             <div class="canvasdiv">
@@ -1058,6 +1225,15 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.4.1.1(c).</strong> Effect of exposure at elevated temperatures on the room-temperature tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of cast EZ33A-T5.</p>
+            <script>
+            (function(){
+                var d1=[{x:81.9896,y:99.7945},{x:597.7731,y:100.1612}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43411c',[
+                  {label:'Dataset 1',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Ftu, Fty'});
+                HdbkUtil.addToggle('toggle-43411c',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.3.4.1.6">
             <div class="canvasdiv">
@@ -1070,6 +1246,15 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.4.1.6.</strong> Typical tensile stress-strain curve for cast EZ33A-T5 at room temperature. Ramberg-Osgood n (RT) = 15.</p>
+            <script>
+            (function(){
+                var d1=[{x:-0.0,y:0},{x:0.7335,y:4.7216},{x:1.448,y:9.3899},{x:1.75,y:11.3905},{x:1.9513,y:12.591},{x:2.145,y:13.7581},{x:2.3162,y:14.4585},{x:2.4672,y:15.0921},{x:2.7467,y:15.8794},{x:3.0238,y:16.42},{x:3.3965,y:16.9342},{x:3.9029,y:17.3953},{x:4.5326,y:17.8634},{x:5.3639,y:18.2986},{x:6.1323,y:18.5936},{x:7.2357,y:18.9561}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43416',[
+                  {label:'Dataset 1',data:d1,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-43416',chart);
+            })();
+            </script>
           </div>
         </div><!-- /4.3.4.1 -->
         </div><!-- /4.3.4 -->
@@ -1161,6 +1346,17 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.5.1.1.</strong> Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) and the tensile yield strength (F<sub>ty</sub>) of cast QE22A-T6.</p>
+            <script>
+            (function(){
+                var d1=[{x:84.4285,y:99.7018},{x:120.1174,y:96.0423},{x:163.7344,y:91.434},{x:208.6652,y:86.2835},{x:250.955,y:81.5397},{x:295.2236,y:76.3893},{x:336.0452,y:71.0762},{x:377.1274,y:65.5462},{x:411.4621,y:60.3958},{x:444.4697,y:55.1098},{x:478.7775,y:48.604},{x:512.4123,y:41.556},{x:540.7707,y:35.5923},{x:575.7488,y:29.4931},{x:610.7512,y:24.6137},{x:647.0943,y:20.5476},{x:699.3529,y:17.5657}];
+                var d2=[{x:100.9848,y:99.7018},{x:140.0334,y:98.482},{x:175.1047,y:97.0724},{x:213.4679,y:94.6869},{x:261.745,y:91.2985},{x:300.0802,y:87.5034},{x:340.3833,y:82.7596},{x:372.0717,y:77.7446},{x:399.7893,y:72.8653},{x:422.8739,y:68.1214},{x:447.9264,y:62.4288},{x:469.0242,y:57.685},{x:491.4357,y:52.399},{x:517.7938,y:45.7577},{x:541.5083,y:39.3874},{x:566.5699,y:34.1556},{x:595.8635,y:28.5985},{x:625.9615,y:23.5294},{x:699.2953,y:14.6652}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43511',[
+                  {label:'Ftu',data:d1,interp:'lin',step:5},
+                  {label:'Fty',data:d2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Ftu, Fty'});
+                HdbkUtil.addToggle('toggle-43511',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.3.5.1.4">
             <div class="canvasdiv">
@@ -1173,6 +1369,15 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.5.1.4.</strong> Effect of temperature on the tensile modulus (E) of cast QE22A-T6.</p>
+            <script>
+            (function(){
+                var d1=[{x:84.5712,y:99.5517},{x:147.0405,y:98.5552},{x:195.5278,y:97.1481},{x:242.6693,y:95.3597},{x:302.3978,y:92.4031},{x:380.659,y:87.3266},{x:433.6925,y:83.2801},{x:495.3329,y:78.3096},{x:546.9938,y:73.2286},{x:623.1724,y:66.0287},{x:699.9655,y:57.6041}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43514',[
+                  {label:'E',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature E'});
+                HdbkUtil.addToggle('toggle-43514',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.3.5.1.6">
             <div class="canvasdiv">
@@ -1185,6 +1390,25 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.5.1.6.</strong> Typical tensile stress-strain curves for cast QE22A-T6 at room and elevated temperatures (RT, 300&deg;F, 400&deg;F, 500&deg;F, 600&deg;F, 700&deg;F), &frac12;-hour exposure. Ramberg-Osgood n (RT) = 6.5, n (300&deg;F) = 7.9, n (400&deg;F) = 9.0, n (500&deg;F) = 6.3, n (600&deg;F) = 4.8, n (700&deg;F) = 3.9.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:0},{x:0.638,y:2.1435},{x:1.1149,y:3.3148},{x:1.8579,y:4.4861},{x:2.8779,y:5.4231},{x:3.7759,y:6.0673},{x:5.1728,y:6.7936},{x:6.8024,y:7.4729}];
+                var d2=[{x:0,y:0},{x:0.7047,y:3.0805},{x:1.2929,y:5.4231},{x:1.9807,y:7.7657},{x:2.7239,y:9.5227},{x:3.7774,y:11.2679},{x:4.6755,y:12.3104},{x:5.8729,y:13.4348},{x:7.1479,y:14.325},{x:8.2476,y:14.9341}];
+                var d3=[{x:0,y:0},{x:1.1644,y:5.8682},{x:1.8082,y:9.0307},{x:2.4031,y:11.7482},{x:2.8336,y:13.5168},{x:3.3795,y:15.2621},{x:4.045,y:17.019},{x:4.7592,y:18.4714},{x:5.398,y:19.4671},{x:6.407,y:20.7438},{x:7.5379,y:21.8214},{x:9.2675,y:23.1684}];
+                var d4=[{x:0,y:0},{x:1.3489,y:7.5315},{x:2.1482,y:11.9824},{x:2.8808,y:15.7306},{x:3.3358,y:17.7921},{x:3.7574,y:19.3031},{x:4.3786,y:21.0015},{x:5.0884,y:22.2899},{x:5.8757,y:23.4612},{x:6.7073,y:24.3865},{x:7.6164,y:25.1596},{x:8.6697,y:25.8741},{x:9.3238,y:26.3192}];
+                var d5=[{x:0,y:0},{x:1.6488,y:9.8155},{x:2.5591,y:15.0278},{x:3.092,y:17.8389},{x:3.4582,y:19.3616},{x:4.0107,y:21.3646},{x:4.7007,y:23.1098},{x:5.4216,y:24.6325},{x:6.2311,y:25.8624},{x:7.3177,y:27.0337},{x:8.2823,y:27.9707},{x:9.6792,y:28.9898}];
+                var d6=[{x:0,y:0},{x:0.8384,y:5.4817},{x:1.6934,y:10.9283},{x:2.393,y:15.4963},{x:3.0925,y:19.713},{x:3.7142,y:23.2269},{x:4.3247,y:26.2138},{x:4.7907,y:28.1464},{x:5.5674,y:30.8404},{x:6.3106,y:32.9488},{x:7.1758,y:34.8814},{x:8.0009,y:36.4041},{x:9.0056,y:38.0439},{x:10.9238,y:40.4217}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43516',[
+                  {label:'700°F',data:d1,interp:'lin',step:0.05},
+                  {label:'600°F',data:d2,interp:'lin',step:0.05},
+                  {label:'500°F',data:d3,interp:'lin',step:0.05},
+                  {label:'400°F',data:d4,interp:'lin',step:0.05},
+                  {label:'300°F',data:d5,interp:'lin',step:0.05},
+                  {label:'RT',data:d6,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-43516',chart);
+            })();
+            </script>
           </div>
         </div><!-- /4.3.5.1 -->
         </div><!-- /4.3.5 -->
@@ -1271,6 +1495,15 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.6.0.</strong> Effect of temperature on the thermal conductivity (K) of ZE41A-T5 sand casting.</p>
+            <script>
+            (function(){
+                var d1=[{x:124.0073,y:70.937},{x:234.3026,y:73.4934},{x:347.2193,y:75.7758},{x:443.6411,y:77.9451},{x:561.8664,y:80.7614},{x:643.0942,y:82.5184},{x:714.4087,y:83.937}];
+                var chart=HdbkUtil.makeMultiLine('canvas-4360',[
+                  {label:'K',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'K, Btu/[(hr)(ft²)(°F)/ft]'});
+                HdbkUtil.addToggle('toggle-4360',chart);
+            })();
+            </script>
           </div>
         </div><!-- /4.3.6.0 -->
 
@@ -1289,6 +1522,17 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.6.1.1.</strong> Effect of temperature on the tensile ultimate strength (F<sub>tu</sub>) and tensile yield strength (F<sub>ty</sub>) of ZE41A-T5 sand casting.</p>
+            <script>
+            (function(){
+                var d1=[{x:79.3332,y:99.8909},{x:151.5014,y:92.4746},{x:204.435,y:85.7537},{x:262.0012,y:78.4839},{x:316.764,y:70.643},{x:389.6209,y:59.1608}];
+                var d2=[{x:83.9804,y:99.8877},{x:127.6739,y:95.2194},{x:172.0493,y:91.2328},{x:217.7671,y:87.791},{x:270.1237,y:84.3446},{x:315.1522,y:79.9483},{x:356.1683,y:74.4633},{x:391.8611,y:68.5181}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43611',[
+                  {label:'Ftu',data:d1,interp:'lin',step:5},
+                  {label:'Fty',data:d2,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature Ftu, Fty'});
+                HdbkUtil.addToggle('toggle-43611',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.3.6.1.4">
             <div class="canvasdiv">
@@ -1301,6 +1545,15 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.6.1.4.</strong> Effect of temperature on the tensile modulus (E) of ZE41A-T5 sand casting.</p>
+            <script>
+            (function(){
+                var d1=[{x:78.4682,y:99.5667},{x:120.1124,y:95.6566},{x:174.9828,y:90.8037},{x:227.207,y:86.0852},{x:278.112,y:81.6369},{x:301.8941,y:78.668},{x:340.822,y:71.374},{x:371.7975,y:63.8067},{x:389.5816,y:58.9412}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43614',[
+                  {label:'E',data:d1,interp:'lin',step:5}
+                ],{xLabel:'Temperature, °F',yLabel:'Percentage of room-temperature E'});
+                HdbkUtil.addToggle('toggle-43614',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.3.6.1.6a">
             <div class="canvasdiv">
@@ -1313,6 +1566,21 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.6.1.6(a).</strong> Typical tensile stress-strain curves for ZE41A-T5 sand casting at room and elevated temperatures.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:0.0},{x:0.7062,y:3.5935},{x:1.3283,y:6.1691},{x:1.8482,y:7.9396},{x:2.6206,y:10.0638},{x:3.4556,y:12.0268},{x:4.5047,y:14.0214},{x:5.503,y:15.7584}];
+                var d2=[{x:0,y:0.0},{x:0.6298,y:3.1749},{x:1.3029,y:6.0403},{x:1.7472,y:7.811},{x:2.191,y:9.3562},{x:2.6345,y:10.7403},{x:3.2676,y:12.4783},{x:3.8748,y:13.862},{x:4.5198,y:15.2456},{x:5.1772,y:16.5647},{x:5.9228,y:17.9158}];
+                var d3=[{x:0,y:0.0},{x:0.8594,y:4.6562},{x:1.2031,y:6.5238},{x:1.6354,y:8.5845},{x:2.143,y:10.5484},{x:2.6629,y:12.3189},{x:3.2838,y:14.2502},{x:4.0026,y:16.0588},{x:4.7666,y:17.7836},{x:5.6313,y:19.4823},{x:6.4626,y:20.8332}];
+                var d4=[{x:0,y:0.0},{x:0.6827,y:4.4634},{x:1.2813,y:7.8123},{x:1.8913,y:10.5813},{x:2.5738,y:13.0988},{x:3.2047,y:15.0043},{x:3.8679,y:16.6971},{x:4.642,y:18.396},{x:5.3195,y:19.6958},{x:6.0371,y:20.8665},{x:6.6634,y:21.7347}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43616a',[
+                  {label:'392°F',data:d1,interp:'lin',step:0.05},
+                  {label:'302°F',data:d2,interp:'lin',step:0.05},
+                  {label:'312°F',data:d3,interp:'lin',step:0.05},
+                  {label:'RT',data:d4,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-43616a',chart);
+            })();
+            </script>
           </div>
           <div class="hdbk-figure" id="fig-4.3.6.1.6b">
             <div class="canvasdiv">
@@ -1325,6 +1593,17 @@
               </div>
             </div>
             <p class="fig-caption"><strong>Figure 4.3.6.1.6(b).</strong> Typical compressive stress-strain and tangent-modulus curves for ZE41A-T5 sand casting at room temperature. Ramberg-Osgood n (compression) = 3.7.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:0},{x:0.6217,y:3.8833},{x:1.0694,y:6.6808},{x:1.7302,y:10.0115},{x:2.1943,y:11.9435},{x:2.7325,y:13.8092},{x:3.1787,y:15.1753},{x:3.7733,y:16.5751},{x:4.4173,y:17.9417},{x:5.4694,y:19.6091}];
+                var d2=[{x:1.1112,y:23.9911},{x:1.4059,y:21.9946},{x:1.7866,y:19.6322},{x:2.1801,y:17.6026},{x:2.5863,y:15.9726},{x:3.0641,y:14.2762},{x:3.5471,y:12.8128},{x:3.9932,y:11.5158},{x:4.607,y:9.853},{x:5.2011,y:8.1902},{x:5.6421,y:6.7933},{x:5.9869,y:5.496},{x:6.2942,y:3.899},{x:6.4458,y:2.235},{x:6.498,y:0.0047}];
+                var chart=HdbkUtil.makeMultiLine('canvas-43616b',[
+                  {label:'Dataset 1',data:d1,interp:'lin',step:0.05},
+                  {label:'Dataset 2',data:d2,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-43616b',chart);
+            })();
+            </script>
           </div>
         </div><!-- /4.3.6.1 -->
         </div><!-- /4.3.6 -->
