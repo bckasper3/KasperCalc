@@ -1557,15 +1557,25 @@ cursor: pointer;
 }
 
 /* Multi-Fluid Properties charts — bigger canvas, tighter side padding than
-   the default .canvasdiv (8rem) so a wide 1500x800 chart has room to breathe. */
+   the default .canvasdiv (8rem) so a wide 1500x800 chart has room to breathe.
+   This element carries BOTH .canvasdiv and .mfp-canvasdiv, so it also picks
+   up the generic .canvasdiv rule's display:flex and max-width:1000px (that
+   rule exists for the hdbk chart button-row layout, which this page doesn't
+   use — its buttons live in a separate .mfp-chart-buttons row outside this
+   div). Explicitly reset those here so this stays a plain, wide block. */
 .mfp-canvasdiv {
-  margin-left: 1rem;
-  margin-right: 1rem;
+  display: block;
+  max-width: 1500px;
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .mfp-canvascontainer {
   max-width: 1500px;
   height: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .mfp-canvascontainer .chartcanvas {
