@@ -59,12 +59,17 @@ window.HdbkUtil = (function () {
       // Data already densified via linInterp/logInterp is piecewise-linear
       // (or piecewise-log) between the original raw points. Applying a
       // spline tension on top of that dense, already-interpolated line
-      // causes visible overshoot/ringing ("jitter") at each original
+      // can cause visible overshoot/ringing ("jitter") at each original
       // breakpoint, since Chart.js's Catmull-Rom smoothing has no way to
-      // know those breakpoints aren't real curvature. Force tension to 0
-      // for interpolated datasets; only apply the requested tension to
-      // genuinely sparse, un-densified data.
-      var tension = interpolated ? 0 : T;
+      // know those breakpoints aren't real curvature — so tension stays 0
+      // for interpolated datasets by default. Callers that explicitly pass
+      // opts.tension (opting in on purpose, e.g. for a smooth best-fit
+      // look) get it applied on top of the dense grid too; keeping the
+      // data densified (rather than switching to raw sparse points) is
+      // what keeps mode:'nearest' tooltips tracking the mouse smoothly —
+      // raw points spaced widely apart make the tooltip's nearest-vertex
+      // snap jump away from wherever the spline curve visually bows.
+      var tension = interpolated ? (opts.tension !== undefined ? T : 0) : T;
       return {
         label: d.label || ('S' + (i + 1)), data: pts, fill: false,
         borderColor: d.color || PAL[i % PAL.length],
