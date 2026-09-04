@@ -9,7 +9,7 @@
     <link rel="canonical" href="https://kaspercalc.com/4-20mACurrentLoopExplained.html" />
     <meta name="author" content="bckasper3" />
     <meta name="keywords" content="KasperCalc, bckasper3, 4-20mA, 4-20mA current loop, 2-wire transmitter, 3-wire transmitter, 4-wire transmitter, loop powered, sourcing sinking, XTR116, current loop driver, live zero" />
-    <meta name="description" content="A visual explanation of the 4-20mA current loop: 2-wire, 3-wire (high/low side), and 4-wire transmitter wiring, plus how to build your own loop driver." />
+    <meta name="description" content="A visual explanation of the 4-20mA current loop: 2-wire, 3-wire (high/low side), and 4-wire transmitter wiring, plus how to build a self-powered loop driver." />
 
     <!-- DEFERRED JAVASCRIPT -->
 
@@ -126,6 +126,9 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
+}
+.ref-body > * {
+  min-width: 0;
 }
 .ref-body.two-col {
   grid-template-columns: 1fr 1fr;
@@ -602,7 +605,7 @@ mjx-container[jax="SVG"] {
       </section>
 
       <!-- UNDER THE BANNER -->
-      <h1 class="visually-hidden">4-20mA Current Loop Explained: 2-Wire, 3-Wire, 4-Wire, and Driving Your Own Loop</h1>
+      <h1 class="visually-hidden">4-20mA Current Loop Explained: 2-Wire, 3-Wire, 4-Wire, and Building a Loop Driver</h1>
 
       <!-- REFERENCE SECTION -->
       <section aria-label="4-20mA current loop reference guide">
@@ -674,8 +677,8 @@ mjx-container[jax="SVG"] {
                   <text x="535" y="118" text-anchor="middle" font-size="14.5" fill="#61828A">R &#8776; 250&#8486;</text>
 
                   <path d="M150 80 H 245" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow1)"/>
-                  <path d="M320 100 V 130 H 490" fill="none" stroke="#1a3a40" stroke-width="2"/>
-                  <path d="M535 145 V 165 H 85 V 145" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <path d="M320 100 V 130 H 490" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow1)"/>
+                  <path d="M535 145 V 165 H 85 V 145" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow1)"/>
 
                   <defs>
                     <marker id="arrow1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
@@ -726,14 +729,19 @@ mjx-container[jax="SVG"] {
                   <text x="515" y="143" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1a3a40">Receiver</text>
                   <text x="515" y="160" text-anchor="middle" font-size="13.5" fill="#61828A">R</text>
 
-                  <path d="M140 60 H 250" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <path d="M140 60 H 250" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow3)"/>
                   <text x="195" y="52" text-anchor="middle" font-size="12.5" fill="#61828A">dedicated power</text>
 
-                  <path d="M380 60 H 515 V 120" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <path d="M380 60 H 515 V 120" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow3)"/>
                   <text x="450" y="52" text-anchor="middle" font-size="12.5" fill="#61828A">signal OUT</text>
 
-                  <path d="M515 175 V 205 H 80 V 145" fill="none" stroke="#1a3a40" stroke-width="2"/>
-                  <path d="M315 120 V 205" fill="none" stroke="#1a3a40" stroke-width="2" stroke-dasharray="4,3"/>
+                  <path d="M515 175 V 205 H 80 V 145" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow3)"/>
+                  <path d="M315 120 V 205" fill="none" stroke="#1a3a40" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrow3)"/>
+                  <defs>
+                    <marker id="arrow3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                      <path d="M0,0 L6,3 L0,6 Z" fill="#1a3a40"/>
+                    </marker>
+                  </defs>
                   <text x="220" y="218" text-anchor="middle" font-size="12.5" fill="#61828A">shared negative / common return (low side)</text>
                 </svg>
                 <span class="ref-fig-label">3-Wire, Common Negative</span>
@@ -777,13 +785,19 @@ mjx-container[jax="SVG"] {
                   <text x="320" y="238" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1a3a40">Transmitter</text>
                   <text x="320" y="260" text-anchor="middle" font-size="13.5" fill="#61828A">RTN   OUT (sink)</text>
 
-                  <path d="M160 80 H 460 M320 80 V 200" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <path d="M160 80 H 460" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow4)"/>
+                  <path d="M320 80 V 200" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow4)"/>
                   <text x="310" y="70" text-anchor="middle" font-size="13.5" fill="#61828A">shared positive rail (high side)</text>
 
-                  <path d="M245 245 H 90 V 130" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <path d="M245 245 H 90 V 130" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow4)"/>
                   <text x="165" y="232" text-anchor="middle" font-size="13.5" fill="#61828A">dedicated return</text>
 
-                  <path d="M530 130 V 245 H 395" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <path d="M530 130 V 245 H 395" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow4)"/>
+                  <defs>
+                    <marker id="arrow4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                      <path d="M0,0 L6,3 L0,6 Z" fill="#1a3a40"/>
+                    </marker>
+                  </defs>
                   <text x="462" y="232" text-anchor="middle" font-size="13.5" fill="#61828A">sinks current</text>
                 </svg>
                 <span class="ref-fig-label">3-Wire, Common Positive</span>
@@ -822,54 +836,50 @@ mjx-container[jax="SVG"] {
                   <text x="335" y="83" text-anchor="middle" font-size="13" fill="#61828A">PWR+ / PWR&minus;</text>
                   <text x="335" y="101" text-anchor="middle" font-size="13" fill="#61828A">IOUT+ / IOUT&minus;</text>
 
-                  <path d="M140 45 H 250" fill="none" stroke="#1a3a40" stroke-width="2"/>
-                  <path d="M140 115 H 250" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <path d="M160 45 H 250" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow5)"/>
+                  <path d="M250 115 H 160" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow5)"/>
 
                   <rect x="490" y="210" width="120" height="90" rx="6" fill="#fff" stroke="#1a3a40" stroke-width="2"/>
                   <text x="550" y="248" text-anchor="middle" font-size="15.5" font-weight="700" fill="#1a3a40">Receiver</text>
                   <text x="550" y="270" text-anchor="middle" font-size="14.5" fill="#61828A">R</text>
 
-                  <path d="M420 45 H 550 V 210" fill="none" stroke="#1a3a40" stroke-width="2"/>
-                  <path d="M420 115 H 460 V 310 H 550 V 300" fill="none" stroke="#1a3a40" stroke-width="2" stroke-dasharray="7,5"/>
+                  <path d="M420 45 H 550 V 210" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow5)"/>
+                  <path d="M550 300 V 310 H 460 V 115 H 420" fill="none" stroke="#1a3a40" stroke-width="2" stroke-dasharray="7,5" marker-end="url(#arrow5)"/>
+                  <defs>
+                    <marker id="arrow5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                      <path d="M0,0 L6,3 L0,6 Z" fill="#1a3a40"/>
+                    </marker>
+                  </defs>
                   <text x="470" y="185" text-anchor="middle" font-size="13.5" fill="#61828A">isolated 2-wire signal loop</text>
-
-                  <circle cx="140" cy="45" r="3.5" fill="#1a3a40"/>
-                  <circle cx="140" cy="115" r="3.5" fill="#1a3a40"/>
-                  <circle cx="250" cy="45" r="3.5" fill="#1a3a40"/>
-                  <circle cx="250" cy="115" r="3.5" fill="#1a3a40"/>
-                  <circle cx="420" cy="45" r="3.5" fill="#1a3a40"/>
-                  <circle cx="420" cy="115" r="3.5" fill="#1a3a40"/>
-                  <circle cx="550" cy="210" r="3.5" fill="#1a3a40"/>
-                  <circle cx="550" cy="300" r="3.5" fill="#1a3a40"/>
                 </svg>
                 <span class="ref-fig-label">4-Wire Self-Powered Transmitter</span>
                 <span class="ref-fig-caption">Power and signal are two completely separate circuits with no shared wire. Two wires deliver power to the transmitter, and a fully independent two-wire loop carries the 4-20mA signal out.</span>
               </div>
             </div>
             <div>
-              <p>Full separation: two wires for power (e.g. your own local 24V) and two wires for the 4-20mA signal loop, with no wire shared between the two circuits. There is no power-budget constraint at all. The transmitter's electronics draw whatever they need from the dedicated power input, completely independent of what current happens to be flowing in the signal loop.</p>
-              <p>This is the architecture you get when you build your own driver circuit (see the next card): your local supply, the regulating element, and the receiver's resistor form one series loop, while your control/logic electronics are powered separately and just tell that loop how much current to carry.</p>
+              <p>Full separation: two wires for power (e.g. a local 24V supply) and two wires for the 4-20mA signal loop, with no wire shared between the two circuits. There is no power-budget constraint at all. The transmitter's electronics draw whatever they need from the dedicated power input, completely independent of what current happens to be flowing in the signal loop.</p>
+              <p>This is the architecture that results from building a self-powered driver circuit (see the next card): the local supply, the regulating element, and the receiver's resistor form one series loop, while the control/logic electronics are powered separately and just tell that loop how much current to carry.</p>
               <div class="ref-callout">Also called <strong>active</strong> or <strong>self-powered</strong>, since the transmitter supplies its own loop voltage rather than relying on the receiver end to provide it.</div>
             </div>
           </div>
         </div>
 
         <!-- ══════════════════════════════════════════════════════
-             6. BUILDING YOUR OWN LOOP DRIVER
+             6. BUILDING A LOOP DRIVER
              ══════════════════════════════════════════════════════ -->
         <div class="ref-card" id="refCard6">
           <div class="ref-card-header" onclick="toggleRefCard('refCard6')" role="button" tabindex="0" aria-expanded="true">
             <span class="ref-num">06</span>
-            <h2>Building Your Own Loop Driver</h2>
+            <h2>Building a Loop Driver</h2>
             <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
             </svg>
           </div>
           <div class="ref-body two-col">
             <div>
-              <p>Say you're supplied with 12&ndash;24V and need to <em>generate</em> a 4-20mA signal for a downstream transducer or indicator to read. You're creating the loop, not living on someone else's bus. This is exactly the 4-wire / self-powered case above: your supply, your regulating circuit, and the receiver's input resistance form one series loop.</p>
+              <p>Consider a circuit supplied with 12&ndash;24V that needs to <em>generate</em> a 4-20mA signal for a downstream transducer or indicator to read, rather than living on someone else's bus. This is exactly the 4-wire / self-powered case above: the local supply, a regulating circuit, and the receiver's input resistance form one series loop.</p>
               <div class="ref-sub">Step 1: Assume a Load Resistance</div>
-              <p>You're not measuring anything with that current, you're only driving it. What matters is whether your circuit has enough voltage headroom to push 20mA through whatever resistance sits on the receiving end. If you don't know the actual device, <strong>250&#8486; is the standard default</strong> (it's what turns a 4-20mA signal into a 1-5V reading inside many PLC/DAQ analog inputs). Add any wire resistance, which is usually negligible unless the run is very long or the wire gauge is small.</p>
+              <p>Nothing is being measured with that current, it's only being driven. What matters is whether the driving circuit has enough voltage headroom to push 20mA through whatever resistance sits on the receiving end. If the actual device is unknown, <strong>250&#8486; is the standard default</strong> (it's what turns a 4-20mA signal into a 1-5V reading inside many PLC/DAQ analog inputs). Add any wire resistance, which is usually negligible unless the run is very long or the wire gauge is small.</p>
               <div class="ref-sub" style="margin-top:12px;">Step 2: Check Compliance Voltage</div>
               <div class="ref-eq-block">
                 <span class="ref-eq-tag">Minimum supply voltage</span>
@@ -881,7 +891,7 @@ mjx-container[jax="SVG"] {
               <div class="ref-fig">
                 <svg viewBox="0 -30 680 330" xmlns="http://www.w3.org/2000/svg" class="ref-zoomable" role="img" aria-label="XTR116 based 4-20mA driver schematic">
                   <rect x="20" y="-25" width="410" height="290" rx="4" fill="none" stroke="#1a3a40" stroke-width="1.5" stroke-dasharray="3,3"/>
-                  <text x="225" y="250" text-anchor="middle" font-size="12.5" font-weight="700" fill="#61828A">YOUR ENCLOSURE</text>
+                  <text x="225" y="250" text-anchor="middle" font-size="12.5" font-weight="700" fill="#61828A">DRIVER ENCLOSURE</text>
 
                   <rect x="45" y="-15" width="110" height="70" rx="6" fill="#e8f0f3" stroke="#1a3a40" stroke-width="2"/>
                   <text x="60" y="5" font-size="13" font-weight="700" fill="#61828A">+</text>
@@ -896,7 +906,7 @@ mjx-container[jax="SVG"] {
                   <text font-size="12.5" fill="#61828A" x="305" y="155">IO (4)</text>
                   <text y="165" font-size="12.5" fill="#61828A" x="260">GND</text>
 
-                  <path d="M155 5 H 185 V 105 H 210" fill="none" stroke="#1a3a40" stroke-width="2"/>
+                  <path d="M155 5 H 185 V 105 H 210" fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow2)"/>
 
                   <text x="55" y="154" font-size="11.5" fill="#61828A">V&#8305;&#8345; (setpoint)</text>
                   <circle cx="118" cy="150" r="3" fill="#1a3a40"/>
@@ -910,17 +920,18 @@ mjx-container[jax="SVG"] {
                   <text x="380" y="158" text-anchor="middle" font-size="10.5" fill="#61828A">NPN</text>
                   <path d="M340 150 H 358" fill="none" stroke="#1a3a40" stroke-width="2"/>
 
-                  <path fill="none" stroke="#1a3a40" stroke-width="2" d="M380 80 V 128"/>
-                  <path fill="none" stroke="#1a3a40" stroke-width="2" d="M340 80 H 380"/>
+                  <path fill="none" stroke="#1a3a40" stroke-width="2" d="M380 80 V 128" marker-end="url(#arrow2)"/>
+                  <path fill="none" stroke="#1a3a40" stroke-width="2" d="M340 80 H 380" marker-end="url(#arrow2)"/>
 
-                  <path fill="none" stroke="#1a3a40" stroke-width="2" d="M100 55 V 230 M270 170 V 230"/>
+                  <path fill="none" stroke="#1a3a40" stroke-width="2" d="M45 230 V 55" marker-end="url(#arrow2)"/>
+                  <path fill="none" stroke="#1a3a40" stroke-width="2" d="M270 170 V 230" marker-end="url(#arrow2)"/>
                   <text x="150" y="220" text-anchor="middle" font-size="11" fill="#61828A">common / return</text>
 
                   <rect x="550" y="60" width="90" height="55" rx="6" fill="#fff" stroke="#1a3a40" stroke-width="2"/>
                   <text x="595" y="83" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1a3a40">Receiver</text>
                   <text x="595" y="100" text-anchor="middle" font-size="13.5" fill="#61828A">R &#8776; 250&#8486;</text>
 
-                  <path fill="none" stroke="#1a3a40" stroke-width="2" d="M100 230 H 620 V 115"/>
+                  <path fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow2)" d="M620 115 V 230 H 45"/>
                   <path fill="none" stroke="#1a3a40" stroke-width="2" marker-end="url(#arrow2)" d="M380 172 V 200 H 580V 115"/>
 
                   <defs>
@@ -931,7 +942,7 @@ mjx-container[jax="SVG"] {
                   <text x="320" y="290" text-anchor="middle" font-size="12" fill="#61828A">only 2 wires leave the enclosure</text>
                 </svg>
                 <span class="ref-fig-label">Self-Powered XTR116 Driver</span>
-                <span class="ref-fig-caption">Your 24V supply, the XTR116, and Q1 all live together in your enclosure. Only two wires go out to the receiver. Current flows from the supply through Q1 (its collector tied to V+, base driven by IO) out to the receiver, through R, and back to the supply's negative terminal, one series loop. A small setpoint voltage through Rin into IIN sets how much of that loop current flows; GND shares the same return as the supply's negative terminal.</span>
+                <span class="ref-fig-caption">The 24V supply, the XTR116, and Q1 all live together in one enclosure. Only two wires go out to the receiver. Current flows from the supply through Q1 (its collector tied to V+, base driven by IO) out to the receiver, through R, and back to the supply's negative terminal, one series loop. A small setpoint voltage through Rin into IIN sets how much of that loop current flows; GND shares the same return as the supply's negative terminal.</span>
               </div>
             </div>
           </div>
@@ -959,7 +970,7 @@ mjx-container[jax="SVG"] {
               <div class="ref-sub">Dedicated Loop-Driver ICs</div>
               <p>Purpose-built chips exist because doing this <em>right</em> (accuracy, temperature stability, protection against loop faults and reverse polarity) is fussier than the basic topology suggests. They split into two families that map directly onto the wiring taxonomy above:</p>
               <ul>
-                <li><strong>Self-powered / 4-wire drivers</strong> (TI XTR111/XTR116/XTR200, ADI AD5410/AD5412/AD5420/AD5422): these need their own supply rail, exactly the "build your own driver" case shown in the XTR116 schematic above. They set the loop current directly; there's no power budget to worry about.</li>
+                <li><strong>Self-powered / 4-wire drivers</strong> (TI XTR111/XTR116/XTR200, ADI AD5410/AD5412/AD5420/AD5422): these need their own supply rail, exactly the "building a loop driver" case shown in the XTR116 schematic above. They set the loop current directly; there's no power budget to worry about.</li>
                 <li><strong>Loop-powered / 2-wire DACs</strong> (ADI AD5421, TI DAC161S997/DAC161P997): these live entirely inside the 2-wire transmitter and must run all of their own electronics, plus whatever sensor front-end they're driving, off the same current they're outputting. This is the harder design problem, and it's the category that HART-compatible smart transmitters are built from.</li>
               </ul>
             </div>
@@ -991,7 +1002,6 @@ mjx-container[jax="SVG"] {
                 <tr><td><strong>TI DAC161P997</strong></td><td>Single-Wire Interface (SWIF)</td><td>16-pin WQFN</td><td>Loop-powered</td><td>&lt;190&micro;A</td><td>&minus;40&deg;C to +105&deg;C</td><td>Active</td><td>Same family as the S997 but with a simplified one-wire digital protocol instead of full SPI, easier to isolate</td></tr>
               </table>
               </div>
-              <p style="margin-top:8px;"><strong>Correction / clarification:</strong> the TI <strong>DAC8740H</strong> is <em>not</em> a current-loop driver at all; it's a HART/FOUNDATION&nbsp;Fieldbus/PROFIBUS&nbsp;PA physical-layer modem chip, meant to sit alongside a separate current-output DAC (like the ones above) rather than replace it. It doesn't belong in this comparison and any earlier reference to it as a "loop-driver IC" was a mistake.</p>
             </div>
             <div class="full-col" style="margin-top:14px;">
               <div class="ref-sub">PWM vs. SPI vs. Single-Wire: What "Digital Input" Actually Means Here</div>

@@ -74,14 +74,20 @@
       .ref-card.collapsed .ref-chevron { transform: rotate(-90deg); }
       .ref-card.collapsed .ref-body    { display: none; }
       .ref-body { padding: 14px 16px; display: grid; grid-template-columns: 1fr; gap: 14px; }
+      .ref-body > * { min-width: 0; }
       .ref-body.two-col { grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 14px 24px; } /*grid-template-columns: 1fr 1fr;/*/
       #doubleEquationRefBody{grid-template-columns: repeat(auto-fit, minmax(650px, 1fr));}
-      @media (max-width: 640px) { .ref-body.two-col { grid-template-columns: 1fr; } }
+      @media (max-width: 640px) {
+        .ref-body.two-col { grid-template-columns: 1fr; }
+        #doubleEquationRefBody { grid-template-columns: 1fr; }
+      }
       .ref-sub { font-size: 12px; font-weight: 700; color: #61828A; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #c0c0c0; padding-bottom: 3px; margin-bottom: 6px; }
       .ref-body p { font-size: 13px; color: #333; line-height: 1.65; margin: 0 0 8px; }
       .ref-body p:last-child { margin-bottom: 0; }
       .ref-body ul, .ref-body ol { font-size: 13px; color: #333; line-height: 1.7; padding-left: 18px; margin: 0 0 8px; }
-      .ref-eq-block { background: #d9d9d9; border: 1.5px solid rgb(67,67,67); border-radius: 6px; padding: 10px 16px 8px; margin: 6px 0 10px; overflow-x: auto; }
+      .ref-eq-block { background: #d9d9d9; border: 1.5px solid rgb(67,67,67); border-radius: 6px; padding: 10px 16px 8px; margin: 6px 0 10px; overflow-x: auto; font-size: 16px; }
+      @media (max-width: 640px) { .ref-eq-block { font-size: 13px; padding: 8px 10px 6px; } }
+      @media (max-width: 420px) { .ref-eq-block { font-size: 11px; padding: 7px 8px 5px; } }
       .ref-eq-tag { font-size: 12px; color: #61828A; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; font-family: "Roboto", Arial, sans-serif; display: block; margin-bottom: 4px; }
       mjx-container { color: #1a3a40 !important; margin: 0; }
       mjx-container[jax="SVG"][display="true"] { margin: 0.7em 0 !important; }
@@ -135,7 +141,7 @@
       .sq-seg button:last-child { border-right: none; }
       .sq-seg button.sq-active { background: var(--sq-blue); color: #fff; }
       /* ── Dimensions table ───────────────────────────────────── */
-      table.sq-dims { width: 100%; border-collapse: collapse; font-size: 14px; margin: 10px 0 0; }
+      table.sq-dims { width: 100%; border-collapse: collapse; font-size: 14px; margin: 10px 0 0; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       table.sq-dims th { text-align: left; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--sq-ink-soft); font-weight: 600; padding: 4px 6px; border-bottom: 1px solid var(--sq-line); }
       table.sq-dims td { padding: 4px 6px; border-bottom: 1px solid var(--sq-line-s); vertical-align: middle; }
       table.sq-dims td.lbl { font-size: 13px; color: var(--sq-ink); }
@@ -158,6 +164,7 @@
       .sq-note { font-size: 12px; color: var(--sq-ink-soft); margin: 6px 0 0; line-height: 1.5; }
       /* ── CTE rows ───────────────────────────────────────────── */
       .sq-cte-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; align-items: start; margin-top: 8px; }
+      .sq-cte-row > * { min-width: 0; }
       @media (max-width:580px) { .sq-cte-row { grid-template-columns: 1fr; } }
       .sq-cte-row label { font-size: 12px; color: var(--sq-ink-soft); display: block; }
       .sq-cte-row .sq-cte-sub { font-size: 11px; color: var(--sq-ink-soft); display: block; margin-top: 1px; }
@@ -186,7 +193,7 @@
       .sq-chip.sq-warn { color: var(--sq-warn-c); border-color: var(--sq-warn-c); background: rgba(183,121,31,.09); }
       .sq-chip.sq-crit { color: var(--sq-crit-c); border-color: var(--sq-crit-c); background: rgba(179,54,43,.07); }
       /* ── Results tables ─────────────────────────────────────── */
-      table.sq-res { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 4px; }
+      table.sq-res { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 4px; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       table.sq-res caption { text-align: left; font-size: 10px; letter-spacing: .13em; text-transform: uppercase; color: var(--sq-ink-soft); font-weight: 600; padding: 10px 0 4px; }
       table.sq-res th { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--sq-ink-soft); font-weight: 600; text-align: right; padding: 4px 8px; border-bottom: 1px solid var(--sq-line); }
       table.sq-res th:first-child { text-align: left; }

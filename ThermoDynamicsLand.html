@@ -144,6 +144,7 @@
     .ref-card.collapsed .ref-chevron{transform:rotate(-90deg)}
     .ref-card.collapsed .ref-body{display:none}
     .ref-body{padding:14px 16px;display:grid;grid-template-columns:1fr;gap:12px}
+    .ref-body>*{min-width:0}
     .ref-body.two-col{grid-template-columns:1fr 1fr;gap:12px 24px}
     @media(max-width:640px){.ref-body.two-col{grid-template-columns:1fr}}
     .full-col{grid-column:1 / -1}
@@ -1716,7 +1717,8 @@
                   </svg>
                 </div>
                 <div class="ref-body">
-                  <div class="full-col" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;">
+                  <div class="full-col d-none d-md-block">
+                    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;">
                     <div style="border:1px solid #ccc;border-radius:6px;border-top:3px solid #6c757d;padding:10px;">
                       <div class="ref-sub fs-6">NIST WebBook</div>
                       <p style="font-size:14px;color:#666;font-style:italic;margin-bottom:6px;">Experimental Authority</p>
@@ -1742,8 +1744,52 @@
                         <li class="fs-6" style="color:#bb2222;">&#10007; Grid-interpolated (approx.)</li>
                         <li class="fs-6" style="color:#bb2222;">&#10007; Reduced precision near T<sub>crit</sub></li>
                       </ul>
-                    </div>                    
+                    </div>
                     <div style="border:1px solid #ccc;border-radius:6px;border-top:3px solid #61828A;padding:10px;">
+                      <div class="ref-sub fs-6">CoolProp</div>
+                      <p style="font-size:14px;color:#666;font-style:italic;margin-bottom:6px;">High-Fidelity Physics Engine</p>
+                      <p style="font-size:14px;">Open-source thermophysical library solving equations of state (EOS) on demand. Supports 400+ fluids, refrigerants, incompressible mixtures, and full phase behavior via iterative numerical solvers.</p>
+                      <ul>
+                        <li class="fs-6">&#10003; High-fidelity, all phases</li>
+                        <li class="fs-6">&#10003; Critical &amp; two-phase region</li>
+                        <li class="fs-6">&#10003; 400+ fluids &amp; mixtures</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Requires Python / C++</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Computational overhead</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Not browser-native</li>
+                      </ul>
+                    </div>
+                    </div>
+                  </div>
+
+                  <!-- Mobile (< md): identical stacked rows instead of the 3-column grid -->
+                  <div class="full-col d-md-none">
+                    <div class="thermo-source-row" style="border:1px solid #ccc;border-radius:6px;border-top:3px solid #6c757d;padding:10px;margin-bottom:12px;">
+                      <div class="ref-sub fs-6">NIST WebBook</div>
+                      <p style="font-size:14px;color:#666;font-style:italic;margin-bottom:6px;">Experimental Authority</p>
+                      <p style="font-size:14px;">Authoritative thermophysical and thermochemical database backed by evaluated experimental data. The primary reference standard for validation and benchmark comparisons.</p>
+                      <ul>
+                        <li class="fs-6">&#10003; Highest experimental accuracy</li>
+                        <li class="fs-6">&#10003; Peer-reviewed, documented lineage</li>
+                        <li class="fs-6">&#10003; Trusted reference standard</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Clunky UI</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Paid service advertisement</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Not designed for engineers</li>
+                      </ul>
+                    </div>
+                    <div class="thermo-source-row" style="border:1px solid #ccc;border-radius:6px;border-top:3px solid #429666;padding:10px;margin-bottom:12px;">
+                      <div class="ref-sub fs-6">KasperCalc</div>
+                      <p style="font-size:14px;color:#666;font-style:italic;margin-bottom:6px;">Fast Browser Lookup</p>
+                      <p style="font-size:14px;">Lightweight, precomputed property database optimized for browser lookup, embedded tools, and offline use. Approximates CoolProp via a structured, pre-solved T/P grid.</p>
+                      <ul>
+                        <li class="fs-6">&#10003; Instant browser-native lookup</li>
+                        <li class="fs-6">&#10003; Works fully offline</li>
+                        <li class="fs-6">&#10003; SI and US customary units</li>
+                        <li class="fs-6">&#10003; Deterministic performance</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Grid-interpolated (approx.)</li>
+                        <li class="fs-6" style="color:#bb2222;">&#10007; Reduced precision near T<sub>crit</sub></li>
+                      </ul>
+                    </div>
+                    <div class="thermo-source-row" style="border:1px solid #ccc;border-radius:6px;border-top:3px solid #61828A;padding:10px;margin-bottom:0;">
                       <div class="ref-sub fs-6">CoolProp</div>
                       <p style="font-size:14px;color:#666;font-style:italic;margin-bottom:6px;">High-Fidelity Physics Engine</p>
                       <p style="font-size:14px;">Open-source thermophysical library solving equations of state (EOS) on demand. Supports 400+ fluids, refrigerants, incompressible mixtures, and full phase behavior via iterative numerical solvers.</p>
