@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>KasperCalc: MIL-HDBK-5 Material Property Lookup</title>
+    <link rel="canonical" href="https://kaspercalc.com/MaterialPropertyLookup.html" />
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, material property lookup, material properties, design allowables, MIL-HDBK-5, MMPDS, Ftu, Fty, Fcy, Fsu, Fbru, Fbry, A basis, B basis, S basis, 6061-T6, 2024-T3, 7075-T6, 4130, aluminum, magnesium, stainless steel, stress analysis" />
+    <meta name="description" content="Look up MIL-HDBK-5 design mechanical properties by alloy, product form, temper, thickness and basis. Returns Ftu, Fty, Fcy, Fsu, Fbru, Fbry, elongation, E, Ec, G, Poisson's ratio and density with a link to the source handbook table." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <script defer src="js/chart.min.js"></script>
+    <script defer src="js/hdbkUtil.js"></script>
+    <script defer src="js/stress-figures.js"></script>
+    <script defer src="js/stress-allowables.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/mil-hdbk-5.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      /* ── Green wrapper token system (matches ThreadStressCalculator.html) ── */
+      :root {
+        --sq-wrap:     #6a746a;
+        --sq-outline:  rgb(67,67,67);
+        --sq-panel:    #eeeeee;
+        --sq-blue:     #61828A;
+        --sq-ink:      #1C2227;
+        --sq-ink-soft: #5A6168;
+        --sq-ui:       "Roboto", Arial, sans-serif;
+      }
+      .sq-main { max-width: 1500px; margin: 0 auto; padding: 0 20px 60px; }
+      .sq-subtitle { font-family: var(--sq-ui); color: var(--sq-ink-soft); font-size: 15px; line-height: 1.5; max-width: 74ch; margin: 18px auto 22px; text-align: center; }
+      .sq-calc-grid { font-family: var(--sq-ui); display: grid; grid-template-columns: minmax(0,340px) minmax(0,1fr); gap: 20px; align-items: start; background: var(--sq-wrap); border: 3px solid var(--sq-outline); border-radius: 18px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); padding: 20px; }
+      /* minmax(0,1fr) rather than 1fr: a bare 1fr track keeps min-width:auto,
+         which lets a wide table inside push the whole grid past the viewport
+         instead of scrolling within its own wrapper. */
+      @media (max-width:960px) { .sq-calc-grid { grid-template-columns: minmax(0,1fr); } }
+      .sq-panel { background: var(--sq-panel); border: 2px solid var(--sq-outline); border-radius: 10px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); overflow: hidden; }
+      .sq-panel-h { padding: 11px 16px; background: #fff; border-bottom: 2px solid var(--sq-outline); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--sq-ink); font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+      .sq-panel-b { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+      .sq-sticky { position: sticky; top: 14px; }
+      @media (max-width:960px) { .sq-sticky { position: static; } }
+
+      /* ── Filters ── */
+      .sa-field { margin-bottom: 10px; }
+      .sa-field label { display: block; margin-bottom: 3px; font-size: 12px; color: #444; font-family: var(--body-font-family); }
+      .sa-field select,
+      .sa-field input[type=number] {
+        width: 100%; padding: 6px 7px; border: 1px solid #9aabb0;
+        border-radius: var(--border-radius-small); font-size: 13px;
+        font-family: var(--body-font-family); background: #fff; color: #222;
+        /* A select's min-content width is its longest option, and some
+           specification names run to 50 characters. Without min-width:0 that
+           intrinsic size overrides width:100% and pushes the whole panel wider
+           than the phone viewport. */
+        min-width: 0;
+      }
+      .sq-panel-b, .sa-field, .sa-r2 > * { min-width: 0; }
+      .sa-field select:focus,
+      .sa-field input[type=number]:focus { outline: 2px solid var(--section-title-color); }
+      .sa-field select:disabled { background: #e4e4e4; color: #888; }
+      .sa-r2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .sa-hint { font-size: 11px; color: #666; margin-top: 4px; font-family: var(--body-font-family); }
+
+      .sa-reset {
+        border: 1px solid var(--sq-outline); background: #fff; color: var(--sq-ink);
+        border-radius: var(--border-radius-small); padding: 5px 12px;
+        font-size: 12px; font-family: var(--sq-ui); cursor: pointer;
+      }
+      .sa-reset:hover { background: var(--calc-hover-color); }
+
+      .sa-count { font-size: 11px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--sq-ink-soft); }
+
+      /* ── Tables ── */
+      .sa-table-scroll { overflow-x: auto; }
+      .sa-match-table, .sa-prop-table {
+        width: 100%; border-collapse: collapse;
+        font-family: var(--body-font-family); font-size: 13px; background: #fff;
+      }
+      .sa-match-table th, .sa-prop-table th,
+      .sa-match-table td, .sa-prop-table td {
+        padding: 6px 9px; border-bottom: 1px solid #d5dade; text-align: left;
+        white-space: nowrap;
+      }
+      .sa-match-table thead th, .sa-prop-table thead th {
+        background: var(--section-title-color); color: #fff; font-size: 12px;
+        font-weight: 600; border-bottom: 2px solid var(--sq-outline);
+        position: sticky; top: 0;
+      }
+      .sa-num { text-align: right !important; font-variant-numeric: tabular-nums; }
+      .sa-match-row { cursor: pointer; }
+      .sa-match-row:hover { background: #eef3f4; }
+      .sa-match-row.is-selected { background: #dbe7ea; box-shadow: inset 3px 0 0 var(--section-title-color); }
+      .sa-match-row:focus-visible { outline: 2px solid var(--section-title-color); outline-offset: -2px; }
+      .sa-src { color: var(--sq-ink-soft); font-size: 12px; }
+
+      .sa-prop-table th[scope=row] { font-weight: 600; color: var(--sq-ink); background: #f6f8f8; }
+      /* Hoverable definition on each property symbol. */
+      .sa-abbr {
+        text-decoration: underline dotted var(--sq-blue);
+        text-underline-offset: 3px; cursor: help;
+      }
+
+      /* ── Derated-at-temperature panel ── */
+      .sa-exposure-row {
+        display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        padding: 10px 16px; background: #f6f8f8;
+        border-bottom: 1px solid #d5dade; font-family: var(--sq-ui);
+      }
+      .sa-exposure-row label { font-size: 12px; color: #444; margin: 0; }
+      .sa-exposure-row select {
+        padding: 5px 7px; border: 1px solid #9aabb0; min-width: 0;
+        border-radius: var(--border-radius-small); font-size: 13px;
+        font-family: var(--body-font-family); background: #fff; color: #222;
+      }
+      .sa-derated-val { font-weight: 700; color: #b34040; }
+      .sa-prop-table .sa-note { color: var(--sq-ink-soft); font-size: 12px; white-space: normal; }
+      .sa-unit { color: var(--sq-ink-soft); font-weight: 400; font-size: 11px; }
+      .sa-qual { color: var(--sq-blue); font-weight: 600; }
+
+      .sa-detail-head { padding: 14px 16px; background: #fff; border-bottom: 2px solid var(--sq-outline); }
+      .sa-detail-title { font-family: var(--title-font-family); font-size: 20px; font-weight: 600; color: var(--sq-ink); }
+      .sa-detail-sub { font-size: 13px; color: var(--sq-ink-soft); margin-top: 2px; }
+      .sa-detail-spec { font-size: 12px; color: var(--sq-blue); margin-top: 3px; }
+
+      .sa-source { font-size: 12px; color: var(--sq-ink-soft); padding: 10px 16px 12px; margin: 0; background: #fff; border-top: 1px solid #d5dade; line-height: 1.5; }
+      .sa-source a { font-size: 12px; }
+
+      .sa-empty { font-size: 13px; color: var(--sq-ink-soft); padding: 18px 16px; margin: 0; font-family: var(--body-font-family); line-height: 1.55; }
+
+      /* ── Figure & source-table sections ── */
+      .sf-section { margin-top: 28px; font-family: var(--sq-ui); }
+      .sf-section-h {
+        display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+        border-bottom: 2px solid var(--sq-outline); padding-bottom: 6px;
+        margin-bottom: 16px;
+      }
+      .sf-section-title {
+        font-family: var(--title-font-family); font-size: 22px;
+        font-weight: 600; color: var(--sq-ink);
+      }
+      .sf-section-note { font-size: 13px; color: var(--sq-ink-soft); }
+
+      .sf-card {
+        background: #fff; border: 2px solid var(--sq-outline); border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,.15); padding: 14px 16px 16px;
+        margin-bottom: 20px;
+      }
+      .sf-card-h {
+        font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+        color: var(--sq-ink); font-weight: 700; margin-bottom: 10px;
+      }
+
+      .sf-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+      .sf-btn {
+        display: inline-block; font-family: var(--sq-ui); font-size: 13px;
+        line-height: 1.2; padding: 6px 11px; border-radius: var(--border-radius-small);
+        border: 1px solid var(--sq-outline); background: var(--calc-background-color);
+        color: var(--sq-ink); text-decoration: none; cursor: pointer;
+      }
+      .sf-btn:hover { background: var(--calc-hover-color); color: var(--sq-ink); }
+      .sf-btn-src { background: var(--section-title-color); color: #fff; border-color: var(--section-title-color); }
+      .sf-btn-src:hover { background: #4e6b73; color: #fff; }
+      .sf-btn-ghost { background: #fff; }
+
+      .sf-canvas-wrap {
+        position: relative; width: 100%; height: 460px; margin-bottom: 6px;
+      }
+      .sf-canvas-wrap .chartcanvas { background: #fff; }
+      @media (max-width: 900px) { .sf-canvas-wrap { height: 340px; } }
+
+      .sf-caption {
+        font-family: var(--body-font-family); font-size: 13.5px; line-height: 1.55;
+        color: var(--sq-ink-soft); margin: 8px 0 0;
+      }
+
+      /* The chapter stylesheet sizes tables for a full-width page; keep them
+         scrollable inside the narrower card here. */
+      .sf-card .hdbk-table-wrap { overflow-x: auto; margin: 0; }
+
+      /* ── Reference prose blocks ── */
+      .ref-wrap { max-width: 1100px; margin: 34px auto 0; padding: 0 20px; font-family: var(--body-font-family); }
+      .ref-section-title { font-size: 16px; font-weight: 700; color: #6a746a; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; padding-left: 2px; }
+      .ref-card { background: #fff; border: 2px solid var(--sq-outline); border-radius: 10px; padding: 16px 18px; box-shadow: 0 2px 5px rgba(0,0,0,.15); margin-bottom: 22px; }
+      .ref-card p { font-size: 14px; line-height: 1.65; margin-bottom: 10px; }
+      .ref-card ul { margin: 0 0 10px; padding-left: 20px; }
+      .ref-card li { font-size: 14px; line-height: 1.65; padding: 0; margin-bottom: 5px; }
+      .ref-card h3 { font-size: 15px; font-weight: 700; color: var(--sq-ink); margin: 14px 0 6px; }
+      .ref-card h3:first-child { margin-top: 0; }
+
+      .sa-roadmap { border-style: dashed; background: #fbfcfc; }
+      .sa-roadmap .sa-badge {
+        display: inline-block; background: var(--sq-blue); color: #fff;
+        font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+        font-weight: 700; padding: 3px 8px; border-radius: 4px; margin-bottom: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">Propylene Glycol</span><span class="nav-label-short">Prop. Glycol</span></a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">Ethylene Glycol</span><span class="nav-label-short">Eth. Glycol</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">MIL-PRF-23699</span><span class="nav-label-short">PRF-23699</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Skydrol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SkydrolPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="SkydrolDensity.html">Density</a>
+                  <a class="dropdown-item" href="SkydrolSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="SkydrolThermalConductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="SkydrolViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="SkydrolPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="SkydrolThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="SkydrolThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermo Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                  <a class="dropdown-item" href="SpringTorsionRound.html">Torsion Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                  <a class="dropdown-item" href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Stress</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MaterialPropertyLookup.html">Material Property Lookup</a>
+                  <a class="dropdown-item" href="LugPinAnalysis.html">Lug &amp; Pin Analysis</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"><span class="nav-label-full">MIL-HDBK-5</span><span class="nav-label-short">HDBK-5</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                  <a class="dropdown-item" href="SvgEditor.html">SVG Editor</a>
+                  <a class="dropdown-item" href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- BANNER -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              Material Property Lookup
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <h1 class="visually-hidden">MIL-HDBK-5 Material Property Lookup &mdash; Ftu, Fty, Fcy, Fsu, Fbru and Fbry by Alloy, Form, Temper, Thickness and Basis</h1>
+
+    <div class="sq-main">
+
+      <p class="sq-subtitle">
+        Room-temperature design mechanical properties straight out of the
+        MIL-HDBK-5 tables. Narrow by alloy, product form, temper, thickness and
+        basis; every result links back to the handbook table it came from.
+      </p>
+
+      <div id="sa-loading">
+        <p class="sa-empty" style="text-align:center;">Loading the allowables dataset&hellip;</p>
+      </div>
+
+      <div id="sa-app" hidden>
+        <div class="sq-calc-grid">
+
+          <!-- ════════ LEFT: FILTERS ════════ -->
+          <div class="sq-panel sq-sticky">
+            <div class="sq-panel-h">
+              <span>Condition</span>
+              <button type="button" class="sa-reset" id="sa-reset">Reset</button>
+            </div>
+            <div class="sq-panel-b">
+
+              <div class="sa-field">
+                <label for="sa-alloy">Alloy</label>
+                <select id="sa-alloy"></select>
+              </div>
+
+              <div class="sa-field">
+                <label for="sa-form">Product form</label>
+                <select id="sa-form"></select>
+              </div>
+
+              <div class="sa-field">
+                <label for="sa-temper">Temper / condition</label>
+                <select id="sa-temper"></select>
+              </div>
+
+              <div class="sa-field">
+                <label for="sa-spec">Specification</label>
+                <select id="sa-spec"></select>
+              </div>
+
+              <div class="sa-r2">
+                <div class="sa-field">
+                  <label for="sa-basis">Basis</label>
+                  <select id="sa-basis"></select>
+                </div>
+                <div class="sa-field">
+                  <label for="sa-grain">Grain direction</label>
+                  <select id="sa-grain">
+                    <option value="L" selected>L (longitudinal)</option>
+                    <option value="LT">LT (long transverse)</option>
+                    <option value="ST">ST (short transverse)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="sa-field">
+                <label for="sa-thickness">Thickness or diameter, in.</label>
+                <input type="number" id="sa-thickness" step="0.001" min="0" placeholder="e.g. 0.063" />
+                <div class="sa-hint">
+                  Leave blank to see every published thickness band. Tables that
+                  do not break a property out by thickness always stay in the list.
+                </div>
+              </div>
+
+              <div class="sa-field">
+                <label for="sa-temperature">Service temperature, &deg;F</label>
+                <input type="number" id="sa-temperature" step="1" placeholder="e.g. 400" />
+                <div class="sa-hint">
+                  Marks this temperature on every temperature-axis figure below
+                  and reads each curve at that point. It does <span style="font-weight: var(--font-weight-normal)">not</span>
+                  change the room-temperature allowables in the table above.
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ════════ RIGHT: RESULTS ════════ -->
+          <div>
+            <div class="sq-panel" style="margin-bottom:20px;">
+              <div class="sq-panel-h">
+                <span>Allowables</span>
+              </div>
+              <div id="sa-detail"></div>
+            </div>
+
+            <div class="sq-panel" id="sa-derated-section" style="margin-bottom:20px;" hidden>
+              <div class="sq-panel-h">
+                <span>Properties at temperature</span>
+                <span class="sa-count" id="sa-derated-note"></span>
+              </div>
+              <div id="sa-derated"></div>
+            </div>
+
+            <div class="sq-panel">
+              <div class="sq-panel-h">
+                <span>Matching conditions</span>
+                <span class="sa-count" id="sa-match-count"></span>
+              </div>
+              <div id="sa-matches"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ── FIGURES FOR THE SELECTED ALLOY ── -->
+        <section class="sf-section" id="sf-figures-section" hidden>
+          <div class="sf-section-h">
+            <div class="sf-section-title">Figures</div>
+            <span class="sf-section-note" id="sf-figures-note"></span>
+          </div>
+          <div id="sf-figures"></div>
+        </section>
+
+        <!-- ── SOURCE TABLES FOR THE SELECTED ALLOY ── -->
+        <section class="sf-section" id="sf-tables-section" hidden>
+          <div class="sf-section-h">
+            <div class="sf-section-title">Source tables</div>
+            <span class="sf-section-note" id="sf-tables-note"></span>
+          </div>
+          <div id="sf-tables"></div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ── REFERENCE ── -->
+    <div class="ref-wrap">
+
+      <div class="ref-section-title">Reading the Result</div>
+      <div class="ref-card">
+        <h3>Basis</h3>
+        <p>
+          MIL-HDBK-5 publishes allowables on three statistical bases. <span style="font-weight: var(--font-weight-normal)">A-basis</span>
+          is the value exceeded by 99% of the population with 95% confidence, and
+          is used where failure of a single element would lose the structure.
+          <span style="font-weight: var(--font-weight-normal)">B-basis</span> is exceeded by 90% with 95% confidence, and applies to
+          redundant structure where load redistributes on failure.
+          <span style="font-weight: var(--font-weight-normal)">S-basis</span> is the minimum value from the governing material
+          specification, with no statistical statement attached.
+        </p>
+
+        <h3>Grain direction</h3>
+        <p>
+          Wrought products are anisotropic. <span style="font-weight: var(--font-weight-normal)">L</span> runs along the rolling or
+          extrusion direction, <span style="font-weight: var(--font-weight-normal)">LT</span> across it in the plane of the product,
+          and <span style="font-weight: var(--font-weight-normal)">ST</span> through the thickness. ST values are typically the
+          lowest and are only published where the section is thick enough to
+          test. Where the handbook prints no value for a grain direction, the
+          lookup shows <span aria-hidden="true">&middot;&middot;&middot;</span> rather than
+          substituting a neighbouring value.
+        </p>
+
+        <h3>Bearing allowables</h3>
+        <p>
+          <em>F<sub>bru</sub></em> and <em>F<sub>bry</sub></em> are tabulated at edge-distance
+          ratios of e/D = 1.5 and e/D = 2.0, and are <span style="font-weight: var(--font-weight-normal)">dry-pin</span> values per
+          MIL-HDBK-5 Section 1.4.7.1. Lubricated joints and other e/D ratios need
+          the correction called out there.
+        </p>
+
+        <h3>Units</h3>
+        <p>
+          Stresses are in ksi, moduli in 10<sup>3</sup> ksi (msi), elongation in percent,
+          and density in lb/in.<sup>3</sup> &mdash; exactly as printed in the handbook,
+          with no unit conversion applied.
+        </p>
+      </div>
+
+      <div class="ref-section-title">Where the Numbers Come From</div>
+      <div class="ref-card">
+        <p id="sa-dataset-note">Loading dataset details&hellip;</p>
+        <p>
+          Every value on this page is transcribed from a MIL-HDBK-5 design
+          mechanical and physical properties table. The lookup does not
+          interpolate between thickness bands, average across tempers, or
+          synthesise a value the handbook does not publish &mdash; if a condition is
+          not in the table, it is not in the result. Each result names its source
+          table and links to both the transcribed table on the relevant chapter
+          page and the corresponding page of the handbook itself.
+        </p>
+        <p>
+          MIL-HDBK-5 was superseded by MMPDS for new design work. It remains the
+          governing document for a great deal of legacy hardware, and it is
+          public domain, which MMPDS is not. Check which document your program
+          requires before using these numbers in a stress report.
+        </p>
+      </div>
+
+      <div class="ref-section-title">Still to Come</div>
+      <div class="ref-card sa-roadmap">
+        <span class="sa-badge">Roadmap</span>
+        <p>
+          This page currently covers <span style="font-weight: var(--font-weight-normal)">room-temperature</span> allowables. The
+          following build on figure digitization that is still in progress, and
+          will be wired into this same lookup as each chapter is finished:
+        </p>
+        <ul>
+          <li>
+            <span style="font-weight: var(--font-weight-normal)">Temperature knockdown</span> &mdash; the percentage-of-room-temperature
+            curves in each section's Figure <em>x.x.x.</em>0 series, applied to the
+            selected condition for a chosen service temperature.
+          </li>
+          <li>
+            <span style="font-weight: var(--font-weight-normal)">Exposure knockdown</span> &mdash; the effect-of-exposure curves, for a
+            given exposure temperature and time at temperature.
+          </li>
+          <li>
+            <span style="font-weight: var(--font-weight-normal)">Tangent modulus</span> &mdash; pulling the digitized stress-strain and
+            tangent-modulus curves for the selected condition, which is what a
+            column buckling or crippling check needs.
+          </li>
+          <li>
+            <span style="font-weight: var(--font-weight-normal)">Remaining chapters</span> &mdash; titanium, nickel and heat-resistant
+            alloys, plus the tables in the already-published chapters whose layout
+            the extractor does not yet handle.
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- CITATION -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div id="citation-container" data-page-title="MIL-HDBK-5 Material Property Lookup" data-page-url="https://kaspercalc.com/MaterialPropertyLookup.html"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+
+  </body>
+</html>

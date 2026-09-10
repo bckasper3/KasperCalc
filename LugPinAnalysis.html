@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>KasperCalc: Lug and Pin Analysis</title>
+    <link rel="canonical" href="https://kaspercalc.com/LugPinAnalysis.html" />
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, lug analysis, pin analysis, Bruhn, lug allowable, bearing bypass, net section, shear tear-out, pin shear, pin bending, bushing bearing, margin of safety, clevis, aerospace stress analysis" />
+    <meta name="description" content="Lug and pin analysis calculator following the Bruhn Chapter D1 method. Computes bearing-bypass, net-section tension and shear tear-out lug allowables, angled-load interaction, pin shear and bending, and bushing bearing, with margins of safety." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <script defer src="js/chart.min.js"></script>
+    <script defer src="js/hdbkUtil.js"></script>
+    <script defer src="js/lug-figures.js"></script>
+    <script defer src="js/stress-figures.js"></script>
+    <script defer src="js/lug-materials.js"></script>
+    <script defer src="js/lug-pin-analysis.js"></script>
+
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+        options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+      };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      /* ── Green wrapper token system (matches ThreadStressCalculator.html) ── */
+      :root {
+        --sq-wrap:     #6a746a;
+        --sq-outline:  rgb(67,67,67);
+        --sq-panel:    #eeeeee;
+        --sq-blue:     #61828A;
+        --sq-ink:      #1C2227;
+        --sq-ink-soft: #5A6168;
+        --sq-ui:       "Roboto", Arial, sans-serif;
+        --lug-ok:      #2f7a4f;
+        --lug-ok-bg:   #e3efe6;
+        --lug-marg:    #a5680a;
+        --lug-marg-bg: #f5ecd9;
+        --lug-fail:    #a3312a;
+        --lug-fail-bg: #f6e4e1;
+      }
+      .sq-main { max-width: 1500px; margin: 0 auto; padding: 0 20px 60px; }
+      .sq-subtitle { font-family: var(--sq-ui); color: var(--sq-ink-soft); font-size: 15px; line-height: 1.5; max-width: 74ch; margin: 18px auto 22px; text-align: center; }
+      .sq-calc-grid { font-family: var(--sq-ui); display: grid; grid-template-columns: minmax(0,340px) minmax(0,1fr); gap: 20px; align-items: start; background: var(--sq-wrap); border: 3px solid var(--sq-outline); border-radius: 18px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); padding: 20px; }
+      /* minmax(0,1fr) rather than 1fr: a bare 1fr track keeps min-width:auto,
+         which lets wide content push the grid past the viewport. */
+      @media (max-width:960px) { .sq-calc-grid { grid-template-columns: minmax(0,1fr); } }
+      .sq-panel { background: var(--sq-panel); border: 2px solid var(--sq-outline); border-radius: 10px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); overflow: hidden; }
+      .sq-panel-h { padding: 11px 16px; background: #fff; border-bottom: 2px solid var(--sq-outline); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--sq-ink); font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+      .sq-panel-b { padding: 16px; }
+      .sq-sticky { position: sticky; top: 14px; }
+      @media (max-width:960px) { .sq-sticky { position: static; } }
+      .sq-panel-b, .lug-field, .lug-r2 > * { min-width: 0; }
+
+      /* ── Inputs ── */
+      .lug-group-h {
+        font-family: var(--title-font-family); font-size: 13px;
+        font-weight: var(--font-weight-bold); background: var(--section-title-color);
+        color: #fff; padding: 5px 10px; border-radius: 6px; margin: 14px 0 10px;
+      }
+      .lug-group-h:first-child { margin-top: 0; }
+
+      .lug-field { margin-bottom: 10px; }
+      .lug-field label {
+        display: block; margin-bottom: 3px; font-size: 12px; color: #444;
+        font-family: var(--body-font-family);
+      }
+      .lug-field .lug-unit { color: var(--sq-ink-soft); font-size: 11px; }
+      .lug-field input[type=number],
+      .lug-field select {
+        width: 100%; min-width: 0; padding: 6px 7px; border: 1px solid #9aabb0;
+        border-radius: var(--border-radius-small); font-size: 13px;
+        font-family: var(--body-font-family); background: #fff; color: #222;
+      }
+      .lug-field input[type=number]:focus,
+      .lug-field select:focus { outline: 2px solid var(--section-title-color); }
+      .lug-r2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+      .lug-check {
+        display: flex; align-items: center; gap: 8px; font-size: 12.5px;
+        color: #444; margin-bottom: 10px; cursor: pointer;
+        font-family: var(--body-font-family);
+      }
+      .lug-check input { accent-color: var(--section-title-color); width: 15px; height: 15px; }
+
+      .lug-mb { margin-bottom: 6px; }
+      .lug-props {
+        font-size: 11px; color: var(--sq-ink-soft); margin-top: 4px;
+        font-family: var(--body-font-family); line-height: 1.4;
+      }
+
+      .lug-note {
+        font-size: 11.5px; color: var(--lug-fail); margin-top: 4px;
+        font-family: var(--body-font-family); line-height: 1.45;
+      }
+
+      /* ── Detailed calculation steps (matches the NSWC-11 pages) ── */
+      details.lug-details summary {
+        cursor: pointer; color: var(--sq-ink); font-weight: 700; margin: 4px 0;
+        font-family: var(--sq-ui);
+      }
+      .calc-steps {
+        font-size: 0.82rem; color: #444; margin-top: 8px; border: 1px solid #ccc;
+        border-radius: 6px; overflow: hidden; background: #fff;
+        font-family: var(--body-font-family);
+      }
+      .calc-steps > div { padding: 4px 10px; border-bottom: 1px dashed #ddd; }
+      .calc-steps > div:nth-child(even) { background: #f7f7f7; }
+      .calc-steps > div:last-child { border-bottom: none; }
+      .calc-steps .val { color: #b3362b; font-weight: 700; }
+      .calc-steps .grp {
+        background: var(--section-title-color) !important; color: #fff;
+        font-weight: 700; letter-spacing: .04em; font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      .lug-toggle { display: flex; gap: 6px; }
+      .lug-toggle button {
+        flex: 1; padding: 7px 6px; font-size: 12.5px; cursor: pointer;
+        border: 1px solid var(--sq-outline); background: var(--calc-background-color);
+        color: var(--sq-ink); border-radius: var(--border-radius-small);
+        font-family: var(--sq-ui);
+      }
+      .lug-toggle button:hover:not(.active) { background: var(--calc-hover-color); }
+      .lug-toggle button.active {
+        background: var(--section-title-color); border-color: var(--section-title-color);
+        color: #fff; font-weight: 600;
+      }
+
+      /* ── Result tiles ── */
+      .lug-tiles {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+        gap: 12px; padding: 16px;
+      }
+      .lug-tile {
+        background: #fff; border: 2px solid var(--sq-outline); border-radius: 10px;
+        padding: 12px 14px; box-shadow: 0 2px 5px rgba(0,0,0,.15); position: relative;
+      }
+      .lug-tile-head {
+        display: flex; justify-content: space-between; align-items: flex-start;
+        gap: 8px; margin-bottom: 6px;
+      }
+      .lug-tile-label {
+        font-size: 12px; color: var(--sq-ink-soft); display: flex;
+        align-items: center; gap: 6px; font-family: var(--sq-ui);
+      }
+      .lug-pill {
+        font-size: 10.5px; padding: 2px 8px; border-radius: 20px; font-weight: 700;
+        letter-spacing: .03em; white-space: nowrap; font-family: var(--sq-ui);
+      }
+      .lug-pill.ok       { background: var(--lug-ok-bg);   color: var(--lug-ok); }
+      .lug-pill.marginal { background: var(--lug-marg-bg); color: var(--lug-marg); }
+      .lug-pill.fail     { background: var(--lug-fail-bg); color: var(--lug-fail); }
+
+      .lug-ms {
+        font-size: 25px; font-weight: 700; font-variant-numeric: tabular-nums;
+        font-family: var(--sq-ui); line-height: 1.15;
+      }
+      .lug-ms.ok       { color: var(--lug-ok); }
+      .lug-ms.marginal { color: var(--lug-marg); }
+      .lug-ms.fail     { color: var(--lug-fail); }
+
+      .lug-sub {
+        margin-top: 8px; font-size: 11.5px; color: var(--sq-ink-soft);
+        display: grid; gap: 2px; font-family: var(--body-font-family);
+      }
+      .lug-sub .v { color: var(--sq-ink); font-variant-numeric: tabular-nums; }
+
+      /* ── Formula popovers ── */
+      .lug-finfo {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 16px; height: 16px; border-radius: 50%; flex: none;
+        background: #dbe7ea; color: var(--sq-blue); border: 1px solid var(--sq-outline);
+        font-size: 11px; font-style: italic; cursor: pointer; position: relative;
+      }
+      .lug-finfo:hover { background: var(--section-title-color); color: #fff; }
+      .lug-pop {
+        display: none; position: absolute; z-index: 40; top: calc(100% + 8px); left: 0;
+        min-width: 250px; max-width: 330px; background: #fff;
+        border: 2px solid var(--sq-outline); border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0,0,0,.3); padding: 11px 13px;
+        color: var(--sq-ink); font-size: 12.5px; line-height: 1.55;
+        font-family: var(--body-font-family); font-style: normal; text-align: left;
+      }
+      .lug-pop.open { display: block; }
+      .lug-pop .lug-pop-t {
+        font-weight: 700; font-size: 11px; text-transform: uppercase;
+        letter-spacing: .05em; color: var(--sq-blue); margin-bottom: 6px;
+      }
+      .lug-pop .lug-pop-n { color: var(--sq-ink-soft); font-size: 11.5px; margin-top: 6px; }
+
+      /* ── Charts & schematic ── */
+      .lug-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px; }
+      @media (max-width: 900px) { .lug-cards { grid-template-columns: 1fr; } }
+      .lug-card {
+        background: #fff; border: 2px solid var(--sq-outline); border-radius: 10px;
+        padding: 12px 14px; box-shadow: 0 2px 5px rgba(0,0,0,.15);
+      }
+      .lug-card-h {
+        font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+        color: var(--sq-ink-soft); font-weight: 700; margin-bottom: 8px;
+        display: flex; justify-content: space-between; align-items: center; gap: 8px;
+        font-family: var(--sq-ui);
+      }
+      .lug-canvas-wrap { position: relative; width: 100%; height: 230px; }
+
+      /* The viewBox is cropped to the drawing, so the box no longer carries a
+         wide empty border; max-width holds the rendered size where it was. */
+      #lugSchematic {
+        width: 100%; max-width: 380px; height: auto;
+        display: block; margin: 0 auto;
+      }
+      #lugSchematic text { font-family: var(--body-font-family); fill: var(--sq-ink-soft); }
+      #lugSchematic .dim-line   { stroke: var(--sq-ink-soft); stroke-width: 1; }
+      #lugSchematic .lug-body   { fill: #dbe7ea; stroke: var(--section-title-color); stroke-width: 2; }
+      #lugSchematic .pin        { fill: #fff; stroke: var(--sq-outline); stroke-width: 2; }
+      #lugSchematic .bushing    { fill: #b9ccd2; stroke: var(--sq-outline); stroke-width: 1.5; }
+      #lugSchematic .fix-hatch  { stroke: var(--sq-ink-soft); stroke-width: 1.4; }
+      #lugSchematic .load-arrow { stroke: var(--lug-fail); stroke-width: 2.5; fill: var(--lug-fail); }
+      #lugSchematic .load-axis  { stroke: var(--lug-fail); stroke-width: 1; stroke-dasharray: 4 4; opacity: .45; }
+
+      /* ── Caveat ── */
+      .lug-caveat {
+        max-width: 1100px; margin: 0 auto 20px; padding: 12px 16px;
+        background: var(--lug-marg-bg); border: 2px solid var(--lug-marg);
+        border-radius: 10px; color: var(--sq-ink); font-size: 13.5px;
+        line-height: 1.6; font-family: var(--body-font-family);
+      }
+      .lug-caveat .lug-caveat-t { color: var(--lug-marg); font-weight: 700; }
+
+      /* ── Reference prose ── */
+      .ref-wrap { max-width: 1100px; margin: 34px auto 0; padding: 0 20px; font-family: var(--body-font-family); }
+      .ref-section-title { font-size: 16px; font-weight: 700; color: #6a746a; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; padding-left: 2px; }
+      /* Chapter-style chart figures, scoped to the source-chart section so the
+         calculator's own two canvases above keep their .lug-canvas-wrap sizing.
+         These rules are the ones css/mil-hdbk-5.css gives the chapter pages;
+         that stylesheet is not loaded here. */
+      #lug-source-charts { max-width: 1180px; }
+      #lug-source-charts .hdbk-figure { margin: 0 0 26px; }
+      #lug-source-charts .canvasdiv { margin-top: 0; max-width: 1000px; }
+      #lug-source-charts .canvascontainer {
+        position: relative; width: 1000px; height: 560px !important;
+        max-width: 100%; margin: 6px auto 0;
+      }
+      #lug-source-charts .chartcanvas { display: block; width: 100%; height: 100%; }
+      #lug-source-charts .canvasdiv button {
+        font-size: 12.5px; padding: 3px 9px; cursor: pointer;
+        border: 1px solid var(--sq-outline); border-radius: 5px;
+        background: #fff; color: var(--sq-ink); font-family: var(--body-font-family);
+      }
+      #lug-source-charts .canvasdiv button:hover { background: #e6ecee; }
+      #lug-source-charts .hdbk-source-link {
+        display: inline-block; font-family: var(--body-font-family);
+        font-size: 12.5px; line-height: 1.2; padding: 6px 11px;
+        border-radius: var(--border-radius-small);
+        border: 1px solid var(--section-title-color);
+        background: var(--section-title-color); color: #fff;
+        text-decoration: none; transition: .2s;
+      }
+      #lug-source-charts .hdbk-source-link:hover { background: #4e6b73; color: #fff; }
+      #lug-source-charts .fig-caption {
+        font-size: 13px; color: var(--sq-ink-soft); line-height: 1.5;
+        margin: 8px auto 0; max-width: 1000px; text-align: center;
+      }
+      @media (max-width: 900px) {
+        #lug-source-charts .canvascontainer { height: 380px !important; }
+      }
+
+      .ref-card { background: #fff; border: 2px solid var(--sq-outline); border-radius: 10px; padding: 16px 18px; box-shadow: 0 2px 5px rgba(0,0,0,.15); margin-bottom: 22px; }
+      .ref-card p { font-size: 14px; line-height: 1.65; margin-bottom: 10px; }
+      .ref-card ul { margin: 0 0 10px; padding-left: 20px; }
+      .ref-card li { font-size: 14px; line-height: 1.65; padding: 0; margin-bottom: 6px; }
+      .ref-card h3 { font-size: 15px; font-weight: 700; color: var(--sq-ink); margin: 14px 0 6px; }
+      .ref-card h3:first-child { margin-top: 0; }
+      .ref-card code {
+        font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 13px;
+        background: #eef3f4; padding: 1px 5px; border-radius: 3px;
+      }
+
+      /* ── Source links into the Air Force manual ── */
+      .lug-srcs { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
+      .lug-src {
+        display: inline-block; font-family: var(--sq-ui); font-size: 12.5px;
+        line-height: 1.2; padding: 6px 11px; border-radius: var(--border-radius-small);
+        background: var(--section-title-color); color: #fff; text-decoration: none;
+        border: 1px solid var(--section-title-color);
+      }
+      .lug-src:hover { background: #4e6b73; color: #fff; }
+
+      /* ── Figures inside the explanation ── */
+      .lug-fig { margin: 16px 0 4px; text-align: center; }
+      .lug-fig img {
+        max-width: 100%; height: auto; border: 1px solid #d5dade;
+        border-radius: 6px; background: #fff; padding: 8px;
+      }
+      .lug-fig figcaption {
+        font-size: 12.5px; color: var(--sq-ink-soft); margin-top: 6px;
+        font-style: italic; line-height: 1.5;
+      }
+      .lug-fig-todo {
+        border: 2px dashed var(--sq-blue); border-radius: 8px; background: #f6f8f8;
+        padding: 14px 16px; text-align: left; color: var(--sq-ink-soft);
+        font-size: 12.5px; line-height: 1.55;
+      }
+      .lug-fig-todo .t {
+        display: inline-block; background: var(--sq-blue); color: #fff;
+        font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+        font-weight: 700; padding: 2px 7px; border-radius: 4px; margin-bottom: 7px;
+      }
+
+      /* -- Five failure modes panel -- */
+      .lug-modes {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+        gap: 12px; margin: 16px 0 4px;
+      }
+      .lug-mode {
+        margin: 0; border: 1px solid #d5dade; border-radius: 6px;
+        background: #fff; padding: 8px 8px 10px;
+      }
+      .lug-mode svg { width: 100%; height: auto; display: block; }
+      .lug-mode figcaption {
+        font-size: 11.5px; line-height: 1.45; color: var(--sq-ink-soft); margin-top: 6px;
+      }
+      .lug-mode figcaption .n {
+        display: block; font-weight: var(--font-weight-normal);
+        color: var(--sq-ink); margin-bottom: 2px;
+      }
+      .lug-mode .m-body { fill: #f2f5f6; stroke: var(--sq-outline); stroke-width: 2; }
+      .lug-mode .m-hole { fill: #fff; stroke: var(--sq-outline); stroke-width: 2; }
+      .lug-mode .m-fail { stroke: var(--lug-fail); stroke-width: 3.2; fill: none; stroke-linecap: round; }
+      .lug-mode .m-ghost { stroke: var(--lug-fail); stroke-width: 1.5; fill: none; stroke-dasharray: 4 3; }
+      .lug-mode .m-load { stroke: var(--sq-ink-soft); stroke-width: 1.8; fill: none; }
+      .lug-mode .m-head { fill: var(--sq-ink-soft); }
+      .lug-mode .m-ref  { stroke: var(--sq-ink-soft); stroke-width: 1; fill: none;
+                          stroke-dasharray: 3 3; opacity: .6; }
+    </style>
+  </head>
+
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">Propylene Glycol</span><span class="nav-label-short">Prop. Glycol</span></a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">Ethylene Glycol</span><span class="nav-label-short">Eth. Glycol</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">MIL-PRF-23699</span><span class="nav-label-short">PRF-23699</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Skydrol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SkydrolPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="SkydrolDensity.html">Density</a>
+                  <a class="dropdown-item" href="SkydrolSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="SkydrolThermalConductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="SkydrolViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="SkydrolPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="SkydrolThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="SkydrolThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermo Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                  <a class="dropdown-item" href="SpringTorsionRound.html">Torsion Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                  <a class="dropdown-item" href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Stress</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MaterialPropertyLookup.html">Material Property Lookup</a>
+                  <a class="dropdown-item" href="LugPinAnalysis.html">Lug &amp; Pin Analysis</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"><span class="nav-label-full">MIL-HDBK-5</span><span class="nav-label-short">HDBK-5</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                  <a class="dropdown-item" href="SvgEditor.html">SVG Editor</a>
+                  <a class="dropdown-item" href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- BANNER -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              Lug &amp; Pin Analysis
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <h1 class="visually-hidden">Lug and Pin Analysis &mdash; Bruhn Chapter D1 Bearing-Bypass, Net-Section, Shear Tear-Out, Pin Shear and Bending</h1>
+
+    <div class="sq-main">
+
+      <p class="sq-subtitle">
+        Axial and transverse lug allowables, pin shear and bending, and bushing
+        bearing, worked by the Bruhn Chapter D1 method. Every margin names the
+        check that governs it, and the &fnof; icons show the formula behind each
+        result.
+      </p>
+
+      <div class="lug-caveat">
+        <span class="lug-caveat-t">Curve-fit notice &mdash;</span>
+        material properties are now real MIL-HDBK-5 allowables, but the
+        <span style="font-weight: var(--font-weight-normal)">curves are not</span>.
+        The K<sub>t</sub> bearing-bypass and transverse coefficients are
+        engineering approximations of the classic Bruhn D1.11 / D1.28-type charts,
+        built to match their general shape and known anchor points, not yet
+        re-digitized point-for-point from the source plots. The net-section
+        coefficient K<sub>n</sub> is taken as 1.0 rather than read off its curve,
+        which is <span style="font-weight: var(--font-weight-normal)">unconservative</span>,
+        and the transverse net-section allowable is a flat knockdown of the axial
+        value because there is no separate transverse-width input yet. Treat
+        margins here as a first-pass check, not a substitute for the actual chart
+        lookup, until the curves and the net-section geometry are refined.
+      </div>
+
+      <div class="sq-calc-grid">
+
+        <!-- ════════ LEFT: INPUTS ════════ -->
+        <div class="sq-panel sq-sticky">
+          <div class="sq-panel-h">
+            <span>Inputs</span>
+            <span id="mat_count" style="font-weight:400;letter-spacing:0;text-transform:none;font-size:11px;color:var(--sq-ink-soft);">Bruhn Ch. D1</span>
+          </div>
+          <div class="sq-panel-b">
+
+            <div class="lug-group-h">Geometry</div>
+            <div class="lug-r2">
+              <div class="lug-field">
+                <label for="in_D">Pin dia. D <span class="lug-unit">in</span></label>
+                <input type="number" id="in_D" value="0.500" step="0.001" min="0.01" />
+              </div>
+              <div class="lug-field">
+                <label for="in_t">Thickness t <span class="lug-unit">in</span></label>
+                <input type="number" id="in_t" value="0.250" step="0.001" min="0.01" />
+              </div>
+            </div>
+            <div class="lug-r2">
+              <div class="lug-field">
+                <label for="in_W">Lug width W <span class="lug-unit">in</span></label>
+                <input type="number" id="in_W" value="1.500" step="0.001" min="0.01" />
+              </div>
+              <div class="lug-field">
+                <label for="in_e">Edge dist. e <span class="lug-unit">in</span></label>
+                <input type="number" id="in_e" value="0.750" step="0.001" min="0.01" />
+              </div>
+            </div>
+            <div class="lug-field">
+              <label for="in_g">Clevis gap g <span class="lug-unit">in (pin bending arm)</span></label>
+              <input type="number" id="in_g" value="0.100" step="0.001" min="0" />
+            </div>
+
+            <div class="lug-group-h">Load</div>
+            <div class="lug-r2">
+              <div class="lug-field">
+                <label for="in_P">Applied load P <span class="lug-unit">lb</span></label>
+                <input type="number" id="in_P" value="8000" step="50" min="0" />
+              </div>
+              <div class="lug-field">
+                <label for="in_theta">Load angle &theta; <span class="lug-unit">deg off-axis</span></label>
+                <input type="number" id="in_theta" value="0" step="1" min="0" max="90" />
+              </div>
+            </div>
+
+            <div class="lug-group-h">Material</div>
+
+            <label class="lug-check" for="mat_advanced">
+              <input type="checkbox" id="mat_advanced" />
+              Full MIL-HDBK-5 database
+            </label>
+
+            <div id="mat_advancedFields" hidden>
+              <div class="lug-r2">
+                <div class="lug-field">
+                  <label for="mat_grain">Grain direction</label>
+                  <select id="mat_grain">
+                    <option value="L" selected>L (longitudinal)</option>
+                    <option value="LT">LT (long transverse)</option>
+                    <option value="ST">ST (short transverse)</option>
+                  </select>
+                </div>
+                <div class="lug-field">
+                  <label for="mat_temp">Service temp. <span class="lug-unit">&deg;F</span></label>
+                  <input type="number" id="mat_temp" step="1" placeholder="room" />
+                </div>
+              </div>
+              <div class="lug-field" id="mat_hoursWrap" hidden>
+                <label for="mat_hours">Time at temperature</label>
+                <select id="mat_hours"></select>
+              </div>
+            </div>
+
+            <div class="lug-field">
+              <label>Lug material</label>
+              <div id="matLug_simpleWrap"><select id="matLug_simple"></select></div>
+              <div id="matLug_fullWrap" hidden>
+                <select id="matLug_alloy" class="lug-mb"></select>
+                <select id="matLug_cond"></select>
+              </div>
+              <div class="lug-props" id="matLug_props"></div>
+            </div>
+
+            <div class="lug-field">
+              <label>Pin material</label>
+              <div id="matPin_simpleWrap"><select id="matPin_simple"></select></div>
+              <div id="matPin_fullWrap" hidden>
+                <select id="matPin_alloy" class="lug-mb"></select>
+                <select id="matPin_cond"></select>
+              </div>
+              <div class="lug-props" id="matPin_props"></div>
+            </div>
+
+            <label class="lug-check" for="in_hasBushing">
+              <input type="checkbox" id="in_hasBushing" />
+              Include bushing
+            </label>
+            <div id="bushingFields" hidden>
+              <div class="lug-field">
+                <label>Bushing material</label>
+                <div id="matBushing_simpleWrap"><select id="matBushing_simple"></select></div>
+                <div id="matBushing_fullWrap" hidden>
+                  <select id="matBushing_alloy" class="lug-mb"></select>
+                  <select id="matBushing_cond"></select>
+                </div>
+                <div class="lug-props" id="matBushing_props"></div>
+              </div>
+              <div class="lug-field">
+                <label for="in_Db">Bushing OD <span class="lug-unit">in (lug hole dia.)</span></label>
+                <input type="number" id="in_Db" value="0.625" step="0.001" min="0.01" />
+                <div class="lug-note" id="bushingWarn" hidden></div>
+              </div>
+            </div>
+
+            <div class="lug-group-h">Configuration</div>
+            <div class="lug-field">
+              <label>Pin shear condition</label>
+              <div class="lug-toggle" id="toggle_shear">
+                <button type="button" data-val="1">Single shear</button>
+                <button type="button" data-val="2" class="active">Double shear</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ════════ RIGHT: RESULTS ════════ -->
+        <div>
+          <div class="sq-panel" style="margin-bottom:20px;">
+            <div class="sq-panel-h">
+              <span>Margins of safety</span>
+              <span class="lug-governs" id="lug_governs" style="font-weight:400;letter-spacing:0;text-transform:none;font-size:11px;color:var(--sq-ink-soft);"></span>
+            </div>
+            <div class="lug-tiles" id="tileGrid"></div>
+            <div style="padding:0 16px 16px;">
+              <details class="lug-details">
+                <summary class="fs-6">Show detailed calculation steps</summary>
+                <div class="calc-steps" id="calcSteps"></div>
+              </details>
+            </div>
+          </div>
+
+          <div class="sq-panel" style="margin-bottom:20px;">
+            <div class="sq-panel-h"><span>Lug schematic</span></div>
+            <div style="padding:16px;">
+              <svg id="lugSchematic" viewBox="162 30 336 288" role="img" aria-label="Lug geometry schematic"></svg>
+            </div>
+          </div>
+
+          <div class="sq-panel">
+            <div class="sq-panel-h"><span>Curves</span></div>
+            <div class="lug-cards">
+              <div class="lug-card">
+                <div class="lug-card-h">
+                  <span>K<sub>t</sub> vs e/D (axial)</span>
+                  <span class="lug-finfo" data-formula="kt_curve">&fnof;</span>
+                </div>
+                <div class="lug-canvas-wrap"><canvas id="ktChart"></canvas></div>
+              </div>
+              <div class="lug-card">
+                <div class="lug-card-h">
+                  <span>Allowable vs load angle</span>
+                  <span class="lug-finfo" data-formula="angle_curve">&fnof;</span>
+                </div>
+                <div class="lug-canvas-wrap"><canvas id="angleChart"></canvas></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── REFERENCE ── -->
+    <div class="ref-wrap">
+
+      <div class="ref-section-title">How the Method Works</div>
+      <div class="ref-card">
+        <p>
+          This page follows the
+          <span style="font-weight: var(--font-weight-normal)">Air Force Method</span>,
+          set out in Section 9 of the Stress Analysis Manual of the Air Force
+          Flight Dynamics Laboratory (AFFDL-TR-69-42). Bruhn Chapter D1 reproduces
+          the same curves, so the two names describe one method. It is empirical:
+          the interaction between bearing, shear-out and hoop tension is messy
+          enough that the manual rolls it into coefficients read off test-derived
+          charts rather than deriving each mode separately.
+        </p>
+        <div class="lug-srcs">
+          <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=507" target="_blank" rel="noopener">&sect;9.1 Introduction &mdash; p. 9-1</a>
+        </div>
+
+        <figure class="lug-fig">
+          <img src="img/lug_analysis_AFFDL_Fig9-1_Lug_Nomenclature.png"
+               alt="Two lug outlines loaded in tension with a thickness view between them, dimensioned for lug width w, tang width w_T, hole diameter D, pin diameter D_P, edge distance e, nose distance a and thickness t." />
+          <figcaption>
+            The dimensions the method is written in: lug width <span style="font-weight: var(--font-weight-normal)">w</span>,
+            tang width w<sub>T</sub>, hole diameter <span style="font-weight: var(--font-weight-normal)">D</span>,
+            pin diameter D<sub>P</sub>, edge distance <span style="font-weight: var(--font-weight-normal)">e</span>
+            to the hole centre, nose distance <span style="font-weight: var(--font-weight-normal)">a</span>
+            to the hole edge, and thickness <span style="font-weight: var(--font-weight-normal)">t</span>.
+            AFFDL-TR-69-42 Figure 9-1, p. 9-3.
+          </figcaption>
+        </figure>
+
+
+        <h3>The five failure modes</h3>
+        <p>
+          A pin-loaded lug can fail by tension across the net section, shear-out
+          along two planes ahead of the hole, bearing against the pin, hoop
+          tension across a single plane, or by buckling out of plane
+          (&ldquo;dishing&rdquo;) if it is thin. The method folds the middle three
+          &mdash; bearing, shear-out and hoop tension &mdash; into a single
+          allowable, because in a real lug they are not independent.
+        </p>
+
+        <div class="lug-modes">
+          <figure class="lug-mode">
+            <svg viewBox="0 0 172 150" role="img" aria-label="Lug outline with cracks running from the top and bottom of the hole out to the lug edges across the net section.">
+              <path class="m-body" d="M12,29 L95,29 A46,46 0 0 1 95,121 L12,121 Z" />
+              <circle class="m-hole" cx="95" cy="75" r="22" />
+              <path class="m-fail" d="M95,53 L95,29" />
+              <path class="m-fail" d="M95,97 L95,121" />
+              <line class="m-load" x1="145" y1="75" x2="164" y2="75" />
+              <polygon class="m-head" points="170,75 161,70.5 161,79.5" />
+            </svg>
+            <figcaption><span class="n">Net-section tension</span>The two ligaments beside the hole part across the section perpendicular to the load.</figcaption>
+          </figure>
+          <figure class="lug-mode">
+            <svg viewBox="0 0 172 150" role="img" aria-label="Lug outline with two parallel shear planes running from the hole out to the loaded edge.">
+              <path class="m-body" d="M12,29 L95,29 A46,46 0 0 1 95,121 L12,121 Z" />
+              <circle class="m-hole" cx="95" cy="75" r="22" />
+              <path class="m-fail" d="M95,53 L135,53" />
+              <path class="m-fail" d="M95,97 L135,97" />
+              <line class="m-load" x1="145" y1="75" x2="164" y2="75" />
+              <polygon class="m-head" points="170,75 161,70.5 161,79.5" />
+            </svg>
+            <figcaption><span class="n">Shear-out</span>Two planes tear from the hole to the loaded edge and the nose pulls out.</figcaption>
+          </figure>
+          <figure class="lug-mode">
+            <svg viewBox="0 0 172 150" role="img" aria-label="Lug outline with the loaded side of the hole thickened in red and a dashed outline showing the hole elongating.">
+              <path class="m-body" d="M12,29 L95,29 A46,46 0 0 1 95,121 L12,121 Z" />
+              <circle class="m-hole" cx="95" cy="75" r="22" />
+              <path class="m-fail" d="M95,53 A22,22 0 0 1 95,97" />
+              <path class="m-ghost" d="M95,53 A22,22 0 0 1 95,97" transform="translate(9,0)" />
+              <line class="m-load" x1="145" y1="75" x2="164" y2="75" />
+              <polygon class="m-head" points="170,75 161,70.5 161,79.5" />
+            </svg>
+            <figcaption><span class="n">Bearing</span>The pin crushes the hole wall and the hole yields out into an oval.</figcaption>
+          </figure>
+          <figure class="lug-mode">
+            <svg viewBox="0 0 172 150" role="img" aria-label="Lug outline with a single crack running from the hole through the nose along the load line.">
+              <path class="m-body" d="M12,29 L95,29 A46,46 0 0 1 95,121 L12,121 Z" />
+              <circle class="m-hole" cx="95" cy="75" r="22" />
+              <path class="m-fail" d="M117,75 L141,75" />
+              <line class="m-load" x1="145" y1="75" x2="164" y2="75" />
+              <polygon class="m-head" points="170,75 161,70.5 161,79.5" />
+            </svg>
+            <figcaption><span class="n">Hoop tension</span>A single plane splits through the nose ahead of the pin.</figcaption>
+          </figure>
+          <figure class="lug-mode">
+            <svg viewBox="0 0 172 150" role="img" aria-label="Edge view of a thin lug bowed out of plane, with a straight dashed reference line and inward end loads.">
+              <path class="m-ref" d="M16,75 L156,75" />
+              <path class="m-body" d="M16,70 Q86,38 156,70 L156,80 Q86,48 16,80 Z" />
+              <line class="m-fail" x1="86" y1="50" x2="86" y2="32" />
+              <polygon points="86,24 81.5,34 90.5,34" style="fill: var(--lug-fail)" />
+              <line class="m-load" x1="2" y1="104" x2="20" y2="104" />
+              <polygon class="m-head" points="26,104 17,99.5 17,108.5" />
+              <line class="m-load" x1="170" y1="104" x2="152" y2="104" />
+              <polygon class="m-head" points="146,104 155,99.5 155,108.5" />
+            </svg>
+            <figcaption><span class="n">Dishing</span>Seen edge-on: a thin lug buckles out of plane before the in-plane modes are reached.</figcaption>
+          </figure>
+        </div>
+
+
+        <h3>Axial loading</h3>
+        <p>
+          The bearing allowable is <code>P = K &middot; Fu &middot; D &middot; t</code>,
+          where K comes from Figure 9-2 as a function of e/D and D/t. That one
+          coefficient is what carries the combined bearing, shear-out and hoop
+          tension behaviour. Net-section tension is checked separately as
+          <code>P = Kn &middot; Fu &middot; (W &minus; D) &middot; t</code>, with
+          the net-tension coefficient Kn from Figure 9-4 &mdash; a knockdown for
+          the stress concentration at the hole that depends on the material's
+          ultimate and yield strengths, modulus and ultimate strain.
+        </p>
+        <p>
+          In both, <code>Fu</code> is not simply F<sub>tu</sub>: the manual caps
+          the effective ultimate at
+          <code>min(Ftu, 1.304 &middot; Fty)</code>, which binds on materials with
+          a high yield-to-ultimate ratio. That cap is applied here and shown in
+          the calculation steps.
+        </p>
+        <div class="lug-srcs">
+          <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=510" target="_blank" rel="noopener">Figure 9-2, axial load coefficient &mdash; p. 9-4</a>
+          <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=511" target="_blank" rel="noopener">Figure 9-3, bearing efficiency &mdash; p. 9-5</a>
+          <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=512" target="_blank" rel="noopener">&sect;9.3.2 &amp; Figure 9-4, net section &mdash; p. 9-6</a>
+          <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=514" target="_blank" rel="noopener">&sect;9.3.4 bushing bearing &mdash; p. 9-8</a>
+        </div>
+
+        <h3>Single shear against double shear</h3>
+        <p>
+          In a single-shear joint the two members are offset, so the load path is
+          eccentric: the pin carries the whole load on one plane and the offset
+          drives a bending moment through the joint. A double-shear (clevis) joint
+          splits the load either side of the inner lug, halving the load on each
+          pin plane and keeping the load path balanced. This is why the pin shear
+          condition below changes the answer, and why the clevis gap sets the pin
+          bending arm.
+        </p>
+
+        <figure class="lug-fig">
+          <img src="img/lug_analysis_Single_vs_Double_Shear.jpg"
+               alt="Single shear joint with eccentric load path marked undesirable, beside a double shear joint splitting the load into two halves marked acceptable." />
+          <figcaption>
+            Single shear (left) puts the full load on one pin plane through an
+            offset load path. Double shear (right) splits it into P/2 either side
+            and keeps the path balanced.
+          </figcaption>
+        </figure>
+
+        <figure class="lug-fig">
+          <img src="img/lug_analysis_AFFDL_Fig9-5_Double_Shear_Bushed_Joint.png"
+               alt="Plan and section views of a double shear lug joint, showing the bushing wall thickness t_B between pin diameter D_P and hole diameter D, the clevis gap g, and the bearing stress distributions on the inner and outer lugs." />
+          <figcaption>
+            The same joint in section. The bushing wall
+            t<sub>B</sub> = (D &minus; D<sub>P</sub>)/2 sits between the pin and the
+            lug, so a bushing spreads the pin load over a larger hole but is itself
+            checked at its own, usually lower, allowable. The gap
+            <span style="font-weight: var(--font-weight-normal)">g</span> between the
+            inner and outer lugs is the arm that drives pin bending.
+            AFFDL-TR-69-42 Figure 9-5, p. 9-9.
+          </figcaption>
+        </figure>
+
+        <div class="lug-srcs">
+          <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=516" target="_blank" rel="noopener">&sect;9.4.2&ndash;9.4.3 pin shear &amp; bending &mdash; p. 9-10</a>
+          <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=519" target="_blank" rel="noopener">&sect;9.5 single-shear joints &mdash; p. 9-13</a>
+        </div>
+
+        <h3>Transverse loading</h3>
+        <p>
+          Loading a lug across its axis rather than along it engages a different,
+          more redundant load path, so it gets its own coefficient family from
+          Figure 9-8. That curve is driven by an
+          <span style="font-weight: var(--font-weight-normal)">effective edge distance</span>
+          h<sub>av</sub>, averaged from four radial distances between the hole and
+          the lug boundary &mdash; which means a proper transverse check needs more
+          of the lug outline than a single edge distance describes.
+        </p>
+
+        <figure class="lug-fig">
+          <img src="img/lug_analysis_AFFDL_Fig9-7_Effective_Edge_Distance.png"
+               alt="Two transversely loaded lug outlines, each with the four radial edge distances h1 through h4 measured from the hole to the lug boundary and a transverse load P_tr applied across the lug axis." />
+          <figcaption>
+            The four radial distances that set h<sub>av</sub>. h<sub>1</sub> and
+            h<sub>4</sub> run out along the load line, h<sub>2</sub> and h<sub>3</sub>
+            at 45&deg;; h<sub>1</sub> is weighted three times as heavily as the others
+            because that is the plane the transverse load opens first. Two lugs with the
+            same edge distance can have quite different h<sub>av</sub>.
+            AFFDL-TR-69-42 Figure 9-7, p. 9-20.
+          </figcaption>
+        </figure>
+
+
+        <div class="lug-srcs">
+          <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=526" target="_blank" rel="noopener">&sect;9.7 transverse load &mdash; p. 9-20</a>
+          <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=527" target="_blank" rel="noopener">Figure 9-8, transverse coefficients &mdash; p. 9-21</a>
+          <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=529" target="_blank" rel="noopener">Figure 9-10, effective edge distance &mdash; p. 9-23</a>
+        </div>
+
+        <h3>Oblique loading</h3>
+        <p>
+          A load at an angle is resolved into its axial and transverse components
+          and recombined against the two pure allowables by a power-law
+          interaction, with an exponent of
+          <span style="font-weight: var(--font-weight-normal)">1.6</span>:
+        </p>
+        <p style="text-align:center;">
+          \( \left(\dfrac{P_{ax}}{P_{u}}\right)^{1.6} +
+             \left(\dfrac{P_{tr}}{P_{tru}}\right)^{1.6} = 1 \)
+        </p>
+        <p>
+          The exponent matters. A plain ellipse (exponent 2) reads about 9% high
+          at 45&deg;, in the unconservative direction. The
+          &ldquo;allowable vs load angle&rdquo; chart above is this envelope,
+          sliced along the applied angle.
+        </p>
+        <figure class="lug-fig">
+          <img src="img/lug_analysis_AFFDL_Fig9-12_Oblique_Allowable_Curve.png"
+               alt="Allowable load curve plotting transverse load ratio against axial load ratio, a convex locus running from 1.0 on each axis, annotated with the interaction equation raised to the 1.6 power." />
+          <figcaption>
+            The interaction locus itself, plotted from the equation above. It bulges
+            outside a straight cut-off but stays inside a circle &mdash; that gap is
+            what the exponent is worth. A radial line of slope
+            P<sub>u</sub>/P<sub>tru</sub> cuts the curve at the allowable for a given
+            load angle. AFFDL-TR-69-42 Figure 9-12, p. 9-25.
+          </figcaption>
+        </figure>
+
+        <div class="lug-srcs">
+          <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=530" target="_blank" rel="noopener">&sect;9.10 oblique load &mdash; p. 9-24</a>
+          <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=531" target="_blank" rel="noopener">Figure 9-12, allowable load curve &mdash; p. 9-25</a>
+        </div>
+      </div>
+
+      <div class="ref-section-title">What This Page Computes</div>
+      <div class="ref-card">
+        <p>
+          The lug is checked three ways at the applied load angle, and the lowest
+          allowable governs:
+        </p>
+        <ul>
+          <li>
+            <span style="font-weight: var(--font-weight-normal)">Bearing-bypass</span> &mdash;
+            <code>Kt &middot; Ftu &middot; D &middot; t</code>, with K<sub>t</sub> read from the
+            axial or transverse curve family.
+          </li>
+          <li>
+            <span style="font-weight: var(--font-weight-normal)">Net-section tension</span> &mdash;
+            <code>Ftu &middot; (W &minus; D) &middot; t</code> through the pin hole.
+          </li>
+          <li>
+            <span style="font-weight: var(--font-weight-normal)">Shear tear-out</span> &mdash;
+            <code>2 &middot; Fsu &middot; t &middot; L</code>, where <code>L = e &minus; D/2</code>
+            is the clear distance from the hole boundary to the lug edge.
+          </li>
+        </ul>
+        <p>
+          Angled loads are interpolated between the pure axial and pure transverse
+          allowables by the 1.6-power interaction above. The pin is checked in
+          shear across one or two planes and in simplified bending across the
+          clevis gap, and an optional bushing is checked in bearing.
+        </p>
+
+        <h3>Reading a margin</h3>
+        <p>
+          MS = P<sub>allow</sub>/P &minus; 1. A margin at or above +0.15 shows as
+          PASS, between 0 and +0.15 as MARGINAL, and below zero as FAIL. Those
+          bands are a display convention on this page, not a certification
+          requirement &mdash; the margin your programme demands is the one that
+          governs.
+        </p>
+      </div>
+
+      <div class="ref-section-title">Limitations</div>
+      <div class="ref-card">
+        <p>
+          Read the curve-fit notice above before using any of these numbers. In
+          short: the K<sub>t</sub> curves are shape-matched approximations rather
+          than digitized Bruhn charts, K<sub>n</sub> is assumed to be 1.0, the
+          transverse net-section allowable is a flat knockdown of the axial value
+          because there is no separate transverse-width input yet, and pin bending
+          uses a first-pass <code>M = P&middot;g/8</code> rather than the real
+          bearing-pressure distribution.
+        </p>
+        <p>
+          Two further gaps worth knowing. There is no
+          <span style="font-weight: var(--font-weight-normal)">out-of-plane buckling</span>
+          check, which can govern a thin lug. And only the inner lug is modelled
+          &mdash; a real clevis fails at whichever of the inner or outer lugs is
+          weakest, and the outer lugs are not sized here. The single/double shear
+          toggle changes only the pin's shear planes.
+        </p>
+
+        <h3>Materials</h3>
+        <p>
+          Properties come from the same MIL-HDBK-5 dataset behind the
+          <a href="MaterialPropertyLookup.html">Material Property Lookup</a>, so
+          F<sub>tu</sub>, F<sub>ty</sub>, F<sub>su</sub> and F<sub>bru</sub> are
+          published allowables rather than typical values. The short list covers
+          the common aerospace picks; ticking
+          <span style="font-weight: var(--font-weight-normal)">Full MIL-HDBK-5 database</span>
+          opens every published condition &mdash; alloy, product form, temper,
+          thickness band and A/B/S basis &mdash; along with grain direction and a
+          service temperature that derates the strengths off the
+          effect-of-temperature curves.
+        </p>
+        <p>
+          Where a bearing allowable is not published for a condition, it is
+          derived as <code>1.304 &middot; Fcy</code>. The K<sub>t</sub> ductility
+          group is inferred from elongation (under 5% low, over 12% high), since
+          the handbook selects that curve family by material type and the dataset
+          carries elongation rather than the family. Both are approximations and
+          are named in the calculation steps.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- ── SOURCE CHARTS ── -->
+    <div class="ref-wrap" id="lug-source-charts">
+
+      <div class="ref-section-title">Source Charts</div>
+      <div class="ref-card">
+        <p>
+          The coefficient charts the Air Force method is built on, digitized
+          point-for-point from the scanned plots and redrawn here so a value can be
+          read off a curve rather than interpolated by eye. Hover any curve for a
+          readout; each series is densified to a fine grid, so the tooltip tracks the
+          line continuously instead of snapping between digitized vertices.
+        </p>
+        <p>
+          <span style="font-weight: var(--font-weight-normal)">These are reference
+          charts, not yet the calculator’s inputs.</span> The engine above still uses the
+          shape-matched approximations described in the notice at the top of the page.
+          Wiring these curves in is what will retire that notice.
+        </p>
+        <div class="lug-srcs">
+          <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=507" target="_blank" rel="noopener">&sect;9 Lug analysis &mdash; p. 9-1</a>
+        </div>
+      </div>
+
+      <div class="hdbk-figure">
+        <div class="canvasdiv">
+          <button id="toggle-fig9-2">Hide Tooltips</button>
+          <button onclick="(function(){var c=document.getElementById('canvas-fig9-2');var a=document.createElement('a');a.download='fig9-2.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+          <button onclick="window.open(document.getElementById('canvas-fig9-2').toDataURL())">Open in New Tab</button>
+          <a class="hdbk-source-link" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=510" target="_blank" rel="noopener">Open p.&nbsp;9-4 of the AFFDL manual</a>
+          <div class="canvascontainer">
+            <canvas id="canvas-fig9-2" class="chartcanvas" role="img" aria-label="Figure 9-2, allowable uniform axial load coefficient K against e over D"></canvas>
+          </div>
+        </div>
+        <p class="fig-caption"><strong>Figure 9-2.</strong> Allowable uniform axial load coefficient. Valid for D/t &le; 5, which covers most lugs. The curve is one line; it is split here because the formula it feeds changes at e/D = 1.5 &mdash; below that the allowable is <code>K &middot; a &middot; t &middot; F<sub>tux</sub></code> using the nose distance <code>a</code>, above it <code>K &middot; D &middot; t &middot; F<sub>tux</sub></code> using the hole diameter. The minimum of 1.33 sits exactly at the changeover.</p>
+      </div>
+
+      <div class="hdbk-figure">
+        <div class="canvasdiv">
+          <button id="toggle-fig9-3">Hide Tooltips</button>
+          <button onclick="(function(){var c=document.getElementById('canvas-fig9-3');var a=document.createElement('a');a.download='fig9-3.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+          <button onclick="window.open(document.getElementById('canvas-fig9-3').toDataURL())">Open in New Tab</button>
+          <a class="hdbk-source-link" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=511" target="_blank" rel="noopener">Open p.&nbsp;9-5 of the AFFDL manual</a>
+          <div class="canvascontainer">
+            <canvas id="canvas-fig9-3" class="chartcanvas" role="img" aria-label="Figure 9-3, bearing efficiency factor K against a over D for thirteen D over t ratios"></canvas>
+          </div>
+        </div>
+        <p class="fig-caption"><strong>Figure 9-3.</strong> Bearing efficiency factors, used in place of Figure 9-2 once D/t exceeds 5. Note the abscissa is <code>a/D</code>, not e/D. The dashed cutoffs cap K for aluminium: (A) for hand forged billet with the long transverse grain across the lug, (B) for plate, bar and hand forged billet with the short transverse grain across it. The original also caps K at 2.00 for lugs cut from aluminium 0.5&Prime; or thicker. The chart is drawn for aluminium alloys and alloy steel below 160 ksi.</p>
+      </div>
+
+      <div class="hdbk-figure">
+        <div class="canvasdiv">
+          <button id="toggle-fig9-4b">Hide Tooltips</button>
+          <button onclick="(function(){var c=document.getElementById('canvas-fig9-4b');var a=document.createElement('a');a.download='fig9-4b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+          <button onclick="window.open(document.getElementById('canvas-fig9-4b').toDataURL())">Open in New Tab</button>
+          <a class="hdbk-source-link" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=513" target="_blank" rel="noopener">Open p.&nbsp;9-7 of the AFFDL manual</a>
+          <div class="canvascontainer">
+            <canvas id="canvas-fig9-4b" class="chartcanvas" role="img" aria-label="Figure 9-4b, net tension stress coefficient Kn against D over w at Fty over Ftu of 1.0"></canvas>
+          </div>
+        </div>
+        <p class="fig-caption"><strong>Figure 9-4(b).</strong> Net-tension stress coefficient for F<sub>ty</sub>/F<sub>tu</sub> = 1.0. The net-section allowable is <code>K<sub>n</sub> &middot; F<sub>tu</sub> &middot; (w &minus; D) &middot; t</code>. K<sub>n</sub> is a knockdown for the stress concentration at the hole, relieved by the material's ability to yield &mdash; which is why the curve family is indexed on F<sub>tu</sub>/(E&middot;&epsilon;<sub>u</sub>), a measure of how brittle the material is.</p>
+      </div>
+
+      <div class="hdbk-figure">
+        <div class="canvasdiv">
+          <button id="toggle-fig9-4c">Hide Tooltips</button>
+          <button onclick="(function(){var c=document.getElementById('canvas-fig9-4c');var a=document.createElement('a');a.download='fig9-4c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+          <button onclick="window.open(document.getElementById('canvas-fig9-4c').toDataURL())">Open in New Tab</button>
+          <a class="hdbk-source-link" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=513" target="_blank" rel="noopener">Open p.&nbsp;9-7 of the AFFDL manual</a>
+          <div class="canvascontainer">
+            <canvas id="canvas-fig9-4c" class="chartcanvas" role="img" aria-label="Figure 9-4c, net tension stress coefficient Kn against D over w at Fty over Ftu of 0.8"></canvas>
+          </div>
+        </div>
+        <p class="fig-caption"><strong>Figure 9-4(c).</strong> Net-tension stress coefficient for F<sub>ty</sub>/F<sub>tu</sub> = 0.8. Interpolate between panels on the yield-to-ultimate ratio; most structural alloys land between this panel and (b).</p>
+      </div>
+
+      <div class="hdbk-figure">
+        <div class="canvasdiv">
+          <button id="toggle-fig9-4d">Hide Tooltips</button>
+          <button onclick="(function(){var c=document.getElementById('canvas-fig9-4d');var a=document.createElement('a');a.download='fig9-4d.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+          <button onclick="window.open(document.getElementById('canvas-fig9-4d').toDataURL())">Open in New Tab</button>
+          <a class="hdbk-source-link" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=513" target="_blank" rel="noopener">Open p.&nbsp;9-7 of the AFFDL manual</a>
+          <div class="canvascontainer">
+            <canvas id="canvas-fig9-4d" class="chartcanvas" role="img" aria-label="Figure 9-4d, net tension stress coefficient Kn against D over w at Fty over Ftu of 0.6"></canvas>
+          </div>
+        </div>
+        <p class="fig-caption"><strong>Figure 9-4(d).</strong> Net-tension stress coefficient for F<sub>ty</sub>/F<sub>tu</sub> = 0.6. The lowest ratio the manual plots; below it the curves are extrapolated rather than read.</p>
+      </div>
+
+      <div class="hdbk-figure">
+        <div class="canvasdiv">
+          <button id="toggle-fig9-8">Hide Tooltips</button>
+          <button onclick="(function(){var c=document.getElementById('canvas-fig9-8');var a=document.createElement('a');a.download='fig9-8.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+          <button onclick="window.open(document.getElementById('canvas-fig9-8').toDataURL())">Open in New Tab</button>
+          <a class="hdbk-source-link" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=527" target="_blank" rel="noopener">Open p.&nbsp;9-21 of the AFFDL manual</a>
+          <div class="canvascontainer">
+            <canvas id="canvas-fig9-8" class="chartcanvas" role="img" aria-label="Figure 9-8, transverse ultimate and yield load coefficients against h av over D"></canvas>
+          </div>
+        </div>
+        <p class="fig-caption"><strong>Figure 9-8.</strong> Transverse ultimate and yield load coefficients against the effective edge distance h<sub>av</sub>/D. The two curves run together to about h<sub>av</sub>/D = 0.8 and then separate, K<sub>tru</sub> above K<sub>try</sub>. The transverse allowable is <code>K<sub>tru</sub> &middot; F<sub>tux</sub> &middot; D &middot; t</code>; there is no separate transverse net-section check in the method.</p>
+      </div>
+
+      <div class="hdbk-figure">
+        <div class="canvasdiv">
+          <button id="toggle-fig9-10">Hide Tooltips</button>
+          <button onclick="(function(){var c=document.getElementById('canvas-fig9-10');var a=document.createElement('a');a.download='fig9-10.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+          <button onclick="window.open(document.getElementById('canvas-fig9-10').toDataURL())">Open in New Tab</button>
+          <a class="hdbk-source-link" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=529" target="_blank" rel="noopener">Open p.&nbsp;9-23 of the AFFDL manual</a>
+          <div class="canvascontainer">
+            <canvas id="canvas-fig9-10" class="chartcanvas" role="img" aria-label="Figure 9-10, effective edge distance h av over D against e over D"></canvas>
+          </div>
+        </div>
+        <p class="fig-caption"><strong>Figure 9-10.</strong> Effective edge distance for a concentric lug with parallel sides &mdash; the geometry this calculator draws. For that shape h<sub>av</sub>/D reads straight off e/D, which sidesteps measuring the four radial distances h<sub>1</sub>&ndash;h<sub>4</sub> of Figure 9-7 and working the nomograph of Figure 9-9. It is the reason a transverse check here does not need a separate transverse-width input.</p>
+      </div>
+
+    </div>
+
+    <!-- CITATION -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div id="citation-container" data-page-title="Lug and Pin Analysis" data-page-url="https://kaspercalc.com/LugPinAnalysis.html"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+
+  </body>
+</html>

@@ -75,7 +75,10 @@ window.HdbkUtil = (function () {
         borderColor: d.color || PAL[i % PAL.length],
         backgroundColor: d.color || PAL[i % PAL.length],
         tension: tension, pointRadius: 0, pointHoverRadius: 0,
-        borderWidth: d.width || 2, showLine: true
+        borderWidth: d.width || 2, showLine: true,
+        // Optional dash pattern, e.g. [6,4] for a cutoff or limit line.
+        // Undefined leaves Chart.js on its solid default.
+        borderDash: d.dash
       };
     });
     var xS = {

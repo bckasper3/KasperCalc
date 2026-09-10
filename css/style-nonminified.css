@@ -1308,6 +1308,22 @@ nav .nav-link.active {
 
 .nav-link{
   padding: .4rem 1rem .2rem 1rem;
+  font-size: 16px;
+  /* multi-word items such as "Thermodynamics Land" must never break
+     mid-phrase and push the navbar onto an extra line */
+  white-space: nowrap;
+}
+
+/* Two labels per nav item: the full wording, and a short form used in the
+   band where the two rows no longer fit side by side. Below 768px the
+   navbar collapses to the hamburger, which has room for the full text. */
+.nav-label-short {
+  display: none;
+}
+
+@media (max-width: 1199.98px) and (min-width: 768px) {
+  .nav-label-full  { display: none; }
+  .nav-label-short { display: inline; }
 }
 
 .navbar {
@@ -1388,8 +1404,15 @@ nav .nav-link.active {
 
  @media (max-width: 1025px) { 
   .nav-link{
-    font-size: 12pt;
+    font-size: 14px;
   } 
+  /* Nav items inherit `ul li { padding: 0 15px }` - 30px of gutter each,
+     which is the single biggest consumer of navbar width. Tighten it as
+     the viewport narrows so the two rows keep fitting on one line. */
+  .navbar-nav .nav-item{
+    padding-left: 8px;
+    padding-right: 8px;
+  }
   .navbar-svg-icon{
   height:32px;
   width:32px;
@@ -1399,8 +1422,12 @@ nav .nav-link.active {
 
 @media (max-width: 900px) { 
   .nav-link{
-    font-size: 9pt;
+    font-size: 12px;
   } 
+  .navbar-nav .nav-item{
+    padding-left: 6px;
+    padding-right: 6px;
+  }
   .navbar-svg-icon{
   height:30px;
   width:30px;
@@ -1410,8 +1437,14 @@ nav .nav-link.active {
 
 @media (max-width: 768px) { 
   .nav-link{
-    font-size: 12pt;
+    font-size: 15px;
   } 
+  /* Below the collapse breakpoint the menu is vertical, so the normal
+     gutter is fine again. */
+  .navbar-nav .nav-item{
+    padding-left: 15px;
+    padding-right: 15px;
+  }
   .navbar-svg-icon{
   height:30px;
   width:30px;

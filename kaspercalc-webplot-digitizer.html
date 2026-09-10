@@ -640,6 +640,50 @@ input[type=number]:not(#kc-fit-poly-degree) {
    override below could never have won against an inline overflow:hidden;
    that's exactly what was clipping these tooltips against the popup's
    canvas/title bar before this was moved out of the markup. */
+/* Curve-fit preview controls in the Dataset sidebar, and the Paste Data popup. */
+.kc-fitprev-box {
+    margin: 8px auto 0 auto;
+    padding: 7px 6px 5px 6px;
+    border-top: 1px solid rgba(0,0,0,.18);
+    max-width: 160px;
+    text-align: center;
+}
+.kc-fitprev-stats {
+    margin: 6px 0 0 0;
+    font-size: 11px;
+    line-height: 1.45;
+    color: #333;
+    min-height: 1em;
+}
+.kc-fitprev-stats .kc-fitprev-warn { color: #a11f1f; }
+#kc-paste-data-popup textarea {
+    width: 100%;
+    height: 190px;
+    font-family: monospace;
+    font-size: 12px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+#kc-paste-status {
+    font-size: 12px;
+    line-height: 1.5;
+    min-height: 3.6em;
+    margin: 6px 0 0 0;
+}
+#kc-paste-status .kc-ok { color: #2c6b33; }
+#kc-paste-status .kc-warn { color: #8a6000; }
+#kc-paste-status .kc-err { color: #a11f1f; }
+#kc-paste-preview {
+    font-family: monospace;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #444;
+    max-height: 66px;
+    overflow: auto;
+    margin-top: 4px;
+    white-space: pre;
+}
+
 #curve-fit-popup .kc-fit-body {
     overflow: hidden;
 }
@@ -2179,8 +2223,43 @@ input[type="checkbox"].kc-styled-checkbox,
             <p><input type="button" value="Delete Dataset" style="width:150px;" onclick="wpd.dataSeriesManagement.deleteDataset();" /></p>
             <p><input type="button" value="Edit Point Groups" id="dataset-edit-point-groups-button" style="width: 150px;" onclick="wpd.pointGroups.showSettingsPopup();" /></p>
             <p><input type="button" value="View Data" style="width:150px;" onclick="wpd.dataTable.showTable();" /></p>
+            <p><input type="button" value="Paste Data" style="width:150px;" onclick="kcPasteData.show();" /></p>
             <p><input type="button" value="Clear Data" style="width:150px;" onclick="wpd.acquireData.clearAll();" /></p>
             <p>Data Points: <span class="data-point-counter">0</span></p>
+
+            <div class="kc-fitprev-box">
+                <p style="margin:0 0 4px 0;">
+                    <label><input type="checkbox" id="kc-fitprev-toggle" onchange="kcFitPreview.onToggle();" /> Curve Fit Preview</label>
+                </p>
+                <select id="kc-fitprev-type" style="width:150px;" onchange="kcFitPreview.onTypeChange();">
+                    <optgroup label="Least squares">
+                        <option value="linear">Linear</option>
+                        <option value="quad">Quadratic</option>
+                        <option value="poly">Polynomial (degree n)</option>
+                        <option value="exp">Exponential  a&middot;e^(bx)</option>
+                        <option value="power">Power  a&middot;x^b</option>
+                        <option value="log">Logarithmic  a+b&middot;ln x</option>
+                    </optgroup>
+                    <optgroup label="Chart.js tension">
+                        <option value="cjs0.1">Chart.js tension 0.1</option>
+                        <option value="cjs0.2">Chart.js tension 0.2</option>
+                        <option value="cjs0.3">Chart.js tension 0.3</option>
+                        <option value="cjs0.4">Chart.js tension 0.4</option>
+                    </optgroup>
+                    <optgroup label="Splines">
+                        <option value="natural">Natural cubic spline</option>
+                        <option value="pchip">Monotone cubic (PCHIP)</option>
+                        <option value="bspline">B-spline (smoothing)</option>
+                    </optgroup>
+                </select>
+                <p id="kc-fitprev-degree-row" style="display:none; margin:5px 0 0 0;">
+                    Degree: <input type="number" id="kc-fitprev-degree" value="3" min="1" max="10" style="width:46px;" onchange="kcFitPreview.refresh();" />
+                </p>
+                <p id="kc-fitprev-nctrl-row" style="display:none; margin:5px 0 0 0;">
+                    Ctrl pts: <input type="number" id="kc-fitprev-nctrl" value="8" min="4" max="40" style="width:46px;" onchange="kcFitPreview.refresh();" />
+                </p>
+                <p id="kc-fitprev-stats" class="kc-fitprev-stats"></p>
+            </div>
         </center>
     </div>
 
@@ -3244,6 +3323,31 @@ input[type="checkbox"].kc-styled-checkbox,
             </div>
         </div>
     </div>
+</div>
+
+<!-- Paste data (kcPasteData) -->
+<div id="kc-paste-data-popup" class="popup" style="width:560px;">
+    <div class="popupheading">Paste Data</div>
+    <p style="font-size:12px; margin:0 0 6px 0;">
+        Paste X/Y pairs for <b><span id="kc-paste-dataset-name">Dataset</span></b>.
+        One point per line; tab, comma, semicolon or space separated. A header row is skipped
+        automatically. Values are in <b>axis units</b> and are converted to pixels through the
+        current calibration.
+    </p>
+    <textarea id="kc-paste-input" spellcheck="false" placeholder="X&#9;Y&#10;0.4&#9;1.98&#10;0.6&#9;1.87&#10;0.8&#9;1.74"></textarea>
+    <p style="margin:6px 0 0 0; font-size:12px;">
+        <label><input type="radio" name="kc-paste-mode" value="append" checked /> Add to existing points</label>
+        &nbsp;&nbsp;
+        <label><input type="radio" name="kc-paste-mode" value="replace" /> Replace all points</label>
+        &nbsp;&nbsp;
+        <label><input type="checkbox" id="kc-paste-sort" /> Sort by X</label>
+    </p>
+    <div id="kc-paste-status"></div>
+    <div id="kc-paste-preview"></div>
+    <p align="center" style="margin-top:8px;">
+        <input type="button" id="kc-paste-add-button" value="Add Points" onclick="kcPasteData.apply();" />
+        <input type="button" value="Cancel" onclick="wpd.popup.close('kc-paste-data-popup');" />
+    </p>
 </div>
 
 <!-- Add dataset -->
@@ -6838,6 +6942,584 @@ input[type="checkbox"].kc-styled-checkbox,
             generateCalculator
         };
     })();
+</script>
+
+<!-- ===== Paste Data (kcPasteData) + Curve Fit Preview (kcFitPreview) ===== -->
+<script>
+/*
+ * Two additions that work together on a busy plot:
+ *
+ *  kcPasteData   - type or paste X/Y pairs straight into the active dataset.
+ *                  Where curves cross or overlap, re-tracing the same stretch
+ *                  by eye is slow and inconsistent; pasting known points (from
+ *                  a table, an earlier session, or another tool) avoids it.
+ *
+ *  kcFitPreview  - overlay a fitted curve on the image, live, so you can see
+ *                  whether the points you have actually describe the printed
+ *                  curve before committing to more digitizing. The Chart.js
+ *                  tension options reproduce exactly what Chart.js draws, so a
+ *                  curve destined for a KasperCalc page can be checked for the
+ *                  overshoot that spline tension introduces between points.
+ */
+var kcPasteData, kcFitPreview;
+
+(function () {
+    'use strict';
+
+    function activeDataset() {
+        return wpd.tree.getActiveDataset();
+    }
+    function axesFor(ds) {
+        return ds == null ? null : wpd.appData.getPlotData().getAxesForDataset(ds);
+    }
+
+    /* ------------------------------------------------------------------ *
+     *  Shared: read the active dataset back as sorted data-space X/Y
+     * ------------------------------------------------------------------ */
+    function datasetXY(ds, axes) {
+        var pts = [];
+        if (ds == null || axes == null || typeof axes.pixelToData !== 'function') return pts;
+        var all = ds.getAllPixels();
+        for (var i = 0; i < all.length; i++) {
+            var d = axes.pixelToData(all[i].x, all[i].y);
+            if (d && isFinite(d[0]) && isFinite(d[1])) pts.push({ x: d[0], y: d[1] });
+        }
+        pts.sort(function (a, b) { return a.x - b.x; });
+        return pts;
+    }
+
+    /* ================================================================== *
+     *  kcPasteData
+     * ================================================================== */
+    (function () {
+        var POPUP = 'kc-paste-data-popup';
+        var _parsed = null;
+
+        /* Delimiters are guessed per line rather than for the block as a whole:
+           spreadsheet copies are tab separated, CSV exports comma separated, and
+           hand-typed lines often use a mix. Splitting on any run of separators
+           handles all three without asking. */
+        function parseText(txt) {
+            var out = { pts: [], skipped: 0, bad: [], header: null };
+            var lines = String(txt || '').split(/\r?\n/);
+            for (var i = 0; i < lines.length; i++) {
+                var raw = lines[i].trim();
+                if (!raw) continue;
+                if (raw.charAt(0) === '#' || raw.charAt(0) === '/') { out.skipped++; continue; }
+                var parts = raw.split(/[\s,;]+/).filter(function (p) { return p !== ''; });
+                if (parts.length < 2) { out.skipped++; out.bad.push(raw); continue; }
+                var x = parseFloat(parts[0]);
+                var y = parseFloat(parts[1]);
+                if (!isFinite(x) || !isFinite(y)) {
+                    out.skipped++;
+                    if (out.header === null && out.pts.length === 0) out.header = raw;
+                    else out.bad.push(raw);
+                    continue;
+                }
+                out.pts.push({ x: x, y: y });
+            }
+            return out;
+        }
+
+        function setStatus(html) {
+            var el = document.getElementById('kc-paste-status');
+            if (el) el.innerHTML = html;
+        }
+
+        function refresh() {
+            var ds = activeDataset();
+            var axes = axesFor(ds);
+            var txt = document.getElementById('kc-paste-input').value;
+            var btn = document.getElementById('kc-paste-add-button');
+            var prev = document.getElementById('kc-paste-preview');
+            _parsed = null;
+            prev.textContent = '';
+
+            if (ds == null) { setStatus('<span class="kc-err">No dataset selected.</span>'); btn.disabled = true; return; }
+            if (axes == null || !(axes instanceof wpd.XYAxes)) {
+                setStatus('<span class="kc-err">This dataset needs XY axes calibrated before data can be pasted. ' +
+                          'Only XY axes can convert values back into image pixels.</span>');
+                btn.disabled = true;
+                return;
+            }
+            if (typeof axes.dataToPixel !== 'function') {
+                setStatus('<span class="kc-err">These axes cannot convert data back to pixels.</span>');
+                btn.disabled = true;
+                return;
+            }
+
+            var r = parseText(txt);
+            if (!r.pts.length) {
+                setStatus(txt.trim() ? '<span class="kc-err">No numeric X/Y pairs found.</span>' : '');
+                btn.disabled = true;
+                return;
+            }
+
+            /* Convert now so anything the calibration cannot express (a
+               non-positive value on a log axis, say) is reported before the
+               dataset is touched rather than as a silent dropped point. */
+            var okPts = [], badConv = 0, offImage = 0;
+            var size = wpd.graphicsWidget.getImageSize();
+            for (var i = 0; i < r.pts.length; i++) {
+                var px = axes.dataToPixel(r.pts[i].x, r.pts[i].y);
+                if (!px || !isFinite(px.x) || !isFinite(px.y)) { badConv++; continue; }
+                if (size && (px.x < 0 || px.y < 0 || px.x > size.width || px.y > size.height)) offImage++;
+                okPts.push({ x: px.x, y: px.y, dx: r.pts[i].x, dy: r.pts[i].y });
+            }
+            _parsed = okPts;
+
+            var msg = '<span class="kc-ok">' + okPts.length + ' point' + (okPts.length === 1 ? '' : 's') + ' ready.</span>';
+            if (r.header) msg += ' Header row <b>' + escapeHtml(r.header) + '</b> skipped.';
+            if (badConv) msg += ' <span class="kc-warn">' + badConv + ' could not be placed on these axes (log scale with a non-positive value?).</span>';
+            if (offImage) msg += ' <span class="kc-warn">' + offImage + ' fall outside the image and will not be visible.</span>';
+            if (r.bad.length) msg += ' <span class="kc-warn">' + r.bad.length + ' unreadable line' + (r.bad.length === 1 ? '' : 's') + ' skipped.</span>';
+            setStatus(msg);
+
+            var lines = [];
+            for (var j = 0; j < Math.min(4, okPts.length); j++) {
+                lines.push('  ' + fmt(okPts[j].dx) + ',  ' + fmt(okPts[j].dy));
+            }
+            if (okPts.length > 4) lines.push('  ... ' + (okPts.length - 4) + ' more');
+            prev.textContent = lines.join('\n');
+            btn.disabled = false;
+        }
+
+        function fmt(v) {
+            if (!isFinite(v)) return String(v);
+            var a = Math.abs(v);
+            if (a !== 0 && (a < 1e-4 || a >= 1e6)) return v.toExponential(4);
+            return String(Math.round(v * 1e6) / 1e6);
+        }
+        function escapeHtml(t) {
+            return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function show() {
+            var ds = activeDataset();
+            document.getElementById('kc-paste-dataset-name').textContent = ds ? ds.name : '(none)';
+            wpd.popup.show(POPUP);
+            var ta = document.getElementById('kc-paste-input');
+            ta.focus();
+            refresh();
+        }
+
+        function apply() {
+            var ds = activeDataset();
+            if (ds == null || !_parsed || !_parsed.length) return;
+
+            var mode = document.querySelector('input[name="kc-paste-mode"]:checked');
+            var replace = mode && mode.value === 'replace';
+            var sortX = document.getElementById('kc-paste-sort').checked;
+
+            var pts = _parsed.slice();
+            if (sortX) pts.sort(function (a, b) { return a.dx - b.dx; });
+
+            if (replace) ds.clearAll();
+            for (var i = 0; i < pts.length; i++) ds.addPixel(pts[i].x, pts[i].y);
+
+            wpd.graphicsWidget.resetData();
+            wpd.graphicsWidget.forceHandlerRepaint();
+            wpd.dataPointCounter.setCount(ds.getCount());
+            if (kcFitPreview) kcFitPreview.refresh();
+
+            wpd.popup.close(POPUP);
+        }
+
+        kcPasteData = { show: show, apply: apply, refresh: refresh };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var ta = document.getElementById('kc-paste-input');
+            if (ta) ta.addEventListener('input', refresh);
+            var radios = document.querySelectorAll('input[name="kc-paste-mode"]');
+            for (var i = 0; i < radios.length; i++) radios[i].addEventListener('change', refresh);
+        });
+    })();
+
+    /* ================================================================== *
+     *  kcFitPreview
+     * ================================================================== */
+    (function () {
+        var _on = false;
+        var _stats = '';
+
+        /* ---------- least squares helpers (small, local, self-contained) ---------- */
+        function solve(A, b) {
+            var n = b.length, i, j, k;
+            var M = [];
+            for (i = 0; i < n; i++) M.push(A[i].slice().concat([b[i]]));
+            for (i = 0; i < n; i++) {
+                var p = i;
+                for (j = i + 1; j < n; j++) if (Math.abs(M[j][i]) > Math.abs(M[p][i])) p = j;
+                if (Math.abs(M[p][i]) < 1e-14) return null;
+                var t = M[i]; M[i] = M[p]; M[p] = t;
+                for (j = i + 1; j < n; j++) {
+                    var f = M[j][i] / M[i][i];
+                    for (k = i; k <= n; k++) M[j][k] -= f * M[i][k];
+                }
+            }
+            var x = new Array(n);
+            for (i = n - 1; i >= 0; i--) {
+                var sum = M[i][n];
+                for (j = i + 1; j < n; j++) sum -= M[i][j] * x[j];
+                x[i] = sum / M[i][i];
+            }
+            return x;
+        }
+
+        function polyFit(pts, deg) {
+            var n = deg + 1, i, j, k;
+            var A = [], b = [];
+            for (i = 0; i < n; i++) {
+                A.push(new Array(n).fill(0));
+                b.push(0);
+            }
+            for (k = 0; k < pts.length; k++) {
+                var pow = [1];
+                for (i = 1; i <= 2 * deg; i++) pow.push(pow[i - 1] * pts[k].x);
+                for (i = 0; i < n; i++) {
+                    b[i] += pow[i] * pts[k].y;
+                    for (j = 0; j < n; j++) A[i][j] += pow[i + j];
+                }
+            }
+            var c = solve(A, b);
+            if (!c) return null;
+            return function (x) {
+                var y = 0;
+                for (var i2 = c.length - 1; i2 >= 0; i2--) y = y * x + c[i2];
+                return y;
+            };
+        }
+
+        function transformedFit(pts, fx, fy, inv) {
+            var t = [];
+            for (var i = 0; i < pts.length; i++) {
+                var X = fx(pts[i].x), Y = fy(pts[i].y);
+                if (isFinite(X) && isFinite(Y)) t.push({ x: X, y: Y });
+            }
+            if (t.length < 2) return null;
+            var lin = polyFit(t, 1);
+            if (!lin) return null;
+            return function (x) { return inv(lin(fx(x))); };
+        }
+
+        /* ---------- interpolating splines ---------- */
+        function naturalSpline(p) {
+            var n = p.length, i;
+            if (n < 3) return null;
+            var h = [], al = [];
+            for (i = 0; i < n - 1; i++) h.push(p[i + 1].x - p[i].x);
+            for (i = 1; i < n - 1; i++) {
+                al.push(3 * ((p[i + 1].y - p[i].y) / h[i] - (p[i].y - p[i - 1].y) / h[i - 1]));
+            }
+            var l = [1], mu = [0], z = [0];
+            for (i = 1; i < n - 1; i++) {
+                l.push(2 * (p[i + 1].x - p[i - 1].x) - h[i - 1] * mu[i - 1]);
+                mu.push(h[i] / l[i]);
+                z.push((al[i - 1] - h[i - 1] * z[i - 1]) / l[i]);
+            }
+            l.push(1); z.push(0);
+            var c = new Array(n).fill(0), bb = new Array(n).fill(0), d = new Array(n).fill(0);
+            for (i = n - 2; i >= 0; i--) {
+                c[i] = z[i] - mu[i] * c[i + 1];
+                bb[i] = (p[i + 1].y - p[i].y) / h[i] - h[i] * (c[i + 1] + 2 * c[i]) / 3;
+                d[i] = (c[i + 1] - c[i]) / (3 * h[i]);
+            }
+            return function (x) {
+                var k = 0;
+                while (k < n - 2 && x > p[k + 1].x) k++;
+                var dx = x - p[k].x;
+                return p[k].y + bb[k] * dx + c[k] * dx * dx + d[k] * dx * dx * dx;
+            };
+        }
+
+        /* Monotone cubic: never overshoots between points, which is usually what
+           an engineering curve wants and what plain spline tension gets wrong. */
+        function pchip(p) {
+            var n = p.length, i;
+            if (n < 2) return null;
+            var h = [], del = [];
+            for (i = 0; i < n - 1; i++) {
+                h.push(p[i + 1].x - p[i].x);
+                del.push((p[i + 1].y - p[i].y) / h[i]);
+            }
+            var m = new Array(n);
+            m[0] = del[0];
+            m[n - 1] = del[n - 2];
+            for (i = 1; i < n - 1; i++) {
+                if (del[i - 1] * del[i] <= 0) m[i] = 0;
+                else {
+                    var w1 = 2 * h[i] + h[i - 1], w2 = h[i] + 2 * h[i - 1];
+                    m[i] = (w1 + w2) / (w1 / del[i - 1] + w2 / del[i]);
+                }
+            }
+            return function (x) {
+                var k = 0;
+                while (k < n - 2 && x > p[k + 1].x) k++;
+                var t = (x - p[k].x) / h[k], t2 = t * t, t3 = t2 * t;
+                return (2 * t3 - 3 * t2 + 1) * p[k].y + (t3 - 2 * t2 + t) * h[k] * m[k] +
+                       (-2 * t3 + 3 * t2) * p[k + 1].y + (t3 - t2) * h[k] * m[k + 1];
+            };
+        }
+
+        /* ---------- B-spline smoothing (least squares over control points) ---------- */
+        function bsplineBasis(i, p, t, knots) {
+            if (p === 0) {
+                return (t >= knots[i] && t < knots[i + 1]) ||
+                       (t === knots[knots.length - 1] && t <= knots[i + 1] && knots[i + 1] === knots[knots.length - 1] && t > knots[i]) ? 1 : 0;
+            }
+            var a = 0, b = 0;
+            var d1 = knots[i + p] - knots[i];
+            var d2 = knots[i + p + 1] - knots[i + 1];
+            if (d1 > 0) a = (t - knots[i]) / d1 * bsplineBasis(i, p - 1, t, knots);
+            if (d2 > 0) b = (knots[i + p + 1] - t) / d2 * bsplineBasis(i + 1, p - 1, t, knots);
+            return a + b;
+        }
+
+        function bsplineFit(pts, nctrl, degree) {
+            var n = pts.length;
+            if (n < nctrl) nctrl = Math.max(2, n);
+            var xmin = pts[0].x, xmax = pts[n - 1].x;
+            if (xmax <= xmin) return null;
+            var nk = nctrl + degree + 1, knots = [], i, j;
+            for (i = 0; i < nk; i++) {
+                if (i <= degree) knots.push(0);
+                else if (i >= nctrl) knots.push(1);
+                else knots.push((i - degree) / (nctrl - degree));
+            }
+            var A = [], b = [];
+            for (i = 0; i < nctrl; i++) { A.push(new Array(nctrl).fill(0)); b.push(0); }
+            for (var k = 0; k < n; k++) {
+                var t = (pts[k].x - xmin) / (xmax - xmin);
+                if (t >= 1) t = 0.999999;
+                var basis = [];
+                for (i = 0; i < nctrl; i++) basis.push(bsplineBasis(i, degree, t, knots));
+                for (i = 0; i < nctrl; i++) {
+                    b[i] += basis[i] * pts[k].y;
+                    for (j = 0; j < nctrl; j++) A[i][j] += basis[i] * basis[j];
+                }
+            }
+            for (i = 0; i < nctrl; i++) A[i][i] += 1e-9;
+            var cy = solve(A, b);
+            if (!cy) return null;
+            return function (x) {
+                var t2 = (x - xmin) / (xmax - xmin);
+                if (t2 < 0) t2 = 0;
+                if (t2 >= 1) t2 = 0.999999;
+                var y = 0;
+                for (var i2 = 0; i2 < nctrl; i2++) y += cy[i2] * bsplineBasis(i2, degree, t2, knots);
+                return y;
+            };
+        }
+
+        /* ---------- Chart.js spline ----------
+           Reproduces Chart.js's own monotone-free cubic: control points are
+           placed along the vector between a point's neighbours, scaled by the
+           tension and by the relative spacing of the two segments. Sampling the
+           resulting Beziers shows the overshoot tension introduces, which is the
+           whole reason to preview it before publishing a chart. */
+        function chartjsCurve(p, tension) {
+            var n = p.length, i;
+            if (n < 2) return null;
+            var cps = [];
+            for (i = 0; i < n; i++) {
+                if (i === 0 || i === n - 1) { cps.push({ prev: p[i], next: p[i] }); continue; }
+                var prev = p[i - 1], cur = p[i], next = p[i + 1];
+                var d01 = Math.sqrt(Math.pow(cur.x - prev.x, 2) + Math.pow(cur.y - prev.y, 2));
+                var d12 = Math.sqrt(Math.pow(next.x - cur.x, 2) + Math.pow(next.y - cur.y, 2));
+                var s01 = d01 / (d01 + d12), s12 = d12 / (d01 + d12);
+                if (!isFinite(s01)) s01 = 0;
+                if (!isFinite(s12)) s12 = 0;
+                var fa = tension * s01, fb = tension * s12;
+                cps.push({
+                    prev: { x: cur.x - fa * (next.x - prev.x), y: cur.y - fa * (next.y - prev.y) },
+                    next: { x: cur.x + fb * (next.x - prev.x), y: cur.y + fb * (next.y - prev.y) }
+                });
+            }
+            var out = [];
+            for (i = 0; i < n - 1; i++) {
+                var p0 = p[i], p3 = p[i + 1];
+                var c1 = cps[i].next, c2 = cps[i + 1].prev;
+                var steps = 24;
+                for (var s = 0; s <= steps; s++) {
+                    if (i > 0 && s === 0) continue;
+                    var t = s / steps, mt = 1 - t;
+                    out.push({
+                        x: mt * mt * mt * p0.x + 3 * mt * mt * t * c1.x + 3 * mt * t * t * c2.x + t * t * t * p3.x,
+                        y: mt * mt * mt * p0.y + 3 * mt * mt * t * c1.y + 3 * mt * t * t * c2.y + t * t * t * p3.y
+                    });
+                }
+            }
+            return out;
+        }
+
+        /* ---------- build the sampled curve for the current settings ---------- */
+        function buildCurve(pts) {
+            var kind = document.getElementById('kc-fitprev-type').value;
+            var i, n = pts.length;
+            if (n < 2) return null;
+
+            if (kind.indexOf('cjs') === 0) {
+                var pl = chartjsCurve(pts, parseFloat(kind.slice(3)));
+                return pl ? { samples: pl, fn: null } : null;
+            }
+
+            var fn = null;
+            if (kind === 'linear') fn = polyFit(pts, 1);
+            else if (kind === 'quad') fn = polyFit(pts, 2);
+            else if (kind === 'poly') {
+                var d = Math.max(1, Math.min(10, parseInt(document.getElementById('kc-fitprev-degree').value, 10) || 3));
+                fn = polyFit(pts, Math.min(d, n - 1));
+            } else if (kind === 'exp') {
+                fn = transformedFit(pts, function (x) { return x; }, Math.log, Math.exp);
+            } else if (kind === 'power') {
+                fn = transformedFit(pts, Math.log, Math.log, Math.exp);
+            } else if (kind === 'log') {
+                fn = transformedFit(pts, Math.log, function (y) { return y; }, function (v) { return v; });
+            } else if (kind === 'natural') fn = naturalSpline(dedupe(pts));
+            else if (kind === 'pchip') fn = pchip(dedupe(pts));
+            else if (kind === 'bspline') {
+                var nc = Math.max(4, Math.min(40, parseInt(document.getElementById('kc-fitprev-nctrl').value, 10) || 8));
+                fn = bsplineFit(dedupe(pts), nc, 3);
+            }
+            if (!fn) return null;
+
+            var x0 = pts[0].x, x1 = pts[n - 1].x, N = 240, samples = [];
+            for (i = 0; i <= N; i++) {
+                var x = x0 + (x1 - x0) * i / N;
+                var y = fn(x);
+                if (isFinite(y)) samples.push({ x: x, y: y });
+            }
+            return samples.length > 1 ? { samples: samples, fn: fn } : null;
+        }
+
+        /* Interpolating splines need strictly increasing x. */
+        function dedupe(pts) {
+            var out = [pts[0]];
+            for (var i = 1; i < pts.length; i++) {
+                if (pts[i].x > out[out.length - 1].x + 1e-12) out.push(pts[i]);
+                else out[out.length - 1] = { x: out[out.length - 1].x, y: (out[out.length - 1].y + pts[i].y) / 2 };
+            }
+            return out;
+        }
+
+        function computeStats(pts, fn) {
+            if (!fn) return null;
+            var ybar = 0, i;
+            for (i = 0; i < pts.length; i++) ybar += pts[i].y;
+            ybar /= pts.length;
+            var ssRes = 0, ssTot = 0;
+            for (i = 0; i < pts.length; i++) {
+                var e = pts[i].y - fn(pts[i].x);
+                if (!isFinite(e)) return null;
+                ssRes += e * e;
+                ssTot += (pts[i].y - ybar) * (pts[i].y - ybar);
+            }
+            return {
+                r2: ssTot > 0 ? 1 - ssRes / ssTot : 1,
+                rmse: Math.sqrt(ssRes / pts.length)
+            };
+        }
+
+        function setStats(html) {
+            _stats = html;
+            var el = document.getElementById('kc-fitprev-stats');
+            if (el) el.innerHTML = html;
+        }
+
+        /* ---------- drawing ---------- */
+        function draw(ds, axes) {
+            if (!_on) return;
+            if (ds == null || axes == null || !(axes instanceof wpd.XYAxes)) return;
+            if (typeof axes.dataToPixel !== 'function') return;
+
+            var pts = datasetXY(ds, axes);
+            if (pts.length < 2) { setStats('<span class="kc-fitprev-warn">Needs at least 2 points.</span>'); return; }
+
+            var built;
+            try { built = buildCurve(pts); }
+            catch (e) { built = null; }
+            if (!built) { setStats('<span class="kc-fitprev-warn">Fit failed for these points.</span>'); return; }
+
+            var ctxs = wpd.graphicsWidget.getAllContexts();
+            if (!ctxs || !ctxs.dataCtx) return;
+            var ctx = ctxs.dataCtx;
+            var dpr = window.devicePixelRatio || 1;
+
+            ctx.save();
+            ctx.beginPath();
+            var started = false;
+            for (var i = 0; i < built.samples.length; i++) {
+                var px = axes.dataToPixel(built.samples[i].x, built.samples[i].y);
+                if (!px || !isFinite(px.x) || !isFinite(px.y)) { started = false; continue; }
+                var cp = wpd.graphicsWidget.imageToCanvasPx(px.x, px.y);
+                if (!started) { ctx.moveTo(cp.x, cp.y); started = true; }
+                else ctx.lineTo(cp.x, cp.y);
+            }
+            ctx.strokeStyle = 'rgba(0, 110, 220, 0.95)';
+            ctx.lineWidth = 2 * dpr;
+            ctx.setLineDash([]);
+            ctx.stroke();
+            ctx.restore();
+
+            var st = computeStats(pts, built.fn);
+            var label = document.getElementById('kc-fitprev-type');
+            var name = label ? label.options[label.selectedIndex].text : '';
+            if (st) {
+                setStats(name + '<br />R&sup2; = ' + st.r2.toFixed(5) + '<br />RMSE = ' +
+                         (st.rmse < 1e-4 || st.rmse >= 1e5 ? st.rmse.toExponential(3) : st.rmse.toPrecision(4)) +
+                         '<br />' + pts.length + ' points');
+            } else {
+                setStats(name + '<br />passes through all ' + pts.length + ' points');
+            }
+        }
+
+        function onTypeChange() {
+            var kind = document.getElementById('kc-fitprev-type').value;
+            document.getElementById('kc-fitprev-degree-row').style.display = (kind === 'poly') ? '' : 'none';
+            document.getElementById('kc-fitprev-nctrl-row').style.display = (kind === 'bspline') ? '' : 'none';
+            refresh();
+        }
+
+        function onToggle() {
+            _on = document.getElementById('kc-fitprev-toggle').checked;
+            if (!_on) setStats('');
+            refresh();
+        }
+
+        function refresh() {
+            if (wpd.graphicsWidget && wpd.graphicsWidget.forceHandlerRepaint) {
+                wpd.graphicsWidget.forceHandlerRepaint();
+            }
+        }
+
+        kcFitPreview = {
+            draw: draw,
+            refresh: refresh,
+            onToggle: onToggle,
+            onTypeChange: onTypeChange,
+            isOn: function () { return _on; }
+        };
+    })();
+
+    /* The repainter owns the data layer and clears it on every zoom, pan and
+       edit, so the overlay is appended to its draw pass rather than painted
+       once and left to be wiped. */
+    function hookRepainter() {
+        if (!window.wpd || !wpd.DataPointsRepainter || wpd.DataPointsRepainter.prototype.__kcFitHooked) return false;
+        var orig = wpd.DataPointsRepainter.prototype.drawPoints;
+        wpd.DataPointsRepainter.prototype.drawPoints = function () {
+            orig.call(this);
+            try { kcFitPreview.draw(this._dataset, this._axes); }
+            catch (e) { /* never let the overlay break point rendering */ }
+        };
+        wpd.DataPointsRepainter.prototype.__kcFitHooked = true;
+        return true;
+    }
+
+    if (!hookRepainter()) {
+        document.addEventListener('DOMContentLoaded', hookRepainter);
+    }
+})();
 </script>
 
 <script>

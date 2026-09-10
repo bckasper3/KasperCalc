@@ -209,7 +209,7 @@
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Propylene Glycol</a>
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">Propylene Glycol</span><span class="nav-label-short">Prop. Glycol</span></a>
                 <div class="dropdown-menu dropdown-menu">
                   <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
                   <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
@@ -223,7 +223,7 @@
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Ethylene Glycol</a>
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">Ethylene Glycol</span><span class="nav-label-short">Eth. Glycol</span></a>
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
                   <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
@@ -237,7 +237,7 @@
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">MIL-PRF-23699</a>
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">MIL-PRF-23699</span><span class="nav-label-short">PRF-23699</span></a>
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
                   <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
@@ -295,7 +295,7 @@
           <div class="d-md-flex d-block justify-content-end">
             <ul class="navbar-nav justify-content-end">
               <li class="nav-item">
-                <a class="nav-link" href="ThermoDynamicsLand.html">Thermodynamics Land</a>
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermo Land</a>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
@@ -329,7 +329,15 @@
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">MIL-HDBK-5</a>
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Stress</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MaterialPropertyLookup.html">Material Property Lookup</a>
+                  <a class="dropdown-item" href="LugPinAnalysis.html">Lug &amp; Pin Analysis</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"><span class="nav-label-full">MIL-HDBK-5</span><span class="nav-label-short">HDBK-5</span></a>
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
 
@@ -411,8 +419,8 @@
                   <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
                   <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
                   <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
-                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
                   <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                  <a class="dropdown-item" href="SvgEditor.html">SVG Editor</a>
                   <a class="dropdown-item" href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a>
                 </div>
               </li>
@@ -2179,15 +2187,11 @@
               </div><!-- /table-2.3.1.0g2 -->
 
               <div class="hdbk-figure" id="fig-2.3.1.0">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=80" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig2310">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.0.png" download="Figure 2.3.1.0.png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.0.png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig2310');var a=document.createElement('a');a.download='canvas-fig2310.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig2310').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=80" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig2310" class="chartcanvas" role="img" aria-label="Figure 2.3.1.0"></canvas>
                   </div>
@@ -2221,15 +2225,11 @@
               <div class="section-heading lvl-2"><span class="section-num">2.3.1.1</span>AISI Low-Alloy Steels</div>
               <p>Elevated temperature curves for heat-treated AISI low-alloy steels are presented in Figures 2.3.1.1.1 through 2.3.1.1.4. These curves are considered valid for each of these steels in each heat-treated condition but only up to the maximum temperatures listed in Table 2.3.0.1(b).</p>
               <div class="hdbk-figure" id="fig-2.3.1.1.1">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=81" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23111">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.1.1.png" download="Figure 2.3.1.1.1.png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.1.1.png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23111');var a=document.createElement('a');a.download='canvas-fig23111.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23111').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=81" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23111" class="chartcanvas" role="img" aria-label="Figure 2.3.1.1.1"></canvas>
                   </div>
@@ -2252,15 +2252,11 @@
               </p>
 
               <div class="hdbk-figure" id="fig-2.3.1.1.2">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=82" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23112">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.1.2.png" download="Figure 2.3.1.1.2.png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.1.2.png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23112');var a=document.createElement('a');a.download='canvas-fig23112.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23112').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=82" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23112" class="chartcanvas" role="img" aria-label="Figure 2.3.1.1.2"></canvas>
                   </div>
@@ -2283,15 +2279,11 @@
               </p>
 
               <div class="hdbk-figure" id="fig-2.3.1.1.3">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=82" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23113">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.1.3.png" download="Figure 2.3.1.1.3.png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.1.3.png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23113');var a=document.createElement('a');a.download='canvas-fig23113.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23113').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=82" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23113" class="chartcanvas" role="img" aria-label="Figure 2.3.1.1.3"></canvas>
                   </div>
@@ -2314,15 +2306,11 @@
               </p>
 
               <div class="hdbk-figure" id="fig-2.3.1.1.4">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=83" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23114">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.1.4.png" download="Figure 2.3.1.1.4.png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.1.4.png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23114');var a=document.createElement('a');a.download='canvas-fig23114.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23114').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=83" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23114" class="chartcanvas" role="img" aria-label="Figure 2.3.1.1.4"></canvas>
                   </div>
@@ -2348,15 +2336,11 @@
               <div class="section-heading lvl-2"><span class="section-num">2.3.1.2</span>AISI 4130 and 8630 Steels</div>
               <p>Typical stress-strain and tangent-modulus curves for AISI 8630 are shown in Figures 2.3.1.2.6(a) through (c). Best-fit S/N curves for AISI 4130 steel are presented in Figures 2.3.1.2.8(a) through (h).</p>
               <div class="hdbk-figure" id="fig-2.3.1.2.6a">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=83" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23126a">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.6(a).png" download="Figure 2.3.1.2.6(a).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.6(a).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23126a');var a=document.createElement('a');a.download='canvas-fig23126a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23126a').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=83" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23126a" class="chartcanvas" role="img" aria-label="Figure 2.3.1.2.6(a)"></canvas>
                   </div>
@@ -2382,15 +2366,11 @@
               </div>
 
               <div class="hdbk-figure" id="fig-2.3.1.2.6b">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=84" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23126b">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.6(b).png" download="Figure 2.3.1.2.6(b).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.6(b).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23126b');var a=document.createElement('a');a.download='canvas-fig23126b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23126b').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=84" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23126b" class="chartcanvas" role="img" aria-label="Figure 2.3.1.2.6(b)"></canvas>
                   </div>
@@ -2412,15 +2392,11 @@
               </div>
 
               <div class="hdbk-figure" id="fig-2.3.1.2.6c">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=84" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23126c">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.6(c).png" download="Figure 2.3.1.2.6(c).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.6(c).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23126c');var a=document.createElement('a');a.download='canvas-fig23126c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23126c').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=84" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23126c" class="chartcanvas" role="img" aria-label="Figure 2.3.1.2.6(c)"></canvas>
                   </div>
@@ -2444,15 +2420,11 @@
                 Ramberg-Osgood &nbsp;|&nbsp; n (500°F) = 9.0 &nbsp;|&nbsp; n (850°F) = 19 &nbsp;|&nbsp; n (1000°F) = 4.4 &nbsp;|&nbsp; ½-hr exposure
               </p>
               <div class="hdbk-figure" id="fig-2.3.1.2.8a">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=85" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23128a">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(a).png" download="Figure 2.3.1.2.8(a).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(a).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23128a');var a=document.createElement('a');a.download='canvas-fig23128a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23128a').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=85" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23128a" class="chartcanvas" role="img" aria-label="Figure 2.3.1.2.8(a)"></canvas>
                   </div>
@@ -2542,15 +2514,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.2.8b">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=86" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23128b">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(b).png" download="Figure 2.3.1.2.8(b).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(b).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23128b');var a=document.createElement('a');a.download='canvas-fig23128b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23128b').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=86" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23128b" class="chartcanvas" role="img" aria-label="Figure 2.3.1.2.8(b)"></canvas>
                   </div>
@@ -2640,15 +2608,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.2.8c">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=87" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23128c">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(c).png" download="Figure 2.3.1.2.8(c).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(c).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23128c');var a=document.createElement('a');a.download='canvas-fig23128c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23128c').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=87" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23128c" class="chartcanvas" role="img" aria-label="Figure 2.3.1.2.8(c)"></canvas>
                   </div>
@@ -2759,15 +2723,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.2.8d">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=88" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23128d">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(d).png" download="Figure 2.3.1.2.8(d).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(d).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23128d');var a=document.createElement('a');a.download='canvas-fig23128d.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23128d').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=88" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23128d" class="chartcanvas" role="img" aria-label="Figure 2.3.1.2.8(d)"></canvas>
                   </div>
@@ -2878,15 +2838,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.2.8e">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=89" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23128e">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(e).png" download="Figure 2.3.1.2.8(e).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(e).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23128e');var a=document.createElement('a');a.download='canvas-fig23128e.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23128e').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=89" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23128e" class="chartcanvas" role="img" aria-label="Figure 2.3.1.2.8(e)"></canvas>
                   </div>
@@ -2969,15 +2925,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.2.8f">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=90" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23128f">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(f).png" download="Figure 2.3.1.2.8(f).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(f).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23128f');var a=document.createElement('a');a.download='canvas-fig23128f.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23128f').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=90" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23128f" class="chartcanvas" role="img" aria-label="Figure 2.3.1.2.8(f)"></canvas>
                   </div>
@@ -3049,15 +3001,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.2.8g">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=91" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23128g">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(g).png" download="Figure 2.3.1.2.8(g).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(g).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23128g');var a=document.createElement('a');a.download='canvas-fig23128g.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23128g').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=91" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23128g" class="chartcanvas" role="img" aria-label="Figure 2.3.1.2.8(g)"></canvas>
                   </div>
@@ -3129,15 +3077,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.2.8h">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=92" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23128h">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(h).png" download="Figure 2.3.1.2.8(h).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.2.8(h).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23128h');var a=document.createElement('a');a.download='canvas-fig23128h.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23128h').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=92" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23128h" class="chartcanvas" role="img" aria-label="Figure 2.3.1.2.8(h)"></canvas>
                   </div>
@@ -3215,15 +3159,11 @@
               <div class="section-heading lvl-2"><span class="section-num">2.3.1.3</span>AISI 4340 Steel</div>
               <p>Typical stress-strain and tangent-modulus curves for AISI 4340 are shown in Figures 2.3.1.3.6(a) through (c). Typical biaxial stress-strain curves and yield-stress envelopes for AISI 4340 alloy steel are presented in Figures 2.3.1.3.6(d) through (g). Best-fit S/N curves for AISI 4340 are presented in Figures 2.3.1.3.8(a) through (o).</p>
               <div class="hdbk-figure" id="fig-2.3.1.3.6a">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=93" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23136a">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(a).png" download="Figure 2.3.1.3.6(a).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(a).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23136a');var a=document.createElement('a');a.download='canvas-fig23136a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23136a').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=93" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23136a" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.6(a)"></canvas>
                   </div>
@@ -3245,15 +3185,11 @@
               </div>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.6b">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=93" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23136b">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(b).png" download="Figure 2.3.1.3.6(b).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(b).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23136b');var a=document.createElement('a');a.download='canvas-fig23136b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23136b').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=93" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23136b" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.6(b)"></canvas>
                   </div>
@@ -3276,15 +3212,11 @@
               </div>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.6c1">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=94" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23136c1">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(c1).png" download="Figure 2.3.1.3.6(c1).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(c1).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23136c1');var a=document.createElement('a');a.download='canvas-fig23136c1.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23136c1').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=94" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23136c1" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.6(c1)"></canvas>
                   </div>
@@ -3302,15 +3234,11 @@
               </div>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.6c2">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=94" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23136c2">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(c2).png" download="Figure 2.3.1.3.6(c2).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(c2).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23136c2');var a=document.createElement('a');a.download='canvas-fig23136c2.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23136c2').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=94" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23136c2" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.6(c2)"></canvas>
                   </div>
@@ -3327,15 +3255,11 @@
                 </script>
               </div>
               <div class="hdbk-figure" id="fig-2.3.1.3.6d">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=95" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23136d">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(d).png" download="Figure 2.3.1.3.6(d).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(d).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23136d');var a=document.createElement('a');a.download='canvas-fig23136d.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23136d').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=95" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23136d" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.6(d)"></canvas>
                   </div>
@@ -3361,15 +3285,11 @@
               </div>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.6e">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=96" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
-                  <button id="toggle-fig23136e">Show Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(e).png" download="Figure 2.3.1.3.6(e).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(e).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button id="toggle-fig23136e">Hide Tooltips</button>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23136e');var a=document.createElement('a');a.download='canvas-fig23136e.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23136e').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=96" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23136e" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.6(e)"></canvas>
                   </div>
@@ -3400,15 +3320,11 @@
               </div>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.6f">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=97" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23136f">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(f).png" download="Figure 2.3.1.3.6(f).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(f).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23136f');var a=document.createElement('a');a.download='canvas-fig23136f.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23136f').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=97" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23136f" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.6(f)"></canvas>
                   </div>
@@ -3432,15 +3348,11 @@
               </div>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.6g">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=98" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
-                  <button id="toggle-fig23136g">Show Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(g).png" download="Figure 2.3.1.3.6(g).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.6(g).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button id="toggle-fig23136g">Hide Tooltips</button>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23136g');var a=document.createElement('a');a.download='canvas-fig23136g.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23136g').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=98" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23136g" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.6(g)"></canvas>
                   </div>
@@ -3470,15 +3382,11 @@
                 <p class="chart-note">Cylindrical Specimens.</p>
               </div>
               <div class="hdbk-figure" id="fig-2.3.1.3.8a">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=99" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23138a">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(a).png" download="Figure 2.3.1.3.8(a).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(a).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23138a');var a=document.createElement('a');a.download='canvas-fig23138a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23138a').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=99" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23138a" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.8(a)"></canvas>
                   </div>
@@ -3553,15 +3461,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.8b">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=100" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23138b">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(b).png" download="Figure 2.3.1.3.8(b).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(b).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23138b');var a=document.createElement('a');a.download='canvas-fig23138b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23138b').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=100" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23138b" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.8(b)"></canvas>
                   </div>
@@ -3639,15 +3543,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.8c">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=101" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23138c">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(c).png" download="Figure 2.3.1.3.8(c).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(c).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23138c');var a=document.createElement('a');a.download='canvas-fig23138c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23138c').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=101" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23138c" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.8(c)"></canvas>
                   </div>
@@ -3722,15 +3622,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.8d">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=102" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23138d">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(d).png" download="Figure 2.3.1.3.8(d).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(d).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23138d');var a=document.createElement('a');a.download='canvas-fig23138d.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23138d').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=102" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23138d" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.8(d)"></canvas>
                   </div>
@@ -3808,15 +3704,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.8e">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=103" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23138e">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(e).png" download="Figure 2.3.1.3.8(e).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(e).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23138e');var a=document.createElement('a');a.download='canvas-fig23138e.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23138e').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=103" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23138e" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.8(e)"></canvas>
                   </div>
@@ -3901,15 +3793,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.8f">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=104" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23138f">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(f).png" download="Figure 2.3.1.3.8(f).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(f).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23138f');var a=document.createElement('a');a.download='canvas-fig23138f.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23138f').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=104" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23138f" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.8(f)"></canvas>
                   </div>
@@ -3997,15 +3885,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.8g">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=105" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23138g">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(g).png" download="Figure 2.3.1.3.8(g).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(g).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23138g');var a=document.createElement('a');a.download='canvas-fig23138g.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23138g').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=105" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23138g" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.8(g)"></canvas>
                   </div>
@@ -4090,15 +3974,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.8h">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=106" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23138h">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(h).png" download="Figure 2.3.1.3.8(h).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(h).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23138h');var a=document.createElement('a');a.download='canvas-fig23138h.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23138h').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=106" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23138h" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.8(h)"></canvas>
                   </div>
@@ -4186,15 +4066,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.8i">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=107" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23138i">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(i).png" download="Figure 2.3.1.3.8(i).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(i).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23138i');var a=document.createElement('a');a.download='canvas-fig23138i.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23138i').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=107" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23138i" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.8(i)"></canvas>
                   </div>
@@ -4369,15 +4245,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.8k">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=109" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23138k">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(k).png" download="Figure 2.3.1.3.8(k).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(k).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23138k');var a=document.createElement('a');a.download='canvas-fig23138k.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23138k').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=109" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23138k" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.8(k)"></canvas>
                   </div>
@@ -4454,15 +4326,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.8l">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=110" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23138l">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(l).png" download="Figure 2.3.1.3.8(l).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(l).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23138l');var a=document.createElement('a');a.download='canvas-fig23138l.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23138l').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=110" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23138l" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.8(l)"></canvas>
                   </div>
@@ -4546,15 +4414,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.8m">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=111" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23138m">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(m).png" download="Figure 2.3.1.3.8(m).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(m).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23138m');var a=document.createElement('a');a.download='canvas-fig23138m.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23138m').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=111" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23138m" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.8(m)"></canvas>
                   </div>
@@ -4631,15 +4495,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.8n">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=112" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23138n">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(n).png" download="Figure 2.3.1.3.8(n).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(n).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23138n');var a=document.createElement('a');a.download='canvas-fig23138n.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23138n').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=112" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23138n" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.8(n)"></canvas>
                   </div>
@@ -4719,15 +4579,11 @@
               </table>
 
               <div class="hdbk-figure" id="fig-2.3.1.3.8o">
-                <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=113" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
                 <div class="canvasdiv">
                   <button id="toggle-fig23138o">Hide Tooltips</button>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(o).png" download="Figure 2.3.1.3.8(o).png">
-                    <button>Download Chart</button>
-                  </a>
-                  <a style="font-size:medium; text-decoration:none;" href="img/MIL-HDBK-5/CHAPTER2/Chapter2.3/Figure 2.3.1.3.8(o).png" target="_blank">
-                    <button>Open In New Tab</button>
-                  </a>
+                  <button onclick="(function(){var c=document.getElementById('canvas-fig23138o');var a=document.createElement('a');a.download='canvas-fig23138o.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+                  <button onclick="window.open(document.getElementById('canvas-fig23138o').toDataURL())">Open in New Tab</button>
+                  <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=113" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
                   <div class="canvascontainer">
                     <canvas id="canvas-fig23138o" class="chartcanvas" role="img" aria-label="Figure 2.3.1.3.8(o)"></canvas>
                   </div>

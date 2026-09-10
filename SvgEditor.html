@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>KasperCalc: SVG Editor</title>
+    <link rel="canonical" href="https://kaspercalc.com/SvgEditor.html" />
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, bckasper3, SVG editor, SVG code editor, online SVG editor, add arrows to SVG, SVG annotation, technical drawing, SVG to PNG, edit SVG code, engineering diagram editor" />
+    <meta name="description" content="Edit SVG code and drawing side by side. Add arrows, text and shapes, restyle any element, zoom and pan, set a transparent or solid background, then copy the code or export PNG, JPEG and WebP at any size." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <script defer src="js/svg-editor.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      /* SVG editor — colors matched to the KasperCalc calculator theme */
+      .svge-shell { max-width: 1600px; margin: 0 auto; }
+      #svge-app { display: flex; flex-direction: column; gap: 10px; padding: 12px 0; }
+
+      /* ── toolbars ── */
+      .svge-bar {
+        display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+        padding: 8px; background: var(--calc-background-color);
+        border: 2px solid var(--calc-outline-color);
+        border-radius: var(--border-radius-small);
+        box-shadow: 0 3px 5px 0 rgba(0,0,0,.4);
+      }
+      .svge-bar button {
+        font-size: 13px; padding: 4px 10px; cursor: pointer;
+        border: 1px solid var(--calc-outline-color);
+        border-radius: var(--border-radius-small);
+        background: #fff; color: var(--p-color);
+        font-family: var(--body-font-family); transition: .2s; white-space: nowrap;
+      }
+      .svge-bar button:hover { background: var(--calc-hover-color); }
+      .svge-bar button.is-on {
+        background: var(--section-title-color); color: #fff;
+        border-color: var(--section-title-color);
+      }
+      .svge-bar button:disabled { opacity: .38; cursor: default; background: #fff; }
+      .svge-bar label {
+        font-size: 13px; color: var(--primary-color);
+        font-family: var(--body-font-family);
+        display: inline-flex; align-items: center; gap: 4px; margin: 0;
+      }
+      .svge-bar select,
+      .svge-bar input[type=text],
+      .svge-bar input[type=number] {
+        font-size: 13px; padding: 3px 6px;
+        border: 1px solid var(--calc-outline-color);
+        border-radius: var(--border-radius-small);
+        background: var(--calc-dropdown-color); color: var(--p-color);
+        font-family: var(--body-font-family); min-width: 0;
+      }
+      .svge-bar input[type=number] { width: 62px; background: #fff; }
+      .svge-bar input[type=color] {
+        width: 34px; height: 26px; padding: 0; cursor: pointer;
+        border: 1px solid var(--calc-outline-color); border-radius: 4px; background: #fff;
+      }
+      .svge-bar input[type=color]:disabled { opacity: .4; cursor: default; }
+      .svge-sep { width: 1px; height: 24px; background: var(--calc-outline-color); margin: 0 3px; opacity: .35; }
+      .svge-bar-title {
+        font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+        color: var(--section-title-color); font-weight: var(--font-weight-medium);
+        min-width: 54px; font-family: var(--body-font-family);
+      }
+      .svge-kbd {
+        font-family: monospace; font-size: 10px; background: var(--calc-result-color);
+        border: 1px solid var(--calc-outline-color); border-radius: 3px;
+        padding: 0 3px; margin-left: 3px; opacity: .8;
+      }
+      .svge-bar button.is-on .svge-kbd { background: rgba(255,255,255,.22); border-color: rgba(255,255,255,.5); color: #fff; }
+
+      /* ── arrow style picker ── */
+      .svge-arrowbtn {
+        display: inline-flex; flex-direction: column; align-items: center; gap: 0;
+        padding: 3px 7px 2px; cursor: pointer; background: #fff;
+        border: 1px solid var(--calc-outline-color);
+        border-radius: var(--border-radius-small); transition: .2s;
+      }
+      .svge-arrowbtn:hover { background: var(--calc-hover-color); }
+      .svge-arrowbtn span { font-size: 10px; line-height: 1.2; color: var(--p-color); }
+      .svge-arrowbtn.is-on {
+        background: #cfe0e3; border-color: var(--section-title-color); border-width: 2px; padding: 2px 6px 1px;
+      }
+
+      /* ── main split ── */
+      .svge-main { display: grid; grid-template-columns: minmax(0,1fr) 336px; gap: 10px; align-items: start; }
+      @media (max-width: 1150px) { .svge-main { grid-template-columns: minmax(0,1fr); } }
+
+      .svge-stage {
+        position: relative; overflow: hidden;
+        height: min(68vh, 660px); min-height: 380px;
+        border: 2px solid var(--calc-outline-color);
+        border-radius: var(--border-radius-small);
+        background: #97a1a6; touch-action: none; user-select: none;
+        box-shadow: 0 3px 5px 0 rgba(0,0,0,.4);
+      }
+      .svge-stage.is-drop { outline: 3px dashed var(--section-title-color); outline-offset: -7px; }
+      .svge-stage[data-tool=select] { cursor: default; }
+      .svge-stage[data-tool=pan] { cursor: grab; }
+      .svge-stage[data-tool=text] { cursor: text; }
+      .svge-stage[data-tool=arrow],
+      .svge-stage[data-tool=line],
+      .svge-stage[data-tool=rect],
+      .svge-stage[data-tool=ellipse],
+      .svge-stage[data-tool=dimension] { cursor: crosshair; }
+
+      .svge-paper {
+        position: absolute; left: 0; top: 0; transform-origin: 0 0;
+        box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35);
+      }
+      .svge-paper > svg { width: 100%; height: 100%; display: block; }
+      .svge-bd-checker {
+        background-color: #fff;
+        background-image:
+          linear-gradient(45deg, #dfe4e7 25%, transparent 25%, transparent 75%, #dfe4e7 75%),
+          linear-gradient(45deg, #dfe4e7 25%, transparent 25%, transparent 75%, #dfe4e7 75%);
+        background-size: 18px 18px;
+        background-position: 0 0, 9px 9px;
+      }
+      .svge-bd-white { background: #fff; }
+      .svge-bd-grey  { background: #b7c0c4; }
+      .svge-bd-dark  { background: #23292d; }
+
+      .svge-overlay { position: absolute; left: 0; top: 0; pointer-events: none; }
+      .svge-overlay .svge-selbox {
+        stroke: var(--section-title-color); stroke-width: 1.3; stroke-dasharray: 5 3;
+      }
+      .svge-overlay .svge-handle {
+        fill: #fff; stroke: var(--section-title-color); stroke-width: 1.6; pointer-events: all;
+      }
+      .svge-overlay .svge-handle:hover { fill: var(--section-title-color); }
+      .svge-overlay .svge-grid line { stroke: rgba(0,0,0,.17); stroke-width: 1; }
+
+      .svge-inline-edit {
+        position: absolute; z-index: 6; min-width: 130px; height: 46px;
+        font-family: var(--body-font-family); font-size: 13px; line-height: 1.35;
+        padding: 3px 5px; border: 2px solid var(--section-title-color);
+        border-radius: 4px; background: #fff; color: var(--p-color); resize: both;
+      }
+
+      /* ── status ── */
+      .svge-statusbar {
+        display: flex; gap: 12px; align-items: center; justify-content: space-between;
+        flex-wrap: wrap; padding: 5px 10px; margin-top: 8px;
+        background: var(--calc-background-color);
+        border: 2px solid var(--calc-outline-color);
+        border-radius: var(--border-radius-small);
+        font-size: 12.5px; font-family: var(--body-font-family);
+        box-shadow: 0 3px 5px 0 rgba(0,0,0,.4);
+      }
+      .svge-status { min-width: 0; }
+      .svge-status-ok   { color: #2c6b33; }
+      .svge-status-warn { color: #8a6000; }
+      .svge-status-err  { color: #a11f1f; font-weight: var(--font-weight-medium); }
+      .svge-meta { font-family: monospace; font-size: 11.5px; color: var(--primary-color); white-space: nowrap; }
+
+      /* ── side panels ── */
+      .svge-panel {
+        background: var(--calc-background-color);
+        border: 2px solid var(--calc-outline-color);
+        border-radius: var(--border-radius-small);
+        box-shadow: 0 3px 5px 0 rgba(0,0,0,.4);
+        margin-bottom: 10px; overflow: hidden;
+      }
+      .svge-panel-h {
+        background: var(--section-title-color); color: #fff;
+        font-size: 11.5px; text-transform: uppercase; letter-spacing: .08em;
+        padding: 5px 10px; font-weight: var(--font-weight-medium);
+        font-family: var(--body-font-family);
+      }
+      .svge-panel-b { padding: 8px 10px; }
+      #svge-inspector { padding: 8px 10px; max-height: 420px; overflow: auto; }
+      #svge-layers { padding: 6px; max-height: 260px; overflow: auto; }
+
+      .svge-row { display: grid; grid-template-columns: 88px minmax(0,1fr); gap: 6px; align-items: center; margin-bottom: 5px; }
+      .svge-row > label { font-size: 12px; color: var(--primary-color); font-family: var(--body-font-family); margin: 0; }
+      .svge-row input, .svge-row select, .svge-row textarea {
+        width: 100%; min-width: 0; font-size: 12px; padding: 3px 5px;
+        border: 1px solid var(--calc-outline-color); border-radius: 4px;
+        background: #fff; color: var(--p-color); font-family: var(--body-font-family);
+      }
+      .svge-row textarea { resize: vertical; font-family: monospace; }
+      .svge-ctl { display: flex; gap: 4px; align-items: center; min-width: 0; }
+      .svge-ctl input[type=color] { width: 30px; height: 24px; flex: 0 0 auto; padding: 0; cursor: pointer; }
+      .svge-colortext { flex: 1 1 auto; min-width: 0; font-family: monospace !important; }
+      .svge-none { font-size: 11px; display: inline-flex; align-items: center; gap: 2px; flex: 0 0 auto; color: var(--primary-color); }
+      .svge-none input { width: auto !important; }
+
+      .svge-insp-head { font-size: 13px; margin-bottom: 7px; }
+      .svge-tagname { font-family: monospace; color: var(--section-title-color); font-weight: var(--font-weight-medium); }
+      .svge-badge {
+        background: var(--section-title-color); color: #fff; font-size: 10px;
+        padding: 1px 6px; border-radius: 4px; letter-spacing: .03em;
+      }
+      .svge-actions { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 9px; }
+      .svge-actions button {
+        font-size: 11px; padding: 2px 7px; cursor: pointer;
+        border: 1px solid var(--calc-outline-color); border-radius: 4px;
+        background: #fff; color: var(--p-color); font-family: var(--body-font-family);
+      }
+      .svge-actions button:hover { background: var(--calc-hover-color); }
+      .svge-subhead {
+        font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+        color: var(--section-title-color); border-bottom: 1px solid var(--calc-outline-color);
+        margin: 12px 0 7px; padding-bottom: 2px; font-weight: var(--font-weight-medium);
+      }
+      .svge-attrs { display: flex; flex-direction: column; gap: 3px; }
+      .svge-attrrow { display: grid; grid-template-columns: 1fr 1.25fr 22px; gap: 3px; }
+      .svge-attrrow input {
+        font-size: 11px; font-family: monospace; padding: 2px 4px; min-width: 0;
+        border: 1px solid var(--calc-outline-color); border-radius: 3px; background: #fff; color: var(--p-color);
+      }
+      .svge-attrrow button {
+        font-size: 12px; line-height: 1; padding: 0; cursor: pointer;
+        border: 1px solid var(--calc-outline-color); border-radius: 3px; background: #fff; color: var(--p-color);
+      }
+      .svge-attrrow button:hover { background: var(--calc-hover-color); }
+      .svge-empty { font-size: 12px; color: var(--primary-color); font-style: italic; line-height: 1.5; }
+
+      .svge-layer {
+        display: flex; gap: 6px; width: 100%; text-align: left; align-items: baseline;
+        font-size: 12px; padding: 3px 6px; margin-bottom: 1px;
+        border: 1px solid transparent; border-radius: 4px; background: transparent;
+        color: var(--p-color); cursor: pointer; font-family: var(--body-font-family);
+      }
+      .svge-layer:hover { background: var(--calc-hover-color); }
+      .svge-layer.is-sel { background: var(--section-title-color); color: #fff; }
+      .svge-ltag { font-family: monospace; flex: 0 0 auto; }
+      .svge-lname { opacity: .78; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+      /* ── code pane ── */
+      /* The pane grows to fit the whole document rather than scrolling, so the
+         gutter stripe is painted by the wrapper and the gutter itself is
+         transparent — that lets the selection band tint the line numbers too. */
+      .svge-code-wrap {
+        display: block; position: relative; overflow: hidden;
+        background: linear-gradient(to right,
+                    var(--calc-result-color) 0 48px, #fff 48px);
+        border: 2px solid var(--calc-outline-color);
+        border-radius: var(--border-radius-small);
+        box-shadow: 0 3px 5px 0 rgba(0,0,0,.4);
+      }
+      #svge-code-hl {
+        position: absolute; left: 0; right: 0; display: none; pointer-events: none;
+        background: rgba(97,130,138,.20);
+        border-top: 1px solid rgba(97,130,138,.5);
+        border-bottom: 1px solid rgba(97,130,138,.5);
+      }
+      #svge-gutter {
+        position: absolute; left: 0; top: 0; bottom: 0;
+        width: 48px; margin: 0; padding: 8px 6px;
+        text-align: right; font-family: monospace; font-size: 12px; line-height: 1.5;
+        background: transparent; color: #5a6168;
+        overflow: hidden; white-space: pre; user-select: none;
+        border-right: 1px solid var(--calc-outline-color);
+      }
+      #svge-code {
+        position: relative; display: block;
+        width: calc(100% - 48px); margin-left: 48px;
+        min-width: 0; min-height: 240px; padding: 8px; border: 0;
+        resize: none; font-family: monospace; font-size: 12px; line-height: 1.5;
+        color: var(--p-color); background: transparent; white-space: pre;
+        overflow-x: auto; overflow-y: hidden; tab-size: 2;
+      }
+      #svge-code:focus { outline: none; }
+      .svge-code-section { margin-top: 10px; }
+
+      .svge-section-label {
+        font-size: 14px; color: var(--section-title-color); text-transform: uppercase;
+        letter-spacing: .05em; margin-bottom: 5px; font-family: var(--body-font-family);
+        font-weight: var(--font-weight-medium);
+      }
+      .svge-note { font-size: 12px; color: var(--primary-color); font-family: var(--body-font-family); }
+
+      /* ── docs below the tool ── */
+      .svge-doc { max-width: 1000px; margin: 0 auto; line-height: 1.7; }
+      .svge-doc h4 {
+        color: var(--section-title-color); border-bottom: 1px solid var(--border-color);
+        padding-bottom: .3rem; margin-top: 2rem;
+      }
+      .svge-doc code {
+        font-size: .92em; background: var(--calc-background-color);
+        padding: 1px 4px; border-radius: 3px; color: var(--p-color);
+      }
+
+      /* -- SVG syntax reference cards -- */
+      .svge-ref { max-width: 1360px; margin: 0 auto; }
+      .svge-ref h4 {
+        color: var(--section-title-color); border-bottom: 1px solid var(--border-color);
+        padding-bottom: .3rem; margin-top: 2.2rem;
+      }
+      .svge-ref > p { line-height: 1.7; }
+      .svge-ref-lede { margin-bottom: .6rem; }
+      .svge-ref code {
+        font-family: monospace; font-size: .92em; background: var(--calc-background-color);
+        padding: 1px 4px; border-radius: 3px; color: var(--p-color);
+      }
+      .svge-ref-grid {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        gap: 14px; margin: 14px 0 26px;
+      }
+      .svge-ex {
+        display: flex; flex-direction: column; margin: 0; overflow: hidden;
+        background: var(--calc-background-color);
+        border: 2px solid var(--calc-outline-color);
+        border-radius: var(--border-radius-small);
+        box-shadow: 0 3px 5px 0 rgba(0,0,0,.4);
+      }
+      .svge-ex-head {
+        display: flex; align-items: center; justify-content: space-between; gap: 8px;
+        background: var(--section-title-color); color: #fff; padding: 4px 7px 4px 10px;
+      }
+      .svge-ex-title {
+        font-size: 12.5px; letter-spacing: .04em; text-transform: uppercase;
+        font-weight: var(--font-weight-medium); font-family: var(--body-font-family);
+      }
+      .svge-ex-load {
+        font-size: 10.5px; padding: 2px 8px; cursor: pointer; white-space: nowrap;
+        border: 1px solid rgba(255,255,255,.6); border-radius: 4px;
+        background: rgba(255,255,255,.16); color: #fff;
+        font-family: var(--body-font-family); transition: .2s;
+      }
+      .svge-ex-load:hover { background: #fff; color: var(--section-title-color); }
+      .svge-ex-fig {
+        background: #fff; padding: 7px 8px;
+        border-bottom: 1px solid var(--calc-outline-color);
+      }
+      .svge-ex-fig svg { width: 100%; max-width: 272px; height: auto; display: block; margin: 0 auto; }
+      .svge-ex-code {
+        margin: 0; padding: 8px 10px; background: #fff; overflow-x: auto;
+        font-family: monospace; font-size: 11.5px; line-height: 1.55;
+        color: var(--p-color); tab-size: 2;
+        /* wrap rather than scroll: a card is narrow and a hidden attribute is
+           worse than a wrapped line */
+        white-space: pre-wrap; overflow-wrap: break-word;
+      }
+      .svge-ex-code code { background: none; padding: 0; font-size: inherit; font-family: inherit; }
+      .svge-ex-note {
+        font-size: 12.5px; line-height: 1.6; padding: 8px 10px; margin: 0; margin-top: auto;
+        color: var(--primary-color); font-family: var(--body-font-family);
+        border-top: 1px solid var(--calc-outline-color);
+      }
+      .svge-ex-note code {
+        font-family: monospace; font-size: .93em; background: var(--calc-result-color);
+        padding: 0 3px; border-radius: 3px; color: var(--p-color);
+      }
+      @media (max-width: 520px) {
+        .svge-ref-grid { grid-template-columns: minmax(0,1fr); }
+      }
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">Propylene Glycol</span><span class="nav-label-short">Prop. Glycol</span></a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">Ethylene Glycol</span><span class="nav-label-short">Eth. Glycol</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">MIL-PRF-23699</span><span class="nav-label-short">PRF-23699</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Skydrol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SkydrolPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="SkydrolDensity.html">Density</a>
+                  <a class="dropdown-item" href="SkydrolSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="SkydrolThermalConductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="SkydrolViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="SkydrolPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="SkydrolThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="SkydrolThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermo Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                  <a class="dropdown-item" href="SpringTorsionRound.html">Torsion Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                  <a class="dropdown-item" href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Stress</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MaterialPropertyLookup.html">Material Property Lookup</a>
+                  <a class="dropdown-item" href="LugPinAnalysis.html">Lug &amp; Pin Analysis</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"><span class="nav-label-full">MIL-HDBK-5</span><span class="nav-label-short">HDBK-5</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                  <a class="dropdown-item" href="SvgEditor.html">SVG Editor</a>
+                  <a class="dropdown-item" href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- BANNER -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              SVG Editor
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDITOR -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12 px-3">
+          <div class="svge-shell">
+
+            <h2 class="visually-hidden">SVG code editor with live drawing canvas, arrow and text annotation, and multi-format export</h2>
+
+            <div id="svge-app">
+
+              <!-- FILE / HISTORY / ZOOM -->
+              <div class="svge-bar">
+                <span class="svge-bar-title">File</span>
+                <button id="svge-new" type="button">New</button>
+                <button id="svge-sample" type="button">Sample</button>
+                <label>Open <input type="file" id="svge-file" accept=".svg,image/svg+xml" style="font-size:12px; max-width:190px;" /></label>
+                <div class="svge-sep"></div>
+                <span class="svge-bar-title">Edit</span>
+                <button id="svge-undo" type="button" title="Undo (Ctrl+Z)">&#8617; Undo</button>
+                <button id="svge-redo" type="button" title="Redo (Ctrl+Y or Ctrl+Shift+Z)">&#8618; Redo</button>
+                <div class="svge-sep"></div>
+                <span class="svge-bar-title">View</span>
+                <button id="svge-zoom-out" type="button" title="Zoom out">&minus;</button>
+                <span id="svge-zoomlabel" style="font-size:13px; min-width:48px; text-align:center; font-family:var(--body-font-family);">100%</span>
+                <button id="svge-zoom-in" type="button" title="Zoom in">+</button>
+                <button id="svge-zoom-100" type="button">1:1</button>
+                <button id="svge-zoom-fit" type="button">Fit</button>
+                <div class="svge-sep"></div>
+                <label><input type="checkbox" id="svge-grid" /> Grid</label>
+                <label><input type="checkbox" id="svge-snap" /> Snap</label>
+                <label>Step <input type="number" id="svge-grid-step" value="10" min="1" step="1" style="width:56px;" /></label>
+                <label>Backdrop
+                  <select id="svge-backdrop">
+                    <option value="checker">Checkerboard</option>
+                    <option value="white">White</option>
+                    <option value="grey">Grey</option>
+                    <option value="dark">Dark</option>
+                  </select>
+                </label>
+              </div>
+
+              <!-- TOOLS -->
+              <div class="svge-bar" id="svge-tools">
+                <span class="svge-bar-title">Tools</span>
+                <button type="button" data-tool="select">Select<span class="svge-kbd">V</span></button>
+                <button type="button" data-tool="pan">Pan<span class="svge-kbd">H</span></button>
+                <div class="svge-sep"></div>
+                <button type="button" data-tool="arrow">Arrow<span class="svge-kbd">A</span></button>
+                <button type="button" data-tool="dimension">Dimension<span class="svge-kbd">D</span></button>
+                <button type="button" data-tool="jog">Jog<span class="svge-kbd">J</span></button>
+                <button type="button" data-tool="line">Line<span class="svge-kbd">L</span></button>
+                <button type="button" data-tool="rect">Rectangle<span class="svge-kbd">R</span></button>
+                <button type="button" data-tool="ellipse">Ellipse<span class="svge-kbd">O</span></button>
+                <button type="button" data-tool="text">Text<span class="svge-kbd">T</span></button>
+                <div class="svge-sep"></div>
+                <span class="svge-note">Shift constrains angle &middot; Alt-click selects inside a group &middot; Ctrl+wheel zooms</span>
+              </div>
+
+              <!-- ARROW STYLES + JOGS -->
+              <div class="svge-bar">
+                <span class="svge-bar-title">Arrows</span>
+                <span id="svge-arrowstyles" style="display:flex; flex-wrap:wrap; gap:6px;"></span>
+                <div class="svge-sep"></div>
+                <span class="svge-bar-title">Jogs</span>
+                <select id="svge-jog-style" title="Shape of the jogged line drawn by the Jog tool">
+                  <option value="elbowH">Elbow, across first</option>
+                  <option value="elbowV">Elbow, down first</option>
+                  <option value="stepH">Z-step, across</option>
+                  <option value="stepV">Z-step, down</option>
+                  <option value="zigzag">Zigzag (jogged dimension)</option>
+                </select>
+                <label><input type="checkbox" id="svge-jog-head" /> arrow head</label>
+                <span class="svge-note">A jogged leader steps around whatever is in the way instead of crossing it.</span>
+              </div>
+
+              <!-- STYLE -->
+              <div class="svge-bar">
+                <span class="svge-bar-title">Style</span>
+                <label>Stroke <input type="color" id="svge-stroke" value="#c0392b" /></label>
+                <label><input type="checkbox" id="svge-stroke-none" /> none</label>
+                <label>Fill <input type="color" id="svge-fill" value="#dce7ea" /></label>
+                <label><input type="checkbox" id="svge-fill-none" checked /> none</label>
+                <label>Width <input type="number" id="svge-sw" value="2" min="0" step="0.25" /></label>
+                <label>Dash
+                  <select id="svge-dash">
+                    <option value="none">Solid</option>
+                    <option value="4 3">Dashed</option>
+                    <option value="1 3">Dotted</option>
+                    <option value="8 4">Long dash</option>
+                    <option value="8 3 2 3">Dash-dot</option>
+                    <option value="12 4 2 4">Centre line</option>
+                  </select>
+                </label>
+                <label>Opacity <input type="number" id="svge-opacity" value="1" min="0" max="1" step="0.05" /></label>
+                <div class="svge-sep"></div>
+                <span class="svge-bar-title">Text</span>
+                <label>Size <input type="number" id="svge-font-size" value="13" min="1" step="0.5" /></label>
+                <label>Family
+                  <select id="svge-font-family">
+                    <option value="inherit">Inherit</option>
+                    <option value="Roboto, Arial, sans-serif">Roboto</option>
+                    <option value="Arial, Helvetica, sans-serif">Arial</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="&quot;Times New Roman&quot;, Times, serif">Times</option>
+                    <option value="monospace">Monospace</option>
+                  </select>
+                </label>
+                <label>Weight
+                  <select id="svge-font-weight">
+                    <option value="normal">Normal</option>
+                    <option value="500">Medium</option>
+                    <option value="bold">Bold</option>
+                    <option value="300">Light</option>
+                  </select>
+                </label>
+                <label>Anchor
+                  <select id="svge-anchor">
+                    <option value="start">Start</option>
+                    <option value="middle">Middle</option>
+                    <option value="end">End</option>
+                  </select>
+                </label>
+                <div class="svge-sep"></div>
+                <button id="svge-apply-style" type="button" title="Apply the settings above to the selected element">Apply to selection</button>
+              </div>
+
+              <!-- CANVAS + SIDE PANELS -->
+              <div class="svge-main">
+                <div>
+                  <div id="svge-stage" class="svge-stage" data-tool="select">
+                    <div id="svge-paper" class="svge-paper svge-bd-checker"></div>
+                    <svg id="svge-overlay" class="svge-overlay" aria-hidden="true"></svg>
+                  </div>
+                  <div class="svge-statusbar">
+                    <div id="svge-status" class="svge-status">Loading&hellip;</div>
+                    <div class="svge-meta"><span id="svge-coords">&mdash;</span> &middot; <span id="svge-charcount">&mdash;</span></div>
+                  </div>
+
+                  <!-- CODE -->
+                  <div class="svge-code-section">
+                    <div class="svge-bar" style="border-bottom-left-radius:0; border-bottom-right-radius:0; border-bottom:0;">
+                      <span class="svge-bar-title">Code</span>
+                      <button id="svge-render" type="button" title="Re-parse the code below and redraw">Render now</button>
+                      <button id="svge-format" type="button">Format</button>
+                      <button id="svge-minify" type="button">Minify</button>
+                      <span class="svge-note">Edits here redraw automatically. Selecting a shape highlights its markup.</span>
+                    </div>
+                    <div class="svge-code-wrap" style="border-top-left-radius:0; border-top-right-radius:0;">
+                      <div id="svge-code-hl"></div>
+                      <pre id="svge-gutter">1
+</pre>
+                      <textarea id="svge-code" spellcheck="false" wrap="off" aria-label="SVG source code"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <aside>
+                  <div class="svge-panel">
+                    <div class="svge-panel-h">Document</div>
+                    <div class="svge-panel-b">
+                      <div class="svge-row"><label>viewBox x</label><input type="number" id="svge-vb-x" step="1" /></div>
+                      <div class="svge-row"><label>viewBox y</label><input type="number" id="svge-vb-y" step="1" /></div>
+                      <div class="svge-row"><label>viewBox w</label><input type="number" id="svge-vb-w" step="1" /></div>
+                      <div class="svge-row"><label>viewBox h</label><input type="number" id="svge-vb-h" step="1" /></div>
+                      <div class="svge-row"><label>width attr</label><input type="text" id="svge-doc-w" placeholder="(none)" /></div>
+                      <div class="svge-row"><label>height attr</label><input type="text" id="svge-doc-h" placeholder="(none)" /></div>
+                      <div class="svge-row">
+                        <label>Background</label>
+                        <div class="svge-ctl">
+                          <select id="svge-bg-mode">
+                            <option value="transparent">Transparent</option>
+                            <option value="solid">Solid colour</option>
+                          </select>
+                          <input type="color" id="svge-bg-color" value="#ffffff" />
+                        </div>
+                      </div>
+                      <div class="svge-row">
+                        <label>Trim pad</label>
+                        <div class="svge-ctl">
+                          <input type="number" id="svge-fit-pad" value="8" step="1" min="0" />
+                          <button id="svge-fit-content" type="button"
+                                  style="font-size:11px; padding:3px 7px; cursor:pointer; border:1px solid var(--calc-outline-color); border-radius:4px; background:#fff; white-space:nowrap;">Fit&nbsp;viewBox</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="svge-panel">
+                    <div class="svge-panel-h">Selection</div>
+                    <div id="svge-inspector"></div>
+                  </div>
+
+                  <div class="svge-panel">
+                    <div class="svge-panel-h">Elements</div>
+                    <div id="svge-layers"></div>
+                  </div>
+                </aside>
+              </div>
+
+              <!-- EXPORT -->
+              <div class="svge-bar">
+                <span class="svge-bar-title">Export</span>
+                <select id="svge-export-fmt">
+                  <option value="svg">SVG code &mdash; formatted</option>
+                  <option value="svg-min">SVG code &mdash; minified</option>
+                  <option value="datauri">Data URI (for CSS or src)</option>
+                  <option value="png">PNG image</option>
+                  <option value="jpeg">JPEG image</option>
+                  <option value="webp">WebP image</option>
+                </select>
+                <label>Size
+                  <select id="svge-export-scale">
+                    <option value="0.5">&times;0.5</option>
+                    <option value="1" selected>&times;1</option>
+                    <option value="2">&times;2</option>
+                    <option value="3">&times;3</option>
+                    <option value="4">&times;4</option>
+                    <option value="8">&times;8</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                </label>
+                <label>W <input type="number" id="svge-export-w" min="1" step="1" /></label>
+                <label>H <input type="number" id="svge-export-h" min="1" step="1" /></label>
+                <div class="svge-sep"></div>
+                <button id="svge-copy" type="button">Copy code</button>
+                <button id="svge-download" type="button" title="Download (Ctrl+S)">Download</button>
+                <span class="svge-note" id="svge-export-note"></span>
+              </div>
+
+            </div><!-- /#svge-app -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SVG SYNTAX REFERENCE -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12 px-3">
+          <div class="svge-ref">
+
+            <div class="section-title-wrap mb-2">
+              <div class="h2 custom-subheading">SVG Syntax Reference</div>
+            </div>
+
+            <p class="svge-ref-lede">Everything below is a working example. Each card shows the markup on the right and exactly that markup rendered on the left, and <span style="font-weight: var(--font-weight-normal)">Load</span> drops the snippet straight into the editor above so you can take it apart. Read it as a key to the code pane: once you can name the eight or so elements and the dozen attributes that do the real work, an unfamiliar SVG stops being a wall of numbers.</p>
+
+            <h4>The document</h4>
+            <p>An SVG is a coordinate system with shapes painted into it. Almost everything else is a variation on that: the root element declares the coordinate system, elements declare geometry in those coordinates, and attributes decide how each one is painted.</p>
+
+            <div class="svge-ref-grid">
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">The &lt;svg&gt; root</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="10" y="10" width="220" height="70" fill="#dce7ea" stroke="#434343" stroke-width="2" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 90"&gt;
+  &lt;rect x="10" y="10" width="220" height="70" fill="#dce7ea" stroke="#434343" stroke-width="2" /&gt;
+&lt;/svg&gt;</code></pre>
+                <div class="svge-ex-note">The wrapper every document needs. <code>xmlns</code> is required for a standalone <code>.svg</code> file (it can be omitted when the markup is inlined directly in HTML). <code>viewBox</code> declares the internal coordinate system as <code>min-x min-y width height</code>. <code>width</code> and <code>height</code> are optional display sizes &mdash; leave them off and the drawing scales to fill whatever box it is put in.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Coordinates run down, not up</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="0" y="0" width="240" height="90" fill="#f5f8f9" />
+                    <line x1="0" y1="2" x2="150" y2="2" stroke="#c0392b" stroke-width="4" />
+                    <line x1="2" y1="0" x2="2" y2="70" stroke="#0b6fa4" stroke-width="4" />
+                    <text x="14" y="22" font-size="13" fill="#c0392b">x increases right</text>
+                    <text x="14" y="40" font-size="13" fill="#0b6fa4">y increases DOWN</text>
+                    <circle cx="185" cy="62" r="5" fill="#434343" />
+                    <text x="152" y="82" font-size="12">185, 62</text>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;rect x="0" y="0" width="240" height="90" fill="#f5f8f9" /&gt;
+&lt;line x1="0" y1="2" x2="150" y2="2" stroke="#c0392b" stroke-width="4" /&gt;
+&lt;line x1="2" y1="0" x2="2" y2="70" stroke="#0b6fa4" stroke-width="4" /&gt;
+&lt;text x="14" y="22" font-size="13" fill="#c0392b"&gt;x increases right&lt;/text&gt;
+&lt;text x="14" y="40" font-size="13" fill="#0b6fa4"&gt;y increases DOWN&lt;/text&gt;
+&lt;circle cx="185" cy="62" r="5" fill="#434343" /&gt;
+&lt;text x="152" y="82" font-size="12"&gt;185, 62&lt;/text&gt;</code></pre>
+                <div class="svge-ex-note">The origin is the <span style="font-weight: var(--font-weight-normal)">top-left</span> corner and y grows downward, which is the single most common source of confusion for anyone coming from graph paper or CAD. A point at <code>y="10"</code> sits above a point at <code>y="60"</code>.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Groups &mdash; &lt;g&gt;</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g fill="none" stroke="#0b6fa4" stroke-width="3">
+                      <circle cx="40" cy="45" r="22" />
+                      <rect x="70" y="23" width="44" height="44" />
+                    </g>
+                    <g fill="none" stroke="#c0392b" stroke-width="3" transform="translate(120,0)">
+                      <circle cx="40" cy="45" r="22" />
+                      <rect x="70" y="23" width="44" height="44" />
+                    </g>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;g fill="none" stroke="#0b6fa4" stroke-width="3"&gt;
+  &lt;circle cx="40" cy="45" r="22" /&gt;
+  &lt;rect x="70" y="23" width="44" height="44" /&gt;
+&lt;/g&gt;
+&lt;g fill="none" stroke="#c0392b" stroke-width="3" transform="translate(120,0)"&gt;
+  &lt;circle cx="40" cy="45" r="22" /&gt;
+  &lt;rect x="70" y="23" width="44" height="44" /&gt;
+&lt;/g&gt;</code></pre>
+                <div class="svge-ex-note">A <code>&lt;g&gt;</code> does two jobs: it hands its painting attributes down to every child, so <code>stroke</code> is written once instead of on each shape, and it applies one <code>transform</code> to the whole set. Both groups here contain identical geometry; only the group attributes differ.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Reuse &mdash; &lt;defs&gt; and &lt;use&gt;</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                      <g id="ref-bolt">
+                        <circle cx="0" cy="0" r="10" fill="#dce7ea" stroke="#434343" stroke-width="2" />
+                        <line x1="-6.5" y1="0" x2="6.5" y2="0" stroke="#434343" stroke-width="2" />
+                      </g>
+                    </defs>
+                    <use href="#ref-bolt" x="45" y="45" />
+                    <use href="#ref-bolt" x="120" y="45" />
+                    <use href="#ref-bolt" x="195" y="45" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;defs&gt;
+  &lt;g id="ref-bolt"&gt;
+    &lt;circle cx="0" cy="0" r="10" fill="#dce7ea" stroke="#434343" stroke-width="2" /&gt;
+    &lt;line x1="-6.5" y1="0" x2="6.5" y2="0" stroke="#434343" stroke-width="2" /&gt;
+  &lt;/g&gt;
+&lt;/defs&gt;
+&lt;use href="#ref-bolt" x="45" y="45" /&gt;
+&lt;use href="#ref-bolt" x="120" y="45" /&gt;
+&lt;use href="#ref-bolt" x="195" y="45" /&gt;</code></pre>
+                <div class="svge-ex-note">Anything inside <code>&lt;defs&gt;</code> is defined but not drawn. <code>&lt;use&gt;</code> then stamps it wherever you want, with <code>x</code> and <code>y</code> acting as a translate. Edit the definition and every copy follows. Older files use <code>xlink:href</code> instead of <code>href</code>; both still work.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Stylesheets and classes</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <style>
+                      .ref-part { fill: #dce7ea; stroke: #434343; stroke-width: 2; }
+                      .ref-ctr  { stroke: #c0392b; stroke-width: 1; stroke-dasharray: 12 3 2 3; }
+                    </style>
+                    <rect class="ref-part" x="30" y="20" width="180" height="50" rx="6" />
+                    <line class="ref-ctr" x1="10" y1="45" x2="230" y2="45" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;style&gt;
+  .ref-part { fill: #dce7ea; stroke: #434343; stroke-width: 2; }
+  .ref-ctr  { stroke: #c0392b; stroke-width: 1; stroke-dasharray: 12 3 2 3; }
+&lt;/style&gt;
+&lt;rect class="ref-part" x="30" y="20" width="180" height="50" rx="6" /&gt;
+&lt;line class="ref-ctr" x1="10" y1="45" x2="230" y2="45" /&gt;</code></pre>
+                <div class="svge-ex-note">An SVG can carry its own <code>&lt;style&gt;</code> block, and CSS properties beat presentation attributes. This is the tidiest way to keep a family of parts consistent. The catch: a class only means something if the stylesheet travels with the markup, so a snippet that relies on classes defined in the host page will look wrong on its own.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Accessible titles</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <title>Pressure vessel nozzle</title>
+                    <desc>Section through the reinforcing pad</desc>
+                    <rect x="30" y="24" width="180" height="42" fill="#dce7ea" stroke="#434343" stroke-width="2" />
+                    <text x="120" y="82" font-size="12" text-anchor="middle">hover the shape to see the title</text>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;title&gt;Pressure vessel nozzle&lt;/title&gt;
+&lt;desc&gt;Section through the reinforcing pad&lt;/desc&gt;
+&lt;rect x="30" y="24" width="180" height="42" fill="#dce7ea" stroke="#434343" stroke-width="2" /&gt;
+&lt;text x="120" y="82" font-size="12" text-anchor="middle"&gt;hover the shape to see the title&lt;/text&gt;</code></pre>
+                <div class="svge-ex-note"><code>&lt;title&gt;</code> as the first child gives the drawing an accessible name and a browser tooltip; <code>&lt;desc&gt;</code> adds a longer description. On the root element, <code>role="img"</code> with <code>aria-label</code> does the same job for screen readers in one line.</div>
+              </figure>
+            </div>
+
+            <h4>Basic shapes</h4>
+            <p>Six elements cover most geometry. Every one of them takes the same painting attributes, so once you know <code>fill</code> and <code>stroke</code> the only thing that changes between them is how the outline is described.</p>
+
+            <div class="svge-ref-grid">
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">&lt;line&gt;</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <line x1="20" y1="70" x2="220" y2="20" stroke="#434343" stroke-width="3" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;line x1="20" y1="70" x2="220" y2="20" stroke="#434343" stroke-width="3" /&gt;</code></pre>
+                <div class="svge-ex-note">Two endpoints, <code>x1 y1</code> to <code>x2 y2</code>. A line has no interior, so <code>fill</code> does nothing &mdash; forget <code>stroke</code> and nothing appears at all, which is the usual reason a line seems to be missing.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">&lt;rect&gt;</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="20" y="20" width="90" height="50" fill="#dce7ea" stroke="#434343" stroke-width="2" />
+                    <rect x="130" y="20" width="90" height="50" rx="14" fill="none" stroke="#c0392b" stroke-width="2" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;rect x="20" y="20" width="90" height="50" fill="#dce7ea" stroke="#434343" stroke-width="2" /&gt;
+&lt;rect x="130" y="20" width="90" height="50" rx="14" fill="none" stroke="#c0392b" stroke-width="2" /&gt;</code></pre>
+                <div class="svge-ex-note"><code>x y</code> is the top-left corner, not the centre. <code>rx</code> (and optionally <code>ry</code>) rounds the corners; give only <code>rx</code> and the corners are circular.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">&lt;circle&gt;</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="70" cy="45" r="32" fill="#dce7ea" stroke="#434343" stroke-width="2" />
+                    <circle cx="170" cy="45" r="32" fill="none" stroke="#c0392b" stroke-width="2" stroke-dasharray="5 4" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;circle cx="70" cy="45" r="32" fill="#dce7ea" stroke="#434343" stroke-width="2" /&gt;
+&lt;circle cx="170" cy="45" r="32" fill="none" stroke="#c0392b" stroke-width="2" stroke-dasharray="5 4" /&gt;</code></pre>
+                <div class="svge-ex-note">Positioned by its centre <code>cx cy</code> with radius <code>r</code> &mdash; unlike <code>&lt;rect&gt;</code>, which uses a corner. Mixing the two up is what makes shapes land half a width away from where you expected.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">&lt;ellipse&gt;</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <ellipse cx="120" cy="45" rx="100" ry="32" fill="#dce7ea" stroke="#434343" stroke-width="2" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;ellipse cx="120" cy="45" rx="100" ry="32" fill="#dce7ea" stroke="#434343" stroke-width="2" /&gt;</code></pre>
+                <div class="svge-ex-note">A circle with independent radii. <code>rx</code> is the horizontal semi-axis, <code>ry</code> the vertical one.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">&lt;polyline&gt;</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <polyline points="15,70 60,25 105,60 150,20 195,55 230,30"
+                              fill="none" stroke="#0b6fa4" stroke-width="3" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;polyline points="15,70 60,25 105,60 150,20 195,55 230,30"
+          fill="none" stroke="#0b6fa4" stroke-width="3" /&gt;</code></pre>
+                <div class="svge-ex-note">A run of connected segments through a list of <code>x,y</code> pairs. The path is left open. Set <code>fill="none"</code> explicitly &mdash; the default fill is black, and a polyline that inherits it renders as a solid blob between its first and last points.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">&lt;polygon&gt;</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <polygon points="120,12 168,44 150,80 90,80 72,44"
+                             fill="#dce7ea" stroke="#434343" stroke-width="2" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;polygon points="120,12 168,44 150,80 90,80 72,44"
+         fill="#dce7ea" stroke="#434343" stroke-width="2" /&gt;</code></pre>
+                <div class="svge-ex-note">The same <code>points</code> list as a polyline, but the shape is closed back to the first point automatically. This is what the arrowheads in this editor are built from.</div>
+              </figure>
+            </div>
+
+            <h4>Paths</h4>
+            <p><code>&lt;path&gt;</code> can draw anything the other shapes can and a great deal they cannot. Its whole geometry lives in one <code>d</code> attribute, written as a string of single-letter commands followed by numbers. An <span style="font-weight: var(--font-weight-normal)">uppercase</span> command takes absolute coordinates; the <span style="font-weight: var(--font-weight-normal)">lowercase</span> version of the same letter takes coordinates relative to the current point.</p>
+
+            <div class="svge-ref-grid">
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">M, L and Z</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M 20 70 L 70 20 L 130 55 L 200 15 L 220 70 Z"
+                          fill="#dce7ea" stroke="#434343" stroke-width="2" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;path d="M 20 70 L 70 20 L 130 55 L 200 15 L 220 70 Z"
+      fill="#dce7ea" stroke="#434343" stroke-width="2" /&gt;</code></pre>
+                <div class="svge-ex-note"><code>M</code> moves the pen without drawing, <code>L</code> draws a straight line to a point, <code>Z</code> closes the shape back to the last <code>M</code>. Every path starts with <code>M</code>. Several <code>M</code> commands in one <code>d</code> make several subpaths.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">H and V shorthands</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M 30 25 H 210 V 65 H 30 Z"
+                          fill="none" stroke="#0b6fa4" stroke-width="3" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;path d="M 30 25 H 210 V 65 H 30 Z"
+      fill="none" stroke="#0b6fa4" stroke-width="3" /&gt;</code></pre>
+                <div class="svge-ex-note"><code>H</code> draws a horizontal line to an x coordinate and <code>V</code> a vertical line to a y coordinate, each taking one number instead of two. Handy for rectangular outlines and dimension witness lines.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Cubic B&eacute;zier &mdash; C and S</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g stroke="#9fb3ba" stroke-width="1" stroke-dasharray="3 2" fill="#9fb3ba">
+                      <line x1="20" y1="72" x2="55" y2="12" />
+                      <line x1="135" y1="48" x2="105" y2="12" />
+                      <circle cx="55" cy="12" r="3.2" />
+                      <circle cx="105" cy="12" r="3.2" />
+                    </g>
+                    <path d="M 20 72 C 55 12, 105 12, 135 48 S 205 84, 228 26"
+                          fill="none" stroke="#c0392b" stroke-width="3" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;g stroke="#9fb3ba" stroke-width="1" stroke-dasharray="3 2" fill="#9fb3ba"&gt;
+  &lt;line x1="20" y1="72" x2="55" y2="12" /&gt;
+  &lt;line x1="135" y1="48" x2="105" y2="12" /&gt;
+  &lt;circle cx="55" cy="12" r="3.2" /&gt;
+  &lt;circle cx="105" cy="12" r="3.2" /&gt;
+&lt;/g&gt;
+&lt;path d="M 20 72 C 55 12, 105 12, 135 48 S 205 84, 228 26"
+      fill="none" stroke="#c0392b" stroke-width="3" /&gt;</code></pre>
+                <div class="svge-ex-note"><code>C x1 y1, x2 y2, x y</code> takes two control points and an endpoint; the curve is pulled toward the controls without touching them (shown dashed). <code>S</code> continues with a smooth joint, reflecting the previous control point so you only supply the second control and the end.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Quadratic B&eacute;zier &mdash; Q and T</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g stroke="#9fb3ba" stroke-width="1" stroke-dasharray="3 2" fill="#9fb3ba">
+                      <line x1="20" y1="70" x2="75" y2="8" />
+                      <line x1="75" y1="8" x2="130" y2="55" />
+                      <circle cx="75" cy="8" r="3.2" />
+                    </g>
+                    <path d="M 20 70 Q 75 8, 130 55 T 228 42"
+                          fill="none" stroke="#0b6fa4" stroke-width="3" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;g stroke="#9fb3ba" stroke-width="1" stroke-dasharray="3 2" fill="#9fb3ba"&gt;
+  &lt;line x1="20" y1="70" x2="75" y2="8" /&gt;
+  &lt;line x1="75" y1="8" x2="130" y2="55" /&gt;
+  &lt;circle cx="75" cy="8" r="3.2" /&gt;
+&lt;/g&gt;
+&lt;path d="M 20 70 Q 75 8, 130 55 T 228 42"
+      fill="none" stroke="#0b6fa4" stroke-width="3" /&gt;</code></pre>
+                <div class="svge-ex-note">A single control point instead of two: <code>Q cx cy, x y</code>. <code>T</code> is its smooth continuation and needs only the endpoint. Cheaper to write than a cubic and enough for most gentle curves.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Arcs &mdash; A</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M 20 72 A 45 45 0 0 1 110 72" fill="none" stroke="#434343" stroke-width="3" />
+                    <path d="M 140 72 A 45 45 0 1 1 220 72" fill="none" stroke="#c0392b" stroke-width="3" />
+                    <text x="20" y="20" font-size="11">large-arc 0</text>
+                    <text x="140" y="20" font-size="11">large-arc 1</text>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;path d="M 20 72 A 45 45 0 0 1 110 72" fill="none" stroke="#434343" stroke-width="3" /&gt;
+&lt;path d="M 140 72 A 45 45 0 1 1 220 72" fill="none" stroke="#c0392b" stroke-width="3" /&gt;
+&lt;text x="20" y="20" font-size="11"&gt;large-arc 0&lt;/text&gt;
+&lt;text x="140" y="20" font-size="11"&gt;large-arc 1&lt;/text&gt;</code></pre>
+                <div class="svge-ex-note"><code>A rx ry rotation large-arc-flag sweep-flag x y</code>. The two flags are the confusing part: <code>large-arc</code> picks the long way round rather than the short way, and <code>sweep</code> picks clockwise rather than anticlockwise. Four arcs fit any two points and a radius; the flags say which one you meant.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Absolute against relative</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M 20 30 l 40 0 l 0 30 l 40 0" fill="none" stroke="#0b6fa4" stroke-width="3" />
+                    <path d="M 130 30 L 170 30 L 170 60 L 210 60" fill="none" stroke="#c0392b" stroke-width="3" />
+                    <text x="20" y="82" font-size="11" fill="#0b6fa4">lowercase = relative</text>
+                    <text x="130" y="82" font-size="11" fill="#c0392b">uppercase = absolute</text>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;path d="M 20 30 l 40 0 l 0 30 l 40 0" fill="none" stroke="#0b6fa4" stroke-width="3" /&gt;
+&lt;path d="M 130 30 L 170 30 L 170 60 L 210 60" fill="none" stroke="#c0392b" stroke-width="3" /&gt;
+&lt;text x="20" y="82" font-size="11" fill="#0b6fa4"&gt;lowercase = relative&lt;/text&gt;
+&lt;text x="130" y="82" font-size="11" fill="#c0392b"&gt;uppercase = absolute&lt;/text&gt;</code></pre>
+                <div class="svge-ex-note">These two paths draw the identical shape. Relative commands are compact and let you move a whole path by editing only its first <code>M</code>; absolute commands are easier to read and to edit by hand. This editor writes absolute coordinates, and translates them properly when you drag a path.</div>
+              </figure>
+            </div>
+
+            <div class="table-responsive mt-1 mb-4">
+              <table class="table table-striped table-bordered table-hover table-sm">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr><th style="white-space:nowrap;">Command</th><th>Name</th><th>What it does</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>M x y</code></td><td>moveto</td><td>Lift the pen and start here. Every <code>d</code> begins with one.</td></tr>
+                  <tr><td><code>L x y</code></td><td>lineto</td><td>Straight line to a point.</td></tr>
+                  <tr><td><code>H x</code></td><td>horizontal lineto</td><td>Straight line to an x coordinate, y unchanged.</td></tr>
+                  <tr><td><code>V y</code></td><td>vertical lineto</td><td>Straight line to a y coordinate, x unchanged.</td></tr>
+                  <tr><td><code>C x1 y1 x2 y2 x y</code></td><td>cubic B&eacute;zier</td><td>Two control points, then the endpoint.</td></tr>
+                  <tr><td><code>S x2 y2 x y</code></td><td>smooth cubic</td><td>First control point mirrored from the previous curve.</td></tr>
+                  <tr><td><code>Q x1 y1 x y</code></td><td>quadratic B&eacute;zier</td><td>One shared control point, then the endpoint.</td></tr>
+                  <tr><td><code>T x y</code></td><td>smooth quadratic</td><td>Control point mirrored from the previous curve.</td></tr>
+                  <tr><td><code>A rx ry rot laf sf x y</code></td><td>elliptical arc</td><td>Radii, x-axis rotation, large-arc flag, sweep flag, endpoint.</td></tr>
+                  <tr><td><code>Z</code></td><td>closepath</td><td>Straight line back to the last <code>M</code>. Takes no numbers.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="mb-4">Every command has a lowercase twin that reads its numbers as offsets from the current point rather than as absolute coordinates. Commas and whitespace between numbers are interchangeable, and a repeated command letter may be omitted &mdash; <code>L 10 20 L 30 40</code> and <code>L 10 20 30 40</code> are the same path.</p>
+
+            <h4>Fill, stroke and colour</h4>
+            <p>Every shape is painted twice: the interior with <code>fill</code>, the outline with <code>stroke</code>. Both default to something surprising &mdash; fill is black and stroke is none &mdash; so a shape you expected to be an outline arrives as a silhouette until you say otherwise.</p>
+
+            <div class="svge-ref-grid">
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">fill and stroke</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="12" y="18" width="66" height="46" fill="#dce7ea" />
+                    <rect x="88" y="18" width="66" height="46" fill="none" stroke="#434343" stroke-width="3" />
+                    <rect x="164" y="18" width="66" height="46" fill="#dce7ea" stroke="#c0392b" stroke-width="3" />
+                    <g font-size="11" text-anchor="middle" fill="#5a6168">
+                      <text x="45" y="80">fill only</text>
+                      <text x="121" y="80">stroke only</text>
+                      <text x="197" y="80">both</text>
+                    </g>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;rect x="12" y="18" width="66" height="46" fill="#dce7ea" /&gt;
+&lt;rect x="88" y="18" width="66" height="46" fill="none" stroke="#434343" stroke-width="3" /&gt;
+&lt;rect x="164" y="18" width="66" height="46" fill="#dce7ea" stroke="#c0392b" stroke-width="3" /&gt;
+&lt;g font-size="11" text-anchor="middle" fill="#5a6168"&gt;
+  &lt;text x="45" y="80"&gt;fill only&lt;/text&gt;
+  &lt;text x="121" y="80"&gt;stroke only&lt;/text&gt;
+  &lt;text x="197" y="80"&gt;both&lt;/text&gt;
+&lt;/g&gt;</code></pre>
+                <div class="svge-ex-note">Colours may be named (<code>red</code>), hex (<code>#c0392b</code>), <code>rgb(192 57 43)</code>, or the keyword <code>none</code>, which paints nothing at all and is not the same as transparent white. <code>currentColor</code> picks up the inherited CSS <code>color</code>, which is how an icon takes on the colour of the text around it.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Line caps and joins</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g fill="none" stroke="#434343" stroke-width="13">
+                      <path d="M 22 20 L 70 20" stroke-linecap="butt" />
+                      <path d="M 22 48 L 70 48" stroke-linecap="round" />
+                      <path d="M 22 76 L 70 76" stroke-linecap="square" />
+                    </g>
+                    <g fill="none" stroke="#0b6fa4" stroke-width="12">
+                      <path d="M 110 78 L 132 22 L 154 78" stroke-linejoin="miter" />
+                      <path d="M 168 78 L 190 22 L 212 78" stroke-linejoin="round" />
+                    </g>
+                    <g font-size="10" fill="#5a6168">
+                      <text x="80" y="24">butt</text><text x="80" y="52">round</text><text x="80" y="80">square</text>
+                    </g>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;g fill="none" stroke="#434343" stroke-width="13"&gt;
+  &lt;path d="M 22 20 L 70 20" stroke-linecap="butt" /&gt;
+  &lt;path d="M 22 48 L 70 48" stroke-linecap="round" /&gt;
+  &lt;path d="M 22 76 L 70 76" stroke-linecap="square" /&gt;
+&lt;/g&gt;
+&lt;g fill="none" stroke="#0b6fa4" stroke-width="12"&gt;
+  &lt;path d="M 110 78 L 132 22 L 154 78" stroke-linejoin="miter" /&gt;
+  &lt;path d="M 168 78 L 190 22 L 212 78" stroke-linejoin="round" /&gt;
+&lt;/g&gt;
+&lt;g font-size="10" fill="#5a6168"&gt;
+  &lt;text x="80" y="24"&gt;butt&lt;/text&gt;&lt;text x="80" y="52"&gt;round&lt;/text&gt;&lt;text x="80" y="80"&gt;square&lt;/text&gt;
+&lt;/g&gt;</code></pre>
+                <div class="svge-ex-note"><code>stroke-linecap</code> shapes the ends: <code>butt</code> stops dead on the endpoint, while <code>round</code> and <code>square</code> overshoot by half the stroke width &mdash; worth knowing when a line has to stop exactly on a boundary. <code>stroke-linejoin</code> shapes the corners, with <code>miter</code> sharp and <code>round</code> softened.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Dash patterns</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g fill="none" stroke="#434343" stroke-width="2.5">
+                      <line x1="15" y1="14" x2="225" y2="14" />
+                      <line x1="15" y1="32" x2="225" y2="32" stroke-dasharray="8 4" />
+                      <line x1="15" y1="50" x2="225" y2="50" stroke-dasharray="1 5" stroke-linecap="round" />
+                      <line x1="15" y1="68" x2="225" y2="68" stroke-dasharray="16 4 3 4" />
+                      <line x1="15" y1="86" x2="225" y2="86" stroke-dasharray="16 4 3 4" stroke-dashoffset="10" />
+                    </g>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;g fill="none" stroke="#434343" stroke-width="2.5"&gt;
+  &lt;line x1="15" y1="14" x2="225" y2="14" /&gt;
+  &lt;line x1="15" y1="32" x2="225" y2="32" stroke-dasharray="8 4" /&gt;
+  &lt;line x1="15" y1="50" x2="225" y2="50" stroke-dasharray="1 5" stroke-linecap="round" /&gt;
+  &lt;line x1="15" y1="68" x2="225" y2="68" stroke-dasharray="16 4 3 4" /&gt;
+  &lt;line x1="15" y1="86" x2="225" y2="86" stroke-dasharray="16 4 3 4" stroke-dashoffset="10" /&gt;
+&lt;/g&gt;</code></pre>
+                <div class="svge-ex-note"><code>stroke-dasharray</code> alternates dash and gap lengths. One value repeats it for both; an odd-length list is repeated to make it even. <code>16 4 3 4</code> is the classic centre line. <code>stroke-dashoffset</code> slides the pattern along, which is how you stop a dash from landing awkwardly on a corner.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Opacity</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="62" cy="45" r="32" fill="#0b6fa4" />
+                    <circle cx="104" cy="45" r="32" fill="#c0392b" fill-opacity="0.5" />
+                    <circle cx="190" cy="45" r="30" fill="#0b6fa4" stroke="#434343" stroke-width="8" opacity="0.35" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;circle cx="62" cy="45" r="32" fill="#0b6fa4" /&gt;
+&lt;circle cx="104" cy="45" r="32" fill="#c0392b" fill-opacity="0.5" /&gt;
+&lt;circle cx="190" cy="45" r="30" fill="#0b6fa4" stroke="#434343" stroke-width="8" opacity="0.35" /&gt;</code></pre>
+                <div class="svge-ex-note"><code>fill-opacity</code> and <code>stroke-opacity</code> fade one channel each. <code>opacity</code> fades the element as a finished picture &mdash; note the right-hand circle, where the fill does not show through its own stroke because the two are composited first and faded afterwards.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">fill-rule</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M 62 12 L 98 78 L 26 78 Z M 62 34 L 80 70 L 44 70 Z" fill="#0b6fa4" fill-rule="nonzero" />
+                    <path d="M 180 12 L 216 78 L 144 78 Z M 180 34 L 198 70 L 162 70 Z" fill="#0b6fa4" fill-rule="evenodd" />
+                    <g font-size="11" text-anchor="middle" fill="#5a6168">
+                      <text x="62" y="90">nonzero</text><text x="180" y="90">evenodd</text>
+                    </g>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;path d="M 62 12 L 98 78 L 26 78 Z M 62 34 L 80 70 L 44 70 Z" fill="#0b6fa4" fill-rule="nonzero" /&gt;
+&lt;path d="M 180 12 L 216 78 L 144 78 Z M 180 34 L 198 70 L 162 70 Z" fill="#0b6fa4" fill-rule="evenodd" /&gt;
+&lt;g font-size="11" text-anchor="middle" fill="#5a6168"&gt;
+  &lt;text x="62" y="90"&gt;nonzero&lt;/text&gt;&lt;text x="180" y="90"&gt;evenodd&lt;/text&gt;
+&lt;/g&gt;</code></pre>
+                <div class="svge-ex-note">When a path encloses itself, this decides what counts as inside. <code>nonzero</code> (the default) fills a hole only when the inner loop winds the opposite way; <code>evenodd</code> alternates on every crossing regardless of direction. Both paths here are identical &mdash; only the rule differs. This is the fix when a letter or washer refuses to show its hole.</div>
+              </figure>
+            </div>
+
+            <h4>Text</h4>
+            <p>SVG text is a shape like any other: it is positioned by a point on its baseline rather than by a box, and it does not wrap. Anything resembling a paragraph has to be broken into lines by hand.</p>
+
+            <div class="svge-ref-grid">
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">&lt;text&gt; and text-anchor</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <line x1="120" y1="6" x2="120" y2="86" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 3" />
+                    <text x="120" y="26" font-size="14" text-anchor="start">start</text>
+                    <text x="120" y="54" font-size="14" text-anchor="middle">middle</text>
+                    <text x="120" y="80" font-size="14" text-anchor="end">end</text>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;line x1="120" y1="6" x2="120" y2="86" stroke="#c0392b" stroke-width="1" stroke-dasharray="3 3" /&gt;
+&lt;text x="120" y="26" font-size="14" text-anchor="start"&gt;start&lt;/text&gt;
+&lt;text x="120" y="54" font-size="14" text-anchor="middle"&gt;middle&lt;/text&gt;
+&lt;text x="120" y="80" font-size="14" text-anchor="end"&gt;end&lt;/text&gt;</code></pre>
+                <div class="svge-ex-note">All three labels are anchored to the same <code>x="120"</code>. <code>text-anchor</code> decides which part of the string lands there: <code>start</code> (the default), <code>middle</code> or <code>end</code>. Centring a label under a dimension needs <code>middle</code>, not arithmetic.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Baselines</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <line x1="10" y1="45" x2="230" y2="45" stroke="#c0392b" stroke-width="1" />
+                    <text x="14" y="45" font-size="13">auto</text>
+                    <text x="66" y="45" font-size="13" dominant-baseline="middle">middle</text>
+                    <text x="142" y="45" font-size="13" dominant-baseline="hanging">hanging</text>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;line x1="10" y1="45" x2="230" y2="45" stroke="#c0392b" stroke-width="1" /&gt;
+&lt;text x="14" y="45" font-size="13"&gt;auto&lt;/text&gt;
+&lt;text x="66" y="45" font-size="13" dominant-baseline="middle"&gt;middle&lt;/text&gt;
+&lt;text x="142" y="45" font-size="13" dominant-baseline="hanging"&gt;hanging&lt;/text&gt;</code></pre>
+                <div class="svge-ex-note"><code>y</code> is the baseline, so text sits <em>above</em> it by default and descenders hang below. <code>dominant-baseline="middle"</code> centres the glyphs on <code>y</code> instead, which is what you want for a label inside a circle or a table cell.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Fonts</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <text x="12" y="26" font-size="16" font-family="Roboto, Arial, sans-serif">Roboto 16</text>
+                    <text x="12" y="52" font-size="16" font-family="Georgia, serif" font-style="italic">Georgia italic</text>
+                    <text x="12" y="80" font-size="15" font-family="monospace" font-weight="bold" letter-spacing="1.5">Mono bold</text>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;text x="12" y="26" font-size="16" font-family="Roboto, Arial, sans-serif"&gt;Roboto 16&lt;/text&gt;
+&lt;text x="12" y="52" font-size="16" font-family="Georgia, serif" font-style="italic"&gt;Georgia italic&lt;/text&gt;
+&lt;text x="12" y="80" font-size="15" font-family="monospace" font-weight="bold" letter-spacing="1.5"&gt;Mono bold&lt;/text&gt;</code></pre>
+                <div class="svge-ex-note"><code>font-size</code> is in user units, so it scales with the drawing. Give <code>font-family</code> a fallback stack: an SVG opened outside your page has no access to a webfont, and a missing family silently becomes the default serif, which changes every label width.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Multiple lines with &lt;tspan&gt;</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <text x="14" y="24" font-size="14" fill="#1c2227">
+                      <tspan x="14" dy="0">SVG never wraps text.</tspan>
+                      <tspan x="14" dy="20">Every line is its own <tspan fill="#c0392b" font-weight="bold">tspan</tspan>,</tspan>
+                      <tspan x="14" dy="20">repeating x and stepping dy.</tspan>
+                    </text>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;text x="14" y="24" font-size="14" fill="#1c2227"&gt;
+  &lt;tspan x="14" dy="0"&gt;SVG never wraps text.&lt;/tspan&gt;
+  &lt;tspan x="14" dy="20"&gt;Every line is its own &lt;tspan fill="#c0392b" font-weight="bold"&gt;tspan&lt;/tspan&gt;,&lt;/tspan&gt;
+  &lt;tspan x="14" dy="20"&gt;repeating x and stepping dy.&lt;/tspan&gt;
+&lt;/text&gt;</code></pre>
+                <div class="svge-ex-note">A <code>&lt;tspan&gt;</code> restates <code>x</code> and steps down by <code>dy</code> to make the next line. Nested inline, it restyles a few words without breaking the run. This is exactly what the Text tool writes when you type a line break.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Rotated labels</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <text x="30" y="86" font-size="13" transform="rotate(-90 30 86)">Vertical</text>
+                    <text x="86" y="62" font-size="13" transform="rotate(-22 86 62)">Angled label</text>
+                    <circle cx="30" cy="86" r="2.5" fill="#c0392b" /><circle cx="86" cy="62" r="2.5" fill="#c0392b" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;text x="30" y="86" font-size="13" transform="rotate(-90 30 86)"&gt;Vertical&lt;/text&gt;
+&lt;text x="86" y="62" font-size="13" transform="rotate(-22 86 62)"&gt;Angled label&lt;/text&gt;
+&lt;circle cx="30" cy="86" r="2.5" fill="#c0392b" /&gt;&lt;circle cx="86" cy="62" r="2.5" fill="#c0392b" /&gt;</code></pre>
+                <div class="svge-ex-note">Rotate about the anchor point itself &mdash; <code>rotate(-90 30 86)</code> where the two extra numbers repeat the text’s own <code>x y</code> (marked red). Give <code>rotate()</code> only an angle and it pivots about the origin instead, flinging the label off the canvas.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Text on a path</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                      <path id="ref-curve" d="M 15 72 Q 120 6 225 72" />
+                    </defs>
+                    <path d="M 15 72 Q 120 6 225 72" fill="none" stroke="#cfd8dc" stroke-width="1" />
+                    <text font-size="14" fill="#0b6fa4">
+                      <textPath href="#ref-curve" startOffset="6%">Text flowing along a curve</textPath>
+                    </text>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;defs&gt;
+  &lt;path id="ref-curve" d="M 15 72 Q 120 6 225 72" /&gt;
+&lt;/defs&gt;
+&lt;path d="M 15 72 Q 120 6 225 72" fill="none" stroke="#cfd8dc" stroke-width="1" /&gt;
+&lt;text font-size="14" fill="#0b6fa4"&gt;
+  &lt;textPath href="#ref-curve" startOffset="6%"&gt;Text flowing along a curve&lt;/textPath&gt;
+&lt;/text&gt;</code></pre>
+                <div class="svge-ex-note">Put a <code>&lt;textPath&gt;</code> inside a <code>&lt;text&gt;</code> and point it at a path by id. The path itself is not drawn unless you also render it, as the grey guide here is. <code>startOffset</code> slides the string along.</div>
+              </figure>
+            </div>
+
+            <h4>Transforms</h4>
+            <p>A <code>transform</code> changes the coordinate system an element is drawn in rather than its written geometry. Several can be listed together and they apply right to left &mdash; the last one written is the first one felt.</p>
+
+            <div class="svge-ref-grid">
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">The four transforms</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g fill="#dce7ea" stroke="#434343" stroke-width="2">
+                      <rect x="10" y="28" width="40" height="34" />
+                      <rect x="10" y="28" width="40" height="34" transform="translate(56,0) rotate(20 30 45)" />
+                      <rect x="10" y="28" width="40" height="34" transform="translate(104,10) scale(1.15)" />
+                      <rect x="10" y="28" width="40" height="34" transform="translate(178,0) skewX(-16)" />
+                    </g>
+                    <g font-size="10" fill="#5a6168" text-anchor="middle">
+                      <text x="30" y="84">none</text><text x="86" y="84">rotate</text>
+                      <text x="140" y="84">scale</text><text x="196" y="84">skewX</text>
+                    </g>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;g fill="#dce7ea" stroke="#434343" stroke-width="2"&gt;
+  &lt;rect x="10" y="28" width="40" height="34" /&gt;
+  &lt;rect x="10" y="28" width="40" height="34" transform="translate(56,0) rotate(20 30 45)" /&gt;
+  &lt;rect x="10" y="28" width="40" height="34" transform="translate(104,10) scale(1.15)" /&gt;
+  &lt;rect x="10" y="28" width="40" height="34" transform="translate(178,0) skewX(-16)" /&gt;
+&lt;/g&gt;
+&lt;g font-size="10" fill="#5a6168" text-anchor="middle"&gt;
+  &lt;text x="30" y="84"&gt;none&lt;/text&gt;&lt;text x="86" y="84"&gt;rotate&lt;/text&gt;
+  &lt;text x="140" y="84"&gt;scale&lt;/text&gt;&lt;text x="196" y="84"&gt;skewX&lt;/text&gt;
+&lt;/g&gt;</code></pre>
+                <div class="svge-ex-note"><code>translate(dx,dy)</code> moves, <code>scale(k)</code> or <code>scale(kx,ky)</code> resizes, <code>rotate(deg)</code> turns, <code>skewX/skewY(deg)</code> slants. <code>matrix(a b c d e f)</code> expresses any combination in one go. Note that <code>scale</code> multiplies the stroke width too.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Rotating about a point</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="120" cy="45" r="34" fill="none" stroke="#cfd8dc" stroke-width="1" />
+                    <g stroke="#0b6fa4" stroke-width="3" fill="none">
+                      <line x1="120" y1="45" x2="120" y2="11" />
+                      <line x1="120" y1="45" x2="120" y2="11" transform="rotate(60 120 45)" />
+                      <line x1="120" y1="45" x2="120" y2="11" transform="rotate(120 120 45)" />
+                      <line x1="120" y1="45" x2="120" y2="11" transform="rotate(180 120 45)" />
+                      <line x1="120" y1="45" x2="120" y2="11" transform="rotate(240 120 45)" />
+                      <line x1="120" y1="45" x2="120" y2="11" transform="rotate(300 120 45)" />
+                    </g>
+                    <circle cx="120" cy="45" r="3" fill="#c0392b" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;circle cx="120" cy="45" r="34" fill="none" stroke="#cfd8dc" stroke-width="1" /&gt;
+&lt;g stroke="#0b6fa4" stroke-width="3" fill="none"&gt;
+  &lt;line x1="120" y1="45" x2="120" y2="11" /&gt;
+  &lt;line x1="120" y1="45" x2="120" y2="11" transform="rotate(60 120 45)" /&gt;
+  &lt;line x1="120" y1="45" x2="120" y2="11" transform="rotate(120 120 45)" /&gt;
+  &lt;line x1="120" y1="45" x2="120" y2="11" transform="rotate(180 120 45)" /&gt;
+  &lt;line x1="120" y1="45" x2="120" y2="11" transform="rotate(240 120 45)" /&gt;
+  &lt;line x1="120" y1="45" x2="120" y2="11" transform="rotate(300 120 45)" /&gt;
+&lt;/g&gt;
+&lt;circle cx="120" cy="45" r="3" fill="#c0392b" /&gt;</code></pre>
+                <div class="svge-ex-note">One spoke, drawn six times. <code>rotate(angle cx cy)</code> takes the centre as two extra numbers; without them the pivot is the origin at the top-left, which is almost never what you want. Positive angles turn clockwise, because y points down.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Strokes that ignore scale</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g fill="none" stroke="#434343" stroke-width="2">
+                      <rect x="8" y="30" width="32" height="32" />
+                      <g transform="translate(56,12) scale(1.7)"><rect x="0" y="0" width="32" height="32" /></g>
+                      <g transform="translate(150,12) scale(1.7)"><rect x="0" y="0" width="32" height="32" vector-effect="non-scaling-stroke" /></g>
+                    </g>
+                    <g font-size="10" fill="#5a6168" text-anchor="middle">
+                      <text x="24" y="94">1&times;</text><text x="83" y="94">scaled</text><text x="177" y="94">non-scaling-stroke</text>
+                    </g>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;g fill="none" stroke="#434343" stroke-width="2"&gt;
+  &lt;rect x="8" y="30" width="32" height="32" /&gt;
+  &lt;g transform="translate(56,12) scale(1.7)"&gt;&lt;rect x="0" y="0" width="32" height="32" /&gt;&lt;/g&gt;
+  &lt;g transform="translate(150,12) scale(1.7)"&gt;&lt;rect x="0" y="0" width="32" height="32" vector-effect="non-scaling-stroke" /&gt;&lt;/g&gt;
+&lt;/g&gt;
+&lt;g font-size="10" fill="#5a6168" text-anchor="middle"&gt;
+  &lt;text x="24" y="94"&gt;1&amp;times;&lt;/text&gt;&lt;text x="83" y="94"&gt;scaled&lt;/text&gt;&lt;text x="177" y="94"&gt;non-scaling-stroke&lt;/text&gt;
+&lt;/g&gt;</code></pre>
+                <div class="svge-ex-note">Scaling a group thickens its outlines along with everything else. <code>vector-effect="non-scaling-stroke"</code> holds the stroke at its written width no matter what transform is above it &mdash; the usual fix for hairlines and leader lines in a scaled assembly.</div>
+              </figure>
+            </div>
+
+            <h4>Arrows and annotation</h4>
+            <p>There is no arrow element. An arrow is a line plus a head you draw yourself, or a line plus a <code>marker</code> the renderer places for you. Both are shown here, along with the two annotation idioms this site uses most.</p>
+
+            <div class="svge-ref-grid">
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Arrow as a plain group</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g>
+                      <line x1="20" y1="45" x2="196" y2="45" stroke="#c0392b" stroke-width="2" />
+                      <polygon points="214,45 194,37.5 194,52.5" fill="#c0392b" />
+                    </g>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;g&gt;
+  &lt;line x1="20" y1="45" x2="196" y2="45" stroke="#c0392b" stroke-width="2" /&gt;
+  &lt;polygon points="214,45 194,37.5 194,52.5" fill="#c0392b" /&gt;
+&lt;/g&gt;</code></pre>
+                <div class="svge-ex-note">A shaft stopping just short of the tip, plus a triangle. Nothing to reference, nothing to collide with, and every number is visible and editable. This is what the Arrow tool writes. Stop the shaft before the tip so its square end cannot poke through a light-coloured head.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Arrow with a &lt;marker&gt;</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                      <marker id="ref-tip" viewBox="0 0 10 10" refX="9" refY="5"
+                              markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0b6fa4" />
+                      </marker>
+                    </defs>
+                    <line x1="20" y1="26" x2="212" y2="26" stroke="#0b6fa4" stroke-width="2" marker-end="url(#ref-tip)" />
+                    <path d="M 20 72 Q 120 48 212 68" fill="none" stroke="#0b6fa4" stroke-width="2" marker-end="url(#ref-tip)" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;defs&gt;
+  &lt;marker id="ref-tip" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="6" markerHeight="6" orient="auto-start-reverse"&gt;
+    &lt;path d="M 0 0 L 10 5 L 0 10 z" fill="#0b6fa4" /&gt;
+  &lt;/marker&gt;
+&lt;/defs&gt;
+&lt;line x1="20" y1="26" x2="212" y2="26" stroke="#0b6fa4" stroke-width="2" marker-end="url(#ref-tip)" /&gt;
+&lt;path d="M 20 72 Q 120 48 212 68" fill="none" stroke="#0b6fa4" stroke-width="2" marker-end="url(#ref-tip)" /&gt;</code></pre>
+                <div class="svge-ex-note">A marker is attached with <code>marker-start</code>, <code>marker-mid</code> or <code>marker-end</code> and follows the line direction automatically, which is why it works on the curve too. The cost is the <code>id</code>: paste two marker-based snippets into one page and the duplicate ids silently make one arrow adopt the other’s colour.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Dimension line</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g stroke="#5a6168" stroke-width="1" fill="none">
+                      <line x1="40" y1="18" x2="40" y2="74" />
+                      <line x1="200" y1="18" x2="200" y2="74" />
+                      <line x1="40" y1="62" x2="200" y2="62" />
+                    </g>
+                    <polygon points="40,62 55,58 55,66" fill="#5a6168" />
+                    <polygon points="200,62 185,58 185,66" fill="#5a6168" />
+                    <text x="120" y="54" font-size="13" text-anchor="middle" fill="#1c2227">e = 1.000&quot;</text>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;g stroke="#5a6168" stroke-width="1" fill="none"&gt;
+  &lt;line x1="40" y1="18" x2="40" y2="74" /&gt;
+  &lt;line x1="200" y1="18" x2="200" y2="74" /&gt;
+  &lt;line x1="40" y1="62" x2="200" y2="62" /&gt;
+&lt;/g&gt;
+&lt;polygon points="40,62 55,58 55,66" fill="#5a6168" /&gt;
+&lt;polygon points="200,62 185,58 185,66" fill="#5a6168" /&gt;
+&lt;text x="120" y="54" font-size="13" text-anchor="middle" fill="#1c2227"&gt;e = 1.000&amp;quot;&lt;/text&gt;</code></pre>
+                <div class="svge-ex-note">Two witness lines, a dimension line between them, inward heads and a centred label sitting just above. Keep the dimension stroke lighter than the part outline so it reads as annotation. The Dimension tool draws this pattern, ticks included.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">Leader with a landing</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <text x="232" y="18" font-size="12" text-anchor="end" fill="#0b6fa4">Bushed bore</text>
+                    <g stroke="#0b6fa4" stroke-width="1.6" fill="none">
+                      <line x1="232" y1="24" x2="178" y2="24" />
+                      <line x1="178" y1="24" x2="82" y2="61" />
+                    </g>
+                    <polygon points="68,67 81.2,56.6 84.8,65.9" fill="#0b6fa4" />
+                    <circle cx="60" cy="70" r="16" fill="none" stroke="#cfd8dc" stroke-width="6" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;text x="232" y="18" font-size="12" text-anchor="end" fill="#0b6fa4"&gt;Bushed bore&lt;/text&gt;
+&lt;g stroke="#0b6fa4" stroke-width="1.6" fill="none"&gt;
+  &lt;line x1="232" y1="24" x2="178" y2="24" /&gt;
+  &lt;line x1="178" y1="24" x2="82" y2="61" /&gt;
+&lt;/g&gt;
+&lt;polygon points="68,67 81.2,56.6 84.8,65.9" fill="#0b6fa4" /&gt;
+&lt;circle cx="60" cy="70" r="16" fill="none" stroke="#cfd8dc" stroke-width="6" /&gt;</code></pre>
+                <div class="svge-ex-note">A horizontal landing under the label, then a straight run to the feature, then the head. The landing is what stops the text colliding with the line and keeps a column of callouts aligned. Pick the Leader arrow style and drag from the feature outward.</div>
+              </figure>
+            </div>
+
+            <h4>Gradients and patterns</h4>
+            <p>A <code>fill</code> does not have to be a flat colour. Anything defined in <code>&lt;defs&gt;</code> with an id can be referenced as <code>fill="url(#that-id)"</code>, including gradients and repeating tiles.</p>
+
+            <div class="svge-ref-grid">
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">linearGradient</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="ref-lg" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#61828a" />
+                        <stop offset="55%" stop-color="#a9cccf" />
+                        <stop offset="100%" stop-color="#f2f7f8" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="15" y="18" width="210" height="54" fill="url(#ref-lg)" stroke="#434343" stroke-width="1" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;defs&gt;
+  &lt;linearGradient id="ref-lg" x1="0" y1="0" x2="1" y2="0"&gt;
+    &lt;stop offset="0%" stop-color="#61828a" /&gt;
+    &lt;stop offset="55%" stop-color="#a9cccf" /&gt;
+    &lt;stop offset="100%" stop-color="#f2f7f8" /&gt;
+  &lt;/linearGradient&gt;
+&lt;/defs&gt;
+&lt;rect x="15" y="18" width="210" height="54" fill="url(#ref-lg)" stroke="#434343" stroke-width="1" /&gt;</code></pre>
+                <div class="svge-ex-note"><code>x1 y1</code> to <code>x2 y2</code> set the gradient axis, by default in fractions of the shape’s own bounding box, so <code>0,0</code> to <code>1,0</code> means left to right whatever the size. Each <code>&lt;stop&gt;</code> places a colour at a percentage along it.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">radialGradient</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                      <radialGradient id="ref-rg" cx="36%" cy="30%" r="72%">
+                        <stop offset="0%" stop-color="#ffffff" />
+                        <stop offset="100%" stop-color="#61828a" />
+                      </radialGradient>
+                    </defs>
+                    <circle cx="120" cy="45" r="38" fill="url(#ref-rg)" stroke="#434343" stroke-width="1" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;defs&gt;
+  &lt;radialGradient id="ref-rg" cx="36%" cy="30%" r="72%"&gt;
+    &lt;stop offset="0%" stop-color="#ffffff" /&gt;
+    &lt;stop offset="100%" stop-color="#61828a" /&gt;
+  &lt;/radialGradient&gt;
+&lt;/defs&gt;
+&lt;circle cx="120" cy="45" r="38" fill="url(#ref-rg)" stroke="#434343" stroke-width="1" /&gt;</code></pre>
+                <div class="svge-ex-note">Same idea radiating from a centre. Offsetting <code>cx cy</code> away from the middle puts the highlight off-centre, which is all it takes to make a circle read as a sphere.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">pattern &mdash; section hatching</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                      <pattern id="ref-hatch" width="8" height="8" patternUnits="userSpaceOnUse"
+                               patternTransform="rotate(45)">
+                        <line x1="0" y1="0" x2="0" y2="8" stroke="#434343" stroke-width="1.2" />
+                      </pattern>
+                    </defs>
+                    <rect x="15" y="18" width="92" height="54" fill="url(#ref-hatch)" stroke="#434343" stroke-width="2" />
+                    <circle cx="178" cy="45" r="30" fill="url(#ref-hatch)" stroke="#434343" stroke-width="2" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;defs&gt;
+  &lt;pattern id="ref-hatch" width="8" height="8" patternUnits="userSpaceOnUse"
+           patternTransform="rotate(45)"&gt;
+    &lt;line x1="0" y1="0" x2="0" y2="8" stroke="#434343" stroke-width="1.2" /&gt;
+  &lt;/pattern&gt;
+&lt;/defs&gt;
+&lt;rect x="15" y="18" width="92" height="54" fill="url(#ref-hatch)" stroke="#434343" stroke-width="2" /&gt;
+&lt;circle cx="178" cy="45" r="30" fill="url(#ref-hatch)" stroke="#434343" stroke-width="2" /&gt;</code></pre>
+                <div class="svge-ex-note">A tile repeated across whatever it fills. <code>patternUnits="userSpaceOnUse"</code> fixes the tile in drawing units so the spacing stays put regardless of the shape’s size, and <code>patternTransform="rotate(45)"</code> gives the 45&deg; run of a section view &mdash; far less work than drawing and clipping dozens of individual hatch lines.</div>
+              </figure>
+            </div>
+
+            <h4>Clipping and masking</h4>
+            <p>Two ways to show only part of something. Clipping is a hard-edged cookie cutter; masking uses brightness, so it can fade.</p>
+
+            <div class="svge-ref-grid">
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">clipPath</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                      <clipPath id="ref-clip"><circle cx="120" cy="45" r="34" /></clipPath>
+                    </defs>
+                    <g clip-path="url(#ref-clip)">
+                      <rect x="70" y="8" width="52" height="74" fill="#0b6fa4" />
+                      <rect x="122" y="8" width="52" height="74" fill="#c0392b" />
+                    </g>
+                    <circle cx="120" cy="45" r="34" fill="none" stroke="#434343" stroke-width="1.5" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;defs&gt;
+  &lt;clipPath id="ref-clip"&gt;&lt;circle cx="120" cy="45" r="34" /&gt;&lt;/clipPath&gt;
+&lt;/defs&gt;
+&lt;g clip-path="url(#ref-clip)"&gt;
+  &lt;rect x="70" y="8" width="52" height="74" fill="#0b6fa4" /&gt;
+  &lt;rect x="122" y="8" width="52" height="74" fill="#c0392b" /&gt;
+&lt;/g&gt;
+&lt;circle cx="120" cy="45" r="34" fill="none" stroke="#434343" stroke-width="1.5" /&gt;</code></pre>
+                <div class="svge-ex-note">Everything outside the clip shape is cut away with a hard edge. The clip geometry is never painted itself &mdash; the thin outline here is a second circle drawn on top to show where the boundary is.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">mask</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                      <mask id="ref-mask">
+                        <rect x="0" y="0" width="240" height="90" fill="#fff" />
+                        <text x="120" y="62" font-size="46" font-weight="bold" text-anchor="middle" fill="#000">CUT</text>
+                      </mask>
+                    </defs>
+                    <rect x="0" y="0" width="240" height="90" fill="#f5f8f9" />
+                    <rect x="15" y="12" width="210" height="66" fill="#61828a" mask="url(#ref-mask)" />
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;defs&gt;
+  &lt;mask id="ref-mask"&gt;
+    &lt;rect x="0" y="0" width="240" height="90" fill="#fff" /&gt;
+    &lt;text x="120" y="62" font-size="46" font-weight="bold" text-anchor="middle" fill="#000"&gt;CUT&lt;/text&gt;
+  &lt;/mask&gt;
+&lt;/defs&gt;
+&lt;rect x="0" y="0" width="240" height="90" fill="#f5f8f9" /&gt;
+&lt;rect x="15" y="12" width="210" height="66" fill="#61828a" mask="url(#ref-mask)" /&gt;</code></pre>
+                <div class="svge-ex-note">Inside a mask, white keeps and black hides, with greys giving partial transparency. That makes knock-out text and soft fades possible in a way <code>clipPath</code> cannot manage, at the price of a little more machinery.</div>
+              </figure>
+              <figure class="svge-ex">
+                <figcaption class="svge-ex-head">
+                  <span class="svge-ex-title">&lt;image&gt;</span>
+                  <button class="svge-ex-load" type="button">Load</button>
+                </figcaption>
+                <div class="svge-ex-fig">
+                  <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <image href="img/blueK.webp" x="20" y="14" width="98" height="60"
+                           preserveAspectRatio="xMidYMid meet" />
+                    <rect x="20" y="14" width="98" height="60" fill="none" stroke="#434343" stroke-width="1" />
+                    <text x="130" y="40" font-size="12" fill="#5a6168">raster inside</text>
+                    <text x="130" y="56" font-size="12" fill="#5a6168">a vector document</text>
+                  </svg>
+                </div>
+                <pre class="svge-ex-code"><code>&lt;image href="img/blueK.webp" x="20" y="14" width="98" height="60"
+       preserveAspectRatio="xMidYMid meet" /&gt;
+&lt;rect x="20" y="14" width="98" height="60" fill="none" stroke="#434343" stroke-width="1" /&gt;
+&lt;text x="130" y="40" font-size="12" fill="#5a6168"&gt;raster inside&lt;/text&gt;
+&lt;text x="130" y="56" font-size="12" fill="#5a6168"&gt;a vector document&lt;/text&gt;</code></pre>
+                <div class="svge-ex-note">A bitmap placed in the coordinate system like any other shape. <code>preserveAspectRatio</code> controls the fit inside the box, exactly as it does on the root <code>&lt;svg&gt;</code>. Note that a relative <code>href</code> only resolves where the file sits &mdash; export the SVG somewhere else and the image goes missing, so embed a <code>data:</code> URI when the file has to travel.</div>
+              </figure>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOCUMENTATION -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12 px-3">
+          <div class="svge-doc">
+
+            <h4>How this editor is put together</h4>
+
+            <p>The code pane and the canvas are two views of one document. Drawing an arrow rewrites the code; editing the code redraws the canvas. Nothing is hidden in a private scene graph, so what you see in the code pane is exactly what you get when you copy it &mdash; there is no separate project format and no export step that changes the markup.</p>
+
+            <p>That matters because the <span style="font-weight: var(--font-weight-normal)">code is the deliverable</span>. Most drawings on this site are generated by scripts and hand-tuned afterwards, so the useful output is a clean snippet you can paste back into a page or a generator, not a binary file. Raster export is there when you need a picture, but the SVG code is the primary format.</p>
+
+            <p>Undo works across both halves. Every committed change &mdash; a drag, a restyle, a paste into the code pane &mdash; pushes a snapshot of the source onto one shared history, so <span style="font-weight: var(--font-weight-normal)">Ctrl+Z</span> always steps back one change no matter which pane you made it in. Up to 150 steps are kept.</p>
+
+            <h4>Loading a drawing</h4>
+
+            <p>Use <span style="font-weight: var(--font-weight-normal)">Open</span>, drop an <code>.svg</code> file straight onto the canvas, or paste markup into the code pane. Fragments are accepted too &mdash; paste a handful of bare <code>&lt;path&gt;</code> or <code>&lt;line&gt;</code> elements with no wrapper and they are wrapped in an <code>&lt;svg&gt;</code> for you.</p>
+
+            <p>Awkward source is handled in stages. The strict XML parser runs first; if it rejects the input, the browser's far more forgiving HTML parser gets a second pass, which recovers unquoted attributes, bare ampersands and unclosed tags. If a document arrives with no <code>viewBox</code>, one is synthesized from the <code>width</code> and <code>height</code> attributes, or measured from the content when those are missing too. Existing <code>&lt;style&gt;</code> blocks, <code>&lt;defs&gt;</code>, gradients, groups and transforms all survive the round trip untouched.</p>
+
+            <p><span style="font-weight: var(--font-weight-normal)">Imported markup is sanitized.</span> An SVG is a live document, and one loaded from elsewhere could carry <code>&lt;script&gt;</code> elements, <code>on*</code> event handlers or <code>javascript:</code> links that would run in this page. Those are stripped before anything is rendered, and the status line tells you how many were removed. Everything else is left exactly as written.</p>
+
+            <h4>Drawing and selecting</h4>
+
+            <p>Click a shape to select it. A click selects the outermost group, so an arrow or a labelled assembly moves as a unit; <span style="font-weight: var(--font-weight-normal)">Alt-click</span> drills through to the exact element underneath for surgery on an imported drawing. Thin lines and unfilled shapes are still selectable &mdash; if nothing is painted under the cursor, the smallest bounding box containing that point wins.</p>
+
+            <p>Drag a selection to move it. Lines and arrows get endpoint handles; rectangles, ellipses, circles and images get corner handles. Arrow keys nudge by one unit, <span style="font-weight: var(--font-weight-normal)">Shift</span> plus an arrow key by ten, and with <span style="font-weight: var(--font-weight-normal)">Snap</span> on, by one grid step.</p>
+
+            <p>Moves rewrite the geometry attributes rather than wrapping everything in a transform, so a rectangle you drag stays a plain <code>&lt;rect x y width height&gt;</code> in the code. Path data is translated command by command. Only elements whose position cannot be expressed in their own attributes pick up a <code>transform</code>, and repeated moves merge into a single translate instead of stacking up.</p>
+
+            <h4>Arrows</h4>
+
+            <p>Arrows are emitted as a self-contained <code>&lt;g&gt;</code> of ordinary shapes rather than as a <code>marker</code> in <code>&lt;defs&gt;</code>. Markers are tidier in isolation but they carry an <code>id</code> reference, and the moment you paste two marker-based snippets into the same page the ids collide and one of them silently changes colour. A group of plain lines and polygons pastes anywhere, in any order, and always looks the same.</p>
+
+            <p>Head length and width scale with the stroke width, so a heavier arrow does not end up with a pinhead. Drag with <span style="font-weight: var(--font-weight-normal)">Shift</span> held to constrain the shaft to 15&deg; steps. Select an existing arrow and the inspector gains its own style, colour and weight controls, which rebuild the geometry in place rather than layering attributes on top of it.</p>
+
+            <div class="table-responsive mt-2 mb-3">
+              <table class="table table-striped table-bordered table-hover table-sm">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr><th>Style</th><th>What it draws</th><th>Where it fits</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><span style="font-weight: var(--font-weight-normal)">Solid head</span></td><td>Shaft with a filled triangular head.</td><td>Load and reaction arrows. The default for force vectors on a schematic.</td></tr>
+                  <tr><td><span style="font-weight: var(--font-weight-normal)">Open head</span></td><td>Full-length shaft with two stroked barbs, no fill.</td><td>Lighter annotation where a solid head would read as a load.</td></tr>
+                  <tr><td><span style="font-weight: var(--font-weight-normal)">Swept barb</span></td><td>Filled head with a notched tail, swept back.</td><td>Flow direction and motion, where a plain triangle looks blunt.</td></tr>
+                  <tr><td><span style="font-weight: var(--font-weight-normal)">Double head</span></td><td>Filled heads at both ends.</td><td>Ranges, spans, and any two-way relationship.</td></tr>
+                  <tr><td><span style="font-weight: var(--font-weight-normal)">Dimension</span></td><td>Thin shaft, heads at both ends, perpendicular witness ticks.</td><td>Dimensioning a drawing. Thinner than the others by design so it recedes.</td></tr>
+                  <tr><td><span style="font-weight: var(--font-weight-normal)">Leader</span></td><td>Horizontal landing, a straight run, then a head at the tip.</td><td>Callouts pointing from a label into a feature.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h4>Jogged lines</h4>
+
+            <p>A leader running straight from a label to a feature often has to cross something on the way &mdash; another dimension, a hatched area, a second leader. A jogged line steps around it instead. Pick the <span style="font-weight: var(--font-weight-normal)">Jog</span> tool, choose a shape, and drag from one end to the other; the intermediate vertices are placed for you and move with the endpoints.</p>
+
+            <div class="table-responsive mt-2 mb-3">
+              <table class="table table-striped table-bordered table-hover table-sm">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr><th>Shape</th><th>Path it takes</th><th>Where it fits</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><span style="font-weight: var(--font-weight-normal)">Elbow, across first</span></td><td>Horizontal from the start, then vertical to the end.</td><td>A label sitting to one side of the feature it points at.</td></tr>
+                  <tr><td><span style="font-weight: var(--font-weight-normal)">Elbow, down first</span></td><td>Vertical from the start, then horizontal to the end.</td><td>A label directly above or below the feature.</td></tr>
+                  <tr><td><span style="font-weight: var(--font-weight-normal)">Z-step, across</span></td><td>Horizontal, a vertical step at the midpoint, then horizontal again.</td><td>Two features at different heights that each need a level run into them.</td></tr>
+                  <tr><td><span style="font-weight: var(--font-weight-normal)">Z-step, down</span></td><td>The same step turned through ninety degrees.</td><td>Routing around something sitting directly in the path.</td></tr>
+                  <tr><td><span style="font-weight: var(--font-weight-normal)">Zigzag</span></td><td>A straight run carrying the standard jog symbol at its midpoint.</td><td>A dimension whose length is not drawn to scale &mdash; the conventional way to say so.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>Tick <span style="font-weight: var(--font-weight-normal)">arrow head</span> to finish the last segment with a head, which turns any of them into a jogged leader. Like arrows, a jog is written out as a plain <code>&lt;polyline&gt;</code> &mdash; plus a <code>&lt;polygon&gt;</code> for the head &mdash; inside a <code>&lt;g&gt;</code>, so every vertex stays visible and editable in the code. Both endpoints get drag handles, and <span style="font-weight: var(--font-weight-normal)">Shift</span> while dragging one constrains that end to 15&deg; steps.</p>
+
+            <h4>Text</h4>
+
+            <p>Pick the Text tool and click to place a label, or double-click any existing <code>&lt;text&gt;</code> to edit it in place. Multi-line content is written out as <code>&lt;tspan&gt;</code> children with a line-height <code>dy</code>, because SVG has no automatic wrapping &mdash; a line break has to become a real element. Font size, family, weight and anchor are set on the toolbar for new text and in the inspector for existing text.</p>
+
+            <h4>The inspector</h4>
+
+            <p>The Selection panel gives the usual controls &mdash; stroke, fill, width, dash, opacity, and the geometry attributes for whichever element type is selected. Colours can be set from the swatch, typed as any CSS colour, or switched to <code>none</code>.</p>
+
+            <p>Below those is an <span style="font-weight: var(--font-weight-normal)">All attributes</span> table listing every attribute actually present on the element, editable by name and value, with rows you can add or remove. That is the escape hatch that keeps an unfamiliar drawing workable: attributes this inspector has never heard of &mdash; <code>mask</code>, <code>clip-path</code>, <code>vector-effect</code>, <code>marker-end</code>, anything from another tool's export &mdash; are all still editable, because nothing is filtered out on the way in.</p>
+
+            <h4>Background</h4>
+
+            <p>There are two independent backgrounds, and the distinction is worth keeping straight.</p>
+
+            <p>The <span style="font-weight: var(--font-weight-normal)">document background</span> lives in the Document panel. Transparent means no background element at all, which is what you usually want for a diagram that will sit on a page of unknown colour. Solid colour inserts a <code>&lt;rect id="kc-bg"&gt;</code> covering the viewBox as the first child, so it is part of the exported code and part of any raster export.</p>
+
+            <p>The <span style="font-weight: var(--font-weight-normal)">backdrop</span> on the View bar changes only what you see while editing. A checkerboard makes transparency obvious; the dark option is the quickest way to check that a drawing with light strokes has not gone invisible against white. It is never exported.</p>
+
+            <h4>viewBox and trimming</h4>
+
+            <p>The Document panel edits the <code>viewBox</code> and the <code>width</code>/<code>height</code> attributes directly. <span style="font-weight: var(--font-weight-normal)">Fit viewBox</span> measures the drawn content, ignoring the background rectangle, and rewrites the <code>viewBox</code> to bound it with the padding you specify. That is the fix for a drawing surrounded by dead space &mdash; it changes the crop, not the scale, so nothing inside moves relative to anything else.</p>
+
+            <h4>Export</h4>
+
+            <p>Choose a format, then <span style="font-weight: var(--font-weight-normal)">Copy code</span> or <span style="font-weight: var(--font-weight-normal)">Download</span> (also <span style="font-weight: var(--font-weight-normal)">Ctrl+S</span>). The pixel size box applies to raster formats only; vector output is resolution independent and ignores it.</p>
+
+            <div class="table-responsive mt-2 mb-3">
+              <table class="table table-striped table-bordered table-hover table-sm">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr><th>Format</th><th>Notes</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>SVG code &mdash; formatted</td><td>Indented, one element per line. The primary output: paste it into a page, a template, or back into a generator script.</td></tr>
+                  <tr><td>SVG code &mdash; minified</td><td>Same document with the whitespace and comments stripped. Use it when the markup is going inline into HTML.</td></tr>
+                  <tr><td>Data URI</td><td>Percent-encoded <code>data:image/svg+xml</code> string for a CSS <code>background-image</code> or an <code>&lt;img src&gt;</code>.</td></tr>
+                  <tr><td>PNG</td><td>Rasterized at the width and height shown. Transparency is preserved unless the document has a background rectangle.</td></tr>
+                  <tr><td>JPEG</td><td>Has no alpha channel, so the image is flattened onto the background colour first. Quality 0.92.</td></tr>
+                  <tr><td>WebP</td><td>Smaller than PNG at the same quality, with alpha. Not every browser can encode it; if yours cannot, the status line says so.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>Raster export runs entirely in your browser through a canvas. Nothing is uploaded, and the drawing never leaves the page.</p>
+
+            <h4>Keyboard</h4>
+
+            <div class="table-responsive mt-2 mb-5">
+              <table class="table table-striped table-bordered table-hover table-sm">
+                <thead style="background-color: var(--section-title-color); color: #fff;">
+                  <tr><th>Key</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>Ctrl+Z</code></td><td>Undo</td></tr>
+                  <tr><td><code>Ctrl+Y</code> or <code>Ctrl+Shift+Z</code></td><td>Redo</td></tr>
+                  <tr><td><code>Ctrl+S</code></td><td>Download in the selected export format</td></tr>
+                  <tr><td><code>Ctrl+D</code></td><td>Duplicate the selection, offset by 10 units</td></tr>
+                  <tr><td><code>V</code> <code>H</code> <code>A</code> <code>D</code> <code>J</code> <code>L</code> <code>R</code> <code>O</code> <code>T</code></td><td>Select, Pan, Arrow, Dimension, Jog, Line, Rectangle, Ellipse, Text</td></tr>
+                  <tr><td><code>Delete</code> or <code>Backspace</code></td><td>Delete the selection</td></tr>
+                  <tr><td><code>Escape</code></td><td>Clear the selection and return to the Select tool</td></tr>
+                  <tr><td>Arrow keys</td><td>Nudge one unit &mdash; ten with <code>Shift</code>, one grid step with Snap on</td></tr>
+                  <tr><td><code>Shift</code> while drawing</td><td>Constrain arrows and lines to 15&deg; steps &mdash; so 30&deg;, 45&deg; and 60&deg; all land exactly &mdash; and rectangles and ellipses to square. Also works when dragging an endpoint handle.</td></tr>
+                  <tr><td><code>Alt</code>-click</td><td>Select the element inside a group instead of the group</td></tr>
+                  <tr><td><code>Ctrl</code>+wheel</td><td>Zoom about the cursor. A plain wheel is left alone so the page still scrolls.</td></tr>
+                  <tr><td>Middle-drag</td><td>Pan, from any tool</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="mb-5">Shortcuts are ignored while you are typing in a text box, so <code>R</code> in the code pane inserts an R rather than switching tools.</p>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+
+<script>
+(function(){
+  var h = location.hostname;
+  var isLocal = !h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1' || /\.local$/i.test(h) || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+  if (isLocal) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+  gtag('js', new Date());
+  gtag('config', 'G-5XLCN0GJQ0');
+})();
+</script>
+
+  </body>
+</html>
