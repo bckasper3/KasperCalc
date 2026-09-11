@@ -15,7 +15,7 @@ window.HdbkUtil = (function () {
     for (var x = xA; x <= xB + 1e-9; x += step) {
       while (i < s.length - 2 && s[i + 1].x < x) { i++; }
       var a = s[i].x, b = s[i + 1].x, ya = s[i].y, yb = s[i + 1].y;
-      r.push({ x: x, y: +(ya + (x - a) / (b - a) * (yb - ya)).toFixed(4) });
+      r.push({ x: x, y: +(ya + (x - a) / (b - a) * (yb - ya)).toFixed(6) });
     }
     return r;
   }
@@ -30,7 +30,7 @@ window.HdbkUtil = (function () {
       while (i < s.length - 2 && s[i + 1].x < x) { i++; }
       var l0 = Math.log10(s[i].x), l1 = Math.log10(s[i + 1].x);
       var t = (l1 === l0) ? 0 : (lx - l0) / (l1 - l0);
-      r.push({ x: x, y: +(s[i].y + t * (s[i + 1].y - s[i].y)).toFixed(3) });
+      r.push({ x: x, y: +(s[i].y + t * (s[i + 1].y - s[i].y)).toFixed(5) });
     }
     return r;
   }
