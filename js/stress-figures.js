@@ -26,6 +26,17 @@ window.StressFigures = (function () {
   var temperature = null;
   var seq = 0;
 
+  /* ── real units ─────────────────────────────────────────────────────────
+   * The handbook plots a knockdown as a percentage of the room-temperature
+   * value, which is the only form that works on a page serving every temper of
+   * an alloy at once. Here one condition is selected, so its tabulated value is
+   * known and the curve can be shown in ksi instead — which is what an engineer
+   * actually wants to read off it. `rtLookup` is supplied by the page and maps
+   * a property to {value, unit, label} for the current selection.
+   */
+  var unitMode = 'percent';   // 'percent' | 'real'
+  var rtLookup = null;
+
   /* ── temperature marker ─────────────────────────────────────────────────
    * Drawn as a Chart.js plugin rather than an extra dataset so it stays out of
    * the legend and cannot be toggled off with the real series.
@@ -204,11 +215,133 @@ window.StressFigures = (function () {
     var chart = HdbkUtil.makeMultiLine(spec._canvasId, spec.series, opts);
     if (!chart) return null;
 
-    var rec = { chart: chart, isTemp: isTempChart(spec) };
+    var rec = {
+      chart: chart,
+      isTemp: isTempChart(spec),
+      derate: spec.derate || null,
+      yLabel: (spec.opts && spec.opts.yLabel) || '',
+      // Kept so switching back to percent restores exactly what was drawn,
+      // rather than an approximation reconstructed from the scaled values.
+      orig: chart.data.datasets.map(function (d) {
+        return { label: d.label, color: d.borderColor, data: d.data.slice() };
+      })
+    };
     charts.push(rec);
     applyTemp(rec);
+    applyUnits(rec);
     chart.update();
     return chart;
+  }
+
+  /** Can this chart be redrawn in real units for the current selection? */
+  function convertible(rec) {
+    if (!rec.derate || rec.derate.mode !== 'percent' || !rtLookup) return false;
+    return (rec.derate.series || []).some(function (sr, i) {
+      return i < rec.orig.length && (sr.props || []).some(function (p) {
+        var r = rtLookup(p);
+        return r && r.value !== null && r.value !== undefined;
+      });
+    });
+  }
+
+  /**
+   * Rescale a percentage-of-RT chart into the property's own unit.
+   *
+   * One published curve often covers several properties at once ("effect of
+   * temperature on Ftu and Fty"), which is unambiguous in percent but not in
+   * ksi — each property has its own room-temperature value. Those are split
+   * into one real-unit curve per property rather than picking one and hiding
+   * the rest.
+   */
+  function applyUnits(rec) {
+    if (!rec.isTemp) return;
+    var want = unitMode === 'real' && convertible(rec);
+    if (!want) {
+      if (rec.converted) {
+        rec.chart.data.datasets = rec.orig.map(function (d) {
+          return baseDataset(d.label, d.data, d.color);
+        });
+        setYLabel(rec, rec.yLabel);
+        rec.converted = false;
+      }
+      return;
+    }
+
+    var out = [], units = Object.create(null), names = Object.create(null);
+    rec.orig.forEach(function (d, i) {
+      var sr = (rec.derate.series || [])[i];
+      var props = (sr && sr.props) || [];
+      var made = 0;
+      props.forEach(function (prop) {
+        var r = rtLookup(prop);
+        if (!r || r.value === null || r.value === undefined) return;
+        units[r.unit || ''] = 1;
+        names[r.label || ''] = 1;
+        out.push(baseDataset(
+          d.label + (props.length > 1 ? ' · ' + r.label : ''),
+          d.data.map(function (pt) { return { x: pt.x, y: r.value * pt.y / 100 }; }),
+          d.color,
+          made ? [6, 4] : undefined));
+        made++;
+      });
+      // A series with no tabulated value for this condition is dropped rather
+      // than left on the plot in percent next to curves in ksi.
+    });
+
+    if (!out.length) return;
+    rec.chart.data.datasets = out;
+    // "Ftu (ksi)" where one property is plotted, plain "ksi" where a figure
+    // carries several and the axis is shared.
+    var u = Object.keys(units), nm = Object.keys(names);
+    var unit = u.length === 1 ? u[0] : '';
+    setYLabel(rec, nm.length === 1 && unit ? nm[0] + ' (' + unit + ')'
+                 : unit || 'value');
+    rec.converted = true;
+  }
+
+  function baseDataset(label, data, color, dash) {
+    return {
+      label: label, data: data, fill: false,
+      borderColor: color, backgroundColor: color,
+      tension: 0, pointRadius: 0, pointHoverRadius: 0,
+      borderWidth: 2, showLine: true, borderDash: dash
+    };
+  }
+
+  function setYLabel(rec, text) {
+    var sc = rec.chart.config.options.scales;
+    if (sc && sc.y && sc.y.title) sc.y.title.text = text;
+    if (rec.chart.options.scales && rec.chart.options.scales.y &&
+        rec.chart.options.scales.y.title) {
+      rec.chart.options.scales.y.title.text = text;
+    }
+  }
+
+  /**
+   * Switch every temperature figure between the handbook's percentage and the
+   * selected condition's real units.
+   * @param {'percent'|'real'} mode
+   * @param {function(string):{value:number,unit:string,label:string}|null} lookup
+   */
+  function setUnits(mode, lookup) {
+    unitMode = mode === 'real' ? 'real' : 'percent';
+    if (lookup !== undefined) rtLookup = lookup;
+    charts.forEach(function (rec) {
+      applyUnits(rec);
+      rec.chart.update('none');
+    });
+  }
+
+  /** Re-read the room-temperature values without changing the mode — used when
+   *  the selected condition or grain direction changes under a live plot. */
+  function setRtLookup(lookup) {
+    rtLookup = lookup;
+    if (unitMode === 'real') setUnits('real');
+  }
+
+  /** How many figures on screen could actually be shown in real units. */
+  function convertibleCount() {
+    return charts.filter(convertible).length;
   }
 
   /** Plugin options must live on the config: chart.options is re-resolved from
@@ -323,7 +456,7 @@ window.StressFigures = (function () {
           tbls = tbls.concat(p.tables || []);
         });
 
-        buildDerateIndex(figs);
+        derateIndex = makeDerateIndex(figs);
 
         figHost.innerHTML = figs.length
           ? figs.map(figureCard).join('')
@@ -351,7 +484,12 @@ window.StressFigures = (function () {
     });
   }
 
+  /* The host element survives every load — only its innerHTML is replaced —
+     so binding on each load stacked another delegated listener on it and one
+     click fired the download once per alloy visited this session. Bind once. */
   function wireButtons(host) {
+    if (host._sfWired) return;
+    host._sfWired = true;
     host.addEventListener('click', function (ev) {
       var btn = ev.target.closest('button[data-act]');
       if (!btn) return;
@@ -378,8 +516,11 @@ window.StressFigures = (function () {
 
   var derateIndex = null;     // property -> candidate curves for this alloy
 
-  function buildDerateIndex(figs) {
-    derateIndex = Object.create(null);
+  /** Build a property -> curves index from a list of figures. Returns it rather
+   *  than assigning it, so the comparison panel can hold an index for a second
+   *  alloy at the same time as the on-screen figures hold theirs. */
+  function makeDerateIndex(figs) {
+    var derateIndex = Object.create(null);
     figs.forEach(function (fig) {
       fig.charts.forEach(function (chart) {
         var d = chart.derate;
@@ -387,6 +528,11 @@ window.StressFigures = (function () {
         d.series.forEach(function (ds, i) {
           var data = chart.series[i] && chart.series[i].data;
           if (!data || !data.length) return;
+          // interpAt walks the array in order, so a point digitized out of
+          // sequence would silently interpolate against the wrong neighbours
+          // rather than fail. Temperature is monotonic by definition here, so
+          // sorting can only ever repair such a series.
+          data = data.slice().sort(function (a, b) { return a.x - b.x; });
           ds.props.forEach(function (p) {
             (derateIndex[p] || (derateIndex[p] = [])).push({
               prop: p, kind: d.kind, mode: d.mode,
@@ -397,13 +543,14 @@ window.StressFigures = (function () {
         });
       });
     });
+    return derateIndex;
   }
 
-  /** Distinct times at temperature offered by this alloy's knockdown curves. */
-  function exposures() {
+  /** Distinct times at temperature offered by a knockdown-curve index. */
+  function exposuresFrom(idx) {
     var seen = Object.create(null), out = [];
-    Object.keys(derateIndex || {}).forEach(function (p) {
-      derateIndex[p].forEach(function (c) {
+    Object.keys(idx || {}).forEach(function (p) {
+      idx[p].forEach(function (c) {
         if (c.kind !== 'temperature' || c.hours === null) return;
         if (!seen[c.hours]) { seen[c.hours] = 1; out.push({ hours: c.hours, label: c.seriesLabel }); }
       });
@@ -411,6 +558,8 @@ window.StressFigures = (function () {
     out.sort(function (a, b) { return a.hours - b.hours; });
     return out;
   }
+
+  function exposures() { return exposuresFrom(derateIndex); }
 
   /**
    * Read the knockdown for one property.
@@ -421,16 +570,20 @@ window.StressFigures = (function () {
    *            hours:number|null}|null}
    */
   function derate(prop, t, hours) {
-    var list = (derateIndex && derateIndex[prop]) || [];
+    return derateFrom(derateIndex, prop, t, hours);
+  }
+
+  /* Exact time at temperature, then a curve with no time dimension at all,
+     then the shortest exposure published — never silently a longer one, which
+     would read lower than the engineer asked for. */
+  function chooseCurve(idx, prop, hours) {
+    var list = (idx && idx[prop]) || [];
     var pool = list.filter(function (c) { return c.kind === 'temperature'; });
     if (!pool.length) return null;
 
-    // Exact time at temperature, then a curve with no time dimension at all,
-    // then the shortest exposure published — never silently a longer one, which
-    // would read lower than the engineer asked for.
     var pick = null;
     for (var i = 0; i < pool.length && !pick; i++) {
-      if (hours !== null && pool[i].hours === hours) pick = pool[i];
+      if (hours !== null && hours !== undefined && pool[i].hours === hours) pick = pool[i];
     }
     if (!pick) {
       for (var j = 0; j < pool.length && !pick; j++) {
@@ -440,6 +593,12 @@ window.StressFigures = (function () {
     if (!pick) {
       pick = pool.slice().sort(function (a, b) { return a.hours - b.hours; })[0];
     }
+    return pick;
+  }
+
+  function derateFrom(idx, prop, t, hours) {
+    var pick = chooseCurve(idx, prop, hours);
+    if (!pick) return null;
 
     var y = interpAt(pick.data, t);
     if (y === null) return null;
@@ -462,11 +621,132 @@ window.StressFigures = (function () {
     return charts.filter(function (r) { return r.isTemp; }).length;
   }
 
+  /**
+   * Knockdown curves for any alloy, without touching what is on screen.
+   * Sections are cached, so asking for an alloy already displayed costs nothing.
+   * @param {string|null} alloy
+   * @returns {Promise<Object|null>} property -> curves, or null if none published
+   */
+  function curvesFor(alloy) {
+    if (!alloy) return Promise.resolve(null);
+    return ensureIndex().then(function (idx) {
+      var prefixes = (idx.byAlloy && idx.byAlloy[alloy]) || [];
+      if (!prefixes.length) return null;
+      return Promise.all(prefixes.map(loadSection)).then(function (parts) {
+        var figs = [];
+        parts.forEach(function (p) { figs = figs.concat(p.figures || []); });
+        return makeDerateIndex(figs);
+      });
+    }).catch(function () { return null; });
+  }
+
+  /**
+   * The full curve for one property, as {x: degF, y: value} points.
+   * Picks the same curve `derate` would, so a chart and the derated table can
+   * never disagree about which figure they came from.
+   */
+  /* ── physical properties ────────────────────────────────────────────────
+   * Each chapter opens with an "Effect of temperature on the physical
+   * properties" figure carrying thermal conductivity (K), coefficient of
+   * thermal expansion (alpha) and specific heat (C) against temperature. Those
+   * are exactly the three an FEA package asks for and the design-property
+   * tables do not carry, so they are read off the curve at room temperature.
+   */
+  var PHYS_RT = 70;                  // degF, the handbook's room temperature
+
+  function physQuantity(seriesLabel, yLabel) {
+    // Some chapters print K, alpha and C on one frame with three different
+    // scales. The digitizer captures those against a single axis, so two of the
+    // three come out mis-scaled — 4130 reads alpha = 32e-6/degF and
+    // C = 0.44 Btu/lb-degF, both several times their real values. Only a chart
+    // whose axis carries one quantity can be trusted.
+    var y = (yLabel || '').trim();
+    if (y.indexOf('|') !== -1) return null;
+    if (/^K,/.test(y)) return 'K';
+    if (/^α,/.test(y)) return 'alpha';
+    if (/^C,/.test(y)) return 'C';
+    return null;
+  }
+
+  // Second guard: a value outside the range any structural metal occupies means
+  // the curve was captured against the wrong scale, whatever the axis said.
+  var PHYS_RANGE = {
+    K:     [1, 160],      // Btu/[(hr)(ft^2)(degF)/ft]
+    alpha: [2, 22],       // 10^-6 in./in./degF
+    C:     [0.03, 0.40]   // Btu/(lb)(degF)
+  };
+
+  /**
+   * Room-temperature K, alpha and C for an alloy, straight off its own figure.
+   * @param {string} alloy
+   * @param {string} [hint] temper or grade, when one figure serves several
+   * @returns {Promise<Object>} quantity -> {value, unit, fig, series}
+   */
+  function physicalFor(alloy, hint) {
+    if (!alloy) return Promise.resolve({});
+    return ensureIndex().then(function (idx) {
+      var prefixes = (idx.byAlloy && idx.byAlloy[alloy]) || [];
+      if (!prefixes.length) return {};
+      return Promise.all(prefixes.map(function (p) { return loadSection(p); }))
+        .then(function (parts) {
+          var out = {};
+          parts.forEach(function (p) {
+            (p.figures || []).forEach(function (fig) {
+              if (!/physical propert/i.test(fig.caption || '')) return;
+              (fig.charts || []).forEach(function (ch) {
+                var yl = (ch.opts && ch.opts.yLabel) || '';
+                var q = physQuantity(null, yl);
+                if (!q) return;
+                (ch.series || []).forEach(function (sr) {
+                  if (!sr.data || !sr.data.length) return;
+                  var sorted = sr.data.slice().sort(function (a, b) { return a.x - b.x; });
+                  var v = interpAt(sorted, PHYS_RT);
+                  // Never extrapolate; only accept an endpoint that is already
+                  // close to room temperature.
+                  if (v === null) {
+                    if (sorted[0].x > PHYS_RT && sorted[0].x < PHYS_RT + 200) v = sorted[0].y;
+                    else return;
+                  }
+                  var r = PHYS_RANGE[q];
+                  if (v < r[0] || v > r[1]) return;
+
+                  var named = hint && sr.label &&
+                    sr.label.toLowerCase().indexOf(String(hint).toLowerCase()) !== -1;
+                  if (out[q] && !named) return;
+                  out[q] = { value: v, unit: yl, fig: fig, series: sr.label || '' };
+                });
+              });
+            });
+          });
+          return out;
+        });
+    }).catch(function () { return {}; });
+  }
+
+  function curveFor(idx, prop, hours) {
+    var pick = chooseCurve(idx, prop, hours);
+    if (!pick) return null;
+    return {
+      mode: pick.mode, fig: pick.fig, hours: pick.hours,
+      seriesLabel: pick.seriesLabel,
+      points: pick.data.map(function (p) { return { x: p.x, y: p.y }; })
+    };
+  }
+
   return {
     load: load,
     setTemperature: setTemperature,
     tempChartCount: tempChartCount,
     exposures: exposures,
-    derate: derate
+    exposuresFrom: exposuresFrom,
+    setUnits: setUnits,
+    setRtLookup: setRtLookup,
+    convertibleCount: convertibleCount,
+    derate: derate,
+    derateFrom: derateFrom,
+    curvesFor: curvesFor,
+    curveFor: curveFor,
+    physicalFor: physicalFor,
+    interpAt: interpAt
   };
 })();

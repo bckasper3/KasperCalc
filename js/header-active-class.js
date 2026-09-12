@@ -2,38 +2,71 @@
   const path = window.location.pathname;
   const currentFile = path.substring(path.lastIndexOf('/') + 1) || 'index.html';
 
+  // A page can legitimately be listed under more than one dropdown —
+  // MaterialPropertyLookup.html sits under both Stress and MIL-HDBK-5. Lighting
+  // up both toggles reads as two current pages, so exactly one menu owns the
+  // highlight: the first whose label matches this list, else the first in
+  // document order.
+  const PREFERRED_MENUS = ['stress'];
+
+  function menuLabel(navItem) {
+    const t = navItem.querySelector('.nav-link.dropdown-toggle');
+    return t ? t.textContent.replace(/\s+/g, ' ').trim().toLowerCase() : '';
+  }
+
   function applyActiveClasses() {
     const currentHash = window.location.hash;
 
+    // Clear what a previous pass set so re-running on hashchange is idempotent
+    // rather than accumulating highlights.
+    document.querySelectorAll('nav .nav-link.active, nav .dropdown-item.active')
+      .forEach(function (el) { el.classList.remove('active'); });
+
     // --- Dropdown items ---
+    const matches = [];
     document.querySelectorAll('nav .dropdown-item').forEach(function (item) {
       const href = item.getAttribute('href') || '';
       const hashIdx = href.indexOf('#');
       const hrefFile = hashIdx >= 0 ? href.substring(0, hashIdx) : href;
-      const hrefHash = hashIdx >= 0 ? href.substring(hashIdx) : '';
-
       if (hrefFile !== currentFile) return;
+      matches.push({ item: item, hash: hashIdx >= 0 ? href.substring(hashIdx) : '' });
+    });
 
-      // File matches — always highlight the parent dropdown toggle
-      const toggle = item.closest('.nav-item').querySelector('.nav-link.dropdown-toggle');
+    if (matches.length) {
+      // the distinct dropdowns this page appears in, in document order
+      const owners = [];
+      matches.forEach(function (m) {
+        const nav = m.item.closest('.nav-item');
+        if (nav && owners.indexOf(nav) === -1) owners.push(nav);
+      });
+
+      let owner = null;
+      for (let i = 0; i < PREFERRED_MENUS.length && !owner; i++) {
+        owner = owners.filter(function (n) {
+          return menuLabel(n).indexOf(PREFERRED_MENUS[i]) !== -1;
+        })[0] || null;
+      }
+      if (!owner) owner = owners[0];
+
+      const toggle = owner.querySelector('.nav-link.dropdown-toggle');
       if (toggle) toggle.classList.add('active');
 
-      // Highlight the specific item only when hashes also agree.
-      // If the link has no hash, it matches any page with that filename.
-      // If the link has a hash, require the current URL hash to match exactly.
-      if (!hrefHash || hrefHash === currentHash) {
-        item.classList.add('active');
+      // Highlight the specific item only within the owning menu, and only when
+      // the hashes agree. A link with no hash matches any page with that
+      // filename; a link with one has to match the current hash exactly.
+      matches.forEach(function (m) {
+        if (m.item.closest('.nav-item') !== owner) return;
+        if (m.hash && m.hash !== currentHash) return;
+        m.item.classList.add('active');
         // Auto-expand the nested submenu (if any) so the active item is visible.
-        const submenu = item.closest('.dropdown-submenu');
+        const submenu = m.item.closest('.dropdown-submenu');
         if (submenu) {
           submenu.classList.add('open');
-          const toggle = submenu.querySelector('.dropdown-submenu-toggle');
-          if (toggle) toggle.setAttribute('aria-expanded', 'true');
+          const subToggle = submenu.querySelector('.dropdown-submenu-toggle');
+          if (subToggle) subToggle.setAttribute('aria-expanded', 'true');
         }
-      } else {
-        item.classList.remove('active');
-      }
-    });
+      });
+    }
 
     // --- Nested submenu expand/collapse (Chapter 2/3/4 sections) ---
     document.querySelectorAll('.dropdown-submenu-toggle').forEach(function (toggle) {

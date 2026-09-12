@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>KasperCalc: Column Buckling and Crippling</title>
+    <link rel="canonical" href="https://kaspercalc.com/ColumnBuckling.html" />
+    <meta name="author" content="bckasper3" />
+    <meta name="keywords" content="KasperCalc, column buckling, crippling, Euler buckling, Johnson parabola, Needham method, slenderness ratio, radius of gyration, end fixity, effective length, thin-walled section, aerospace stress analysis, MIL-HDBK-5" />
+    <meta name="description" content="Column buckling and crippling calculator following AFFDL-TR-69-42 Section 2. Euler and short-column allowables with a Needham crippling cutoff, for tubes, square tubes, I-sections, channels, angles and zees, using real MIL-HDBK-5 material allowables." />
+
+    <!-- DEFERRED JAVASCRIPT -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <script defer src="js/chart.min.js"></script>
+    <script defer src="js/hdbkUtil.js"></script>
+    <script defer src="js/stress-figures.js"></script>
+    <script defer src="js/stress-materials.js"></script>
+    <script defer src="js/column-buckling.js"></script>
+
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+        options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+      };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <style>
+      /* ── Green wrapper token system (matches ThreadStressCalculator.html) ── */
+      :root {
+        --sq-wrap:     #6a746a;
+        --sq-outline:  rgb(67,67,67);
+        --sq-panel:    #eeeeee;
+        --sq-blue:     #61828A;
+        --sq-ink:      #1C2227;
+        --sq-ink-soft: #5A6168;
+        --sq-ui:       "Roboto", Arial, sans-serif;
+        --lug-ok:      #2f7a4f;
+        --lug-ok-bg:   #e3efe6;
+        --lug-marg:    #a5680a;
+        --lug-marg-bg: #f5ecd9;
+        --lug-fail:    #a3312a;
+        --lug-fail-bg: #f6e4e1;
+      }
+      .sq-main { max-width: 1500px; margin: 0 auto; padding: 0 20px 60px; }
+      .sq-subtitle { font-family: var(--sq-ui); color: var(--sq-ink-soft); font-size: 15px; line-height: 1.5; max-width: 74ch; margin: 18px auto 22px; text-align: center; }
+      .sq-calc-grid { font-family: var(--sq-ui); display: grid; grid-template-columns: minmax(0,340px) minmax(0,1fr); gap: 20px; align-items: start; background: var(--sq-wrap); border: 3px solid var(--sq-outline); border-radius: 18px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); padding: 20px; }
+      /* minmax(0,1fr) rather than 1fr: a bare 1fr track keeps min-width:auto,
+         which lets wide content push the grid past the viewport. */
+      @media (max-width:960px) { .sq-calc-grid { grid-template-columns: minmax(0,1fr); } }
+      .sq-panel { background: var(--sq-panel); border: 2px solid var(--sq-outline); border-radius: 10px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); overflow: hidden; }
+      .sq-panel-h { padding: 11px 16px; background: #fff; border-bottom: 2px solid var(--sq-outline); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--sq-ink); font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+      .sq-panel-b { padding: 16px; }
+      .sq-sticky { position: sticky; top: 14px; }
+      @media (max-width:960px) { .sq-sticky { position: static; } }
+      .sq-panel-b, .lug-field, .lug-r2 > * { min-width: 0; }
+
+      /* ── Inputs ── */
+      .lug-group-h {
+        font-family: var(--title-font-family); font-size: 13px;
+        font-weight: var(--font-weight-bold); background: var(--section-title-color);
+        color: #fff; padding: 5px 10px; border-radius: 6px; margin: 14px 0 10px;
+      }
+      .lug-group-h:first-child { margin-top: 0; }
+
+      .lug-field { margin-bottom: 10px; }
+      .lug-field label {
+        display: block; margin-bottom: 3px; font-size: 12px; color: #444;
+        font-family: var(--body-font-family);
+      }
+      .lug-field .lug-unit { color: var(--sq-ink-soft); font-size: 11px; }
+      .lug-field input[type=number],
+      .lug-field select {
+        width: 100%; min-width: 0; padding: 6px 7px; border: 1px solid #9aabb0;
+        border-radius: var(--border-radius-small); font-size: 13px;
+        font-family: var(--body-font-family); background: #fff; color: #222;
+      }
+      .lug-field input[type=number]:focus,
+      .lug-field select:focus { outline: 2px solid var(--section-title-color); }
+      .lug-r2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+      .lug-check {
+        display: flex; align-items: center; gap: 8px; font-size: 12.5px;
+        color: #444; margin-bottom: 10px; cursor: pointer;
+        font-family: var(--body-font-family);
+      }
+      .lug-check input { accent-color: var(--section-title-color); width: 15px; height: 15px; }
+
+      .lug-mb { margin-bottom: 6px; }
+      .lug-props {
+        font-size: 11px; color: var(--sq-ink-soft); margin-top: 4px;
+        font-family: var(--body-font-family); line-height: 1.4;
+      }
+
+      .lug-note {
+        font-size: 11.5px; color: var(--lug-fail); margin-top: 4px;
+        font-family: var(--body-font-family); line-height: 1.45;
+      }
+
+      /* ── Detailed calculation steps (matches the NSWC-11 pages) ── */
+      details.lug-details summary {
+        cursor: pointer; color: var(--sq-ink); font-weight: 700; margin: 4px 0;
+        font-family: var(--sq-ui);
+      }
+      .calc-steps {
+        font-size: 0.82rem; color: #444; margin-top: 8px; border: 1px solid #ccc;
+        border-radius: 6px; overflow: hidden; background: #fff;
+        font-family: var(--body-font-family);
+      }
+      .calc-steps > div { padding: 4px 10px; border-bottom: 1px dashed #ddd; }
+      .calc-steps > div:nth-child(even) { background: #f7f7f7; }
+      .calc-steps > div:last-child { border-bottom: none; }
+      .calc-steps .val { color: #b3362b; font-weight: 700; }
+      .calc-steps .grp {
+        background: var(--section-title-color) !important; color: #fff;
+        font-weight: 700; letter-spacing: .04em; font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      .lug-toggle { display: flex; gap: 6px; }
+      .lug-toggle button {
+        flex: 1; padding: 7px 6px; font-size: 12.5px; cursor: pointer;
+        border: 1px solid var(--sq-outline); background: var(--calc-background-color);
+        color: var(--sq-ink); border-radius: var(--border-radius-small);
+        font-family: var(--sq-ui);
+      }
+      .lug-toggle button:hover:not(.active) { background: var(--calc-hover-color); }
+      .lug-toggle button.active {
+        background: var(--section-title-color); border-color: var(--section-title-color);
+        color: #fff; font-weight: 600;
+      }
+
+      /* ── Result tiles ── */
+      .lug-tiles {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+        gap: 12px; padding: 16px;
+      }
+      .lug-tile {
+        background: #fff; border: 2px solid var(--sq-outline); border-radius: 10px;
+        padding: 12px 14px; box-shadow: 0 2px 5px rgba(0,0,0,.15); position: relative;
+      }
+      .lug-tile-head {
+        display: flex; justify-content: space-between; align-items: flex-start;
+        gap: 8px; margin-bottom: 6px;
+      }
+      .lug-tile-label {
+        font-size: 12px; color: var(--sq-ink-soft); display: flex;
+        align-items: center; gap: 6px; font-family: var(--sq-ui);
+      }
+      .lug-pill {
+        font-size: 10.5px; padding: 2px 8px; border-radius: 20px; font-weight: 700;
+        letter-spacing: .03em; white-space: nowrap; font-family: var(--sq-ui);
+      }
+      .lug-pill.ok       { background: var(--lug-ok-bg);   color: var(--lug-ok); }
+      .lug-pill.marginal { background: var(--lug-marg-bg); color: var(--lug-marg); }
+      .lug-pill.fail     { background: var(--lug-fail-bg); color: var(--lug-fail); }
+
+      .lug-ms {
+        font-size: 25px; font-weight: 700; font-variant-numeric: tabular-nums;
+        font-family: var(--sq-ui); line-height: 1.15;
+      }
+      .lug-ms.ok       { color: var(--lug-ok); }
+      .lug-ms.marginal { color: var(--lug-marg); }
+      .lug-ms.fail     { color: var(--lug-fail); }
+
+      .lug-sub {
+        margin-top: 8px; font-size: 11.5px; color: var(--sq-ink-soft);
+        display: grid; gap: 2px; font-family: var(--body-font-family);
+      }
+      .lug-sub .v { color: var(--sq-ink); font-variant-numeric: tabular-nums; }
+
+      /* ── Formula popovers ── */
+      .lug-finfo {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 16px; height: 16px; border-radius: 50%; flex: none;
+        background: #dbe7ea; color: var(--sq-blue); border: 1px solid var(--sq-outline);
+        font-size: 11px; font-style: italic; cursor: pointer; position: relative;
+      }
+      .lug-finfo:hover { background: var(--section-title-color); color: #fff; }
+      .lug-pop {
+        display: none; position: absolute; z-index: 40; top: calc(100% + 8px); left: 0;
+        min-width: 250px; max-width: 330px; background: #fff;
+        border: 2px solid var(--sq-outline); border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0,0,0,.3); padding: 11px 13px;
+        color: var(--sq-ink); font-size: 12.5px; line-height: 1.55;
+        font-family: var(--body-font-family); font-style: normal; text-align: left;
+      }
+      .lug-pop.open { display: block; }
+      .lug-pop .lug-pop-t {
+        font-weight: 700; font-size: 11px; text-transform: uppercase;
+        letter-spacing: .05em; color: var(--sq-blue); margin-bottom: 6px;
+      }
+      .lug-pop .lug-pop-n { color: var(--sq-ink-soft); font-size: 11.5px; margin-top: 6px; }
+
+      /* ── Charts & schematic ── */
+      .lug-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px; }
+      @media (max-width: 900px) { .lug-cards { grid-template-columns: 1fr; } }
+      .lug-card {
+        background: #fff; border: 2px solid var(--sq-outline); border-radius: 10px;
+        padding: 12px 14px; box-shadow: 0 2px 5px rgba(0,0,0,.15);
+      }
+      .lug-card-h {
+        font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+        color: var(--sq-ink-soft); font-weight: 700; margin-bottom: 8px;
+        display: flex; justify-content: space-between; align-items: center; gap: 8px;
+        font-family: var(--sq-ui);
+      }
+      .lug-canvas-wrap { position: relative; width: 100%; height: 230px; }
+
+      /* The viewBox is cropped to the drawing, so the box no longer carries a
+         wide empty border; max-width holds the rendered size where it was. */
+      #lugSchematic {
+        width: 100%; max-width: 380px; height: auto;
+        display: block; margin: 0 auto;
+      }
+      #lugSchematic text { font-family: var(--body-font-family); fill: var(--sq-ink-soft); }
+      #lugSchematic .dim-line   { stroke: var(--sq-ink-soft); stroke-width: 1; }
+      #lugSchematic .lug-body   { fill: #dbe7ea; stroke: var(--section-title-color); stroke-width: 2; }
+      #lugSchematic .pin        { fill: #fff; stroke: var(--sq-outline); stroke-width: 2; }
+      #lugSchematic .bushing    { fill: #b9ccd2; stroke: var(--sq-outline); stroke-width: 1.5; }
+      #lugSchematic .fix-hatch  { stroke: var(--sq-ink-soft); stroke-width: 1.4; }
+      #lugSchematic .load-arrow { stroke: var(--lug-fail); stroke-width: 2.5; fill: var(--lug-fail); }
+      #lugSchematic .load-axis  { stroke: var(--lug-fail); stroke-width: 1; stroke-dasharray: 4 4; opacity: .45; }
+
+      /* ── Caveat ── */
+      .lug-caveat {
+        max-width: 1100px; margin: 0 auto 20px; padding: 12px 16px;
+        background: var(--lug-marg-bg); border: 2px solid var(--lug-marg);
+        border-radius: 10px; color: var(--sq-ink); font-size: 13.5px;
+        line-height: 1.6; font-family: var(--body-font-family);
+      }
+      .lug-caveat .lug-caveat-t { color: var(--lug-marg); font-weight: 700; }
+
+      /* ── Reference prose ── */
+      .ref-wrap { max-width: 1100px; margin: 34px auto 0; padding: 0 20px; font-family: var(--body-font-family); }
+      .ref-section-title { font-size: 16px; font-weight: 700; color: #6a746a; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; padding-left: 2px; }
+
+      /* ── Column page additions ── */
+      .cb-figs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px; }
+      @media (max-width: 900px) { .cb-figs { grid-template-columns: 1fr; } }
+      .cb-fig {
+        background: #fff; border: 2px solid var(--sq-outline); border-radius: 10px;
+        padding: 10px 12px; box-shadow: 0 2px 5px rgba(0,0,0,.15);
+      }
+      .cb-fig-h {
+        font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+        color: var(--sq-ink-soft); font-weight: 700; margin-bottom: 6px;
+        font-family: var(--sq-ui);
+      }
+      .cb-fig svg { width: 100%; height: auto; display: block; }
+
+      #cbElevation .cb-member { fill: #dce7ea; stroke: var(--sq-outline); stroke-width: 2; }
+      #cbElevation .cb-buckle { fill: none; stroke: var(--lug-fail); stroke-width: 1.6; stroke-dasharray: 5 4; }
+      #cbElevation .cb-pin { fill: #fff; stroke: var(--sq-outline); stroke-width: 1.8; }
+      #cbElevation .cb-fixblock { fill: #c9d4d8; stroke: var(--sq-outline); stroke-width: 1.8; }
+      #cbElevation .cb-ground { stroke: var(--sq-outline); stroke-width: 2; }
+      #cbElevation .cb-hatch { stroke: var(--sq-ink-soft); stroke-width: 1.2; }
+      #cbElevation .cb-load { stroke: var(--lug-fail); stroke-width: 2.4; }
+      #cbElevation .cb-load-head { fill: var(--lug-fail); }
+      #cbElevation .cb-dim { stroke: var(--sq-ink-soft); stroke-width: 1; }
+
+      #cbSection .cb-sec { fill: #dce7ea; stroke: var(--sq-outline); stroke-width: 1.8; }
+      #cbSection .cb-sec-hole { fill: #fff; stroke: var(--sq-outline); stroke-width: 1.8; }
+      #cbSection .cb-axis { stroke: var(--sq-blue); stroke-width: 1; stroke-dasharray: 8 3 2 3; }
+      #cbSection .cb-axis-weak { stroke: var(--lug-fail); stroke-width: 1.2; stroke-dasharray: 8 3 2 3; }
+
+      .cb-lab { font-family: var(--sq-ui); font-size: 12px; fill: var(--sq-ink); }
+      .cb-lab-sm { font-family: var(--sq-ui); font-size: 10.5px; fill: var(--sq-ink-soft); }
+
+      /* ── Reference guide cards (matches SpringCompressionRound.html) ── */
+      .ref-zoomable { cursor: zoom-in; transition: opacity .15s; }
+      .ref-zoomable:hover { opacity: .85; }
+      .lightbox-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:99999; align-items:center; justify-content:center; padding:20px; cursor:zoom-out; }
+      .lightbox-overlay.active { display:flex; }
+      .lightbox-img { max-width:90vw; max-height:90vh; object-fit:contain; border-radius:6px; box-shadow:0 8px 32px rgba(0,0,0,.6); cursor:default; touch-action:pinch-zoom; background:#fff; }
+      .lightbox-close { position:fixed; top:16px; right:20px; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.15); border:2px solid rgba(255,255,255,.4); color:#fff; font-size:20px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s; z-index:100000; }
+      .lightbox-close:hover { background:rgba(255,255,255,.3); }
+      .lightbox-caption { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,.8); font-size:13px; font-family:Roboto,Arial,sans-serif; text-align:center; max-width:80vw; pointer-events:none; }
+      .ref-wrapper {
+        margin: 0 auto;
+        max-width: 58rem;
+        font-family: "Roboto", Arial, sans-serif;
+      }
+
+      /* ── Top-level section card ────────────────────────────── */
+      .ref-card {
+        background: #eee;
+        border: 2px solid rgb(67,67,67);
+        border-radius: 10px;
+        box-shadow: 0 3px 5px rgba(0,0,0,.4);
+        margin: 0 0 1rem;
+        overflow: hidden;
+      }
+
+      /* ── Card header bar ───────────────────────────────────── */
+      .ref-card-header {
+        background: #6a746a;
+        padding: 8px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .ref-card-header h2 {
+        font-size: 13px;
+        font-weight: 700;
+        color: #eee;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin: 0;
+        flex: 1;
+      }
+      .ref-card-header .ref-num {
+        font-size: 12px;
+        color: #A3C3CD;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+      .ref-chevron {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        transition: transform 0.2s ease;
+        color: #A3C3CD;
+      }
+      .ref-card.collapsed .ref-chevron { transform: rotate(-90deg); }
+      .ref-card.collapsed .ref-body    { display: none; }
+
+      /* ── Card body ─────────────────────────────────────────── */
+      .ref-body {
+        padding: 14px 16px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .ref-body > * {
+        min-width: 0;
+      }
+      .ref-body.two-col {
+        grid-template-columns: 1fr 1fr;
+        gap: 14px 24px;
+      }
+      @media (max-width: 640px) {
+        .ref-body.two-col { grid-template-columns: 1fr; }
+      }
+
+      /* ── Sub-section label ─────────────────────────────────── */
+      .ref-sub {
+        font-size: 12px;
+        font-weight: 700;
+        color: #61828A;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        border-bottom: 1px solid #c0c0c0;
+        padding-bottom: 3px;
+        margin-bottom: 6px;
+      }
+
+      /* ── Body copy ─────────────────────────────────────────── */
+      .ref-body p {
+        font-size: 13px;
+        color: #333;
+        line-height: 1.65;
+        margin: 0 0 8px;
+      }
+      .ref-body p:last-child { margin-bottom: 0; }
+      .ref-body ul {
+        font-size: 13px;
+        color: #333;
+        line-height: 1.7;
+        padding-left: 18px;
+        margin: 0 0 8px;
+      }
+      /* css/style.css sets `ul li` and `a` to 20px site-wide; both are more
+         specific than the inherited size, so restate them for card copy. */
+      .ref-body ul li {
+        font-size: 13px;
+        color: #333;
+        font-weight: 400;
+        line-height: 1.7;
+        padding: 0;
+        margin: 0 0 5px;
+      }
+      .ref-body ul li:last-child { margin-bottom: 0; }
+      .ref-body a {
+        font-size: inherit;
+        color: #3a6270;
+        text-decoration: underline;
+      }
+      .ref-body a:hover { color: #61828A; }
+      .ref-body p a, .ref-body li a { font-size: 13px; }
+      .ref-body a.lug-src { font-size: 12.5px; color: #fff; text-decoration: none; }
+      .ref-body a.lug-src:hover { color: #fff; }
+
+      /* ── Equation block ────────────────────────────────────── */
+      .ref-eq-block {
+        background: #d9d9d9;
+        border: 1.5px solid rgb(67,67,67);
+        border-radius: 6px;
+        padding: 10px 16px 8px;
+        margin: 6px 0 10px;
+        overflow-x: auto;
+      }
+      .ref-eq-tag {
+        font-size: 12px;
+        color: #61828A;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 700;
+        font-family: "Roboto", Arial, sans-serif;
+        display: block;
+        margin-bottom: 4px;
+      }
+      mjx-container { color: #1a3a40 !important; margin: 0;}
+      mjx-container[jax="SVG"][display="true"] {
+        margin: 0.7em 0 !important;
+      }
+
+      /* Inline math */
+      mjx-container[jax="SVG"] {
+        margin: 0 !important;
+      }
+
+      /* ── Figure placeholder ────────────────────────────────── */
+      .ref-fig {
+        border: 1.5px dashed #999;
+        border-radius: 6px;
+        background: #fafafa;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 20px 12px;
+        text-align: center;
+        margin: 4px 0;
+      }
+      .ref-fig-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #494949;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .ref-fig-caption {
+        font-size: 12px;
+        color: #5f5f5f;
+        max-width: 400px;
+      }
+
+      /* ── Data table ────────────────────────────────────────── */
+      .ref-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11.5px;
+        margin: 6px 0;
+      }
+      .ref-table th {
+        background: #d9d9d9;
+        border: 1px solid #bbb;
+        padding: 4px 8px;
+        font-weight: 600;
+        color: #444;
+        text-align: left;
+      }
+      .ref-table td {
+        border: 1px solid #ccc;
+        padding: 3px 8px;
+        color: #333;
+        vertical-align: top;
+      }
+      .ref-table tr:nth-child(even) td { background: #f5f5f5; }
+      .ref-table-caption {
+        font-size: 12px;
+        color: #888;
+        margin-top: 3px;
+        font-style: italic;
+      }
+
+      /* ── Callout / warning boxes ───────────────────────────── */
+      .ref-callout {
+        background: #e8f0f3;
+        border-left: 3px solid #61828A;
+        border-radius: 0 6px 6px 0;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: #1a3a40;
+        line-height: 1.55;
+      }
+      .ref-callout strong { color: #3a6270; }
+      .ref-warn {
+        background: #fff8e6;
+        border-left: 3px solid #cc7700;
+        border-radius: 0 6px 6px 0;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: #5a3a00;
+        line-height: 1.55;
+      }
+
+      /* ── Section wrapper ───────────────────────────────────── */
+      .ref-section-wrap {
+        padding: 1rem 0.5rem 0.5rem;
+      }
+      .ref-section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #6a746a;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.5rem;
+        padding-left: 2px;
+      }
+
+      /* ── Full-bleed child inside two-col ───────────────────── */
+      .full-col { grid-column: 1 / -1; }
+
+      .lug-srcs { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
+      .lug-src {
+        display: inline-block; font-family: var(--sq-ui); font-size: 12.5px;
+        line-height: 1.2; padding: 6px 11px; border-radius: var(--border-radius-small);
+        background: var(--section-title-color); color: #fff; text-decoration: none;
+        border: 1px solid var(--section-title-color);
+      }
+      .lug-src:hover { background: #4e6b73; color: #fff; }
+
+      /* drawn figures: real <img> so they are crawlable and zoomable */
+      .ref-fig-img {
+        border: 1px solid #c6c6c6;
+        border-radius: 6px;
+        background: #fff;
+        padding: 10px 12px;
+        display: block;
+        margin: 4px 0;
+      }
+      .ref-fig-img img { width: 100%; height: auto; display: block; }
+      .ref-canvas-wrap { position: relative; width: 100%; height: 260px; }
+      .cb-ref { stroke: var(--sq-outline); fill: #dce7ea; stroke-width: 1.6; }
+      .cb-ref-line { stroke: var(--sq-outline); stroke-width: 1.6; fill: none; }
+      .cb-ref-dash { stroke: var(--sq-ink-soft); stroke-width: 1; fill: none; stroke-dasharray: 5 3; }
+      .cb-ref-hot { stroke: var(--lug-fail); stroke-width: 2; fill: none; }
+      .cb-ref-hotf { fill: var(--lug-fail); }
+      .cb-ref-t { font-family: var(--sq-ui); font-size: 11px; fill: var(--sq-ink); }
+      .cb-ref-ts { font-family: var(--sq-ui); font-size: 10px; fill: var(--sq-ink-soft); }
+      .cb-ref-tb { font-family: var(--sq-ui); font-size: 11px; font-weight: 700; fill: var(--sq-blue); }
+      .cb-hatchline { stroke: var(--sq-ink-soft); stroke-width: 1.1; }
+
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="GasMassFlowRateCalculator.html">Gas Mass Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">Propylene Glycol</span><span class="nav-label-short">Prop. Glycol</span></a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">Ethylene Glycol</span><span class="nav-label-short">Eth. Glycol</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">MIL-PRF-23699</span><span class="nav-label-short">PRF-23699</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Skydrol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SkydrolPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="SkydrolDensity.html">Density</a>
+                  <a class="dropdown-item" href="SkydrolSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="SkydrolThermalConductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="SkydrolViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="SkydrolPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="SkydrolThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="SkydrolThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermo Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                  <a class="dropdown-item" href="SpringTorsionRound.html">Torsion Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                  <a class="dropdown-item" href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Stress</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MaterialPropertyLookup.html">Material Property Lookup</a>
+                  <a class="dropdown-item" href="LugPinAnalysis.html">Lug &amp; Pin Analysis</a>
+                  <a class="dropdown-item" href="ColumnBuckling.html">Column Buckling &amp; Crippling</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"><span class="nav-label-full">MIL-HDBK-5</span><span class="nav-label-short">HDBK-5</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MaterialPropertyLookup.html">MIL-HDBK-5 Material Property Lookup</a>
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                  <a class="dropdown-item" href="SvgEditor.html">SVG Editor</a>
+                  <a class="dropdown-item" href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- BANNER -->
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              Column Buckling &amp; Crippling
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="sq-main">
+
+      <p class="sq-subtitle">
+        Euler and short-column allowables with a crippling cutoff, following
+        Section 2 of the Air Force Flight Dynamics Laboratory Stress Analysis
+        Manual (AFFDL-TR-69-42). Pick a cross-section and a material and the page
+        works the section properties, the local crippling stress and the column
+        curve, and shows which of the two governs.
+      </p>
+
+      <div class="sq-calc-grid">
+
+        <!-- ════════ LEFT: INPUTS ════════ -->
+        <div class="sq-panel sq-sticky">
+          <div class="sq-panel-h">
+            <span>Inputs</span>
+            <span id="cb_matcount" style="font-weight:400;letter-spacing:0;text-transform:none;font-size:11px;color:var(--sq-ink-soft);"></span>
+          </div>
+          <div class="sq-panel-b">
+
+            <div class="lug-group-h">Cross-section</div>
+            <div class="lug-field">
+              <label for="cb_shape">Shape</label>
+              <select id="cb_shape"></select>
+            </div>
+            <div id="cb_dims"></div>
+
+            <div class="lug-group-h">Column</div>
+            <div class="lug-field">
+              <label for="cb_L">Length L <span class="lug-unit">in</span></label>
+              <input type="number" id="cb_L" value="30" step="0.5" min="0" />
+            </div>
+            <div class="lug-field">
+              <label for="cb_fixity">End fixity</label>
+              <select id="cb_fixity"></select>
+            </div>
+
+            <div class="lug-group-h">Load</div>
+            <div class="lug-field">
+              <label for="cb_P">Applied load P <span class="lug-unit">lb, compression</span></label>
+              <input type="number" id="cb_P" value="5000" step="100" min="0" />
+            </div>
+
+            <div class="lug-group-h">Material</div>
+            <label class="lug-check">
+              <input type="checkbox" id="mat_advanced" />
+              Full MIL-HDBK-5 database
+            </label>
+
+            <div class="lug-field" id="matCol_simpleWrap">
+              <label for="matCol_simple">Column material</label>
+              <select id="matCol_simple"></select>
+            </div>
+            <div id="matCol_fullWrap" hidden>
+              <div class="lug-field">
+                <label for="matCol_alloy">Alloy</label>
+                <select id="matCol_alloy"></select>
+              </div>
+              <div class="lug-field">
+                <label for="matCol_cond">Condition</label>
+                <select id="matCol_cond"></select>
+              </div>
+            </div>
+            <div class="lug-props" id="matCol_props"></div>
+
+            <div id="mat_advancedFields" hidden>
+              <div class="lug-r2" style="margin-top:10px;">
+                <div class="lug-field">
+                  <label for="mat_grain">Grain direction</label>
+                  <select id="mat_grain">
+                    <option value="L">L (longitudinal)</option>
+                    <option value="LT">LT (long transverse)</option>
+                    <option value="ST">ST (short transverse)</option>
+                  </select>
+                </div>
+                <div class="lug-field">
+                  <label for="mat_temp">Service temp <span class="lug-unit">&deg;F</span></label>
+                  <input type="number" id="mat_temp" placeholder="room" step="10" />
+                </div>
+              </div>
+              <div class="lug-field" id="mat_hoursWrap" hidden>
+                <label for="mat_hours">Time at temperature <span class="lug-unit">exposure</span></label>
+                <select id="mat_hours"><option value="">shortest published</option></select>
+              </div>
+            </div>
+
+            <div class="lug-note" id="cb_warn"></div>
+          </div>
+        </div>
+
+        <!-- ════════ RIGHT: RESULTS ════════ -->
+        <div>
+          <div class="sq-panel" style="margin-bottom:20px;">
+            <div class="sq-panel-h">
+              <span>Margins of safety</span>
+              <span id="cb_governs" style="font-weight:400;letter-spacing:0;text-transform:none;font-size:11px;color:var(--sq-ink-soft);"></span>
+            </div>
+            <div class="lug-tiles" id="cbTiles"></div>
+            <div style="padding:0 16px 16px;">
+              <details class="lug-details">
+                <summary class="fs-6">Show detailed calculation steps</summary>
+                <div class="calc-steps" id="cbSteps"></div>
+              </details>
+            </div>
+          </div>
+
+          <div class="sq-panel" style="margin-bottom:20px;">
+            <div class="sq-panel-h"><span>Loading condition &amp; section</span></div>
+            <div class="cb-figs">
+              <div class="cb-fig">
+                <div class="cb-fig-h">Elevation &mdash; end fixity and load</div>
+                <svg id="cbElevation" viewBox="0 0 300 340" role="img"
+                     aria-label="Column elevation showing end restraints, the applied compressive load and the buckled shape"></svg>
+              </div>
+              <div class="cb-fig">
+                <div class="cb-fig-h">Cross-section &mdash; drawn to your dimensions</div>
+                <svg id="cbSection" viewBox="0 0 300 240" role="img"
+                     aria-label="Cross-section of the column with its principal axes"></svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="sq-panel">
+            <div class="sq-panel-h"><span>Column curve</span></div>
+            <div style="padding:16px;">
+              <div class="lug-canvas-wrap" style="height:300px;"><canvas id="cbCurve"></canvas></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── REFERENCE GUIDE ── -->
+    <section aria-label="Column buckling and crippling reference guide">
+    <div class="csscontainer">
+    <div class="col-lg-12 col-12 px-3">
+    <div class="ref-wrapper">
+    <div class="ref-section-wrap">
+
+      <div class="ref-section-title">Reference Guide &mdash; Columns in Compression</div>
+
+  <div class="ref-card" id="cbRef1">
+    <div class="ref-card-header" onclick="toggleRefCard('cbRef1')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">01</span>
+      <h2>The Two Ways a Column Fails</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
+      <div>
+        <p>A compression member has two failure modes and a real design has to clear both.
+        <span style="font-weight:700">Column buckling</span> is the member bowing as a whole, its
+        cross-section keeping its shape. <span style="font-weight:700">Crippling</span> is the thin
+        elements of that cross-section buckling locally &mdash; a flange rolling over, a web
+        dimpling &mdash; while the member as a whole stays straight.</p>
+        <p>Which one arrives first depends on how slender the member is and how thin its walls are.
+        They are not independent: once a section has crippled it cannot carry more, so the crippling
+        stress sets the ceiling that the column curve is allowed to reach. That coupling is the whole
+        point of this page.</p>
+        <div class="ref-callout">
+          A stocky, thin-walled strut is limited by crippling. A long, chunky one is limited by Euler.
+          Most real members sit between the two, which is where the short-column branch applies.
+        </div>
+      </div>
+      <div>
+        <div class="ref-sub">The two modes side by side</div>
+        <div class="ref-fig ref-fig-img">
+          <img src="img/column-buckling-vs-crippling-failure-modes.svg" alt="Column buckling versus crippling: a slender column bows as a whole with its cross-section unchanged, while a short stub stays straight along its axis and a thin flange buckles into waves" width="520" height="356" loading="lazy" decoding="async" class="ref-zoomable">
+          <span class="ref-fig-label" hidden>Column buckling versus local crippling</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ref-card" id="cbRef2">
+    <div class="ref-card-header" onclick="toggleRefCard('cbRef2')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">02</span>
+      <h2>Section Properties and the Weak Axis</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body two-col">
+      <div>
+        <p>Buckling happens about whichever axis is weakest, so the section property that matters is
+        the <span style="font-weight:700">minimum</span> second moment of area and the radius of
+        gyration that follows from it.</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Radius of gyration</span>
+          \[ \rho = \sqrt{I_{min}/A} \]
+        </div>
+        <p>For a symmetric shape the weak axis is a drawing axis and there is nothing to think about.
+        For an angle or a zee it is not: the product of inertia is non-zero and the true weak axis is
+        rotated. This page finds the principal axes rather than assuming them.</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Principal second moments</span>
+          \[ I_{max,min} = \frac{I_x + I_y}{2} \pm \sqrt{\left(\frac{I_x - I_y}{2}\right)^2 + I_{xy}^2} \]
+        </div>
+        <div class="ref-warn">
+          An equal-leg angle has its weak axis at 45&deg; &mdash; the diagonal <em>perpendicular</em> to the one through its heel. Taking <em>I</em><sub>y</sub> instead of
+          <em>I</em><sub>min</sub> overstates the allowable, so the error is unconservative.
+        </div>
+      </div>
+      <div>
+        <div class="ref-sub">Where an angle’s principal axes actually lie</div>
+        <div class="ref-fig ref-fig-img">
+          <img src="img/angle-section-weak-principal-axis.svg" alt="Equal-leg angle with both principal axes at 45 degrees: the strong axis runs through the heel and the opposite corner, the weak axis is perpendicular to it" width="330" height="215" loading="lazy" decoding="async" class="ref-zoomable">
+          <span class="ref-fig-label" hidden>Principal axes of an equal-leg angle</span>
+        </div>
+        <p>Section properties here come from a rectangle decomposition of the shape, so area,
+        centroid and second moments are exact for the thin-walled idealisation rather than
+        approximated with a formula per shape.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ref-card" id="cbRef3">
+    <div class="ref-card-header" onclick="toggleRefCard('cbRef3')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">03</span>
+      <h2>Crippling of Thin Sections</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
+      <p>The manual's method is to break a built-up section into angles, find the crippling stress of
+      each, and area-weight them. Everything on this page except the round tube and the solid bars is
+      handled this way.</p>
+      <div class="ref-eq-block">
+        <span class="ref-eq-tag">Element crippling stress &mdash; Equation 2-26</span>
+        \[ F_{cc} = \frac{C_e \sqrt{F_{cy} E}}{\left(b'/t\right)^{0.75}}, \qquad b' = \frac{b+h}{2} \]
+      </div>
+      <div class="ref-eq-block">
+        <span class="ref-eq-tag">Built-up section &mdash; Equation 2-29</span>
+        \[ F_{cc,\;section} = \frac{\sum F_{cc,i}\,A_i}{\sum A_i}, \qquad A_i = (b + h - t)\,t \]
+      </div>
+      <p>The coefficient <em>C<sub>e</sub></em> is set by how the element's edges are held. An
+      unsupported edge is free to roll, so the fewer free edges the element has the more it carries.</p>
+      <div class="ref-sub">Edge restraint and the coefficient</div>
+      <div class="ref-fig ref-fig-img">
+        <img src="img/crippling-edge-restraint-coefficients.svg" alt="Three edge-restraint cases for a flange and the crippling coefficient each one takes" width="470" height="150" loading="lazy" decoding="async" class="ref-zoomable">
+        <span class="ref-fig-label" hidden>Edge restraint and the crippling coefficient</span>
+      </div>
+      <table class="ref-table">
+        <thead><tr><th>Edge condition</th><th>C<sub>e</sub></th><th>Where it applies</th></tr></thead>
+        <tbody>
+          <tr><td>Two edges free</td><td>0.316</td><td>Plain angle</td></tr>
+          <tr><td>One edge free</td><td>0.342</td><td>Flange outstand of an I-section, channel or zee</td></tr>
+          <tr><td>No edge free</td><td>0.366</td><td>Wall of a closed box or rectangular tube</td></tr>
+        </tbody>
+      </table>
+      <div class="ref-table-caption">At the same b&#8242;/t a box wall crips at 0.366/0.316 = 1.16&times; the stress of a plain angle leg.</div>
+
+      <div class="ref-sub">How each shape is divided</div>
+      <div class="ref-fig ref-fig-img">
+        <img src="img/crippling-section-decomposition.svg" alt="An I-section, a channel and a box divided into the angle elements the crippling method uses" width="470" height="180" loading="lazy" decoding="async" class="ref-zoomable">
+        <span class="ref-fig-label" hidden>How each shape is divided for crippling</span>
+      </div>
+      <table class="ref-table">
+        <thead><tr><th>Shape</th><th>Elements</th><th>Legs b, h</th><th>C<sub>e</sub></th></tr></thead>
+        <tbody>
+          <tr><td>Angle</td><td>1</td><td>b, h</td><td>0.316</td></tr>
+          <tr><td>Channel</td><td>2</td><td>b<sub>f</sub>, h/2</td><td>0.342</td></tr>
+          <tr><td>Zee</td><td>2</td><td>b<sub>f</sub>, h/2</td><td>0.342</td></tr>
+          <tr><td>I-section</td><td>4</td><td>b<sub>f</sub>/2, h/2</td><td>0.342</td></tr>
+          <tr><td>Rectangular tube</td><td>4</td><td>b/2, h/2</td><td>0.366</td></tr>
+          <tr><td>Solid bar or round</td><td>&mdash;</td><td>&mdash;</td><td>no local buckling; plateau is F<sub>cy</sub></td></tr>
+        </tbody>
+      </table>
+      <div class="ref-callout">
+        Nothing above the compressive yield has any meaning, so every element is capped at
+        <em>F<sub>cy</sub></em>. A stocky section simply reaches <em>F<sub>cy</sub></em> and stops.
+      </div>
+      <div class="lug-srcs">
+        <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=232" target="_blank" rel="noopener">&sect;2.3.2.4 Crippling of angles &mdash; p. 2-90</a>
+        <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=236" target="_blank" rel="noopener">Eq 2-29, complex sections &mdash; p. 2-94</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ref-card" id="cbRef4">
+    <div class="ref-card-header" onclick="toggleRefCard('cbRef4')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">04</span>
+      <h2>Round Tubes Are Their Own Case</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body two-col">
+      <div>
+        <p>A tube has no flanges to roll over, so the angle method does not apply. Its wall buckles as
+        a cylinder instead.</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Equation 2-23</span>
+          \[ F_{cc} = C\,\frac{E\,t}{r} \]
+        </div>
+        <p>The coefficient <em>C</em> falls as the wall gets thinner relative to the radius, along the
+        curve the manual prints as Figure 2-67. It is digitized here and interpolated, and the same cap
+        at <em>F<sub>cy</sub></em> applies.</p>
+        <div class="ref-callout">
+          The theoretically correct value, <em>F<sub>cc</sub></em> = 0.605 E t/r, runs far above test.
+          The manual's own example gives 12,100&nbsp;psi from theory against 4,400&nbsp;psi from this
+          curve for the same tube &mdash; which is why the empirical coefficient is used.
+        </div>
+      <div class="lug-srcs">
+        <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=230" target="_blank" rel="noopener">Figure 2-67 &mdash; p. 2-88</a>
+        <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=231" target="_blank" rel="noopener">Worked example &mdash; p. 2-89</a>
+      </div>
+      </div>
+      <div>
+        <div class="ref-sub">Figure 2-67 &mdash; coefficient C against r/t</div>
+        <div class="ref-canvas-wrap"><canvas id="cbFig267"></canvas></div>
+        <div class="ref-table-caption">Digitized from the printed chart; hover for a value.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ref-card" id="cbRef5">
+    <div class="ref-card-header" onclick="toggleRefCard('cbRef5')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">05</span>
+      <h2>The Column Curve</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body two-col">
+      <div>
+        <p>Above a transition slenderness the member fails elastically and Euler governs. Below it the
+        material has already yielded locally, and a parabola tangent to the Euler curve is used instead.</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Euler &mdash; long columns</span>
+          \[ F_c = \frac{\pi^2 E}{\left(L'/\rho\right)^2} \]
+        </div>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Johnson parabola &mdash; short columns</span>
+          \[ F_c = F_{cc}\left[1 - \frac{F_{cc}\left(L'/\rho\right)^2}{4\pi^2 E}\right] \]
+        </div>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Transition</span>
+          \[ \left(\frac{L'}{\rho}\right)_{cr} = \sqrt{\frac{2\pi^2 E}{F_{cc}}} \;\Rightarrow\; F_c = \frac{F_{cc}}{2} \]
+        </div>
+        <p>Both branches give <em>F<sub>cc</sub></em>/2 at the transition and share a slope there, so
+        the allowable is continuous across the changeover.</p>
+        <div class="ref-warn">
+          Note the parabola starts from <em>F<sub>cc</sub></em>, not <em>F<sub>cy</sub></em>. That one
+          substitution is what carries the crippling result into the column answer, and it is why a
+          thin-walled section is worth less as a column than its yield strength suggests.
+        </div>
+      </div>
+      <div>
+        <div class="ref-sub">How the branches fit together</div>
+        <div class="ref-fig ref-fig-img">
+          <img src="img/column-curve-johnson-parabola-euler.svg" alt="The column curve: a crippling plateau, a Johnson parabola and the Euler hyperbola meeting tangentially" width="430" height="250" loading="lazy" decoding="async" class="ref-zoomable">
+          <span class="ref-fig-label" hidden>How the column-curve branches fit together</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ref-card" id="cbRef6">
+    <div class="ref-card-header" onclick="toggleRefCard('cbRef6')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">06</span>
+      <h2>End Fixity</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
+      <p>The coefficient <em>c</em> describes how much the ends are held, and enters through the
+      effective length <em>L</em>&#8242; = <em>L</em>/&radic;<em>c</em>. Fixing both ends halves the
+      effective length; a cantilever doubles it.</p>
+      <div class="ref-fig ref-fig-img">
+        <img src="img/column-end-fixity-coefficients.svg" alt="The four end-fixity cases with their buckled shapes and coefficients" width="470" height="252" loading="lazy" decoding="async" class="ref-zoomable">
+        <span class="ref-fig-label" hidden>End fixity and the effective length</span>
+      </div>
+      <table class="ref-table">
+        <thead><tr><th>End condition</th><th>c</th><th>L&#8242;/L</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td>Pinned &ndash; pinned</td><td>1.0</td><td>1.00</td><td>The reference case</td></tr>
+          <tr><td>Fixed &ndash; pinned</td><td>2.05</td><td>0.70</td><td>About twice the load of pinned&ndash;pinned</td></tr>
+          <tr><td>Fixed &ndash; fixed</td><td>4.0</td><td>0.50</td><td>Four times, in theory</td></tr>
+          <tr><td>Fixed &ndash; free</td><td>0.25</td><td>2.00</td><td>A quarter &mdash; the worst case</td></tr>
+        </tbody>
+      </table>
+      <div class="ref-warn">
+        These are the theoretical values. Real joints are never perfectly fixed and most structures
+        departments require a reduced figure &mdash; commonly <em>c</em> = 3 or less in place of 4.
+        Check what your programme allows before taking credit for full fixity.
+      </div>
+      <div class="lug-srcs">
+        <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=182" target="_blank" rel="noopener">&sect;2.3.1 End fixity &mdash; p. 2-42</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ref-card" id="cbRef7">
+    <div class="ref-card-header" onclick="toggleRefCard('cbRef7')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">07</span>
+      <h2>What This Page Computes</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
+      <p>Three checks, reported side by side, with the lowest governing:</p>
+      <ul>
+        <li><span style="font-weight:700">Column allowable</span> &mdash; the governing answer.
+        <em>F<sub>c</sub></em>&middot;<em>A</em> using whichever branch applies at this slenderness.</li>
+        <li><span style="font-weight:700">Crippling</span> &mdash;
+        <em>F<sub>cc</sub></em>&middot;<em>A</em>, the local capacity with no column effect at all.
+        This is the ceiling; a very short member is limited by it.</li>
+        <li><span style="font-weight:700">Euler</span> &mdash; &pi;&sup2;<em>EI</em>/<em>L</em>&#8242;&sup2;
+        on its own. Above the transition it equals the column allowable; below it, it reads high and is
+        shown only for comparison.</li>
+      </ul>
+      <p>Material properties are read from the same MIL-HDBK-5 dataset behind
+      <a href="MaterialPropertyLookup.html">Material Property Lookup</a>. Only conditions publishing
+      both <em>F<sub>cy</sub></em> and <em>E</em> are offered, since the method cannot run without
+      them. Tick <span style="font-weight:700">Full MIL-HDBK-5 database</span> for the whole set, with
+      grain direction and a service temperature that derates both properties off the
+      effect-of-temperature curves.</p>
+    </div>
+  </div>
+
+  <div class="ref-card" id="cbRef8">
+    <div class="ref-card-header" onclick="toggleRefCard('cbRef8')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">08</span>
+      <h2>Limitations</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
+      <div class="ref-warn">
+        <span style="font-weight:700">Bending failure only.</span> Open sections with low torsional
+        stiffness &mdash; angles, channels and zees especially &mdash; can fail in torsion, or in
+        combined bending and torsion, at a lower load than the bending mode computed here. Closed
+        sections have enough torsional stiffness that primary failure is always of the bending type, so
+        a tube or a box is fully covered; an open section is not.
+      </div>
+      <p><span style="font-weight:700">Concentric load, straight member.</span> No eccentricity, no
+      initial bow and no lateral load. A column with an offset load needs the secant formula or an
+      interaction check.</p>
+      <p><span style="font-weight:700">Uniform thickness.</span> The crippling decomposition assumes one
+      thickness through the section, which is what formed sheet and most extrusions have. A section with
+      a heavy flange and a light web needs its elements treated with their own b/t.</p>
+      <p><span style="font-weight:700">Johnson rather than tangent modulus.</span> The manual also gives
+      the tangent-modulus and Ramberg&ndash;Osgood treatments, which track test data more closely for
+      materials with a rounded stress-strain knee. The parabola is the conservative, widely used
+      approximation, not the last word.</p>
+      <p><span style="font-weight:700">No joint or end-detail check.</span> Fastener bearing, tension
+      clips and local crushing of a tube end are outside the scope of this page, and any of them can
+      govern before the column does.</p>
+    </div>
+  </div>
+
+    </div>
+    </div>
+    </div>
+    </div>
+    </section>
+
+    <!-- CITATION -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div id="citation-container" data-page-title="Column Buckling and Crippling" data-page-url="https://kaspercalc.com/ColumnBuckling.html"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+<script>
+/* Collapsible reference cards, matching SpringCompressionRound.html. */
+function toggleRefCard(id) {
+  var card = document.getElementById(id);
+  if (!card) return;
+  var wasCollapsed = card.classList.contains('collapsed');
+  card.classList.toggle('collapsed', !wasCollapsed);
+  var header = card.querySelector('.ref-card-header');
+  if (header) header.setAttribute('aria-expanded', wasCollapsed ? 'true' : 'false');
+  // MathJax skips display:none content, so re-typeset a card the first time it opens
+  if (wasCollapsed && window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([card]).catch(function (e) { console.warn('MathJax:', e); });
+  }
+}
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.ref-card-header').forEach(function (h) {
+    h.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleRefCard(h.parentElement.id);
+      }
+    });
+  });
+});
+
+/* Click any .ref-zoomable figure to view it full size. */
+function initLightbox() {
+  var overlay  = document.getElementById('lightboxOverlay');
+  var img      = document.getElementById('lightboxImg');
+  var caption  = document.getElementById('lightboxCaption');
+  var closeBtn = document.getElementById('lightboxClose');
+  if (!overlay) return;
+
+  function open(src, alt, text) {
+    img.src = src;
+    img.alt = alt || '';
+    caption.textContent = text || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function close() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    img.src = '';
+  }
+
+  document.addEventListener('click', function (e) {
+    var target = e.target.closest && e.target.closest('.ref-zoomable');
+    if (!target) return;
+    var fig = target.closest('.ref-fig');
+    var label = fig && fig.querySelector('.ref-fig-label');
+    // the label is hidden in the card, so fall back to the alt text
+    open(target.src, target.alt, (label && label.textContent) || target.alt);
+  });
+
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) close();
+  });
+  closeBtn.addEventListener('click', close);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) close();
+  });
+}
+document.addEventListener('DOMContentLoaded', initLightbox);
+</script>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+
+<script>
+(function(){
+  var h = location.hostname;
+  var isLocal = !h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1' || /\.local$/i.test(h) || /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h);
+  if (isLocal) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5XLCN0GJQ0';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+  gtag('js', new Date());
+  gtag('config', 'G-5XLCN0GJQ0');
+})();
+</script>
+
+  </body>
+</html>

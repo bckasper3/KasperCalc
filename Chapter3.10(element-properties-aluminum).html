@@ -88,7 +88,7 @@
                   <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
                   <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
                   <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
-                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="GasMassFlowRateCalculator.html">Gas Mass Flow Rate Calculator</a>
                   <a class="dropdown-item" href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a>
                 </div>
               </li>
@@ -230,12 +230,14 @@
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="MaterialPropertyLookup.html">Material Property Lookup</a>
                   <a class="dropdown-item" href="LugPinAnalysis.html">Lug &amp; Pin Analysis</a>
+                  <a class="dropdown-item" href="ColumnBuckling.html">Column Buckling &amp; Crippling</a>
                   <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"><span class="nav-label-full">MIL-HDBK-5</span><span class="nav-label-short">HDBK-5</span></a>
                 <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MaterialPropertyLookup.html">MIL-HDBK-5 Material Property Lookup</a>
                   <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
 
                   <div class="dropdown-submenu">
@@ -625,12 +627,93 @@
             <div class="section-heading lvl-2"><span class="section-num">3.10.2.3</span>Column Properties</div>
             <p>Curves of the allowable column stresses for round and streamline tubing are given in Figure 3.10.2.3. The allowable stress is plotted against the effective slenderness ratio, as defined by Equation 3.10.2.3.</p>
             <div class="hdbk-figure" id="fig-3.10.2.3">
-                          <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.10.2.3</span>
-              <span class="fig-caption">Not digitized &mdash; composite best-fit curve family (not a simple XY dataset); skipped.</span>
+                                      <div class="canvasdiv">
+              <button id="toggle-31023a">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-31023a');var a=document.createElement('a');a.download='canvas-31023a.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-31023a').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=821" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-31023a" class="chartcanvas" role="img" aria-label="Figure 3.10.2.3 (1 of 4) — Fc, allowable column stress vs L'/ρ, 2024-T3 and 6061-T6"></canvas>
+              </div>
             </div>
-
-              <p class="fig-caption"><strong>Figure 3.10.2.3.</strong> Allowable column and crushing stresses for 2024 and 6061 aluminum alloy tubing.</p>
+            <p class="fig-caption"><strong>Figure 3.10.2.3(1 of 4).</strong> Allowable column stress (<em>F<sub>c</sub></em>) versus <em>L&prime;/&rho;</em> for 2024-T3 and 6061-T6 aluminum alloy tubing. Dashed lines are D/t cutoff construction lines linking the column curve to the crushing-stress chart at right.</p>
+            <script>
+            (function(){
+                var d1=[{x:0.235833,y:50.0225},{x:19.119345,y:41.3537},{x:34.129919,y:35.2833},{x:45.606066,y:30.4276},{x:55.668852,y:26.0924},{x:68.205532,y:20.8896},{x:77.376019,y:16.1232},{x:86.567368,y:13.1205},{x:95.060423,y:11.087},{x:103.022598,y:9.1751},{x:112.764258,y:7.6934},{x:124.989017,y:6.1221},{x:139.170698,y:4.9806}];
+                var d2=[{x:0.314069,y:41.6363},{x:10.384014,y:37.9063},{x:25.059145,y:33.4789},{x:38.667607,y:28.88},{x:50.688338,y:25.0611},{x:65.533747,y:20.0284},{x:77.197559,y:16.037},{x:88.157758,y:12.5653},{x:100.370244,y:9.9565},{x:113.650422,y:7.6058},{x:127.64853,y:5.9459},{x:138.815824,y:4.9811}];
+                var d3=[{x:4.82261,y:47.769},{x:6.851633,y:39.2939}];
+                var d4=[{x:12.236111,y:44.4746},{x:14.450752,y:36.6909}];
+                var d5=[{x:18.413687,y:41.7004},{x:20.282658,y:34.6952}];
+                var d6=[{x:23.180969,y:39.706},{x:25.409928,y:33.1327}];
+                var d7=[{x:28.833392,y:37.5377},{x:30.221902,y:31.9163}];
+                var chart=HdbkUtil.makeMultiLine('canvas-31023a',[
+                  {label:'2024-T3',data:d1,interp:'lin',step:5},
+                  {label:'6061-T6',data:d2,interp:'lin',step:5},
+                  {label:'D/t = 20',data:d3,dash:[4,3],width:1},
+                  {label:'D/t = 40',data:d4,dash:[4,3],width:1},
+                  {label:'D/t = 60',data:d5,dash:[4,3],width:1},
+                  {label:'D/t = 80',data:d6,dash:[4,3],width:1},
+                  {label:'D/t = 100',data:d7,dash:[4,3],width:1}
+                ],{xLabel:'L′/ρ',yLabel:'Fc, Allowable Column Stress, ksi'});
+                HdbkUtil.addToggle('toggle-31023a',chart);
+            })();
+            </script>
+            <div class="canvasdiv">
+              <button id="toggle-31023b">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-31023b');var a=document.createElement('a');a.download='canvas-31023b.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-31023b').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-31023b" class="chartcanvas" role="img" aria-label="Figure 3.10.2.3 (2 of 4) — Fcc, crushing stress vs D/t, 2024-T3 and 6061-T6"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.10.2.3(2 of 4).</strong> Crushing stress (<em>F<sub>cc</sub></em>) versus <em>D/t</em> for 2024-T3 and 6061-T6 aluminum alloy tubing.</p>
+            <script>
+            (function(){
+                var d1=[{x:0.018683,y:50.3966},{x:18.949677,y:47.2069},{x:43.53032,y:43.931},{x:68.119085,y:40.8276},{x:93.780106,y:37.9828},{x:118.372934,y:34.9655}];
+                var d2=[{x:0.627919,y:40.8276},{x:29.091426,y:37.4655},{x:55.467284,y:34.7931},{x:78.699484,y:32.8966},{x:98.061005,y:31.3448},{x:118.831891,y:29.7069}];
+                var chart=HdbkUtil.makeMultiLine('canvas-31023b',[
+                  {label:'2024-T3',data:d1,interp:'lin',step:5},
+                  {label:'6061-T6',data:d2,interp:'lin',step:5}
+                ],{xLabel:'D/t',yLabel:'Fcc, Crushing Stress, ksi'});
+                HdbkUtil.addToggle('toggle-31023b',chart);
+            })();
+            </script>
+            <div class="canvasdiv">
+              <button id="toggle-31023c">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-31023c');var a=document.createElement('a');a.download='canvas-31023c.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-31023c').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-31023c" class="chartcanvas" role="img" aria-label="Figure 3.10.2.3 (3 of 4) — Fc, allowable column stress vs L'/ρ"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.10.2.3(3 of 4).</strong> Allowable column stress (<em>F<sub>c</sub></em>) versus <em>L&prime;/&rho;</em>, general curve keyed to D/t = 10 through 50 (D = basic round tube diameter).</p>
+            <script>
+            (function(){
+                var d1=[{x:0.146864,y:49.5087},{x:14.353233,y:43.6888},{x:25.267269,y:39.324},{x:39.127961,y:33.504},{x:48.137312,y:29.738},{x:59.22468,y:25.2877},{x:70.487356,y:20.4089},{x:80.190532,y:16.2148},{x:89.71593,y:12.8778},{x:98.889231,y:10.6548},{x:108.579568,y:8.6893},{x:121.898039,y:6.9832},{x:139.533039,y:6.0511}];
+                var chart=HdbkUtil.makeMultiLine('canvas-31023c',[
+                  {label:'Allowable Column Stress',data:d1,interp:'lin',step:5}
+                ],{xLabel:'L′/ρ',yLabel:'Fc, Allowable Column Stress, ksi'});
+                HdbkUtil.addToggle('toggle-31023c',chart);
+            })();
+            </script>
+            <div class="canvasdiv">
+              <button id="toggle-31023d">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-31023d');var a=document.createElement('a');a.download='canvas-31023d.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-31023d').toDataURL())">Open in New Tab</button>
+              <div class="canvascontainer">
+                <canvas id="canvas-31023d" class="chartcanvas" role="img" aria-label="Figure 3.10.2.3 (4 of 4) — Fcc, crushing stress vs D/t"></canvas>
+              </div>
+            </div>
+            <p class="fig-caption"><strong>Figure 3.10.2.3(4 of 4).</strong> Crushing stress (<em>F<sub>cc</sub></em>) versus <em>D/t</em>, general curve corresponding to the chart above.</p>
+            <script>
+            (function(){
+                var d1=[{x:-1.213612,y:50.6559},{x:14.33149,y:44.7805},{x:30.8922,y:39.4213},{x:50.474541,y:33.7148},{x:73.622532,y:27.8328},{x:87.40213,y:24.2864},{x:107.089181,y:19.9936}];
+                var chart=HdbkUtil.makeMultiLine('canvas-31023d',[
+                  {label:'Crushing Stress',data:d1,interp:'lin',step:5}
+                ],{xLabel:'D/t',yLabel:'Fcc, Crushing Stress, ksi'});
+                HdbkUtil.addToggle('toggle-31023d',chart);
+            })();
+            </script>
             </div>
           </div>
         </div><!-- /3.10.2 -->

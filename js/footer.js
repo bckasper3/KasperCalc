@@ -27,8 +27,10 @@
           <div class="footerlink"><a href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a></div>
           <div class="footerlink"><a href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a></div>
           <div class="footerlink"><a href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a></div>
-          <div class="footerlink"><a href="MassFlowConverter.html">Mass Flow Rate Calculator</a></div>
+          <div class="footerlink"><a href="GasMassFlowRateCalculator.html">Gas Mass Flow Rate Calculator</a></div>
           <div class="footerlink"><a href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a></div>
+          <div class="footerlink"><a href="GasFlowSafety.html">Gas Flow Safety Calculator</a></div>
+          <div class="footerlink"><a href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a></div>
         </div>
 
         <div class="footerRow">
@@ -146,21 +148,21 @@
           <div class="footerlink"><a href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a></div>
           <div class="footerlink"><a href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a></div>
           <div class="footerlink"><a href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a></div>
-          <div class="footerlink"><a href="GasFlowSafety.html">Gas Flow Safety Calculator</a></div>
           <div class="footerlink"><a href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a></div>
           <div class="footerlink"><a href="SvgEditor.html">SVG Editor</a></div>
-          <div class="footerlink"><a href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a></div>
         </div>
 
         <div class="footerRow">
           <h4 class="FooterRowTitle"><span class="footerflexbox">Stress Analysis</span></h4>
           <div class="footerlink"><a href="MaterialPropertyLookup.html">MIL-HDBK-5 Material Property Lookup</a></div>
           <div class="footerlink"><a href="LugPinAnalysis.html">Lug &amp; Pin Analysis</a></div>
+          <div class="footerlink"><a href="ColumnBuckling.html">Column Buckling &amp; Crippling</a></div>
           <div class="footerlink"><a href="ThreadStressCalculator.html">Thread Stress Calculator</a></div>
         </div>
 
         <div class="footerRow">
           <h4 class="FooterRowTitle"><span class="footerflexbox">MIL-HDBK-5</span></h4>
+          <div class="footerlink"><a href="MaterialPropertyLookup.html">MIL-HDBK-5 Material Property Lookup</a></div>
           <div class="footerlink"><a href="Chapter1(general).html">Chapter 1 (General)</a></div>
           <div class="footerlink"><a href="Chapter2(steel).html">Chapter 2 (Steel)</a></div>
           <div class="footerlink"><a href="Chapter2.1(steel).html" class="ms-4">2.1 (General)</a></div>

@@ -30,35 +30,66 @@
 
   var GRAIN_PROPS = ['Ftu', 'Fty', 'Fcy'];
 
+  /* ── units ──────────────────────────────────────────────────────────────
+   * Values are held exactly as MIL-HDBK-5 publishes them and converted only
+   * on the way to the screen. 10^3 ksi -> GPa uses the same factor as
+   * ksi -> MPa, since 10^3 MPa is a GPa.
+   */
+  var KSI_MPA    = 6.894757;
+  var LBIN3_GCM3 = 27.679905;
+  var IN_MM      = 25.4;
+
+  var UNITS = 'us';                       // 'us' | 'si'
+  function isSI() { return UNITS === 'si'; }
+
+  /** Display unit for a row, as HTML. */
+  function unitOf(p) {
+    return isSI() && p.si ? p.si.unit : p.unit;
+  }
+
+  /** A stored value in the unit currently on display. */
+  function toDisplay(p, v) {
+    if (v === null || v === undefined) return v;
+    return isSI() && p.si ? v * p.si.k : v;
+  }
+
+  function fToC(f) { return (f - 32) * 5 / 9; }
+  function cToF(c) { return c * 9 / 5 + 32; }
+
   // Display order and formatting for the result grid. `tip` is the hover
   // explanation on the property name — enough to tell a reader who has not met
   // the symbol before what it actually is and when it governs.
   var PROP_ROWS = [
     { key: 'Ftu',     label: 'F<sub>tu</sub>',  unit: 'ksi',      grain: true,
+      si: { unit: 'MPa', k: KSI_MPA },
       note: 'Ultimate tensile stress',
       tip: 'Ultimate tensile stress — the stress at which the material finally '
          + 'breaks in tension. Ultimate load cases are checked against this.' },
     { key: 'Fty',     label: 'F<sub>ty</sub>',  unit: 'ksi',      grain: true,
+      si: { unit: 'MPa', k: KSI_MPA },
       note: 'Tensile yield stress',
       tip: 'Tensile yield stress — the stress producing 0.2% permanent set in '
          + 'tension. Limit load cases are checked against this, since yielding '
          + 'is permanent deformation rather than failure.' },
     { key: 'Fcy',     label: 'F<sub>cy</sub>',  unit: 'ksi',      grain: true,
+      si: { unit: 'MPa', k: KSI_MPA },
       note: 'Compressive yield stress',
       tip: 'Compressive yield stress — 0.2% permanent set in compression. It '
          + 'differs from Fty because most alloys are not symmetric, and it is '
          + 'what column buckling and crippling checks use.' },
-    { key: 'Fsu',     label: 'F<sub>su</sub>',  unit: 'ksi',
+    { key: 'Fsu',     label: 'F<sub>su</sub>',  unit: 'ksi',      si: { unit: 'MPa', k: KSI_MPA },
       note: 'Ultimate shear stress',
       tip: 'Ultimate shear stress — failure stress in pure shear. Governs '
          + 'fastener shear, shear webs and shear tie-outs.' },
     { key: 'Fbru',    label: 'F<sub>bru</sub>', unit: 'ksi',      ed: true,
+      si: { unit: 'MPa', k: KSI_MPA },
       note: 'Ultimate bearing stress (dry pin)',
       tip: 'Ultimate bearing stress — failure of the material bearing against '
          + 'a pin or fastener, taken as load divided by (hole diameter x '
          + 'thickness). Tabulated at edge-distance ratios e/D of 1.5 and 2.0, '
          + 'and these are dry-pin values per Section 1.4.7.1.' },
     { key: 'Fbry',    label: 'F<sub>bry</sub>', unit: 'ksi',      ed: true,
+      si: { unit: 'MPa', k: KSI_MPA },
       note: 'Bearing yield stress (dry pin)',
       tip: 'Bearing yield stress — permanent hole elongation begins here. Use '
          + 'it where hole deformation matters, such as a joint that must stay '
@@ -69,14 +100,17 @@
          + 'gauge length. A ductility measure, not a strength; published on an '
          + 'S-basis (specification minimum).' },
     { key: 'E',       label: 'E',               unit: '10<sup>3</sup> ksi',
+      si: { unit: 'GPa', k: KSI_MPA },
       note: 'Tensile modulus',
       tip: "Young's modulus in tension — stiffness, the slope of the elastic "
          + 'part of the stress-strain curve. Drives deflection, not strength.' },
     { key: 'Ec',      label: 'E<sub>c</sub>',   unit: '10<sup>3</sup> ksi',
+      si: { unit: 'GPa', k: KSI_MPA },
       note: 'Compressive modulus',
       tip: 'Compressive modulus — the same stiffness measured in compression, '
          + 'usually slightly higher than E. Use it for buckling.' },
     { key: 'G',       label: 'G',               unit: '10<sup>3</sup> ksi',
+      si: { unit: 'GPa', k: KSI_MPA },
       note: 'Shear modulus',
       tip: 'Shear modulus (modulus of rigidity) — stiffness in shear, relating '
          + 'shear stress to shear strain. Drives torsional deflection and '
@@ -86,10 +120,14 @@
       tip: "Poisson's ratio — how much the material contracts sideways as it "
          + 'stretches. Near 0.33 for aluminium and 0.32 for steel.' },
     { key: 'density', label: '&omega;',         unit: 'lb/in.<sup>3</sup>',
+      si: { unit: 'g/cm<sup>3</sup>', k: LBIN3_GCM3 },
       note: 'Density',
       tip: 'Density — weight per unit volume. Aluminium runs about 0.10 and '
          + 'steel about 0.28 lb/in3.' }
   ];
+
+  var ROW = {};
+  PROP_ROWS.forEach(function (p) { ROW[p.key] = p; });
 
   function $(id) { return document.getElementById(id); }
 
@@ -143,11 +181,15 @@
     return sel;
   }
 
+  /** Thickness in inches, whatever the box is showing. Matching is done
+   *  against the handbook's own inch bands, so the conversion happens here and
+   *  nowhere else. */
   function readThickness() {
     var raw = $('sa-thickness').value.trim();
     if (raw === '') return null;
     var v = parseFloat(raw);
-    return isFinite(v) && v > 0 ? v : null;
+    if (!isFinite(v) || v <= 0) return null;
+    return isSI() ? v / IN_MM : v;
   }
 
   function rebuildFilters() {
@@ -257,22 +299,49 @@
     return (Math.round(v * 1000) / 1000).toString();
   }
 
+  /** Converting ksi to MPa turns 73 into 503.31726; scale the precision to the
+   *  magnitude so a unit change does not imply accuracy the handbook never had. */
+  function fmtNum(v) {
+    if (v === null || v === undefined) return '&middot;&middot;&middot;';
+    var a = Math.abs(v);
+    var dp = a >= 100 ? 1 : a >= 10 ? 2 : 3;
+    var t = v.toFixed(dp);
+    if (t.indexOf('.') !== -1) t = t.replace(/0+$/, '').replace(/\.$/, '');
+    return t;
+  }
+
+  /** A stored value rendered in the active unit system, unit included. */
+  function cell(p, v) {
+    if (v === null || v === undefined) return '&middot;&middot;&middot;';
+    var u = unitOf(p);
+    return fmtNum(toDisplay(p, v)) +
+           (u ? ' <span class="sa-unit">' + u + '</span>' : '');
+  }
+
   function thicknessText(e) {
     var th = e.thickness;
     if (!th || !th.raw) return 'not broken out';
-    return th.raw + ' in.';
+    if (!isSI()) return th.raw + ' in.';
+    // The raw band is a handbook string such as "0.126-0.249" or "≤0.187";
+    // convert the numbers in place and leave the notation alone.
+    return th.raw.replace(/[\d.]+/g, function (n) {
+      return fmtNum(parseFloat(n) * IN_MM);
+    }) + ' mm';
   }
 
+  var LAST_LIST = [];
+
   function renderMatches(list) {
+    LAST_LIST = list;
     var wrap = $('sa-matches');
     var countEl = $('sa-match-count');
 
-    countEl.textContent = list.length === 0 ? 'No matching condition' :
-      list.length === 1 ? '1 matching condition' :
-      list.length + ' matching conditions';
+    countEl.textContent = list.length === 0 ? 'No matching material' :
+      list.length === 1 ? '1 matching material' :
+      list.length + ' matching materials';
 
     if (list.length === 0) {
-      wrap.innerHTML = '<p class="sa-empty">No published condition matches ' +
+      wrap.innerHTML = '<p class="sa-empty">No published material matches ' +
         'these selections. Widen a filter, or clear the thickness to see every ' +
         'thickness band for this alloy.</p>';
       return;
@@ -287,8 +356,8 @@
         '<td>' + escapeHtml(e.temper || '&mdash;') + '</td>' +
         '<td>' + escapeHtml(thicknessText(e)) + '</td>' +
         '<td>' + escapeHtml(e.basis || '&mdash;') + '</td>' +
-        '<td class="sa-num">' + fmt(pick(ftu, 'L')) + '</td>' +
-        '<td class="sa-num">' + fmt(pick(fty, 'L')) + '</td>' +
+        '<td class="sa-num">' + fmtNum(toDisplay(ROW.Ftu, pick(ftu, 'L'))) + '</td>' +
+        '<td class="sa-num">' + fmtNum(toDisplay(ROW.Fty, pick(fty, 'L'))) + '</td>' +
         '<td class="sa-src">' + escapeHtml(e.table) + '</td>' +
         '</tr>';
     }).join('');
@@ -296,8 +365,10 @@
     wrap.innerHTML =
       '<div class="sa-table-scroll"><table class="sa-match-table">' +
       '<thead><tr><th>Form</th><th>Temper</th><th>Thickness</th><th>Basis</th>' +
-      '<th class="sa-num">F<sub>tu</sub> (L)</th>' +
-      '<th class="sa-num">F<sub>ty</sub> (L)</th>' +
+      '<th class="sa-num">F<sub>tu</sub> (L) <span class="sa-unit">' +
+        unitOf(ROW.Ftu) + '</span></th>' +
+      '<th class="sa-num">F<sub>ty</sub> (L) <span class="sa-unit">' +
+        unitOf(ROW.Fty) + '</span></th>' +
       '<th>Table</th></tr></thead><tbody>' + rows +
       '</tbody></table></div>';
 
@@ -308,6 +379,7 @@
           renderMatches(list);
           renderDetail();
           renderDerated();
+          announce();
         }
         tr.addEventListener('click', choose);
         tr.addEventListener('keydown', function (ev) {
@@ -342,8 +414,8 @@
       var cells, shownGrain = grain;
 
       if (p.ed) {
-        cells = '<td class="sa-num">' + fmt(pick(raw, 'eD1.5')) + '</td>' +
-                '<td class="sa-num">' + fmt(pick(raw, 'eD2.0')) + '</td>';
+        cells = '<td class="sa-num">' + cell(p, pick(raw, 'eD1.5')) + '</td>' +
+                '<td class="sa-num">' + cell(p, pick(raw, 'eD2.0')) + '</td>';
       } else if (p.grain) {
         var v = pick(raw, grain);
         // Elongation is normally published for one direction only, so show the
@@ -355,9 +427,9 @@
           });
           if (have.length) { shownGrain = have[0]; v = raw[shownGrain]; }
         }
-        cells = '<td class="sa-num" colspan="2">' + fmt(v) + '</td>';
+        cells = '<td class="sa-num" colspan="2">' + cell(p, v) + '</td>';
       } else {
-        cells = '<td class="sa-num" colspan="2">' + fmt(pick(raw)) + '</td>';
+        cells = '<td class="sa-num" colspan="2">' + cell(p, pick(raw)) + '</td>';
       }
 
       var qualifier = p.ed ? '<span class="sa-qual">e/D = 1.5 &nbsp;|&nbsp; 2.0</span>'
@@ -366,7 +438,6 @@
       return '<tr><th scope="row">' +
              '<abbr class="sa-abbr" title="' + escapeAttr(p.tip) + '">' +
              p.label + '</abbr>' +
-             (p.unit ? ' <span class="sa-unit">' + p.unit + '</span>' : '') +
              '</th><td class="sa-note">' + p.note + ' ' + qualifier + '</td>' +
              cells + '</tr>';
     }).join('');
@@ -426,7 +497,7 @@
       var d = StressFigures.derate(p.key, t, exposureHours);
       if (!d) { missing.push(p.key); return; }
 
-      function cell(rt) {
+      function pair(rt) {
         if (rt === null) return { rt: null, out: null };
         return {
           rt: rt,
@@ -437,8 +508,8 @@
       var parts;
       if (p.ed) {
         parts = [
-          { sub: 'e/D 1.5', v: cell(pick(raw, 'eD1.5')) },
-          { sub: 'e/D 2.0', v: cell(pick(raw, 'eD2.0')) }
+          { sub: 'e/D 1.5', v: pair(pick(raw, 'eD1.5')) },
+          { sub: 'e/D 2.0', v: pair(pick(raw, 'eD2.0')) }
         ];
       } else if (p.grain) {
         var g = pick(raw, grain), shown = grain;
@@ -448,9 +519,9 @@
           });
           if (have.length) { shown = have[0]; g = raw[shown]; }
         }
-        parts = [{ sub: shown, v: cell(g) }];
+        parts = [{ sub: shown, v: pair(g) }];
       } else {
-        parts = [{ sub: '', v: cell(pick(raw)) }];
+        parts = [{ sub: '', v: pair(pick(raw)) }];
       }
 
       parts.forEach(function (part) {
@@ -459,17 +530,13 @@
           '<tr>' +
           '<th scope="row"><abbr class="sa-abbr" title="' + escapeAttr(p.tip) +
             '">' + p.label + '</abbr>' +
-            (p.unit ? ' <span class="sa-unit">' + p.unit + '</span>' : '') +
             (part.sub ? ' <span class="sa-qual">' + escapeHtml(part.sub) +
                         '</span>' : '') +
           '</th>' +
-          '<td class="sa-num">' + (part.v.rt === null ? '&middot;&middot;&middot;'
-                                                      : fmt(part.v.rt)) + '</td>' +
+          '<td class="sa-num">' + cell(p, part.v.rt) + '</td>' +
           '<td class="sa-num">' +
-            (d.mode === 'percent' ? fmt(d.value) + '%' : '&mdash;') + '</td>' +
-          '<td class="sa-num sa-derated-val">' +
-            (part.v.out === null ? '&middot;&middot;&middot;' : fmt(part.v.out)) +
-          '</td>' +
+            (d.mode === 'percent' ? fmtNum(d.value) + '%' : '&mdash;') + '</td>' +
+          '<td class="sa-num sa-derated-val">' + cell(p, part.v.out) + '</td>' +
           '<td class="sa-src">' +
             '<a href="' + escapeAttr(d.fig.page + '#' + d.fig.anchor) + '">Fig ' +
             escapeHtml(d.fig.id) + '</a>' +
@@ -488,7 +555,8 @@
     }
 
     sec.hidden = false;
-    note.textContent = 'at ' + fmt(t) + ' °F' +
+    note.textContent = 'at ' + fmtNum(isSI() ? fToC(t) : t) +
+      (isSI() ? ' °C' : ' °F') +
       (missing.length ? ' · no curve published for ' + missing.join(', ') : '');
 
     host.innerHTML =
@@ -498,12 +566,14 @@
         '<th>Property</th>' +
         '<th class="sa-num">Room temp.</th>' +
         '<th class="sa-num">% of RT</th>' +
-        '<th class="sa-num">At ' + fmt(t) + ' &deg;F</th>' +
+        '<th class="sa-num">At ' + fmtNum(isSI() ? fToC(t) : t) +
+          (isSI() ? ' &deg;C' : ' &deg;F') + '</th>' +
         '<th>Curve</th>' +
       '</tr></thead><tbody>' + rows.join('') + '</tbody></table></div>' +
       '<p class="sa-source">Read off the "Effect of temperature" curves for this ' +
       'alloy and applied to the room-temperature values above. Curves published ' +
-      'only for a specific temper may not apply to every condition in the table ' +
+      'only for a specific temper may not apply to every material condition ' +
+      'in the table '
       '&mdash; check the figure caption. Exposure-effect curves (properties ' +
       'measured back at room temperature after being held hot) are a separate ' +
       'question and are not used here.</p>';
@@ -530,6 +600,140 @@
                escapeHtml(o.label) + '</option>';
       }).join('') +
       '</select></div>';
+  }
+
+  /* ── published surface ────────────────────────────────────────────────── */
+
+  /** Everything the comparison panel needs, so it never reaches into this
+   *  module's internals: the current condition, the grain direction, and the
+   *  row definitions and formatters that keep both tables reading alike. */
+  window.StressAllowables = {
+    PROP_ROWS: PROP_ROWS,
+    pick: pick,
+    fmt: fmt,
+    escapeHtml: escapeHtml,
+    escapeAttr: escapeAttr,
+    thicknessText: thicknessText,
+    selected: function () { return SELECTED; },
+    units: function () { return UNITS; },
+    isSI: isSI,
+    unitOf: unitOf,
+    toDisplay: toDisplay,
+    fmtNum: fmtNum,
+    cell: cell,
+    fToC: fToC,
+    KSI_MPA: KSI_MPA,
+    grain: function () { var g = $('sa-grain'); return g ? g.value : 'L'; },
+    temperature: readTemperature,
+    entries: function () { return ENTRIES; }
+  };
+
+  /** PROP_ROWS labels are HTML. Subscripts flatten harmlessly (F<sub>tu</sub> ->
+   *  "Ftu"), but a superscript must not: 10<sup>3</sup> ksi flattening to
+   *  "103 ksi" would misstate the unit by three orders of magnitude. */
+  var SUPS = { '0': '⁰', '1': '¹', '2': '²', '3': '³',
+               '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷',
+               '8': '⁸', '9': '⁹', '-': '⁻' };
+
+  function plainText(html) {
+    var d = document.createElement('div');
+    d.innerHTML = String(html || '').replace(
+      /<sup>([^<]*)<\/sup>/gi, function (m, inner) {
+        return inner.replace(/[0-9-]/g, function (ch) { return SUPS[ch] || ch; });
+      });
+    return (d.textContent || '').replace(/\s+/g, ' ').trim();
+  }
+
+  /** Room-temperature value for one property under the current selection, for
+   *  StressFigures to rescale the percentage curves with. */
+  function rtLookup(prop) {
+    if (!SELECTED) return null;
+    var row = null;
+    for (var i = 0; i < PROP_ROWS.length; i++) {
+      if (PROP_ROWS[i].key === prop) { row = PROP_ROWS[i]; break; }
+    }
+    if (!row) return null;
+    var raw = SELECTED.props[prop];
+    if (raw === undefined || raw === null) return null;
+
+    // Bearing is published per e/D; the lower ratio is the conservative one and
+    // the only single number that can stand for the property on one axis.
+    var v = row.ed ? pick(raw, 'eD1.5')
+          : row.grain ? pick(raw, $('sa-grain').value)
+          : pick(raw);
+    if (v === null) return null;
+    return { value: toDisplay(row, v), unit: plainText(unitOf(row)),
+             label: plainText(row.label) };
+  }
+
+  /* ── unit-system switch ───────────────────────────────────────────────── */
+
+  var UNIT_LABELS = {
+    us: { thickness: 'Thickness or diameter, in.',
+          thicknessPlaceholder: 'e.g. 0.063',
+          temperature: 'Service temperature, &deg;F',
+          temperaturePlaceholder: 'e.g. 400',
+          step: '0.001' },
+    si: { thickness: 'Thickness or diameter, mm',
+          thicknessPlaceholder: 'e.g. 1.6',
+          temperature: 'Service temperature, &deg;C',
+          temperaturePlaceholder: 'e.g. 200',
+          step: '0.01' }
+  };
+
+  function setUnitSystem(next) {
+    if (next === UNITS) return;
+
+    // Carry the numbers the user typed across, so switching does not silently
+    // change what is being asked for.
+    var th = $('sa-thickness'), tp = $('sa-temperature');
+    var thRaw = parseFloat(th.value), tpRaw = parseFloat(tp.value);
+
+    UNITS = next === 'si' ? 'si' : 'us';
+    var L = UNIT_LABELS[UNITS];
+
+    if (isFinite(thRaw)) {
+      th.value = fmtNum(isSI() ? thRaw * IN_MM : thRaw / IN_MM);
+    }
+    if (isFinite(tpRaw)) {
+      tp.value = fmtNum(isSI() ? fToC(tpRaw) : cToF(tpRaw));
+    }
+
+    $('sa-thickness-label').innerHTML = L.thickness;
+    $('sa-temperature-label').innerHTML = L.temperature;
+    th.placeholder = L.thicknessPlaceholder;
+    tp.placeholder = L.temperaturePlaceholder;
+    th.step = L.step;
+
+    Array.prototype.forEach.call(
+      document.querySelectorAll('#sa-units button'), function (b) {
+        var on = b.getAttribute('data-units') === UNITS;
+        b.classList.toggle('sq-active', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+
+    renderMatches(LAST_LIST);
+    renderDetail();
+    renderDerated();
+    syncUnits();
+    announce();
+    writeUrlState(readSelections(), readThickness());
+  }
+
+  function syncUnits() {
+    var box = $('sf-units');
+    if (!box || !window.StressFigures) return;
+    StressFigures.setRtLookup(SELECTED ? rtLookup : null);
+    // Nothing to offer unless a figure on screen actually has a curve that can
+    // be rescaled for this condition.
+    box.hidden = !SELECTED || StressFigures.convertibleCount() === 0;
+  }
+
+  function announce() {
+    syncUnits();
+    document.dispatchEvent(new CustomEvent('sa:change', {
+      detail: { entry: SELECTED, grain: window.StressAllowables.grain() }
+    }));
   }
 
   /* ── wiring ───────────────────────────────────────────────────────────── */
@@ -560,17 +764,20 @@
     renderDerated();
     syncFigures(sel.alloy);
     writeUrlState(sel, t);
+    announce();
   }
 
   /* ── figures & source tables for the selected alloy ───────────────────── */
 
+  /** Service temperature in °F — the unit every digitized curve is drawn in. */
   function readTemperature() {
     var el = $('sa-temperature');
     if (!el) return null;
     var raw = el.value.trim();
     if (raw === '') return null;
     var v = parseFloat(raw);
-    return isFinite(v) ? v : null;
+    if (!isFinite(v)) return null;
+    return isSI() ? cToF(v) : v;
   }
 
   /** Reload the figure/table panels only when the alloy actually changes —
@@ -606,6 +813,10 @@
         StressFigures.setTemperature(readTemperature());
         exposureHours = null;      // exposures differ from alloy to alloy
         renderDerated();
+        // Charts are built on a timer after this resolves, so the toggle's
+        // availability can only be judged once they exist.
+        setTimeout(syncUnits, 400);
+        setTimeout(syncUnits, 1500);
       });
   }
 
@@ -619,6 +830,7 @@
     if (temp !== null) p.set('temp', String(temp));
     var grain = $('sa-grain').value;
     if (grain !== 'L') p.set('grain', grain);
+    if (isSI()) p.set('u', 'si');
     var qs = p.toString();
     history.replaceState(null, '', qs ? '?' + qs : location.pathname);
   }
@@ -637,6 +849,8 @@
     if (p.get('t')) $('sa-thickness').value = p.get('t');
     if (p.get('temp')) $('sa-temperature').value = p.get('temp');
     if (p.get('grain')) $('sa-grain').value = p.get('grain');
+    // before any value is read, so the inputs are interpreted in the right unit
+    if (p.get('u') === 'si') setUnitSystem('si');
   }
 
   function init() {
@@ -648,12 +862,25 @@
       renderDetail();
       renderDerated();
       writeUrlState(readSelections(), readThickness());
+      announce();
     });
     $('sa-temperature').addEventListener('input', function () {
       if (window.StressFigures) StressFigures.setTemperature(readTemperature());
       renderDerated();
       writeUrlState(readSelections(), readThickness());
     });
+    Array.prototype.forEach.call(
+      document.querySelectorAll('#sa-units button'), function (b) {
+        b.addEventListener('click', function () {
+          setUnitSystem(b.getAttribute('data-units'));
+        });
+      });
+    Array.prototype.forEach.call(
+      document.querySelectorAll('input[name="sf-unit"]'), function (r) {
+        r.addEventListener('change', function () {
+          if (window.StressFigures) StressFigures.setUnits(r.value, rtLookup);
+        });
+      });
     $('sa-reset').addEventListener('click', function () {
       FILTERS.forEach(function (f) { $('sa-' + f.id).value = ''; });
       $('sa-thickness').value = '';
@@ -679,7 +906,7 @@
       var meta = payload.meta || {};
       var stamp = $('sa-dataset-note');
       if (stamp) {
-        stamp.textContent = ENTRIES.length + ' published conditions from ' +
+        stamp.textContent = ENTRIES.length + ' fully specified materials from ' +
           (meta.tables || 0) + ' ' + (meta.source || 'MIL-HDBK-5') +
           ' tables. Digitization is ongoing; more chapters are added as they ' +
           'are transcribed.';

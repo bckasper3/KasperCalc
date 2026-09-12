@@ -21,6 +21,10 @@
     <script defer src="js/stress-figures.js"></script>
     <script defer src="js/stress-allowables.js"></script>
 
+    <script defer src="js/stress-compare.js"></script>
+
+    <script defer src="js/stress-export.js"></script>
+
     <!-- CSS FILES -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
@@ -160,6 +164,13 @@
         font-weight: 600; color: var(--sq-ink);
       }
       .sf-section-note { font-size: 13px; color: var(--sq-ink-soft); }
+      .sf-units {
+        margin-left: auto; display: flex; align-items: center; gap: 12px;
+        font-size: 12.5px; color: var(--sq-ink-soft);
+      }
+      .sf-units-label { font-weight: 600; color: var(--sq-ink); }
+      .sf-units label { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; margin: 0; }
+      .sf-units input { margin: 0; }
 
       .sf-card {
         background: #fff; border: 2px solid var(--sq-outline); border-radius: 10px;
@@ -198,6 +209,202 @@
          scrollable inside the narrower card here. */
       .sf-card .hdbk-table-wrap { overflow-x: auto; margin: 0; }
 
+
+      /* -- Export preview modal -- */
+      .xp-overlay {
+        display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7);
+        z-index: 99999; align-items: center; justify-content: center; padding: 24px;
+      }
+      .xp-overlay.active { display: flex; }
+      .xp-box {
+        background: #fff; border: 2px solid var(--sq-outline); border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0,0,0,.5);
+        width: min(760px, 100%); max-height: 88vh; display: flex; flex-direction: column;
+        font-family: var(--sq-ui);
+      }
+      .xp-bar {
+        background: #6a746a; color: #fff; padding: 10px 14px;
+        display: flex; align-items: center; gap: 10px; border-radius: 8px 8px 0 0;
+      }
+      .xp-bar-t {
+        font-size: 13px; font-weight: 700; letter-spacing: .05em;
+        text-transform: uppercase; flex: 1;
+      }
+      .xp-x {
+        appearance: none; border: 0; background: none; color: #fff;
+        font-size: 16px; line-height: 1; cursor: pointer; padding: 2px 4px;
+      }
+      .xp-scroll { overflow-y: auto; padding: 14px 16px; }
+
+      .xp-head { margin-bottom: 12px; }
+      .xp-mat {
+        font-family: var(--title-font-family); font-size: 19px;
+        font-weight: 600; color: var(--sq-ink);
+      }
+      .xp-sub { font-size: 12px; color: var(--sq-ink-soft); margin-top: 2px; }
+
+      .xp-warn {
+        border: 2px solid #b3362b; border-left-width: 7px; border-radius: 6px;
+        background: #fdf3f2; padding: 10px 13px; margin: 0 0 12px;
+      }
+      .xp-warn-h {
+        font-size: 12px; font-weight: 700; text-transform: uppercase;
+        letter-spacing: .06em; color: #b3362b; margin-bottom: 5px;
+      }
+      .xp-warn p { font-size: 12.5px; line-height: 1.55; color: #3a1c19; margin: 0 0 6px; }
+      .xp-warn p:last-child { margin-bottom: 0; }
+      .xp-warn strong { font-weight: 700; color: #8f241b; }
+      .xp-warn-legal { background: #b3362b; border-color: #8f241b; }
+      .xp-warn-legal .xp-warn-h,
+      .xp-warn-legal p,
+      .xp-warn-legal strong { color: #fff; }
+
+      .xp-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 4px; }
+      .xp-table th {
+        background: #d9d9d9; border: 1px solid #bbb; padding: 4px 7px;
+        text-align: left; font-weight: 600; color: #444;
+      }
+      .xp-table td {
+        border: 1px solid #ccc; padding: 3px 7px; color: #333; vertical-align: top;
+      }
+      .xp-table .xp-num {
+        text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap;
+      }
+      .xp-id { font-family: ui-monospace, Consolas, monospace; font-weight: 700; }
+      .xp-unit { color: var(--sq-ink-soft); white-space: nowrap; }
+      .xp-note { font-size: 11px; color: var(--sq-ink-soft); margin-top: 2px; }
+      .xp-b {
+        display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .05em;
+        text-transform: uppercase; padding: 2px 6px; border-radius: 3px; white-space: nowrap;
+      }
+      .xp-b-ok      { background: #e8f0f3; color: #3a6270; border: 1px solid #bcd2da; }
+      .xp-b-derived { background: #fff0d4; color: #8a5200; border: 1px solid #e0b768; }
+      .xp-b-typical { background: #b3362b; color: #fff; border: 1px solid #8f241b; }
+
+      .xp-how { font-size: 12px; color: var(--sq-ink-soft); line-height: 1.55; margin: 10px 0 0; }
+
+      .xp-foot {
+        display: flex; gap: 8px; justify-content: flex-end; padding: 11px 14px;
+        border-top: 1px solid #d5dade; background: var(--calc-background-color);
+        border-radius: 0 0 8px 8px;
+      }
+      .xp-cancel, .xp-go {
+        appearance: none; font-family: var(--sq-ui); font-size: 13px; font-weight: 600;
+        padding: 8px 15px; border-radius: var(--border-radius-small);
+        border: 1px solid var(--sq-outline); cursor: pointer;
+      }
+      .xp-cancel { background: #fff; color: var(--sq-ink); }
+      .xp-go { background: #b3362b; border-color: #8f241b; color: #fff; }
+      .xp-go:disabled { opacity: .5; cursor: default; }
+
+      /* -- Export buttons -- */
+      .sa-export { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+      .sa-exp-btn {
+        appearance: none; font-family: var(--sq-ui); font-size: 12px; line-height: 1.2;
+        padding: 5px 10px; border-radius: var(--border-radius-small);
+        border: 1px solid var(--sq-outline); background: #fff; color: var(--sq-ink);
+        cursor: pointer; white-space: nowrap;
+      }
+      .sa-exp-btn:hover:not(:disabled) { background: var(--calc-hover-color); }
+      .sa-exp-btn:disabled { opacity: .6; cursor: default; }
+      .sa-export-warn {
+        font-size: 12px; line-height: 1.5; margin: 0;
+        padding: 9px 16px; background: #fff8e6; color: #5a3a00;
+        border-top: 1px solid #d5dade; border-left: 3px solid #cc7700;
+      }
+      .sa-export-note {
+        font-size: 11.5px; color: var(--sq-ink-soft); line-height: 1.5;
+        margin: 0; padding: 10px 16px 12px; background: #fff;
+        border-top: 1px solid #d5dade;
+      }
+
+      /* ── Unit-system toolbar ── */
+      .sa-toolbar {
+        display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .sq-seg {
+        display: inline-flex; border: 1px solid #b9bcb9; border-radius: 4px;
+        overflow: hidden; width: fit-content;
+      }
+      .sq-seg button {
+        appearance: none; border: 0; background: #fff; color: #5a6168;
+        font: 600 13px/1 "Roboto", Arial, sans-serif; padding: 8px 15px;
+        cursor: pointer; border-right: 1px solid #b9bcb9;
+      }
+      .sq-seg button:last-child { border-right: none; }
+      .sq-seg button.sq-active { background: #6a746a; color: #fff; }
+      .sa-toolbar-note { font-size: 12px; color: var(--sq-ink-soft); }
+      .sa-toolbar-sep { color: #b9bcb9; margin: 0 4px; }
+
+      /* ── Compare two materials ── */
+      .sc-slots {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+        padding: 14px 16px; background: #fff;
+        border-bottom: 1px solid #d5dade;
+      }
+      @media (max-width: 700px) { .sc-slots { grid-template-columns: 1fr; } }
+      .sc-slot {
+        display: flex; align-items: center; gap: 10px;
+        border: 1px solid #d5dade; border-left: 4px solid var(--sq-ink-soft);
+        border-radius: 6px; padding: 8px 10px; background: var(--calc-background-color);
+        min-height: 54px;
+      }
+      .sc-slot-empty { border-left-style: dashed; background: #fbfcfc; }
+      .sc-slot-tag {
+        flex: none; width: 22px; height: 22px; border-radius: 50%;
+        background: var(--sq-ink-soft); color: #fff; font-size: 12px;
+        font-weight: 700; display: flex; align-items: center; justify-content: center;
+      }
+      .sc-slot-body { flex: 1; min-width: 0; }
+      .sc-slot-title { font-size: 14px; font-weight: 600; color: var(--sq-ink); }
+      .sc-slot-sub {
+        font-size: 11.5px; color: var(--sq-ink-soft); margin-top: 1px;
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      }
+      .sc-slot-empty-text { flex: 1; font-size: 13px; color: var(--sq-ink-soft); font-style: italic; }
+      .sc-slot-acts { display: flex; align-items: center; gap: 6px; flex: none; }
+      .sc-pin {
+        font-family: var(--sq-ui); font-size: 12px; line-height: 1.2;
+        padding: 5px 10px; border-radius: var(--border-radius-small);
+        border: 1px solid var(--sq-outline); background: #fff;
+        color: var(--sq-ink); cursor: pointer;
+      }
+      .sc-pin:hover:not(:disabled) { background: var(--calc-hover-color); }
+      .sc-pin:disabled { opacity: .45; cursor: default; }
+      .sc-clear {
+        border: none; background: none; color: var(--sq-ink-soft);
+        font-size: 14px; line-height: 1; padding: 4px 2px; cursor: pointer;
+      }
+      .sc-clear:hover { color: var(--lug-fail, #a3312a); }
+
+      .sc-head-tag {
+        display: inline-flex; width: 16px; height: 16px; border-radius: 50%;
+        color: #fff; font-size: 10px; font-weight: 700;
+        align-items: center; justify-content: center; margin-right: 4px;
+        vertical-align: 1px;
+      }
+      .sc-table th[scope=row] { white-space: nowrap; }
+      .sc-delta { font-variant-numeric: tabular-nums; color: var(--sq-ink-soft); }
+      .sc-delta.is-up { color: #2f6b4f; }
+      .sc-delta.is-down { color: #a3312a; }
+      .sc-pct { font-size: 11px; opacity: .8; }
+      .sc-derived-row th[scope=row], .sc-derived-row td { background: #f3f7f8; }
+
+      .sc-chart-ctl {
+        display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        padding: 12px 16px 0; font-size: 13px; color: var(--sq-ink-soft);
+      }
+      .sc-chart-ctl select {
+        font-family: var(--sq-ui); font-size: 13px; padding: 4px 8px;
+        border: 1px solid var(--sq-outline); border-radius: var(--border-radius-small);
+        background: #fff; color: var(--sq-ink);
+      }
+      .sc-canvas-wrap { position: relative; width: 100%; height: 560px; padding: 10px 16px 0; }
+      @media (max-width: 900px) { .sc-canvas-wrap { height: 400px; } }
+
+
+
       /* ── Reference prose blocks ── */
       .ref-wrap { max-width: 1100px; margin: 34px auto 0; padding: 0 20px; font-family: var(--body-font-family); }
       .ref-section-title { font-size: 16px; font-weight: 700; color: #6a746a; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; padding-left: 2px; }
@@ -218,6 +425,23 @@
   </head>
 
   <body>
+
+  <!-- Export preview: anything that is not straight off the handbook table has
+       to be seen before the file can be written. -->
+  <div class="xp-overlay" id="xp-overlay" role="dialog" aria-modal="true"
+       aria-labelledby="xp-title">
+    <div class="xp-box">
+      <div class="xp-bar">
+        <span class="xp-bar-t">Export preview &mdash; <span id="xp-title"></span></span>
+        <button type="button" class="xp-x" id="xp-close" aria-label="Close">&#x2715;</button>
+      </div>
+      <div class="xp-scroll" id="xp-body"></div>
+      <div class="xp-foot">
+        <button type="button" class="xp-cancel" id="xp-cancel">Cancel</button>
+        <button type="button" class="xp-go" id="xp-go" disabled>Download</button>
+      </div>
+    </div>
+  </div>
 
   <!-- NAVIGATION -->
   <div class="navbarwrapper">
@@ -245,7 +469,7 @@
                   <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
                   <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
                   <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
-                  <a class="dropdown-item" href="MassFlowConverter.html">Mass Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="GasMassFlowRateCalculator.html">Gas Mass Flow Rate Calculator</a>
                   <a class="dropdown-item" href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a>
                 </div>
               </li>
@@ -387,12 +611,14 @@
                 <div class="dropdown-menu dropdown-menu-end">
                   <a class="dropdown-item" href="MaterialPropertyLookup.html">Material Property Lookup</a>
                   <a class="dropdown-item" href="LugPinAnalysis.html">Lug &amp; Pin Analysis</a>
+                  <a class="dropdown-item" href="ColumnBuckling.html">Column Buckling &amp; Crippling</a>
                   <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"><span class="nav-label-full">MIL-HDBK-5</span><span class="nav-label-short">HDBK-5</span></a>
                 <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MaterialPropertyLookup.html">MIL-HDBK-5 Material Property Lookup</a>
                   <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
 
                   <div class="dropdown-submenu">
@@ -551,12 +777,22 @@
       </div>
 
       <div id="sa-app" hidden>
+
+        <div class="sa-toolbar">
+          <div class="sq-seg" id="sa-units" role="group" aria-label="Unit system">
+            <button type="button" data-units="us" class="sq-active" aria-pressed="true">US customary</button>
+            <button type="button" data-units="si" aria-pressed="false">Metric (SI)</button>
+          </div>
+          <span class="sa-toolbar-note">ksi &middot; 10<sup>3</sup> ksi &middot; lb/in.<sup>3</sup> &middot; in. &middot; &deg;F
+            <span class="sa-toolbar-sep">/</span> MPa &middot; GPa &middot; g/cm<sup>3</sup> &middot; mm &middot; &deg;C</span>
+        </div>
+
         <div class="sq-calc-grid">
 
           <!-- ════════ LEFT: FILTERS ════════ -->
           <div class="sq-panel sq-sticky">
             <div class="sq-panel-h">
-              <span>Condition</span>
+              <span>Material</span>
               <button type="button" class="sa-reset" id="sa-reset">Reset</button>
             </div>
             <div class="sq-panel-b">
@@ -597,7 +833,7 @@
               </div>
 
               <div class="sa-field">
-                <label for="sa-thickness">Thickness or diameter, in.</label>
+                <label for="sa-thickness" id="sa-thickness-label">Thickness or diameter, in.</label>
                 <input type="number" id="sa-thickness" step="0.001" min="0" placeholder="e.g. 0.063" />
                 <div class="sa-hint">
                   Leave blank to see every published thickness band. Tables that
@@ -606,7 +842,7 @@
               </div>
 
               <div class="sa-field">
-                <label for="sa-temperature">Service temperature, &deg;F</label>
+                <label for="sa-temperature" id="sa-temperature-label">Service temperature, &deg;F</label>
                 <input type="number" id="sa-temperature" step="1" placeholder="e.g. 400" />
                 <div class="sa-hint">
                   Marks this temperature on every temperature-axis figure below
@@ -623,8 +859,28 @@
             <div class="sq-panel" style="margin-bottom:20px;">
               <div class="sq-panel-h">
                 <span>Allowables</span>
+                <div class="sa-export" id="sa-export" hidden>
+                  <button type="button" class="sa-exp-btn" data-export="copy"
+                          title="Copy the property table as plain text">Copy</button>
+                  <button type="button" class="sa-exp-btn" data-export="csv"
+                          title="Download every published property as CSV, in both unit systems">CSV</button>
+                  <button type="button" class="sa-exp-btn" data-export="sw"
+                          title="SolidWorks material library file (.sldmat), SI base units">SolidWorks</button>
+                  <button type="button" class="sa-exp-btn" data-export="ansys"
+                          title="Mechanical APDL MP commands (.inp), SI base units">ANSYS</button>
+                </div>
               </div>
               <div id="sa-detail"></div>
+              <p class="sa-export-note" id="sa-export-note">
+                <span style="font-weight: var(--font-weight-normal)">Copy</span> and
+                <span style="font-weight: var(--font-weight-normal)">CSV</span> give
+                exactly what the handbook publishes, in both unit systems.
+                <span style="font-weight: var(--font-weight-normal)">SolidWorks</span> and
+                <span style="font-weight: var(--font-weight-normal)">ANSYS</span> build a
+                complete material card in SI base units, filling the gaps the handbook
+                leaves &mdash; each opens a preview first showing every value and where
+                it came from.
+              </p>
             </div>
 
             <div class="sq-panel" id="sa-derated-section" style="margin-bottom:20px;" hidden>
@@ -637,7 +893,7 @@
 
             <div class="sq-panel">
               <div class="sq-panel-h">
-                <span>Matching conditions</span>
+                <span>Matching materials</span>
                 <span class="sa-count" id="sa-match-count"></span>
               </div>
               <div id="sa-matches"></div>
@@ -646,11 +902,42 @@
 
         </div>
 
+        <!-- ── COMPARE TWO MATERIALS ── -->
+        <section class="sf-section" id="sc-section">
+          <div class="sf-section-h">
+            <div class="sf-section-title">Compare two materials/conditions</div>
+            <span class="sf-section-note">Pin the material selected above into
+              A or B, then change the filters and pin the other one. A
+              &ldquo;condition&rdquo; is one fully specified row &mdash; alloy,
+              product form, temper, thickness and basis.</span>
+          </div>
+
+          <div class="sq-panel" style="margin-bottom:20px;">
+            <div class="sq-panel-h"><span>Pinned</span></div>
+            <div id="sc-slots"></div>
+            <div id="sc-body"></div>
+          </div>
+
+          <div class="sq-panel" id="sc-chart-section" style="margin-bottom:20px;" hidden>
+            <div class="sq-panel-h">
+              <span>Against temperature, in real units</span>
+            </div>
+            <div id="sc-chart-body"></div>
+          </div>
+        </section>
+
         <!-- ── FIGURES FOR THE SELECTED ALLOY ── -->
         <section class="sf-section" id="sf-figures-section" hidden>
           <div class="sf-section-h">
             <div class="sf-section-title">Figures</div>
             <span class="sf-section-note" id="sf-figures-note"></span>
+            <div class="sf-units" id="sf-units" hidden>
+              <span class="sf-units-label">Effect-of-temperature curves</span>
+              <label><input type="radio" name="sf-unit" value="percent" checked>
+                % of room temp.</label>
+              <label><input type="radio" name="sf-unit" value="real">
+                real units</label>
+            </div>
           </div>
           <div id="sf-figures"></div>
         </section>
@@ -716,8 +1003,8 @@
           Every value on this page is transcribed from a MIL-HDBK-5 design
           mechanical and physical properties table. The lookup does not
           interpolate between thickness bands, average across tempers, or
-          synthesise a value the handbook does not publish &mdash; if a condition is
-          not in the table, it is not in the result. Each result names its source
+          synthesise a value the handbook does not publish &mdash; if a material
+          condition is not in the table, it is not in the result. Each result names its source
           table and links to both the transcribed table on the relevant chapter
           page and the corresponding page of the handbook itself.
         </p>

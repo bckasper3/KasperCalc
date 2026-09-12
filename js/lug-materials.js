@@ -88,7 +88,7 @@ window.LugMaterials = (function () {
     return 'medium';
   }
 
-  function conditionLabel(e) {
+  function baseLabel(e) {
     var bits = [];
     if (e.form) bits.push(e.form);
     if (e.temper) bits.push(e.temper);
@@ -100,6 +100,37 @@ window.LugMaterials = (function () {
     }
     if (e.basis) bits.push(e.basis + '-basis');
     return bits.join(' · ') || 'as published';
+  }
+
+  function conditionLabel(e) {
+    return baseLabel(e) + (e.labelSuffix || '');
+  }
+
+  /* Form, temper, thickness and basis do not always separate two conditions:
+     4130 and 4135 tubing are published at several heat-treat levels under
+     otherwise identical labels. Without the strength in the text the dropdown
+     repeats itself and a strength level gets picked by accident. */
+  function disambiguate() {
+    var groups = Object.create(null);
+    ENTRIES.forEach(function (e) {
+      var k = e.alloy + '|' + baseLabel(e);
+      (groups[k] || (groups[k] = [])).push(e);
+    });
+    Object.keys(groups).forEach(function (k) {
+      var list = groups[k];
+      if (list.length < 2) return;
+      var seen = Object.create(null);
+      list.forEach(function (e, i) {
+        var ftu = pick(e.props.Ftu, 'L');
+        e.labelSuffix = ftu !== null ? ' · Ftu ' + ftu + ' ksi' : '';
+        var full = baseLabel(e) + e.labelSuffix;
+        if (seen[full]) {
+          var fty = pick(e.props.Fty, 'L');
+          e.labelSuffix += fty !== null ? ' / Fty ' + fty : ' (alt ' + (i + 1) + ')';
+        }
+        seen[baseLabel(e) + e.labelSuffix] = 1;
+      });
+    });
   }
 
   /* ── resolution ───────────────────────────────────────────────────────── */
@@ -378,6 +409,7 @@ window.LugMaterials = (function () {
       })
       .then(function (payload) {
         ENTRIES = (payload.entries || []).filter(usable);
+        disambiguate();
         ENTRIES.forEach(function (e) { byId[e.id] = e; });
         buildCurated();
         PARTS.forEach(function (p) { renderPart(p, null); });
