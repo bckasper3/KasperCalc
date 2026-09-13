@@ -218,7 +218,10 @@ mjx-container[jax="SVG"] {
   color: #5f5f5f;
   max-width: 500px;
 }
-.ref-fig svg { max-width: 100%; height: auto; }
+/* The diagrams are <img> now, not inline <svg>, so they carry an intrinsic
+   size and will not shrink to the card on their own. */
+.ref-fig svg,
+.ref-fig img { max-width: 100%; height: auto; display: block; }
 
 .ref-table {
   width: 100%;
