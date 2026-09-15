@@ -134,6 +134,7 @@
           <div class="footerlink"><a href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a></div>
           <div class="footerlink"><a href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a></div>
           <div class="footerlink"><a href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a></div>
+          <div class="footerlink"><a href="SolenoidCoil.html">Solenoid &amp; Coil Designer</a></div>
         </div>
 
         <div class="footerRow">

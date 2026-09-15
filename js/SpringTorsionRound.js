@@ -619,6 +619,124 @@ function buildResiduals(x, structural = false) {
     }
   }
 
+  // ── TIER C3: Alternate per-column drivers ────────────────
+  // Columns 1 and 2 can be pinned by any of the same quantities the
+  // deterministic columns (3, Set) accept — stress, %MTS, arm force,
+  // angle between arms, or wind-down geometry — instead of only a raw
+  // torque, deflection or absolute arm angle. Each expresses the SAME
+  // physical fact as pinning M/defl directly, algebraically converted;
+  // together with the M = k·θ residual above (now active because
+  // torqueColumnActive() recognises these fields too) it fully places
+  // the column.
+  {
+    const useWahl   = document.getElementById('useWahl')?.checked ?? false;
+    const angFreeV  = readFieldValue('angFree');
+    const betwFreeV = readFieldValue('betwFree');
+    const dTolCoilV = readFieldValue('dTolCoil') || 0;
+    const Ki        = torsionStressFactorInner(v.C);
+    const Ko        = torsionStressFactorOuter(v.C);
+    const kInV      = useWahl && Ki ? Ki : 1;
+    const kOutV     = useWahl && Ko ? Ko : 1;
+    const mtsV      = userEnteredFieldIds.has('mts')
+                     ? readFieldValue('mts')
+                     : computeMinTensileStrengthPsi(selectedMaterialRecord, v.d);
+
+    ['1', '2'].forEach(n => {
+      const Mv        = v['M' + n];
+      const armForce1 = v.arm1 > 1e-9 ? Mv / v.arm1 : null;
+      const armForce2 = v.arm2 > 1e-9 ? Mv / v.arm2 : null;
+      const sNom      = torsionNominalStress(Mv, v.d) || 0;
+
+      if (userEnteredFieldIds.has('betw' + n) && betwFreeV !== null) {
+        const userVal = readFieldValue('betw' + n);
+        if (userVal !== null) {
+          r.push(W_USER * (v['defl' + n] - wrap360(betwFreeV - userVal)) / 180.0);
+        }
+      }
+      if (userEnteredFieldIds.has('si' + n)) {
+        const userVal = readFieldValue('si' + n);
+        if (userVal !== null) {
+          r.push(W_USER * (sNom * kInV - userVal) / Math.max(userVal, 1));
+        }
+      }
+      if (userEnteredFieldIds.has('so' + n)) {
+        const userVal = readFieldValue('so' + n);
+        if (userVal !== null) {
+          r.push(W_USER * (sNom * kOutV - userVal) / Math.max(userVal, 1));
+        }
+      }
+      if (userEnteredFieldIds.has('pMTS' + n) && mtsV > 0) {
+        const userVal = readFieldValue('pMTS' + n);
+        if (userVal !== null) {
+          r.push(W_USER * (sNom * kInV / mtsV * 100 - userVal) / Math.max(userVal, 1));
+        }
+      }
+      if (userEnteredFieldIds.has('Fa1_' + n) && armForce1 !== null) {
+        const userVal = readFieldValue('Fa1_' + n);
+        if (userVal !== null) {
+          r.push(W_USER * (armForce1 - userVal) / Math.max(userVal, 0.01));
+        }
+      }
+      if (userEnteredFieldIds.has('Fa2_' + n) && armForce2 !== null) {
+        const userVal = readFieldValue('Fa2_' + n);
+        if (userVal !== null) {
+          r.push(W_USER * (armForce2 - userVal) / Math.max(userVal, 0.01));
+        }
+      }
+      if (userEnteredFieldIds.has('Nt' + n)) {
+        const userVal = readFieldValue('Nt' + n);
+        if (userVal !== null) {
+          r.push(W_USER * (v.NtFree + v['defl' + n] / 360 - userVal) / 10.0);
+        }
+      }
+      if (userEnteredFieldIds.has('Lb' + n) && closeWound) {
+        const userVal = readFieldValue('Lb' + n);
+        if (userVal !== null) {
+          const NtWound = v.NtFree + v['defl' + n] / 360;
+          r.push(W_USER * (v.d * (NtWound + 1) - userVal) / 1.0);
+        }
+      }
+      if (userEnteredFieldIds.has('minID_' + n)) {
+        const userVal = readFieldValue('minID_' + n);
+        if (userVal !== null) {
+          const NtWound = v.NtFree + v['defl' + n] / 360;
+          const Dwound  = (NtWound > 1e-9) ? (v.D * v.NtFree / NtWound) : v.D;
+          r.push(W_USER * (Dwound - v.d - dTolCoilV - userVal) / 1.0);
+        }
+      }
+    });
+
+    // Natural frequency — a function of the solved primary geometry
+    // (d, D, Na), not of any single torque column.
+    if (userEnteredFieldIds.has('fn1')) {
+      const userVal = readFieldValue('fn1');
+      const calc = torsionNaturalFrequency(v.d, v.D, v.Na, E, getMaterialDensity(), false);
+      if (userVal !== null && calc) r.push(W_USER * (calc - userVal) / Math.max(userVal, 1));
+    }
+    if (userEnteredFieldIds.has('fn2')) {
+      const userVal = readFieldValue('fn2');
+      const calc = torsionNaturalFrequency(v.d, v.D, v.Na, E, getMaterialDensity(), true);
+      if (userVal !== null && calc) r.push(W_USER * (calc - userVal) / Math.max(userVal, 1));
+    }
+
+    // Wire length / weight
+    if (userEnteredFieldIds.has('wl')) {
+      const userVal = readFieldValue('wl');
+      if (userVal !== null) {
+        const calc = torsionWireLength(v.D, v.NtFree, v.arm1, v.arm2, v.pitch);
+        r.push(W_USER * (calc - userVal) / Math.max(userVal, 0.1));
+      }
+    }
+    if (userEnteredFieldIds.has('sw')) {
+      const userVal = readFieldValue('sw');
+      if (userVal !== null) {
+        const wireLen = torsionWireLength(v.D, v.NtFree, v.arm1, v.arm2, v.pitch);
+        const calc    = torsionWireWeight(v.d, wireLen, getMaterialDensity());
+        r.push(W_USER * (calc - userVal) / Math.max(userVal, 0.001));
+      }
+    }
+  }
+
   // ── TIER C2: One-sided physical penalties ────────────────
   // These rows are ALWAYS pushed (zero when satisfied) so that
   // buildResiduals() returns a constant residual count. The numerical
@@ -801,10 +919,20 @@ function numericalJacobianOf(residualFn, x, r0) {
  *   until single-variable rows are exhausted.
  *
  * @param {number[][]} A
- * @param {number}     relTol  Threshold for treating a pivot as zero (default 1e-4)
+ * @param {number}     relTol  Threshold for treating a pivot as zero (default 1e-6).
+ *   Was 1e-4 until the alternate per-column drivers (Tier C3 — stress,
+ *   %MTS, wind-down geometry, ...) exposed a false negative: those
+ *   residuals route their information through the M = k·θ physics
+ *   equation, which carries the weakest tier weight (W_PHYS = 1, versus
+ *   W_USER = 1e6 for a pin), so by the last elimination step its
+ *   genuinely-nonzero pivot has been driven down to ~1e-5 — real signal,
+ *   not noise (confirmed against the same matrix's hand-computed
+ *   determinant), but below the old threshold. 1e-6 clears that case with
+ *   comfortable margin while a truly underdetermined system still misses
+ *   by several orders of magnitude, not by one.
  * @returns {number}
  */
-function computeMatrixRank(A, relTol = 1e-4) {
+function computeMatrixRank(A, relTol = 1e-6) {
   if (!A.length || !A[0].length) return 0;
   const m = A.length, n = A[0].length;
 
@@ -1767,6 +1895,11 @@ function torsionStressFactorOuter(C) {
 }
 
 // Nominal bending stress at the wire surface.
+// Wraps an angle into [0, 360) — winding the moving arm past its partner
+// (or past 3 o'clock) reads as a large positive angle rather than going
+// negative, matching how the part is actually dimensioned on a drawing.
+function wrap360(a) { return ((a % 360) + 360) % 360; }
+
 function torsionNominalStress(M, d) {
   if (!(d > 0)) return null;
   return (32 * M) / (Math.PI * Math.pow(d, 3));
@@ -1885,11 +2018,110 @@ function diagnoseImpossibleGeometry() {
 }
 
 // A torque column participates in the solve when the user has pinned
-// any of its cells, in either torque or angle form.
+// any of its cells — a torque or angle directly, or any of the derived
+// quantities (stress, %MTS, arm force, wind-down geometry) that
+// resolveColumnMoment() can invert back to a torque.
 function torqueColumnActive(n) {
-  return userEnteredFieldIds.has('M' + n) ||
-         userEnteredFieldIds.has('defl' + n) ||
-         userEnteredFieldIds.has('ang' + n);
+  return userEnteredFieldIds.has('M' + n)     ||
+         userEnteredFieldIds.has('defl' + n)  ||
+         userEnteredFieldIds.has('ang' + n)   ||
+         userEnteredFieldIds.has('betw' + n)  ||
+         userEnteredFieldIds.has('si' + n)    ||
+         userEnteredFieldIds.has('so' + n)    ||
+         userEnteredFieldIds.has('pMTS' + n)  ||
+         userEnteredFieldIds.has('Fa1_' + n)  ||
+         userEnteredFieldIds.has('Fa2_' + n)  ||
+         userEnteredFieldIds.has('Nt' + n)    ||
+         userEnteredFieldIds.has('Lb' + n)    ||
+         userEnteredFieldIds.has('minID_' + n);
+}
+
+// Resolves the torque a column carries from whichever field the user
+// pinned — a raw torque or deflection, an absolute arm angle, the angle
+// between arms, a target stress or %MTS, an arm contact force, or the
+// wind-down geometry (coil count / body length / minimum ID) at that
+// position. Exactly one of these is enough to place the column; if more
+// than one is pinned the first match in this priority order wins.
+//
+// Used both for the deterministic columns (3 and Set, where every ctx
+// value is already a solved number) and, via the same per-field algebra,
+// to build the Tier C3 residuals for the two LM-solved columns (1 and 2).
+function resolveColumnMoment(n, ctx) {
+  const s       = (n === 'set');
+  const idM     = s ? 'Mset'    : 'M'    + n;
+  const idDefl  = s ? 'deflSet' : 'defl' + n;
+  const idAng   = s ? 'angSet'  : 'ang'  + n;
+  const idBetw  = s ? 'betwSet' : 'betw' + n;
+  const idSi    = s ? 'siSet'   : 'si'   + n;
+  const idSo    = s ? 'soSet'   : 'so'   + n;
+  const idPmts  = s ? 'pMTSset' : 'pMTS' + n;
+  const idFa1   = 'Fa1_' + n;
+  const idFa2   = 'Fa2_' + n;
+  const idNt    = s ? 'NtSet'   : 'Nt'   + n;
+  const idLb    = s ? 'LbSet'   : 'Lb'   + n;
+  const idMinID = 'minID_' + n;
+
+  const { k, d, D, arm1, arm2, NtFree, angFree, betwFree, mts,
+          kIn, kOut, closeWound, dTolCoil } = ctx;
+
+  if (userEnteredFieldIds.has(idM)) {
+    const v = readFieldValue(idM);
+    if (v !== null) return v;
+  }
+  if (userEnteredFieldIds.has(idDefl) && k > 0) {
+    const v = readFieldValue(idDefl);
+    if (v !== null) return k * v;
+  }
+  if (userEnteredFieldIds.has(idAng) && k > 0 && angFree !== null) {
+    const v = readFieldValue(idAng);
+    if (v !== null) return k * Math.abs(v - angFree);
+  }
+  if (userEnteredFieldIds.has(idBetw) && k > 0 && betwFree !== null) {
+    const v = readFieldValue(idBetw);
+    // Forward: betw = wrap360(betwFree - defl). Winding the spring can
+    // carry betw past 0 and wrap it up near 360 (see runDeterministicPostPass),
+    // so recovering defl needs the same wrap, not a plain difference.
+    if (v !== null) return k * wrap360(betwFree - v);
+  }
+  if (userEnteredFieldIds.has(idSi) && d > 0 && kIn > 0) {
+    const v = readFieldValue(idSi);
+    if (v !== null) return v * Math.PI * Math.pow(d, 3) / (32 * kIn);
+  }
+  if (userEnteredFieldIds.has(idSo) && d > 0 && kOut > 0) {
+    const v = readFieldValue(idSo);
+    if (v !== null) return v * Math.PI * Math.pow(d, 3) / (32 * kOut);
+  }
+  if (userEnteredFieldIds.has(idPmts) && d > 0 && kIn > 0 && mts > 0) {
+    const v = readFieldValue(idPmts);
+    if (v !== null) return (v / 100 * mts) * Math.PI * Math.pow(d, 3) / (32 * kIn);
+  }
+  if (userEnteredFieldIds.has(idFa1) && arm1 > 0) {
+    const v = readFieldValue(idFa1);
+    if (v !== null) return v * arm1;
+  }
+  if (userEnteredFieldIds.has(idFa2) && arm2 > 0) {
+    const v = readFieldValue(idFa2);
+    if (v !== null) return v * arm2;
+  }
+  if (userEnteredFieldIds.has(idNt) && k > 0 && NtFree !== null) {
+    const v = readFieldValue(idNt);
+    if (v !== null) return k * (v - NtFree) * 360;
+  }
+  // Lb only tracks wind-down in the close-wound identity (Lb = d(N+1));
+  // a pitched body length is defined by the free-state pitch alone and
+  // does not move with deflection, so it cannot be inverted for torque.
+  if (userEnteredFieldIds.has(idLb) && k > 0 && closeWound && d > 0 && NtFree !== null) {
+    const v = readFieldValue(idLb);
+    if (v !== null) return k * (v / d - 1 - NtFree) * 360;
+  }
+  if (userEnteredFieldIds.has(idMinID) && k > 0 && D > 0 && NtFree !== null && d > 0) {
+    const v = readFieldValue(idMinID);
+    if (v !== null) {
+      const DPrime = v + d + (dTolCoil || 0);
+      if (DPrime > 0) return k * 360 * NtFree * (D / DPrime - 1);
+    }
+  }
+  return null;
 }
 
 function calculateWahlStressCorrectionFactor(C) {
@@ -1917,19 +2149,27 @@ function findNearestStandardWireDiameters(d) {
 // INPUT MODE SELECTOR
 // ============================================================
 
+// Matches the reference software's own Standard / Dimensional scenario
+// presets (confirmed against its screenshots): wire diameter, coil OD
+// and arm 1 are common to both; Standard then wants one torque plus the
+// wound coil count it produces, while Dimensional wants the free coil
+// count plus a target %MTS at each cycle position.
 const INPUT_MODE_FIELDS = {
   power: [],
-  std:   ['d', 'OD', 'M1', 'defl1', 'M2', 'defl2', 'arm1', 'arm2'],
-  dim:   ['d', 'OD', 'NtFree', 'arm1', 'arm2'],
+  std:   ['d', 'OD', 'arm1', 'M2', 'Nt2'],
+  dim:   ['d', 'OD', 'arm1', 'NtFree', 'pMTS1', 'pMTS2'],
 };
 
 function applyInputModeHighlights() {
   const sel = document.querySelector('.it.sel');
   if (!sel) return;
-  document.querySelectorAll('input[type=number]').forEach(el => el.classList.remove('input-highlight'));
+  // .scenario-in is the same green used for a live user-entered value —
+  // the reference tool's own convention is that green marks "the inputs
+  // for this scenario", not a separate highlight colour.
+  document.querySelectorAll('input[type=number]').forEach(el => el.classList.remove('scenario-in'));
   (INPUT_MODE_FIELDS[sel.dataset.mode] || []).forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.classList.add('input-highlight');
+    if (el) el.classList.add('scenario-in');
   });
 }
 
@@ -1948,6 +2188,14 @@ const INDEPENDENT_FIELDS = new Set([
   'arm1', 'arm2',
   'M1', 'M2', 'defl1', 'defl2', 'ang1', 'ang2',
   'shaft',
+  // Alternate drivers for columns 1 & 2 — each is algebraically
+  // equivalent to pinning M/defl directly (see resolveColumnMoment()
+  // and the Tier C3 residuals in buildResiduals()), so each counts as
+  // one independent constraint just like the fields above.
+  'betw1', 'betw2', 'si1', 'si2', 'so1', 'so2', 'pMTS1', 'pMTS2',
+  'Fa1_1', 'Fa1_2', 'Fa2_1', 'Fa2_2', 'Nt1', 'Nt2', 'Lb1', 'Lb2',
+  'minID_1', 'minID_2',
+  'fn1', 'fn2', 'wl', 'sw',
 ]);
 
 function countEffectiveConstraints() {
@@ -2370,17 +2618,18 @@ function runDeterministicPostPass(sv, result) {
   out('maxOD', D + d + dTolCoil, true, 4);
 
   // ── Resolve every torque column ──────────────────────────
-  // Columns 1 and 2 come from the solver. Column 3 is deterministic
-  // from a user torque or angle. The Set column is driven backwards
-  // from a target % of minimum tensile strength.
+  // Columns 1 and 2 come from the solver — whichever field drove them
+  // (torque, angle, stress, %MTS, force, wind-down geometry, ...) was
+  // already folded into the LM solve as a residual, so sv.M1/sv.M2
+  // reflect it. Columns 3 and Set are deterministic: d, D, C, k, arm1,
+  // arm2 are already fixed numbers at this point, so resolveColumnMoment()
+  // inverts whichever field is pinned directly, no solver needed.
   const columns = [
     { n: '1',   label: 'minimum cycle torque' },
     { n: '2',   label: 'maximum cycle torque' },
     { n: '3',   label: 'other torque'         },
     { n: 'set', label: 'set'                  },
   ];
-
-  const nominalToM = sigma => (sigma * Math.PI * Math.pow(d, 3)) / (32 * kIn);
 
   // Peak K_B-corrected inner-fibre stress across the operating positions.
   // The Set column is a design target rather than an operating point, so
@@ -2412,23 +2661,12 @@ function runDeterministicPostPass(sv, result) {
       if (torqueColumnActive(n === '1' ? 1 : 2)) {
         M = n === '1' ? sv.M1 : sv.M2;
       }
-    } else if (n === '3') {
-      if (userEnteredFieldIds.has('M3')) {
-        M = readFieldValue('M3');
-      } else if (userEnteredFieldIds.has('defl3')) {
-        M = k * readFieldValue('defl3');
-      } else if (userEnteredFieldIds.has('ang3') && angFree !== null) {
-        M = k * Math.abs(readFieldValue('ang3') - angFree);
-      }
     } else {
-      // Set column: the user specifies a target % of MTS and the
-      // calculator reports the torque that produces it.
-      if (userEnteredFieldIds.has('Mset')) {
-        M = readFieldValue('Mset');
-      } else {
-        const pctTarget = readFieldValue('pMTSset');
-        if (pctTarget && mts) M = nominalToM((pctTarget / 100) * mts);
-      }
+      M = resolveColumnMoment(n, {
+        k, d, D, arm1, arm2, NtFree: Nb,
+        angFree, betwFree, mts, kIn, kOut,
+        closeWound, dTolCoil,
+      });
     }
 
     // ── Blank the column when it carries no torque ─────────
@@ -2455,7 +2693,6 @@ function runDeterministicPostPass(sv, result) {
     // the gap between the two arms. Once the moving arm passes its
     // partner the gap reads as a large positive angle rather than a
     // negative one — that is how the part gets dimensioned on a drawing.
-    const wrap360 = a => ((a % 360) + 360) % 360;
     if (angFree  !== null) out(idAng,  wrap360(angFree + defl),  true, 2);
     if (betwFree !== null) out(idBetw, wrap360(betwFree - defl), true, 2);
 

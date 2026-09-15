@@ -198,7 +198,6 @@
 .fatigue-custom-tag{font-size:10px;color:#61828A;border:1px solid #61828A;border-radius:3px;padding:0 3px;margin-left:4px;text-transform:uppercase;letter-spacing:0.03em}
 @media (max-width:520px){.fatigue-row{grid-template-columns:1fr 90px 80px;font-size:11px}}
 
-.input-highlight {background:#becbcf !important;border-color:#3a6270 !important;font-weight:600} /*{background-color: #e8f5e8 !important; border-color: #4caf50 !important;} */
 #bottomStatusSummary { white-space: pre-line; }
 
 .lt input[type=number]::-webkit-inner-spin-button,.lt input[type=number]::-webkit-outer-spin-button{opacity: 0}
@@ -395,6 +394,7 @@
                   <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
                   <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
                   <a class="dropdown-item" href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a>
+                  <a class="dropdown-item" href="SolenoidCoil.html">Solenoid &amp; Coil Designer</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -729,13 +729,13 @@
 
         <div class="prop-row">
           <label class="prop-row-label" for="fn1">Nat. Freq., One End Fixed</label>
-          <input type="number" id="fn1" readonly aria-label="Natural frequency with one end fixed in Hertz" aria-readonly="true">
+          <input type="number" id="fn1" oninput="onUserInput('fn1')" aria-label="Natural frequency with one end fixed in Hertz">
           <span class="prop-row-unit" aria-hidden="true">Hz</span>
         </div>
 
         <div class="prop-row">
           <label class="prop-row-label" for="fn2">Nat. Freq., Both Ends Fixed</label>
-          <input type="number" id="fn2" readonly aria-label="Natural frequency with both ends fixed in Hertz" aria-readonly="true">
+          <input type="number" id="fn2" oninput="onUserInput('fn2')" aria-label="Natural frequency with both ends fixed in Hertz">
           <span class="prop-row-unit" aria-hidden="true">Hz</span>
         </div>
 
@@ -1003,19 +1003,19 @@
           <tr>
             <td scope="row">Contact Force, Arm 1</td>
             <td class="na">0</td>
-            <td><input type="number" id="Fa1_1" placeholder="&mdash;" readonly aria-label="Contact force on arm 1 at minimum cycle torque in pounds, computed" aria-readonly="true"></td>
-            <td><input type="number" id="Fa1_2" placeholder="&mdash;" readonly aria-label="Contact force on arm 1 at maximum cycle torque in pounds, computed" aria-readonly="true"></td>
-            <td><input type="number" id="Fa1_3" placeholder="&mdash;" readonly aria-label="Contact force on arm 1 at other torque in pounds, computed" aria-readonly="true"></td>
-            <td><input type="number" id="Fa1_set" placeholder="&mdash;" readonly aria-label="Contact force on arm 1 at set in pounds, computed" aria-readonly="true"></td>
+            <td><input type="number" id="Fa1_1" placeholder="&mdash;" oninput="onUserInput('Fa1_1')" aria-label="Contact force on arm 1 at minimum cycle torque in pounds"></td>
+            <td><input type="number" id="Fa1_2" placeholder="&mdash;" oninput="onUserInput('Fa1_2')" aria-label="Contact force on arm 1 at maximum cycle torque in pounds"></td>
+            <td><input type="number" id="Fa1_3" placeholder="&mdash;" oninput="onUserInput('Fa1_3')" aria-label="Contact force on arm 1 at other torque in pounds"></td>
+            <td><input type="number" id="Fa1_set" placeholder="&mdash;" oninput="onUserInput('Fa1_set')" aria-label="Contact force on arm 1 at set in pounds"></td>
             <td>lbf</td>
           </tr>
           <tr>
             <td scope="row">Contact Force, Arm 2</td>
             <td class="na">0</td>
-            <td><input type="number" id="Fa2_1" placeholder="&mdash;" readonly aria-label="Contact force on arm 2 at minimum cycle torque in pounds, computed" aria-readonly="true"></td>
-            <td><input type="number" id="Fa2_2" placeholder="&mdash;" readonly aria-label="Contact force on arm 2 at maximum cycle torque in pounds, computed" aria-readonly="true"></td>
-            <td><input type="number" id="Fa2_3" placeholder="&mdash;" readonly aria-label="Contact force on arm 2 at other torque in pounds, computed" aria-readonly="true"></td>
-            <td><input type="number" id="Fa2_set" placeholder="&mdash;" readonly aria-label="Contact force on arm 2 at set in pounds, computed" aria-readonly="true"></td>
+            <td><input type="number" id="Fa2_1" placeholder="&mdash;" oninput="onUserInput('Fa2_1')" aria-label="Contact force on arm 2 at minimum cycle torque in pounds"></td>
+            <td><input type="number" id="Fa2_2" placeholder="&mdash;" oninput="onUserInput('Fa2_2')" aria-label="Contact force on arm 2 at maximum cycle torque in pounds"></td>
+            <td><input type="number" id="Fa2_3" placeholder="&mdash;" oninput="onUserInput('Fa2_3')" aria-label="Contact force on arm 2 at other torque in pounds"></td>
+            <td><input type="number" id="Fa2_set" placeholder="&mdash;" oninput="onUserInput('Fa2_set')" aria-label="Contact force on arm 2 at set in pounds"></td>
             <td>lbf</td>
           </tr>
           <tr>
@@ -1030,73 +1030,73 @@
           <tr>
             <td scope="row">Angle Between Arms</td>
             <td><input type="number" id="betwFree" step="0.1" placeholder="&mdash;" oninput="onUserInput('betwFree')" aria-label="Angle between arms at free position in degrees"></td>
-            <td><input type="number" id="betw1" step="0.1" placeholder="&mdash;" readonly aria-label="Angle between arms at minimum cycle torque in degrees, computed" aria-readonly="true"></td>
-            <td><input type="number" id="betw2" step="0.1" placeholder="&mdash;" readonly aria-label="Angle between arms at maximum cycle torque in degrees, computed" aria-readonly="true"></td>
-            <td><input type="number" id="betw3" step="0.1" placeholder="&mdash;" readonly aria-label="Angle between arms at other torque in degrees, computed" aria-readonly="true"></td>
-            <td><input type="number" id="betwSet" step="0.1" placeholder="&mdash;" readonly aria-label="Angle between arms at set in degrees, computed" aria-readonly="true"></td>
+            <td><input type="number" id="betw1" step="0.1" placeholder="&mdash;" oninput="onUserInput('betw1')" aria-label="Angle between arms at minimum cycle torque in degrees"></td>
+            <td><input type="number" id="betw2" step="0.1" placeholder="&mdash;" oninput="onUserInput('betw2')" aria-label="Angle between arms at maximum cycle torque in degrees"></td>
+            <td><input type="number" id="betw3" step="0.1" placeholder="&mdash;" oninput="onUserInput('betw3')" aria-label="Angle between arms at other torque in degrees"></td>
+            <td><input type="number" id="betwSet" step="0.1" placeholder="&mdash;" oninput="onUserInput('betwSet')" aria-label="Angle between arms at set in degrees"></td>
             <td>deg</td>
           </tr>
           <tr>
             <td scope="row">Deflection</td>
             <td class="na">0</td>
-            <td><input type="number" id="defl1" placeholder="&mdash;" readonly aria-label="Angular deflection at minimum cycle torque in degrees, computed" aria-readonly="true"></td>
-            <td><input type="number" id="defl2" placeholder="&mdash;" readonly aria-label="Angular deflection at maximum cycle torque in degrees, computed" aria-readonly="true"></td>
-            <td><input type="number" id="defl3" placeholder="&mdash;" readonly aria-label="Angular deflection at other torque in degrees, computed" aria-readonly="true"></td>
-            <td><input type="number" id="deflSet" placeholder="&mdash;" readonly aria-label="Angular deflection at set in degrees, computed" aria-readonly="true"></td>
+            <td><input type="number" id="defl1" placeholder="&mdash;" oninput="onUserInput('defl1')" aria-label="Angular deflection at minimum cycle torque in degrees"></td>
+            <td><input type="number" id="defl2" placeholder="&mdash;" oninput="onUserInput('defl2')" aria-label="Angular deflection at maximum cycle torque in degrees"></td>
+            <td><input type="number" id="defl3" placeholder="&mdash;" oninput="onUserInput('defl3')" aria-label="Angular deflection at other torque in degrees"></td>
+            <td><input type="number" id="deflSet" placeholder="&mdash;" oninput="onUserInput('deflSet')" aria-label="Angular deflection at set in degrees"></td>
             <td>deg</td>
           </tr>
           <tr>
             <td scope="row">ID Stress</td>
             <td class="na">0</td>
-            <td><input type="number" id="si1" placeholder="&mdash;" readonly aria-label="Inside diameter bending stress at minimum cycle torque in PSI, computed" aria-readonly="true"></td>
-            <td><input type="number" id="si2" placeholder="&mdash;" readonly aria-label="Inside diameter bending stress at maximum cycle torque in PSI, computed" aria-readonly="true"></td>
-            <td><input type="number" id="si3" placeholder="&mdash;" readonly aria-label="Inside diameter bending stress at other torque in PSI, computed" aria-readonly="true"></td>
-            <td><input type="number" id="siSet" placeholder="&mdash;" readonly aria-label="Inside diameter bending stress at set in PSI, computed" aria-readonly="true"></td>
+            <td><input type="number" id="si1" placeholder="&mdash;" oninput="onUserInput('si1')" aria-label="Inside diameter bending stress at minimum cycle torque in PSI"></td>
+            <td><input type="number" id="si2" placeholder="&mdash;" oninput="onUserInput('si2')" aria-label="Inside diameter bending stress at maximum cycle torque in PSI"></td>
+            <td><input type="number" id="si3" placeholder="&mdash;" oninput="onUserInput('si3')" aria-label="Inside diameter bending stress at other torque in PSI"></td>
+            <td><input type="number" id="siSet" placeholder="&mdash;" oninput="onUserInput('siSet')" aria-label="Inside diameter bending stress at set in PSI"></td>
             <td>psi</td>
           </tr>
           <tr>
             <td scope="row">OD Stress</td>
             <td class="na">0</td>
-            <td><input type="number" id="so1" placeholder="&mdash;" readonly aria-label="Outside diameter bending stress at minimum cycle torque in PSI, computed" aria-readonly="true"></td>
-            <td><input type="number" id="so2" placeholder="&mdash;" readonly aria-label="Outside diameter bending stress at maximum cycle torque in PSI, computed" aria-readonly="true"></td>
-            <td><input type="number" id="so3" placeholder="&mdash;" readonly aria-label="Outside diameter bending stress at other torque in PSI, computed" aria-readonly="true"></td>
-            <td><input type="number" id="soSet" placeholder="&mdash;" readonly aria-label="Outside diameter bending stress at set in PSI, computed" aria-readonly="true"></td>
+            <td><input type="number" id="so1" placeholder="&mdash;" oninput="onUserInput('so1')" aria-label="Outside diameter bending stress at minimum cycle torque in PSI"></td>
+            <td><input type="number" id="so2" placeholder="&mdash;" oninput="onUserInput('so2')" aria-label="Outside diameter bending stress at maximum cycle torque in PSI"></td>
+            <td><input type="number" id="so3" placeholder="&mdash;" oninput="onUserInput('so3')" aria-label="Outside diameter bending stress at other torque in PSI"></td>
+            <td><input type="number" id="soSet" placeholder="&mdash;" oninput="onUserInput('soSet')" aria-label="Outside diameter bending stress at set in PSI"></td>
             <td>psi</td>
           </tr>
           <tr>
             <td scope="row">% of Min. Tensile Strength</td>
             <td class="na">0</td>
-            <td><input type="number" id="pMTS1" placeholder="&mdash;" readonly aria-label="Stress as percent of minimum tensile strength at minimum cycle torque, computed" aria-readonly="true"></td>
-            <td><input type="number" id="pMTS2" placeholder="&mdash;" readonly aria-label="Stress as percent of minimum tensile strength at maximum cycle torque, computed" aria-readonly="true"></td>
-            <td><input type="number" id="pMTS3" placeholder="&mdash;" readonly aria-label="Stress as percent of minimum tensile strength at other torque, computed" aria-readonly="true"></td>
+            <td><input type="number" id="pMTS1" placeholder="&mdash;" oninput="onUserInput('pMTS1')" aria-label="Stress as percent of minimum tensile strength at minimum cycle torque"></td>
+            <td><input type="number" id="pMTS2" placeholder="&mdash;" oninput="onUserInput('pMTS2')" aria-label="Stress as percent of minimum tensile strength at maximum cycle torque"></td>
+            <td><input type="number" id="pMTS3" placeholder="&mdash;" oninput="onUserInput('pMTS3')" aria-label="Stress as percent of minimum tensile strength at other torque"></td>
             <td><input type="number" id="pMTSset" step="0.1" value="80.0" oninput="onUserInput('pMTSset')" aria-label="Stress as percent of minimum tensile strength at set"></td>
             <td>%</td>
           </tr>
           <tr>
             <td scope="row">Total Coils</td>
             <td><input type="number" id="NtFree" step="0.25" placeholder="&mdash;" oninput="onUserInput('NtFree')" aria-label="Total coils at free position"></td>
-            <td><input type="number" id="Nt1" placeholder="&mdash;" readonly aria-label="Total coils at minimum cycle torque, computed" aria-readonly="true"></td>
-            <td><input type="number" id="Nt2" placeholder="&mdash;" readonly aria-label="Total coils at maximum cycle torque, computed" aria-readonly="true"></td>
-            <td><input type="number" id="Nt3" placeholder="&mdash;" readonly aria-label="Total coils at other torque, computed" aria-readonly="true"></td>
-            <td><input type="number" id="NtSet" placeholder="&mdash;" readonly aria-label="Total coils at set, computed" aria-readonly="true"></td>
+            <td><input type="number" id="Nt1" placeholder="&mdash;" oninput="onUserInput('Nt1')" aria-label="Total coils at minimum cycle torque"></td>
+            <td><input type="number" id="Nt2" placeholder="&mdash;" oninput="onUserInput('Nt2')" aria-label="Total coils at maximum cycle torque"></td>
+            <td><input type="number" id="Nt3" placeholder="&mdash;" oninput="onUserInput('Nt3')" aria-label="Total coils at other torque"></td>
+            <td><input type="number" id="NtSet" placeholder="&mdash;" oninput="onUserInput('NtSet')" aria-label="Total coils at set"></td>
             <td></td>
           </tr>
           <tr>
             <td scope="row">Body Length</td>
             <td><input type="number" id="LbFree" step="0.001" placeholder="&mdash;" oninput="onUserInput('LbFree')" aria-label="Body length at free position in inches"></td>
-            <td><input type="number" id="Lb1" placeholder="&mdash;" readonly aria-label="Body length at minimum cycle torque in inches, computed" aria-readonly="true"></td>
-            <td><input type="number" id="Lb2" placeholder="&mdash;" readonly aria-label="Body length at maximum cycle torque in inches, computed" aria-readonly="true"></td>
-            <td><input type="number" id="Lb3" placeholder="&mdash;" readonly aria-label="Body length at other torque in inches, computed" aria-readonly="true"></td>
-            <td><input type="number" id="LbSet" placeholder="&mdash;" readonly aria-label="Body length at set in inches, computed" aria-readonly="true"></td>
+            <td><input type="number" id="Lb1" placeholder="&mdash;" oninput="onUserInput('Lb1')" aria-label="Body length at minimum cycle torque in inches"></td>
+            <td><input type="number" id="Lb2" placeholder="&mdash;" oninput="onUserInput('Lb2')" aria-label="Body length at maximum cycle torque in inches"></td>
+            <td><input type="number" id="Lb3" placeholder="&mdash;" oninput="onUserInput('Lb3')" aria-label="Body length at other torque in inches"></td>
+            <td><input type="number" id="LbSet" placeholder="&mdash;" oninput="onUserInput('LbSet')" aria-label="Body length at set in inches"></td>
             <td>in</td>
           </tr>
           <tr>
             <td scope="row">Min. Coil ID</td>
-            <td><input type="number" id="minID_free" placeholder="&mdash;" readonly aria-label="Minimum coil inside diameter at free position in inches, computed" aria-readonly="true"></td>
-            <td><input type="number" id="minID_1" placeholder="&mdash;" readonly aria-label="Minimum coil inside diameter at minimum cycle torque in inches, computed" aria-readonly="true"></td>
-            <td><input type="number" id="minID_2" placeholder="&mdash;" readonly aria-label="Minimum coil inside diameter at maximum cycle torque in inches, computed" aria-readonly="true"></td>
-            <td><input type="number" id="minID_3" placeholder="&mdash;" readonly aria-label="Minimum coil inside diameter at other torque in inches, computed" aria-readonly="true"></td>
-            <td><input type="number" id="minID_set" placeholder="&mdash;" readonly aria-label="Minimum coil inside diameter at set in inches, computed" aria-readonly="true"></td>
+            <td><input type="number" id="minID_free" placeholder="&mdash;" oninput="onUserInput('minID_free')" aria-label="Minimum coil inside diameter at free position in inches"></td>
+            <td><input type="number" id="minID_1" placeholder="&mdash;" oninput="onUserInput('minID_1')" aria-label="Minimum coil inside diameter at minimum cycle torque in inches"></td>
+            <td><input type="number" id="minID_2" placeholder="&mdash;" oninput="onUserInput('minID_2')" aria-label="Minimum coil inside diameter at maximum cycle torque in inches"></td>
+            <td><input type="number" id="minID_3" placeholder="&mdash;" oninput="onUserInput('minID_3')" aria-label="Minimum coil inside diameter at other torque in inches"></td>
+            <td><input type="number" id="minID_set" placeholder="&mdash;" oninput="onUserInput('minID_set')" aria-label="Minimum coil inside diameter at set in inches"></td>
             <td>in</td>
           </tr>
         </tbody>

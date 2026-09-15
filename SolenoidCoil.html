@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KasperCalc: Solenoid and Coil Designer</title>
+    <meta name="description" content="Size a solenoid or electromagnet coil: turns and resistance from AWG magnet wire and winding geometry, inductance and AC impedance, current on 120 VAC, 240 VAC, DC or rectified mains, pull force against a steel armature, saturation limits, and how long the coil lasts before the insulation cooks." />
+
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="js/citation.js"></script>
+    <script defer src="js/footer.js"></script>
+    <script defer src="js/header-active-class.js"></script>
+    <script defer src="js/navsearch.js"></script>
+    <script defer src="js/chart.min.js"></script>
+    <script defer src="js/hdbkUtil.js"></script>
+    <script defer src="js/solenoid-coil.js"></script>
+    <script defer src="js/solenoid-coil-ui.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
+    <link defer rel="stylesheet" type="text/css" media="screen" href="css/belowthefold.css" />
+    <link defer rel="stylesheet" type="text/css" media="print" href="css/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
+
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon1.svg" />
+    <link rel="shortcut icon" property="og:image" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KasperCalc" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+        /* $ opens inline math here, so any generated text carrying two
+           dollar amounts would be swallowed as an equation. Calculator
+           output that prices things is fenced off by this class. */
+        options: { skipHtmlTags: ['script','noscript','style','textarea','pre'],
+                   ignoreHtmlClass: 'tex2jax_ignore',
+                   processHtmlClass: 'tex2jax_process' }
+      };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <style>
+      /* ── Shared token system (matches LugPinAnalysis.html) ── */
+      :root {
+        --sq-wrap:     #6a746a;
+        --sq-outline:  rgb(67,67,67);
+        --sq-panel:    #eeeeee;
+        --sq-blue:     #61828A;
+        --sq-ink:      #1C2227;
+        --sq-ink-soft: #5A6168;
+        --sq-ui:       "Roboto", Arial, sans-serif;
+        --lug-ok:      #2f7a4f;
+        --lug-ok-bg:   #e3efe6;
+        --lug-marg:    #a5680a;
+        --lug-marg-bg: #f5ecd9;
+        --lug-fail:    #a3312a;
+        --lug-fail-bg: #f6e4e1;
+      }
+
+      .sq-main { max-width: 1500px; margin: 0 auto; padding: 0 20px 60px; }
+      .sq-subtitle { font-family: var(--body-font-family); font-size: 14px; color: var(--sq-ink-soft); text-align: center; max-width: 760px; margin: 0 auto 18px; padding-top: 26px; line-height: 1.6; }
+      .sq-calc-grid { font-family: var(--sq-ui); display: grid; grid-template-columns: minmax(0,340px) minmax(0,1fr); gap: 20px; align-items: start; background: var(--sq-wrap); border: 3px solid var(--sq-outline); border-radius: 18px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); padding: 20px; }
+      /* The input panel used to follow the scroll. It fought the page on anything
+         but a tall window, so it stays put. */
+      .sq-sticky { position: static; }
+      @media (max-width:960px) { .sq-calc-grid { grid-template-columns: minmax(0,1fr); } .sq-sticky { position: static; } }
+      .sq-panel { background: var(--sq-panel); border: 2px solid var(--sq-outline); border-radius: 10px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); overflow: hidden; }
+      .sq-panel-h { padding: 11px 16px; background: #fff; border-bottom: 2px solid var(--sq-outline); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--sq-ink); font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+      .sq-panel-b { padding: 16px; }
+      .sq-panel-b, .lug-field, .lug-r2 > * { min-width: 0; }
+
+      /* ── Inputs ── */
+      .lug-group-h { font-family: var(--title-font-family); font-size: 13px; font-weight: var(--font-weight-bold); background: var(--section-title-color); color: #fff; padding: 5px 10px; border-radius: 6px; margin: 14px 0 10px; }
+      .lug-group-h:first-child { margin-top: 0; }
+      .lug-field { margin-bottom: 10px; }
+      .lug-field label { display: block; margin-bottom: 3px; font-size: 12px; color: #444; font-family: var(--body-font-family); }
+      .lug-field .lug-unit { color: var(--sq-ink-soft); font-size: 11px; }
+      .lug-field input[type=number], .lug-field select { width: 100%; min-width: 0; padding: 6px 7px; border: 1px solid #9aabb0; border-radius: var(--border-radius-small); font-size: 13px; font-family: var(--body-font-family); background: #fff; color: #222; }
+      .lug-field input[type=number]:focus, .lug-field select:focus { outline: 2px solid var(--section-title-color); }
+      .lug-r2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .lug-props { font-size: 11px; color: var(--sq-ink-soft); margin-top: 4px; font-family: var(--body-font-family); line-height: 1.4; }
+
+      .lug-labelrow { display: flex; align-items: center; gap: 2px; position: relative; }
+      .lug-labelrow label { margin-bottom: 3px; }
+
+      /* ── Info tooltips (formatting matched to NSWC-11TorsionSpring.html's
+         .tooltip-icon/.tooltip-box) ──
+         Two variants share this dark-box look:
+           .lug-pop            plain — CSS-only, shown by :hover/:focus on its
+                                icon and centered above it. Used everywhere the
+                                icon sits in normal document flow.
+           .lug-pop.sc-tip-pop table-header tooltips inside .sc-mag-scroll
+                                (overflow-x:auto). A plain absolutely
+                                positioned box would be clipped by that
+                                container — CSS forces overflow-y to auto too
+                                once overflow-x is set, so it clips on both
+                                axes, not just the scrolling one. These stay
+                                position:fixed and get top/left from
+                                placeTip() in solenoid-coil-ui.js. */
+      .lug-finfo {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 13px; height: 13px; border-radius: 50%; flex: none;
+        background: #61828a; color: #fff; border: none;
+        font-size: 9px; font-weight: 700; font-style: normal; cursor: default;
+        position: relative; vertical-align: -1px; margin-left: 4px;
+        user-select: none;
+      }
+      .lug-pop {
+        display: none; z-index: 2000; min-width: 210px; max-width: 260px;
+        background: #1a3a40; color: #eee; border: 1px solid #3a6270;
+        border-radius: 6px; box-shadow: 0 3px 8px rgba(0,0,0,.4);
+        padding: 7px 10px; font-size: 12px; line-height: 1.55;
+        font-family: var(--body-font-family); font-weight: 400; text-align: left;
+      }
+      .lug-pop.open { display: block; }
+      .lug-pop .lug-pop-t {
+        font-weight: 700; font-size: 11px; text-transform: uppercase;
+        letter-spacing: .05em; color: #fff; margin-bottom: 6px;
+      }
+      .lug-pop .lug-pop-n { color: #b9c6c9; font-size: 11.5px; margin-top: 7px; }
+
+      /* Plain variant: centered above its icon, pure CSS, dismissed by
+         :hover/:focus alone (no keepOpenWhileInside bridging — that's only
+         wired up for .sc-tip-pop, see solenoid-coil-ui.js), so it does not
+         need to receive pointer events itself. */
+      .lug-pop:not(.sc-tip-pop) {
+        position: absolute; bottom: calc(100% + 6px); left: 50%;
+        transform: translateX(-50%); pointer-events: none;
+      }
+      .lug-pop:not(.sc-tip-pop)::after {
+        content: ''; position: absolute; top: 100%; left: 50%;
+        transform: translateX(-50%); border: 5px solid transparent;
+        border-top-color: #1a3a40;
+      }
+      .lug-finfo:hover > .lug-pop:not(.sc-tip-pop),
+      .lug-finfo:focus > .lug-pop:not(.sc-tip-pop) { display: block; }
+
+      /* ── Result tiles ── */
+      .lug-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 12px; padding: 16px; }
+      .lug-tile { background: #fff; border: 2px solid var(--sq-outline); border-radius: 10px; padding: 12px 14px; box-shadow: 0 2px 5px rgba(0,0,0,.15); position: relative; }
+      .lug-tile-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+      .lug-tile-label { font-size: 12px; color: var(--sq-ink-soft); display: flex; align-items: center; gap: 6px; font-family: var(--sq-ui); }
+      .lug-pill { font-size: 10.5px; padding: 2px 8px; border-radius: 20px; font-weight: 700; letter-spacing: .03em; white-space: nowrap; font-family: var(--sq-ui); }
+      .lug-pill.ok { background: var(--lug-ok-bg); color: var(--lug-ok); }
+      .lug-pill.marginal { background: var(--lug-marg-bg); color: var(--lug-marg); }
+      .lug-pill.fail { background: var(--lug-fail-bg); color: var(--lug-fail); }
+      .lug-ms { font-size: 25px; font-weight: 700; font-variant-numeric: tabular-nums; font-family: var(--sq-ui); line-height: 1.15; color: var(--sq-ink); }
+      .lug-ms.ok { color: var(--lug-ok); }
+      .lug-ms.marginal { color: var(--lug-marg); }
+      .lug-ms.fail { color: var(--lug-fail); }
+      .lug-sub { margin-top: 8px; font-size: 11.5px; color: var(--sq-ink-soft); display: grid; gap: 2px; font-family: var(--body-font-family); }
+      .lug-sub .v { color: var(--sq-ink); font-variant-numeric: tabular-nums; }
+
+      /* ── Worked steps ── */
+      details.lug-details summary { cursor: pointer; color: var(--sq-ink); font-weight: 700; margin: 4px 0; font-family: var(--sq-ui); }
+      .calc-steps { font-size: 0.82rem; color: #444; margin-top: 8px; border: 1px solid #ccc; border-radius: 6px; overflow: hidden; background: #fff; font-family: var(--body-font-family); }
+      .calc-steps > div { padding: 4px 10px; border-bottom: 1px dashed #ddd; }
+      .calc-steps > div:nth-child(even) { background: #f7f7f7; }
+      .calc-steps > div:last-child { border-bottom: none; }
+      .calc-steps .val { color: #b3362b; font-weight: 700; }
+      /* -- equivalent magnet -- */
+      .sc-mag { font-size: 0.82rem; color: #444; margin-top: 8px;
+        font-family: var(--body-font-family); }
+      /* The global p rule sets its own font-size, which beats anything this
+         panel inherits, so the prose has to declare its own to sit at the same
+         scale as the tables beside it. */
+      .sc-mag-lead, .sc-mag-sub { margin: 0 0 10px; line-height: 1.5;
+        font-size: 0.82rem; font-weight: var(--font-weight-normal);
+        color: #444; }
+      .sc-mag-sub { margin-top: 14px; }
+      .sc-mag-cap { font-family: var(--sq-ui); font-size: 11px;
+        letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+        color: var(--sq-ink); margin: 18px 0 7px; padding-bottom: 5px;
+        border-bottom: 2px solid var(--sq-outline); }
+      .sc-mag-scroll { overflow-x: auto; border: 1px solid #ccc;
+        border-radius: 6px; background: #fff; }
+      .sc-mag-tbl { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+      .sc-mag-tbl th { background: var(--section-title-color); color: #fff;
+        font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+        font-size: 0.7rem; padding: 6px 9px; text-align: left;
+        white-space: nowrap; }
+      /* The calculator column is narrow, so numbers are kept on one line and
+         the table scrolls sideways rather than stacking every figure into a
+         four-line stack. Only the name and the "cannot reach" sentence wrap. */
+      .sc-mag-tbl td { padding: 6px 9px; border-bottom: 1px dashed #ddd;
+        vertical-align: top; white-space: nowrap; }
+      .sc-mag-tbl td:first-child { white-space: normal; min-width: 132px; }
+      .sc-mag-no td { white-space: normal; }
+      .sc-mag-tbl tr:last-child td { border-bottom: none; }
+      .sc-mag-tbl tbody tr:nth-child(even) { background: #f7f7f7; }
+      .sc-mag-key { color: #b3362b; font-weight: 700; white-space: nowrap; }
+      /* the header is uppercased, which would render the i icon as I */
+      .sc-mag-tbl th .lug-finfo { vertical-align: 0; text-transform: none;
+        letter-spacing: normal; }
+      .sc-mag .sc-tip-pop { position: fixed; top: 0; left: 0; right: auto;
+        text-transform: none; letter-spacing: normal;
+        /* the th sets nowrap, which the popover must not inherit or its text
+           runs off the side of the box */
+        white-space: normal; font-weight: 400; z-index: 2000; }
+      .sc-mag .sc-tip-pop .lug-pop-t { display: block; }
+      .sc-mag-no td { color: #777; font-style: italic; }
+      .sc-mag-win { color: #2f7a4f; font-weight: 700; }
+      .sc-mag-flag { display: inline-block; font-size: 0.68rem;
+        font-style: normal; color: #6a5200; background: #fdf4d8;
+        border: 1px solid #e6d08a; border-radius: 3px; padding: 1px 5px;
+        margin-top: 3px; }
+      .sc-mag-flag.sc-mag-hot { color: #8a2b22; background: #fbeceb;
+        border-color: #e2b3ae; }
+      .sc-mag-note { margin-top: 14px; padding: 10px 12px; background: #f4f6f4;
+        border-left: 3px solid var(--sq-wrap); border-radius: 0 6px 6px 0;
+        line-height: 1.55; font-size: 0.78rem; }
+
+      .calc-steps .grp { background: var(--section-title-color) !important; color: #fff; font-weight: 700; letter-spacing: .04em; font-size: 0.78rem; text-transform: uppercase; }
+
+      /* ── Unit switch ── */
+      .sq-seg { display: inline-flex; border: 1px solid #b9bcb9; border-radius: 4px; overflow: hidden; width: fit-content; }
+      .sq-seg button { appearance: none; border: 0; background: #fff; color: #5a6168; font: 600 12px/1 "Roboto", Arial, sans-serif; padding: 6px 12px; cursor: pointer; border-right: 1px solid #b9bcb9; }
+      .sq-seg button:last-child { border-right: none; }
+      .sq-seg button.sq-active { background: #6a746a; color: #fff; }
+
+      .sc-inputs-h { flex-wrap: wrap; row-gap: 8px; }
+      .sc-inputs-h .sq-seg button { padding: 5px 9px; font-size: 11px; }
+      .sc-mode-note {
+        font-size: 11.5px; color: var(--sq-ink-soft); line-height: 1.45;
+        font-family: var(--body-font-family); background: #fff;
+        border: 1px solid #d5dade; border-radius: 6px; padding: 8px 10px;
+        margin-bottom: 12px;
+      }
+
+      .sc-toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 0 0 14px; font-family: var(--sq-ui); }
+      .sc-toolbar-l { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--sq-ink); }
+      .sc-toolbar-n { font-size: 11.5px; color: var(--sq-ink-soft); font-family: var(--body-font-family); }
+
+      /* ── Warnings ── */
+      .sc-warn { background: #fff8e6; border-left: 4px solid #cc7700; border-radius: 0 6px 6px 0; padding: 9px 13px; margin: 0 16px 12px; font-size: 12.5px; line-height: 1.55; color: #5a3a00; font-family: var(--body-font-family); }
+
+      /* ── Schematic ── */
+      .sc-svg-wrap { padding: 8px 16px 16px; background: #fff; }
+      .sc-svg-wrap svg { width: 100%; height: auto; display: block; }
+      .sc-core { fill: #c9d2d6; stroke: var(--sq-outline); stroke-width: 1.6; }
+      .sc-windbg { fill: #fdf6e8; stroke: var(--sq-outline); stroke-width: 1.4; }
+      .sc-wire { fill: #e6b45c; stroke: #8a6420; stroke-width: 0.9; }
+      .sc-wsym { stroke: #5c4212; stroke-width: 1; }
+      .sc-wdot { fill: #5c4212; }
+      .sc-arm  { fill: #b6bfc4; stroke: var(--sq-outline); stroke-width: 1.8; }
+      .sc-plunger { fill: #9fb0b8; stroke: var(--sq-outline); stroke-width: 1.8; }
+      .sc-tp { font-family: var(--sq-ui); font-size: 10px; font-weight: 700; fill: #1C2227; letter-spacing: .06em; }
+      .sc-pole { fill: var(--lug-fail); }
+      .sc-gapfill { fill: #f6e4e1; stroke: var(--lug-fail); stroke-width: 1; stroke-dasharray: 3 2; }
+      .sc-dim { stroke: var(--sq-ink-soft); stroke-width: 1; }
+      .sc-ext { stroke: var(--sq-ink-soft); stroke-width: 0.7; stroke-dasharray: 3 2; }
+      .sc-lead { stroke: var(--sq-ink-soft); stroke-width: 0.8; }
+      .sc-force { stroke: var(--lug-fail); stroke-width: 2.2; }
+      .sc-react { stroke: #8a5200; stroke-width: 2; stroke-dasharray: 5 3; }
+      .sc-reactf { fill: #8a5200; }
+      .sc-tr { font-family: var(--sq-ui); font-size: 10px; font-weight: 700; fill: #8a5200; }
+      .sc-forcef { fill: var(--lug-fail); }
+      .sc-tg { font-family: var(--sq-ui); font-size: 10px; fill: var(--lug-fail); }
+      .sc-flux { stroke: var(--sq-blue); stroke-width: 2.2; fill: none; }
+      .sc-fluxf { fill: var(--sq-blue); }
+      .sc-t  { font-family: var(--sq-ui); font-size: 11px; fill: var(--sq-ink); }
+      .sc-ts { font-family: var(--sq-ui); font-size: 10px; fill: var(--sq-ink-soft); }
+      .sc-tb { font-family: var(--sq-ui); font-size: 11px; font-weight: 700; fill: var(--sq-blue); }
+      .sc-tf { font-family: var(--sq-ui); font-size: 12px; font-weight: 700; fill: var(--lug-fail); }
+      .sc-chart-wrap { position: relative; width: 100%; height: 300px; padding: 10px 16px 16px; background: #fff; }
+
+      /* ── Reference prose ── */
+      .ref-section-title { font-size: 16px; font-weight: 700; color: #6a746a; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; padding-left: 2px; }
+      .ref-card { background: #fff; border: 2px solid var(--sq-outline); border-radius: 10px; padding: 16px 18px; box-shadow: 0 2px 5px rgba(0,0,0,.15); margin-bottom: 22px; }
+      .ref-warn { background: #fff8e6; border-left: 3px solid #cc7700; border-radius: 0 6px 6px 0; padding: 9px 13px; font-size: 13px; color: #5a3a00; line-height: 1.6; margin: 8px 0 12px; }
+      .ref-zoomable { cursor: zoom-in; transition: opacity .15s; }
+      .ref-zoomable:hover { opacity: .85; }
+      .lightbox-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:99999; align-items:center; justify-content:center; padding:20px; cursor:zoom-out; }
+      .lightbox-overlay.active { display:flex; }
+      .lightbox-img { max-width:90vw; max-height:90vh; object-fit:contain; border-radius:6px; box-shadow:0 8px 32px rgba(0,0,0,.6); cursor:default; touch-action:pinch-zoom; background:#fff; }
+      .lightbox-close { position:fixed; top:16px; right:20px; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.15); border:2px solid rgba(255,255,255,.4); color:#fff; font-size:20px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s; z-index:100000; }
+      .lightbox-close:hover { background:rgba(255,255,255,.3); }
+      .lightbox-caption { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,.8); font-size:13px; font-family:Roboto,Arial,sans-serif; text-align:center; max-width:80vw; pointer-events:none; }
+
+      /* ── Reference guide cards (matches SpringCompressionRound.html) ── */
+      .ref-zoomable { cursor: zoom-in; transition: opacity .15s; }
+      .ref-zoomable:hover { opacity: .85; }
+      .lightbox-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:99999; align-items:center; justify-content:center; padding:20px; cursor:zoom-out; }
+      .lightbox-overlay.active { display:flex; }
+      .lightbox-img { max-width:90vw; max-height:90vh; object-fit:contain; border-radius:6px; box-shadow:0 8px 32px rgba(0,0,0,.6); cursor:default; touch-action:pinch-zoom; background:#fff; }
+      .lightbox-close { position:fixed; top:16px; right:20px; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.15); border:2px solid rgba(255,255,255,.4); color:#fff; font-size:20px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s; z-index:100000; }
+      .lightbox-close:hover { background:rgba(255,255,255,.3); }
+      .lightbox-caption { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,.8); font-size:13px; font-family:Roboto,Arial,sans-serif; text-align:center; max-width:80vw; pointer-events:none; }
+      .ref-wrapper {
+        margin: 0 auto;
+        max-width: 58rem;
+        font-family: "Roboto", Arial, sans-serif;
+      }
+
+      /* ── Top-level section card ────────────────────────────── */
+      .ref-card {
+        background: #eee;
+        border: 2px solid rgb(67,67,67);
+        border-radius: 10px;
+        box-shadow: 0 3px 5px rgba(0,0,0,.4);
+        margin: 0 0 1rem;
+        overflow: hidden;
+      }
+
+      /* ── Card header bar ───────────────────────────────────── */
+      .ref-card-header {
+        background: #6a746a;
+        padding: 8px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .ref-card-header h2 {
+        font-size: 13px;
+        font-weight: 700;
+        color: #eee;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin: 0;
+        flex: 1;
+      }
+      .ref-card-header .ref-num {
+        font-size: 12px;
+        color: #A3C3CD;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+      .ref-chevron {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        transition: transform 0.2s ease;
+        color: #A3C3CD;
+      }
+      .ref-card.collapsed .ref-chevron { transform: rotate(-90deg); }
+      .ref-card.collapsed .ref-body    { display: none; }
+
+      /* ── Card body ─────────────────────────────────────────── */
+      .ref-body {
+        padding: 14px 16px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .ref-body > * {
+        min-width: 0;
+      }
+      .ref-body.two-col {
+        grid-template-columns: 1fr 1fr;
+        gap: 14px 24px;
+      }
+      @media (max-width: 640px) {
+        .ref-body.two-col { grid-template-columns: 1fr; }
+      }
+
+      /* ── Sub-section label ─────────────────────────────────── */
+      .ref-sub {
+        font-size: 12px;
+        font-weight: 700;
+        color: #61828A;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        border-bottom: 1px solid #c0c0c0;
+        padding-bottom: 3px;
+        margin-bottom: 6px;
+      }
+
+      /* ── Body copy ─────────────────────────────────────────── */
+      .ref-body p {
+        font-size: 13px;
+        color: #333;
+        line-height: 1.65;
+        margin: 0 0 8px;
+      }
+      .ref-body p:last-child { margin-bottom: 0; }
+      .ref-body ul {
+        font-size: 13px;
+        color: #333;
+        line-height: 1.7;
+        padding-left: 18px;
+        margin: 0 0 8px;
+      }
+      /* css/style.css sets `ul li` and `a` to 20px site-wide; both are more
+         specific than the inherited size, so restate them for card copy. */
+      .ref-body ul li {
+        font-size: 13px;
+        color: #333;
+        font-weight: 400;
+        line-height: 1.7;
+        padding: 0;
+        margin: 0 0 5px;
+      }
+      .ref-body ul li:last-child { margin-bottom: 0; }
+      .ref-body a {
+        font-size: inherit;
+        color: #3a6270;
+        text-decoration: underline;
+      }
+      .ref-body a:hover { color: #61828A; }
+      .ref-body p a, .ref-body li a { font-size: 13px; }
+      .ref-body a.lug-src { font-size: 12.5px; color: #fff; text-decoration: none; }
+      .ref-body a.lug-src:hover { color: #fff; }
+
+      /* ── Equation block ────────────────────────────────────── */
+      .ref-eq-block {
+        background: #d9d9d9;
+        border: 1.5px solid rgb(67,67,67);
+        border-radius: 6px;
+        padding: 10px 16px 8px;
+        margin: 6px 0 10px;
+        overflow-x: auto;
+      }
+      .ref-eq-tag {
+        font-size: 12px;
+        color: #61828A;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 700;
+        font-family: "Roboto", Arial, sans-serif;
+        display: block;
+        margin-bottom: 4px;
+      }
+      mjx-container { color: #1a3a40 !important; margin: 0;}
+      mjx-container[jax="SVG"][display="true"] {
+        margin: 0.7em 0 !important;
+      }
+
+      /* Inline math */
+      mjx-container[jax="SVG"] {
+        margin: 0 !important;
+      }
+
+      /* ── Figure placeholder ────────────────────────────────── */
+      .ref-fig {
+        border: 1.5px dashed #999;
+        border-radius: 6px;
+        background: #fafafa;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 20px 12px;
+        text-align: center;
+        margin: 4px 0;
+      }
+      .ref-fig-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #494949;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .ref-fig-caption {
+        font-size: 12px;
+        color: #5f5f5f;
+        max-width: 400px;
+      }
+      /* drawn figures: real <img> so they are crawlable and zoomable */
+      .ref-fig-img {
+        border: 1px solid #c6c6c6;
+        border-radius: 6px;
+        background: #fff;
+        padding: 10px 12px;
+        display: block;
+        margin: 4px 0;
+      }
+      .ref-fig-img img { width: 100%; height: auto; display: block; }
+      .ref-canvas-wrap { position: relative; width: 100%; height: 260px; }
+
+      /* ── Data table ────────────────────────────────────────── */
+      .ref-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11.5px;
+        margin: 6px 0;
+      }
+      .ref-table th {
+        background: #d9d9d9;
+        border: 1px solid #bbb;
+        padding: 4px 8px;
+        font-weight: 600;
+        color: #444;
+        text-align: left;
+      }
+      .ref-table td {
+        border: 1px solid #ccc;
+        padding: 3px 8px;
+        color: #333;
+        vertical-align: top;
+      }
+      .ref-table tr:nth-child(even) td { background: #f5f5f5; }
+      .ref-table-caption {
+        font-size: 12px;
+        color: #888;
+        margin-top: 3px;
+        font-style: italic;
+      }
+
+      /* ── Callout / warning boxes ───────────────────────────── */
+      .ref-callout {
+        background: #e8f0f3;
+        border-left: 3px solid #61828A;
+        border-radius: 0 6px 6px 0;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: #1a3a40;
+        line-height: 1.55;
+      }
+      .ref-callout strong { color: #3a6270; }
+      .ref-warn {
+        background: #fff8e6;
+        border-left: 3px solid #cc7700;
+        border-radius: 0 6px 6px 0;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: #5a3a00;
+        line-height: 1.55;
+      }
+
+      /* ── Section wrapper ───────────────────────────────────── */
+      .ref-section-wrap {
+        padding: 1rem 0.5rem 0.5rem;
+      }
+      .ref-section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #6a746a;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.5rem;
+        padding-left: 2px;
+      }
+
+      /* ── Full-bleed child inside two-col ───────────────────── */
+      .full-col { grid-column: 1 / -1; }
+
+      .lug-srcs { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
+      .lug-src {
+        display: inline-block; font-family: var(--sq-ui); font-size: 12.5px;
+        line-height: 1.2; padding: 6px 11px; border-radius: var(--border-radius-small);
+        background: var(--section-title-color); color: #fff; text-decoration: none;
+        border: 1px solid var(--section-title-color);
+      }
+      .lug-src:hover { background: #4e6b73; color: #fff; }
+    </style>
+  </head>
+
+  <!-- BODY -->
+  <body>
+
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="navbarwrapper">
+    <nav class="navbar navbar-expand-md navbar-light mx-auto">
+      <div class="d-flex align-items-center mb-auto">
+        <a class="navbar-brand" href="index.html">
+          <img src="img/blueK.webp" width="50" height="30" class="d-inline-block align-top" alt="KasperCalcLogo" />
+        </a>
+        <a class="navbar-brand" href="index.html">KasperCalc</a>
+      </div>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler ms-auto" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ms-auto">
+          <div>
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Fluids</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="fuelHead.html">Jet Fuel Head Calculator</a>
+                  <a class="dropdown-item" href="PPH.html">Jet Fuel PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="universalfuelHead.html">Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="universalPPH.html">Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalfuelHead.html">Water Density Compensated Universal Fluid Head Calculator</a>
+                  <a class="dropdown-item" href="CrazyUniversalPPH.html">Water Density Compensated Universal PPH to GPM Calculator</a>
+                  <a class="dropdown-item" href="equivalentFlows.html">Density Dependent Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="GasMassFlowRateCalculator.html">Gas Mass Flow Rate Calculator</a>
+                  <a class="dropdown-item" href="PipeVelocity.html">Fluid Velocity in Pipe Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Jet Fuel</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="JetFuelPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="nominalDensity.html">Nominal Density</a>
+                  <a class="dropdown-item" href="minmaxDensity.html">Min/Max Density</a>
+                  <a class="dropdown-item" href="kinematicViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="surfaceTension.html">Surface Tension</a>
+                  <a class="dropdown-item" href="vaporPressure.html">Vapor Pressure</a>
+                  <a class="dropdown-item" href="MultipleOfVolume.html">Multiple of Volume</a>
+                  <a class="dropdown-item" href="distillationCurves.html">Distillation Curves</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">Propylene Glycol</span><span class="nav-label-short">Prop. Glycol</span></a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="PGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="PGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="PGdensity.html">Density</a>
+                  <a class="dropdown-item" href="PGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="PGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="PGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="PGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="PGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="PGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">Ethylene Glycol</span><span class="nav-label-short">Eth. Glycol</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="EGPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="EGFrostProtection.html">Frost Protection</a>
+                  <a class="dropdown-item" href="EGdensity.html">Density</a>
+                  <a class="dropdown-item" href="EGheatcapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="EGthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="EGviscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="EGPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="EGThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="EGBoilingPoint.html">Boiling Point</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"><span class="nav-label-full">MIL-PRF-23699</span><span class="nav-label-short">PRF-23699</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MIL-PRF-23699PropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699Density.html">Density</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699SpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699thermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699viscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699PrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="MIL-PRF-23699ThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Skydrol</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="SkydrolPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="SkydrolDensity.html">Density</a>
+                  <a class="dropdown-item" href="SkydrolSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="SkydrolThermalConductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="SkydrolViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="SkydrolPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="SkydrolThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="SkydrolThermalDiffusivity.html">Thermal Diffusivity</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Water</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="WaterPropertiesGeneral.html">General Properties</a>
+                  <a class="dropdown-item" href="densityWater.html">Density</a>
+                  <a class="dropdown-item" href="WaterSpecificHeatCapacity.html">Specific Heat Capacity</a>
+                  <a class="dropdown-item" href="WaterBoilingHighPressure.html">Boiling Points at Pressures</a>
+                  <a class="dropdown-item" href="Waterthermalconductivity.html">Thermal Conductivity</a>
+                  <a class="dropdown-item" href="WaterViscosity.html">Viscosity</a>
+                  <a class="dropdown-item" href="WaterPrandtlNumber.html">Prandtl Number</a>
+                  <a class="dropdown-item" href="WaterEnthalpyEntropy.html">Enthalpy and Entropy</a>
+                  <a class="dropdown-item" href="WaterIonizationConstant.html">Ionization Constant (pK<sub>w</sub>)</a>
+                  <a class="dropdown-item" href="WaterHeatVaporization.html">Heat of Vaporization</a>
+                  <a class="dropdown-item" href="WaterSaturationPressure.html">Saturation Pressure</a>
+                  <a class="dropdown-item" href="WaterMeltingPointsHighPressure.html">Melting Points at High Pressure</a>
+                  <a class="dropdown-item" href="WaterThermalExpansionCoefficient.html">Thermal Expansion Coefficient</a>
+                  <a class="dropdown-item" href="WaterThermalDiffusivity.html">Thermal Diffusivity</a>
+                  <a class="dropdown-item" href="WaterDissolvedGasDiffusionCoefficients.html">Gasses Dissolved in Water - Diffusion Coefficients</a>
+                </div>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="text-center align-svg-bottom largesearchbar" style="padding:0px;">
+                <span class="nav-link search-icon" id="toggleSearch2" role="button" aria-label="Search" style="padding:0px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-2">
+                    <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"></path>
+                  </svg>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="d-md-flex d-block justify-content-end">
+            <ul class="navbar-nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="ThermoDynamicsLand.html">Thermo Land</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Springs</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="SpringCompressionRound.html">Compression Spring Calculator</a>
+                  <a class="dropdown-item" href="SpringTorsionRound.html">Torsion Spring Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Electronics</a>
+                <div class="dropdown-menu dropdown-menu">
+                  <a class="dropdown-item" href="ColorBandCalculator.html#resistor.html">Resistor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#capacitor.html">Capacitor Color Band</a>
+                  <a class="dropdown-item" href="ColorBandCalculator.html#inductor.html">Inductor Color Band</a>
+                  <a class="dropdown-item" href="12VAmperageAndWireLength.html">12V Amperage and Wire Length</a>
+                  <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
+                  <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
+                  <a class="dropdown-item" href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a>
+                  <a class="dropdown-item" href="SolenoidCoil.html">Solenoid &amp; Coil Designer</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">O-Rings</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="ORing-SAE AS5857GlandDimensions.html">O-Ring (SAE AS5857)</a>
+                  <a class="dropdown-item" href="ORing-HighPressureIndustrial.html">O-Ring (High Pressure Industrial Seal)</a>
+                  <a class="dropdown-item" href="ORing-FaceSeal.html">O-Ring (Face Seal Gland)</a>
+                  <a class="dropdown-item" href="ORingSqueezeCalculator.html">Squeeze Calculator (AS4716 App. A)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes.html">O-Ring Size Finder (O-Ring Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-All-Sizes-Groove.html">O-Ring Size Finder (Groove Dimensions)</a>
+                  <a class="dropdown-item" href="ORing-Chemical-Compatibility.html">O-Ring Chemical Compatibility</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Stress</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MaterialPropertyLookup.html">Material Property Lookup</a>
+                  <a class="dropdown-item" href="LugPinAnalysis.html">Lug &amp; Pin Analysis</a>
+                  <a class="dropdown-item" href="ColumnBuckling.html">Column Buckling &amp; Crippling</a>
+                  <a class="dropdown-item" href="ThreadStressCalculator.html">Thread Stress Calculator</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"><span class="nav-label-full">MIL-HDBK-5</span><span class="nav-label-short">HDBK-5</span></a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="MaterialPropertyLookup.html">MIL-HDBK-5 Material Property Lookup</a>
+                  <a class="dropdown-item" href="Chapter1(general).html">Chapter 1 (General)</a>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter2(steel).html">Chapter 2 (Steel)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 2 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.1(steel).html">2.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.2(steel).html">2.2 (Carbon Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.3(steel).html">2.3 (Low Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.4(steel).html">2.4 (Intermediate Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.5(steel).html">2.5 (High Alloy Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.6(steel).html">2.6 (Precipitation Hardening Stainless Steel)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.7(steel).html">2.7 (Austenitic Stainless Steels)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter2.8(steel).html">2.8 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter3(aluminum).html">Chapter 3 (Aluminum)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 3 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.1(general-aluminum).html">3.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.2(aluminum).html">3.2 (2000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.5(aluminum).html">3.5 (5000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.6(aluminum).html">3.6 (6000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.7(aluminum).html">3.7 (7000 Series Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.8(aluminum).html">3.8 (200.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.9(aluminum).html">3.9 (300.0 Series Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter3.10(element-properties-aluminum).html">3.10 (Element Properties)</a>
+                    </div>
+                  </div>
+
+                  <div class="dropdown-submenu">
+                    <div class="dropdown-submenu-row">
+                      <a class="dropdown-item" href="Chapter4(magnesium).html">Chapter 4 (Magnesium)</a>
+                      <button type="button" class="dropdown-submenu-toggle" aria-expanded="false" aria-label="Toggle Chapter 4 sections">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="dropdown-submenu-list">
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.1(general-magnesium).html">4.1 (General)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.2(magnesium).html">4.2 (Magnesium-Wrought Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.3(magnesium).html">4.3 (Magnesium Cast Alloys)</a>
+                      <a class="dropdown-item dropdown-subitem" href="Chapter4.4(element-properties-magnesium).html">4.4 (Element Properties)</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">NSWC-11</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="NSWC-11StaticSeal.html">Static Seal &amp; Gasket Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11DynamicSeal.html">Dynamic Seal Reliability</a>
+                  <a class="dropdown-item" href="NSWC-11Spring.html">Compression Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11TorsionSpring.html">Torsion Spring Failure Rate</a>
+                  <a class="dropdown-item" href="NSWC-11BellevilleWasher.html">Belleville Washer Failure Rate</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Misc</a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <a class="dropdown-item" href="densityAirAltitude.html">Air Pressure from Altitude</a>
+                  <a class="dropdown-item" href="SpecificGravCalculator.html">Temperature Compensated Specific Gravity Calculator</a>
+                  <a class="dropdown-item" href="SpecificGravityExplanation.html">Specific Gravity Explanation</a>
+                  <a class="dropdown-item" href="AS4395-Checker-Tool.html">AS4395 Checker Tool</a>
+                  <a class="dropdown-item" href="AS5202-Checker-Tool.html">AS5202 Checker Tool</a>
+                  <a class="dropdown-item" href="AnodizeToleranceCalculator.html">Anodize Tolerance Calculator</a>
+                  <a class="dropdown-item" href="sensor-integrity-bit-analysis.html">Sensor Event &amp; Binary Integrity Analysis</a>
+                  <a class="dropdown-item" href="UltraTax-to-Canopy-Converter.html">UltraTax to Canopy Converter</a>
+                  <a class="dropdown-item" href="Plastics-Chemical-Compatibility.html">Plastics Chemical Compatibility</a>
+                  <a class="dropdown-item" href="Fungal-Compatibility.html">Plastics and Elastomer Fungal Resistance</a>
+                  <a class="dropdown-item" href="GasFlowSafety.html">Gas Flow Safety Calculator</a>
+                  <a class="dropdown-item" href="kaspercalc-webplot-digitizer.html">KasperCalc Webplot Digitizer</a>
+                  <a class="dropdown-item" href="SvgEditor.html">SVG Editor</a>
+                  <a class="dropdown-item" href="Multi-Fluid-Properties.html">Multi-Fluid Property Charts</a>
+                </div>
+              </li>
+              <li class="nav-item text-center align-svg-bottom smallsearchbar">
+                <div class="d-flex flex-grow-1" style="flex-direction: row; width: auto;">
+                  <div>
+                    <a class="nav-link search-icon" id="toggleSearch1" role="button" aria-label="Search">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="navbar-svg-icon" viewBox="0 0 64 64" id="nav-svg-1">
+                        <path d="M 27 9 C 17.075 9 9 17.075 9 27 C 9 36.925 17.075 45 27 45 C 31.129213 45 34.9263 43.587367 37.966797 41.240234 L 51.048828 54.322266 C 51.952828 55.226266 53.418266 55.226266 54.322266 54.322266 C 55.226266 53.418266 55.226266 51.952828 54.322266 51.048828 L 41.240234 37.966797 C 43.587367 34.9263 45 31.129213 45 27 C 45 17.075 36.925 9 27 9 z M 27 13 C 34.719 13 41 19.281 41 27 C 41 34.719 34.719 41 27 41 C 19.281 41 13 34.719 13 27 C 13 19.281 19.281 13 27 13 z"/>
+                      </svg>
+                    </a>
+                  </div>
+                  <div class="search-form my-auto flex-grow-1" id="search-container1">
+                    <form class="ms-3 mb-auto flex-grow-1" action="/search.html" method="GET">
+                      <div class="d-flex flex-grow-1" style="flex-direction: column; flex-grow: 1;">
+                        <div class="search-container11 flex-grow-1" id="searchBox1" style="flex-grow: 1;">
+                          <div class="d-inline-block me-3 flex-grow-1 my-auto" style="min-width: 10rem;">
+                            <input type="search" name="q" class="navbar-search-input" placeholder="Search..." required>
+                          </div>
+                          <div class="d-inline-block my-auto">
+                            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="page-ident-container2 d-none d-md-block">
+      <div class="page-identifier2 search-container2 no-animate" id="searchBox2">
+        <form id="siteSearchForm" action="/search.html" method="GET" class="d-flex justify-content-end">
+          <input type="search" name="q" class="navbar-search-input2 my-2 me-3" placeholder="Search..." id="searchInput2" required>
+          <div class="my-auto me-2">
+            <button class="btn btn-outline-info-bck" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main data-pagefind-body>
+
+    <!-- BANNER -->
+
+    <section class="banner">
+      <div class="cssbannercontainer">
+        <div class="col-lg-12 col-12">
+          <div class="banner section-title-wrap">
+            <div class="h1 section-title bannertext">
+              Solenoid &amp; Coil Designer
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <h1 class="visually-hidden">Solenoid and Electromagnet Coil Designer &mdash; Turns, Impedance, Pull Force and Thermal Duty</h1>
+
+    <div class="sq-main">
+
+      <p class="sq-subtitle">
+        Wind a coil on paper and find out what it takes to drive it. Turns and
+        resistance come from the AWG magnet wire and the winding window;
+        inductance and impedance decide how much current the supply will actually
+        push; ampere-turns and the working gap set the force; and the dissipation
+        decides whether it runs continuously, intermittently, or for four seconds.
+      </p>
+
+      <div class="sc-toolbar">
+        <span class="sc-toolbar-l">Units</span>
+        <span class="sq-seg" id="unitSeg" role="group" aria-label="Unit system">
+          <button type="button" data-u="in" class="sq-active" aria-pressed="true">Inch</button>
+          <button type="button" data-u="mm" aria-pressed="false">Metric</button>
+        </span>
+        <span class="sc-toolbar-n">Dimensions, force and pressure follow this.
+          Volts, amps, watts, ohms, tesla and °C are the same either way.</span>
+      </div>
+
+      <div class="sq-calc-grid">
+
+        <!-- ════════ LEFT: INPUTS ════════ -->
+        <div class="sq-panel sq-sticky">
+          <div class="sq-panel-h sc-inputs-h">
+            <span>Inputs</span>
+            <span class="sq-seg" id="modeSeg" role="group" aria-label="Solenoid type">
+              <button type="button" data-m="armature" class="sq-active" aria-pressed="true">Flat armature</button>
+              <button type="button" data-m="plunger" aria-pressed="false">Plunger</button>
+            </span>
+          </div>
+          <div class="sq-panel-b">
+
+            <div class="sc-mode-note" id="modeNote"></div>
+
+            <div class="lug-group-h">Winding</div>
+            <div class="lug-r2">
+              <div class="lug-field">
+                <label for="bore" id="boreLabel">Bore / core dia <span class="lug-unit u-len">in</span></label>
+                <input type="number" id="bore" value="0.500" step="0.025" min="0.001" />
+              </div>
+              <div class="lug-field">
+                <label for="coilLen">Winding length <span class="lug-unit u-len">in</span></label>
+                <input type="number" id="coilLen" value="1.250" step="0.05" min="0.001" />
+              </div>
+            </div>
+            <div class="lug-r2">
+              <div class="lug-field">
+                <label for="build">Radial build <span class="lug-unit u-len">in</span></label>
+                <input type="number" id="build" value="0.315" step="0.025" min="0.001" />
+              </div>
+              <div class="lug-field">
+                <div class="lug-labelrow">
+                  <label for="fill">Fill factor <span class="lug-unit">%</span></label>
+                  <span class="lug-finfo" id="fillInfo" role="button" tabindex="0"
+                        aria-label="What fill factor means">i</span>
+                </div>
+                <input type="number" id="fill" value="70" step="1" min="10" max="90" />
+              </div>
+            </div>
+            <div class="lug-field">
+              <label for="awg">Magnet wire</label>
+              <select id="awg"></select>
+              <div class="lug-props" id="wireHint"></div>
+            </div>
+
+            <div class="lug-group-h" id="coreGroupH">Core &amp; working gap</div>
+            <div class="lug-field">
+              <label for="core" id="coreMatLabel">Core material</label>
+              <select id="core"></select>
+            </div>
+            <div class="lug-field">
+              <label for="returnPath">Magnetic circuit</label>
+              <select id="returnPath">
+                <option value="open">Open rod &mdash; no return path</option>
+                <option value="yoke" selected>Steel shell or yoke closes the circuit</option>
+              </select>
+            </div>
+            <div class="lug-field">
+              <div class="lug-labelrow">
+                <label for="gapCount">Working gaps in the flux path</label>
+                <span class="lug-finfo" id="gapCountInfo" role="button" tabindex="0"
+                      aria-label="How many working gaps the flux crosses">i</span>
+              </div>
+              <select id="gapCount">
+                <option value="1">One &mdash; plunger onto a stop</option>
+                <option value="2" selected>Two &mdash; armature across a pair of poles</option>
+              </select>
+            </div>
+            <div class="lug-r2">
+              <div class="lug-field">
+                <label for="gap" id="gapLabel">Working gap <span class="lug-unit u-len">in</span></label>
+                <input type="number" id="gap" value="0.080" step="0.005" min="0" />
+              </div>
+              <div class="lug-field">
+                <label for="poleMode">Pole face area</label>
+                <select id="poleMode">
+                  <option value="core" selected id="poleModeCore">Same as core</option>
+                  <option value="custom">Enter directly</option>
+                </select>
+              </div>
+            </div>
+            <div class="lug-field" id="poleAreaField">
+              <label for="poleArea">Pole area <span class="lug-unit u-area">in²</span></label>
+              <input type="number" id="poleArea" value="0.196" step="0.01" min="0.0001" />
+            </div>
+
+            <div class="lug-group-h">Drive</div>
+            <div class="lug-field">
+              <label for="drive">Supply</label>
+              <select id="drive"></select>
+            </div>
+            <div class="lug-r2">
+              <div class="lug-field" id="dcVoltsField">
+                <label for="dcVolts" id="dcVoltsLabel">Supply, V DC</label>
+                <input type="number" id="dcVolts" value="24" step="1" min="0.1" />
+              </div>
+              <div class="lug-field" id="customFField">
+                <label for="customF">Frequency <span class="lug-unit">Hz</span></label>
+                <input type="number" id="customF" value="60" step="1" min="0.1" />
+              </div>
+            </div>
+            <div class="lug-field">
+              <label for="ballast">Series ballast resistor <span class="lug-unit">&#937;</span></label>
+              <input type="number" id="ballast" value="0" step="1" min="0" />
+              <div class="lug-props">
+                A series resistor is how a coil is run below its natural current.
+                It does not match impedance &mdash; it burns the difference as
+                heat, and that heat has to go somewhere too.
+              </div>
+            </div>
+
+            <div class="lug-group-h">Thermal</div>
+            <div class="lug-r2">
+              <div class="lug-field">
+                <label for="ambient">Ambient <span class="lug-unit">°C</span></label>
+                <input type="number" id="ambient" value="25" step="1" />
+              </div>
+              <div class="lug-field">
+                <div class="lug-labelrow">
+                  <label for="hConv">h <span class="lug-unit">W/m²K</span></label>
+                  <span class="lug-finfo" id="hInfo" role="button" tabindex="0"
+                        aria-label="What the convection coefficient means">i</span>
+                </div>
+                <input type="number" id="hConv" value="12" step="1" min="1" />
+              </div>
+            </div>
+            <div class="lug-field">
+              <label for="insul">Insulation class</label>
+              <select id="insul"></select>
+              <div class="lug-props" id="thermHint"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ════════ RIGHT: RESULTS ════════ -->
+        <div>
+          <div class="sq-panel" style="margin-bottom:20px;">
+            <div class="sq-panel-h"><span>Results</span></div>
+            <div class="lug-tiles" id="tileGrid"></div>
+            <div id="warnBox"></div>
+            <div style="padding:0 16px 16px;">
+              <details class="lug-details">
+                <summary>Worked calculation</summary>
+                <div class="calc-steps" id="calcSteps"></div>
+              </details>
+              <details class="lug-details">
+                <summary>Or use a permanent magnet instead</summary>
+                <div class="sc-mag tex2jax_ignore" id="magnetBox"></div>
+              </details>
+            </div>
+          </div>
+
+          <div class="sq-panel" style="margin-bottom:20px;">
+            <div class="sq-panel-h"><span>Assembly</span></div>
+            <div class="sc-svg-wrap">
+              <svg id="schematic" viewBox="0 0 460 250" role="img"
+                   aria-label="Cross-section of the coil, core, working gap and armature"></svg>
+            </div>
+          </div>
+
+          <div class="sq-panel">
+            <div class="sq-panel-h"><span>Force against working gap</span></div>
+            <div class="sc-chart-wrap"><canvas id="gapChart"></canvas></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── REFERENCE GUIDE ── -->
+    <section aria-label="Solenoid and coil design reference guide">
+    <div class="csscontainer">
+    <div class="col-lg-12 col-12 px-3">
+    <div class="ref-wrapper">
+    <div class="ref-section-wrap">
+
+      <div class="ref-section-title">Reference Guide &mdash; Designing a Coil</div>
+
+  <div class="ref-card" id="scRef1">
+    <div class="ref-card-header" onclick="toggleRefCard('scRef1')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">01</span>
+      <h2>What Actually Limits the Current</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
+      <div>
+        <p>On DC nothing limits the current but copper. It is <em>V</em>/<em>R</em>, the resistance is set by how much wire is on the bobbin, and the only ways to draw less are more turns, thinner wire, or a series resistor.</p>
+        <p>On AC the winding also has reactance, and the two do not add — they combine at right angles.</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Reactance and impedance</span>
+          \[ X_L = 2\pi f L, \qquad |Z| = \sqrt{R^2 + X_L^2}, \qquad I = \frac{V}{|Z|} \]
+        </div>
+        <p>That is why a coil which would draw twenty amps across a DC supply can sit quite happily on 120 VAC: at 60 Hz the reactance is doing the limiting and the copper is barely involved. It is also why the power factor is poor — most of the volt-amps are borrowed and handed back each cycle rather than consumed.</p>
+        <div class="ref-callout">Real power is always <em>I</em>²<em>R</em>. The reactive part heats nothing; it just makes the supply work harder.</div>
+      </div>
+        <div class="ref-sub">Resistance and reactance are perpendicular</div>
+        <div class="ref-fig ref-fig-img">
+          <img src="img/coil-impedance-triangle.svg" alt="Impedance triangle showing resistance, inductive reactance and their vector sum" loading="lazy" decoding="async" class="ref-zoomable">
+          <span class="ref-fig-label" hidden>The impedance triangle</span>
+        </div>
+    </div>
+  </div>
+
+  <div class="ref-card" id="scRef2">
+    <div class="ref-card-header" onclick="toggleRefCard('scRef2')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">02</span>
+      <h2>Mains, and What a Rectifier Changes</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
+      <div>
+        <p>A coil designed to be reactance-limited on mains is one with a large inductance and a small resistance. Put a bridge rectifier in front of it and the reactance stops helping: the winding now sees something close to DC, and the current settles at <em>V</em>/<em>R</em> — which is exactly what the reactance had been protecting it from.</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Rectified mains, smoothed and unsmoothed</span>
+          \[ V_{\text{cap}} = \sqrt{2}\,V_{rms} = 1.41\,V_{rms}, \qquad V_{\text{avg}} = \frac{2\sqrt{2}}{\pi}V_{rms} = 0.90\,V_{rms} \]
+        </div>
+        <div class="ref-warn"><span style="font-weight: var(--font-weight-normal)">The classic failure.</span> Rectified 120 VAC with a smoothing capacitor is not 120 V — the capacitor charges to the peak, 170 V. So the voltage rises 41% at the very moment the current-limiting reactance disappears. On an inductive coil that is routinely five to ten times the current and twenty-five to a hundred times the heating.</div>
+        <p>Running the same coil on 120 V and 240 V is the same question in reverse: double the voltage, double the current, four times the heat. A coil is only dual-voltage if it has two windings or a series element sized for the difference.</p>
+      </div>
+        <div class="ref-sub">Two things get worse at once</div>
+        <div class="ref-fig ref-fig-img">
+          <img src="img/coil-rectified-mains.svg" alt="Comparison of a coil on AC mains and the same coil behind a bridge rectifier with a smoothing capacitor" loading="lazy" decoding="async" class="ref-zoomable">
+          <span class="ref-fig-label" hidden>What a rectifier changes</span>
+        </div>
+    </div>
+  </div>
+
+  <div class="ref-card" id="scRef3">
+    <div class="ref-card-header" onclick="toggleRefCard('scRef3')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">03</span>
+      <h2>Turns, Wire and Fill</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body two-col">
+      <div>
+        <p>Turns come from how much insulated wire fits the winding window, not from the bare copper. The fill factor carries everything the geometry does not: winding method, interleaving, how hard the wire was tensioned.</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Turns from the window</span>
+          \[ N = \frac{k_{fill}\,\ell_{w}\,b}{d_{ins}^{2}}, \qquad \ell_{wire} = N \cdot \pi D_{mean} \]
+        </div>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Resistance, hot and cold</span>
+          \[ R_{20} = \frac{\rho\,\ell_{wire}}{A_{Cu}}, \qquad R_T = R_{20}\left[1 + \alpha (T - 20)\right] \]
+        </div>
+        <p>Copper's tempco is 0.393% per kelvin, so a winding at 155 °C carries about 53% more resistance than the same winding on the bench. On a DC coil that is self-limiting and helpful; on an AC coil it barely matters because the reactance dominates.</p>
+        <div class="ref-callout">Random-wound layers land near 50–60% fill. A careful layer wind with interleaving paper reaches 65–75%. Above that you are describing a winding nobody can actually make.</div>
+      </div>
+      <div>
+        <div class="ref-sub">Where the ampere-turns go</div>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">The drive that matters</span>
+          \[ \mathcal{F} = N I \quad [\text{ampere-turns}] \]
+        </div>
+        <p>Ampere-turns are the honest measure of drive: 500 At is 500 At whether it is 500 turns at 1 A or 50 turns at 10 A. The split between them decides the voltage and the wire size, not the magnetics.</p>
+        <p>What the split <em>does</em> decide is heat. For a given window, halving the wire area doubles the resistance and doubles the dissipation at the same ampere-turns — so the efficient direction is always more copper, not more current.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ref-card" id="scRef4">
+    <div class="ref-card-header" onclick="toggleRefCard('scRef4')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">04</span>
+      <h2>Where the Force Comes From</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
+      <div>
+        <p>Ampere-turns drive the magnetic circuit, the circuit's reluctance decides how much flux that produces, and flux squared is what pulls. For a flat armature across a working gap the Maxwell stress is</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Maxwell pull force</span>
+          \[ F = \frac{B^2 A}{2\mu_0} \]
+        </div>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Flux from the circuit</span>
+          \[ \Phi = \frac{NI}{\mathcal{R}}, \qquad \mathcal{R} = \underbrace{\frac{g}{\mu_0 A}}_{\text{gap}} + \underbrace{\frac{l}{\mu_0 \mu_r A}}_{\text{iron}} \]
+        </div>
+        <div class="ref-warn">An electromagnet <span style="font-weight: var(--font-weight-normal)">only ever attracts</span>. It pulls the armature toward the pole face and closes the gap; it cannot push one away. Anything that pushes is either a repelling permanent magnet or an induced eddy current in a conductor.</div>
+        <p>Two consequences are worth internalising. Force falls roughly as 1/<em>g</em>², so a solenoid is weak when open and slams shut at the end of its stroke. And force goes as the <em>square</em> of current, right up until the iron saturates — at which point it stops responding at all.</p>
+        <div class="ref-callout">
+          <span style="font-weight: var(--font-weight-normal)">The core is pulled just
+          as hard.</span> Only the armature usually gets drawn, but the two attract
+          each other: whatever force appears on the armature appears on the core in
+          the opposite direction, and the bobbin, housing or bracket holding the core
+          has to react it. On a plunger solenoid that reaction <em>is</em> the output
+          &mdash; the core is the part that moves. On a fixed-core electromagnet it is
+          a mounting load, and it is the one people forget when they glue a core into
+          a bobbin.
+        </div>
+      </div>
+        <div class="ref-sub">Air has no permeability to divide by</div>
+        <div class="ref-fig ref-fig-img">
+          <img src="img/coil-reluctance-gap.svg" alt="Magnetic circuit showing that the working air gap carries far more reluctance than the entire iron path" loading="lazy" decoding="async" class="ref-zoomable">
+          <span class="ref-fig-label" hidden>Why the gap dominates</span>
+        </div>
+        <div class="ref-sub">Better metrics than raw force</div>
+        <ul>
+          <li><span style="font-weight: var(--font-weight-normal)">Ampere-turns</span>
+          &mdash; the actual drive, independent of how you split turns against current.</li>
+          <li><span style="font-weight: var(--font-weight-normal)">Pressure on the pole
+          face</span> &mdash; force per unit area, so it does not change when you scale
+          the pole, and it compares directly against the saturation ceiling.</li>
+          <li><span style="font-weight: var(--font-weight-normal)">Ampere-turns per
+          watt</span> &mdash; the efficiency of the winding, and the number that improves
+          with more copper rather than more current.</li>
+        </ul>
+    </div>
+  </div>
+
+  <div class="ref-card" id="scRef5">
+    <div class="ref-card-header" onclick="toggleRefCard('scRef5')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">05</span>
+      <h2>Saturation Is the Ceiling</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
+      <div>
+        <p>Once the iron is saturated, extra ampere-turns produce almost no extra flux. Substituting <em>B</em><sub>sat</sub> into the Maxwell expression gives a hard upper bound on pressure that no amount of current can beat.</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Maximum pressure on a pole face</span>
+          \[ p_{max} = \frac{B_{sat}^{2}}{2\mu_0} \]
+        </div>
+        <table class="ref-table">
+          <thead><tr><th>Core</th><th>B<sub>sat</sub></th><th>Max pressure</th><th>psi</th></tr></thead>
+          <tbody>
+            <tr><td>Low-carbon steel</td><td>2.0 T</td><td>1590 kPa</td><td>231</td></tr>
+            <tr><td>M19 silicon steel</td><td>1.95 T</td><td>1510 kPa</td><td>219</td></tr>
+            <tr><td>430FR stainless</td><td>1.4 T</td><td>780 kPa</td><td>113</td></tr>
+            <tr><td>Iron powder, -26</td><td>1.2 T</td><td>573 kPa</td><td>83</td></tr>
+            <tr><td>MnZn ferrite</td><td>0.45 T</td><td>81 kPa</td><td>12</td></tr>
+          </tbody>
+        </table>
+        <div class="ref-table-caption">A steel-cored magnet with a one square inch pole cannot hold much more than 230 lbf however it is driven.</div>
+      </div>
+        <div class="ref-sub">Past the knee, current buys nothing</div>
+        <div class="ref-fig ref-fig-img">
+          <img src="img/coil-saturation-ceiling.svg" alt="Magnetisation curve showing the saturation knee and the resulting ceiling on force per unit pole area" loading="lazy" decoding="async" class="ref-zoomable">
+          <span class="ref-fig-label" hidden>Saturation and the force ceiling</span>
+        </div>
+    </div>
+  </div>
+
+  <div class="ref-card" id="scRef6">
+    <div class="ref-card-header" onclick="toggleRefCard('scRef6')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">06</span>
+      <h2>Open Cores Are Weaker Than the Datasheet</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
+      <div>
+        <p>A bare rod core does not deliver its material permeability. Free poles at its ends set up a field opposing the one the coil is driving, and the effective permeability collapses.</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Effective permeability of an open core</span>
+          \[ \mu_{eff} = \frac{\mu_r}{1 + N_d\left(\mu_r - 1\right)} \]
+        </div>
+        <p>where <em>N<sub>d</sub></em> is the demagnetising factor, set by how long and thin the core is. A 1000-µ steel rod at a length-to-diameter ratio of 5 behaves like a permeability of about 18. At L/D of 20 it reaches roughly 130. It never approaches 1000 unless the circuit is closed with a shell or a yoke — which is precisely why real solenoids have one.</p>
+        <div class="ref-callout">This is the single biggest reason a first attempt underperforms: the calculation used µ<sub>r</sub> from the steel datasheet and the hardware had nowhere for the flux to return.</div>
+      </div>
+        <div class="ref-sub">Give the flux a way home</div>
+        <div class="ref-fig ref-fig-img">
+          <img src="img/coil-open-versus-closed-core.svg" alt="An open rod core compared with the same coil inside a steel shell that closes the magnetic circuit" loading="lazy" decoding="async" class="ref-zoomable">
+          <span class="ref-fig-label" hidden>Open rod against a closed yoke</span>
+        </div>
+    </div>
+  </div>
+
+  <div class="ref-card" id="scRef7">
+    <div class="ref-card-header" onclick="toggleRefCard('scRef7')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">07</span>
+      <h2>Heat Decides What Is Buildable</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
+      <div>
+        <p>A coil is a resistor that happens to make a magnetic field, and almost every coil that fails, fails thermally. There are two regimes and they want different arithmetic.</p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Continuous — equilibrium with the air</span>
+          \[ \Delta T = \frac{P}{h\,A_{surface}} \]
+        </div>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Burst — nothing escapes yet</span>
+          \[ t = \frac{m_{Cu}\,c_{Cu}\,\Delta T}{P} \]
+        </div>
+        <p>The convection coefficient is the weak link: roughly 8–12 W/m²K for a bare coil in still air, 15–25 bolted to metal that can sink the heat, 50 and up with forced air. It scales the temperature rise directly, so it deserves more thought than any other input on the page.</p>
+        <p>For the first seconds essentially none of the heat escapes, so all of it raises the temperature of the copper. Copper's specific heat is 385 J/kg·K, so a 40 g winding absorbs about 2 kJ before it has risen 130 K — forty seconds at 50 W, four seconds at 500 W. That is the number that answers "how long can I throw this little coil across 120 V".</p>
+        <div class="ref-warn">Insulation classes are <span style="font-weight: var(--font-weight-normal)">hotspot</span> temperatures, not averages, and they include ambient. Class F is 155 °C total, so a 40 °C ambient leaves only 115 K of rise.</div>
+      </div>
+        <div class="ref-sub">Two curves, two questions</div>
+        <div class="ref-fig ref-fig-img">
+          <img src="img/coil-thermal-regimes.svg" alt="Coil temperature against time showing the equilibrium curve for continuous duty and the straight adiabatic rise that sets the burst limit" loading="lazy" decoding="async" class="ref-zoomable">
+          <span class="ref-fig-label" hidden>Continuous and burst thermal limits</span>
+        </div>
+    </div>
+  </div>
+
+  <div class="ref-card" id="scRef8">
+    <div class="ref-card-header" onclick="toggleRefCard('scRef8')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">08</span>
+      <h2>Limitations</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
+      <ul>
+        <li><span style="font-weight: var(--font-weight-normal)">Lumped magnetic circuit.</span> Flux is assumed to follow one path and cross a uniform gap inside the pole footprint. Once the gap approaches the pole diameter that stops being true: the flux fringes and leaks, and the figure becomes an optimistic upper bound rather than an estimate.</li>
+        <li><span style="font-weight: var(--font-weight-normal)">No eddy currents or hysteresis.</span> A solid steel core on AC loses real power to both and shields its own interior, so the true inductance is lower and the true dissipation higher. Laminate it, or treat the AC numbers as a first pass.</li>
+        <li><span style="font-weight: var(--font-weight-normal)">Static force only.</span> Nothing here models the stroke, the inrush before the armature moves, or the way inductance climbs as the gap closes.</li>
+        <li><span style="font-weight: var(--font-weight-normal)">One thermal mass.</span> The burst calculation counts only the copper. A bobbin, core and housing add thermal mass and buy time, so the real burst is longer — conservative, but only roughly.</li>
+        <li><span style="font-weight: var(--font-weight-normal)">Film build is nominal.</span> Heavy-build magnet wire dimensions vary between suppliers; the fill factor is the knob that absorbs the difference.</li>
+      </ul>
+      <div class="ref-warn">Mains-driven coils are a shock and fire hazard. Nothing here substitutes for proper insulation coordination, fusing, thermal protection and agency approval.</div>
+    </div>
+  </div>
+
+    </div>
+    </div>
+    </div>
+    </div>
+    </section>
+
+    <!-- CITATION -->
+    <section>
+      <div class="csscontainer">
+        <div class="col-lg-12 col-12">
+          <div id="citation-container" data-page-title="Solenoid and Coil Designer" data-page-url="https://kaspercalc.com/SolenoidCoil.html"></div>
+        </div>
+      </div>
+    </section>
+
+<script>
+/* Collapsible reference cards, matching SpringCompressionRound.html. */
+function toggleRefCard(id) {
+  var card = document.getElementById(id);
+  if (!card) return;
+  var wasCollapsed = card.classList.contains('collapsed');
+  card.classList.toggle('collapsed', !wasCollapsed);
+  var header = card.querySelector('.ref-card-header');
+  if (header) header.setAttribute('aria-expanded', wasCollapsed ? 'true' : 'false');
+  // MathJax skips display:none content, so re-typeset a card the first time it opens
+  if (wasCollapsed && window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([card]).catch(function (e) { console.warn('MathJax:', e); });
+  }
+}
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.ref-card-header').forEach(function (h) {
+    h.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleRefCard(h.parentElement.id);
+      }
+    });
+  });
+});
+
+/* Click any .ref-zoomable figure to view it full size. */
+function initLightbox() {
+  var overlay  = document.getElementById('lightboxOverlay');
+  var img      = document.getElementById('lightboxImg');
+  var caption  = document.getElementById('lightboxCaption');
+  var closeBtn = document.getElementById('lightboxClose');
+  if (!overlay) return;
+
+  function open(src, alt, text) {
+    img.src = src;
+    img.alt = alt || '';
+    caption.textContent = text || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function close() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    img.src = '';
+  }
+
+  document.addEventListener('click', function (e) {
+    var target = e.target.closest && e.target.closest('.ref-zoomable');
+    if (!target) return;
+    var fig = target.closest('.ref-fig');
+    var label = fig && fig.querySelector('.ref-fig-label');
+    // the label is hidden in the card, so fall back to the alt text
+    open(target.src, target.alt, (label && label.textContent) || target.alt);
+  });
+
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) close();
+  });
+  closeBtn.addEventListener('click', close);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) close();
+  });
+}
+document.addEventListener('DOMContentLoaded', initLightbox);
+</script>
+
+  <!-- FOOTER -->
+  <footer id="site-footer"></footer>
+
+  </body>
+</html>
