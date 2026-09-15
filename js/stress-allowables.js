@@ -602,6 +602,153 @@
       '</select></div>';
   }
 
+  /* ── tangent modulus ────────────────────────────────────────────────────
+   * A column above its proportional limit does not buckle on E; it buckles on
+   * the slope of the stress-strain curve where it is actually working. The
+   * handbook publishes that slope as a curve against stress, and this reads it.
+   */
+  var tanCurves = [];        // curves for the alloy on screen
+  var tanChart = null;
+  var tanPick = 0;
+
+  function renderTangent() {
+    var host = $('sa-tangent');
+    var sec = $('sa-tangent-section');
+    if (!host || !sec) return;
+
+    if (!SELECTED || !tanCurves.length) {
+      sec.hidden = true;
+      host.innerHTML = '';
+      if (tanChart) { try { tanChart.destroy(); } catch (e) {} tanChart = null; }
+      return;
+    }
+    if (tanPick >= tanCurves.length) tanPick = 0;
+
+    var curve = tanCurves[tanPick];
+    var stress = readTanStress(curve);
+    var got = StressFigures.tangentAt(curve, stress);
+    var si = isSI();
+
+    var etDisp = si ? got.et * KSI_MPA : got.et;            // 10^3 ksi -> GPa
+    var etUnit = si ? 'GPa' : '10<sup>3</sup> ksi';
+    var stressUnit = si ? 'MPa' : 'ksi';
+    var ratio = curve.eMax > 0 ? got.et / curve.eMax : 0;
+
+    sec.hidden = false;
+    $('sa-tangent-note').textContent =
+      tanCurves.length + ' published curve' + (tanCurves.length === 1 ? '' : 's');
+
+    host.innerHTML =
+      '<div class="sa-tan-row">' +
+        '<label for="sa-tan-curve">Curve</label>' +
+        '<select id="sa-tan-curve">' + tanCurves.map(function (c, i) {
+          return '<option value="' + i + '"' + (i === tanPick ? ' selected' : '') +
+                 '>' + escapeHtml(c.label) + ' &mdash; Fig ' + escapeHtml(c.fig.id) +
+                 '</option>';
+        }).join('') + '</select>' +
+        '<label for="sa-tan-stress">at</label>' +
+        '<input type="number" id="sa-tan-stress" step="1" min="0" value="' +
+          fmtNum(si ? stress * KSI_MPA : stress) + '">' +
+        '<span>' + stressUnit + '</span>' +
+      '</div>' +
+      '<div class="sa-tan-out">' +
+        '<span class="sa-tan-val">' + fmtNum(etDisp) + '</span>' +
+        '<span class="sa-tan-unit">' + etUnit + '</span>' +
+        '<span class="sa-tan-ratio">' + Math.round(ratio * 100) + '% of E</span>' +
+      '</div>' +
+      '<div class="sa-tan-canvas"><canvas id="sa-tan-chart"></canvas></div>' +
+      '<p class="sa-source">' +
+        (got.elastic
+          ? 'Still on the elastic straight line at this stress, so E<sub>t</sub> is ' +
+            'the initial slope of the curve.'
+          : got.offCurve
+            ? '<span style="font-weight: var(--font-weight-normal)">Past the end of the ' +
+              'published curve.</span> The handbook stops at ' +
+              fmtNum(si ? curve.stressMax * KSI_MPA : curve.stressMax) + ' ' +
+              stressUnit + ' and so does this &mdash; the value shown is the last ' +
+              'point, not an extrapolation.'
+            : 'Read off the curve at ' + fmtNum(si ? stress * KSI_MPA : stress) +
+              ' ' + stressUnit + '.') +
+        ' Source: <a href="' + escapeAttr(curve.fig.page + '#' + curve.fig.anchor) +
+        '">Figure ' + escapeHtml(curve.fig.id) + '</a>. ' +
+        'Typical curve, not a design allowable &mdash; the handbook prints these ' +
+        'as representative of the material, not as a minimum.' +
+      '</p>';
+
+    var sel = $('sa-tan-curve');
+    sel.addEventListener('change', function () {
+      tanPick = parseInt(sel.value, 10);
+      tanStress = null;                 // a new curve gets a fresh default
+      renderTangent();
+    });
+    var inp = $('sa-tan-stress');
+    inp.addEventListener('input', function () {
+      var v = parseFloat(inp.value);
+      if (!isFinite(v)) return;
+      tanStress = isSI() ? v / KSI_MPA : v;
+      renderTangentValueOnly();
+    });
+
+    drawTangentChart(curve, stress);
+  }
+
+  /** Update the readout without rebuilding the field the user is typing in. */
+  function renderTangentValueOnly() {
+    var curve = tanCurves[tanPick];
+    if (!curve) return;
+    var stress = readTanStress(curve);
+    var got = StressFigures.tangentAt(curve, stress);
+    var si = isSI();
+    var host = $('sa-tangent');
+    var val = host.querySelector('.sa-tan-val');
+    var rat = host.querySelector('.sa-tan-ratio');
+    if (val) val.innerHTML = fmtNum(si ? got.et * KSI_MPA : got.et);
+    if (rat) {
+      rat.textContent = Math.round((curve.eMax > 0 ? got.et / curve.eMax : 0) * 100) +
+        '% of E';
+    }
+    drawTangentChart(curve, stress);
+  }
+
+  var tanStress = null;
+
+  /** Default to the material's own compressive yield, which is where a
+   *  crippling or column check actually lands. */
+  function readTanStress(curve) {
+    if (tanStress !== null) return tanStress;
+    var fcy = SELECTED ? pick(SELECTED.props.Fcy, $('sa-grain').value) : null;
+    if (fcy === null && SELECTED) fcy = pick(SELECTED.props.Fty, $('sa-grain').value);
+    if (fcy === null || fcy === undefined) fcy = curve.stressMax * 0.8;
+    return Math.min(fcy, curve.stressMax);
+  }
+
+  function drawTangentChart(curve, stress) {
+    if (!window.HdbkUtil || !window.Chart) return;
+    if (tanChart) { try { tanChart.destroy(); } catch (e) {} tanChart = null; }
+    var si = isSI();
+    var pts = curve.points.map(function (p) {
+      return { x: si ? p.stress * KSI_MPA : p.stress,
+               y: si ? p.et * KSI_MPA : p.et };
+    });
+    tanChart = HdbkUtil.makeMultiLine('sa-tan-chart', [
+      { label: curve.label, data: pts, color: '#3a6270' }
+    ], {
+      xLabel: 'Stress (' + (si ? 'MPa' : 'ksi') + ')',
+      yLabel: 'Tangent modulus (' + (si ? 'GPa' : '10\u00b3 ksi') + ')',
+      yMin: 0
+    });
+  }
+
+  function syncTangent(alloy) {
+    if (!window.StressFigures || !StressFigures.tangentFor) return;
+    StressFigures.tangentFor(alloy).then(function (list) {
+      tanCurves = list || [];
+      tanPick = 0;
+      tanStress = null;
+      renderTangent();
+    });
+  }
+
   /* ── published surface ────────────────────────────────────────────────── */
 
   /** Everything the comparison panel needs, so it never reaches into this
@@ -715,6 +862,8 @@
     renderMatches(LAST_LIST);
     renderDetail();
     renderDerated();
+    tanStress = null;
+    renderTangent();
     syncUnits();
     announce();
     writeUrlState(readSelections(), readThickness());
@@ -762,6 +911,7 @@
     renderMatches(list);
     renderDetail();
     renderDerated();
+    renderTangent();
     syncFigures(sel.alloy);
     writeUrlState(sel, t);
     announce();
@@ -796,6 +946,8 @@
       StressFigures.load(null, $('sf-figures'), $('sf-tables'));
       return;
     }
+
+    syncTangent(target);
 
     StressFigures.load(target, $('sf-figures'), $('sf-tables'))
       .then(function (counts) {

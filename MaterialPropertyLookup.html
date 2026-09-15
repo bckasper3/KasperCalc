@@ -18,6 +18,7 @@
     <script defer src="js/navsearch.js"></script>
     <script defer src="js/chart.min.js"></script>
     <script defer src="js/hdbkUtil.js"></script>
+    <script defer src="js/tangent-modulus.js"></script>
     <script defer src="js/stress-figures.js"></script>
     <script defer src="js/stress-allowables.js"></script>
 
@@ -62,8 +63,9 @@
       .sq-panel { background: var(--sq-panel); border: 2px solid var(--sq-outline); border-radius: 10px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); overflow: hidden; }
       .sq-panel-h { padding: 11px 16px; background: #fff; border-bottom: 2px solid var(--sq-outline); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--sq-ink); font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
       .sq-panel-b { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-      .sq-sticky { position: sticky; top: 14px; }
-      @media (max-width:960px) { .sq-sticky { position: static; } }
+      /* The input panel used to follow the scroll. It fought the page on anything
+         but a tall window, so it stays put. */
+      .sq-sticky { position: static; }
 
       /* ── Filters ── */
       .sa-field { margin-bottom: 10px; }
@@ -296,6 +298,28 @@
       .xp-cancel { background: #fff; color: var(--sq-ink); }
       .xp-go { background: #b3362b; border-color: #8f241b; color: #fff; }
       .xp-go:disabled { opacity: .5; cursor: default; }
+
+      .sa-tan-row {
+        display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        padding: 12px 16px 0; font-size: 13px; color: var(--sq-ink-soft);
+      }
+      .sa-tan-row input, .sa-tan-row select {
+        font-family: var(--sq-ui); font-size: 13px; padding: 5px 8px;
+        border: 1px solid var(--sq-outline); border-radius: var(--border-radius-small);
+        background: #fff; color: var(--sq-ink);
+      }
+      .sa-tan-row input { width: 88px; }
+      .sa-tan-out {
+        display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+        padding: 12px 16px 4px;
+      }
+      .sa-tan-val {
+        font-family: var(--sq-ui); font-size: 26px; font-weight: 700;
+        color: var(--sq-ink); font-variant-numeric: tabular-nums;
+      }
+      .sa-tan-unit { font-size: 13px; color: var(--sq-ink-soft); }
+      .sa-tan-ratio { font-size: 13px; color: var(--sq-blue); font-weight: 600; }
+      .sa-tan-canvas { position: relative; width: 100%; height: 260px; padding: 6px 16px 12px; }
 
       /* -- Export buttons -- */
       .sa-export { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
@@ -592,6 +616,7 @@
                   <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
                   <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
                   <a class="dropdown-item" href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a>
+                  <a class="dropdown-item" href="SolenoidCoil.html">Solenoid &amp; Coil Designer</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -891,6 +916,14 @@
               <div id="sa-derated"></div>
             </div>
 
+            <div class="sq-panel" id="sa-tangent-section" style="margin-bottom:20px;" hidden>
+              <div class="sq-panel-h">
+                <span>Tangent modulus</span>
+                <span class="sa-count" id="sa-tangent-note"></span>
+              </div>
+              <div id="sa-tangent"></div>
+            </div>
+
             <div class="sq-panel">
               <div class="sq-panel-h">
                 <span>Matching materials</span>
@@ -1020,29 +1053,26 @@
       <div class="ref-card sa-roadmap">
         <span class="sa-badge">Roadmap</span>
         <p>
-          This page currently covers <span style="font-weight: var(--font-weight-normal)">room-temperature</span> allowables. The
-          following build on figure digitization that is still in progress, and
+          Room-temperature allowables, temperature knockdown, tangent modulus
+          and a two-material comparison are live. These are the pieces still
+          outstanding, all of them waiting on figure digitization, and they
           will be wired into this same lookup as each chapter is finished:
         </p>
         <ul>
           <li>
-            <span style="font-weight: var(--font-weight-normal)">Temperature knockdown</span> &mdash; the percentage-of-room-temperature
-            curves in each section's Figure <em>x.x.x.</em>0 series, applied to the
-            selected condition for a chosen service temperature.
-          </li>
-          <li>
-            <span style="font-weight: var(--font-weight-normal)">Exposure knockdown</span> &mdash; the effect-of-exposure curves, for a
-            given exposure temperature and time at temperature.
-          </li>
-          <li>
-            <span style="font-weight: var(--font-weight-normal)">Tangent modulus</span> &mdash; pulling the digitized stress-strain and
-            tangent-modulus curves for the selected condition, which is what a
-            column buckling or crippling check needs.
+            <span style="font-weight: var(--font-weight-normal)">Exposure knockdown</span> &mdash; properties measured back at room
+            temperature after a spell held hot, which is a different question from
+            properties measured <em>at</em> temperature. Fifteen effect-of-exposure
+            curves are already digitized and tagged; nothing reads them yet, so the
+            &ldquo;time at temperature&rdquo; selector above still applies only to
+            the effect-of-temperature family.
           </li>
           <li>
             <span style="font-weight: var(--font-weight-normal)">Remaining chapters</span> &mdash; titanium, nickel and heat-resistant
-            alloys, plus the tables in the already-published chapters whose layout
-            the extractor does not yet handle.
+            alloys are absent entirely. The dataset currently runs to 1,108
+            conditions across aluminium, magnesium, the carbon and low-alloy steels,
+            and both stainless families. Also outstanding are the tables in
+            already-published chapters whose layout the extractor skips.
           </li>
         </ul>
       </div>

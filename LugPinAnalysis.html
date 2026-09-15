@@ -73,8 +73,9 @@
       .sq-panel { background: var(--sq-panel); border: 2px solid var(--sq-outline); border-radius: 10px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); overflow: hidden; }
       .sq-panel-h { padding: 11px 16px; background: #fff; border-bottom: 2px solid var(--sq-outline); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--sq-ink); font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
       .sq-panel-b { padding: 16px; }
-      .sq-sticky { position: sticky; top: 14px; }
-      @media (max-width:960px) { .sq-sticky { position: static; } }
+      /* The input panel used to follow the scroll. It fought the page on anything
+         but a tall window, so it stays put. */
+      .sq-sticky { position: static; }
       .sq-panel-b, .lug-field, .lug-r2 > * { min-width: 0; }
 
       /* ── Inputs ── */
@@ -359,10 +360,294 @@
       .lug-mode .m-head { fill: var(--sq-ink-soft); }
       .lug-mode .m-ref  { stroke: var(--sq-ink-soft); stroke-width: 1; fill: none;
                           stroke-dasharray: 3 3; opacity: .6; }
+      .ref-zoomable { cursor: zoom-in; transition: opacity .15s; }
+      .ref-zoomable:hover { opacity: .85; }
+      .lightbox-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:99999; align-items:center; justify-content:center; padding:20px; cursor:zoom-out; }
+      .lightbox-overlay.active { display:flex; }
+      .lightbox-img { max-width:90vw; max-height:90vh; object-fit:contain; border-radius:6px; box-shadow:0 8px 32px rgba(0,0,0,.6); cursor:default; touch-action:pinch-zoom; background:#fff; }
+      .lightbox-close { position:fixed; top:16px; right:20px; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.15); border:2px solid rgba(255,255,255,.4); color:#fff; font-size:20px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s; z-index:100000; }
+      .lightbox-close:hover { background:rgba(255,255,255,.3); }
+      .lightbox-caption { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,.8); font-size:13px; font-family:Roboto,Arial,sans-serif; text-align:center; max-width:80vw; pointer-events:none; }
+
+      /* ── Reference guide cards (matches SpringCompressionRound.html) ── */
+      .ref-zoomable { cursor: zoom-in; transition: opacity .15s; }
+      .ref-zoomable:hover { opacity: .85; }
+      .lightbox-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:99999; align-items:center; justify-content:center; padding:20px; cursor:zoom-out; }
+      .lightbox-overlay.active { display:flex; }
+      .lightbox-img { max-width:90vw; max-height:90vh; object-fit:contain; border-radius:6px; box-shadow:0 8px 32px rgba(0,0,0,.6); cursor:default; touch-action:pinch-zoom; background:#fff; }
+      .lightbox-close { position:fixed; top:16px; right:20px; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.15); border:2px solid rgba(255,255,255,.4); color:#fff; font-size:20px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s; z-index:100000; }
+      .lightbox-close:hover { background:rgba(255,255,255,.3); }
+      .lightbox-caption { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,.8); font-size:13px; font-family:Roboto,Arial,sans-serif; text-align:center; max-width:80vw; pointer-events:none; }
+      .ref-wrapper {
+        margin: 0 auto;
+        max-width: 58rem;
+        font-family: "Roboto", Arial, sans-serif;
+      }
+
+      /* ── Top-level section card ────────────────────────────── */
+      .ref-card {
+        background: #eee;
+        border: 2px solid rgb(67,67,67);
+        border-radius: 10px;
+        box-shadow: 0 3px 5px rgba(0,0,0,.4);
+        margin: 0 0 1rem;
+        overflow: hidden;
+      }
+
+      /* ── Card header bar ───────────────────────────────────── */
+      .ref-card-header {
+        background: #6a746a;
+        padding: 8px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .ref-card-header h2 {
+        font-size: 13px;
+        font-weight: 700;
+        color: #eee;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin: 0;
+        flex: 1;
+      }
+      .ref-card-header .ref-num {
+        font-size: 12px;
+        color: #A3C3CD;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+      .ref-chevron {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        transition: transform 0.2s ease;
+        color: #A3C3CD;
+      }
+      .ref-card.collapsed .ref-chevron { transform: rotate(-90deg); }
+      .ref-card.collapsed .ref-body    { display: none; }
+
+      /* ── Card body ─────────────────────────────────────────── */
+      .ref-body {
+        padding: 14px 16px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .ref-body > * {
+        min-width: 0;
+      }
+      .ref-body.two-col {
+        grid-template-columns: 1fr 1fr;
+        gap: 14px 24px;
+      }
+      @media (max-width: 640px) {
+        .ref-body.two-col { grid-template-columns: 1fr; }
+      }
+
+      /* ── Sub-section label ─────────────────────────────────── */
+      .ref-sub {
+        font-size: 12px;
+        font-weight: 700;
+        color: #61828A;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        border-bottom: 1px solid #c0c0c0;
+        padding-bottom: 3px;
+        margin-bottom: 6px;
+      }
+
+      /* ── Body copy ─────────────────────────────────────────── */
+      .ref-body p {
+        font-size: 13px;
+        color: #333;
+        line-height: 1.65;
+        margin: 0 0 8px;
+      }
+      .ref-body p:last-child { margin-bottom: 0; }
+      .ref-body ul {
+        font-size: 13px;
+        color: #333;
+        line-height: 1.7;
+        padding-left: 18px;
+        margin: 0 0 8px;
+      }
+      /* css/style.css sets `ul li` and `a` to 20px site-wide; both are more
+         specific than the inherited size, so restate them for card copy. */
+      .ref-body ul li {
+        font-size: 13px;
+        color: #333;
+        font-weight: 400;
+        line-height: 1.7;
+        padding: 0;
+        margin: 0 0 5px;
+      }
+      .ref-body ul li:last-child { margin-bottom: 0; }
+      .ref-body a {
+        font-size: inherit;
+        color: #3a6270;
+        text-decoration: underline;
+      }
+      .ref-body a:hover { color: #61828A; }
+      .ref-body p a, .ref-body li a { font-size: 13px; }
+      .ref-body a.lug-src { font-size: 12.5px; color: #fff; text-decoration: none; }
+      .ref-body a.lug-src:hover { color: #fff; }
+
+      /* ── Equation block ────────────────────────────────────── */
+      .ref-eq-block {
+        background: #d9d9d9;
+        border: 1.5px solid rgb(67,67,67);
+        border-radius: 6px;
+        padding: 10px 16px 8px;
+        margin: 6px 0 10px;
+        overflow-x: auto;
+      }
+      .ref-eq-tag {
+        font-size: 12px;
+        color: #61828A;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 700;
+        font-family: "Roboto", Arial, sans-serif;
+        display: block;
+        margin-bottom: 4px;
+      }
+      mjx-container { color: #1a3a40 !important; margin: 0;}
+      mjx-container[jax="SVG"][display="true"] {
+        margin: 0.7em 0 !important;
+      }
+
+      /* Inline math */
+      mjx-container[jax="SVG"] {
+        margin: 0 !important;
+      }
+
+      /* ── Figure placeholder ────────────────────────────────── */
+      .ref-fig {
+        border: 1.5px dashed #999;
+        border-radius: 6px;
+        background: #fafafa;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 20px 12px;
+        text-align: center;
+        margin: 4px 0;
+      }
+      .ref-fig-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #494949;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .ref-fig-caption {
+        font-size: 12px;
+        color: #5f5f5f;
+        max-width: 400px;
+      }
+      /* drawn figures: real <img> so they are crawlable and zoomable */
+      .ref-fig-img {
+        border: 1px solid #c6c6c6;
+        border-radius: 6px;
+        background: #fff;
+        padding: 10px 12px;
+        display: block;
+        margin: 4px 0;
+      }
+      .ref-fig-img img { width: 100%; height: auto; display: block; }
+      .ref-canvas-wrap { position: relative; width: 100%; height: 260px; }
+
+      /* ── Data table ────────────────────────────────────────── */
+      .ref-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11.5px;
+        margin: 6px 0;
+      }
+      .ref-table th {
+        background: #d9d9d9;
+        border: 1px solid #bbb;
+        padding: 4px 8px;
+        font-weight: 600;
+        color: #444;
+        text-align: left;
+      }
+      .ref-table td {
+        border: 1px solid #ccc;
+        padding: 3px 8px;
+        color: #333;
+        vertical-align: top;
+      }
+      .ref-table tr:nth-child(even) td { background: #f5f5f5; }
+      .ref-table-caption {
+        font-size: 12px;
+        color: #888;
+        margin-top: 3px;
+        font-style: italic;
+      }
+
+      /* ── Callout / warning boxes ───────────────────────────── */
+      .ref-callout {
+        background: #e8f0f3;
+        border-left: 3px solid #61828A;
+        border-radius: 0 6px 6px 0;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: #1a3a40;
+        line-height: 1.55;
+      }
+      .ref-callout strong { color: #3a6270; }
+      .ref-warn {
+        background: #fff8e6;
+        border-left: 3px solid #cc7700;
+        border-radius: 0 6px 6px 0;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: #5a3a00;
+        line-height: 1.55;
+      }
+
+      /* ── Section wrapper ───────────────────────────────────── */
+      .ref-section-wrap {
+        padding: 1rem 0.5rem 0.5rem;
+      }
+      .ref-section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #6a746a;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 0.5rem;
+        padding-left: 2px;
+      }
+
+      /* ── Full-bleed child inside two-col ───────────────────── */
+      .full-col { grid-column: 1 / -1; }
+
+      .lug-srcs { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
+      .lug-src {
+        display: inline-block; font-family: var(--sq-ui); font-size: 12.5px;
+        line-height: 1.2; padding: 6px 11px; border-radius: var(--border-radius-small);
+        background: var(--section-title-color); color: #fff; text-decoration: none;
+        border: 1px solid var(--section-title-color);
+      }
+      .lug-src:hover { background: #4e6b73; color: #fff; }
     </style>
   </head>
 
   <body>
+
+  <div class="lightbox-overlay" id="lightboxOverlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close image viewer">&#x2715;</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
 
   <!-- NAVIGATION -->
   <div class="navbarwrapper">
@@ -513,6 +798,7 @@
                   <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
                   <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
                   <a class="dropdown-item" href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a>
+                  <a class="dropdown-item" href="SolenoidCoil.html">Solenoid &amp; Coil Designer</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -887,10 +1173,24 @@
     </div>
 
     <!-- ── REFERENCE ── -->
-    <div class="ref-wrap">
+    <!-- ── REFERENCE GUIDE ── -->
+    <section aria-label="Lug and pin analysis reference guide">
+    <div class="csscontainer">
+    <div class="col-lg-12 col-12 px-3">
+    <div class="ref-wrapper">
+    <div class="ref-section-wrap">
 
-      <div class="ref-section-title">How the Method Works</div>
-      <div class="ref-card">
+      <div class="ref-section-title">Reference Guide &mdash; The Air Force Lug Method</div>
+
+  <div class="ref-card" id="lugRef1">
+    <div class="ref-card-header" onclick="toggleRefCard('lugRef1')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">01</span>
+      <h2>How the Method Works</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
         <p>
           This page follows the
           <span style="font-weight: var(--font-weight-normal)">Air Force Method</span>,
@@ -917,9 +1217,18 @@
             AFFDL-TR-69-42 Figure 9-1, p. 9-3.
           </figcaption>
         </figure>
+    </div>
+  </div>
 
-
-        <h3>The five failure modes</h3>
+  <div class="ref-card" id="lugRef2">
+    <div class="ref-card-header" onclick="toggleRefCard('lugRef2')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">02</span>
+      <h2>The five failure modes</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
         <p>
           A pin-loaded lug can fail by tension across the net section, shear-out
           along two planes ahead of the hole, bearing against the pin, hoop
@@ -951,25 +1260,43 @@
             <figcaption><span class="n">Dishing</span>Seen edge-on: a thin lug buckles out of plane before the in-plane modes are reached.</figcaption>
           </figure>
         </div>
+    </div>
+  </div>
 
-
-        <h3>Axial loading</h3>
+  <div class="ref-card" id="lugRef3">
+    <div class="ref-card-header" onclick="toggleRefCard('lugRef3')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">03</span>
+      <h2>Axial loading</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
         <p>
-          The bearing allowable is <code>P = K &middot; Fu &middot; D &middot; t</code>,
-          where K comes from Figure 9-2 as a function of e/D and D/t. That one
-          coefficient is what carries the combined bearing, shear-out and hoop
-          tension behaviour. Net-section tension is checked separately as
-          <code>P = Kn &middot; Fu &middot; (W &minus; D) &middot; t</code>, with
-          the net-tension coefficient Kn from Figure 9-4 &mdash; a knockdown for
-          the stress concentration at the hole that depends on the material's
+          The bearing allowable carries the combined bearing, shear-out and hoop
+          tension behaviour in a single coefficient, read from Figure 9-2 as a
+          function of <em>e</em>/<em>D</em> and <em>D</em>/<em>t</em>.
+        </p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Bearing allowable &mdash; Figure 9-2</span>
+          \[ P_{bru} = K\,F_{u}\,D\,t \]
+        </div>
+        <p>
+          Net-section tension is checked separately, with the net-tension
+          coefficient <em>K</em><sub>n</sub> from Figure 9-4 &mdash; a knockdown
+          for the stress concentration at the hole that depends on the material's
           ultimate and yield strengths, modulus and ultimate strain.
         </p>
+        <div class="ref-eq-block">
+          <span class="ref-eq-tag">Net-section tension &mdash; Figure 9-4</span>
+          \[ P_{nu} = K_{n}\,F_{u}\,(W - D)\,t \]
+        </div>
         <p>
-          In both, <code>Fu</code> is not simply F<sub>tu</sub>: the manual caps
-          the effective ultimate at
-          <code>min(Ftu, 1.304 &middot; Fty)</code>, which binds on materials with
-          a high yield-to-ultimate ratio. That cap is applied here and shown in
-          the calculation steps.
+          In both, \( F_{u} \) is not simply <em>F</em><sub>tu</sub>: the manual
+          caps the effective ultimate at
+          \( \min\!\left(F_{tu},\; 1.304\,F_{ty}\right) \), which binds on
+          materials with a high yield-to-ultimate ratio. That cap is applied here
+          and shown in the calculation steps.
         </p>
         <div class="lug-srcs">
           <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=510" target="_blank" rel="noopener">Figure 9-2, axial load coefficient &mdash; p. 9-4</a>
@@ -977,8 +1304,18 @@
           <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=512" target="_blank" rel="noopener">&sect;9.3.2 &amp; Figure 9-4, net section &mdash; p. 9-6</a>
           <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=514" target="_blank" rel="noopener">&sect;9.3.4 bushing bearing &mdash; p. 9-8</a>
         </div>
+    </div>
+  </div>
 
-        <h3>Single shear against double shear</h3>
+  <div class="ref-card" id="lugRef4">
+    <div class="ref-card-header" onclick="toggleRefCard('lugRef4')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">04</span>
+      <h2>Single shear against double shear</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
         <p>
           In a single-shear joint the two members are offset, so the load path is
           eccentric: the pin carries the whole load on one plane and the offset
@@ -1017,8 +1354,18 @@
           <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=516" target="_blank" rel="noopener">&sect;9.4.2&ndash;9.4.3 pin shear &amp; bending &mdash; p. 9-10</a>
           <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=519" target="_blank" rel="noopener">&sect;9.5 single-shear joints &mdash; p. 9-13</a>
         </div>
+    </div>
+  </div>
 
-        <h3>Transverse loading</h3>
+  <div class="ref-card" id="lugRef5">
+    <div class="ref-card-header" onclick="toggleRefCard('lugRef5')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">05</span>
+      <h2>Transverse loading</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
         <p>
           Loading a lug across its axis rather than along it engages a different,
           more redundant load path, so it gets its own coefficient family from
@@ -1048,8 +1395,18 @@
           <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=527" target="_blank" rel="noopener">Figure 9-8, transverse coefficients &mdash; p. 9-21</a>
           <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=529" target="_blank" rel="noopener">Figure 9-10, effective edge distance &mdash; p. 9-23</a>
         </div>
+    </div>
+  </div>
 
-        <h3>Oblique loading</h3>
+  <div class="ref-card" id="lugRef6">
+    <div class="ref-card-header" onclick="toggleRefCard('lugRef6')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">06</span>
+      <h2>Oblique loading</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
         <p>
           A load at an angle is resolved into its axial and transverse components
           and recombined against the two pure allowables by a power-law
@@ -1082,10 +1439,18 @@
           <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=530" target="_blank" rel="noopener">&sect;9.10 oblique load &mdash; p. 9-24</a>
           <a class="lug-src" href="downloadable/AD759199-AFFDL-Stress-Analysis-Manual.pdf#page=531" target="_blank" rel="noopener">Figure 9-12, allowable load curve &mdash; p. 9-25</a>
         </div>
-      </div>
+    </div>
+  </div>
 
-      <div class="ref-section-title">What This Page Computes</div>
-      <div class="ref-card">
+  <div class="ref-card" id="lugRef7">
+    <div class="ref-card-header" onclick="toggleRefCard('lugRef7')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">07</span>
+      <h2>What This Page Computes</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
         <p>
           The lug is checked three ways at the applied load angle, and the lowest
           allowable governs:
@@ -1093,17 +1458,17 @@
         <ul>
           <li>
             <span style="font-weight: var(--font-weight-normal)">Bearing-bypass</span> &mdash;
-            <code>Kt &middot; Ftu &middot; D &middot; t</code>, with K<sub>t</sub> read from the
+            \( K_{t}\,F_{tu}\,D\,t \), with <em>K</em><sub>t</sub> read from the
             axial or transverse curve family.
           </li>
           <li>
             <span style="font-weight: var(--font-weight-normal)">Net-section tension</span> &mdash;
-            <code>Ftu &middot; (W &minus; D) &middot; t</code> through the pin hole.
+            \( F_{tu}\,(W - D)\,t \) through the pin hole.
           </li>
           <li>
             <span style="font-weight: var(--font-weight-normal)">Shear tear-out</span> &mdash;
-            <code>2 &middot; Fsu &middot; t &middot; L</code>, where <code>L = e &minus; D/2</code>
-            is the clear distance from the hole boundary to the lug edge.
+            \( 2\,F_{su}\,t\,L \), where \( L = e - D/2 \) is the clear
+            distance from the hole boundary to the lug edge.
           </li>
         </ul>
         <p>
@@ -1112,8 +1477,18 @@
           shear across one or two planes and in simplified bending across the
           clevis gap, and an optional bushing is checked in bearing.
         </p>
+    </div>
+  </div>
 
-        <h3>Reading a margin</h3>
+  <div class="ref-card" id="lugRef8">
+    <div class="ref-card-header" onclick="toggleRefCard('lugRef8')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">08</span>
+      <h2>Reading a margin</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
         <p>
           MS = P<sub>allow</sub>/P &minus; 1. A margin at or above +0.15 shows as
           PASS, between 0 and +0.15 as MARGINAL, and below zero as FAIL. Those
@@ -1121,17 +1496,25 @@
           requirement &mdash; the margin your programme demands is the one that
           governs.
         </p>
-      </div>
+    </div>
+  </div>
 
-      <div class="ref-section-title">Limitations</div>
-      <div class="ref-card">
+  <div class="ref-card" id="lugRef9">
+    <div class="ref-card-header" onclick="toggleRefCard('lugRef9')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">09</span>
+      <h2>Limitations</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
         <p>
           Read the curve-fit notice above before using any of these numbers. In
           short: the K<sub>t</sub> curves are shape-matched approximations rather
           than digitized Bruhn charts, K<sub>n</sub> is assumed to be 1.0, the
           transverse net-section allowable is a flat knockdown of the axial value
           because there is no separate transverse-width input yet, and pin bending
-          uses a first-pass <code>M = P&middot;g/8</code> rather than the real
+          uses a first-pass \( M = P g / 8 \) rather than the real
           bearing-pressure distribution.
         </p>
         <p>
@@ -1142,8 +1525,18 @@
           weakest, and the outer lugs are not sized here. The single/double shear
           toggle changes only the pin's shear planes.
         </p>
+    </div>
+  </div>
 
-        <h3>Materials</h3>
+  <div class="ref-card" id="lugRef10">
+    <div class="ref-card-header" onclick="toggleRefCard('lugRef10')" role="button" tabindex="0" aria-expanded="true">
+      <span class="ref-num">10</span>
+      <h2>Materials</h2>
+      <svg class="ref-chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ref-body">
         <p>
           Properties come from the same MIL-HDBK-5 dataset behind the
           <a href="MaterialPropertyLookup.html">Material Property Lookup</a>, so
@@ -1158,15 +1551,20 @@
         </p>
         <p>
           Where a bearing allowable is not published for a condition, it is
-          derived as <code>1.304 &middot; Fcy</code>. The K<sub>t</sub> ductility
+          derived as \( 1.304\,F_{cy} \). The K<sub>t</sub> ductility
           group is inferred from elongation (under 5% low, over 12% high), since
           the handbook selects that curve family by material type and the dataset
           carries elongation rather than the family. Both are approximations and
           are named in the calculation steps.
         </p>
-      </div>
+    </div>
+  </div>
 
     </div>
+    </div>
+    </div>
+    </div>
+    </section>
 
     <!-- ── SOURCE CHARTS ── -->
     <div class="ref-wrap" id="lug-source-charts">
@@ -1201,7 +1599,7 @@
             <canvas id="canvas-fig9-2" class="chartcanvas" role="img" aria-label="Figure 9-2, allowable uniform axial load coefficient K against e over D"></canvas>
           </div>
         </div>
-        <p class="fig-caption"><strong>Figure 9-2.</strong> Allowable uniform axial load coefficient. Valid for D/t &le; 5, which covers most lugs. The curve is one line; it is split here because the formula it feeds changes at e/D = 1.5 &mdash; below that the allowable is <code>K &middot; a &middot; t &middot; F<sub>tux</sub></code> using the nose distance <code>a</code>, above it <code>K &middot; D &middot; t &middot; F<sub>tux</sub></code> using the hole diameter. The minimum of 1.33 sits exactly at the changeover.</p>
+        <p class="fig-caption"><strong>Figure 9-2.</strong> Allowable uniform axial load coefficient. Valid for D/t &le; 5, which covers most lugs. The curve is one line; it is split here because the formula it feeds changes at e/D = 1.5 &mdash; below that the allowable is \( K\,a\,t\,F_{tux} \) using the nose distance <em>a</em>, above it \( K\,D\,t\,F_{tux} \) using the hole diameter. The minimum of 1.33 sits exactly at the changeover.</p>
       </div>
 
       <div class="hdbk-figure">
@@ -1214,7 +1612,7 @@
             <canvas id="canvas-fig9-3" class="chartcanvas" role="img" aria-label="Figure 9-3, bearing efficiency factor K against a over D for thirteen D over t ratios"></canvas>
           </div>
         </div>
-        <p class="fig-caption"><strong>Figure 9-3.</strong> Bearing efficiency factors, used in place of Figure 9-2 once D/t exceeds 5. Note the abscissa is <code>a/D</code>, not e/D. The dashed cutoffs cap K for aluminium: (A) for hand forged billet with the long transverse grain across the lug, (B) for plate, bar and hand forged billet with the short transverse grain across it. The original also caps K at 2.00 for lugs cut from aluminium 0.5&Prime; or thicker. The chart is drawn for aluminium alloys and alloy steel below 160 ksi.</p>
+        <p class="fig-caption"><strong>Figure 9-3.</strong> Bearing efficiency factors, used in place of Figure 9-2 once D/t exceeds 5. Note the abscissa is \( a/D \), not <em>e</em>/<em>D</em>. The dashed cutoffs cap K for aluminium: (A) for hand forged billet with the long transverse grain across the lug, (B) for plate, bar and hand forged billet with the short transverse grain across it. The original also caps K at 2.00 for lugs cut from aluminium 0.5&Prime; or thicker. The chart is drawn for aluminium alloys and alloy steel below 160 ksi.</p>
       </div>
 
       <div class="hdbk-figure">
@@ -1227,7 +1625,7 @@
             <canvas id="canvas-fig9-4b" class="chartcanvas" role="img" aria-label="Figure 9-4b, net tension stress coefficient Kn against D over w at Fty over Ftu of 1.0"></canvas>
           </div>
         </div>
-        <p class="fig-caption"><strong>Figure 9-4(b).</strong> Net-tension stress coefficient for F<sub>ty</sub>/F<sub>tu</sub> = 1.0. The net-section allowable is <code>K<sub>n</sub> &middot; F<sub>tu</sub> &middot; (w &minus; D) &middot; t</code>. K<sub>n</sub> is a knockdown for the stress concentration at the hole, relieved by the material's ability to yield &mdash; which is why the curve family is indexed on F<sub>tu</sub>/(E&middot;&epsilon;<sub>u</sub>), a measure of how brittle the material is.</p>
+        <p class="fig-caption"><strong>Figure 9-4(b).</strong> Net-tension stress coefficient for F<sub>ty</sub>/F<sub>tu</sub> = 1.0. The net-section allowable is \( K_{n}\,F_{tu}\,(w - D)\,t \). K<sub>n</sub> is a knockdown for the stress concentration at the hole, relieved by the material's ability to yield &mdash; which is why the curve family is indexed on F<sub>tu</sub>/(E&middot;&epsilon;<sub>u</sub>), a measure of how brittle the material is.</p>
       </div>
 
       <div class="hdbk-figure">
@@ -1266,7 +1664,7 @@
             <canvas id="canvas-fig9-8" class="chartcanvas" role="img" aria-label="Figure 9-8, transverse ultimate and yield load coefficients against h av over D"></canvas>
           </div>
         </div>
-        <p class="fig-caption"><strong>Figure 9-8.</strong> Transverse ultimate and yield load coefficients against the effective edge distance h<sub>av</sub>/D. The two curves run together to about h<sub>av</sub>/D = 0.8 and then separate, K<sub>tru</sub> above K<sub>try</sub>. The transverse allowable is <code>K<sub>tru</sub> &middot; F<sub>tux</sub> &middot; D &middot; t</code>; there is no separate transverse net-section check in the method.</p>
+        <p class="fig-caption"><strong>Figure 9-8.</strong> Transverse ultimate and yield load coefficients against the effective edge distance h<sub>av</sub>/D. The two curves run together to about h<sub>av</sub>/D = 0.8 and then separate, K<sub>tru</sub> above K<sub>try</sub>. The transverse allowable is \( K_{tru}\,F_{tux}\,D\,t \); there is no separate transverse net-section check in the method.</p>
       </div>
 
       <div class="hdbk-figure">
@@ -1294,6 +1692,72 @@
     </section>
 
   </main>
+
+<script>
+/* Collapsible reference cards, matching SpringCompressionRound.html. */
+function toggleRefCard(id) {
+  var card = document.getElementById(id);
+  if (!card) return;
+  var wasCollapsed = card.classList.contains('collapsed');
+  card.classList.toggle('collapsed', !wasCollapsed);
+  var header = card.querySelector('.ref-card-header');
+  if (header) header.setAttribute('aria-expanded', wasCollapsed ? 'true' : 'false');
+  // MathJax skips display:none content, so re-typeset a card the first time it opens
+  if (wasCollapsed && window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([card]).catch(function (e) { console.warn('MathJax:', e); });
+  }
+}
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.ref-card-header').forEach(function (h) {
+    h.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleRefCard(h.parentElement.id);
+      }
+    });
+  });
+});
+
+/* Click any .ref-zoomable figure to view it full size. */
+function initLightbox() {
+  var overlay  = document.getElementById('lightboxOverlay');
+  var img      = document.getElementById('lightboxImg');
+  var caption  = document.getElementById('lightboxCaption');
+  var closeBtn = document.getElementById('lightboxClose');
+  if (!overlay) return;
+
+  function open(src, alt, text) {
+    img.src = src;
+    img.alt = alt || '';
+    caption.textContent = text || '';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function close() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    img.src = '';
+  }
+
+  document.addEventListener('click', function (e) {
+    var target = e.target.closest && e.target.closest('.ref-zoomable');
+    if (!target) return;
+    var fig = target.closest('.ref-fig');
+    var label = fig && fig.querySelector('.ref-fig-label');
+    // the label is hidden in the card, so fall back to the alt text
+    open(target.src, target.alt, (label && label.textContent) || target.alt);
+  });
+
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) close();
+  });
+  closeBtn.addEventListener('click', close);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) close();
+  });
+}
+document.addEventListener('DOMContentLoaded', initLightbox);
+</script>
 
   <!-- FOOTER -->
   <footer id="site-footer"></footer>

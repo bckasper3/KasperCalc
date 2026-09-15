@@ -12,6 +12,7 @@
  *   Round tubes                   Fcc = C E t / r, C from Figure 2-67
  *   Euler                         Fc  = pi^2 E / (L'/rho)^2
  *   Short columns (Johnson)       Fc  = Fcc [1 - Fcc (L'/rho)^2 / (4 pi^2 E)]
+ *   Tangent modulus (Engesser)    Fc  = pi^2 Et(Fc) / (L'/rho)^2
  *
  * Material properties come from js/stress-materials.js, reading the same
  * MIL-HDBK-5 dataset as MaterialPropertyLookup.html.
@@ -292,6 +293,172 @@
     return { Fc: Math.PI * Math.PI * E / (lam * lam), mode: 'euler' };
   }
 
+  /* ── tangent-modulus column curve ─────────────────────────────
+   * Past the proportional limit a column stops buckling on E. Engesser’s
+   * correction replaces it with the tangent modulus at the buckling stress:
+   *
+   *     Fc = pi^2 Et(Fc) / (L'/rho)^2
+   *
+   * which is implicit, since Et depends on the stress being solved for. It does
+   * not need iterating though. Read the handbook curve the other way round and
+   * every (Et, sigma) point on it already names the slenderness at which that
+   * stress is the critical one:
+   *
+   *     lambda = pi sqrt(Et / sigma)
+   *
+   * That sweeps out the entire column curve in one exact pass, no root-finding
+   * and no convergence to worry about. Lambda falls monotonically as sigma
+   * rises, so the same list inverts to read a stress off at a chosen lambda.
+   *
+   * The curves arrive alloy by alloy as the handbook is digitized, so every
+   * path here has to end in "not available yet" rather than in an error.
+   */
+
+  var tmCache = Object.create(null);    // alloy -> curve list, [] when none
+  var tmPending = Object.create(null);
+
+  /**
+   * @returns {Array|null} the alloy's E_t curves, or null while still loading.
+   */
+  function tangentCurvesFor(alloy) {
+    if (!alloy || !window.TangentModulus) return [];
+    if (tmCache[alloy]) return tmCache[alloy];
+    if (!tmPending[alloy]) {
+      tmPending[alloy] = true;
+      TangentModulus.curves(alloy).then(function (cs) {
+        tmCache[alloy] = cs || [];
+        compute();                      // redraw now the curves are in
+      }).catch(function () {
+        tmCache[alloy] = [];
+      });
+    }
+    return null;
+  }
+
+  /* Choosing the curve is not a formality, because an alloy carries one E_t
+   * curve per heat treat and they are wildly different materials. 4130 is
+   * published normalized, at the 125-ksi level, at the 150-ksi level and
+   * higher; handing the normalized condition the 180-ksi curve overstates it
+   * several times over.
+   *
+   * The curve's own top edge is the discriminator. A compressive E_t curve is
+   * measured until the specimen gives up, so it stops a little past the
+   * compressive yield of the condition it came from. Comparing that top with
+   * the selected Fcy therefore identifies the matching heat treat without
+   * needing to parse the labels, which are not written to a pattern.
+   *
+   * Direction still matters, so a compressive longitudinal curve is preferred,
+   * but only as a tiebreak between curves of the right strength. Strength is
+   * the hard constraint; orientation is a refinement.
+   */
+  var TM_LO = 0.55, TM_HI = 1.9;     // of Fcy, the believable span for a top
+
+  function curveTop(c) {
+    var top = 0;
+    c.points.forEach(function (p) { if (p.stress > top) top = p.stress; });
+    return top;
+  }
+
+  function pickTangentCurve(cs, FcyPsi) {
+    if (!cs || !cs.length) return null;
+    var fcy = FcyPsi / 1000;                       // curves are plotted in ksi
+    var best = null, bestScore = Infinity;
+
+    cs.forEach(function (c) {
+      var top = curveTop(c);
+      if (top <= 0) return;
+      var ratio = top / fcy;
+      if (ratio < TM_LO || ratio > TM_HI) return;  // a different heat treat
+
+      var score = Math.abs(ratio - 1);
+      if (!/compress/i.test(c.label)) score += 0.15;
+      if (!/(^|[^A-Za-z])L([^A-Za-z]|$)|longitudinal/i.test(c.label)) score += 0.05;
+      if (score < bestScore) { bestScore = score; best = c; }
+    });
+    return best;
+  }
+
+  /* Each digitized point becomes one point on the column curve. Units come in
+     as the handbook plots them, Et in 10^3 ksi and stress in ksi, and leave in
+     psi to match everything else on this page. */
+  function engesserPoints(curve) {
+    var out = [];
+    curve.points.forEach(function (p) {
+      if (p.stress <= 0 || p.et <= 0) return;
+      var E = p.et * 1e6, f = p.stress * 1000;
+      out.push({ lam: Math.PI * Math.sqrt(E / f), Fc: f });
+    });
+    out.sort(function (a, b) { return b.lam - a.lam; });
+    return out;
+  }
+
+  /**
+   * Critical stress at a given slenderness.
+   *
+   * Solved rather than read off the parametric curve. Et is interpolated
+   * against stress, the direction the digitized points are dense in, and
+   * bisection finds the stress satisfying Fc = pi^2 Et(Fc)/lambda^2. The left
+   * side falls and the right side rises with stress, so the difference crosses
+   * zero exactly once and bisection cannot pick a wrong root.
+   *
+   * Below the curve's first point Et is still the initial slope, so the answer
+   * is Euler and is returned as such. Above the curve's last point the handbook
+   * has stopped, and so does this rather than extrapolate into the region where
+   * being wrong costs the most.
+   */
+  function engesserSolve(curve, lam) {
+    if (!curve || !curve.points.length || lam <= 0) return null;
+
+    var k = Math.PI * Math.PI / (lam * lam);
+    var elastic = k * curve.eMax * 1e6;
+    if (elastic <= curve.points[0].stress * 1000) {
+      return { Fc: elastic, elastic: true };
+    }
+
+    function excess(sig) {                 // psi in, psi out
+      var r = TangentModulus.at(curve, sig / 1000);
+      return r ? k * r.et * 1e6 - sig : -sig;
+    }
+
+    var top = curve.stressMax * 1000;
+    if (excess(top) > 0) return { Fc: top, offCurve: true };
+
+    var lo = 0, hi = top;                  // excess(lo) > 0, excess(hi) <= 0
+    for (var i = 0; i < 60; i++) {
+      var mid = (lo + hi) / 2;
+      if (excess(mid) > 0) lo = mid; else hi = mid;
+    }
+    return { Fc: (lo + hi) / 2 };
+  }
+
+  /** Everything the panels need about the tangent-modulus branch, or null. */
+  function tangentResult(alloy, lam, Fcc, area, P, Fcy) {
+    var cs = tangentCurvesFor(alloy);
+    if (cs === null) return { status: 'loading' };
+    if (!cs.length) return { status: 'none' };
+
+    var curve = pickTangentCurve(cs, Fcy);
+    /* Curves exist for this alloy but none of them was measured on anything
+       like this condition, which is worth saying rather than silently using
+       the nearest. */
+    if (!curve) return { status: 'mismatch', count: cs.length };
+
+    var pts = engesserPoints(curve);
+    var hit = engesserSolve(curve, lam);
+    if (!hit) return { status: 'none' };
+
+    /* Local buckling still caps the member: the tangent modulus describes how
+       the material softens, not how a thin flange folds. */
+    var Fc = Math.min(hit.Fc, Fcc);
+    var out = {
+      status: 'ok', curve: curve, pts: pts, Fc: Fc, raw: hit.Fc,
+      capped: hit.Fc > Fcc, elastic: !!hit.elastic, offCurve: !!hit.offCurve,
+      Pallow: Fc * area
+    };
+    out.ms = P > 0 ? out.Pallow / P - 1 : Infinity;
+    return out;
+  }
+
   /* ── state ────────────────────────────────────────────────────────────── */
 
   var curveChart = null;
@@ -498,7 +665,7 @@
 
   /* ── chart ────────────────────────────────────────────────────────────── */
 
-  function buildChart(E, Fcc, Fcy, lam, Fc) {
+  function buildChart(E, Fcc, Fcy, lam, Fc, tm) {
     var lmax = Math.max(160, lam * 1.6);
     var euler = [], john = [], N = 120, i, l;
     var lc = lambdaCrit(E, Fcc);
@@ -508,12 +675,39 @@
       if (eu <= Fcy / 1000 * 1.15) euler.push({ x: l, y: eu });
       if (l <= lc) john.push({ x: l, y: Fcc * (1 - Fcc * l * l / (4 * Math.PI * Math.PI * E)) / 1000 });
     }
+    /* The tangent-modulus branch, drawn from the digitized curve where it
+       reaches and continued up the elastic line beyond it, so the two methods
+       can be compared over the same span. */
+    var tmLine = [];
+    if (tm && tm.status === 'ok') {
+      var Emax = tm.curve.eMax * 1e6;
+      tm.pts.forEach(function (p) {
+        if (p.lam <= lmax) tmLine.push({ x: p.lam, y: Math.min(p.Fc, Fcc) / 1000 });
+      });
+      var lamTop = tm.pts[0].lam;
+      for (i = 1; i <= N; i++) {
+        l = lmax * i / N;
+        if (l > lamTop) tmLine.push({ x: l, y: Math.PI * Math.PI * Emax / (l * l) / 1000 });
+      }
+      tmLine.sort(function (a, b) { return a.x - b.x; });
+      tmLine = tmLine.filter(function (p) { return p.y <= Fcy / 1000 * 1.15; });
+      /* Stockier than the published curve reaches, the panel reports the
+         crippling cap, so the line says the same rather than stopping in
+         mid-air short of the axis. */
+      if (tmLine.length && tmLine[0].x > 0) {
+        tmLine.unshift({ x: 0, y: tmLine[0].y });
+      }
+    }
+
     var data = {
       datasets: [
         { label: 'Johnson (short)', data: john, borderColor: '#3a6270', backgroundColor: '#3a6270',
           pointRadius: 0, borderWidth: 2, tension: 0, showLine: true },
         { label: 'Euler (long)', data: euler, borderColor: '#c87941', backgroundColor: '#c87941',
           pointRadius: 0, borderWidth: 2, tension: 0, showLine: true },
+        { label: 'Tangent modulus', data: tmLine, borderColor: '#2f7a4f',
+          backgroundColor: '#2f7a4f', pointRadius: 0, borderWidth: 2.5,
+          tension: 0, showLine: true, hidden: tmLine.length === 0 },
         { label: 'F_cc cutoff', data: [{ x: 0, y: Fcc / 1000 }, { x: lmax, y: Fcc / 1000 }],
           borderColor: '#7a5a8a', borderDash: [6, 4], pointRadius: 0, borderWidth: 1.5, showLine: true },
         { label: 'This column', data: [{ x: lam, y: Fc / 1000 }],
@@ -579,6 +773,64 @@
       '</div></div>';
   }
 
+  function esc(t) {
+    return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  /* The comparison is the point of showing both. Johnson is the conservative
+     standby, but whether it is conservative *here* depends on how rounded this
+     alloy's knee is, and that is exactly what the reader cannot guess. */
+  function tangentTile(tm, col, mat) {
+    if (!tm || tm.status !== 'ok') {
+      if (tm && tm.status === 'loading') {
+        return tile('Tangent modulus', Infinity, ['Reading the handbook figures…']);
+      }
+      if (tm && tm.status === 'mismatch') {
+        return tile('Tangent modulus', Infinity, [
+          esc(mat.alloy) + ' has ' + tm.count + ' digitized E<sub>t</sub> ' +
+          (tm.count === 1 ? 'curve' : 'curves') + ', but none measured on a ' +
+          'condition near F<sub>cy</sub> = ' + fmt(mat.Fcy / 1000) + ' ksi.',
+          'They belong to other heat treats of this alloy, and one heat ' +
+          'treat’s curve says nothing useful about another. Johnson above ' +
+          'still applies.'
+        ]);
+      }
+      return tile('Tangent modulus', Infinity, [
+        'No tangent-modulus curve is digitized for ' + esc(mat.alloy) + ' yet.',
+        'Curves are being added chapter by chapter, and this panel fills ' +
+        'itself in as soon as one exists at this strength level.'
+      ]);
+    }
+
+    var lines = [
+      'F<sub>c</sub> = ' + fmt(tm.Fc / 1000) + ' ksi',
+      'P<sub>allow</sub> = ' + fmt(tm.Pallow) + ' lb'
+    ];
+
+    if (tm.capped) {
+      lines.push('Capped by crippling at F<sub>cc</sub>: E<sub>t</sub> alone ' +
+                 'would allow ' + fmt(tm.raw / 1000) + ' ksi');
+    } else if (col.Fc > 0) {
+      var pct = (tm.Fc / col.Fc - 1) * 100;
+      lines.push(Math.abs(pct) < 0.5
+        ? 'Within half a percent of Johnson'
+        : (pct > 0
+            ? 'Johnson is ' + Math.abs(pct).toFixed(0) + '% conservative here'
+            : 'Johnson is ' + Math.abs(pct).toFixed(0) + '% optimistic here'));
+    }
+
+    var f = tm.curve.fig;
+    lines.push(f && f.page && f.anchor
+      ? '<a href="' + f.page + '#' + f.anchor + '">Fig ' + esc(f.id) + '</a>, ' +
+        esc(tm.curve.label)
+      : esc(tm.curve.label));
+
+    var badge = tm.capped ? 'CRIPPLES'
+              : tm.elastic ? 'ELASTIC'
+              : tm.offCurve ? 'OFF CURVE' : 'TANGENT';
+    return tile('Tangent modulus', tm.ms, lines, badge);
+  }
+
   function compute() {
     var shapeKey = $('cb_shape').value;
     var S = SHAPES[shapeKey];
@@ -619,9 +871,12 @@
     var Peuler = Math.PI * Math.PI * E * props.Imin / (Le * Le);
     var msEuler = P > 0 ? Peuler / P - 1 : Infinity;
 
+    var tm = tangentResult(mat.alloy, lam, crip.Fcc, props.A, P, Fcy);
+
     LAST = {
       shapeKey: shapeKey, d: d, L: L, P: P, fix: fix, mat: mat, props: props,
-      crip: crip, rho: rho, Le: Le, lam: lam, col: col, Pallow: Pallow, ms: msCol
+      crip: crip, rho: rho, Le: Le, lam: lam, col: col, Pallow: Pallow,
+      ms: msCol, tm: tm
     };
 
     var governs = col.mode === 'euler' ? 'Euler buckling'
@@ -649,6 +904,7 @@
         'ρ = ' + rho.toFixed(4) + ' in',
         "L' = " + Le.toFixed(2) + ' in'
       ]) +
+      tangentTile(tm, col, mat) +
       tile('Section', Infinity, [
         'A = ' + props.A.toFixed(4) + ' in<sup>2</sup>',
         'I<sub>x</sub> = ' + (props.Ix || 0).toExponential(3),
@@ -658,7 +914,7 @@
 
     drawElevation(fix, L, lam);
     drawSection(shapeKey, d, props);
-    buildChart(E, crip.Fcc, Fcy, lam, col.Fc);
+    buildChart(E, crip.Fcc, Fcy, lam, col.Fc, tm);
     buildSteps();
   }
 
@@ -719,6 +975,24 @@
     row('Allowable stress F<sub>c</sub>', fmt(r.col.Fc / 1000) + ' ksi');
     row('P<sub>allow</sub> = F<sub>c</sub>·A', fmt(r.Pallow) + ' lb');
     row('MS = P<sub>allow</sub>/P − 1', msText(r.ms));
+
+    if (r.tm && r.tm.status === 'ok') {
+      grp('Tangent modulus (Engesser)');
+      row('Curve', r.tm.curve.label + ', Fig ' + r.tm.curve.fig.id);
+      row('E from this curve', (r.tm.curve.eMax).toFixed(2) + ' Msi, against ' +
+          fmt(r.mat.E / 1e6) + ' Msi tabulated');
+      row('F<sub>c</sub> = &pi;²E<sub>t</sub>(F<sub>c</sub>)/(L′/&rho;)², read at L′/&rho; = ' +
+          r.lam.toFixed(1), fmt(r.tm.raw / 1000) + ' ksi' +
+          (r.tm.elastic ? ' (still elastic, Eₜ = E)' : '') +
+          (r.tm.offCurve ? ' (stockier than the published curve reaches)' : ''));
+      if (r.tm.capped) {
+        row('Capped by crippling', fmt(r.crip.Fcc / 1000) +
+            ' ksi — the material softening is not what governs here');
+      }
+      row('P<sub>allow</sub> = F<sub>c</sub>·A', fmt(r.tm.Pallow) + ' lb');
+      row('MS = P<sub>allow</sub>/P − 1', msText(r.tm.ms));
+      row('Against Johnson', (r.tm.Fc / r.col.Fc).toFixed(3) + '×');
+    }
 
     $('cbSteps').innerHTML = s.join('');
   }

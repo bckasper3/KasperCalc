@@ -18,6 +18,7 @@
     <script defer src="js/navsearch.js"></script>
     <script defer src="js/chart.min.js"></script>
     <script defer src="js/hdbkUtil.js"></script>
+    <script defer src="js/tangent-modulus.js"></script>
     <script defer src="js/stress-figures.js"></script>
     <script defer src="js/stress-materials.js"></script>
     <script defer src="js/column-buckling.js"></script>
@@ -72,8 +73,9 @@
       .sq-panel { background: var(--sq-panel); border: 2px solid var(--sq-outline); border-radius: 10px; box-shadow: 0px 3px 5px 0 rgba(0,0,0,.4); overflow: hidden; }
       .sq-panel-h { padding: 11px 16px; background: #fff; border-bottom: 2px solid var(--sq-outline); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--sq-ink); font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
       .sq-panel-b { padding: 16px; }
-      .sq-sticky { position: sticky; top: 14px; }
-      @media (max-width:960px) { .sq-sticky { position: static; } }
+      /* The input panel used to follow the scroll. It fought the page on anything
+         but a tall window, so it stays put. */
+      .sq-sticky { position: static; }
       .sq-panel-b, .lug-field, .lug-r2 > * { min-width: 0; }
 
       /* ── Inputs ── */
@@ -189,6 +191,12 @@
         display: grid; gap: 2px; font-family: var(--body-font-family);
       }
       .lug-sub .v { color: var(--sq-ink); font-variant-numeric: tabular-nums; }
+      /* a link in a tile is still tile text; the global anchor rule sets its
+         own size, which a tile cannot inherit its way out of */
+      .lug-sub a { font-size: inherit; font-family: inherit; font-weight: 600;
+        color: var(--sq-blue); text-decoration: underline;
+        text-underline-offset: 2px; }
+      .lug-sub a:hover { color: var(--sq-ink); }
 
       /* ── Formula popovers ── */
       .lug-finfo {
@@ -729,6 +737,7 @@
                   <a class="dropdown-item" href="bitmapfileviewer.html">Bitmap File Viewer and Editor</a>
                   <a class="dropdown-item" href="bitmapfileviewerscreensimulator.html">OLED Sketch Simulator</a>
                   <a class="dropdown-item" href="4-20mACurrentLoopExplained.html">4-20mA Current Loop Explained</a>
+                  <a class="dropdown-item" href="SolenoidCoil.html">Solenoid &amp; Coil Designer</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -1083,7 +1092,7 @@
         <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
       </svg>
     </div>
-    <div class="ref-body two-col">
+    <div class="ref-body">
       <div>
         <p>Buckling happens about whichever axis is weakest, so the section property that matters is
         the <span style="font-weight:700">minimum</span> second moment of area and the radius of
@@ -1104,7 +1113,6 @@
           <em>I</em><sub>min</sub> overstates the allowable, so the error is unconservative.
         </div>
       </div>
-      <div>
         <div class="ref-sub">Where an angle’s principal axes actually lie</div>
         <div class="ref-fig ref-fig-img">
           <img src="img/angle-section-weak-principal-axis.svg" alt="Equal-leg angle with both principal axes at 45 degrees: the strong axis runs through the heel and the opposite corner, the weak axis is perpendicular to it" width="330" height="215" loading="lazy" decoding="async" class="ref-zoomable">
@@ -1113,7 +1121,6 @@
         <p>Section properties here come from a rectangle decomposition of the shape, so area,
         centroid and second moments are exact for the thin-walled idealisation rather than
         approximated with a formula per shape.</p>
-      </div>
     </div>
   </div>
 
@@ -1226,7 +1233,7 @@
         <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
       </svg>
     </div>
-    <div class="ref-body two-col">
+    <div class="ref-body">
       <div>
         <p>Above a transition slenderness the member fails elastically and Euler governs. Below it the
         material has already yielded locally, and a parabola tangent to the Euler curve is used instead.</p>
@@ -1250,13 +1257,11 @@
           thin-walled section is worth less as a column than its yield strength suggests.
         </div>
       </div>
-      <div>
         <div class="ref-sub">How the branches fit together</div>
         <div class="ref-fig ref-fig-img">
           <img src="img/column-curve-johnson-parabola-euler.svg" alt="The column curve: a crippling plateau, a Johnson parabola and the Euler hyperbola meeting tangentially" width="430" height="250" loading="lazy" decoding="async" class="ref-zoomable">
           <span class="ref-fig-label" hidden>How the column-curve branches fit together</span>
         </div>
-      </div>
     </div>
   </div>
 
@@ -1347,10 +1352,13 @@
       <p><span style="font-weight:700">Uniform thickness.</span> The crippling decomposition assumes one
       thickness through the section, which is what formed sheet and most extrusions have. A section with
       a heavy flange and a light web needs its elements treated with their own b/t.</p>
-      <p><span style="font-weight:700">Johnson rather than tangent modulus.</span> The manual also gives
-      the tangent-modulus and Ramberg&ndash;Osgood treatments, which track test data more closely for
-      materials with a rounded stress-strain knee. The parabola is the conservative, widely used
-      approximation, not the last word.</p>
+      <p><span style="font-weight:700">Two column curves, not one.</span> The Johnson parabola is the
+      conservative, widely used approximation. Where MIL-HDBK-5 publishes a tangent-modulus curve for
+      the selected condition, the Engesser result is solved from it as well and both are shown, since
+      the parabola is not reliably conservative &mdash; it can sit either side of the measured curve
+      depending on how rounded the alloy&rsquo;s knee is. Curves exist for a growing subset of
+      conditions; where there is none, only Johnson is reported. The Ramberg&ndash;Osgood treatment is
+      not implemented.</p>
       <p><span style="font-weight:700">No joint or end-detail check.</span> Fastener bearing, tension
       clips and local crushing of a tube end are outside the scope of this page, and any of them can
       govern before the column does.</p>

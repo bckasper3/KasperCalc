@@ -608,6 +608,30 @@ window.StressFigures = (function () {
     };
   }
 
+  /* ── tangent modulus ──────────────────────────────────────
+   * The reader itself lives in js/tangent-modulus.js so that pages with no
+   * interest in the figure gallery — a column buckling check, say — can read a
+   * tangent modulus without pulling in this renderer or Chart.js. It is handed
+   * our loader so the section files are fetched and parsed once, not twice.
+   * These two are kept as pass-throughs because this page reaches the reader
+   * through StressFigures already.
+   */
+  if (window.TangentModulus) {
+    window.TangentModulus.useLoader({ index: ensureIndex, section: loadSection });
+  }
+
+  function tangentFor(alloy) {
+    return window.TangentModulus
+      ? window.TangentModulus.curves(alloy)
+      : Promise.resolve([]);
+  }
+
+  function tangentAt(curve, stressKsi) {
+    return window.TangentModulus
+      ? window.TangentModulus.at(curve, stressKsi)
+      : null;
+  }
+
   /** Set the marker temperature (°F), or null to clear it. */
   function setTemperature(t) {
     temperature = (t === null || t === undefined || isNaN(t)) ? null : t;
@@ -746,6 +770,8 @@ window.StressFigures = (function () {
     derateFrom: derateFrom,
     curvesFor: curvesFor,
     curveFor: curveFor,
+    tangentFor: tangentFor,
+    tangentAt: tangentAt,
     physicalFor: physicalFor,
     interpAt: interpAt
   };
