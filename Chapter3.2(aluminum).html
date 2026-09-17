@@ -2041,7 +2041,7 @@
                 var chart=HdbkUtil.makeMultiLine('canvas-32116f',[
                   {label:'1000 hr exposure',data:d1,interp:'lin',step:0.05},
                   {label:'1/2 & 2 hr exposure',data:d2,interp:'lin',step:0.05},
-                  {label:'1/2 & 2 hr exposure TM',data:d3,interp:'lin',step:0.05},
+                  {label:'1/2 & 2 hr exposure TM',data:d3},
                   {label:'1000 hr exposure TM',data:d4}
                 ],{xLabel:'Strain, percent',yLabel:'Stress, ksi',tension:0});
                 HdbkUtil.addToggle('toggle-32116f',chart);
@@ -2074,7 +2074,7 @@
                   {label:'1000 hr exposure',data:d3,interp:'lin',step:0.05},
                   {label:'1/2 hr exposure TM',data:d4},
                   {label:'100 hr exposure TM',data:d5},
-                  {label:'1000 hr exposure TM',data:d6,interp:'lin',step:0.05}
+                  {label:'1000 hr exposure TM',data:d6}
                 ],{xLabel:'Strain, percent',yLabel:'Stress, ksi',tension:0});
                 HdbkUtil.addToggle('toggle-32116g',chart);
             })();
@@ -4418,9 +4418,9 @@
                   {label:'LT Tension',data:d2,interp:'lin',step:0.05},
                   {label:'LT Compression',data:d3,interp:'lin',step:0.05},
                   {label:'L Tension',data:d4,interp:'lin',step:0.05},
-                  {label:'LT Compression TM',data:d5,interp:'lin',step:0.05},
-                  {label:'L Compression TM',data:d6,interp:'lin',step:0.05}
-                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi'});
+                  {label:'LT Compression TM',data:d5},
+                  {label:'L Compression TM',data:d6}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi',tension:0});
                 HdbkUtil.addToggle('toggle-32316b',chart);
             })();
             </script>
@@ -4655,138 +4655,389 @@
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6j">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=401" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(j)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316j">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316j');var a=document.createElement('a');a.download='canvas-32316j.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316j').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=401" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316j" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6j"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(j).</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 2024-T42 aluminum alloy plate at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:0.0},{x:2.23676,y:24.0171},{x:2.971963,y:31.7127},{x:3.383178,y:34.9987},{x:3.732087,y:36.8413},{x:4.180685,y:38.6832},{x:4.978193,y:40.5549},{x:5.925234,y:41.9603},{x:6.934579,y:42.9161},{x:8.080997,y:43.8069}];
+                var d2=[{x:0,y:0.0},{x:3.061682,y:32.6105},{x:3.457944,y:35.8805},{x:3.734579,y:37.7076},{x:4.018692,y:38.9249},{x:4.484735,y:40.4138},{x:5.065421,y:41.565},{x:5.88785,y:42.859},{x:6.58567,y:43.496},{x:7.495327,y:44.2439},{x:8.193146,y:44.7526}];
+                var d3=[{x:0,y:0.0},{x:2.161994,y:23.6967},{x:2.94704,y:32.1139},{x:3.330841,y:35.8814},{x:3.567601,y:37.9012},{x:3.819315,y:39.4075},{x:4.130841,y:40.7851},{x:4.479751,y:41.8095},{x:5.102804,y:43.1209},{x:5.825545,y:44.1428},{x:6.58567,y:44.8917},{x:7.345794,y:45.4642},{x:8.23053,y:46.1962}];
+                var d4=[{x:0.566978,y:46.4079},{x:0.908411,y:44.9297},{x:1.65109,y:43.2723},{x:2.485981,y:41.9833},{x:3.71215,y:40.7238},{x:5.202492,y:39.3983},{x:6.697819,y:38.2653},{x:7.981308,y:37.1337},{x:8.866044,y:36.069},{x:9.713396,y:34.8762},{x:10.361371,y:33.2676},{x:10.672897,y:31.6612},{x:10.839875,y:29.3339},{x:10.894704,y:-0.105}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316j',[
+                  {label:'LT Tension',data:d1,interp:'lin',step:0.05},
+                  {label:'L Tension',data:d2,interp:'lin',step:0.05},
+                  {label:'L and LT Compression',data:d3,interp:'lin',step:0.05},
+                  {label:'L and LT Compression TM',data:d4}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi',tension:0});
+                HdbkUtil.addToggle('toggle-32316j',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6k">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=402" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(k)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316k">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316k');var a=document.createElement('a');a.download='canvas-32316k.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316k').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=402" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316k" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6k"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(k).</strong> Typical tension and compression stress-strain and compression tangent modulus curves for 2024-T42 aluminum alloy plate at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:-0.0},{x:2.254509,y:24.1896},{x:3.036072,y:32.6075},{x:3.553106,y:37.3728},{x:3.973948,y:39.9946},{x:4.406814,y:41.5848},{x:5.128257,y:43.2562},{x:6.174349,y:44.8504},{x:7.076152,y:45.7294},{x:7.953908,y:46.4495}];
+                var d2=[{x:0,y:-0.0},{x:2.146293,y:23.1571},{x:2.93988,y:31.5751},{x:3.541082,y:37.1346},{x:4.142285,y:40.8687},{x:4.599198,y:42.6972},{x:5.200401,y:44.2726},{x:5.993988,y:45.7223},{x:6.871743,y:46.7122},{x:7.472946,y:47.3193},{x:8.062124,y:47.8312}];
+                var d3=[{x:0,y:-0.0},{x:2.81002,y:30.3679},{x:3.517034,y:37.2138},{x:3.925852,y:40.0737},{x:4.346693,y:42.2193},{x:4.779559,y:43.9682},{x:5.308617,y:45.4796},{x:5.945892,y:46.9918},{x:6.751503,y:48.4416},{x:7.581162,y:49.4947},{x:8.098196,y:50.0219}];
+                var d4=[{x:0,y:-0.0},{x:2.43487,y:26.6511},{x:3.156313,y:34.2749},{x:3.613226,y:38.4843},{x:3.973948,y:41.1851},{x:4.286573,y:42.8062},{x:4.599198,y:44.1257},{x:5.008016,y:45.4776},{x:5.597194,y:46.9101},{x:6.282565,y:48.1845},{x:7.064128,y:49.3008},{x:8.218437,y:50.4989}];
+                var d5=[{x:1.088176,y:50.1343},{x:1.583567,y:48.1375},{x:2.194389,y:46.7448},{x:2.819639,y:45.6219},{x:3.877756,y:43.994},{x:5.549098,y:41.8939},{x:6.955912,y:40.2048},{x:8.254509,y:38.5467},{x:9.168337,y:37.0131},{x:9.937876,y:35.2722},{x:10.334669,y:33.6875},{x:10.683367,y:31.4676},{x:10.827655,y:28.8495},{x:10.89499,y:24.088},{x:10.8998,y:0.1992}];
+                var d6=[{x:0.91503,y:50.4982},{x:1.470541,y:48.3908},{x:2.470942,y:45.699},{x:4.058116,y:42.8999},{x:5.416834,y:40.9883},{x:7.088176,y:38.7612},{x:8.254509,y:36.9912},{x:9.108216,y:35.4095},{x:9.805611,y:33.6046},{x:10.310621,y:31.7349},{x:10.57515,y:29.8795},{x:10.774749,y:27.5793},{x:10.875752,y:24.0879},{x:10.909419,y:0.0405}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316k',[
+                  {label:'LT Tension',data:d1,interp:'lin',step:0.05},
+                  {label:'L Tension',data:d2,interp:'lin',step:0.05},
+                  {label:'L Compression',data:d3,interp:'lin',step:0.05},
+                  {label:'LT Compression',data:d4,interp:'lin',step:0.05},
+                  {label:'LT Compression TM',data:d5},
+                  {label:'L Compression TM',data:d6}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi',tension:0});
+                HdbkUtil.addToggle('toggle-32316k',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6l">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=402" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(l)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316l">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316l');var a=document.createElement('a');a.download='canvas-32316l.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316l').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=402" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316l" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6l"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(l).</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 2024-T4 aluminum alloy rolled bar, rod, and shapes at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:-0.0},{x:2.046184,y:21.9112},{x:2.792479,y:29.5851},{x:3.351978,y:33.5524},{x:3.985912,y:36.7242},{x:4.917917,y:39.3629},{x:6.036191,y:41.4698},{x:7.489819,y:43.1756},{x:9.030354,y:44.4831}];
+                var d2=[{x:0,y:-0.0},{x:2.294927,y:24.2926},{x:3.215414,y:34.2162},{x:3.750217,y:39.3758},{x:4.133335,y:43.4776},{x:4.409335,y:45.2758},{x:4.732454,y:46.3849},{x:5.366105,y:47.2785},{x:7.005973,y:48.2141},{x:9.602322,y:48.8212}];
+                var d3=[{x:0.75709,y:44.7069},{x:1.266077,y:42.0523},{x:2.110503,y:39.6853},{x:3.091642,y:37.8467},{x:4.333636,y:35.8992},{x:5.923429,y:33.7359},{x:7.252403,y:31.9729},{x:8.568918,y:29.9187},{x:9.425845,y:28.1874},{x:10.059122,y:26.0612},{x:10.394311,y:24.3356},{x:10.587787,y:21.8169},{x:10.661959,y:18.9022},{x:10.691921,y:0.0939}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316l',[
+                  {label:'L Compression',data:d1,interp:'lin',step:0.05},
+                  {label:'L Tension',data:d2,interp:'lin',step:0.05},
+                  {label:'L Compression TM',data:d3}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi',tension:0});
+                HdbkUtil.addToggle('toggle-32316l',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6m">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=403" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(m)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316m">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316m');var a=document.createElement('a');a.download='canvas-32316m.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316m').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=403" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316m" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6m"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(m).</strong> Typical tensile stress-strain curves for 2024-T351X aluminum alloy extrusion at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:-0.0,y:-0.0},{x:2.316473,y:24.9382},{x:3.382831,y:36.1316},{x:3.730858,y:39.1065},{x:4.064965,y:41.299},{x:4.49652,y:43.3357},{x:5.109049,y:45.3736},{x:6.153132,y:47.5864},{x:7.308585,y:49.1428},{x:8.477958,y:50.3082},{x:9.811601,y:51.3651}];
+                var d2=[{x:-0.0,y:-0.0},{x:2.909513,y:31.4349},{x:3.839443,y:41.4227},{x:4.329466,y:46.7766},{x:4.649652,y:50.0642},{x:4.844548,y:51.63},{x:5.12297,y:52.8052},{x:5.62413,y:53.8255},{x:6.180974,y:54.3767},{x:6.960557,y:54.9293},{x:8.241299,y:55.5635},{x:9.800464,y:55.9648}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316m',[
+                  {label:'LT Tension',data:d1,interp:'lin',step:0.05},
+                  {label:'L Tension',data:d2,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-32316m',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6n">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=403" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(n)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316n">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316n');var a=document.createElement('a');a.download='canvas-32316n.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316n').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=403" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316n" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6n"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(n).</strong> Typical compressive stress-strain and compressive tangentmodulus curves for 2024-T351X aluminum alloy extrusion at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:0},{x:2.602431,y:28.2484},{x:3.472253,y:37.7021},{x:3.92183,y:41.2255},{x:4.372011,y:43.4654},{x:5.076005,y:45.718},{x:6.456809,y:48.0579},{x:8.049455,y:49.705},{x:9.698753,y:50.822}];
+                var d2=[{x:0,y:0},{x:3.247652,y:35.5393},{x:3.907201,y:42.3486},{x:4.356704,y:46.0325},{x:4.792844,y:48.1443},{x:5.32776,y:50.1104},{x:6.539327,y:52.5006},{x:7.864058,y:54.1353},{x:8.935323,y:55.0194},{x:9.913581,y:55.7764}];
+                var d3=[{x:0.575183,y:51.2167},{x:0.942756,y:49.2065},{x:1.437012,y:47.6758},{x:2.100415,y:46.2872},{x:3.412741,y:44.3125},{x:4.654298,y:42.9002},{x:6.22028,y:41.2749},{x:7.631095,y:39.7641},{x:8.816323,y:38.1921},{x:9.536047,y:36.9793},{x:10.114797,y:35.6881},{x:10.482068,y:34.3196},{x:10.750782,y:32.6315},{x:10.920976,y:30.5436},{x:10.978738,y:27.6552},{x:11.028461,y:-0.1316}];
+                var d4=[{x:0.618007,y:56.1092},{x:0.920564,y:54.4207},{x:1.434599,y:52.8095},{x:2.281505,y:51.0174},{x:3.875998,y:48.7341},{x:5.456171,y:46.9162},{x:7.022212,y:45.1626},{x:8.263807,y:43.6701},{x:9.223334,y:42.2776},{x:9.957362,y:40.6314},{x:10.409263,y:39.2136},{x:10.697778,y:37.3969},{x:10.884833,y:35.4372},{x:10.962073,y:33.1099},{x:11.020023,y:-0.1796}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316n',[
+                  {label:'L Compression',data:d1,interp:'lin',step:0.05},
+                  {label:'LT Compression',data:d2,interp:'lin',step:0.05},
+                  {label:'L Compression TM',data:d3},
+                  {label:'LT Compression TM',data:d4}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi',tension:0});
+                HdbkUtil.addToggle('toggle-32316n',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6o">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=404" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(o)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316o">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316o');var a=document.createElement('a');a.download='canvas-32316o.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316o').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=404" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316o" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6o"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(o).</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 2024-T3 aluminum alloy extrusion at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:0.0},{x:2.230019,y:23.5966},{x:3.332122,y:35.1009},{x:3.857078,y:39.4465},{x:4.43245,y:42.2573},{x:5.109488,y:44.0447},{x:6.169372,y:45.9072},{x:7.394913,y:47.2063},{x:8.097012,y:47.8683},{x:8.849987,y:48.1208}];
+                var d2=[{x:0,y:0.0},{x:2.752872,y:29.042},{x:3.998384,y:41.7477},{x:4.526352,y:47.2186},{x:4.869545,y:50.1838},{x:5.150693,y:51.2057},{x:5.776271,y:51.9703},{x:7.03999,y:53.0135},{x:8.265155,y:53.3919},{x:9.439278,y:53.7705}];
+                var d3=[{x:0.632326,y:48.4116},{x:1.294974,y:46.2093},{x:2.25103,y:43.8011},{x:3.564579,y:41.8774},{x:5.01865,y:40.3367},{x:6.383491,y:39.0265},{x:7.518717,y:37.8963},{x:8.641067,y:36.4849},{x:9.546467,y:35.0232},{x:10.298544,y:33.0763},{x:10.680555,y:31.1054},{x:10.856075,y:29.698},{x:10.909186,y:16.0149},{x:10.928118,y:-0.1233}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316o',[
+                  {label:'L Tension',data:d1,interp:'lin',step:0.05},
+                  {label:'L Compression',data:d2,interp:'lin',step:0.05},
+                  {label:'L Compression TM',data:d3}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi',tension:0});
+                HdbkUtil.addToggle('toggle-32316o',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6p">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=404" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(p)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316p">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316p');var a=document.createElement('a');a.download='canvas-32316p.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316p').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=404" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316p" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6p"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(p).</strong> Typical tensile and compressive stress-strain and compressive tangent-modulus curves for 2024-T3 aluminum alloy extrusion at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:0},{x:2.152138,y:23.1137},{x:3.563325,y:38.003},{x:4.162983,y:43.675},{x:4.722283,y:46.3693},{x:5.490574,y:48.9926},{x:6.559452,y:51.616},{x:7.593012,y:53.6012},{x:9.002249,y:55.2083},{x:10.164856,y:56.4372}];
+                var d2=[{x:0,y:0},{x:2.690725,y:28.6913},{x:3.92782,y:41.4298},{x:4.473547,y:47.6455},{x:4.762798,y:50.4106},{x:5.080101,y:52.3013},{x:5.726126,y:53.8848},{x:6.395585,y:55.1374},{x:7.135412,y:55.8227},{x:8.168739,y:56.2245},{x:9.143316,y:56.3427},{x:10.211806,y:56.3191}];
+                var d3=[{x:0.90053,y:55.4919},{x:2.003676,y:51.5923},{x:3.189135,y:48.5199},{x:4.304334,y:46.7474},{x:5.407775,y:44.8567},{x:6.58169,y:43.1315},{x:8.095993,y:40.579},{x:9.164208,y:38.6883},{x:9.9858,y:36.4668},{x:10.455155,y:34.3397},{x:10.724919,y:32.3309},{x:10.91237,y:29.4948},{x:10.970593,y:26.1861},{x:10.990215,y:-0.1182}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316p',[
+                  {label:'L Compression',data:d1,interp:'lin',step:0.05},
+                  {label:'L Tension',data:d2,interp:'lin',step:0.05},
+                  {label:'L Compression TM',data:d3}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi',tension:0});
+                HdbkUtil.addToggle('toggle-32316p',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6q">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=405" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(q)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316q">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316q');var a=document.createElement('a');a.download='canvas-32316q.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316q').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=405" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316q" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6q"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(q).</strong> Typical tensile stress-strain curves for 2024-T42 aluminum alloy extrusion at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:-0.0},{x:2.289753,y:24.7022},{x:2.925795,y:31.4122},{x:3.335689,y:34.6112},{x:3.655124,y:36.4681},{x:4.084806,y:38.2783},{x:4.848057,y:40.3069},{x:5.809187,y:41.9298},{x:6.826855,y:43.0689},{x:7.957597,y:44.052},{x:8.975265,y:44.8479}];
+                var d2=[{x:0,y:-0.0},{x:1.99576,y:21.6437},{x:3.10106,y:33.5657},{x:3.785159,y:40.8687},{x:4.169611,y:45.1443},{x:4.522968,y:48.4213},{x:4.879152,y:50.5592},{x:5.243816,y:51.6983},{x:5.755477,y:52.697},{x:6.35477,y:53.4616},{x:7.301767,y:54.2263},{x:8.4947,y:54.9129},{x:10.021201,y:55.459}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316q',[
+                  {label:'LT Tension',data:d1,interp:'lin',step:0.05},
+                  {label:'L Tension',data:d2,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-32316q',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6r">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=405" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(r)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316r">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316r');var a=document.createElement('a');a.download='canvas-32316r.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316r').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=405" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316r" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6r"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(r).</strong> Typical compressive stress-strain and compressive tangent-modulus curves for 2024-T42 aluminum alloy extrusion at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:-0.0},{x:2.158596,y:23.7969},{x:3.009045,y:33.0156},{x:3.407451,y:36.8438},{x:3.769181,y:39.125},{x:4.142253,y:40.6875},{x:4.73582,y:42.2188},{x:5.595118,y:43.625},{x:6.443136,y:44.4375},{x:7.573838,y:45.2813},{x:8.365334,y:45.7813},{x:9.111608,y:46.125}];
+                var d2=[{x:0,y:-0.0},{x:2.41288,y:26.625},{x:3.430025,y:37.7188},{x:3.949897,y:43.4375},{x:4.283299,y:46.9844},{x:4.548924,y:49.0781},{x:4.777837,y:50.4063},{x:5.091567,y:51.5},{x:5.566431,y:52.5},{x:6.230702,y:53.3594},{x:7.248325,y:54.2969},{x:8.364902,y:54.9531},{x:10.018582,y:55.5938}];
+                var d3=[{x:0.450119,y:46.2188},{x:0.902504,y:44.3438},{x:1.55275,y:42.875},{x:2.598752,y:41.4844},{x:3.969848,y:39.9688},{x:5.680158,y:38.6563},{x:7.164312,y:37.4688},{x:8.394045,y:36.3906},{x:9.355228,y:35.2813},{x:10.047867,y:34.0313},{x:10.514357,y:32.7813},{x:10.782978,y:31.2969},{x:10.924413,y:29.3438},{x:10.995209,y:26.6875},{x:11.013428,y:0.0}];
+                var d4=[{x:0.3366,y:55.6719},{x:0.619348,y:54.3438},{x:1.09996,y:53.3594},{x:1.679505,y:52.5156},{x:2.810297,y:51.4375},{x:4.775026,y:50.0781},{x:6.541856,y:49.1094},{x:8.08254,y:48.0938},{x:9.156785,y:47.2344},{x:9.863539,y:46.375},{x:10.485504,y:45.1875},{x:10.768247,y:43.9531},{x:10.946427,y:42.0781},{x:10.980449,y:39.9688},{x:11.013433,y:-0.1094}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316r',[
+                  {label:'LT Compression',data:d1,interp:'lin',step:0.05},
+                  {label:'L Compression',data:d2,interp:'lin',step:0.05},
+                  {label:'LT Compression TM',data:d3},
+                  {label:'L Compression TM',data:d4}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi',tension:0});
+                HdbkUtil.addToggle('toggle-32316r',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6s">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=406" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(s)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316s">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316s');var a=document.createElement('a');a.download='canvas-32316s.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316s').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=406" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316s" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6s"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(s).</strong> Typical tensile stress-strain curves for clad 2024-T42 aluminum alloy sheet at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:-0.0},{x:2.904269,y:30.054},{x:3.270391,y:34.0303},{x:3.500735,y:36.211},{x:3.74373,y:37.9431},{x:4.012199,y:39.4445},{x:4.408281,y:40.7671},{x:4.944717,y:41.8085},{x:5.608774,y:42.6966},{x:6.336621,y:43.4313},{x:7.294242,y:44.1159},{x:8.290119,y:44.634}];
+                var d2=[{x:0,y:-0.0},{x:2.143941,y:22.1012},{x:2.911912,y:29.9899},{x:3.308689,y:34.0305},{x:3.587462,y:35.891},{x:3.968369,y:37.7776},{x:4.527915,y:39.3319},{x:5.186956,y:40.579},{x:6.016993,y:41.5578},{x:6.898026,y:42.2676},{x:7.613055,y:42.7971},{x:8.34083,y:43.2497}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316s',[
+                  {label:'Longitudinal',data:d1,interp:'lin',step:0.05},
+                  {label:'Long Transverse',data:d2,interp:'lin',step:0.05}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-32316s',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6t">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=406" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(t)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316t">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316t');var a=document.createElement('a');a.download='canvas-32316t.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316t').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=406" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316t" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6t"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(t).</strong> Typical compressive stress-strain and compressive tangent-modulus curves for clad 2024-T42 aluminum alloy sheet at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0.0,y:-0.0},{x:2.288761,y:23.1225},{x:3.268863,y:33.0821},{x:3.736859,y:36.8506},{x:4.126776,y:40.3499},{x:4.639678,y:42.9744},{x:5.119362,y:44.3876},{x:5.733015,y:45.7335},{x:6.357903,y:46.7564},{x:7.09444,y:47.6851}];
+                var d2=[{x:0.0,y:-0.0},{x:2.520424,y:25.4643},{x:3.447092,y:34.7645},{x:3.736709,y:37.5236},{x:4.026542,y:39.3136},{x:4.45028,y:41.319},{x:4.974565,y:42.961},{x:5.610531,y:44.3607},{x:6.280064,y:45.4105},{x:7.083593,y:46.2719}];
+                var d3=[{x:0.950356,y:48.0619},{x:1.524493,y:46.4065},{x:2.339725,y:44.8452},{x:3.30002,y:43.5262},{x:5.008354,y:41.6151},{x:6.415196,y:40.1346},{x:7.487088,y:38.9502},{x:8.402737,y:37.6043},{x:9.08395,y:36.3392},{x:9.49499,y:35.2221},{x:9.85479,y:33.6205},{x:10.040467,y:31.9381},{x:10.150389,y:29.5828},{x:10.195986,y:25.3432},{x:10.216671,y:12.6918},{x:10.306364,y:10.9421},{x:10.473956,y:10.2692},{x:10.608015,y:9.7981},{x:10.686365,y:8.856},{x:10.709111,y:6.9717},{x:10.721842,y:-0.0538}];
+                var d4=[{x:0.823347,y:46.9583},{x:1.178612,y:45.6662},{x:1.692374,y:44.4415},{x:2.585721,y:42.9879},{x:3.825134,y:41.4536},{x:5.231967,y:40.0135},{x:6.504826,y:38.6676},{x:7.398059,y:37.7254},{x:8.123854,y:36.7699},{x:8.805037,y:35.6393},{x:9.262942,y:34.603},{x:9.665082,y:33.3513},{x:9.922157,y:31.8708},{x:10.078842,y:30.0538},{x:10.16864,y:27.8331},{x:10.201428,y:20.969},{x:10.205418,y:13.0956},{x:10.261593,y:11.4805},{x:10.384594,y:10.5384},{x:10.540948,y:10.2019},{x:10.641594,y:9.3943},{x:10.697678,y:8.183},{x:10.71068,y:-0.0538}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316t',[
+                  {label:'Longitudinal',data:d1,interp:'lin',step:0.05},
+                  {label:'Long Transverse',data:d2,interp:'lin',step:0.05},
+                  {label:'Longitudinal TM',data:d3},
+                  {label:'Long Transverse TM',data:d4}
+                ],{xLabel:'Strain, percent',yLabel:'Stress, ksi',tension:0});
+                HdbkUtil.addToggle('toggle-32316t',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6u">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=407" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(u)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316u">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316u');var a=document.createElement('a');a.download='canvas-32316u.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316u').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=407" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316u" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6u"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(u).</strong> Typical tensile stress-strain curves (full range) for clad 2024-T3 aluminum alloy sheet at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:-0.0,y:0},{x:0.004042,y:34.1564},{x:0.004825,y:40.7077},{x:0.006142,y:43.4},{x:0.010364,y:45.9667},{x:0.016698,y:49.0538},{x:0.02726,y:51.6564},{x:0.042839,y:54.7974},{x:0.059211,y:57.1308},{x:0.075584,y:59.2667},{x:0.100146,y:60.8282},{x:0.122596,y:61.8333},{x:0.148215,y:62.4974},{x:0.168288,y:62.9821},{x:0.186672,y:63.0718}];
+                var d2=[{x:-0.0,y:0},{x:0.004035,y:38.8231},{x:0.004871,y:45.1949},{x:0.005871,y:47.5282},{x:0.007928,y:49.7179},{x:0.012364,y:50.9205},{x:0.019862,y:52.6077},{x:0.031956,y:55.0667},{x:0.047694,y:57.6333},{x:0.06787,y:60.1641},{x:0.09502,y:62.2462},{x:0.114934,y:63.1436},{x:0.136592,y:63.7718},{x:0.159571,y:63.9154},{x:0.175683,y:63.8615},{x:0.187833,y:63.7718}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316u',[
+                  {label:'Long Transverse',data:d1,interp:'lin',step:0.001},
+                  {label:'Longitudinal',data:d2,interp:'lin',step:0.001}
+                ],{xLabel:'Strain, in./in.',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-32316u',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6v">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=408" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(v)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316v">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316v');var a=document.createElement('a');a.download='canvas-32316v.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316v').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=408" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316v" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6v"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(v).</strong> Typical tensile stress-strain curve (full range) for 2024-T351 aluminum alloy rolled rod at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0,y:0.0},{x:0.002882,y:30.7177},{x:0.003573,y:39.5699},{x:0.003738,y:43.2204},{x:0.004095,y:45.5018},{x:0.005193,y:47.1438},{x:0.00795,y:49.0586},{x:0.011262,y:50.6079},{x:0.015496,y:52.0654},{x:0.025038,y:54.4686},{x:0.044056,y:57.8877},{x:0.063078,y:60.4125},{x:0.081256,y:62.1164},{x:0.101466,y:63.3809},{x:0.115886,y:64.1747},{x:0.126103,y:64.4053},{x:0.132374,y:64.4925},{x:0.139568,y:64.433}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316v',[
+                  {label:'Longitudinal',data:d1,interp:'lin',step:0.001}
+                ],{xLabel:'Strain, in./in.',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-32316v',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6w">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=409" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(w)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316w">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316w');var a=document.createElement('a');a.download='canvas-32316w.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316w').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=409" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316w" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6w"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(w).</strong> Typical tensile stress-strain curve (full range) for 2024-T351X aluminum alloy extrusion at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:0.0,y:0},{x:0.002863,y:37.2933},{x:0.004336,y:45.1924},{x:0.005169,y:47.0307},{x:0.006148,y:48.5777},{x:0.009574,y:50.7618},{x:0.015934,y:53.1279},{x:0.025327,y:55.4576},{x:0.040883,y:58.4061},{x:0.055999,y:60.6994},{x:0.074049,y:62.9563},{x:0.0898,y:64.4124},{x:0.104475,y:65.4134},{x:0.118905,y:66.2507},{x:0.131867,y:66.7785},{x:0.143117,y:66.8149},{x:0.149721,y:66.7785},{x:0.156568,y:66.6875},{x:0.16097,y:66.4873}];
+                var d2=[{x:0.0,y:0},{x:0.00232,y:30.5044},{x:0.002962,y:38.3853},{x:0.003554,y:46.7031},{x:0.003948,y:50.0338},{x:0.004195,y:53.3099},{x:0.005174,y:54.948},{x:0.007865,y:56.3131},{x:0.013981,y:58.1877},{x:0.022102,y:59.935},{x:0.033549,y:62.0463},{x:0.050915,y:64.9584},{x:0.069748,y:66.9605},{x:0.085646,y:68.5257},{x:0.100076,y:69.4176},{x:0.11744,y:70.4186},{x:0.129669,y:70.7826},{x:0.144588,y:70.9464},{x:0.15706,y:70.8918},{x:0.166354,y:70.6006},{x:0.170511,y:70.2366}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316w',[
+                  {label:'Long Transverse',data:d1,interp:'lin',step:0.001},
+                  {label:'Longitudinal',data:d2,interp:'lin',step:0.001}
+                ],{xLabel:'Strain, in./in.',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-32316w',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6x">
-            <div class="hdbk-source-link-row"><a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=410" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a></div>
-            <div class="fig-placeholder">
-              <span class="fig-label">Figure 3.2.3.1.6(x)</span>
-              <span class="fig-caption">Pending digitization via WebPlotDigitizer.</span>
+                        <div class="canvasdiv">
+              <button id="toggle-32316x">Hide Tooltips</button>
+              <button onclick="(function(){var c=document.getElementById('canvas-32316x');var a=document.createElement('a');a.download='canvas-32316x.png';a.href=c.toDataURL();a.click()})()">Download Chart</button>
+              <button onclick="window.open(document.getElementById('canvas-32316x').toDataURL())">Open in New Tab</button>
+              <a class="hdbk-source-link" href="downloadable/MIL-HDBK-5J-1.pdf#page=410" target="_blank" rel="noopener">Open this page of MIL-HDBK-5</a>
+              <div class="canvascontainer">
+                <canvas id="canvas-32316x" class="chartcanvas" role="img" aria-label="fig-3.2.3.1.6x"></canvas>
+              </div>
             </div>
             <p class="fig-caption"><strong>Figure 3.2.3.1.6(x).</strong> Typical stress-strain curve (full range) for 2024-T3 aluminum alloy extrusion at room temperature.</p>
+            <script>
+            (function(){
+                var d1=[{x:-0.0,y:0},{x:0.001854,y:19.457},{x:0.003502,y:35.2963},{x:0.004327,y:43.1649},{x:0.005816,y:47.1495},{x:0.006809,y:49.7037},{x:0.008879,y:51.7462},{x:0.014883,y:53.7857},{x:0.026686,y:57.1087},{x:0.044288,y:60.6524},{x:0.059819,y:63.1551},{x:0.079078,y:65.5529},{x:0.10103,y:67.2742},{x:0.116148,y:67.999},{x:0.139964,y:68.7174}];
+                var chart=HdbkUtil.makeMultiLine('canvas-32316x',[
+                  {label:'Longitudinal',data:d1,interp:'lin',step:0.001}
+                ],{xLabel:'Strain, in./in.',yLabel:'Stress, ksi'});
+                HdbkUtil.addToggle('toggle-32316x',chart);
+            })();
+            </script>
           </div>
 
           <div class="hdbk-figure" id="fig-3.2.3.1.6y">
