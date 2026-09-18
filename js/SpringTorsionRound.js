@@ -81,6 +81,26 @@ const userEnteredFieldIds = new Set();
 // Suppresses hash writes during the initial restore pass.
 let _suppressHashWrite = true;
 
+// pMTSset (the Set column's %-of-tensile target) ships with a real
+// default value, "80.0", not placeholder text — it's meant to drive the
+// Set column the moment the rest of the spring is determined, the same
+// as if the user had typed it. But a bare HTML value="80.0"/JS .value=
+// assignment never fires a 'change' event, so without this it never
+// joins userEnteredFieldIds and the Set column silently never resolves,
+// however complete the design otherwise is. Called once after every
+// point where the field's DOM value gets (re)settled — initial load,
+// hash restore, and Clear All — unless something already pinned it
+// first (a restored share-link, or the user's own edit take priority).
+function pinDefaultTargetFields() {
+  const el = document.getElementById('pMTSset');
+  if (!el || userEnteredFieldIds.has('pMTSset')) return;
+  const v = parseFloat(el.value);
+  if (!isNaN(v) && v > 0) {
+    userEnteredFieldIds.add('pMTSset');
+    el.classList.add('user-entered');
+  }
+}
+
 
 // ============================================================
 // VARIABLE SYSTEM
@@ -1169,6 +1189,7 @@ async function loadMaterialDatabase() {
     if (!sel.value) sel.selectedIndex = 0;
 
     restoreStateFromHash();
+    pinDefaultTargetFields();
     _suppressHashWrite = false;
     onMaterialSelectionChange();
 
@@ -1203,6 +1224,7 @@ function loadFallbackMaterials() {
   });
 
   restoreStateFromHash();
+  pinDefaultTargetFields();
   _suppressHashWrite = false;
   onMaterialSelectionChange();
 }
@@ -2234,6 +2256,7 @@ function runCalc() {
       _lastSolvedState = null;
       blankAllComputedOutputs();
       updateAllCharts(null);
+      window.update3DModel?.(null);
       return;
     }
   }
@@ -2262,6 +2285,7 @@ function runCalc() {
       _lastSolvedState = null;
       blankAllComputedOutputs();
       updateAllCharts(null);
+      window.update3DModel?.(null);
       return;
     }
   }
@@ -2290,6 +2314,7 @@ function runCalc() {
           _lastSolvedState = null;
           blankAllComputedOutputs();
           updateAllCharts(null);
+          window.update3DModel?.(null);
           return;
         }
       }
@@ -2347,6 +2372,7 @@ function runCalc() {
     _lastSolvedState = null;
     blankAllComputedOutputs();
     updateAllCharts(null);
+    window.update3DModel?.(null);
     return;
   }
 
@@ -2421,6 +2447,7 @@ function updateStatusUnderdefined(have, need) {
   _lastSolvedState = null;
   blankAllComputedOutputs();
   updateAllCharts(null);
+  window.update3DModel?.(null);
 }
 
 function getSuggestedNextInputs() {
@@ -2939,11 +2966,46 @@ function runDeterministicPostPass(sv, result) {
   applyGradeTolerances();
 
   // ── Charts ───────────────────────────────────────────────
-  // springTorsionCharts.js still plots the compression quantities it was
-  // cloned with. Feeding it torsion data would draw confidently wrong
-  // curves, so the canvases stay blank until the chart module is
-  // reworked for torque-vs-angle.
-  updateAllCharts(null);
+  // defMax bounds the plotted range. Torsion has no "solid height" the way
+  // a compression spring does, so there is no single hard endpoint —
+  // instead use the largest deflection actually in play (M1, M2, or Set),
+  // padded for visual headroom, falling back to a nominal 90° so the
+  // curve still has *some* extent before any position is pinned.
+  const defl1V   = readFieldValue('defl1');
+  const defl2V   = readFieldValue('defl2');
+  const deflSetV = readFieldValue('deflSet');
+  const defMax   = Math.max(defl1V || 0, defl2V || 0, deflSetV || 0, 1) * 1.15 || 90;
+
+  const chartData = (k && d && D && angFree !== null) ? {
+    k, d, D, arm1, arm2,
+    Ki, Ko, kIn, kOut, mts, peened,
+    angFree, defMax,
+    hasM1: torqueColumnActive(1),
+    hasM2: torqueColumnActive(2),
+    M1:    torqueColumnActive(1) ? readFieldValue('M1') : null,
+    defl1: torqueColumnActive(1) ? defl1V : null,
+    M2:    torqueColumnActive(2) ? readFieldValue('M2') : null,
+    defl2: torqueColumnActive(2) ? defl2V : null,
+    Mset:    readFieldValue('Mset'),
+    deflSet: deflSetV,
+    loadTol: readFieldValue('loadTol'),
+  } : null;
+  updateAllCharts(chartData);
+
+  // ── 3D model ───────────────────────────────────────────────
+  // Reuses the exact same windDownGeometry() call the Nt1/Nt2/NtSet and
+  // Lb1/Lb2/LbSet table cells are built from — the 3D view has no separate
+  // geometry of its own, so it can never disagree with the table.
+  const model3DData = (d && D) ? {
+    d, arm1, arm2,
+    positions: {
+      free: windDownGeometry(D, Nb, d, 0),
+      m1:   torqueColumnActive(1) ? windDownGeometry(D, Nb, d, defl1V)   : null,
+      m2:   torqueColumnActive(2) ? windDownGeometry(D, Nb, d, defl2V)   : null,
+      set:  deflSetV != null      ? windDownGeometry(D, Nb, d, deflSetV) : null,
+    },
+  } : null;
+  window.update3DModel?.(model3DData);
 }
 
 // ── Grade tolerance helper (no side effects, no runCalc) ──────
@@ -3001,6 +3063,7 @@ function clearAll() {
   if (addFeed) addFeed.value = '0.0000';
   const pMTSset = document.getElementById('pMTSset');
   if (pMTSset) pMTSset.value = '80.0';
+  pinDefaultTargetFields();
 
   const coilTol = document.getElementById('dTolCoil');
   if (coilTol) coilTol.value = '';
@@ -3298,12 +3361,12 @@ function switchGraphTab(n, btn) {
   // _lastChartParams is null when the system is underdefined; charts blank.
   const chartFns = [
     null,
-    window._chartLoadVsDeflection,
-    window._chartLoadVsLength,
+    window._chartTorqueVsDeflection,
+    window._chartTorqueVsAngle,
     window._chartPctMTSvsDeflection,
-    window._chartStressVsLength,
+    window._chartStressVsAngle,
     window._chartFatigueStrength,
-    window._chartStressVsLoad,
+    window._chartStressVsTorque,
   ];
   const fn = chartFns[n];
   if (fn) fn(window._lastChartParams ?? null);

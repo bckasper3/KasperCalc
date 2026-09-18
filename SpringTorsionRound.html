@@ -21,6 +21,32 @@
     <script defer src="js/navsearch.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
     <script defer src="js/springTorsionCharts.js"></script>
+    <!-- 3D viewer: vendored Three.js (MIT) + OrbitControls, resolved via
+         import map since OrbitControls.js imports the bare specifier "three".
+         The bundle is ~700KB, so it is NOT loaded eagerly here — a module
+         script still starts fetching as soon as the parser sees its <script>
+         tag (only its *execution* is deferred), which would otherwise
+         compete with the calculator's own scripts for bandwidth on first
+         load. Instead it's dynamically imported after the page is idle/
+         loaded; update3DModel() calls everywhere are already optional-
+         chained (window.update3DModel?.()) so nothing breaks while it
+         hasn't arrived yet, and rerunPostPassOnly() backfills the panel
+         with whatever's already solved the moment it does. -->
+    <script type="importmap">
+      { "imports": { "three": "./js/three.module.min.js" } }
+    </script>
+    <script>
+      (function () {
+        function loadTorsion3D() {
+          import('./js/springTorsion3D.js').then(() => window.rerunPostPassOnly?.());
+        }
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadTorsion3D, { timeout: 2000 });
+        } else {
+          window.addEventListener('load', loadTorsion3D);
+        }
+      })();
+    </script>
     <script defer type="text/javascript" src="js/SpringTorsionRound.js"></script>
     <script defer src="js/torsionspringprinthelper.js"></script>
 
@@ -119,6 +145,10 @@
 .graph-tab.active{background:#eeeeee;color:#1a3a40;font-weight:700;border-bottom:2px solid #eeeeee;margin-bottom:-2px}
 .graph-content{padding:8px;display:none;min-height: 450px;}
 .graph-content.visible{display:block}
+#torsion3DCanvas{cursor:grab}
+#torsion3DCanvas:active{cursor:grabbing}
+.torsion3d-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;font-size:13px;color:#666;background:#f4f4f4}
+#torsion3DPositions .graph-tab.unavailable{color:#aaa}
 .graph-placeholder{height:140px;border:1.5px dashed #999;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#888;background:#fafafa}
 .graph-placeholder svg{opacity:0.3}
 .bottom-bar{background:#eee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:6px 10px;display:flex;align-items:center;gap:8px;justify-content:space-between}
@@ -1126,27 +1156,17 @@
           <a href="https://cad.onshape.com/documents/3443442e14bd222b97f69040/w/6bbc2fd497e4dddbcf151ba9/e/bfc7fd8423c19df892d54757?configuration=List_3CI4HSVITrER5d%3DMin_Operating&renderMode=0&uiState=69f73a6509cbe237fa8c2e2a" target="_blank"
           style="font-size: 13px; color: #fff; text-decoration: none;">OnShape Spring Creator</a>
         </button>
-        <button class="tbtn accent" onclick="ComingSoon()" style="font-size:13px;padding:5px 18px;" aria-label="Export spring 3D model as STEP file">
+        <button class="tbtn accent" onclick="import('./js/springTorsion3DExport.js').then(() => window.downloadTorsion3DSTEP())" style="font-size:13px;padding:5px 18px;" aria-label="Export spring 3D model as STEP file">
           <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           Export .STEP
         </button>
-        <button class="tbtn accent" onclick="ComingSoon()" style="font-size:13px;padding:5px 18px;" aria-label="Export spring 3D model as SolidWorks part file">
+        <button class="tbtn accent" onclick="import('./js/springTorsion3DExport.js').then(() => window.downloadTorsion3DSTL())" style="font-size:13px;padding:5px 18px;" aria-label="Export spring 3D model as STL file">
           <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Export .SLDPRT
-        </button>
-        <button class="tbtn accent" onclick="ComingSoon()" style="font-size:13px;padding:5px 18px;" aria-label="Export spring 2D drawing as DXF file">
-          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Export DXF
-        </button>
-        <button class="tbtn accent" onclick="UseAMcMasterCarrSpring()" style="font-size:13px;padding:5px 18px;" aria-label="Export KasperCalc SolidWorks Smart Spring parametric file">
-          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Solidworks Smart Spring
-        </button>
-        <button class="tbtn accent" onclick="SpringMacroPopup()" style="font-size:13px;padding:5px 18px;" aria-label="Export KasperCalc SolidWorks Smart Spring parametric file">
-          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          KasperCalc Solidworks Spring Macro
+          Export .STL
         </button>
       </div>
+      <div style="font-size:11px;color:#777;margin-top:4px;" id="torsion3DExportStatus" role="status" aria-live="polite"></div>
+      <p style="font-size:11px;color:#999;margin:2px 0 0;">STEP and STL exports reflect the Free (unloaded) position, using the current tangent-arm and coil-direction settings above.</p>
     </div>
 
     <!-- RIGHT BOX: Warnings & Status -->
@@ -1164,30 +1184,30 @@
   <div class="graph-banner" role="region" aria-labelledby="graphsTitle">
     <div class="grp-title" id="graphsTitle" style="padding:6px 8px 0;margin:0">Graphs</div>
     <div class="graph-tab-row" role="tablist" aria-label="Spring calculation graphs">
-      <button class="graph-tab active" role="tab" aria-selected="true" aria-controls="graphContent1" onclick="switchGraphTab(1, this)">Load vs. Deflection</button>
-      <button class="graph-tab" role="tab" aria-selected="false" aria-controls="graphContent2" onclick="switchGraphTab(2, this)">Load vs. Length</button>
+      <button class="graph-tab active" role="tab" aria-selected="true" aria-controls="graphContent1" onclick="switchGraphTab(1, this)">Torque vs. Deflection</button>
+      <button class="graph-tab" role="tab" aria-selected="false" aria-controls="graphContent2" onclick="switchGraphTab(2, this)">Torque vs. Arm Angle</button>
       <button class="graph-tab" role="tab" aria-selected="false" aria-controls="graphContent3" onclick="switchGraphTab(3, this)">% MTS vs. Deflection</button>
-      <button class="graph-tab" role="tab" aria-selected="false" aria-controls="graphContent4" onclick="switchGraphTab(4, this)">Stress vs. Length</button>
+      <button class="graph-tab" role="tab" aria-selected="false" aria-controls="graphContent4" onclick="switchGraphTab(4, this)">Stress vs. Arm Angle</button>
       <button class="graph-tab" role="tab" aria-selected="false" aria-controls="graphContent5" onclick="switchGraphTab(5, this)">Fatigue Strength Diagram</button>
-      <button class="graph-tab" role="tab" aria-selected="false" aria-controls="graphContent6" onclick="switchGraphTab(6, this)">Stress vs. Load</button>
+      <button class="graph-tab" role="tab" aria-selected="false" aria-controls="graphContent6" onclick="switchGraphTab(6, this)">Stress vs. Torque</button>
     </div>
       <div id="graphContent1" class="graph-content visible" role="tabpanel">
-        <canvas id="chartLoadVsDeflection" height="350" style="width:100%;height:350px;"></canvas>
+        <canvas id="chartTorqueVsDeflection" height="350" style="width:100%;height:350px;"></canvas>
       </div>
       <div id="graphContent2" class="graph-content" role="tabpanel">
-        <canvas id="chartLoadVsLength" height="350" style="width:100%;height:350px;"></canvas>
+        <canvas id="chartTorqueVsAngle" height="350" style="width:100%;height:350px;"></canvas>
       </div>
       <div id="graphContent3" class="graph-content" role="tabpanel">
         <canvas id="chartPctMTSvsDeflection" height="350" style="width:100%;height:350px;"></canvas>
       </div>
       <div id="graphContent4" class="graph-content" role="tabpanel">
-        <canvas id="chartStressVsLength" height="350" style="width:100%;height:350px;"></canvas>
+        <canvas id="chartStressVsAngle" height="350" style="width:100%;height:350px;"></canvas>
       </div>
       <div id="graphContent5" class="graph-content" role="tabpanel">
         <canvas id="chartFatigueStrength" height="350" style="width:100%;height:350px;"></canvas>
       </div>
       <div id="graphContent6" class="graph-content" role="tabpanel">
-        <canvas id="chartStressVsLoad" height="350" style="width:100%;height:350px;"></canvas>
+        <canvas id="chartStressVsTorque" height="350" style="width:100%;height:350px;"></canvas>
       </div>
   </div>
 
@@ -1198,30 +1218,50 @@
        ─────────────────────────────────────────────────────────────────── -->
   <div id="springGraphsPrint" aria-hidden="true">
     <div class="spg-item">
-      <div class="spg-label">Load vs. Deflection</div>
-      <div class="spg-canvas-wrap"><canvas id="chartLoadVsDeflection_p"></canvas></div>
+      <div class="spg-label">Torque vs. Deflection</div>
+      <div class="spg-canvas-wrap"><canvas id="chartTorqueVsDeflection_p"></canvas></div>
     </div>
     <div class="spg-item">
-      <div class="spg-label">Load vs. Length</div>
-      <div class="spg-canvas-wrap"><canvas id="chartLoadVsLength_p"></canvas></div>
+      <div class="spg-label">Torque vs. Arm Angle</div>
+      <div class="spg-canvas-wrap"><canvas id="chartTorqueVsAngle_p"></canvas></div>
     </div>
     <div class="spg-item">
       <div class="spg-label">% MTS vs. Deflection</div>
       <div class="spg-canvas-wrap"><canvas id="chartPctMTSvsDeflection_p"></canvas></div>
     </div>
     <div class="spg-item">
-      <div class="spg-label">Stress vs. Length</div>
-      <div class="spg-canvas-wrap"><canvas id="chartStressVsLength_p"></canvas></div>
+      <div class="spg-label">Stress vs. Arm Angle</div>
+      <div class="spg-canvas-wrap"><canvas id="chartStressVsAngle_p"></canvas></div>
     </div>
     <div class="spg-item">
       <div class="spg-label">Fatigue Strength Diagram</div>
       <div class="spg-canvas-wrap"><canvas id="chartFatigueStrength_p"></canvas></div>
     </div>
     <div class="spg-item">
-      <div class="spg-label">Stress vs. Load</div>
-      <div class="spg-canvas-wrap"><canvas id="chartStressVsLoad_p"></canvas></div>
+      <div class="spg-label">Stress vs. Torque</div>
+      <div class="spg-canvas-wrap"><canvas id="chartStressVsTorque_p"></canvas></div>
     </div>
   </div><!-- /#springGraphsPrint -->
+
+  <div class="graph-banner" role="region" aria-labelledby="torsion3DTitle">
+    <div class="grp-title" id="torsion3DTitle" style="padding:6px 8px 0;margin:0">3D Model</div>
+    <div id="torsion3DPositions" class="graph-tab-row" role="tablist" aria-label="Spring load position">
+      <button type="button" class="graph-tab active" data-pos="free">Free</button>
+      <button type="button" class="graph-tab" data-pos="m1">Cycle Torque 1</button>
+      <button type="button" class="graph-tab" data-pos="m2">Cycle Torque 2</button>
+      <button type="button" class="graph-tab" data-pos="set">Set</button>
+    </div>
+    <div id="torsion3DPanel" style="position:relative;height:420px;">
+      <canvas id="torsion3DCanvas" style="width:100%;height:100%;display:block;touch-action:none;"></canvas>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin:4px 8px 6px;">
+      <p style="font-size:11px;color:#777;margin:0;">Drag to orbit, scroll to zoom.</p>
+      <label style="font-size:11px;color:#555;display:inline-flex;align-items:center;gap:4px;cursor:pointer;">
+        <input type="checkbox" id="torsion3DTangentArms" style="margin:0;">
+        Tangent arms <span style="color:#999;">(off = radial, the drawing-style default)</span>
+      </label>
+    </div>
+  </div>
 
   <div class="bottom-bar d-block" role="contentinfo">
     <p style="font-size:12px;color:#555">For critical applications, please verify with hand calculations or other spring solvers. This is a free calculator and is not liable for any design errors or calculation mistakes. This calculator uses a fuzzy solver and may make mistakes.</p>

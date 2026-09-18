@@ -21,6 +21,24 @@
     <script defer src="js/navsearch.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
     <script defer src="js/springCharts.js"></script>
+
+    <!-- 3D viewer deps load lazily (idle/on-load), never competing with
+         the calculator's own scripts above for bandwidth. -->
+    <script type="importmap">
+      { "imports": { "three": "./js/three.module.min.js" } }
+    </script>
+    <script>
+      (function () {
+        function loadComp3D() {
+          import('./js/springCompression3D.js').then(() => window.rerunPostPassOnly?.());
+        }
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadComp3D, { timeout: 2000 });
+        } else {
+          window.addEventListener('load', loadComp3D);
+        }
+      })();
+    </script>
     <script defer type="text/javascript" src="js/SpringCompressionRound.js"></script>
     <script defer src="js/compressionspringprinthelper.js"></script>
 
@@ -120,6 +138,10 @@
 .graph-content.visible{display:block}
 .graph-placeholder{height:140px;border:1.5px dashed #999;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#888;background:#fafafa}
 .graph-placeholder svg{opacity:0.3}
+.comp3d-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;font-size:13px;color:#666;background:#f4f4f4}
+#comp3DPositions .graph-tab.unavailable{color:#aaa}
+#comp3DCanvas{cursor:grab}
+#comp3DCanvas:active{cursor:grabbing}
 .bottom-bar{background:#eee;margin:0 0.5rem 0.5rem;border-radius:10px;border:2px solid rgb(67,67,67);box-shadow:0 3px 5px rgba(0,0,0,.4);padding:6px 10px;display:flex;align-items:center;gap:8px;justify-content:space-between}
 
 .status-dot{width:8px;height:8px;border-radius:50%;background:#aaa;flex-shrink:0}
@@ -1087,27 +1109,17 @@
           <a href="https://cad.onshape.com/documents/3443442e14bd222b97f69040/w/6bbc2fd497e4dddbcf151ba9/e/bfc7fd8423c19df892d54757?configuration=List_3CI4HSVITrER5d%3DMin_Operating&renderMode=0&uiState=69f73a6509cbe237fa8c2e2a" target="_blank"
           style="font-size: 13px; color: #fff; text-decoration: none;">OnShape Spring Creator</a>
         </button>
-        <button class="tbtn accent" onclick="ComingSoon()" style="font-size:13px;padding:5px 18px;" aria-label="Export spring 3D model as STEP file">
+        <button class="tbtn accent" onclick="import('./js/springCompression3DExport.js').then(() => window.downloadComp3DSTEP())" style="font-size:13px;padding:5px 18px;" aria-label="Export spring 3D model as STEP file">
           <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           Export .STEP
         </button>
-        <button class="tbtn accent" onclick="ComingSoon()" style="font-size:13px;padding:5px 18px;" aria-label="Export spring 3D model as SolidWorks part file">
+        <button class="tbtn accent" onclick="import('./js/springCompression3DExport.js').then(() => window.downloadComp3DSTL())" style="font-size:13px;padding:5px 18px;" aria-label="Export spring 3D model as STL file">
           <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Export .SLDPRT
-        </button>
-        <button class="tbtn accent" onclick="ComingSoon()" style="font-size:13px;padding:5px 18px;" aria-label="Export spring 2D drawing as DXF file">
-          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Export DXF
-        </button>
-        <button class="tbtn accent" onclick="UseAMcMasterCarrSpring()" style="font-size:13px;padding:5px 18px;" aria-label="Export KasperCalc SolidWorks Smart Spring parametric file">
-          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Solidworks Smart Spring
-        </button>
-        <button class="tbtn accent" onclick="SpringMacroPopup()" style="font-size:13px;padding:5px 18px;" aria-label="Export KasperCalc SolidWorks Smart Spring parametric file">
-          <svg aria-hidden="true" width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          KasperCalc Solidworks Spring Macro
+          Export .STL
         </button>
       </div>
+      <div style="font-size:11px;color:#777;margin-top:4px;" id="comp3DExportStatus" role="status" aria-live="polite"></div>
+      <p style="font-size:11px;color:#999;margin:2px 0 0;">STEP and STL exports reflect the Free (unloaded) position, using the current coil-direction setting above.</p>
     </div>
 
     <!-- RIGHT BOX: Warnings & Status -->
@@ -1150,6 +1162,20 @@
       <div id="graphContent6" class="graph-content" role="tabpanel">
         <canvas id="chartStressVsLoad" height="350" style="width:100%;height:350px;"></canvas>
       </div>
+  </div>
+
+  <div class="graph-banner" role="region" aria-labelledby="comp3DTitle">
+    <div class="grp-title" id="comp3DTitle" style="padding:6px 8px 0;margin:0">3D Model</div>
+    <div id="comp3DPositions" class="graph-tab-row" role="tablist" aria-label="Spring load position">
+      <button type="button" class="graph-tab active" data-pos="free">Free</button>
+      <button type="button" class="graph-tab" data-pos="l1">L1</button>
+      <button type="button" class="graph-tab" data-pos="l2">L2</button>
+      <button type="button" class="graph-tab" data-pos="solid">At Solid</button>
+    </div>
+    <div id="comp3DPanel" style="position:relative;height:420px;">
+      <canvas id="comp3DCanvas" style="width:100%;height:100%;display:block;touch-action:none;"></canvas>
+    </div>
+    <p style="font-size:11px;color:#777;margin:4px 8px 6px;">Drag to orbit, scroll to zoom.</p>
   </div>
 
   <!-- ── PRINT-ONLY: all 6 charts always rendered ────────────────────────

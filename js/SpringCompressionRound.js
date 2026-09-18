@@ -1754,6 +1754,7 @@ function runCalc() {
       _lastSolvedState = null;
       blankAllComputedOutputs();
       updateAllCharts(null);
+      window.update3DModel?.(null);
       return;
     }
   }
@@ -1782,6 +1783,7 @@ function runCalc() {
       _lastSolvedState = null;
       blankAllComputedOutputs();
       updateAllCharts(null);
+      window.update3DModel?.(null);
       return;
     }
   }
@@ -1818,6 +1820,7 @@ function runCalc() {
           _lastSolvedState = null;
           blankAllComputedOutputs();
           updateAllCharts(null);
+          window.update3DModel?.(null);
           return;
         }
       }
@@ -1846,6 +1849,7 @@ function runCalc() {
         _lastSolvedState = null;
         blankAllComputedOutputs();
         updateAllCharts(null);
+        window.update3DModel?.(null);
         return;
       }
     }
@@ -1905,6 +1909,7 @@ function runCalc() {
     _lastSolvedState = null;
     blankAllComputedOutputs();
     updateAllCharts(null);
+    window.update3DModel?.(null);
     return;
   }
 
@@ -2597,6 +2602,24 @@ function runDeterministicPostPass(sv, result) {
           `${result.iter} iters) — check for conflicting inputs`
     );
   }
+
+  // ── 14.5. 3D model — reuses the geometry already solved above ──
+  // No new spring math: Na, Nt, pitch, Lf, Ls and the closed/ground
+  // flags are exactly what the Configuration and results table already
+  // show. Each position just swaps in its own length (Free/L1/L2/Solid)
+  // for the pitch formula the solver itself uses (Pass 7, above).
+  const model3DData = (d && D && Na > 0) ? {
+    d, D, Na, Nd,
+    closed: document.getElementById('endClosed')?.checked ?? false,
+    ground: document.getElementById('endGround')?.checked ?? false,
+    positions: {
+      free:  (Lf > 0) ? { length: Lf } : null,
+      l1:    (hasL1 && L1 > 0) ? { length: L1 } : null,
+      l2:    (hasL2 && L2 > 0) ? { length: L2 } : null,
+      solid: (Ls > 0) ? { length: Ls } : null,
+    },
+  } : null;
+  window.update3DModel?.(model3DData);
 
   // ── 15. Status bar — always last ─────────────────────────
   const dot     = document.getElementById('bottomStatusDot');

@@ -1,31 +1,51 @@
 // ============================================================
-// KASPERCALC SPRING CHARTS — DEBUG VERSION
-// Console logs added to trace exactly where rendering breaks
-// Search for [KC-CHART] to find all debug output
+// KASPERCALC TORSION SPRING CHARTS
+//
+// Torsion-specific adaptation of springCharts.js (the compression spring
+// chart module this was originally cloned from). The two calculators share
+// a rendering engine (rebuildChart, makeOpts, smartAxis, dataset helpers)
+// but the physics differs enough to need its own chart-building functions:
+//
+//   - The load quantity is torque M (lbf-in), not force F (lb).
+//   - The "position" axis is angular deflection (deg), not linear length —
+//     and where compression pairs deflection with free-length-minus-
+//     deflection, torsion pairs it with the moving arm's absolute angle
+//     (angFree + deflection), since torsion has no "solid height" analogue.
+//   - Torsion springs are stressed in BENDING and fail from the inner
+//     fibre, so where compression shows one corrected/uncorrected shear
+//     stress line, torsion shows two: inner-fibre and outer-fibre bending
+//     stress (si, so). The inner fibre is always the higher of the two.
+//   - There is no "preset" concept for torsion (that's a compression/
+//     extension spring manufacturing process). The static bending
+//     allowable is a flat 80% (warn) / 100% (yield) of tensile strength,
+//     matching the thresholds already used in runDeterministicPostPass.
+//   - Only two S-N reference points are published (1e5, 1e6 cycles),
+//     against compression's three — and the torsion Goodman relation
+//     happens to converge exactly at 100% MTS (see the derivation in
+//     _chartFatigueStrength), so that line is drawn to its true
+//     mathematical limit rather than a separately-tracked static cutoff.
 // ============================================================
-
-// console.log('[KC-CHART] springTorsionCharts.js: script started parsing');
 
 let _lastChartParams = null;
 
 const _charts = {
-  loadVsDeflection:   null,
-  loadVsLength:       null,
+  torqueVsDeflection: null,
+  torqueVsAngle:      null,
   pctMTSvsDeflection: null,
-  stressVsLength:     null,
+  stressVsAngle:      null,
   fatigueStrength:    null,
-  stressVsLoad:       null,
+  stressVsTorque:     null,
 };
 
 // Print-shadow registry — canvases live in #springGraphsPrint (position:fixed;left:-9999px)
 // so they always have real pixel dimensions regardless of which tab is active.
 const _printCharts = {
-  loadVsDeflection:   null,
-  loadVsLength:       null,
+  torqueVsDeflection: null,
+  torqueVsAngle:      null,
   pctMTSvsDeflection: null,
-  stressVsLength:     null,
+  stressVsAngle:      null,
   fatigueStrength:    null,
-  stressVsLoad:       null,
+  stressVsTorque:     null,
 };
 
 const KC = {
@@ -39,13 +59,9 @@ const KC = {
   grey:      '#aaa',
   warn:      '#cc7700',
   err:       '#cc2222',
-  presetClr: '#7b5ea7',
 };
 
 const BASE_FONT = { family: "'Roboto', Arial, sans-serif", size: 11 };
-
-// ── Check Chart.js availability immediately ───────────────────
-// console.log('[KC-CHART] Chart.js available at parse time:', typeof Chart !== 'undefined' ? `YES (v${Chart.version})` : 'NO — window.Chart is undefined');
 
 // ── Dataset helpers ───────────────────────────────────────────
 
@@ -90,11 +106,8 @@ function pointDs(label, data, color, extra = {}) {
 
 // ── Smart axis ────────────────────────────────────────────────
 function smartAxis(values, forceZeroMin = false) {
-  const valid = values.filter(v => Number.isFinite(v));  // already filters NaN and Infinity
-  if (!valid.length) {
-    console.warn('[KC-CHART] smartAxis: no finite values, returning default {0,1}');
-    return { min: 0, max: 1 };
-  }
+  const valid = values.filter(v => Number.isFinite(v));
+  if (!valid.length) return { min: 0, max: 1 };
 
   let lo = Math.min(...valid);
   let hi = Math.max(...valid);
@@ -105,11 +118,10 @@ function smartAxis(values, forceZeroMin = false) {
   }
 
   const pad = (hi - lo) * 0.08;
-  const result = {
+  return {
     min: forceZeroMin ? 0 : lo - pad,
     max: hi + pad,
   };
-  return result;
 }
 
 // ── Annotation data helpers ───────────────────────────────────
@@ -144,16 +156,16 @@ function makeOpts(xLabel, yLabel, xR, yR, extras = {}) {
         type: 'linear', min: xR.min, max: xR.max,
         reverse: extras?.xExtra?.reverse || false,
         title: { display: true, text: xLabel },
-        ticks: { callback: v => Number(v).toFixed(3) },
+        ticks: { callback: v => Number(v).toFixed(1) },
       },
       y: {
         type: 'linear', min: yR.min, max: yR.max,
         title: { display: true, text: yLabel },
         ticks: {
-          maxTicksLimit: 8,   // ← ADD THIS
+          maxTicksLimit: 8,
           callback: v => Math.abs(v) > 1000
             ? v.toLocaleString()
-            : Number(v).toFixed(2),
+            : Number(v).toFixed(3),
         },
       },
     },
@@ -164,37 +176,29 @@ function makeOpts(xLabel, yLabel, xR, yR, extras = {}) {
 // ── Rebuild chart ─────────────────────────────────────────────
 function rebuildChart(key, canvasId, config) {
 
-  // ── Main canvas ──────────────────────────────────────────────────────────────
-  // Only renders when the canvas has real layout dimensions (its tab is active).
-  // switchGraphTab() calls the chart function again when a hidden tab is opened.
-
+  // ── Main canvas ──
+  // Only renders when the canvas has real layout dimensions (its tab is
+  // active). switchGraphTab() calls the chart function again on tab switch.
   if (_charts[key]) {
-    try { _charts[key].destroy(); } catch(e) { console.warn('[KC-CHART] destroy failed:', e); }
+    try { _charts[key].destroy(); } catch(e) {}
     _charts[key] = null;
   }
 
   const canvas = document.getElementById(canvasId);
-  if (!canvas) {
-    console.error('[KC-CHART] FAIL: canvas #' + canvasId + ' not found in DOM');
-  } else if (canvas.offsetWidth === 0 || canvas.offsetHeight === 0) {
-    // Zero dimensions — parent tab is hidden.  Will render on tab switch.
-  } else {
+  if (canvas && canvas.offsetWidth > 0 && canvas.offsetHeight > 0) {
     if (!canvas.height || canvas.height === 0) canvas.height = 350;
-    if (typeof Chart === 'undefined') {
-      console.error('[KC-CHART] FAIL: Chart.js not loaded');
-    } else {
+    if (typeof Chart !== 'undefined') {
       try {
         _charts[key] = new Chart(canvas.getContext('2d'), config);
       } catch(e) {
-        console.error('[KC-CHART] new Chart() THREW:', e);
+        console.error('[torsion chart] new Chart() threw:', e);
       }
     }
   }
 
-  // ── Print-shadow canvas ──────────────────────────────────────────────────────
-  // Lives in #springGraphsPrint (position:fixed;left:-9999px;width:750px) so it
-  // always has real pixel dimensions — renders every time, no tab restriction.
-
+  // ── Print-shadow canvas ──
+  // Lives in #springGraphsPrint (position:fixed;left:-9999px;width:750px) so
+  // it always has real pixel dimensions — renders every time, no tab restriction.
   if (_printCharts[key]) {
     try { _printCharts[key].destroy(); } catch(e) {}
     _printCharts[key] = null;
@@ -203,37 +207,34 @@ function rebuildChart(key, canvasId, config) {
   if (printCanvas && typeof Chart !== 'undefined') {
     try {
       _printCharts[key] = new Chart(printCanvas.getContext('2d'), config);
-    } catch(e) {
-      console.warn('[KC-CHART] print shadow render error:', key, e);
-    }
+    } catch(e) {}
   }
 }
 
-// ── Stress helpers ────────────────────────────────────────────
-function corrStress(F, Kw, D, d) {
-  if (F == null || Kw == null || D == null || d == null) return null;
-  return Kw * (8 * F * D) / (Math.PI * Math.pow(d, 3));
-}
-function uncorrStress(F, D, d) {
-  if (F == null || D == null || d == null) return null;
-  return (8 * F * D) / (Math.PI * Math.pow(d, 3));
-}
-
-function stressThresholds(mts, preset, peened) {
-  if (!mts) return { warn: null, err: null, preset: null };
-  const warnPct   = preset ? (peened ? 0.50 : 0.45) : (peened ? 0.36 : 0.30);
-  const errPct    = preset ? (peened ? 0.72 : 0.67) : 0.45;
-  const presetPct = 0.45;
-  return {
-    warn:   mts * warnPct,
-    err:    mts * errPct,
-    preset: mts * presetPct,
-  };
+// ── Bending stress helpers ─────────────────────────────────────
+// Torsion wire is stressed in bending, not shear: sigma = K * 32M / (pi d^3).
+// K is the inner- or outer-fibre curvature factor (Ki > Ko always) — the
+// caller decides whether that's the toggle-respecting kIn/kOut (matches
+// what's shown in the results table) or the unconditional Ki/Ko (matches
+// the cycle-life estimate, which applies the correction regardless of the
+// "Use Wahl Factor" checkbox — see computeOperatingStressRange()).
+function siStress(M, d, K) {
+  if (M == null || d == null || !K) return null;
+  return K * (32 * M) / (Math.PI * Math.pow(d, 3));
 }
 
-function stressToLoad(stressPsi, mts, Kw, d, D) {
-  if (!stressPsi || !Kw || !d || !D) return null;
-  return (stressPsi * Math.PI * Math.pow(d, 3)) / (8 * D * Kw);
+// Flat static bending allowable — no preset concept for torsion springs,
+// and (unlike compression) not conditioned on shot-peening either; peening
+// only shifts the fatigue S-N points, not the static limit. Matches the
+// warnPct/errPct pair in runDeterministicPostPass exactly.
+function torsionStressThresholds(mts) {
+  if (!mts) return { warn: null, err: null };
+  return { warn: mts * 0.80, err: mts * 1.00 };
+}
+
+function stressToTorque(stressPsi, d, K) {
+  if (!stressPsi || !K || !d) return null;
+  return (stressPsi * Math.PI * Math.pow(d, 3)) / (32 * K);
 }
 
 
@@ -243,8 +244,7 @@ function stressToLoad(stressPsi, mts, Kw, d, D) {
 
 function updateAllCharts(p) {
   if (!window.Chart) return;
-  if (!p || !p.k || !p.Lf || !p.defS || p.defS <= 0) return;
-  if (!p.d || !p.D) return;
+  if (!p || !p.k || !p.d || !p.D || !p.defMax || p.defMax <= 0) return;
 
   _lastChartParams        = p;
   window._lastChartParams = p;
@@ -259,12 +259,12 @@ function updateAllCharts(p) {
 
   const chartFns = [
     null,
-    _chartLoadVsDeflection,
-    _chartLoadVsLength,
+    _chartTorqueVsDeflection,
+    _chartTorqueVsAngle,
     _chartPctMTSvsDeflection,
-    _chartStressVsLength,
+    _chartStressVsAngle,
     _chartFatigueStrength,
-    _chartStressVsLoad,
+    _chartStressVsTorque,
   ];
 
   const fn = chartFns[activeN];
@@ -273,136 +273,106 @@ function updateAllCharts(p) {
 
 
 // ============================================================
-// 1. LOAD vs. DEFLECTION
+// 1. TORQUE vs. DEFLECTION
 // ============================================================
-function _chartLoadVsDeflection(p) {
-  // console.log('[KC-CHART] _chartLoadVsDeflection(): building datasets');
-  const { k, defS, F1, F2, Fs, def1, def2, F1tol, F2tol, hasL1, hasL2 } = p;
+function _chartTorqueVsDeflection(p) {
+  const { k, defMax, M1, defl1, M2, defl2, Mset, deflSet, loadTol, hasM1, hasM2 } = p;
 
   const STEPS = 50;
   const line  = [];
   for (let i = 0; i <= STEPS; i++) {
-    const def = (defS / STEPS) * i;
+    const def = (defMax / STEPS) * i;
     line.push({ x: def, y: k * def });
   }
-  // console.log(`[KC-CHART]   main line: ${line.length} points, first=${JSON.stringify(line[0])}, last=${JSON.stringify(line[line.length-1])}`);
 
-  const allX = [0, defS];
-  const allY = [0, k * defS];
-  if (hasL1 && def1 != null) { allX.push(def1); if (F1 != null) allY.push(F1); }
-  if (hasL2 && def2 != null) { allX.push(def2); if (F2 != null) allY.push(F2); }
-  if (Fs != null) allY.push(Fs);
+  const allX = [0, defMax];
+  const allY = [0, k * defMax];
+  if (hasM1 && defl1 != null) { allX.push(defl1); if (M1 != null) allY.push(M1); }
+  if (hasM2 && defl2 != null) { allX.push(defl2); if (M2 != null) allY.push(M2); }
+  if (Mset != null && deflSet != null) { allX.push(deflSet); allY.push(Mset); }
 
-  const hasTol1 = hasL1 && F1tol != null && F1tol > 0;
-  const hasTol2 = hasL2 && F2tol != null && F2tol > 0;
-  if (hasTol1 && F1 != null) { allY.push(F1 + F1tol, F1 - F1tol); }
-  if (hasTol2 && F2 != null) { allY.push(F2 + F2tol, F2 - F2tol); }
+  const hasTol = loadTol != null && loadTol > 0;
+  if (hasTol && M1 != null) allY.push(M1 + loadTol, M1 - loadTol);
+  if (hasTol && M2 != null) allY.push(M2 + loadTol, M2 - loadTol);
 
   const xR = smartAxis(allX, true);
   const yR = smartAxis(allY, true);
-  // console.log(`[KC-CHART]   axes: x=${JSON.stringify(xR)}, y=${JSON.stringify(yR)}`);
 
-  const datasets = [
-    lineDs('Load', line, KC.blue),
-    annotDs('15% deflection', vLineData(defS * 0.15, yR.min, yR.max), KC.grey),
-    annotDs('85% deflection', vLineData(defS * 0.85, yR.min, yR.max), KC.grey),
-  ];
+  const datasets = [ lineDs('Torque', line, KC.blue) ];
 
-  if (hasTol1 && def1 != null && F1 != null) {
-    datasets.push(...tolBandDs(line, F1tol, KC.green, 'L1'));
-  }
-  if (hasTol2 && def2 != null && F2 != null) {
-    datasets.push(...tolBandDs(line, F2tol, KC.orange, 'L2'));
-  }
+  if (hasTol && hasM1 && defl1 != null && M1 != null) datasets.push(...tolBandDs(line, loadTol, KC.green, 'M1'));
+  if (hasTol && hasM2 && defl2 != null && M2 != null) datasets.push(...tolBandDs(line, loadTol, KC.orange, 'M2'));
 
-  if (hasL1 && def1 != null && F1 != null)
-    datasets.push(pointDs('L1', [{ x: def1, y: F1 }], KC.green));
-  if (hasL2 && def2 != null && F2 != null)
-    datasets.push(pointDs('L2', [{ x: def2, y: F2 }], KC.orange));
-  if (Fs != null)
-    datasets.push(pointDs('At Solid', [{ x: defS, y: Fs }], KC.red, { pointStyle: 'rectRot' }));
+  if (hasM1 && defl1 != null && M1 != null)
+    datasets.push(pointDs('M1', [{ x: defl1, y: M1 }], KC.green));
+  if (hasM2 && defl2 != null && M2 != null)
+    datasets.push(pointDs('M2', [{ x: defl2, y: M2 }], KC.orange));
+  if (Mset != null && deflSet != null)
+    datasets.push(pointDs('At Set', [{ x: deflSet, y: Mset }], KC.red, { pointStyle: 'rectRot' }));
 
-  rebuildChart('loadVsDeflection', 'chartLoadVsDeflection', {
+  rebuildChart('torqueVsDeflection', 'chartTorqueVsDeflection', {
     type: 'scatter',
     data: { datasets },
-    options: makeOpts('Deflection (in)', 'Load (lb)', xR, yR),
+    options: makeOpts('Deflection (deg)', 'Torque (lbf·in)', xR, yR),
   });
 }
 
 
 // ============================================================
-// 2. LOAD vs. LENGTH
+// 2. TORQUE vs. ARM ANGLE
 // ============================================================
-function _chartLoadVsLength(p) {
-  // console.log('[KC-CHART] _chartLoadVsLength(): building datasets');
-  const { k, Lf, Ls_final, defS, F1, L1, F2, L2, Fs,
-          F1tol, F2tol, hasL1, hasL2, mts, Kw, d, D, preset, peened } = p;
+// Compression pairs deflection with free-length-minus-deflection because a
+// compression spring's other natural position readout IS its length. A
+// torsion spring's other natural readout is the moving arm's absolute
+// angle: angFree + deflection. Plotted unwrapped (not mod 360) so the curve
+// stays a single continuous line even if winding carries the arm past
+// where it reads back around on a drawing — see wrap360() in
+// SpringTorsionRound.js for why the dimensioned angle itself does wrap.
+function _chartTorqueVsAngle(p) {
+  const { k, defMax, angFree, M1, defl1, M2, defl2, Mset, deflSet, loadTol, hasM1, hasM2 } = p;
+  if (angFree == null) return;
 
   const STEPS = 50;
   const line  = [];
   for (let i = 0; i <= STEPS; i++) {
-    const length = Lf - (defS / STEPS) * i;
-    line.push({ x: length, y: k * (Lf - length) });
-  }
-  // console.log(`[KC-CHART]   main line: ${line.length} points`);
-
-  const allX = [Ls_final ?? (Lf - defS), Lf];
-  const allY = [0, k * defS];
-  if (hasL1 && L1 != null) { allX.push(L1); if (F1 != null) allY.push(F1); }
-  if (hasL2 && L2 != null) { allX.push(L2); if (F2 != null) allY.push(F2); }
-  if (Fs != null) allY.push(Fs);
-
-  const hasTol1 = hasL1 && F1tol != null && F1tol > 0;
-  const hasTol2 = hasL2 && F2tol != null && F2tol > 0;
-  if (hasTol1 && F1 != null) allY.push(F1 + F1tol, F1 - F1tol);
-  if (hasTol2 && F2 != null) allY.push(F2 + F2tol, F2 - F2tol);
-
-  const thresh = stressThresholds(mts, preset, peened);
-  let warnF = null, errF = null, presetReqF = null;
-  if (mts && Kw && d && D) {
-    warnF      = stressToLoad(thresh.warn,   mts, Kw, d, D);
-    errF       = stressToLoad(thresh.err,    mts, Kw, d, D);
-    presetReqF = stressToLoad(thresh.preset, mts, Kw, d, D);
-    if (warnF)      allY.push(warnF);
-    if (errF)       allY.push(errF);
-    if (presetReqF) allY.push(presetReqF);
+    const def = (defMax / STEPS) * i;
+    line.push({ x: angFree + def, y: k * def });
   }
 
-  const validX = allX.filter(v => Number.isFinite(v));
-  const xMin   = Math.min(...validX);
-  const xMax   = Math.max(...validX);
-  const xPad   = (xMax - xMin) * 0.08 || 0.1;
-  const xR     = { min: xMin - xPad, max: xMax + xPad };
-  const yR     = smartAxis(allY, true);
-  // console.log(`[KC-CHART]   axes: x=${JSON.stringify(xR)}, y=${JSON.stringify(yR)}`);
+  const ang1 = hasM1 && defl1 != null ? angFree + defl1 : null;
+  const ang2 = hasM2 && defl2 != null ? angFree + defl2 : null;
+  const angSetPt = deflSet != null ? angFree + deflSet : null;
 
-  const datasets = [
-    lineDs('Load vs. Length', line, KC.blue),
-    annotDs('85% deflection', vLineData(Lf - defS * 0.15, yR.min, yR.max), KC.grey),
-    annotDs('15% deflection', vLineData(Lf - defS * 0.85, yR.min, yR.max), KC.grey),
-  ];
+  const allX = [angFree, angFree + defMax];
+  const allY = [0, k * defMax];
+  if (ang1 != null) { allX.push(ang1); if (M1 != null) allY.push(M1); }
+  if (ang2 != null) { allX.push(ang2); if (M2 != null) allY.push(M2); }
+  if (Mset != null && angSetPt != null) { allX.push(angSetPt); allY.push(Mset); }
 
-  if (errF       != null) datasets.push(annotDs('Stress limit',      hLineData(errF,       xR.min, xR.max), KC.err));
-  if (warnF      != null) datasets.push(annotDs('Warn threshold',     hLineData(warnF,      xR.min, xR.max), KC.warn));
-  if (presetReqF != null && !preset)
-    datasets.push(annotDs('Preset required', hLineData(presetReqF, xR.min, xR.max), KC.presetClr, [8, 4]));
+  const hasTol = loadTol != null && loadTol > 0;
+  if (hasTol && M1 != null) allY.push(M1 + loadTol, M1 - loadTol);
+  if (hasTol && M2 != null) allY.push(M2 + loadTol, M2 - loadTol);
 
-  if (hasTol1 && L1 != null && F1 != null)
-    datasets.push(...tolBandDs(line, F1tol, KC.green, 'L1'));
-  if (hasTol2 && L2 != null && F2 != null)
-    datasets.push(...tolBandDs(line, F2tol, KC.orange, 'L2'));
+  const validX = allX.filter(Number.isFinite);
+  const xMin = Math.min(...validX), xMax = Math.max(...validX);
+  const xPad = (xMax - xMin) * 0.08 || 1;
+  const xR = { min: xMin - xPad, max: xMax + xPad };
+  const yR = smartAxis(allY, true);
 
-  if (hasL1 && L1 != null && F1 != null)
-    datasets.push(pointDs('L1', [{ x: L1, y: F1 }], KC.green));
-  if (hasL2 && L2 != null && F2 != null)
-    datasets.push(pointDs('L2', [{ x: L2, y: F2 }], KC.orange));
-  if (Fs != null && Ls_final != null)
-    datasets.push(pointDs('At Solid', [{ x: Ls_final, y: Fs }], KC.red, { pointStyle: 'rectRot' }));
+  const datasets = [ lineDs('Torque', line, KC.blue) ];
 
-  rebuildChart('loadVsLength', 'chartLoadVsLength', {
+  if (hasTol && ang1 != null && M1 != null) datasets.push(...tolBandDs(line, loadTol, KC.green, 'M1'));
+  if (hasTol && ang2 != null && M2 != null) datasets.push(...tolBandDs(line, loadTol, KC.orange, 'M2'));
+
+  if (ang1 != null && M1 != null) datasets.push(pointDs('M1', [{ x: ang1, y: M1 }], KC.green));
+  if (ang2 != null && M2 != null) datasets.push(pointDs('M2', [{ x: ang2, y: M2 }], KC.orange));
+  if (Mset != null && angSetPt != null)
+    datasets.push(pointDs('At Set', [{ x: angSetPt, y: Mset }], KC.red, { pointStyle: 'rectRot' }));
+
+  rebuildChart('torqueVsAngle', 'chartTorqueVsAngle', {
     type: 'scatter',
     data: { datasets },
-    options: makeOpts('Length (in)', 'Load (lb)', xR, yR, { xExtra: { reverse: true } }),
+    options: makeOpts('Moving Arm Angle (deg)', 'Torque (lbf·in)', xR, yR),
   });
 }
 
@@ -410,202 +380,108 @@ function _chartLoadVsLength(p) {
 // ============================================================
 // 3. % MTS vs. DEFLECTION
 // ============================================================
+// Uses the inner fibre (si) at whichever correction the results table
+// itself shows (kIn — respects the "Use Wahl Factor" toggle), so the M1/M2
+// dots always land exactly on the curve regardless of that setting.
 function _chartPctMTSvsDeflection(p) {
-  // console.log('[KC-CHART] _chartPctMTSvsDeflection(): building datasets');
-  const { k, defS, mts, Kw, d, D, hasL1, hasL2, def1, def2, F1, F2, F1tol, F2tol, Fs, preset, peened } = p;
-
-  if (!mts || !Kw || !d || !D) {
-    console.warn(`[KC-CHART]   SKIP — missing mts=${mts}, Kw=${Kw}, d=${d}, D=${D}`);
-    return;
-  }
+  const { k, defMax, d, mts, kIn, M1, defl1, M2, defl2, Mset, deflSet, hasM1, hasM2 } = p;
+  if (!mts || !kIn || !d) return;
 
   const STEPS = 60;
   const line  = [];
   for (let i = 0; i <= STEPS; i++) {
-    const def = (defS / STEPS) * i;
-    const pct = corrStress(k * def, Kw, D, d) / mts * 100;
-    if (pct != null) line.push({ x: def, y: pct });
+    const def = (defMax / STEPS) * i;
+    const pct = siStress(k * def, d, kIn) / mts * 100;
+    line.push({ x: def, y: pct });
   }
-  // console.log(`[KC-CHART]   line: ${line.length} points`);
 
-  const warnPct = preset ? (peened ? 50 : 45) : (peened ? 36 : 30);
-  const errPct  = preset ? (peened ? 72 : 67) : 45;
+  const warnPct = 80, errPct = 100;
 
-  const allX = [0, defS];
+  const allX = [0, defMax];
   const allY = line.map(pt => pt.y).concat([warnPct, errPct]);
-  if (hasL1 && def1 != null) allX.push(def1);
-  if (hasL2 && def2 != null) allX.push(def2);
-
-  const hasTol1 = hasL1 && F1tol != null && F1tol > 0 && F1 != null;
-  const hasTol2 = hasL2 && F2tol != null && F2tol > 0 && F2 != null;
-  if (hasTol1) {
-    const pctHi = corrStress(F1 + F1tol, Kw, D, d) / mts * 100;
-    const pctLo = corrStress(F1 - F1tol, Kw, D, d) / mts * 100;
-    if (pctHi != null) allY.push(pctHi);
-    if (pctLo != null) allY.push(pctLo);
-  }
-  if (hasTol2) {
-    const pctHi = corrStress(F2 + F2tol, Kw, D, d) / mts * 100;
-    const pctLo = corrStress(F2 - F2tol, Kw, D, d) / mts * 100;
-    if (pctHi != null) allY.push(pctHi);
-    if (pctLo != null) allY.push(pctLo);
-  }
+  if (hasM1 && defl1 != null) allX.push(defl1);
+  if (hasM2 && defl2 != null) allX.push(defl2);
+  if (deflSet != null) allX.push(deflSet);
 
   const xR = smartAxis(allX, true);
   const yR = smartAxis(allY, true);
-  // console.log(`[KC-CHART]   axes: x=${JSON.stringify(xR)}, y=${JSON.stringify(yR)}`);
-
-  function tolPctLine(tol) {
-    return line.map(pt => {
-      const F   = pt.x * k;
-      const pct = corrStress(F + tol, Kw, D, d) / mts * 100;
-      return { x: pt.x, y: pct ?? pt.y };
-    });
-  }
 
   const datasets = [
-    lineDs('% Corrected MTS', line, KC.blue),
+    lineDs('% MTS (inner fibre)', line, KC.blue),
     annotDs(`Warn (${warnPct}%)`, hLineData(warnPct, xR.min, xR.max), KC.warn),
-    annotDs(`Limit (${errPct}%)`, hLineData(errPct,  xR.min, xR.max), KC.err),
+    annotDs(`Yield (${errPct}%)`, hLineData(errPct,  xR.min, xR.max), KC.err),
   ];
 
-  if (hasTol1) {
-    datasets.push(tolDs('L1 +tol', tolPctLine( F1tol), KC.green));
-    datasets.push(tolDs('L1 −tol', tolPctLine(-F1tol), KC.green));
+  if (hasM1 && defl1 != null && M1 != null) {
+    const pct = siStress(M1, d, kIn) / mts * 100;
+    datasets.push(pointDs('M1', [{ x: defl1, y: pct }], KC.green));
   }
-  if (hasTol2) {
-    datasets.push(tolDs('L2 +tol', tolPctLine( F2tol), KC.orange));
-    datasets.push(tolDs('L2 −tol', tolPctLine(-F2tol), KC.orange));
+  if (hasM2 && defl2 != null && M2 != null) {
+    const pct = siStress(M2, d, kIn) / mts * 100;
+    datasets.push(pointDs('M2', [{ x: defl2, y: pct }], KC.orange));
   }
-
-  if (hasL1 && def1 != null && F1 != null) {
-    const pct = corrStress(F1, Kw, D, d) / mts * 100;
-    if (pct != null) datasets.push(pointDs('L1', [{ x: def1, y: pct }], KC.green));
-  }
-  if (hasL2 && def2 != null && F2 != null) {
-    const pct = corrStress(F2, Kw, D, d) / mts * 100;
-    if (pct != null) datasets.push(pointDs('L2', [{ x: def2, y: pct }], KC.orange));
-  }
-  if (Fs != null) {
-    const pct = corrStress(Fs, Kw, D, d) / mts * 100;
-    if (pct != null) datasets.push(pointDs('At Solid', [{ x: defS, y: pct }], KC.red, { pointStyle: 'rectRot' }));
+  if (Mset != null && deflSet != null) {
+    const pct = siStress(Mset, d, kIn) / mts * 100;
+    datasets.push(pointDs('At Set', [{ x: deflSet, y: pct }], KC.red, { pointStyle: 'rectRot' }));
   }
 
   rebuildChart('pctMTSvsDeflection', 'chartPctMTSvsDeflection', {
     type: 'scatter',
     data: { datasets },
-    options: makeOpts('Deflection (in)', '% of MTS', xR, yR),
+    options: makeOpts('Deflection (deg)', '% of MTS', xR, yR),
   });
 }
 
 
 // ============================================================
-// 4. STRESS vs. LENGTH  (units: ksi)
+// 4. STRESS vs. ARM ANGLE  (inner + outer fibre, ksi)
 // ============================================================
-function _chartStressVsLength(p) {
-  // console.log('[KC-CHART] _chartStressVsLength(): building datasets');
-  const { k, Lf, Ls_final, defS, mts, Kw, d, D,
-          hasL1, hasL2, L1, L2, F1, F2, F1tol, F2tol, Fs, preset, peened } = p;
-
-  if (!Kw || !d || !D) {
-    console.warn(`[KC-CHART]   SKIP — missing Kw=${Kw}, d=${d}, D=${D}`);
-    return;
-  }
+function _chartStressVsAngle(p) {
+  const { k, defMax, d, angFree, kIn, kOut, M1, defl1, M2, defl2, Mset, deflSet, hasM1, hasM2 } = p;
+  if (!kIn || !kOut || !d || angFree == null) return;
 
   const PSI_TO_KSI = 1 / 1000;
-  const STEPS    = 60;
-  const corrLine = [], uncorrLine = [];
+  const STEPS = 60;
+  const siLine = [], soLine = [];
   for (let i = 0; i <= STEPS; i++) {
-    const length = Lf - (defS / STEPS) * i;
-    const F      = k * (Lf - length);
-    const cs     = corrStress(F, Kw, D, d);
-    const us     = uncorrStress(F, D, d);
-    if (cs != null) corrLine.push({ x: length, y: cs * PSI_TO_KSI });
-    if (us != null) uncorrLine.push({ x: length, y: us * PSI_TO_KSI });
-  }
-  // console.log(`[KC-CHART]   corrLine: ${corrLine.length} pts, uncorrLine: ${uncorrLine.length} pts`);
-
-  const allX = [Ls_final ?? (Lf - defS), Lf];
-  const allY = corrLine.map(pt => pt.y);
-  if (hasL1 && L1 != null) allX.push(L1);
-  if (hasL2 && L2 != null) allX.push(L2);
-
-  const thresh = stressThresholds(mts, preset, peened);
-  const warnKsi      = thresh.warn   ? thresh.warn   * PSI_TO_KSI : null;
-  const errKsi       = thresh.err    ? thresh.err    * PSI_TO_KSI : null;
-  const presetReqKsi = thresh.preset ? thresh.preset * PSI_TO_KSI : null;
-
-  if (warnKsi)      allY.push(warnKsi);
-  if (errKsi)       allY.push(errKsi);
-  if (presetReqKsi) allY.push(presetReqKsi);
-
-  const hasTol1 = hasL1 && F1tol != null && F1tol > 0 && F1 != null;
-  const hasTol2 = hasL2 && F2tol != null && F2tol > 0 && F2 != null;
-
-  function corrLineTolShift(tol) {
-    return corrLine.map((pt, i) => {
-      const length = Lf - (defS / STEPS) * i;
-      const F      = k * (Lf - length) + tol;
-      const cs     = corrStress(F, Kw, D, d);
-      return { x: pt.x, y: cs != null ? cs * PSI_TO_KSI : pt.y };
-    });
+    const def = (defMax / STEPS) * i;
+    const M   = k * def;
+    siLine.push({ x: angFree + def, y: siStress(M, d, kIn)  * PSI_TO_KSI });
+    soLine.push({ x: angFree + def, y: siStress(M, d, kOut) * PSI_TO_KSI });
   }
 
-  if (hasTol1) {
-    const hiKsi = corrStress(F1 + F1tol, Kw, D, d) * PSI_TO_KSI;
-    const loKsi = corrStress(F1 - F1tol, Kw, D, d) * PSI_TO_KSI;
-    allY.push(hiKsi, loKsi);
-  }
-  if (hasTol2) {
-    const hiKsi = corrStress(F2 + F2tol, Kw, D, d) * PSI_TO_KSI;
-    const loKsi = corrStress(F2 - F2tol, Kw, D, d) * PSI_TO_KSI;
-    allY.push(hiKsi, loKsi);
-  }
+  const ang1 = hasM1 && defl1 != null ? angFree + defl1 : null;
+  const ang2 = hasM2 && defl2 != null ? angFree + defl2 : null;
+  const angSetPt = deflSet != null ? angFree + deflSet : null;
 
-  const validX = allX.filter(v => Number.isFinite(v));
-  const xMin   = Math.min(...validX);
-  const xMax   = Math.max(...validX);
-  const xPad   = (xMax - xMin) * 0.08 || 0.1;
-  const xR     = { min: xMin - xPad, max: xMax + xPad };
-  const yR     = smartAxis(allY, true);
-  // console.log(`[KC-CHART]   axes: x=${JSON.stringify(xR)}, y=${JSON.stringify(yR)}`);
+  const allX = [angFree, angFree + defMax];
+  const allY = siLine.map(pt => pt.y);
+  if (ang1 != null) allX.push(ang1);
+  if (ang2 != null) allX.push(ang2);
+  if (angSetPt != null) allX.push(angSetPt);
+
+  const validX = allX.filter(Number.isFinite);
+  const xMin = Math.min(...validX), xMax = Math.max(...validX);
+  const xPad = (xMax - xMin) * 0.08 || 1;
+  const xR = { min: xMin - xPad, max: xMax + xPad };
+  const yR = smartAxis(allY, true);
 
   const datasets = [
-    lineDs('Corrected Stress',   corrLine,   KC.blue),
-    lineDs('Uncorrected Stress', uncorrLine, KC.teal, { borderDash: [4, 3] }),
+    lineDs('Inner fibre (σi)', siLine, KC.blue),
+    lineDs('Outer fibre (σo)', soLine, KC.teal, { borderDash: [4, 3] }),
   ];
 
-  if (errKsi       != null) datasets.push(annotDs(`Limit (${errKsi.toFixed(1)} ksi)`,       hLineData(errKsi,       xR.min, xR.max), KC.err));
-  if (warnKsi      != null) datasets.push(annotDs(`Warn (${warnKsi.toFixed(1)} ksi)`,        hLineData(warnKsi,      xR.min, xR.max), KC.warn));
-  if (presetReqKsi != null && !preset)
-    datasets.push(annotDs(`Preset required (${presetReqKsi.toFixed(1)} ksi)`, hLineData(presetReqKsi, xR.min, xR.max), KC.presetClr, [8, 4]));
+  if (ang1 != null && M1 != null)
+    datasets.push(pointDs('M1', [{ x: ang1, y: siStress(M1, d, kIn) * PSI_TO_KSI }], KC.green));
+  if (ang2 != null && M2 != null)
+    datasets.push(pointDs('M2', [{ x: ang2, y: siStress(M2, d, kIn) * PSI_TO_KSI }], KC.orange));
+  if (Mset != null && angSetPt != null)
+    datasets.push(pointDs('At Set', [{ x: angSetPt, y: siStress(Mset, d, kIn) * PSI_TO_KSI }], KC.red, { pointStyle: 'rectRot' }));
 
-  if (hasTol1) {
-    datasets.push(tolDs('L1 stress +tol', corrLineTolShift( F1tol), KC.green));
-    datasets.push(tolDs('L1 stress −tol', corrLineTolShift(-F1tol), KC.green));
-  }
-  if (hasTol2) {
-    datasets.push(tolDs('L2 stress +tol', corrLineTolShift( F2tol), KC.orange));
-    datasets.push(tolDs('L2 stress −tol', corrLineTolShift(-F2tol), KC.orange));
-  }
-
-  if (hasL1 && L1 != null && F1 != null) {
-    const cs = corrStress(F1, Kw, D, d);
-    if (cs != null) datasets.push(pointDs('L1', [{ x: L1, y: cs * PSI_TO_KSI }], KC.green));
-  }
-  if (hasL2 && L2 != null && F2 != null) {
-    const cs = corrStress(F2, Kw, D, d);
-    if (cs != null) datasets.push(pointDs('L2', [{ x: L2, y: cs * PSI_TO_KSI }], KC.orange));
-  }
-  if (Fs != null && Ls_final != null) {
-    const cs = corrStress(Fs, Kw, D, d);
-    if (cs != null) datasets.push(pointDs('At Solid', [{ x: Ls_final, y: cs * PSI_TO_KSI }], KC.red, { pointStyle: 'rectRot' }));
-  }
-
-  const opts = makeOpts('Length (in)', 'Torsional Stress (ksi)', xR, yR, { xExtra: { reverse: true } });
+  const opts = makeOpts('Moving Arm Angle (deg)', 'Bending Stress (ksi)', xR, yR);
   opts.scales.y.ticks.callback = v => Number(v).toFixed(2);
 
-  rebuildChart('stressVsLength', 'chartStressVsLength', {
+  rebuildChart('stressVsAngle', 'chartStressVsAngle', {
     type: 'scatter',
     data: { datasets },
     options: opts,
@@ -616,112 +492,94 @@ function _chartStressVsLength(p) {
 // ============================================================
 // 5. FATIGUE STRENGTH DIAGRAM (Modified Goodman)
 // ============================================================
+// The S-N reference points (see estimateTorsionCycleLife in
+// SpringTorsionRound.js) are defined as sar = Se at a given cycle life,
+// where sar = sa/(1-sm/mts) is the Goodman-corrected fully-reversed
+// equivalent. Solving that boundary condition for (sigma_min, sigma_max)
+// as a function of mean stress sm gives two affine expressions in sm —
+// i.e. the boundary is exactly a straight line in (sigma_min, sigma_max)
+// space, running from (0, Se) at sm=Se·mts/(mts+Se) up to (mts, mts) — so
+// unlike the compression diagram (which truncates at a separately-defined
+// static limit below true ultimate), the torsion Se lines are drawn to
+// their real mathematical convergence at 100% MTS, which is also exactly
+// where the static yield threshold sits.
 function _chartFatigueStrength(p) {
-  // console.log('[KC-CHART] _chartFatigueStrength(): building datasets');
-  const { mts, Kw, d, D, hasL1, hasL2, F1, F2, F1tol, F2tol, peened, preset } = p;
+  const { mts, d, Ki, M1, M2, hasM1, hasM2, peened } = p;
+  if (!mts || !Ki || !d) return;
 
-  if (!mts || !Kw || !d || !D) {
-    console.warn(`[KC-CHART]   SKIP — missing mts=${mts}, Kw=${Kw}, d=${d}, D=${D}`);
-    return;
-  }
-
-  const Se_up  = [0.36, 0.33, 0.30];
-  const Se_pe  = [0.42, 0.39, 0.36];
-  const labels  = ['10⁵ cycles', '10⁶ cycles', '10⁷ cycles'];
-  const lColors = [KC.err, KC.darkTeal, KC.green];
-
-  const staticLimitPct = preset ? 0.67 : 0.45;
-  const convergX = staticLimitPct;
-  const convergY = staticLimitPct;
+  // Se as a fraction of mts, from the same table estimateTorsionCycleLife
+  // uses: S/(2-S/mts) normalized by mts reduces to Spct/(2-Spct).
+  const toSeNorm = spct => spct / (2 - spct);
+  const se1 = toSeNorm(peened ? 0.62 : 0.53);   // 1e5 cycles
+  const se2 = toSeNorm(peened ? 0.60 : 0.50);   // 1e6 cycles
+  const labels  = ['10⁵ cycles', '10⁶ cycles'];
+  const seVals  = [se1, se2];
+  const lColors = [KC.err, KC.darkTeal];
 
   const datasets = [];
-
-  for (let i = 0; i < 3; i++) {
-    const Se = (peened ? Se_pe : Se_up)[i];
+  for (let i = 0; i < 2; i++) {
     datasets.push({
       label: labels[i],
-      data: [{ x: 0, y: Se }, { x: convergX, y: convergY }],
+      data: [{ x: 0, y: seVals[i] }, { x: 1, y: 1 }],
       borderColor: lColors[i],
-      fill: false,
-      pointRadius: 0,
-      borderWidth: 2,
-      showLine: true,
-      parsing: false,
+      fill: false, pointRadius: 0, borderWidth: 2,
+      showLine: true, parsing: false,
     });
   }
 
   datasets.push({
-    label: `Static limit (${Math.round(staticLimitPct * 100)}% MTS)`,
-    data: [{ x: 0, y: staticLimitPct }, { x: convergX, y: staticLimitPct }],
+    label: 'Yield (100% MTS)',
+    data: [{ x: 0, y: 1 }, { x: 1, y: 1 }],
     borderColor: KC.blue,
-    fill: false,
-    pointRadius: 0,
-    borderWidth: 1.5,
-    showLine: true,
-    parsing: false,
+    fill: false, pointRadius: 0, borderWidth: 1.5,
+    showLine: true, parsing: false,
   });
 
   datasets.push({
-    label: 'τ_max = τ_min',
-    data: [{ x: 0, y: 0 }, { x: convergX, y: convergY }],
+    label: 'σmax = σmin',
+    data: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
     borderColor: KC.blue,
-    fill: false,
-    pointRadius: 0,
-    borderDash: [6, 4],
-    borderWidth: 1,
-    showLine: true,
-    parsing: false,
+    fill: false, pointRadius: 0, borderDash: [6, 4], borderWidth: 1,
+    showLine: true, parsing: false,
   });
 
-  let tau_min_n = 0, tau_max_n = 0;
-  if (hasL1 && hasL2 && F1 != null && F2 != null) {
-    const s1 = corrStress(F1, Kw, D, d) / mts;
-    const s2 = corrStress(F2, Kw, D, d) / mts;
-    tau_min_n = Math.min(s1, s2);
-    tau_max_n = Math.max(s1, s2);
-  } else if (hasL1 && F1 != null) {
-    tau_max_n = corrStress(F1, Kw, D, d) / mts;
-  } else if (hasL2 && F2 != null) {
-    tau_max_n = corrStress(F2, Kw, D, d) / mts;
+  let siMin = 0, siMax = 0;
+  if (hasM1 && hasM2 && M1 != null && M2 != null) {
+    const s1 = siStress(M1, d, Ki) / mts;
+    const s2 = siStress(M2, d, Ki) / mts;
+    siMin = Math.min(s1, s2);
+    siMax = Math.max(s1, s2);
+  } else if (hasM1 && M1 != null) {
+    siMax = siStress(M1, d, Ki) / mts;
+  } else if (hasM2 && M2 != null) {
+    siMax = siStress(M2, d, Ki) / mts;
   }
 
-  // console.log(`[KC-CHART]   operating point: tau_min=${tau_min_n}, tau_max=${tau_max_n}`);
-
-  if (tau_max_n > 0) {
+  if (siMax > 0) {
     datasets.push({
       label: 'Operating point',
-      data: [{ x: tau_min_n, y: tau_max_n }],
-      borderColor: KC.darkTeal,
-      backgroundColor: 'transparent',
-      pointRadius: 9,
-      pointStyle: 'circle',
-      borderWidth: 1.5,
-      showLine: false,
-      parsing: false,
+      data: [{ x: siMin, y: siMax }],
+      borderColor: KC.darkTeal, backgroundColor: 'transparent',
+      pointRadius: 9, pointStyle: 'circle', borderWidth: 1.5,
+      showLine: false, parsing: false,
     });
     datasets.push({
       label: '_inner',
-      data: [{ x: tau_min_n, y: tau_max_n }],
-      borderColor: KC.darkTeal,
-      backgroundColor: KC.darkTeal,
-      pointRadius: 3,
-      pointStyle: 'circle',
-      borderWidth: 1,
-      showLine: false,
-      parsing: false,
+      data: [{ x: siMin, y: siMax }],
+      borderColor: KC.darkTeal, backgroundColor: KC.darkTeal,
+      pointRadius: 3, pointStyle: 'circle', borderWidth: 1,
+      showLine: false, parsing: false,
     });
   }
 
   const opts = makeOpts(
-    'Initial Stress / Tensile Strength Ratio',
-    'Max. Stress/Tensile Strength',
-    { min: 0, max: 0.80 },
-    { min: 0.10, max: 0.70 }
+    'Minimum Stress / Tensile Strength',
+    'Maximum Stress / Tensile Strength',
+    { min: 0, max: 1.0 },
+    { min: 0, max: 1.0 }
   );
-
   opts.scales.y.ticks.callback = v => Number(v).toFixed(2);
   opts.scales.x.ticks.callback = v => Number(v).toFixed(2);
-
   opts.plugins.legend.labels = {
     ...opts.plugins.legend.labels,
     filter: item => item.text !== '_inner',
@@ -736,100 +594,59 @@ function _chartFatigueStrength(p) {
 
 
 // ============================================================
-// 6. STRESS vs. LOAD
+// 6. STRESS vs. TORQUE  (inner + outer fibre, psi)
 // ============================================================
-function _chartStressVsLoad(p) {
-  // console.log('[KC-CHART] _chartStressVsLoad(): building datasets');
-  const { k, defS, mts, Kw, d, D, hasL1, hasL2, F1, F2, F1tol, F2tol, Fs, preset, peened } = p;
+function _chartStressVsTorque(p) {
+  const { k, defMax, d, kIn, kOut, mts, M1, M2, Mset, hasM1, hasM2 } = p;
+  if (!kIn || !kOut || !d) return;
 
-  if (!Kw || !d || !D) {
-    console.warn(`[KC-CHART]   SKIP — missing Kw=${Kw}, d=${d}, D=${D}`);
-    return;
-  }
-
-  const Fmax     = k * defS;
-  const STEPS    = 60;
-  const corrLine = [], uncorrLine = [];
+  const Mmax  = k * defMax;
+  const STEPS = 60;
+  const siLine = [], soLine = [];
   for (let i = 0; i <= STEPS; i++) {
-    const F  = (Fmax / STEPS) * i;
-    const cs = corrStress(F, Kw, D, d);
-    const us = uncorrStress(F, D, d);
-    if (cs != null) corrLine.push({ x: F, y: cs });
-    if (us != null) uncorrLine.push({ x: F, y: us });
+    const M = (Mmax / STEPS) * i;
+    siLine.push({ x: M, y: siStress(M, d, kIn) });
+    soLine.push({ x: M, y: siStress(M, d, kOut) });
   }
-  // console.log(`[KC-CHART]   corrLine: ${corrLine.length} pts, Fmax=${Fmax}`);
 
-  const allX = [0, Fmax];
-  const allY = corrLine.map(pt => pt.y);
-  if (hasL1 && F1 != null) allX.push(F1);
-  if (hasL2 && F2 != null) allX.push(F2);
-  if (Fs != null)           allX.push(Fs);
+  const allX = [0, Mmax];
+  const allY = siLine.map(pt => pt.y);
+  if (hasM1 && M1 != null) allX.push(M1);
+  if (hasM2 && M2 != null) allX.push(M2);
+  if (Mset != null) allX.push(Mset);
 
-  const hasTol1 = hasL1 && F1tol != null && F1tol > 0 && F1 != null;
-  const hasTol2 = hasL2 && F2tol != null && F2tol > 0 && F2 != null;
-  if (hasTol1) allX.push(F1 + F1tol, F1 - F1tol);
-  if (hasTol2) allX.push(F2 + F2tol, F2 - F2tol);
-
-  const thresh = stressThresholds(mts, preset, peened);
-  if (thresh.warn)   allY.push(thresh.warn);
-  if (thresh.err)    allY.push(thresh.err);
-  if (thresh.preset) allY.push(thresh.preset);
+  const thresh = torsionStressThresholds(mts);
+  if (thresh.warn) allY.push(thresh.warn);
+  if (thresh.err)  allY.push(thresh.err);
 
   const xR = smartAxis(allX, true);
   const yR = smartAxis(allY, true);
-  // console.log(`[KC-CHART]   axes: x=${JSON.stringify(xR)}, y=${JSON.stringify(yR)}`);
 
   const datasets = [
-    lineDs('Corrected Stress',   corrLine,   KC.blue),
-    lineDs('Uncorrected Stress', uncorrLine, KC.teal, { borderDash: [4, 3] }),
+    lineDs('Inner fibre (σi)', siLine, KC.blue),
+    lineDs('Outer fibre (σo)', soLine, KC.teal, { borderDash: [4, 3] }),
   ];
 
-  if (thresh.err)    datasets.push(annotDs(`Limit (${Math.round(thresh.err).toLocaleString()} psi)`,    hLineData(thresh.err,    xR.min, xR.max), KC.err));
-  if (thresh.warn)   datasets.push(annotDs(`Warn (${Math.round(thresh.warn).toLocaleString()} psi)`,    hLineData(thresh.warn,   xR.min, xR.max), KC.warn));
-  if (thresh.preset && !preset)
-    datasets.push(annotDs(`Preset required (${Math.round(thresh.preset).toLocaleString()} psi)`, hLineData(thresh.preset, xR.min, xR.max), KC.presetClr, [8, 4]));
+  if (thresh.err)  datasets.push(annotDs(`Yield (${Math.round(thresh.err).toLocaleString()} psi)`, hLineData(thresh.err,  xR.min, xR.max), KC.err));
+  if (thresh.warn) datasets.push(annotDs(`Warn (${Math.round(thresh.warn).toLocaleString()} psi)`, hLineData(thresh.warn, xR.min, xR.max), KC.warn));
 
-  if (hasTol1) {
-    const csHi = corrStress(F1 + F1tol, Kw, D, d);
-    const csLo = corrStress(F1 - F1tol, Kw, D, d);
-    datasets.push(tolDs('L1 +tol', vLineData(F1 + F1tol, yR.min, csHi ?? yR.max), KC.green));
-    datasets.push(tolDs('L1 −tol', vLineData(F1 - F1tol, yR.min, csLo ?? yR.max), KC.green));
-  }
-  if (hasTol2) {
-    const csHi = corrStress(F2 + F2tol, Kw, D, d);
-    const csLo = corrStress(F2 - F2tol, Kw, D, d);
-    datasets.push(tolDs('L2 +tol', vLineData(F2 + F2tol, yR.min, csHi ?? yR.max), KC.orange));
-    datasets.push(tolDs('L2 −tol', vLineData(F2 - F2tol, yR.min, csLo ?? yR.max), KC.orange));
-  }
+  if (hasM1 && M1 != null) datasets.push(pointDs('M1', [{ x: M1, y: siStress(M1, d, kIn) }], KC.green));
+  if (hasM2 && M2 != null) datasets.push(pointDs('M2', [{ x: M2, y: siStress(M2, d, kIn) }], KC.orange));
+  if (Mset != null) datasets.push(pointDs('At Set', [{ x: Mset, y: siStress(Mset, d, kIn) }], KC.red, { pointStyle: 'rectRot' }));
 
-  if (hasL1 && F1 != null) {
-    const cs = corrStress(F1, Kw, D, d);
-    if (cs != null) datasets.push(pointDs('L1', [{ x: F1, y: cs }], KC.green));
-  }
-  if (hasL2 && F2 != null) {
-    const cs = corrStress(F2, Kw, D, d);
-    if (cs != null) datasets.push(pointDs('L2', [{ x: F2, y: cs }], KC.orange));
-  }
-  if (Fs != null) {
-    const cs = corrStress(Fs, Kw, D, d);
-    if (cs != null) datasets.push(pointDs('At Solid', [{ x: Fs, y: cs }], KC.red, { pointStyle: 'rectRot' }));
-  }
-
-  rebuildChart('stressVsLoad', 'chartStressVsLoad', {
+  rebuildChart('stressVsTorque', 'chartStressVsTorque', {
     type: 'scatter',
     data: { datasets },
-    options: makeOpts('Load (lb)', 'Torsional Stress (psi)', xR, yR),
+    options: makeOpts('Torque (lbf·in)', 'Bending Stress (psi)', xR, yR),
   });
 }
 
 
 // ── Expose for tab-switch re-rendering ────────────────────────
 window.updateAllCharts          = updateAllCharts;
-window._chartLoadVsDeflection   = _chartLoadVsDeflection;
-window._chartLoadVsLength       = _chartLoadVsLength;
+window._chartTorqueVsDeflection = _chartTorqueVsDeflection;
+window._chartTorqueVsAngle      = _chartTorqueVsAngle;
 window._chartPctMTSvsDeflection = _chartPctMTSvsDeflection;
-window._chartStressVsLength     = _chartStressVsLength;
+window._chartStressVsAngle      = _chartStressVsAngle;
 window._chartFatigueStrength    = _chartFatigueStrength;
-window._chartStressVsLoad       = _chartStressVsLoad;
-
-// console.log('[KC-CHART] springTorsionCharts.js: finished, window.updateAllCharts =', typeof window.updateAllCharts);
+window._chartStressVsTorque     = _chartStressVsTorque;
