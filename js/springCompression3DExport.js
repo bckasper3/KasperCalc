@@ -91,9 +91,12 @@ async function downloadComp3DSTEP() {
   }
 }
 
-// Same region walk as CompressionHelixCurve.getPoint() in
+// Same region walk as buildRegions()/regionHeight() in
 // springCompression3D.js (kept in sync by hand — Three.js and
-// OpenCascade have no shared curve/vector types).
+// OpenCascade have no shared curve/vector types). A ground end isn't
+// just clipped after the fact — the coil actually tapers down and lies
+// flush (zero slope) against the bearing plane; see regionHeight there
+// for the closed-form math.
 function buildRegions(d, Na, Nd, closed, ground, length) {
   let endOffset = 0;
   if      ( closed &&  ground) endOffset = 2 * d;
@@ -104,12 +107,31 @@ function buildRegions(d, Na, Nd, closed, ground, length) {
   if (closed) {
     const ndEach = Nd / 2;
     return [
-      { turns: ndEach, pitch: d },
+      { turns: ndEach, pitch: d, ...(ground ? { taper: 'in' }  : {}) },
       { turns: Na,     pitch: bodyPitch },
-      { turns: ndEach, pitch: d },
+      { turns: ndEach, pitch: d, ...(ground ? { taper: 'out' } : {}) },
     ].filter(r => r.turns > 0);
   }
-  return [{ turns: Na, pitch: bodyPitch }];
+
+  if (!ground) return [{ turns: Na, pitch: bodyPitch }];
+
+  const taper = Math.min(0.5, Na / 2);
+  const mid   = Na - 2 * taper;
+  return [
+    { turns: taper, pitch: bodyPitch, taper: 'in' },
+    ...(mid > 0 ? [{ turns: mid, pitch: bodyPitch }] : []),
+    { turns: taper, pitch: bodyPitch, taper: 'out' },
+  ].filter(r => r.turns > 0);
+}
+
+function regionHeight(r, span) {
+  if (r.taper === 'in') {
+    return r.pitch * (span / 2 - (r.turns / (2 * Math.PI)) * Math.sin(Math.PI * span / r.turns));
+  }
+  if (r.taper === 'out') {
+    return r.pitch * (span / 2 + (r.turns / (2 * Math.PI)) * Math.sin(Math.PI * span / r.turns));
+  }
+  return span * r.pitch;
 }
 
 function samplePoints(R, regions, hand, segsPerTurn) {
@@ -122,8 +144,9 @@ function samplePoints(R, regions, hand, segsPerTurn) {
     const theta = turnsTotal * Math.PI * 2;
     let z = 0, remaining = turnsTotal;
     for (const r of regions) {
-      if (remaining <= r.turns) { z += remaining * r.pitch; remaining = 0; break; }
-      z += r.turns * r.pitch;
+      const span = Math.min(remaining, r.turns);
+      z += regionHeight(r, span);
+      if (remaining <= r.turns) { remaining = 0; break; }
       remaining -= r.turns;
     }
     pts.push([R * Math.cos(theta), hand * R * Math.sin(theta), z]);
@@ -168,7 +191,30 @@ function buildSpringSolid(oc, { d, D, Na, Nd, closed, ground, length, hand }) {
   const circWire = new oc.BRepBuilderAPI_MakeWire_2(circEdge).Wire();
   const profileFace = new oc.BRepBuilderAPI_MakeFace_15(circWire, false).Face();
 
-  return new oc.BRepOffsetAPI_MakePipe_1(spineWire, profileFace).Shape();
+  let solid = new oc.BRepOffsetAPI_MakePipe_1(spineWire, profileFace).Shape();
+
+  // Ground ends: the taper (see buildRegions/regionHeight) brings the
+  // CENTERLINE in flush, but the wire has real thickness (radius d/2),
+  // so part of its round cross-section still pokes past the bearing
+  // plane near the very tip — geometrically unavoidable from a swept
+  // curve alone, the same issue as the Three.js viewer. There it's
+  // fixed by clamping vertices onto the plane; here, with a real solid
+  // kernel, the correct fix is a real boolean cut — subtract everything
+  // below z=0 and above z=length so the solid is genuinely flush, not
+  // just clipped for display.
+  if (ground) {
+    const margin = R + d; // generous — covers the whole coil radius
+    const bottomBox = new oc.BRepPrimAPI_MakeBox_3(
+      new oc.gp_Pnt_3(-margin, -margin, -margin), 2 * margin, 2 * margin, margin
+    ).Shape();
+    const topBox = new oc.BRepPrimAPI_MakeBox_3(
+      new oc.gp_Pnt_3(-margin, -margin, length), 2 * margin, 2 * margin, margin
+    ).Shape();
+    solid = new oc.BRepAlgoAPI_Cut_3(solid, bottomBox, new oc.Message_ProgressRange_1()).Shape();
+    solid = new oc.BRepAlgoAPI_Cut_3(solid, topBox, new oc.Message_ProgressRange_1()).Shape();
+  }
+
+  return solid;
 }
 
 window.downloadComp3DSTL  = downloadComp3DSTL;

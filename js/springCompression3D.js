@@ -38,9 +38,36 @@ const POSITION_LABELS = {
   solid: 'At Solid',
 };
 
+// Height (z) contributed by a region as a function of how many turns
+// into it the walk has gone (span, 0..r.turns). Three kinds:
+//   plain region        — constant pitch, height = span * pitch.
+//   region.taper='in'   — rate eases 0 → pitch (SMOOTHSTEP-style cosine
+//                          ease), so the coil arrives BONE-FLUSH (zero
+//                          slope) at the region's own start and ramps up
+//                          to the normal rate by its end. Used for the
+//                          first region at a ground bottom end.
+//   region.taper='out'  — the mirror: rate eases pitch → 0, arriving
+//                          flush at the region's end. Used for the last
+//                          region at a ground top end.
+// Both taper forms integrate to exactly half of the plain-region height
+// over the same span (average rate is pitch/2) and match the
+// neighbouring region's rate at the shared boundary, so there's no kink
+// where a taper meets a constant-pitch run — only at the flush tip
+// itself, where by construction the slope is zero.
+function regionHeight(r, span) {
+  if (r.taper === 'in') {
+    return r.pitch * (span / 2 - (r.turns / (2 * Math.PI)) * Math.sin(Math.PI * span / r.turns));
+  }
+  if (r.taper === 'out') {
+    return r.pitch * (span / 2 + (r.turns / (2 * Math.PI)) * Math.sin(Math.PI * span / r.turns));
+  }
+  return span * r.pitch;
+}
+
 // t runs 0→1 across the WHOLE coil (Curve interface). Angle is simply
 // proportional to total turns traversed — only the axial rise per turn
-// (pitch) changes between regions, so only z needs the piecewise walk.
+// (pitch, or taper — see regionHeight) changes between regions, so only
+// z needs the piecewise walk.
 class CompressionHelixCurve extends THREE.Curve {
   constructor(R, regions, hand) {
     super();
@@ -54,8 +81,9 @@ class CompressionHelixCurve extends THREE.Curve {
     const theta = turnsTotal * Math.PI * 2;
     let z = 0, remaining = turnsTotal;
     for (const r of this.regions) {
-      if (remaining <= r.turns) { z += remaining * r.pitch; remaining = 0; break; }
-      z += r.turns * r.pitch;
+      const span = Math.min(remaining, r.turns);
+      z += regionHeight(r, span);
+      if (remaining <= r.turns) { remaining = 0; break; }
       remaining -= r.turns;
     }
     return target.set(
@@ -66,9 +94,65 @@ class CompressionHelixCurve extends THREE.Curve {
   }
 }
 
-// Builds the regions (bottom end / body / top end, or a single uniform
-// run) for one position, then sweeps a circular wire cross-section
-// along them. Returns a THREE.Mesh ready to add to the scene.
+// Lays out the bottom-end / body / top-end regions for one position.
+// Shared between the Three.js viewer and the STEP/STL export sampler
+// (springCompression3DExport.js) — kept in sync by hand, since the two
+// have no shared curve/vector types.
+//
+//   closed  end coils are wound touching (pitch = d) rather than at the
+//           body's own pitch — see getDeadCoilCountFromEndType().
+//   ground  the last bit of wire at each end is ground flat against a
+//           bearing plane. Modeled as a taper (see regionHeight) over
+//           the closed end coil if Closed is also set (the already-
+//           touching turn eases down to flush), or over the last 0.5
+//           turns of the body pitch if not (mirroring the ~0.5-turn/end
+//           allowance getDeadCoilCountFromEndType() already gives a
+//           plain-and-ground end) — either way the coil actually lies
+//           flat against z=0 / z=length, not just clipped after the
+//           fact, so it reads as genuinely ground rather than merely cut.
+function buildRegions(d, Na, Nd, closed, ground, length, isSolid) {
+  if (isSolid) {
+    const totalTurns = Na + Nd;
+    if (!ground) return [{ turns: totalTurns, pitch: d }];
+    const taper = Math.min(0.5, totalTurns / 2);
+    const mid   = totalTurns - 2 * taper;
+    return [
+      { turns: taper, pitch: d, taper: 'in' },
+      ...(mid > 0 ? [{ turns: mid, pitch: d }] : []),
+      { turns: taper, pitch: d, taper: 'out' },
+    ].filter(r => r.turns > 0);
+  }
+
+  // Mirrors Pass 7 in SpringCompressionRound.js exactly.
+  let endOffset = 0;
+  if      ( closed &&  ground) endOffset = 2 * d;
+  else if ( closed && !ground) endOffset = 3 * d;
+  else if (!closed &&  ground) endOffset = d;
+  const bodyPitch = Math.max((length - endOffset) / Na, d);
+
+  if (closed) {
+    const ndEach = Nd / 2;
+    return [
+      { turns: ndEach, pitch: d, ...(ground ? { taper: 'in' }  : {}) },
+      { turns: Na,     pitch: bodyPitch },
+      { turns: ndEach, pitch: d, ...(ground ? { taper: 'out' } : {}) },
+    ].filter(r => r.turns > 0);
+  }
+
+  if (!ground) return [{ turns: Na, pitch: bodyPitch }];
+
+  const taper = Math.min(0.5, Na / 2);
+  const mid   = Na - 2 * taper;
+  return [
+    { turns: taper, pitch: bodyPitch, taper: 'in' },
+    ...(mid > 0 ? [{ turns: mid, pitch: bodyPitch }] : []),
+    { turns: taper, pitch: bodyPitch, taper: 'out' },
+  ].filter(r => r.turns > 0);
+}
+
+// Builds the regions for one position, then sweeps a circular wire
+// cross-section along them. Returns a THREE.Mesh ready to add to the
+// scene.
 //
 //   d, D       wire diameter, mean coil diameter
 //   Na, Nd     active coils, total dead/end coils (0/1/2/2 per end type)
@@ -82,36 +166,31 @@ class CompressionHelixCurve extends THREE.Curve {
 //              viewer for the same trick).
 function buildSpringMesh(d, D, Na, Nd, closed, ground, length, isSolid, hand, material) {
   const R = D / 2;
-  let regions;
-
-  if (isSolid) {
-    regions = [{ turns: Na + Nd, pitch: d }];
-  } else {
-    // Mirrors Pass 7 in SpringCompressionRound.js exactly.
-    let endOffset = 0;
-    if      ( closed &&  ground) endOffset = 2 * d;
-    else if ( closed && !ground) endOffset = 3 * d;
-    else if (!closed &&  ground) endOffset = d;
-    const bodyPitch = Math.max((length - endOffset) / Na, d);
-
-    if (closed) {
-      const ndEach = Nd / 2;
-      regions = [
-        { turns: ndEach, pitch: d },
-        { turns: Na,     pitch: bodyPitch },
-        { turns: ndEach, pitch: d },
-      ].filter(r => r.turns > 0);
-    } else {
-      // Not closed: the end coils are NOT touching, just plain pitch —
-      // any Ground allowance is a tip-flattening detail, not a distinct
-      // geometric region, so the whole coil is one uniform run.
-      regions = [{ turns: Na, pitch: bodyPitch }];
-    }
-  }
+  const regions = buildRegions(d, Na, Nd, closed, ground, length, isSolid);
 
   const curve = new CompressionHelixCurve(R, regions, hand);
   const tubularSegments = Math.max(64, Math.round(curve.totalTurns * 24 + 16));
   const geometry = new THREE.TubeGeometry(curve, tubularSegments, d / 2, 10, false);
+
+  // The taper (see buildRegions) brings the CENTERLINE in flush with
+  // zero slope, but the wire has real thickness (radius d/2) — near the
+  // very tip the centerline is closer to the bearing plane than that
+  // radius, so part of the tube's round cross-section still poking
+  // through the plane is geometrically unavoidable from a swept curve
+  // alone. Ground ends finish the job by flattening those vertices onto
+  // the plane directly, which is what "ground" physically is — material
+  // removed until it's flush — rather than a rounded tip left in place.
+  if (ground) {
+    const posAttr = geometry.attributes.position;
+    for (let i = 0; i < posAttr.count; i++) {
+      const z = posAttr.getZ(i);
+      if (z < 0)      posAttr.setZ(i, 0);
+      else if (z > length) posAttr.setZ(i, length);
+    }
+    posAttr.needsUpdate = true;
+    geometry.computeVertexNormals();
+  }
+
   return new THREE.Mesh(geometry, material);
 }
 
@@ -134,7 +213,6 @@ function ensureScene() {
     showFallback('3D rendering could not start (' + e.message + ').');
     return null;
   }
-
   _scene  = new THREE.Scene();
   _camera = new THREE.PerspectiveCamera(40, 1, 0.01, 100);
 
@@ -205,6 +283,9 @@ function renderPosition(key) {
     _springMesh = null;
   }
 
+  // Ground ends are baked into the geometry itself (see buildRegions /
+  // regionHeight) — the coil actually tapers down and lies flush against
+  // the bearing plane, rather than being clipped after the fact.
   const material = new THREE.MeshStandardMaterial({
     color: 0x8a9296, metalness: 0.6, roughness: 0.35,
   });
