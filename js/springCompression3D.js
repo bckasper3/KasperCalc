@@ -111,43 +111,65 @@ class CompressionHelixCurve extends THREE.Curve {
 //           flat against z=0 / z=length, not just clipped after the
 //           fact, so it reads as genuinely ground rather than merely cut.
 function buildRegions(d, Na, Nd, closed, ground, length, isSolid) {
+  let regions;
+
   if (isSolid) {
     const totalTurns = Na + Nd;
     if (!ground) return [{ turns: totalTurns, pitch: d }];
     const taper = Math.min(0.5, totalTurns / 2);
     const mid   = totalTurns - 2 * taper;
-    return [
+    regions = [
       { turns: taper, pitch: d, taper: 'in' },
       ...(mid > 0 ? [{ turns: mid, pitch: d }] : []),
       { turns: taper, pitch: d, taper: 'out' },
     ].filter(r => r.turns > 0);
+  } else {
+    // Mirrors Pass 7 in SpringCompressionRound.js exactly.
+    let endOffset = 0;
+    if      ( closed &&  ground) endOffset = 2 * d;
+    else if ( closed && !ground) endOffset = 3 * d;
+    else if (!closed &&  ground) endOffset = d;
+    const bodyPitch = Math.max((length - endOffset) / Na, d);
+
+    if (closed) {
+      const ndEach = Nd / 2;
+      regions = [
+        { turns: ndEach, pitch: d, ...(ground ? { taper: 'in' }  : {}) },
+        { turns: Na,     pitch: bodyPitch },
+        { turns: ndEach, pitch: d, ...(ground ? { taper: 'out' } : {}) },
+      ].filter(r => r.turns > 0);
+    } else if (!ground) {
+      regions = [{ turns: Na, pitch: bodyPitch }];
+    } else {
+      const taper = Math.min(0.5, Na / 2);
+      const mid   = Na - 2 * taper;
+      regions = [
+        { turns: taper, pitch: bodyPitch, taper: 'in' },
+        ...(mid > 0 ? [{ turns: mid, pitch: bodyPitch }] : []),
+        { turns: taper, pitch: bodyPitch, taper: 'out' },
+      ].filter(r => r.turns > 0);
+    }
   }
 
-  // Mirrors Pass 7 in SpringCompressionRound.js exactly.
-  let endOffset = 0;
-  if      ( closed &&  ground) endOffset = 2 * d;
-  else if ( closed && !ground) endOffset = 3 * d;
-  else if (!closed &&  ground) endOffset = d;
-  const bodyPitch = Math.max((length - endOffset) / Na, d);
-
-  if (closed) {
-    const ndEach = Nd / 2;
-    return [
-      { turns: ndEach, pitch: d, ...(ground ? { taper: 'in' }  : {}) },
-      { turns: Na,     pitch: bodyPitch },
-      { turns: ndEach, pitch: d, ...(ground ? { taper: 'out' } : {}) },
-    ].filter(r => r.turns > 0);
+  // A taper trades away some of its region's height for a flush landing
+  // (regionHeight integrates a taper to HALF of what constant pitch over
+  // the same span would give), so as built the coil falls a bit short
+  // of `length` — the bottom still looks ground (it starts at z=0 by
+  // construction) but the top just stops short in mid-air, well before
+  // it ever reaches the bearing plane to be flush against, let alone
+  // clamped to it. Rescaling every pitch uniformly closes that gap: it
+  // stretches the whole coil so the top actually reaches `length` again,
+  // without disturbing any taper's zero-slope landing (a uniform scale
+  // doesn't change the shape, just its size).
+  if (ground) {
+    const builtHeight = regions.reduce((s, r) => s + regionHeight(r, r.turns), 0);
+    if (builtHeight > 1e-9) {
+      const scale = length / builtHeight;
+      regions = regions.map(r => ({ ...r, pitch: r.pitch * scale }));
+    }
   }
 
-  if (!ground) return [{ turns: Na, pitch: bodyPitch }];
-
-  const taper = Math.min(0.5, Na / 2);
-  const mid   = Na - 2 * taper;
-  return [
-    { turns: taper, pitch: bodyPitch, taper: 'in' },
-    ...(mid > 0 ? [{ turns: mid, pitch: bodyPitch }] : []),
-    { turns: taper, pitch: bodyPitch, taper: 'out' },
-  ].filter(r => r.turns > 0);
+  return regions;
 }
 
 // Builds the regions for one position, then sweeps a circular wire

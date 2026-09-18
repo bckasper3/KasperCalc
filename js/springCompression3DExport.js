@@ -98,6 +98,7 @@ async function downloadComp3DSTEP() {
 // flush (zero slope) against the bearing plane; see regionHeight there
 // for the closed-form math.
 function buildRegions(d, Na, Nd, closed, ground, length) {
+  let regions;
   let endOffset = 0;
   if      ( closed &&  ground) endOffset = 2 * d;
   else if ( closed && !ground) endOffset = 3 * d;
@@ -106,22 +107,40 @@ function buildRegions(d, Na, Nd, closed, ground, length) {
 
   if (closed) {
     const ndEach = Nd / 2;
-    return [
+    regions = [
       { turns: ndEach, pitch: d, ...(ground ? { taper: 'in' }  : {}) },
       { turns: Na,     pitch: bodyPitch },
       { turns: ndEach, pitch: d, ...(ground ? { taper: 'out' } : {}) },
     ].filter(r => r.turns > 0);
+  } else if (!ground) {
+    regions = [{ turns: Na, pitch: bodyPitch }];
+  } else {
+    const taper = Math.min(0.5, Na / 2);
+    const mid   = Na - 2 * taper;
+    regions = [
+      { turns: taper, pitch: bodyPitch, taper: 'in' },
+      ...(mid > 0 ? [{ turns: mid, pitch: bodyPitch }] : []),
+      { turns: taper, pitch: bodyPitch, taper: 'out' },
+    ].filter(r => r.turns > 0);
   }
 
-  if (!ground) return [{ turns: Na, pitch: bodyPitch }];
+  // A taper trades away some of its region's height for a flush landing
+  // (regionHeight integrates a taper to HALF of what constant pitch over
+  // the same span would give), so as built the coil falls a bit short of
+  // `length` — the bottom still looks ground (it starts at z=0 by
+  // construction) but the top stops short before it ever reaches the
+  // bearing plane. Rescaling every pitch uniformly closes that gap
+  // without disturbing any taper's zero-slope landing. Kept in sync with
+  // the identical step in springCompression3D.js.
+  if (ground) {
+    const builtHeight = regions.reduce((s, r) => s + regionHeight(r, r.turns), 0);
+    if (builtHeight > 1e-9) {
+      const scale = length / builtHeight;
+      regions = regions.map(r => ({ ...r, pitch: r.pitch * scale }));
+    }
+  }
 
-  const taper = Math.min(0.5, Na / 2);
-  const mid   = Na - 2 * taper;
-  return [
-    { turns: taper, pitch: bodyPitch, taper: 'in' },
-    ...(mid > 0 ? [{ turns: mid, pitch: bodyPitch }] : []),
-    { turns: taper, pitch: bodyPitch, taper: 'out' },
-  ].filter(r => r.turns > 0);
+  return regions;
 }
 
 function regionHeight(r, span) {
@@ -204,11 +223,19 @@ function buildSpringSolid(oc, { d, D, Na, Nd, closed, ground, length, hand }) {
   // just clipped for display.
   if (ground) {
     const margin = R + d; // generous — covers the whole coil radius
+    // The rescale in buildRegions makes the coil reach z=0/length almost
+    // exactly, so a cutting box with its face placed EXACTLY on that
+    // plane is coincident with the solid's own boundary there — OCCT's
+    // boolean cut resolves that degenerate touching case by dropping the
+    // whole shape instead of trimming it. A tiny overlap (EPS, far below
+    // any visible or dimensional tolerance) keeps the cut a genuine,
+    // non-degenerate intersection.
+    const EPS = 1e-4;
     const bottomBox = new oc.BRepPrimAPI_MakeBox_3(
-      new oc.gp_Pnt_3(-margin, -margin, -margin), 2 * margin, 2 * margin, margin
+      new oc.gp_Pnt_3(-margin, -margin, -margin), 2 * margin, 2 * margin, margin + EPS
     ).Shape();
     const topBox = new oc.BRepPrimAPI_MakeBox_3(
-      new oc.gp_Pnt_3(-margin, -margin, length), 2 * margin, 2 * margin, margin
+      new oc.gp_Pnt_3(-margin, -margin, length - EPS), 2 * margin, 2 * margin, margin
     ).Shape();
     solid = new oc.BRepAlgoAPI_Cut_3(solid, bottomBox, new oc.Message_ProgressRange_1()).Shape();
     solid = new oc.BRepAlgoAPI_Cut_3(solid, topBox, new oc.Message_ProgressRange_1()).Shape();
